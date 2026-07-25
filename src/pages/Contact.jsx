@@ -5,12 +5,6 @@ import { IconMap, IconChat, IconClock, IconCheck } from "../components/icons";
 
 const roleOptions = ["General Contractor", "Subcontractor", "Supplier", "Engineer", "Other"];
 
-function encode(data) {
-  return Object.keys(data)
-    .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`)
-    .join("&");
-}
-
 export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
   const [role, setRole] = useState(roleOptions[0]);
@@ -22,15 +16,16 @@ export default function Contact() {
     setSubmitting(true);
     setError(false);
 
-    const data = Object.fromEntries(new FormData(e.target).entries());
+    const form = e.target;
 
     try {
-      const res = await fetch("/", {
+      const res = await fetch("/contact.php", {
         method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: encode({ "form-name": "contact", ...data }),
+        body: new FormData(form),
       });
-      if (!res.ok) throw new Error(`Submission failed: ${res.status}`);
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.ok) throw new Error("Submission failed");
+      form.reset();
       setSubmitted(true);
     } catch {
       setError(true);
@@ -101,15 +96,7 @@ export default function Contact() {
                 </Button>
               </div>
             ) : (
-              <form
-                name="contact"
-                method="POST"
-                data-netlify="true"
-                data-netlify-honeypot="bot-field"
-                className="space-y-5"
-                onSubmit={handleSubmit}
-              >
-                <input type="hidden" name="form-name" value="contact" />
+              <form name="contact" className="space-y-5" onSubmit={handleSubmit}>
                 <p className="hidden">
                   <label>
                     Don&rsquo;t fill this out: <input name="bot-field" tabIndex="-1" autoComplete="off" />
