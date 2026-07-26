@@ -1,59 +1,33 @@
 import { useState } from "react";
 import Section, { Eyebrow } from "../components/Section";
 import CTASection from "../components/CTASection";
-import { IconBuilding, IconHelmet, IconTruck, IconMap, IconCheck } from "../components/icons";
+import { IconBuilding, IconHelmet, IconCheck } from "../components/icons";
 
 const roles = [
   {
     key: "gc",
     icon: <IconBuilding />,
     label: "General Contractors",
-    title: "Run the whole job, not a dozen disconnected tools.",
-    text: "Publish bid packages across every trade, qualify and match subs automatically, and keep procurement, schedule, and cost visibility in one place instead of spread across spreadsheets and email.",
+    title: "Run the whole pipeline, not a dozen disconnected tools.",
+    text: "Post projects, build a qualified sub list, and manage every bid, RFI, and deadline from one dashboard — then award and track performance so your next project starts smarter.",
     points: [
-      "Build and distribute trade-specific bid packages in minutes",
-      "Compare leveled bids side by side before awarding scope",
-      "Track committed costs as bids are awarded and change orders land",
-      "One activity log across every sub, supplier, and engineer on the job",
+      "Post projects and invite the right subcontractors in minutes",
+      "Compare leveled bids side by side before awarding",
+      "Manage RFIs, addenda, and deadlines without email archaeology",
+      "Award contracts and rate vendor performance in one place",
     ],
   },
   {
     key: "sub",
     icon: <IconHelmet />,
     label: "Subcontractors",
-    title: "Get matched to the bids worth your time.",
-    text: "Stop chasing leads across plan rooms and cold emails. D&J Stratagem surfaces relevant bid packages based on your trade, licensing, capacity, and service area, and gives you a clean, structured way to respond.",
+    title: "Get matched to work worth bidding — and win more of it.",
+    text: "D&J Stratagem finds projects that fit your trade, helps you present a professional profile with verified credentials, and tracks your bid history so every submission gets sharper.",
     points: [
-      "Automatic matching to bid packages in your trade and territory",
-      "Structured bid forms, no more reformatting proposals by hand",
-      "Direct visibility into award status and next steps",
-      "Submittals, RFIs, and schedule updates in one inbox",
-    ],
-  },
-  {
-    key: "supplier",
-    icon: <IconTruck />,
-    label: "Suppliers",
-    title: "Quote against real specs, not secondhand info.",
-    text: "Plug directly into active projects to see accurate material specs and quantities, submit quotes, and manage delivery commitments without relying on a sub to relay details.",
-    points: [
-      "Visibility into project specs and quantities as scopes are awarded",
-      "Purchase orders generated directly from the awarded bid",
-      "Delivery milestones tracked and visible to the project team",
-      "Fewer change-driven surprises thanks to shared, current project data",
-    ],
-  },
-  {
-    key: "engineer",
-    icon: <IconMap />,
-    label: "Engineers",
-    title: "Stay looped in without living in your inbox.",
-    text: "Respond to RFIs, review submittals, and track design changes through a shared record that keeps the field, the GC, and every affected trade on the same page.",
-    points: [
-      "RFIs and submittals routed to you automatically with full context",
-      "Design changes tracked against the trades and scopes they affect",
-      "One place to see how field questions map back to the drawings",
-      "Fewer duplicate questions from different subs on the same issue",
+      "Automatic matching to projects in your trade and territory",
+      "Digital bid submission with a profile and portfolio that sells your work",
+      "License and insurance verification that builds GC trust",
+      "Bid analytics and a follow-up CRM so opportunities never go cold",
     ],
   },
 ];
@@ -67,11 +41,11 @@ export default function Solutions() {
       <Section className="pt-16 pb-8 md:pt-24">
         <Eyebrow>Solutions</Eyebrow>
         <h1 className="text-balance max-w-3xl text-4xl font-semibold leading-tight tracking-tight text-paper sm:text-5xl">
-          Built for every party on a multi-trade job.
+          Built for both sides of the bid.
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-steel">
-          Each role works from the same project record, with a workflow tailored to what they
-          actually need to get done.
+          General contractors and subcontractors work from the same platform, with workflows
+          tailored to how each side actually wins.
         </p>
       </Section>
 
@@ -120,7 +94,7 @@ export default function Solutions() {
 
       <CTASection
         title="Find your fit on the platform."
-        subtitle="Tell us about your role on the job and we'll show you exactly how D&J Stratagem fits your workflow."
+        subtitle="Tell us about your business and we'll show you exactly how D&J Stratagem helps you win more."
       />
     </>
   );

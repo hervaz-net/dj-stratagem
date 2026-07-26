@@ -2,8 +2,8 @@ import Button from "./Button";
 import Section from "./Section";
 
 export default function CTASection({
-  title = "See D&J Stratagem on your next bid.",
-  subtitle = "Walk through the platform with our team and find out how it fits your workflow.",
+  title = "Win more projects. Build bigger business.",
+  subtitle = "Walk through the platform with our team and see exactly where it fits your workflow.",
 }) {
   return (
     <Section className="border-t border-line">

@@ -121,3 +121,39 @@ export const IconBuilding = (p) => (
     <path d="M7 7h1M10 7h1M7 11h1M10 11h1M7 15h1M10 15h1" />
   </svg>
 );
+
+export const IconMegaphone = (p) => (
+  <svg {...common} {...p}>
+    <path d="M3 10v4a1 1 0 0 0 1 1h2l10 4V5L6 9H4a1 1 0 0 0-1 1z" />
+    <path d="M8 15v4a1.5 1.5 0 0 0 3 0v-3" />
+    <path d="M19 9.5a3.5 3.5 0 0 1 0 5" />
+  </svg>
+);
+
+export const IconBriefcase = (p) => (
+  <svg {...common} {...p}>
+    <rect x="2.5" y="7" width="19" height="13" rx="1.5" />
+    <path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+    <path d="M2.5 12.5h19" />
+  </svg>
+);
+
+export const IconSparkle = (p) => (
+  <svg {...common} {...p}>
+    <path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z" />
+    <path d="M19 15l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z" />
+  </svg>
+);
+
+export const IconStar = (p) => (
+  <svg {...common} {...p}>
+    <path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.2 1 5.9-5.2-2.8-5.2 2.8 1-5.9-4.3-4.2 5.9-.8z" />
+  </svg>
+);
+
+export const IconTrendingUp = (p) => (
+  <svg {...common} {...p}>
+    <path d="M3 17l6-6 4 4 8-8" />
+    <path d="M15 6h6v6" />
+  </svg>
+);

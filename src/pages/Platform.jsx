@@ -2,27 +2,26 @@ import Section, { Eyebrow } from "../components/Section";
 import CTASection from "../components/CTASection";
 import {
   IconGavel,
-  IconTruck,
-  IconLayers,
-  IconLink,
-  IconTarget,
-  IconShield,
+  IconHelmet,
+  IconMegaphone,
+  IconBriefcase,
+  IconSparkle,
   IconCheck,
-  IconChat,
-  IconWallet,
-  IconClock,
 } from "../components/icons";
 
 const modules = [
   {
     icon: <IconGavel />,
-    eyebrow: "Bidding",
-    title: "Run every bid package from one place.",
-    text: "Publish scopes by trade, distribute to a qualified sub pool, and collect structured, comparable bids instead of a folder of mismatched PDFs.",
+    eyebrow: "For general contractors",
+    title: "Run every bid from posting to award.",
+    text: "Publish projects, build your sub list, and keep every RFI, addendum, and deadline in one place — then award with a clear paper trail.",
     points: [
-      "Trade-specific bid packages with drawings and specs attached",
-      "Structured bid forms so proposals line up apples-to-apples",
-      "Automatic notifications when a bid is late, revised, or awarded",
+      "Post projects and invite subcontractors",
+      "Compare bids side by side",
+      "Manage RFIs and addenda",
+      "Track deadlines across every open package",
+      "Award contracts with one click",
+      "Vendor performance ratings on every sub you've worked with",
     ],
     panel: {
       title: "Bid comparison",
@@ -34,94 +33,92 @@ const modules = [
     },
   },
   {
-    icon: <IconTruck />,
-    eyebrow: "Procurement",
-    title: "Turn awarded scopes into tracked purchase orders.",
-    text: "Once a bid is awarded, generate POs against the actual scope, route them to suppliers, and track material commitments through to delivery.",
+    icon: <IconHelmet />,
+    eyebrow: "For subcontractors",
+    title: "Find the right projects and win them.",
+    text: "Stop chasing plan rooms. Get matched to projects in your trade, submit clean digital bids, and build a track record that wins the next one.",
     points: [
-      "POs generated directly from awarded bid line items",
-      "Supplier quotes tracked against approved specs",
-      "Delivery milestones visible to the whole project team",
+      "Find projects matching your trades",
+      "Submit bids digitally with structured forms",
+      "Company profile and portfolio that sells your work",
+      "License and insurance verification built in",
+      "Bid history and analytics to sharpen your win rate",
+      "CRM for follow-ups so no opportunity goes cold",
     ],
     panel: {
-      title: "Purchase orders",
+      title: "Matched projects",
       rows: [
-        { label: "PO-1042 · Rebar", value: "On order", tag: "Due Aug 4" },
-        { label: "PO-1039 · Curtain wall", value: "Confirmed", tag: "Due Aug 18" },
-        { label: "PO-1035 · HVAC units", value: "Shipped", tag: "Due Jul 29" },
+        { label: "Riverside Medical Office", value: "Electrical", tag: "Bids due Fri" },
+        { label: "Summit Ridge Apartments", value: "Electrical", tag: "New match" },
+        { label: "Gateway Logistics Hub", value: "Low voltage", tag: "Invited" },
       ],
     },
   },
   {
-    icon: <IconLayers />,
-    eyebrow: "Project management",
-    title: "Schedules, submittals, and RFIs tied to the trades that own them.",
-    text: "Keep the project moving with a shared schedule, submittal log, and RFI tracker that route directly to the responsible sub, supplier, or engineer.",
+    icon: <IconMegaphone />,
+    eyebrow: "Marketing suite",
+    title: "Keep your pipeline full without hiring an agency.",
+    text: "Your next job shouldn't depend on word of mouth. Market your business with the same tools the big firms use — built for contractors.",
     points: [
-      "Shared schedule with trade-level milestones and dependencies",
-      "Submittal and RFI logs with built-in routing and response tracking",
-      "Change orders linked back to the originating scope and bid",
+      "SEO-optimized contractor profiles that rank",
+      "Lead generation that feeds your CRM directly",
+      "AI-generated project proposals",
+      "Email and SMS campaigns",
+      "Google Business Profile integration",
+      "Reviews, reputation management, and social content generation",
+    ],
+    panel: {
+      title: "This month",
+      rows: [
+        { label: "Profile views", value: "1,284", tag: "+38%" },
+        { label: "New leads", value: "23", tag: "+9" },
+        { label: "Review rating", value: "4.8 / 5", tag: "62 reviews" },
+      ],
+    },
+  },
+  {
+    icon: <IconBriefcase />,
+    eyebrow: "Business tools",
+    title: "Run the business, not just the bid.",
+    text: "Everything after the award lives here too — so your estimating, invoicing, and paperwork stay connected to the job they belong to.",
+    points: [
+      "CRM built for construction relationships",
+      "Estimating and invoicing",
+      "Change orders tied to the original scope",
+      "Document management with e-signatures",
+      "Team collaboration across office and field",
+      "Mobile app with field notifications",
     ],
     panel: {
       title: "Open items",
       rows: [
-        { label: "RFI-118 · Beam clearance", value: "Engineer", tag: "2d left" },
-        { label: "Submittal · Glazing spec", value: "GC review", tag: "Due today" },
-        { label: "CO-07 · Added scope", value: "Pending", tag: "Draft" },
+        { label: "Invoice #1042", value: "$38,400", tag: "Sent" },
+        { label: "CO-07 · Added scope", value: "Pending signature", tag: "2d" },
+        { label: "Estimate · Lot 14 build-out", value: "Draft", tag: "Due today" },
       ],
     },
   },
   {
-    icon: <IconLink />,
-    eyebrow: "Coordination",
-    title: "One shared view of the job for everyone on it.",
-    text: "General contractors, subs, suppliers, and engineers work off the same live project record instead of chasing updates across email, texts, and spreadsheets.",
+    icon: <IconSparkle />,
+    eyebrow: "AI features",
+    title: "An unfair advantage on every bid.",
+    text: "AI works alongside your team — matching you to the right work, flagging what's missing, and drafting the documents that used to eat your evenings.",
     points: [
-      "Real-time project chat scoped by trade and by task",
-      "Shared document and drawing set with version history",
-      "Activity feed so nothing gets lost between parties",
+      "Match contractors to the right projects automatically",
+      "Predict bid competitiveness before you submit",
+      "Generate proposal drafts in minutes",
+      "Analyze plans and specifications",
+      "Identify missing bid documents before they cost you",
+      "Forecast your revenue pipeline",
     ],
     panel: {
-      title: "Project activity",
+      title: "AI insights",
       rows: [
-        { label: "Steel sub uploaded shop drawings", value: "10:14 AM", tag: "New" },
-        { label: "Engineer responded to RFI-118", value: "9:52 AM", tag: "Resolved" },
-        { label: "GC awarded Glazing package", value: "Yesterday", tag: "Awarded" },
+        { label: "Bid competitiveness", value: "High — within 4% of est.", tag: "92%" },
+        { label: "Missing documents", value: "Bond form, W-9", tag: "2 flagged" },
+        { label: "Pipeline forecast", value: "$2.4M next quarter", tag: "+18%" },
       ],
     },
-  },
-];
-
-const extras = [
-  {
-    icon: <IconTarget />,
-    title: "Intelligent matching",
-    text: "Every scope is matched to qualified subs and suppliers based on trade, licensing, capacity, and location, so bid pools are relevant from day one.",
-  },
-  {
-    icon: <IconShield />,
-    title: "Local regulatory intelligence",
-    text: "Built-in guidance on LADBS processes, permitting timelines, inspection triggers, and jurisdiction-specific code requirements across the LA area.",
-  },
-  {
-    icon: <IconChat />,
-    title: "Real-time collaboration",
-    text: "Trade-scoped chat, shared files, and an always-current activity log keep every party working from the same information.",
-  },
-  {
-    icon: <IconWallet />,
-    title: "Cost visibility",
-    text: "Track committed costs against budget as bids are awarded and change orders are approved, without waiting on a monthly reconciliation.",
-  },
-  {
-    icon: <IconClock />,
-    title: "Faster turnarounds",
-    text: "Structured workflows for bidding, submittals, and RFIs cut the back-and-forth that slows multi-trade jobs down.",
-  },
-  {
-    icon: <IconLayers />,
-    title: "One system of record",
-    text: "Bids, POs, drawings, and correspondence live in a single project record instead of scattered across tools and inboxes.",
   },
 ];
 
@@ -150,12 +147,11 @@ export default function Platform() {
       <Section className="pt-16 pb-8 md:pt-24">
         <Eyebrow>The platform</Eyebrow>
         <h1 className="text-balance max-w-3xl text-4xl font-semibold leading-tight tracking-tight text-paper sm:text-5xl">
-          Bidding, procurement, and coordination, built for how multi-trade projects actually run.
+          One platform to win work, market your business, and grow revenue.
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-steel">
-          D&amp;J Stratagem replaces the patchwork of spreadsheets, inboxes, and point tools
-          construction teams use today with specialized workflows for every trade and every
-          party on the job.
+          Five connected suites replace the patchwork of point tools contractors juggle today
+          &mdash; from the first opportunity to the final invoice.
         </p>
       </Section>
 
@@ -185,27 +181,9 @@ export default function Platform() {
         </Section>
       ))}
 
-      <Section className="border-t border-line">
-        <Eyebrow>Also built in</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-paper md:text-4xl">
-          The details that make a multi-trade job easier to run.
-        </h2>
-        <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {extras.map((f) => (
-            <div key={f.title} className="rounded-xl border border-line bg-ink-2 p-6">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber/10 text-amber">
-                {f.icon}
-              </div>
-              <h3 className="mt-5 text-base font-semibold text-paper">{f.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-steel">{f.text}</p>
-            </div>
-          ))}
-        </div>
-      </Section>
-
       <CTASection
-        title="Ready to see it on a real project?"
-        subtitle="We'll walk through your current bidding and procurement workflow and show you where the platform fits."
+        title="See it on your next bid."
+        subtitle="We'll walk through your current workflow and show you exactly where the platform fits."
       />
     </>
   );

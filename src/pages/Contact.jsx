@@ -57,7 +57,7 @@ export default function Contact() {
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-paper">Los Angeles, California</p>
-                  <p className="mt-1 text-sm text-steel">Serving multi-trade projects across the LA area.</p>
+                  <p className="mt-1 text-sm text-steel">Serving general contractors and subcontractors nationwide.</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">

@@ -4,54 +4,49 @@ import FeatureCard from "../components/FeatureCard";
 import CTASection from "../components/CTASection";
 import {
   IconGavel,
-  IconTruck,
-  IconLayers,
-  IconLink,
-  IconTarget,
-  IconChat,
-  IconShield,
+  IconHelmet,
+  IconMegaphone,
+  IconBriefcase,
+  IconSparkle,
   IconArrowRight,
   IconBuilding,
-  IconUsers,
-  IconMap,
-  IconHelmet,
+  IconCheck,
+  IconTrendingUp,
 } from "../components/icons";
 
-const trades = [
-  "Concrete", "Electrical", "Mechanical", "Plumbing", "Framing",
-  "Structural Steel", "Drywall", "Roofing", "Excavation", "Glazing",
-];
-
-const roles = [
+const pillars = [
   {
-    icon: <IconBuilding />,
-    title: "General Contractors",
-    text: "Run bid packages, qualify subs, and track every trade on one job from a single dashboard.",
+    icon: <IconGavel />,
+    title: "For general contractors",
+    text: "Post projects, invite subs, compare bids side by side, and award with confidence.",
   },
   {
     icon: <IconHelmet />,
-    title: "Subcontractors",
-    text: "Get matched to relevant bids in your trade and territory, and submit clean, comparable proposals.",
+    title: "For subcontractors",
+    text: "Find projects that match your trade, submit digital bids, and build a bid history that wins more work.",
   },
   {
-    icon: <IconTruck />,
-    title: "Suppliers",
-    text: "Plug into active projects, quote materials against real specs, and manage delivery commitments.",
+    icon: <IconMegaphone />,
+    title: "Marketing suite",
+    text: "SEO-optimized profiles, lead generation, and AI-generated proposals that keep your pipeline full.",
   },
   {
-    icon: <IconMap />,
-    title: "Engineers",
-    text: "Stay looped into design changes and field questions without living in your inbox.",
+    icon: <IconBriefcase />,
+    title: "Business tools",
+    text: "CRM, estimating, invoicing, change orders, and e-signatures in one connected workspace.",
+  },
+  {
+    icon: <IconSparkle />,
+    title: "AI built in",
+    text: "Match to the right projects, predict bid competitiveness, and draft proposals in minutes, not hours.",
   },
 ];
 
-const platformFeatures = [
-  { icon: <IconGavel />, title: "Bidding", text: "Publish, distribute, and compare bids across every trade in one structured workflow." },
-  { icon: <IconTruck />, title: "Procurement", text: "Turn awarded scopes into purchase orders and track materials from quote to delivery." },
-  { icon: <IconLayers />, title: "Project management", text: "Schedules, submittals, RFIs, and change orders, tied back to the trades that own them." },
-  { icon: <IconLink />, title: "Coordination", text: "Give every GC, sub, supplier, and engineer a shared, real-time view of the job." },
-  { icon: <IconTarget />, title: "Intelligent matching", text: "Surface the right subs and suppliers for a scope based on trade, capacity, and location." },
-  { icon: <IconShield />, title: "Regulatory intelligence", text: "Local permitting, inspection, and code guidance built for Los Angeles jurisdictions." },
+const competitors = [
+  { name: "PlanHub", does: "Finding bids" },
+  { name: "Dodge Construction Network", does: "Project leads" },
+  { name: "BuildingConnected", does: "Bid invitations" },
+  { name: "ConstructConnect", does: "Project intelligence" },
 ];
 
 export default function Home() {
@@ -61,14 +56,14 @@ export default function Home() {
         <div className="pointer-events-none absolute inset-0 bg-grid [mask-image:radial-gradient(ellipse_60%_60%_at_50%_0%,black,transparent)]" />
         <div className="relative grid grid-cols-1 items-center gap-14 lg:grid-cols-2">
           <div>
-            <Eyebrow>Built for Los Angeles construction</Eyebrow>
+            <Eyebrow>The operating system for construction growth</Eyebrow>
             <h1 className="text-balance text-4xl font-semibold leading-[1.08] tracking-tight text-paper sm:text-5xl md:text-6xl">
-              One platform for bidding, procurement, and every trade on the job.
+              Win more projects. Build bigger business.
             </h1>
             <p className="mt-6 max-w-lg text-lg leading-relaxed text-steel">
-              D&amp;J Stratagem connects general contractors, subcontractors, suppliers, and
-              engineers on complex multi-trade projects, replacing scattered spreadsheets and
-              email threads with one coordinated hub.
+              D&amp;J Stratagem helps contractors win more work, market their business, and
+              manage the entire bidding pipeline from opportunity to award &mdash; all in one
+              platform.
             </p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
               <Button to="/contact" variant="primary">
@@ -79,8 +74,8 @@ export default function Home() {
               </Button>
             </div>
             <div className="mt-10 flex flex-wrap gap-x-6 gap-y-2 text-sm text-steel">
-              <span className="flex items-center gap-2"><IconUsers width={16} height={16} className="text-amber" /> Built for multi-trade teams</span>
-              <span className="flex items-center gap-2"><IconMap width={16} height={16} className="text-amber" /> LA regulatory intelligence</span>
+              <span className="flex items-center gap-2"><IconBuilding width={16} height={16} className="text-amber" /> Built for GCs and subs</span>
+              <span className="flex items-center gap-2"><IconTrendingUp width={16} height={16} className="text-amber" /> Grow revenue, not just win bids</span>
             </div>
           </div>
 
@@ -117,67 +112,41 @@ export default function Home() {
         </div>
       </Section>
 
-      <Section className="border-t border-line py-10 md:py-12">
-        <p className="text-center text-xs font-semibold uppercase tracking-widest text-steel">
-          Trades coordinated on the platform
-        </p>
-        <div className="mt-6 flex flex-wrap justify-center gap-3">
-          {trades.map((t) => (
-            <span key={t} className="rounded-full border border-line px-4 py-1.5 text-sm text-steel">
-              {t}
-            </span>
-          ))}
-        </div>
-      </Section>
-
       <Section className="border-t border-line">
         <div className="grid grid-cols-1 gap-16 lg:grid-cols-2 lg:items-start">
           <div>
             <Eyebrow>The problem</Eyebrow>
             <h2 className="text-balance text-3xl font-semibold tracking-tight text-paper md:text-4xl">
-              Multi-trade jobs run on tools that were never built to talk to each other.
+              Most platforms solve one piece of the puzzle.
             </h2>
             <p className="mt-5 text-base leading-relaxed text-steel">
-              Bids sit in email. Schedules live in one tool, submittals in another. Suppliers get
-              looped in late. On a complex job with a dozen trades, that fragmentation shows up as
-              delays, rework, and cost overruns &mdash; long before a shovel hits the ground.
+              PlanHub finds bids. Dodge surfaces leads. BuildingConnected sends invitations.
+              ConstructConnect delivers project intelligence. Contractors end up stitching
+              together five tools to do one job &mdash; and still handle marketing, CRM, and
+              document management somewhere else entirely.
             </p>
           </div>
           <div>
             <Eyebrow>The platform</Eyebrow>
             <h2 className="text-balance text-3xl font-semibold tracking-tight text-paper md:text-4xl">
-              A single hub for the entire project team.
+              We sell growth, not just access to bids.
             </h2>
             <p className="mt-5 text-base leading-relaxed text-steel">
-              D&amp;J Stratagem consolidates bidding, procurement, project management, and
-              coordination into one platform, with intelligent matching and specialized
-              workflows for every trade &mdash; so projects move faster and cost less to run.
+              D&amp;J Stratagem is where a contractor wins work, markets the business, manages
+              relationships, and grows revenue &mdash; bidding, marketing, CRM, estimating, and
+              AI, all in one connected platform.
             </p>
           </div>
-        </div>
-      </Section>
-
-      <Section className="border-t border-line">
-        <Eyebrow>Who it connects</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-paper md:text-4xl">
-          Every party on the job, in one workflow.
-        </h2>
-        <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {roles.map((r) => (
-            <FeatureCard key={r.title} icon={r.icon} title={r.title}>
-              {r.text}
-            </FeatureCard>
-          ))}
         </div>
       </Section>
 
       <Section className="border-t border-line">
         <Eyebrow>The platform</Eyebrow>
         <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-paper md:text-4xl">
-          Everything a multi-trade project needs, consolidated.
+          Everything a growing contractor needs.
         </h2>
         <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {platformFeatures.map((f) => (
+          {pillars.map((f) => (
             <FeatureCard key={f.title} icon={f.icon} title={f.title}>
               {f.text}
             </FeatureCard>
@@ -193,36 +162,42 @@ export default function Home() {
       <Section className="border-t border-line">
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
           <div>
-            <Eyebrow>Local by design</Eyebrow>
+            <Eyebrow>Why it's different</Eyebrow>
             <h2 className="text-balance text-3xl font-semibold tracking-tight text-paper md:text-4xl">
-              Regulatory intelligence built around Los Angeles.
+              Once you rely on us, switching gets painful &mdash; in a good way.
             </h2>
             <p className="mt-5 text-base leading-relaxed text-steel">
-              LADBS processes, coastal and hillside overlays, seismic retrofit rules, and
-              jurisdiction-specific permitting quirks are baked into the platform &mdash; so
-              project teams spend less time chasing down local requirements and more time
-              building.
+              Marketing, bidding, document management, and customer relationships, all built on
+              one platform. That's how durable businesses are built: not by chasing the next
+              lead source, but by owning the entire pipeline from opportunity to award.
             </p>
-            <div className="mt-8">
-              <Button to="/platform" variant="secondary">
-                See regulatory intelligence <IconArrowRight width={16} height={16} />
-              </Button>
-            </div>
+            <ul className="mt-6 space-y-3">
+              {[
+                "Post a project or find one that fits your trade",
+                "Bid, negotiate, and award without leaving the platform",
+                "Market your business and manage every relationship in one CRM",
+              ].map((pt) => (
+                <li key={pt} className="flex items-start gap-3 text-sm text-paper/90">
+                  <IconCheck width={16} height={16} className="mt-0.5 shrink-0 text-amber" />
+                  {pt}
+                </li>
+              ))}
+            </ul>
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            {[
-              { icon: <IconMap />, label: "Jurisdiction-aware permitting" },
-              { icon: <IconShield />, label: "Code & inspection guidance" },
-              { icon: <IconChat />, label: "Real-time project chat" },
-              { icon: <IconLayers />, label: "Submittals & RFIs in one log" },
-            ].map((item, i) => (
-              <div key={i} className="rounded-xl border border-line bg-ink-2 p-5">
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber/10 text-amber">
-                  {item.icon}
+          <div className="rounded-2xl border border-line bg-ink-2 p-6">
+            <p className="text-xs uppercase tracking-wider text-steel">Solving one problem vs. the whole pipeline</p>
+            <div className="mt-4 space-y-3">
+              {competitors.map((c) => (
+                <div key={c.name} className="flex items-center justify-between rounded-lg bg-ink px-4 py-3 text-sm">
+                  <span className="font-medium text-paper">{c.name}</span>
+                  <span className="text-xs text-steel">{c.does}</span>
                 </div>
-                <p className="mt-4 text-sm font-medium text-paper">{item.label}</p>
+              ))}
+              <div className="flex items-center justify-between rounded-lg border border-amber/40 bg-amber/10 px-4 py-3 text-sm">
+                <span className="font-medium text-amber">D&amp;J Stratagem</span>
+                <span className="text-xs text-amber">Win, market, manage, and grow</span>
               </div>
-            ))}
+            </div>
           </div>
         </div>
       </Section>

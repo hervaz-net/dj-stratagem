@@ -1,28 +1,35 @@
 import Section, { Eyebrow } from "../components/Section";
 import CTASection from "../components/CTASection";
-import { IconMap, IconLink, IconShield, IconTarget } from "../components/icons";
+import { IconTarget, IconLink, IconShield, IconTrendingUp } from "../components/icons";
 
 const values = [
   {
     icon: <IconLink />,
-    title: "One hub, not another silo",
-    text: "We measure the platform by how much fragmentation it removes, not how many features it adds.",
+    title: "One platform, not another silo",
+    text: "We measure ourselves by how many disconnected tools we replace, not how many features we ship.",
+  },
+  {
+    icon: <IconTrendingUp />,
+    title: "We sell growth",
+    text: "Access to bids is table stakes. The platform exists to help contractors win work and grow revenue.",
   },
   {
     icon: <IconTarget />,
-    title: "Built for the trade, not just the GC",
-    text: "Subs, suppliers, and engineers are treated as core users, with workflows built around how they actually work.",
-  },
-  {
-    icon: <IconMap />,
-    title: "Local, on purpose",
-    text: "We focus on the Los Angeles market so regulatory and jurisdictional detail is deep, not generic.",
+    title: "Focus over feature sprawl",
+    text: "Construction software has a long history of becoming a digital junk drawer. We start with the workflows that win jobs, then expand deliberately.",
   },
   {
     icon: <IconShield />,
-    title: "Trust runs through the platform",
-    text: "Every match, bid, and change order is traceable, so project teams can move fast without losing accountability.",
+    title: "Trust runs through everything",
+    text: "Verified licenses, transparent bid histories, and vendor ratings — so both sides of every deal can move fast with confidence.",
   },
+];
+
+const competitors = [
+  { name: "PlanHub", does: "Finding bids" },
+  { name: "Dodge Construction Network", does: "Project leads" },
+  { name: "BuildingConnected", does: "Bid invitations" },
+  { name: "ConstructConnect", does: "Project intelligence" },
 ];
 
 export default function About() {
@@ -31,12 +38,12 @@ export default function About() {
       <Section className="pt-16 pb-8 md:pt-24">
         <Eyebrow>About D&amp;J Stratagem</Eyebrow>
         <h1 className="text-balance max-w-3xl text-4xl font-semibold leading-tight tracking-tight text-paper sm:text-5xl">
-          Consolidating how Los Angeles builds.
+          The operating system for construction growth.
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-steel">
-          D&amp;J Stratagem, Inc. builds the platform that connects general contractors,
-          subcontractors, suppliers, and engineers on complex multi-trade construction projects
-          across the Los Angeles area.
+          D&amp;J Stratagem, Inc. builds the platform where contractors win work, market their
+          business, manage relationships, and grow revenue &mdash; from the first opportunity to
+          the final invoice.
         </p>
       </Section>
 
@@ -45,42 +52,38 @@ export default function About() {
           <div>
             <Eyebrow>Why we exist</Eyebrow>
             <h2 className="text-balance text-3xl font-semibold tracking-tight text-paper md:text-4xl">
-              Construction runs on too many disconnected systems.
+              Every competitor solves one problem.
             </h2>
             <p className="mt-5 text-base leading-relaxed text-steel">
-              A single multi-trade job can touch a dozen tools and just as many spreadsheets:
-              bids in email, schedules in one app, submittals in another, and suppliers finding
-              out about changes last. That fragmentation costs time and money on every project,
-              and it compounds as jobs get more complex.
+              Contractors today stitch together plan rooms, lead services, bid tools, CRMs,
+              and marketing agencies &mdash; and none of them talk to each other. The result is
+              double entry, missed follow-ups, and opportunities that die in an inbox.
             </p>
+            <div className="mt-6 space-y-3">
+              {competitors.map((c) => (
+                <div key={c.name} className="flex items-center justify-between rounded-lg border border-line bg-ink-2 px-4 py-3 text-sm">
+                  <span className="font-medium text-paper">{c.name}</span>
+                  <span className="text-xs text-steel">{c.does}</span>
+                </div>
+              ))}
+            </div>
           </div>
           <div>
             <Eyebrow>What we build</Eyebrow>
             <h2 className="text-balance text-3xl font-semibold tracking-tight text-paper md:text-4xl">
-              A single platform for the whole project team.
+              The whole pipeline, opportunity to award.
             </h2>
             <p className="mt-5 text-base leading-relaxed text-steel">
-              We built D&amp;J Stratagem to bring bidding, procurement, project management, and
-              coordination into one place, with intelligent matching, specialized workflows by
-              trade, and local regulatory intelligence, so every party on a job works from the
-              same information.
+              We built D&amp;J Stratagem to be the platform a contractor runs their growth on:
+              bidding and awards, marketing and lead generation, CRM and estimating, documents
+              and e-signatures &mdash; with AI woven through all of it.
+            </p>
+            <p className="mt-4 text-base leading-relaxed text-steel">
+              That's a stronger promise than access to bid listings. We're selling growth:
+              win more projects, build bigger business.
             </p>
           </div>
         </div>
-      </Section>
-
-      <Section className="border-t border-line">
-        <Eyebrow>Why Los Angeles</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-paper md:text-4xl">
-          We focus on one market so we can go deep, not wide.
-        </h2>
-        <p className="mt-5 max-w-2xl text-base leading-relaxed text-steel">
-          Los Angeles construction runs through a specific set of jurisdictions, permitting
-          processes, and code requirements, from LADBS to coastal and hillside overlays. Rather
-          than build a generic national tool, we built the platform around the realities of
-          building in LA, so regulatory guidance and sub-supplier networks are grounded in the
-          market our customers actually work in.
-        </p>
       </Section>
 
       <Section className="border-t border-line">
@@ -102,8 +105,8 @@ export default function About() {
       </Section>
 
       <CTASection
-        title="Let's talk about your next project."
-        subtitle="We're always glad to hear how multi-trade teams in LA are running their jobs today."
+        title="Let's talk about your growth."
+        subtitle="We're always glad to hear how contractors are winning work today — and where the process still hurts."
       />
     </>
   );
