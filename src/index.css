@@ -3,18 +3,18 @@
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
 
-  --color-ink: #0e1420;
-  --color-ink-2: #161e2e;
-  --color-ink-3: #202a3d;
-  --color-line: #2a3549;
+  --color-ink: #f5f5f7;
+  --color-ink-2: #ffffff;
+  --color-ink-3: #f5f5f7;
+  --color-line: #e5e5e7;
 
-  --color-paper: #f7f5f0;
-  --color-paper-2: #eeebe3;
+  --color-paper: #1d1d1f;
+  --color-paper-2: #424245;
 
-  --color-amber: #ff7a1a;
-  --color-amber-2: #ffa94d;
+  --color-amber: #0071e3;
+  --color-amber-2: #34c759;
 
-  --color-steel: #7c8aa5;
+  --color-steel: #86868b;
 }
 
 html {
@@ -23,7 +23,8 @@ html {
 
 body {
   margin: 0;
-  background-color: var(--color-ink);
+  background: linear-gradient(135deg, #f5f5f7 0%, #ffffff 50%, #f0f0f2 100%);
+  background-attachment: fixed;
   color: var(--color-paper);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
@@ -31,16 +32,24 @@ body {
 
 ::selection {
   background: var(--color-amber);
-  color: var(--color-ink);
+  color: white;
 }
 
 .bg-grid {
   background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
   background-size: 44px 44px;
 }
 
 .text-balance {
   text-wrap: balance;
+}
+
+/* Apple-inspired glassmorphism */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
 }

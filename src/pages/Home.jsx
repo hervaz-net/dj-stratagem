@@ -84,11 +84,6 @@ export default function Home() {
               <span className="flex items-center gap-2"><IconTrendingUp width={16} height={16} className="text-amber" /> Grow revenue, not just win bids</span>
             </div>
           </div>
-
-          <div className="relative rounded-2xl border border-line/30 overflow-hidden h-96 shadow-2xl shadow-black/20">
-            <div className="absolute inset-0 bg-gradient-to-br from-orange-200 via-white to-orange-300 blur-3xl opacity-50" />
-            <div className="absolute inset-0 backdrop-blur-[100px] bg-white/10 border border-white/20" />
-          </div>
         </div>
       </Section>
 
@@ -164,36 +159,14 @@ export default function Home() {
               ))}
             </ul>
           </div>
-          <div className="relative rounded-2xl border border-line/30 overflow-hidden h-96 shadow-2xl shadow-black/20">
-            <div className="absolute inset-0 bg-gradient-to-br from-orange-200 via-white to-orange-300 blur-3xl opacity-50" />
-            <div className="absolute inset-0 backdrop-blur-[100px] bg-white/10 border border-white/20" />
-          </div>
         </div>
       </Section>
 
       <Section className="border-t border-line">
-        <Eyebrow>Explore our features</Eyebrow>
+        <Eyebrow>Everything you need</Eyebrow>
         <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-paper md:text-4xl">
-          Everything built with modern design.
+          Designed for contractors who are serious about growth.
         </h2>
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="relative rounded-2xl border border-line/30 overflow-hidden h-72 shadow-2xl shadow-black/20">
-            <div className="absolute inset-0 bg-gradient-to-br from-orange-200 via-white to-orange-300 blur-3xl opacity-50" />
-            <div className="absolute inset-0 backdrop-blur-[100px] bg-white/10 border border-white/20" />
-          </div>
-          <div className="relative rounded-2xl border border-line/30 overflow-hidden h-72 shadow-2xl shadow-black/20">
-            <div className="absolute inset-0 bg-gradient-to-br from-orange-300 via-white to-orange-200 blur-3xl opacity-50" />
-            <div className="absolute inset-0 backdrop-blur-[100px] bg-white/10 border border-white/20" />
-          </div>
-          <div className="relative rounded-2xl border border-line/30 overflow-hidden h-72 shadow-2xl shadow-black/20">
-            <div className="absolute inset-0 bg-gradient-to-br from-orange-200 via-white to-orange-400 blur-3xl opacity-50" />
-            <div className="absolute inset-0 backdrop-blur-[100px] bg-white/10 border border-white/20" />
-          </div>
-          <div className="relative rounded-2xl border border-line/30 overflow-hidden h-72 shadow-2xl shadow-black/20">
-            <div className="absolute inset-0 bg-gradient-to-br from-orange-300 via-white to-orange-100 blur-3xl opacity-50" />
-            <div className="absolute inset-0 backdrop-blur-[100px] bg-white/10 border border-white/20" />
-          </div>
-        </div>
       </Section>
 
       <CTASection />

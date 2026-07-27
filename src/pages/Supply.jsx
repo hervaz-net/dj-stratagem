@@ -260,23 +260,6 @@ export default function Supply() {
         </div>
       </Section>
 
-      <Section className="border-t border-line">
-        <Eyebrow>Real projects. Real materials.</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-paper md:text-4xl">
-          See how Supply Exchange works in practice.
-        </h2>
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="relative rounded-2xl border border-line/30 overflow-hidden h-72 shadow-2xl shadow-black/20">
-            <div className="absolute inset-0 bg-gradient-to-br from-orange-300 via-white to-orange-200 blur-3xl opacity-50" />
-            <div className="absolute inset-0 backdrop-blur-[100px] bg-white/10 border border-white/20" />
-          </div>
-          <div className="relative rounded-2xl border border-line/30 overflow-hidden h-72 shadow-2xl shadow-black/20">
-            <div className="absolute inset-0 bg-gradient-to-br from-orange-200 via-white to-orange-400 blur-3xl opacity-50" />
-            <div className="absolute inset-0 backdrop-blur-[100px] bg-white/10 border border-white/20" />
-          </div>
-        </div>
-      </Section>
-
       <CTASection
         title="Stop overpaying for the things you buy every week."
         subtitle="See how Supply Exchange prices your standing materials list — bring a recent PO and we'll walk it through."
