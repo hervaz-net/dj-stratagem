@@ -157,3 +157,39 @@ export const IconTrendingUp = (p) => (
     <path d="M15 6h6v6" />
   </svg>
 );
+
+export const IconTool = (p) => (
+  <svg {...common} {...p}>
+    <path d="M15.5 3.5a5 5 0 0 0-6.1 6.6L3.6 15.9a2 2 0 0 0 2.8 2.8l5.8-5.8a5 5 0 0 0 6.6-6.1l-2.9 2.9-2.6-.7-.7-2.6z" />
+  </svg>
+);
+
+export const IconPackage = (p) => (
+  <svg {...common} {...p}>
+    <path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z" />
+    <path d="M4 7.5l8 4.5 8-4.5M12 12v9" />
+    <path d="M8 5.2l8 4.6" />
+  </svg>
+);
+
+export const IconBolt = (p) => (
+  <svg {...common} {...p}>
+    <circle cx="7.5" cy="7.5" r="3.5" />
+    <path d="M7.5 4v7M4 7.5h7" />
+    <path d="M10.2 10.2l9 9M17 18.5l2.5-2.5" />
+  </svg>
+);
+
+export const IconScale = (p) => (
+  <svg {...common} {...p}>
+    <path d="M12 4v16M7 20h10" />
+    <path d="M4 8h16M4 8l-2.5 5a3 3 0 0 0 5 0L4 8zM20 8l-2.5 5a3 3 0 0 0 5 0L20 8z" />
+  </svg>
+);
+
+export const IconLock = (p) => (
+  <svg {...common} {...p}>
+    <rect x="4.5" y="10.5" width="15" height="9.5" rx="2" />
+    <path d="M8 10.5V7.5a4 4 0 0 1 8 0v3" />
+  </svg>
+);

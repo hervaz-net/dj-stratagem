@@ -19,6 +19,7 @@ export default function Footer() {
             <ul className="mt-4 space-y-3 text-sm">
               <li><Link to="/platform" className="text-paper/80 hover:text-amber">Platform</Link></li>
               <li><Link to="/solutions" className="text-paper/80 hover:text-amber">Solutions</Link></li>
+              <li><Link to="/supply" className="text-paper/80 hover:text-amber">Supply Exchange</Link></li>
               <li><Link to="/pricing" className="text-paper/80 hover:text-amber">Pricing</Link></li>
               <li><Link to="/contact" className="text-paper/80 hover:text-amber">Request a demo</Link></li>
             </ul>

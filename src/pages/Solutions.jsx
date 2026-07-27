@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Section, { Eyebrow } from "../components/Section";
 import CTASection from "../components/CTASection";
-import { IconBuilding, IconHelmet, IconCheck } from "../components/icons";
+import { IconBuilding, IconHelmet, IconTruck, IconCheck } from "../components/icons";
 
 const roles = [
   {
@@ -30,6 +30,19 @@ const roles = [
       "Bid analytics and a follow-up CRM so opportunities never go cold",
     ],
   },
+  {
+    key: "supplier",
+    icon: <IconTruck />,
+    label: "Suppliers",
+    title: "Compete on what you're actually good at.",
+    text: "Distributors and manufacturers quote into Supply Exchange without getting dragged into a margin-destroying bid war. Sealed quotes, scored awards, and pooled demand mean fewer, larger, better orders.",
+    points: [
+      "Sealed single-round quotes — competitors never see your number",
+      "Win on lead time, fill rate, and reliability, not just lowest price",
+      "Floor pricing per SKU so a quote is never scored below your margin",
+      "Pooled contractor demand delivers larger committed POs",
+    ],
+  },
 ];
 
 export default function Solutions() {
@@ -41,11 +54,11 @@ export default function Solutions() {
       <Section className="pt-16 pb-8 md:pt-24">
         <Eyebrow>Solutions</Eyebrow>
         <h1 className="text-balance max-w-3xl text-4xl font-semibold leading-tight tracking-tight text-paper sm:text-5xl">
-          Built for both sides of the bid.
+          Built for every side of the bid.
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-steel">
-          General contractors and subcontractors work from the same platform, with workflows
-          tailored to how each side actually wins.
+          General contractors, subcontractors, and suppliers work from the same platform, with
+          workflows tailored to how each side actually wins.
         </p>
       </Section>
 

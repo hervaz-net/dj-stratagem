@@ -1,7 +1,71 @@
 # D&J Stratagem, Inc. — marketing site
 
-Marketing site for D&J Stratagem's construction bidding, procurement, and project
-coordination platform. Built with React, Vite, React Router, and Tailwind CSS v4.
+Marketing site for D&J Stratagem: **the operating system for construction growth**.
+Helps contractors win more work, market their business, source materials, and manage the
+entire bidding pipeline from opportunity to award.
+
+Tagline: **Win More Projects. Build Bigger Business.**
+
+Built with React, Vite, React Router, and Tailwind CSS v4. Live at
+[djstratageminc.com](https://djstratageminc.com).
+
+## Pages
+
+| Route | Purpose |
+| --- | --- |
+| `/` | Positioning, the six platform pillars, competitive framing |
+| `/platform` | Deep dive on all six suites |
+| `/solutions` | Tabbed by audience: general contractors, subcontractors, suppliers |
+| `/supply` | Supply Exchange — B2B materials sourcing and its bidding model |
+| `/pricing` | Starter / Professional / Growth / Enterprise, plus add-ons |
+| `/about` | Mission and positioning vs. PlanHub, Dodge, BuildingConnected, ConstructConnect |
+| `/contact` | Demo request form (see below) |
+| `*` | 404 page |
+
+### The six platform suites
+
+1. **For general contractors** — post projects, invite subs, compare bids, manage RFIs and
+   addenda, track deadlines, award contracts, rate vendor performance.
+2. **For subcontractors** — trade-matched projects, digital bids, profile and portfolio,
+   license/insurance verification, bid analytics, follow-up CRM.
+3. **Marketing suite** — SEO profiles, lead gen, AI proposals, email/SMS campaigns, Google
+   Business Profile, reviews and reputation, social content.
+4. **Supply Exchange** — sourcing for always-in-demand materials (see below).
+5. **Business tools** — CRM, estimating, invoicing, change orders, document management,
+   e-signatures, team collaboration, mobile app with field notifications.
+6. **AI features** — project matching, bid competitiveness prediction, proposal drafts,
+   plan/spec analysis, missing-document detection, pipeline forecasting.
+
+## Supply Exchange: the bidding model
+
+Supply Exchange sources commodity construction materials — fasteners and hardware, power
+tools, electrical, lumber and slabs, metal plate/rod/structural, plumbing PVC and fittings,
+plumbing hardware, safety consumables.
+
+It deliberately **avoids a conventional open reverse auction**. Multi-round bid wars destroy
+supplier margin, which comes back as substitutions, short shipments, and slipped dates — and
+iterative bidding takes days that a materials order doesn't have.
+
+Instead, four mechanisms:
+
+- **Sealed single-round quotes.** Suppliers can't see competitors' numbers and can't re-bid,
+  so there's no undercutting spiral.
+- **Multi-factor scored awards.** The buyer sets weights across price, lead time, fill rate,
+  delivery, and past performance. Best total score wins, not the lowest line.
+- **Auto-award at deadline.** A fixed bid window (hours, not days) closes and the system
+  awards automatically.
+- **Line-item split awards.** Award different lines to different suppliers to get a 100% fill
+  instead of a partial fill from the cheapest bidder.
+
+Two mechanisms take repeat volume off the bidding table entirely:
+
+- **Standing price books** — tiered contract pricing that stays live for frequently reordered
+  SKUs; bidding happens on the price book periodically, not per purchase order.
+- **Pooled demand** — same-SKU demand aggregated across contractors to reach volume tiers a
+  small shop couldn't reach alone, while the supplier gets one large committed block.
+
+Supplier-side protections: per-SKU floor pricing, non-price win paths, larger committed POs,
+and performance ratings that compound into better future matching.
 
 ## Development
 
@@ -16,57 +80,70 @@ npm run dev
 npm run build
 ```
 
-Outputs to `dist/`. That folder is a complete static site: HTML/CSS/JS plus
-two files copied straight from `public/`:
+Outputs to `dist/`. That folder is a complete static site: HTML/CSS/JS plus three files copied
+straight from `public/`:
 
-- **`.htaccess`** — Apache rewrite rules so client-side routes like `/platform`
-  or `/contact` load correctly on direct visit/refresh, and sets long cache
-  lifetimes for assets.
-- **`contact.php`** — server-side handler for the contact form (see below).
+- **`.htaccess`** — Apache/LiteSpeed rewrite rules so client-side routes load correctly on
+  direct visit or refresh, plus long cache lifetimes for hashed assets.
+- **`contact.php`** — server-side handler for the contact form.
+- **`robots.txt`** / **`sitemap.xml`** — kept in sync with the routes above.
 
-## Deploying on Namecheap (domain + shared hosting)
+## Deployment
 
-1. **Buy the right hosting plan.** Use a **Shared Hosting** plan (Stellar,
-   Stellar Plus, or Stellar Business) — these give you cPanel, PHP, and file
-   access. Do **not** use EasyWP; that's managed WordPress hosting and won't
-   run this site or `contact.php` properly.
-2. If the domain and hosting are bought together, Namecheap links them
-   automatically. If the domain was registered separately, point its
-   nameservers at the hosting account from the domain's **Domain List →
-   Manage → Nameservers** page (Namecheap's hosting welcome email has the
-   exact nameserver values). DNS changes can take up to a few hours to
-   propagate, occasionally longer.
-3. In **cPanel → MultiPHP Manager**, make sure the domain is set to a current
-   PHP version (8.1+ is fine).
-4. Run `npm run build` locally, then upload the **contents** of `dist/`
-   (not the folder itself) into `public_html/` (or the subfolder for that
-   domain, if it's an addon domain) using cPanel's **File Manager** or an FTP
-   client such as FileZilla. Your FTP/cPanel credentials come from the
-   hosting welcome email — I can't log in on your behalf, since entering
-   passwords for you isn't something I'll do, but I'm glad to walk through
-   any step.
-5. In **cPanel → SSL/TLS Status**, run **AutoSSL** if the domain doesn't
-   already show a valid free SSL certificate, so the site serves over
-   `https://`.
-6. Visit the domain and click through all five pages, then submit the
-   contact form to confirm mail delivery (see below).
+Hosted on **Namecheap Stellar shared hosting** (cPanel + LiteSpeed), deployed via cPanel's
+Git Version Control.
+
+Two branches:
+
+- **`main`** — source of truth. Full source tree.
+- **`deploy`** — build output only (the contents of `dist/`) plus `.cpanel.yml`. This is the
+  branch cPanel checks out, so the server never needs Node or a build step.
+
+### Shipping a change
+
+```bash
+npm run build
+```
+
+Then refresh the `deploy` branch with the new `dist/` contents and push it. From a scratch
+clone of `deploy`: replace everything except `.git`, copy in `dist/`, restore `.cpanel.yml`,
+commit, push.
+
+`.cpanel.yml` runs on deploy:
+
+```yaml
+---
+deployment:
+  tasks:
+    - /usr/bin/rsync -a --delete --exclude='.git' --exclude='.cpanel.yml' ./ /home/djstlime/public_html/
+```
+
+Finally, in cPanel → **Git™ Version Control** → the `dj-stratagem` repo → **Pull or Deploy**:
+click **Update from Remote**, then **Deploy HEAD Commit**.
+
+> Note: `rsync --delete` briefly empties `public_html` mid-sync. A request during that window
+> can return a directory listing or 404s. Re-check ~10 seconds after deploying before
+> concluding something broke.
 
 ### Contact form
 
-The Contact page posts to `/contact.php`, a same-origin PHP script that
-validates the fields and sends the submission via PHP's `mail()` to
-**yeheca@icloud.com**, with the submitter's address set as `Reply-To` so you
-can respond directly. It also checks a hidden honeypot field (`bot-field`)
-and silently discards anything that fills it in, as basic bot filtering.
+The Contact page posts to `/contact.php`, a same-origin PHP script that validates fields and
+sends via PHP `mail()` to the configured destination address, with the submitter as `Reply-To`.
+A hidden honeypot field (`bot-field`) silently discards bot submissions.
 
-This only works once uploaded to real PHP hosting — running `npm run dev`
-locally has no PHP runtime, so local submissions will fail with a fetch
-error (expected; the error state in the UI is what you'll see).
+This only works on real PHP hosting — `npm run dev` has no PHP runtime, so local submissions
+fail with a fetch error and surface the form's error state. That's expected.
 
-**Deliverability note:** shared-hosting `mail()` sends are sometimes flagged
-as spam depending on the host's reputation and whether SPF/DKIM are set up
-for the domain. If demo requests aren't arriving, check the destination
-inbox's spam folder first. If it's unreliable, the fix is to send through an
-authenticated mailbox on the domain (e.g. create `noreply@yourdomain.com` in
-cPanel and switch `contact.php` from `mail()` to SMTP via that mailbox) —
-happy to wire that up once the domain is live.
+**Deliverability:** shared-hosting `mail()` is sometimes spam-filtered. If demo requests aren't
+arriving, check spam first. The durable fix is sending through an authenticated mailbox on the
+domain (create one in cPanel, switch `contact.php` from `mail()` to SMTP).
+
+## Outstanding
+
+- **SSL is not yet issued.** `https://` fails; the site currently serves over HTTP only.
+  Namecheap Stellar includes free AutoSSL, which validates over port 80 — that was broken
+  during initial setup, so issuance kept failing. It should provision on a subsequent AutoSSL
+  run now that HTTP works; if not, ask Namecheap support to trigger AutoSSL for the account.
+  Once issued, add an HTTPS redirect to `.htaccess`.
+- Pricing figures are placeholders pending a real pricing decision.
+- Screenshots/mock panels throughout the site are illustrative, not live product.

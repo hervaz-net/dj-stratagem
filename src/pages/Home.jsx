@@ -7,6 +7,7 @@ import {
   IconHelmet,
   IconMegaphone,
   IconBriefcase,
+  IconPackage,
   IconSparkle,
   IconArrowRight,
   IconBuilding,
@@ -31,9 +32,14 @@ const pillars = [
     text: "SEO-optimized profiles, lead generation, and AI-generated proposals that keep your pipeline full.",
   },
   {
+    icon: <IconPackage />,
+    title: "Supply Exchange",
+    text: "Source the materials you burn through every week with sealed, scored bidding — no race to the bottom.",
+  },
+  {
     icon: <IconBriefcase />,
     title: "Business tools",
-    text: "CRM, estimating, invoicing, change orders, and e-signatures in one connected workspace.",
+    text: "CRM, estimating, invoicing, change orders, and e-signatures — plus a mobile app that keeps the field in sync with the office.",
   },
   {
     icon: <IconSparkle />,

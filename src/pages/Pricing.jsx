@@ -24,11 +24,13 @@ const tiers = [
     period: "/mo",
     blurb: "For contractors ready to win consistently.",
     features: [
+      "Everything in Starter",
       "Unlimited bids and project postings",
       "Bid comparison, RFIs, and awards",
       "CRM, estimating, and invoicing",
       "Bid history and analytics",
       "AI proposal drafts",
+      "Supply Exchange RFQs with scored auto-award",
       "Premium profile placement",
     ],
     cta: "Start free trial",
@@ -45,6 +47,8 @@ const tiers = [
       "Lead generation with pay-per-lead options",
       "Featured project listings",
       "AI bid competitiveness and pipeline forecasting",
+      "AI plan and spec analysis with missing-document detection",
+      "Standing price books and pooled-demand buying",
       "Priority support",
     ],
     cta: "Start free trial",
@@ -72,6 +76,7 @@ const addOns = [
   { name: "Pay-per-lead", detail: "Buy qualified leads only when you want them." },
   { name: "Featured project listings", detail: "Put your project in front of more qualified subs." },
   { name: "Supplier advertising", detail: "Reach contractors at the moment they're buying." },
+  { name: "Supply Exchange for suppliers", detail: "Quote into sealed RFQs with floor pricing that protects your margin." },
   { name: "CRM & AI add-ons", detail: "Scale up automation as your team grows." },
 ];
 
@@ -84,8 +89,8 @@ export default function Pricing() {
           Plans that pay for themselves with one won bid.
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-steel">
-          Start free, upgrade when you're ready to grow. Every paid plan includes a free trial
-          &mdash; no credit card required.
+          Start free, upgrade when you're ready to grow. Professional and Growth include a free
+          trial &mdash; no credit card required. Enterprise starts with a guided pilot.
         </p>
       </Section>
 

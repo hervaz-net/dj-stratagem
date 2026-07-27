@@ -5,6 +5,7 @@ import {
   IconHelmet,
   IconMegaphone,
   IconBriefcase,
+  IconPackage,
   IconSparkle,
   IconCheck,
 } from "../components/icons";
@@ -73,6 +74,28 @@ const modules = [
         { label: "Profile views", value: "1,284", tag: "+38%" },
         { label: "New leads", value: "23", tag: "+9" },
         { label: "Review rating", value: "4.8 / 5", tag: "62 reviews" },
+      ],
+    },
+  },
+  {
+    icon: <IconPackage />,
+    eyebrow: "Supply Exchange",
+    title: "Buy materials without the race to the bottom.",
+    text: "Fasteners, lumber, conduit, PVC, plate, and power tools sourced through sealed, scored bidding — fast enough for a same-day order, structured so good suppliers keep quoting you.",
+    points: [
+      "Sealed single-round quotes — no undercutting spiral",
+      "Awards scored on price, lead time, fill rate, and past performance",
+      "Auto-award when the bid window closes",
+      "Split awards by line item for a 100% fill",
+      "Standing price books for the SKUs you reorder weekly",
+      "Pooled demand across contractors to reach volume tiers",
+    ],
+    panel: {
+      title: "RFQ · Fasteners & hardware",
+      rows: [
+        { label: "Metro Supply Co.", value: "Score 94 · 2-day", tag: "Awarded" },
+        { label: "Ironline Distribution", value: "Score 89 · same-day", tag: "Partial" },
+        { label: "Cardinal Hardware", value: "Score 81 · 4-day", tag: "Quoted" },
       ],
     },
   },
@@ -150,7 +173,7 @@ export default function Platform() {
           One platform to win work, market your business, and grow revenue.
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-steel">
-          Five connected suites replace the patchwork of point tools contractors juggle today
+          Six connected suites replace the patchwork of point tools contractors juggle today
           &mdash; from the first opportunity to the final invoice.
         </p>
       </Section>
