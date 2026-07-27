@@ -56,3 +56,28 @@ body {
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.5);
 }
+
+/* Interactive button enhancements */
+button, a[class*="inline-flex"] {
+  position: relative;
+}
+
+button:focus-visible, a[class*="inline-flex"]:focus-visible {
+  outline: 2px solid var(--color-amber);
+  outline-offset: 2px;
+}
+
+/* Smooth transitions */
+button, a {
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Hover lift effect */
+button:not(:disabled):hover, a[class*="inline-flex"]:hover {
+  transform: translateY(-2px);
+}
+
+/* Active press effect */
+button:active:not(:disabled), a[class*="inline-flex"]:active {
+  transform: translateY(0px);
+}
