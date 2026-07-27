@@ -86,33 +86,11 @@ export default function Home() {
           </div>
 
           <div className="relative">
-            <div className="rounded-2xl border border-line bg-ink-2 p-6 shadow-2xl shadow-black/40">
-              <div className="flex items-center justify-between border-b border-line pb-4">
-                <div>
-                  <p className="text-xs uppercase tracking-wider text-steel">Active bid package</p>
-                  <p className="mt-1 font-medium text-paper">7420 Alameda &mdash; Mixed Use Podium</p>
-                </div>
-                <span className="rounded-full bg-amber/10 px-3 py-1 text-xs font-medium text-amber">Open</span>
-              </div>
-              <div className="mt-4 space-y-3">
-                {[
-                  { trade: "Structural Steel", subs: 6, status: "3 bids in" },
-                  { trade: "Electrical", subs: 9, status: "Matching" },
-                  { trade: "Mechanical", subs: 5, status: "2 bids in" },
-                  { trade: "Glazing", subs: 4, status: "Awarded" },
-                ].map((row) => (
-                  <div key={row.trade} className="flex items-center justify-between rounded-lg bg-ink px-4 py-3 text-sm">
-                    <div>
-                      <p className="font-medium text-paper">{row.trade}</p>
-                      <p className="text-xs text-steel">{row.subs} subs matched</p>
-                    </div>
-                    <span className={`text-xs font-medium ${row.status === "Awarded" ? "text-amber" : "text-steel"}`}>
-                      {row.status}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <img 
+              src="/images/dj-stratagem-hero.jpg" 
+              alt="Construction site with DJ Stratagem branding" 
+              className="rounded-2xl border border-line shadow-2xl shadow-black/40 w-full object-cover h-96"
+            />
             <div className="pointer-events-none absolute -bottom-8 -right-8 -z-10 h-40 w-40 rounded-full bg-amber/20 blur-3xl" />
           </div>
         </div>
@@ -190,21 +168,36 @@ export default function Home() {
               ))}
             </ul>
           </div>
-          <div className="rounded-2xl border border-line bg-ink-2 p-6">
-            <p className="text-xs uppercase tracking-wider text-steel">Solving one problem vs. the whole pipeline</p>
-            <div className="mt-4 space-y-3">
-              {competitors.map((c) => (
-                <div key={c.name} className="flex items-center justify-between rounded-lg bg-ink px-4 py-3 text-sm">
-                  <span className="font-medium text-paper">{c.name}</span>
-                  <span className="text-xs text-steel">{c.does}</span>
-                </div>
-              ))}
-              <div className="flex items-center justify-between rounded-lg border border-amber/40 bg-amber/10 px-4 py-3 text-sm">
-                <span className="font-medium text-amber">D&amp;J Stratagem</span>
-                <span className="text-xs text-amber">Win, market, manage, and grow</span>
-              </div>
-            </div>
-          </div>
+          <img 
+            src="/images/construction-team.jpg" 
+            alt="Construction team collaborating on site" 
+            className="rounded-2xl border border-line w-full object-cover h-96"
+          />
+        </div>
+      </Section>
+
+      <Section className="border-t border-line">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <img 
+            src="/images/construction-crane.jpg" 
+            alt="Urban construction with crane" 
+            className="rounded-2xl border border-line w-full object-cover h-72"
+          />
+          <img 
+            src="/images/construction-workers.jpg" 
+            alt="Construction workers on high-rise" 
+            className="rounded-2xl border border-line w-full object-cover h-72"
+          />
+          <img 
+            src="/images/construction-sunset.jpg" 
+            alt="Construction site at sunset" 
+            className="rounded-2xl border border-line w-full object-cover h-72"
+          />
+          <img 
+            src="/images/construction-large-site.jpg" 
+            alt="Large construction site with multiple cranes" 
+            className="rounded-2xl border border-line w-full object-cover h-72"
+          />
         </div>
       </Section>
 

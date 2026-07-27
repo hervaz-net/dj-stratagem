@@ -253,17 +253,30 @@ export default function Supply() {
               </Button>
             </div>
           </div>
-          <div className="rounded-2xl border border-line bg-ink-2 p-6">
-            <p className="text-xs uppercase tracking-wider text-steel">Supplier protections</p>
-            <ul className="mt-4 space-y-4">
-              {supplierProtections.map((p) => (
-                <li key={p} className="flex items-start gap-3 text-sm text-paper/90">
-                  <IconCheck width={16} height={16} className="mt-0.5 shrink-0 text-amber" />
-                  {p}
-                </li>
-              ))}
-            </ul>
-          </div>
+          <img 
+            src="/images/construction-dust.jpg" 
+            alt="Active construction site" 
+            className="rounded-2xl border border-line w-full object-cover h-96"
+          />
+        </div>
+      </Section>
+
+      <Section className="border-t border-line">
+        <Eyebrow>Real projects. Real materials.</Eyebrow>
+        <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+          See how Supply Exchange works in practice.
+        </h2>
+        <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
+          <img 
+            src="/images/construction-rain.jpg" 
+            alt="Construction site in challenging weather" 
+            className="rounded-2xl border border-line w-full object-cover h-72"
+          />
+          <img 
+            src="/images/dj-stratagem-brand.jpg" 
+            alt="DJ Stratagem branding on construction site" 
+            className="rounded-2xl border border-line w-full object-cover h-72"
+          />
         </div>
       </Section>
 
