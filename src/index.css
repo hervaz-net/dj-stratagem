@@ -23,11 +23,14 @@ html {
 
 body {
   margin: 0;
-  background: linear-gradient(135deg, #f5f5f7 0%, #ffffff 50%, #f0f0f2 100%);
+  background: linear-gradient(135deg, rgba(255, 140, 70, 0.15) 0%, rgba(255, 200, 120, 0.1) 50%, rgba(255, 160, 90, 0.15) 100%);
+  background-color: #fef5f0;
   background-attachment: fixed;
   color: var(--color-paper);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 ::selection {
