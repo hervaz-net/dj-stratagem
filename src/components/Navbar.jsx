@@ -38,7 +38,10 @@ export default function Navbar() {
           ))}
         </nav>
 
-        <div className="hidden md:block">
+        <div className="hidden items-center gap-3 md:flex">
+          <Button to="/login" variant="secondary">
+            Sign In
+          </Button>
           <Button to="/contact" variant="primary">
             Request a demo
           </Button>
@@ -74,9 +77,14 @@ export default function Navbar() {
                 {l.label}
               </NavLink>
             ))}
-            <Button to="/contact" variant="primary" className="mt-2 w-full" onClick={() => setOpen(false)}>
-              Request a demo
-            </Button>
+            <div className="flex flex-col gap-2 pt-2">
+              <Button to="/login" variant="secondary" className="w-full" onClick={() => setOpen(false)}>
+                Sign In
+              </Button>
+              <Button to="/contact" variant="primary" className="w-full" onClick={() => setOpen(false)}>
+                Request a demo
+              </Button>
+            </div>
           </nav>
         </div>
       )}
