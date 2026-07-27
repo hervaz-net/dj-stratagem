@@ -85,13 +85,9 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="relative">
-            <img 
-              src="/images/dj-stratagem-hero.jpg" 
-              alt="Construction site with DJ Stratagem branding" 
-              className="rounded-2xl border border-line shadow-2xl shadow-black/40 w-full object-cover h-96"
-            />
-            <div className="pointer-events-none absolute -bottom-8 -right-8 -z-10 h-40 w-40 rounded-full bg-amber/20 blur-3xl" />
+          <div className="relative rounded-2xl border border-line/30 overflow-hidden h-96 shadow-2xl shadow-black/20">
+            <div className="absolute inset-0 bg-gradient-to-br from-orange-200 via-white to-orange-300 blur-3xl opacity-50" />
+            <div className="absolute inset-0 backdrop-blur-[100px] bg-white/10 border border-white/20" />
           </div>
         </div>
       </Section>
@@ -168,36 +164,35 @@ export default function Home() {
               ))}
             </ul>
           </div>
-          <img 
-            src="/images/construction-team.jpg" 
-            alt="Construction team collaborating on site" 
-            className="rounded-2xl border border-line w-full object-cover h-96"
-          />
+          <div className="relative rounded-2xl border border-line/30 overflow-hidden h-96 shadow-2xl shadow-black/20">
+            <div className="absolute inset-0 bg-gradient-to-br from-orange-200 via-white to-orange-300 blur-3xl opacity-50" />
+            <div className="absolute inset-0 backdrop-blur-[100px] bg-white/10 border border-white/20" />
+          </div>
         </div>
       </Section>
 
       <Section className="border-t border-line">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <img 
-            src="/images/construction-crane.jpg" 
-            alt="Urban construction with crane" 
-            className="rounded-2xl border border-line w-full object-cover h-72"
-          />
-          <img 
-            src="/images/construction-workers.jpg" 
-            alt="Construction workers on high-rise" 
-            className="rounded-2xl border border-line w-full object-cover h-72"
-          />
-          <img 
-            src="/images/construction-sunset.jpg" 
-            alt="Construction site at sunset" 
-            className="rounded-2xl border border-line w-full object-cover h-72"
-          />
-          <img 
-            src="/images/construction-large-site.jpg" 
-            alt="Large construction site with multiple cranes" 
-            className="rounded-2xl border border-line w-full object-cover h-72"
-          />
+        <Eyebrow>Explore our features</Eyebrow>
+        <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+          Everything built with modern design.
+        </h2>
+        <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="relative rounded-2xl border border-line/30 overflow-hidden h-72 shadow-2xl shadow-black/20">
+            <div className="absolute inset-0 bg-gradient-to-br from-orange-200 via-white to-orange-300 blur-3xl opacity-50" />
+            <div className="absolute inset-0 backdrop-blur-[100px] bg-white/10 border border-white/20" />
+          </div>
+          <div className="relative rounded-2xl border border-line/30 overflow-hidden h-72 shadow-2xl shadow-black/20">
+            <div className="absolute inset-0 bg-gradient-to-br from-orange-300 via-white to-orange-200 blur-3xl opacity-50" />
+            <div className="absolute inset-0 backdrop-blur-[100px] bg-white/10 border border-white/20" />
+          </div>
+          <div className="relative rounded-2xl border border-line/30 overflow-hidden h-72 shadow-2xl shadow-black/20">
+            <div className="absolute inset-0 bg-gradient-to-br from-orange-200 via-white to-orange-400 blur-3xl opacity-50" />
+            <div className="absolute inset-0 backdrop-blur-[100px] bg-white/10 border border-white/20" />
+          </div>
+          <div className="relative rounded-2xl border border-line/30 overflow-hidden h-72 shadow-2xl shadow-black/20">
+            <div className="absolute inset-0 bg-gradient-to-br from-orange-300 via-white to-orange-100 blur-3xl opacity-50" />
+            <div className="absolute inset-0 backdrop-blur-[100px] bg-white/10 border border-white/20" />
+          </div>
         </div>
       </Section>
 

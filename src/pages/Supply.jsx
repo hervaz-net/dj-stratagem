@@ -253,11 +253,10 @@ export default function Supply() {
               </Button>
             </div>
           </div>
-          <img 
-            src="/images/construction-dust.jpg" 
-            alt="Active construction site" 
-            className="rounded-2xl border border-line w-full object-cover h-96"
-          />
+          <div className="relative rounded-2xl border border-line/30 overflow-hidden h-96 shadow-2xl shadow-black/20">
+            <div className="absolute inset-0 bg-gradient-to-br from-orange-200 via-white to-orange-300 blur-3xl opacity-50" />
+            <div className="absolute inset-0 backdrop-blur-[100px] bg-white/10 border border-white/20" />
+          </div>
         </div>
       </Section>
 
@@ -267,16 +266,14 @@ export default function Supply() {
           See how Supply Exchange works in practice.
         </h2>
         <div className="mt-12 grid grid-cols-1 md:grid-cols-2 gap-6">
-          <img 
-            src="/images/construction-rain.jpg" 
-            alt="Construction site in challenging weather" 
-            className="rounded-2xl border border-line w-full object-cover h-72"
-          />
-          <img 
-            src="/images/dj-stratagem-brand.jpg" 
-            alt="DJ Stratagem branding on construction site" 
-            className="rounded-2xl border border-line w-full object-cover h-72"
-          />
+          <div className="relative rounded-2xl border border-line/30 overflow-hidden h-72 shadow-2xl shadow-black/20">
+            <div className="absolute inset-0 bg-gradient-to-br from-orange-300 via-white to-orange-200 blur-3xl opacity-50" />
+            <div className="absolute inset-0 backdrop-blur-[100px] bg-white/10 border border-white/20" />
+          </div>
+          <div className="relative rounded-2xl border border-line/30 overflow-hidden h-72 shadow-2xl shadow-black/20">
+            <div className="absolute inset-0 bg-gradient-to-br from-orange-200 via-white to-orange-400 blur-3xl opacity-50" />
+            <div className="absolute inset-0 backdrop-blur-[100px] bg-white/10 border border-white/20" />
+          </div>
         </div>
       </Section>
 
