@@ -31,6 +31,10 @@
   --color-paper-2: var(--text-strong);
   --color-steel: var(--text-muted);
 
+  /* Same intent as the orange accent fix on main, kept indirect so the dark
+     theme can swap it. The literals live in :root / [data-theme] below and
+     are darker than #f97316, which is only ~3:1 on white — short of 4.5:1
+     for the body text, eyebrows, and links that use this token. */
   --color-amber: var(--accent);
   --color-amber-2: var(--accent-hover);
   --color-brand: var(--brand);

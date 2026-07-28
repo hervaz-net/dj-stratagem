@@ -73,7 +73,10 @@ export default function Navbar() {
           <Logo />
         </NavLink>
 
-        <nav className="hidden items-center gap-7 md:flex" aria-label="Main">
+        {/* lg:, not md: — six nav items overlap the actions at the md
+            breakpoint (fixed on main in 3d0f2fd), and the theme toggle
+            added here makes that row tighter still. */}
+        <nav className="hidden items-center gap-6 lg:flex" aria-label="Main">
           {links.map((l) => (
             <NavLink
               key={l.to}
@@ -91,7 +94,7 @@ export default function Navbar() {
           ))}
         </nav>
 
-        <div className="hidden items-center gap-3 md:flex">
+        <div className="hidden items-center gap-3 lg:flex">
           <ThemeToggle />
           <Button to="/login" variant="secondary" size="sm">
             Sign In
@@ -101,7 +104,7 @@ export default function Navbar() {
           </Button>
         </div>
 
-        <div className="flex items-center gap-2 md:hidden">
+        <div className="flex items-center gap-2 lg:hidden">
           <ThemeToggle />
           <button
             ref={toggleRef}
@@ -126,7 +129,7 @@ export default function Navbar() {
       {open && (
         <div
           id="mobile-menu"
-          className="animate-menu-in border-t border-line bg-ink px-6 pb-6 md:hidden"
+          className="animate-menu-in border-t border-line bg-ink px-6 pb-6 lg:hidden"
         >
           <nav className="flex flex-col gap-1 pt-3" aria-label="Mobile">
             {links.map((l) => (
