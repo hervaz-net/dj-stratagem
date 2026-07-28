@@ -172,10 +172,9 @@ domain (create one in cPanel, switch `contact.php` from `mail()` to SMTP).
   during initial setup, so issuance kept failing. It should provision on a subsequent AutoSSL
   run now that HTTP works; if not, ask Namecheap support to trigger AutoSSL for the account.
   Once issued, add an HTTPS redirect to `.htaccess`.
-- **`/login` has no backend.** The form validates input and shows a "contact us"
-  message; it never authenticates, and credentials are not logged or persisted.
-  Wire it to a real endpoint before advertising the route. It is `noindex` and
-  disallowed in `robots.txt` in the meantime.
+- **Auth is built but must stay off until SSL is issued.** See Authentication
+  below — `require_https` refuses to serve the endpoints over plaintext HTTP,
+  which is correct and deliberate. Do not disable it to "get it working".
 - Pricing figures are placeholders pending a real pricing decision. The annual
   toggle derives its numbers from a flat 20% discount constant in `Pricing.jsx`.
 - Screenshots/mock panels throughout the site are illustrative, not live product.
@@ -186,8 +185,8 @@ domain (create one in cPanel, switch `contact.php` from `mail()` to SMTP).
 sparklines, progress rings, a market ticker, a filter bar with dual range
 sliders, and a supplier table with risk gauges. `/dashboard` redirects to it.
 
-It is `noindex` and **not access-controlled** — `/login` still has no backend,
-so anyone with the URL can reach it. Gate it before advertising the route.
+It is `noindex` and gated: `/dashboard/*` redirects to `/login` without a
+session. The route guard is a convenience — the server is the real boundary.
 
 ### Wiring it to a real API
 
@@ -223,3 +222,83 @@ On a failed poll the last good data stays on screen with a retry prompt.
 
 Exact shapes and the fixture data live in `src/api/suppliers.js` and
 `src/api/fixtures.js`.
+
+## Authentication
+
+`/login` and `/register` are backed by PHP endpoints under `public/api/`,
+matching the existing `contact.php` pattern. Accounts are **approval-gated**:
+registering creates a `pending` row that cannot sign in until an admin activates
+it.
+
+| Endpoint | Method | Purpose |
+| --- | --- | --- |
+| `/api/me.php` | GET | Current user (or `null`) + a CSRF token |
+| `/api/register.php` | POST | Creates a `pending` account |
+| `/api/login.php` | POST | Authenticates an `active` account, starts a session |
+| `/api/logout.php` | POST | Destroys the session |
+
+### ⚠️ Do not enable before HTTPS
+
+`require_https` is `true` by default and the endpoints return `403
+https_required` over plaintext. This is deliberate: passwords and session
+cookies sent over HTTP are readable by anyone on the network path, and the
+session cookie's `Secure` flag means it won't be sent at all. **Get AutoSSL
+issued first** (see Outstanding), then this starts working on its own.
+
+Set `require_https` to `false` only for local development against
+`http://localhost`.
+
+### Server setup
+
+1. **Create the database** — cPanel → MySQL® Databases. Create a database and a
+   user, and grant the user all privileges on it. cPanel prefixes both with your
+   account name (e.g. `djstlime_djs`).
+
+2. **Import the schema** — phpMyAdmin → your database → Import →
+   `public_html/api/schema.sql`.
+
+3. **Create the config above the docroot:**
+
+   ```bash
+   cp public_html/api/config.example.php ~/djs-config.php
+   chmod 600 ~/djs-config.php
+   ```
+
+   Fill in the database credentials. It lives outside `public_html` on purpose:
+   nothing there is web-reachable even if PHP breaks, and the deploy's
+   `rsync --delete` can't wipe it. `bootstrap.php` also accepts a `DJS_CONFIG`
+   env var, or `api/config.php` for local development (gitignored).
+
+### Approving an account
+
+Registration emails the address in `admin_email`. To activate:
+
+```sql
+UPDATE users SET status = 'active', approved_at = UTC_TIMESTAMP()
+ WHERE email = 'person@example.com';
+```
+
+`status` is `pending` | `active` | `suspended`. Only `active` can sign in;
+suspending takes effect on the user's next request, not their next login.
+
+### Security properties
+
+- Passwords hashed with `password_hash()` (bcrypt by default), rehashed on
+  login when the algorithm default moves.
+- **No user enumeration.** Login returns one message for unknown-email and
+  wrong-password, and always runs a hash comparison so response time doesn't
+  differ. Register returns the same response whether or not the address exists.
+- **Throttled** on two axes — failures per email and per IP, default 5 and 20 in
+  a 15-minute window. Only failures count.
+- Session cookie is `HttpOnly`, `SameSite=Lax`, and `Secure` under HTTPS. The ID
+  is regenerated on login to defeat fixation.
+- CSRF token required on every state-changing request.
+- `api/.htaccess` denies direct access to `config.php`, `bootstrap.php`, and
+  `schema.sql`, so a broken PHP handler can't serve credentials as plaintext.
+- DB errors are logged server-side and returned to the client as a generic
+  `server_error` — no driver messages or SQL reach the browser.
+
+### Not built yet
+
+Password reset, email verification of the registrant's own address, "remember
+me", and an admin UI for approvals (approval is a SQL update today).

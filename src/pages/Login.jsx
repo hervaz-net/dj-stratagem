@@ -1,44 +1,59 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import Button from "../components/Button";
 import Logo from "../components/Logo";
 import Seo from "../components/Seo";
+import PasswordField from "../components/PasswordField";
+import useAuth from "../auth/useAuth";
 
 export default function Login() {
+  const { user, loading, login } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [invalid, setInvalid] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const errorId = "login-error";
 
-  const handleSubmit = (e) => {
+  // Send an already-authenticated visitor onward rather than showing the form.
+  const destination = location.state?.from ?? "/dashboard/suppliers";
+  if (!loading && user) return <Navigate to={destination} replace />;
+
+  const fail = (field, message) => {
+    setInvalid(field);
+    setError(message);
+    document.getElementById(field)?.focus();
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setInvalid(null);
 
-    // Flag the offending field and move focus to it, so a screen-reader user
-    // gets more than a generic message with no idea which input to fix.
-    const fail = (field, message) => {
-      setInvalid(field);
-      setError(message);
-      document.getElementById(field)?.focus();
-    };
+    if (!email) return fail("email", "Enter your email address.");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return fail("email", "Enter a valid email address.");
+    }
+    if (!password) return fail("password", "Enter your password.");
 
-    if (!email) return fail("email", "Please enter your email address.");
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
-      return fail("email", "Please enter a valid email address.");
-    if (!password) return fail("password", "Please enter your password.");
-
-    setLoading(true);
-
-    // TODO: replace with the real authentication endpoint. Credentials are
-    // deliberately never logged or persisted here.
-    window.setTimeout(() => {
-      setLoading(false);
-      setError("Accounts aren't open yet. Contact us and we'll get you set up.");
-    }, 500);
+    setSubmitting(true);
+    try {
+      await login(email, password);
+      navigate(destination, { replace: true });
+    } catch (err) {
+      setError(err.message);
+      // Focus the email field for a credentials failure so a retry is one
+      // keystroke away; leave focus alone for server-side problems.
+      if (err.code === "invalid_credentials") {
+        setInvalid("email");
+        document.getElementById("email")?.focus();
+      }
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const inputClass =
@@ -47,11 +62,7 @@ export default function Login() {
 
   return (
     <>
-      <Seo
-        title="Sign in"
-        description="Sign in to your D&J Stratagem account."
-        noindex
-      />
+      <Seo title="Sign in" description="Sign in to your D&J Stratagem account." noindex />
 
       <div className="mx-auto flex w-full max-w-md flex-col justify-center px-6 py-16 md:py-24">
         <div className="rounded-2xl border border-line bg-ink-2 p-8 shadow-xl shadow-brand/5">
@@ -76,49 +87,20 @@ export default function Login() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
                 aria-invalid={invalid === "email" ? true : undefined}
-                aria-describedby={invalid === "email" ? errorId : undefined}
+                aria-describedby={error ? errorId : undefined}
                 className={inputClass}
               />
             </div>
 
-            <div>
-              <label htmlFor="password" className="mb-2 block text-sm font-medium text-paper">
-                Password
-              </label>
-              <div className="relative">
-                <input
-                  id="password"
-                  name="password"
-                  type={showPassword ? "text" : "password"}
-                  autoComplete="current-password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  aria-invalid={invalid === "password" ? true : undefined}
-                  aria-describedby={invalid === "password" ? errorId : undefined}
-                  className={`${inputClass} pr-12`}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword((v) => !v)}
-                  aria-label={showPassword ? "Hide password" : "Show password"}
-                  aria-pressed={showPassword}
-                  className="absolute inset-y-0 right-0 flex w-11 items-center justify-center text-steel transition-colors hover:text-amber"
-                >
-                  {showPassword ? (
-                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M3 3l18 18M10.6 10.7a2 2 0 0 0 2.8 2.8" />
-                      <path d="M9.4 5.3A9.7 9.7 0 0 1 12 5c5 0 9 4.5 9 7a12 12 0 0 1-2.4 3.4M6.2 6.6C4 8.1 3 10.4 3 12c0 2.5 4 7 9 7a9.6 9.6 0 0 0 3.6-.7" />
-                    </svg>
-                  ) : (
-                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M3 12c0-2.5 4-7 9-7s9 4.5 9 7-4 7-9 7-9-4.5-9-7z" />
-                      <circle cx="12" cy="12" r="2.6" />
-                    </svg>
-                  )}
-                </button>
-              </div>
-            </div>
+            <PasswordField
+              id="password"
+              label="Password"
+              autoComplete="current-password"
+              value={password}
+              onChange={setPassword}
+              invalid={invalid === "password"}
+              describedBy={error ? errorId : undefined}
+            />
 
             <div aria-live="polite" role="status" id={errorId}>
               {error && (
@@ -128,8 +110,8 @@ export default function Login() {
               )}
             </div>
 
-            <Button type="submit" variant="primary" className="mt-2 w-full" disabled={loading}>
-              {loading ? "Signing in…" : "Sign in"}
+            <Button type="submit" variant="primary" className="mt-2 w-full" disabled={submitting}>
+              {submitting ? "Signing in…" : "Sign in"}
             </Button>
           </form>
 
@@ -144,15 +126,15 @@ export default function Login() {
             </div>
             <p className="text-center text-sm text-steel">
               Don&rsquo;t have an account?{" "}
-              <Link to="/contact" className="font-medium text-amber hover:text-amber-2">
-                Contact us for access
+              <Link to="/register" className="font-medium text-amber hover:text-amber-2">
+                Request access
               </Link>
             </p>
           </div>
         </div>
 
         <p className="mt-8 text-center text-xs text-steel">
-          This is a secure login portal for D&amp;J Stratagem platform users.
+          Accounts are approved by our team before first sign-in.
         </p>
       </div>
     </>

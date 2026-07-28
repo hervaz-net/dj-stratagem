@@ -27,3 +27,7 @@ dist-ssr
 # never commit credentials
 .cpanel_token
 *.token
+
+# Server-only auth config — holds database credentials
+public/api/config.php
+dist/api/config.php

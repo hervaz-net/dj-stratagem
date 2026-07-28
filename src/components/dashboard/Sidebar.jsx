@@ -1,6 +1,8 @@
-import { NavLink } from "react-router-dom";
+import { useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 import StatusDot from "./StatusDot";
 import Logo from "../Logo";
+import useAuth from "../../auth/useAuth";
 
 /* `ready: false` sections have no route yet — they render as disabled rather
    than as links that would drop the user on the marketing 404. */
@@ -55,6 +57,20 @@ function ItemIcon({ item }) {
  * dashboard stays navigable on a tablet without a second menu.
  */
 export default function Sidebar() {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const [signingOut, setSigningOut] = useState(false);
+
+  const signOut = async () => {
+    setSigningOut(true);
+    try {
+      await logout();
+      navigate("/login", { replace: true });
+    } finally {
+      setSigningOut(false);
+    }
+  };
+
   return (
     <aside className="no-print lg:sticky lg:top-0 lg:h-screen lg:w-[15.5rem] lg:shrink-0">
       <div className="panel flex h-full flex-col gap-1 rounded-none border-x-0 border-t-0 px-3 py-3 lg:rounded-r-2xl lg:border-x lg:border-t lg:px-4 lg:py-6">
@@ -116,6 +132,29 @@ export default function Sidebar() {
               Supplier feeds syncing on schedule.
             </p>
           </div>
+
+          {user && (
+            <div className="mt-3 rounded-xl border border-line bg-ink/60 p-3">
+              <p className="truncate text-xs font-semibold text-paper" title={user.name}>
+                {user.name}
+              </p>
+              <p className="truncate text-xs text-steel" title={user.company}>
+                {user.company}
+              </p>
+              <button
+                type="button"
+                onClick={signOut}
+                disabled={signingOut}
+                className="mt-2.5 inline-flex items-center gap-1.5 text-xs font-semibold text-amber transition-colors hover:text-amber-2 disabled:opacity-60"
+              >
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                  <path d="M16 17l5-5-5-5M21 12H9" />
+                </svg>
+                {signingOut ? "Signing out…" : "Sign out"}
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </aside>

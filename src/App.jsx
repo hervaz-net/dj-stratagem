@@ -11,8 +11,11 @@ import Pricing from "./pages/Pricing";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
 import SuppliersDashboard from "./pages/dashboard/Suppliers";
+import { AuthProvider } from "./auth/AuthContext";
+import RequireAuth from "./auth/RequireAuth";
 
 function ScrollToTop() {
   const { pathname, hash } = useLocation();
@@ -68,19 +71,25 @@ function DashboardShell({ children }) {
 
 function App() {
   return (
-    <>
+    <AuthProvider>
       <ScrollToTop />
       <Routes>
         <Route
           path="/dashboard"
-          element={<Navigate to="/dashboard/suppliers" replace />}
+          element={
+            <RequireAuth>
+              <Navigate to="/dashboard/suppliers" replace />
+            </RequireAuth>
+          }
         />
         <Route
           path="/dashboard/suppliers"
           element={
-            <DashboardShell>
-              <SuppliersDashboard />
-            </DashboardShell>
+            <RequireAuth>
+              <DashboardShell>
+                <SuppliersDashboard />
+              </DashboardShell>
+            </RequireAuth>
           }
         />
 
@@ -92,9 +101,10 @@ function App() {
         <Route path="/about" element={<MarketingLayout><About /></MarketingLayout>} />
         <Route path="/contact" element={<MarketingLayout><Contact /></MarketingLayout>} />
         <Route path="/login" element={<MarketingLayout><Login /></MarketingLayout>} />
+        <Route path="/register" element={<MarketingLayout><Register /></MarketingLayout>} />
         <Route path="*" element={<MarketingLayout><NotFound /></MarketingLayout>} />
       </Routes>
-    </>
+    </AuthProvider>
   );
 }
 
