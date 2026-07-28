@@ -179,3 +179,47 @@ domain (create one in cPanel, switch `contact.php` from `mail()` to SMTP).
 - Pricing figures are placeholders pending a real pricing decision. The annual
   toggle derives its numbers from a flat 20% discount constant in `Pricing.jsx`.
 - Screenshots/mock panels throughout the site are illustrative, not live product.
+
+## Suppliers dashboard
+
+`/dashboard/suppliers` is an internal-style screen: glassmorphic cards, live
+sparklines, progress rings, a market ticker, a filter bar with dual range
+sliders, and a supplier table with risk gauges. `/dashboard` redirects to it.
+
+It is `noindex` and **not access-controlled** — `/login` still has no backend,
+so anyone with the URL can reach it. Gate it before advertising the route.
+
+### Wiring it to a real API
+
+Data access lives in `src/api/`. Set `VITE_API_BASE_URL` and the screen
+switches from fixtures to live data with no component changes:
+
+```bash
+VITE_API_BASE_URL=https://api.example.com npm run dev
+```
+
+Three endpoints are expected. Each may return a bare array or a wrapped object
+(`{ suppliers: [...] }`):
+
+| Endpoint | Returns |
+| --- | --- |
+| `GET /suppliers` | `Supplier[]` |
+| `GET /metrics` | `Metric[]` |
+| `GET /market-ticker` | `TickerItem[]` |
+
+```
+Supplier   { id, name, category, region, riskScore (0-100, higher = worse),
+             deliveryRate (0-100), fillRate, leadTimeDays,
+             status: "active"|"watch"|"at-risk", openOrders, spendYtd,
+             trend: number[] }
+Metric     { id, label, value, unit?, prefix?, delta, ring?,
+             accent: "blue"|"cyan"|"red"|"gold", series: number[] }
+TickerItem { id, label, change }
+```
+
+Requests send `credentials: "include"`, assuming cookie sessions. Suppliers and
+metrics poll every 30s, the ticker every 15s; polling pauses on a hidden tab.
+On a failed poll the last good data stays on screen with a retry prompt.
+
+Exact shapes and the fixture data live in `src/api/suppliers.js` and
+`src/api/fixtures.js`.

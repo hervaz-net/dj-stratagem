@@ -72,6 +72,20 @@
   --glass-bg: rgba(255, 255, 255, 0.68);
   --glass-border: rgba(255, 255, 255, 0.6);
   --shadow-color: 20 12 4;
+
+  /* Dashboard: data accents. Chosen to stay distinguishable in both themes
+     and to hold up for the colour-blind — they differ in lightness, not just
+     hue, and every use is paired with a label or shape. */
+  --viz-blue: #2563eb;
+  --viz-cyan: #0e7490;
+  --viz-red: #c2334a;
+  --viz-gold: #a16207;
+  --viz-green: #157f4a;
+
+  --panel-bg: rgba(255, 255, 255, 0.72);
+  --panel-border: rgba(255, 255, 255, 0.75);
+  --panel-glow: rgba(255, 122, 26, 0.16);
+  --panel-shadow: 0 10px 30px -12px rgba(20, 12, 4, 0.28);
 }
 
 [data-theme="dark"] {
@@ -102,6 +116,17 @@
   --glass-bg: rgba(30, 30, 36, 0.68);
   --glass-border: rgba(255, 255, 255, 0.08);
   --shadow-color: 0 0 0;
+
+  --viz-blue: #60a5fa;
+  --viz-cyan: #22d3ee;
+  --viz-red: #fb7185;
+  --viz-gold: #fbbf24;
+  --viz-green: #4ade80;
+
+  --panel-bg: rgba(28, 28, 35, 0.66);
+  --panel-border: rgba(255, 255, 255, 0.1);
+  --panel-glow: rgba(255, 122, 26, 0.2);
+  --panel-shadow: 0 14px 40px -14px rgba(0, 0, 0, 0.7);
 }
 
 /* --------------------------------------------------------------------------- */
@@ -291,9 +316,123 @@ body {
   animation: float-slow 7s ease-in-out infinite;
 }
 
+/* ---------------------------------------------------------------------------
+   Dashboard surfaces
+--------------------------------------------------------------------------- */
+
+/* Frosted panel with a luminous rim. The rim is a masked gradient border via
+   two backgrounds, so it stays crisp at any radius without a wrapper element. */
+.panel {
+  position: relative;
+  background: var(--panel-bg);
+  backdrop-filter: saturate(150%) blur(18px);
+  -webkit-backdrop-filter: saturate(150%) blur(18px);
+  border: 1px solid var(--panel-border);
+  box-shadow: var(--panel-shadow);
+}
+
+.panel-lum::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    140deg,
+    color-mix(in srgb, var(--brand) 55%, transparent),
+    transparent 42%,
+    transparent 62%,
+    color-mix(in srgb, var(--viz-cyan) 42%, transparent)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Soft bloom behind an element, used on the primary action button. */
+.glow-brand {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--brand) 35%, transparent),
+    0 8px 24px -6px color-mix(in srgb, var(--brand) 55%, transparent),
+    0 0 36px -8px color-mix(in srgb, var(--brand) 45%, transparent);
+}
+
+.glow-brand:hover {
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--brand) 55%, transparent),
+    0 10px 30px -6px color-mix(in srgb, var(--brand) 70%, transparent),
+    0 0 52px -8px color-mix(in srgb, var(--brand) 60%, transparent);
+}
+
+@keyframes status-pulse {
+  0% {
+    box-shadow: 0 0 0 0 var(--pulse-color, rgba(34, 197, 94, 0.55));
+  }
+  70% {
+    box-shadow: 0 0 0 7px rgba(0, 0, 0, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+  }
+}
+
+.pulse-dot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  animation: status-pulse 2.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes ticker-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    /* The track renders its items twice; -50% lands on the seam. */
+    transform: translateX(-50%);
+  }
+}
+
+.ticker-track {
+  animation: ticker-scroll 42s linear infinite;
+}
+
+.ticker-viewport:hover .ticker-track,
+.ticker-viewport:focus-within .ticker-track {
+  animation-play-state: paused;
+}
+
+@keyframes sheen {
+  from {
+    transform: translateX(-120%);
+  }
+  to {
+    transform: translateX(320%);
+  }
+}
+
+.animate-sheen {
+  animation: sheen 2.4s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  /* The live-data affordances are decorative; freeze them rather than let
+     them run at 0.01ms, which would strobe. */
+  .ticker-track,
+  .pulse-dot::after,
+  .animate-sheen {
+    animation: none !important;
   }
 
   *,
