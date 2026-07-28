@@ -13,7 +13,6 @@ const ANNUAL_DISCOUNT = 0.2;
 const tiers = [
   {
     name: "Starter",
-    price: "Free",
     monthly: 0,
     period: "",
     blurb: "For subs getting started — build a profile and find work.",
@@ -28,7 +27,6 @@ const tiers = [
   },
   {
     name: "Professional",
-    price: "$99",
     monthly: 99,
     period: "/mo",
     blurb: "For contractors ready to win consistently.",
@@ -47,7 +45,6 @@ const tiers = [
   },
   {
     name: "Growth",
-    price: "$249",
     monthly: 249,
     period: "/mo",
     blurb: "For firms that treat marketing as a growth engine.",
@@ -66,7 +63,6 @@ const tiers = [
   },
   {
     name: "Enterprise",
-    price: "Custom",
     monthly: null,
     period: "",
     blurb: "For large contractors with teams, volume, and integrations.",

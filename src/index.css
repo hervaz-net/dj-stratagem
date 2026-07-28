@@ -182,10 +182,14 @@ body {
    themes. `:focus-visible` only, so mouse users never see it.
 --------------------------------------------------------------------------- */
 
-:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-  border-radius: 4px;
+/* Must live in `base` — an unlayered rule outranks every Tailwind utility,
+   so a stray border-radius here would square off `rounded-full` on focus.
+   The outline follows the element's own radius, so none is set. */
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
 }
 
 /* ---------------------------------------------------------------------------
@@ -309,13 +313,23 @@ body {
   }
 }
 
-/* Native form controls follow the theme instead of rendering system-light. */
-input,
-select,
-textarea,
-button {
-  font: inherit;
-  color: inherit;
+/* Native form controls follow the theme instead of rendering system-light.
+   Layered, and deliberately no `color: inherit` — unlayered it beat every
+   text-color utility, so `text-white` on a primary <button> lost to the
+   inherited body color. Inputs opt in individually. */
+@layer base {
+  input,
+  select,
+  textarea,
+  button {
+    font: inherit;
+  }
+
+  input,
+  select,
+  textarea {
+    color: inherit;
+  }
 }
 
 /* Print: drop the fixed gradient and chrome so pages print legibly. */

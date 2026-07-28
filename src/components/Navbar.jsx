@@ -28,7 +28,9 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Close the mobile menu on navigation.
+  // Close the mobile menu on navigation. Tapping a link for the route you're
+  // already on doesn't change `pathname`, so links close it directly too.
+  const close = () => setOpen(false);
   useEffect(() => setOpen(false), [pathname]);
 
   // Escape closes the menu and returns focus to the button that opened it.
@@ -131,6 +133,7 @@ export default function Navbar() {
               <NavLink
                 key={l.to}
                 to={l.to}
+                onClick={close}
                 className={({ isActive }) =>
                   `rounded-lg px-3 py-2.5 text-base font-medium transition-colors ${
                     isActive ? "bg-amber/10 text-amber" : "text-paper hover:bg-ink-3"
@@ -141,10 +144,10 @@ export default function Navbar() {
               </NavLink>
             ))}
             <div className="mt-3 flex flex-col gap-2 border-t border-line pt-4">
-              <Button to="/login" variant="secondary" className="w-full">
+              <Button to="/login" variant="secondary" className="w-full" onClick={close}>
                 Sign In
               </Button>
-              <Button to="/contact" variant="primary" className="w-full">
+              <Button to="/contact" variant="primary" className="w-full" onClick={close}>
                 Request a demo
               </Button>
             </div>

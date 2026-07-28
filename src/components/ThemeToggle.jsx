@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 const STORAGE_KEY = "djs-theme";
+const THEME_EVENT = "djs-theme-change";
 
 function readTheme() {
   if (typeof window === "undefined") return "light";
@@ -14,8 +15,16 @@ export default function ThemeToggle({ className = "" }) {
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
-    window.localStorage.setItem(STORAGE_KEY, theme);
   }, [theme]);
+
+  // Navbar mounts this twice (desktop + mobile); both stay in the DOM with
+  // only CSS hiding one. Without this, toggling one leaves the other's icon
+  // stale after a resize across the `md` breakpoint.
+  useEffect(() => {
+    const sync = () => setTheme(readTheme());
+    window.addEventListener(THEME_EVENT, sync);
+    return () => window.removeEventListener(THEME_EVENT, sync);
+  }, []);
 
   // Follow the OS until the visitor makes an explicit choice.
   useEffect(() => {
@@ -27,12 +36,21 @@ export default function ThemeToggle({ className = "" }) {
     return () => mq.removeEventListener("change", onChange);
   }, []);
 
+  // Persist only on an explicit choice. Writing the inferred theme on mount
+  // would make the guard above permanently false, so OS changes would stop
+  // being followed after the very first render.
+  const chooseTheme = (next) => {
+    window.localStorage.setItem(STORAGE_KEY, next);
+    setTheme(next);
+    window.dispatchEvent(new Event(THEME_EVENT));
+  };
+
   const isDark = theme === "dark";
 
   return (
     <button
       type="button"
-      onClick={() => setTheme(isDark ? "light" : "dark")}
+      onClick={() => chooseTheme(isDark ? "light" : "dark")}
       className={`flex h-9 w-9 items-center justify-center rounded-full border border-line bg-ink-2 text-steel transition-colors hover:border-amber/50 hover:text-amber ${className}`}
       aria-label={`Switch to ${isDark ? "light" : "dark"} theme`}
       title={`Switch to ${isDark ? "light" : "dark"} theme`}

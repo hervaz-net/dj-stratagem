@@ -6,6 +6,7 @@ import HeroPanel from "../components/HeroPanel";
 import Reveal from "../components/Reveal";
 import Accordion from "../components/Accordion";
 import StatCounter from "../components/StatCounter";
+import CompetitorList from "../components/CompetitorList";
 import Seo from "../components/Seo";
 import {
   IconGavel,
@@ -51,13 +52,6 @@ const pillars = [
     title: "AI built in",
     text: "Match to the right projects, predict bid competitiveness, and draft proposals in minutes, not hours.",
   },
-];
-
-const competitors = [
-  { name: "PlanHub", does: "Finding bids" },
-  { name: "Dodge Construction Network", does: "Project leads" },
-  { name: "BuildingConnected", does: "Bid invitations" },
-  { name: "ConstructConnect", does: "Project intelligence" },
 ];
 
 const stats = [
@@ -182,17 +176,7 @@ export default function Home() {
               together five tools to do one job &mdash; and still handle marketing, CRM, and
               document management somewhere else entirely.
             </p>
-            <div className="mt-6 space-y-2.5">
-              {competitors.map((c) => (
-                <div
-                  key={c.name}
-                  className="flex items-center justify-between rounded-lg border border-line bg-ink-2 px-4 py-3 text-sm"
-                >
-                  <span className="font-medium text-paper">{c.name}</span>
-                  <span className="text-xs text-steel">{c.does}</span>
-                </div>
-              ))}
-            </div>
+            <CompetitorList className="mt-6" />
           </Reveal>
           <Reveal delay={120}>
             <Eyebrow>The platform</Eyebrow>

@@ -97,7 +97,9 @@ export default function Solutions() {
             return (
               <button
                 key={r.key}
-                ref={(el) => (tabRefs.current[i] = el)}
+                ref={(el) => {
+                  tabRefs.current[i] = el;
+                }}
                 type="button"
                 role="tab"
                 id={`tab-${r.key}`}

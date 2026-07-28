@@ -2,6 +2,7 @@ import Section, { Eyebrow } from "../components/Section";
 import CTASection from "../components/CTASection";
 import Reveal from "../components/Reveal";
 import Seo from "../components/Seo";
+import CompetitorList from "../components/CompetitorList";
 import { IconTarget, IconLink, IconShield, IconTrendingUp } from "../components/icons";
 
 const values = [
@@ -25,13 +26,6 @@ const values = [
     title: "Trust runs through everything",
     text: "Verified licenses, transparent bid histories, and vendor ratings — so both sides of every deal can move fast with confidence.",
   },
-];
-
-const competitors = [
-  { name: "PlanHub", does: "Finding bids" },
-  { name: "Dodge Construction Network", does: "Project leads" },
-  { name: "BuildingConnected", does: "Bid invitations" },
-  { name: "ConstructConnect", does: "Project intelligence" },
 ];
 
 export default function About() {
@@ -66,14 +60,7 @@ export default function About() {
               and marketing agencies &mdash; and none of them talk to each other. The result is
               double entry, missed follow-ups, and opportunities that die in an inbox.
             </p>
-            <div className="mt-6 space-y-3">
-              {competitors.map((c) => (
-                <div key={c.name} className="flex items-center justify-between rounded-lg border border-line bg-ink-2 px-4 py-3 text-sm">
-                  <span className="font-medium text-paper">{c.name}</span>
-                  <span className="text-xs text-steel">{c.does}</span>
-                </div>
-              ))}
-            </div>
+            <CompetitorList className="mt-6" />
           </div>
           <div>
             <Eyebrow>What we build</Eyebrow>

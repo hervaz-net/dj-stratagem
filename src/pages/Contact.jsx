@@ -61,10 +61,16 @@ export default function Contact() {
     setSubmitting(true);
     setError(false);
 
+    // Without a deadline, a hung request leaves `submitting` true forever and
+    // the button permanently disabled with no error shown.
+    const controller = new AbortController();
+    const timer = window.setTimeout(() => controller.abort(), 15000);
+
     try {
       const res = await fetch("/contact.php", {
         method: "POST",
         body: new FormData(e.target),
+        signal: controller.signal,
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok || !data.ok) throw new Error("Submission failed");
@@ -74,6 +80,7 @@ export default function Contact() {
     } catch {
       setError(true);
     } finally {
+      window.clearTimeout(timer);
       setSubmitting(false);
     }
   }

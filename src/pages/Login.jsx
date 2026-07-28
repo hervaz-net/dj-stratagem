@@ -9,21 +9,27 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [invalid, setInvalid] = useState(null);
   const [loading, setLoading] = useState(false);
+  const errorId = "login-error";
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setError("");
+    setInvalid(null);
 
-    if (!email || !password) {
-      setError("Please fill in all fields.");
-      return;
-    }
+    // Flag the offending field and move focus to it, so a screen-reader user
+    // gets more than a generic message with no idea which input to fix.
+    const fail = (field, message) => {
+      setInvalid(field);
+      setError(message);
+      document.getElementById(field)?.focus();
+    };
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setError("Please enter a valid email address.");
-      return;
-    }
+    if (!email) return fail("email", "Please enter your email address.");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+      return fail("email", "Please enter a valid email address.");
+    if (!password) return fail("password", "Please enter your password.");
 
     setLoading(true);
 
@@ -69,6 +75,8 @@ export default function Login() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
+                aria-invalid={invalid === "email" ? true : undefined}
+                aria-describedby={invalid === "email" ? errorId : undefined}
                 className={inputClass}
               />
             </div>
@@ -86,6 +94,8 @@ export default function Login() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
+                  aria-invalid={invalid === "password" ? true : undefined}
+                  aria-describedby={invalid === "password" ? errorId : undefined}
                   className={`${inputClass} pr-12`}
                 />
                 <button
@@ -110,7 +120,7 @@ export default function Login() {
               </div>
             </div>
 
-            <div aria-live="polite" role="status">
+            <div aria-live="polite" role="status" id={errorId}>
               {error && (
                 <div className="rounded-md border border-danger/30 bg-danger/10 px-4 py-2.5 text-sm text-danger">
                   {error}

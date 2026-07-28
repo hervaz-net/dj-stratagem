@@ -49,6 +49,7 @@ export default function Button({
         {...rest}
       >
         {children}
+        {external && <span className="sr-only"> (opens in a new tab)</span>}
       </a>
     );
   }
