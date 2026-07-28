@@ -11,8 +11,10 @@
   --color-paper: #1d1d1f;
   --color-paper-2: #424245;
 
-  --color-amber: #0071e3;
-  --color-amber-2: #34c759;
+  /* Accent must match the orange button gradient and page tint.
+     (Was Apple blue/green, which clashed once buttons went orange.) */
+  --color-amber: #f97316;
+  --color-amber-2: #ea580c;
 
   --color-steel: #86868b;
 }
