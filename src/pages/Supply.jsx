@@ -1,6 +1,8 @@
 import Section, { Eyebrow } from "../components/Section";
 import Button from "../components/Button";
 import CTASection from "../components/CTASection";
+import Reveal from "../components/Reveal";
+import Seo from "../components/Seo";
 import {
   IconTool,
   IconBolt,
@@ -105,6 +107,11 @@ const supplierProtections = [
 export default function Supply() {
   return (
     <>
+      <Seo
+        title="Supply Exchange"
+        description="Source fasteners, lumber, conduit, PVC, plate, and power tools through sealed, scored bidding — fast enough for a same-day order, structured so suppliers stay at the table."
+      />
+
       <Section className="relative overflow-hidden pt-16 pb-8 md:pt-24">
         <div className="pointer-events-none absolute inset-0 bg-grid [mask-image:radial-gradient(ellipse_60%_60%_at_50%_0%,black,transparent)]" />
         <div className="relative">
@@ -138,14 +145,16 @@ export default function Supply() {
           where a better price and a reliable fill rate compound across every job on your board.
         </p>
         <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {categories.map((c) => (
-            <div key={c.title} className="rounded-xl border border-line bg-ink-2 p-6">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber/10 text-amber">
-                {c.icon}
+          {categories.map((c, i) => (
+            <Reveal key={c.title} delay={(i % 4) * 80} className="h-full">
+              <div className="lift h-full rounded-xl border border-line bg-ink-2 p-6 hover:border-amber/40">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber/10 text-amber">
+                  {c.icon}
+                </div>
+                <h3 className="mt-5 text-base font-semibold text-paper">{c.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-steel">{c.text}</p>
               </div>
-              <h3 className="mt-5 text-base font-semibold text-paper">{c.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-steel">{c.text}</p>
-            </div>
+            </Reveal>
           ))}
         </div>
       </Section>
@@ -253,9 +262,18 @@ export default function Supply() {
               </Button>
             </div>
           </div>
-          <div className="relative rounded-2xl border border-line/30 overflow-hidden h-96 shadow-2xl shadow-black/20">
-            <div className="absolute inset-0 bg-gradient-to-br from-orange-200 via-white to-orange-300 blur-3xl opacity-50" />
-            <div className="absolute inset-0 backdrop-blur-[100px] bg-white/10 border border-white/20" />
+          {/* Was an empty blurred gradient box; this is the supplier-protection
+              list the page describes. */}
+          <div className="rounded-2xl border border-line bg-ink-2 p-6">
+            <p className="text-xs uppercase tracking-wider text-steel">Supplier protections</p>
+            <ul className="mt-4 space-y-4">
+              {supplierProtections.map((pt) => (
+                <li key={pt} className="flex items-start gap-3 text-sm text-paper/90">
+                  <IconCheck width={16} height={16} className="mt-0.5 shrink-0 text-amber" />
+                  {pt}
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </Section>

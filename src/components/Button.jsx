@@ -1,16 +1,35 @@
 import { Link } from "react-router-dom";
 
 const base =
-  "inline-flex items-center justify-center gap-2 rounded-lg text-sm font-semibold transition-all duration-200 px-5 py-2.5 whitespace-nowrap disabled:opacity-60 disabled:cursor-not-allowed active:scale-95 hover:shadow-lg backdrop-blur-md";
+  "lift inline-flex items-center justify-center gap-2 rounded-lg font-semibold whitespace-nowrap " +
+  "disabled:opacity-60 disabled:cursor-not-allowed disabled:pointer-events-none";
 
-const variants = {
-  primary: "bg-gradient-to-br from-orange-400 to-orange-500 text-white hover:from-orange-500 hover:to-orange-600 hover:shadow-orange-300/50 active:from-orange-600 active:to-orange-700 shadow-lg shadow-orange-300/40 border border-orange-300/50",
-  secondary: "bg-white/60 text-paper border-2 border-orange-300/60 hover:bg-white/80 hover:border-orange-400 hover:shadow-orange-200/50 shadow-md shadow-orange-200/20 backdrop-blur-xl",
-  ghost: "text-paper hover:text-orange-600 hover:bg-white/50 hover:backdrop-blur-lg transition-all border border-transparent hover:border-orange-300/30",
+const sizes = {
+  sm: "px-4 py-2 text-xs",
+  md: "px-5 py-2.5 text-sm",
+  lg: "px-6 py-3 text-base",
 };
 
-export default function Button({ to, href, variant = "primary", className = "", children, ...rest }) {
-  const classes = `${base} ${variants[variant]} ${className}`;
+const variants = {
+  primary:
+    "bg-gradient-to-br from-brand to-amber-2 text-white shadow-lg shadow-brand/30 " +
+    "hover:shadow-xl hover:shadow-brand/40 hover:brightness-105",
+  secondary:
+    "bg-ink-2 text-paper border border-line shadow-sm hover:border-amber/60 hover:bg-ink-3 hover:shadow-md",
+  ghost:
+    "text-paper border border-transparent hover:text-amber hover:border-amber/30 hover:bg-amber/8",
+};
+
+export default function Button({
+  to,
+  href,
+  variant = "primary",
+  size = "md",
+  className = "",
+  children,
+  ...rest
+}) {
+  const classes = `${base} ${sizes[size] ?? sizes.md} ${variants[variant] ?? variants.primary} ${className}`;
 
   if (to) {
     return (
@@ -21,9 +40,16 @@ export default function Button({ to, href, variant = "primary", className = "", 
   }
 
   if (href) {
+    const external = /^https?:/.test(href);
     return (
-      <a href={href} className={classes} {...rest}>
+      <a
+        href={href}
+        className={classes}
+        {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+        {...rest}
+      >
         {children}
+        {external && <span className="sr-only"> (opens in a new tab)</span>}
       </a>
     );
   }

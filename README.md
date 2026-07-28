@@ -20,7 +20,11 @@ Built with React, Vite, React Router, and Tailwind CSS v4. Live at
 | `/pricing` | Starter / Professional / Growth / Enterprise, plus add-ons |
 | `/about` | Mission and positioning vs. PlanHub, Dodge, BuildingConnected, ConstructConnect |
 | `/contact` | Demo request form (see below) |
+| `/login` | Sign-in portal (placeholder auth — see below). `noindex` |
 | `*` | 404 page |
+
+Each route sets its own `<title>`, description, canonical URL, and Open Graph tags
+via the `Seo` component; `index.html` only supplies the defaults.
 
 ### The six platform suites
 
@@ -67,12 +71,35 @@ Two mechanisms take repeat volume off the bidding table entirely:
 Supplier-side protections: per-SKU floor pricing, non-price win paths, larger committed POs,
 and performance ratings that compound into better future matching.
 
+## Design system
+
+Colors are semantic tokens, not literal names — `ink` is the recessed surface,
+`ink-2` the raised card surface, `paper` the text color, `steel` muted text,
+`line` borders, and `amber` the accent. Each Tailwind token in `src/index.css`
+is declared inside `@theme inline` and resolves through a second variable
+(`--surface`, `--text`, `--accent`, …), so `[data-theme="dark"]` swaps the whole
+palette without touching a single component.
+
+Two accent tokens exist on purpose: `amber` is contrast-tuned per theme and is
+what text and icons use, while `brand` is the fixed `#ff7a1a` and is only ever
+used for fills, gradients, and glows — it fails contrast as text on white.
+
+The theme follows the OS by default and remembers an explicit choice in
+`localStorage` under `djs-theme`. A small inline script in `index.html` applies
+it before first paint so dark-theme visitors never see a white flash.
+
+Motion is opt-in via the `lift` class and the `Reveal` component rather than
+blanket `transition: all` rules, and everything collapses under
+`prefers-reduced-motion: reduce`.
+
 ## Development
 
 ```bash
 npm install
 npm run dev
 ```
+
+Lint with `npm run lint` (oxlint).
 
 ## Build
 
@@ -145,5 +172,10 @@ domain (create one in cPanel, switch `contact.php` from `mail()` to SMTP).
   during initial setup, so issuance kept failing. It should provision on a subsequent AutoSSL
   run now that HTTP works; if not, ask Namecheap support to trigger AutoSSL for the account.
   Once issued, add an HTTPS redirect to `.htaccess`.
-- Pricing figures are placeholders pending a real pricing decision.
+- **`/login` has no backend.** The form validates input and shows a "contact us"
+  message; it never authenticates, and credentials are not logged or persisted.
+  Wire it to a real endpoint before advertising the route. It is `noindex` and
+  disallowed in `robots.txt` in the meantime.
+- Pricing figures are placeholders pending a real pricing decision. The annual
+  toggle derives its numbers from a flat 20% discount constant in `Pricing.jsx`.
 - Screenshots/mock panels throughout the site are illustrative, not live product.

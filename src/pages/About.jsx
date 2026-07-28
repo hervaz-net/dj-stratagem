@@ -1,5 +1,8 @@
 import Section, { Eyebrow } from "../components/Section";
 import CTASection from "../components/CTASection";
+import Reveal from "../components/Reveal";
+import Seo from "../components/Seo";
+import CompetitorList from "../components/CompetitorList";
 import { IconTarget, IconLink, IconShield, IconTrendingUp } from "../components/icons";
 
 const values = [
@@ -25,16 +28,14 @@ const values = [
   },
 ];
 
-const competitors = [
-  { name: "PlanHub", does: "Finding bids" },
-  { name: "Dodge Construction Network", does: "Project leads" },
-  { name: "BuildingConnected", does: "Bid invitations" },
-  { name: "ConstructConnect", does: "Project intelligence" },
-];
-
 export default function About() {
   return (
     <>
+      <Seo
+        title="About"
+        description="D&J Stratagem, Inc. builds the platform where contractors win work, market their business, manage relationships, and grow revenue."
+      />
+
       <Section className="pt-16 pb-8 md:pt-24">
         <Eyebrow>About D&amp;J Stratagem</Eyebrow>
         <h1 className="text-balance max-w-3xl text-4xl font-semibold leading-tight tracking-tight text-paper sm:text-5xl">
@@ -59,14 +60,7 @@ export default function About() {
               and marketing agencies &mdash; and none of them talk to each other. The result is
               double entry, missed follow-ups, and opportunities that die in an inbox.
             </p>
-            <div className="mt-6 space-y-3">
-              {competitors.map((c) => (
-                <div key={c.name} className="flex items-center justify-between rounded-lg border border-line bg-ink-2 px-4 py-3 text-sm">
-                  <span className="font-medium text-paper">{c.name}</span>
-                  <span className="text-xs text-steel">{c.does}</span>
-                </div>
-              ))}
-            </div>
+            <CompetitorList className="mt-6" />
           </div>
           <div>
             <Eyebrow>What we build</Eyebrow>
@@ -92,14 +86,16 @@ export default function About() {
           The principles behind the platform.
         </h2>
         <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2">
-          {values.map((v) => (
-            <div key={v.title} className="rounded-xl border border-line bg-ink-2 p-6">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber/10 text-amber">
-                {v.icon}
+          {values.map((v, i) => (
+            <Reveal key={v.title} delay={(i % 2) * 100} className="h-full">
+              <div className="lift h-full rounded-xl border border-line bg-ink-2 p-6 hover:border-amber/40">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber/10 text-amber">
+                  {v.icon}
+                </div>
+                <h3 className="mt-5 text-base font-semibold text-paper">{v.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-steel">{v.text}</p>
               </div>
-              <h3 className="mt-5 text-base font-semibold text-paper">{v.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-steel">{v.text}</p>
-            </div>
+            </Reveal>
           ))}
         </div>
       </Section>
