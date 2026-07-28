@@ -22,7 +22,7 @@ export default function Navbar() {
           <Logo />
         </NavLink>
 
-        <nav className="hidden items-center gap-8 md:flex">
+        <nav className="hidden items-center gap-6 lg:flex">
           {links.map((l) => (
             <NavLink
               key={l.to}
@@ -38,7 +38,7 @@ export default function Navbar() {
           ))}
         </nav>
 
-        <div className="hidden items-center gap-3 md:flex">
+        <div className="hidden items-center gap-3 lg:flex">
           <Button to="/login" variant="secondary">
             Sign In
           </Button>
@@ -48,7 +48,7 @@ export default function Navbar() {
         </div>
 
         <button
-          className="flex h-9 w-9 items-center justify-center rounded-md border border-line text-paper md:hidden"
+          className="flex h-9 w-9 items-center justify-center rounded-md border border-line text-paper lg:hidden"
           onClick={() => setOpen((v) => !v)}
           aria-label="Toggle menu"
         >
@@ -63,7 +63,7 @@ export default function Navbar() {
       </div>
 
       {open && (
-        <div className="border-t border-line bg-ink px-6 pb-6 md:hidden">
+        <div className="border-t border-line bg-ink px-6 pb-6 lg:hidden">
           <nav className="flex flex-col gap-4 pt-4">
             {links.map((l) => (
               <NavLink
