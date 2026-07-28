@@ -1,5 +1,7 @@
 import Section, { Eyebrow } from "../components/Section";
 import CTASection from "../components/CTASection";
+import Reveal from "../components/Reveal";
+import Seo from "../components/Seo";
 import {
   IconGavel,
   IconHelmet,
@@ -145,6 +147,12 @@ const modules = [
   },
 ];
 
+const slug = (s) =>
+  s
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+
 function Panel({ panel }) {
   return (
     <div className="rounded-2xl border border-line bg-ink-2 p-6">
@@ -167,6 +175,11 @@ function Panel({ panel }) {
 export default function Platform() {
   return (
     <>
+      <Seo
+        title="Platform"
+        description="Six connected suites — bidding, subcontractor tools, marketing, Supply Exchange, business tools, and AI — replacing the patchwork of point tools contractors juggle today."
+      />
+
       <Section className="pt-16 pb-8 md:pt-24">
         <Eyebrow>The platform</Eyebrow>
         <h1 className="text-balance max-w-3xl text-4xl font-semibold leading-tight tracking-tight text-paper sm:text-5xl">
@@ -176,12 +189,25 @@ export default function Platform() {
           Six connected suites replace the patchwork of point tools contractors juggle today
           &mdash; from the first opportunity to the final invoice.
         </p>
+
+        {/* Jump links — the page runs six long sections deep. */}
+        <nav aria-label="Platform suites" className="mt-10 flex flex-wrap gap-2">
+          {modules.map((m) => (
+            <a
+              key={m.eyebrow}
+              href={`#${slug(m.eyebrow)}`}
+              className="lift rounded-full border border-line bg-ink-2 px-4 py-2 text-xs font-medium text-steel hover:border-amber/50 hover:text-amber"
+            >
+              {m.eyebrow}
+            </a>
+          ))}
+        </nav>
       </Section>
 
       {modules.map((m, i) => (
-        <Section key={m.eyebrow} className="border-t border-line">
+        <Section key={m.eyebrow} id={slug(m.eyebrow)} className="border-t border-line">
           <div className={`grid grid-cols-1 items-center gap-14 lg:grid-cols-2 ${i % 2 ? "lg:[&>*:first-child]:order-2" : ""}`}>
-            <div>
+            <Reveal>
               <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-amber/10 text-amber">
                 {m.icon}
               </div>
@@ -198,8 +224,10 @@ export default function Platform() {
                   </li>
                 ))}
               </ul>
-            </div>
-            <Panel panel={m.panel} />
+            </Reveal>
+            <Reveal delay={140}>
+              <Panel panel={m.panel} />
+            </Reveal>
           </div>
         </Section>
       ))}

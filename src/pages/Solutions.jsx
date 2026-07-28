@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Section, { Eyebrow } from "../components/Section";
 import CTASection from "../components/CTASection";
+import Seo from "../components/Seo";
 import { IconBuilding, IconHelmet, IconTruck, IconCheck } from "../components/icons";
 
 const roles = [
@@ -48,9 +49,31 @@ const roles = [
 export default function Solutions() {
   const [active, setActive] = useState(roles[0].key);
   const role = roles.find((r) => r.key === active);
+  const tabRefs = useRef([]);
+
+  // Arrow keys move between tabs, per the WAI-ARIA tabs pattern.
+  const onTabKeyDown = (e) => {
+    const index = roles.findIndex((r) => r.key === active);
+    let next = null;
+
+    if (e.key === "ArrowRight") next = (index + 1) % roles.length;
+    else if (e.key === "ArrowLeft") next = (index - 1 + roles.length) % roles.length;
+    else if (e.key === "Home") next = 0;
+    else if (e.key === "End") next = roles.length - 1;
+    else return;
+
+    e.preventDefault();
+    setActive(roles[next].key);
+    tabRefs.current[next]?.focus();
+  };
 
   return (
     <>
+      <Seo
+        title="Solutions"
+        description="Workflows built for each side of the bid — general contractors, subcontractors, and suppliers, all working from one platform."
+      />
+
       <Section className="pt-16 pb-8 md:pt-24">
         <Eyebrow>Solutions</Eyebrow>
         <h1 className="text-balance max-w-3xl text-4xl font-semibold leading-tight tracking-tight text-paper sm:text-5xl">
@@ -63,24 +86,46 @@ export default function Solutions() {
       </Section>
 
       <Section className="border-t border-line">
-        <div className="flex flex-wrap gap-3">
-          {roles.map((r) => (
-            <button
-              key={r.key}
-              onClick={() => setActive(r.key)}
-              className={`flex items-center gap-2 rounded-full border px-5 py-2.5 text-sm font-medium transition-colors ${
-                active === r.key
-                  ? "border-amber bg-amber/10 text-amber"
-                  : "border-line text-steel hover:text-paper"
-              }`}
-            >
-              {r.icon}
-              {r.label}
-            </button>
-          ))}
+        <div
+          role="tablist"
+          aria-label="Choose your role"
+          onKeyDown={onTabKeyDown}
+          className="flex flex-wrap gap-3"
+        >
+          {roles.map((r, i) => {
+            const selected = active === r.key;
+            return (
+              <button
+                key={r.key}
+                ref={(el) => (tabRefs.current[i] = el)}
+                type="button"
+                role="tab"
+                id={`tab-${r.key}`}
+                aria-selected={selected}
+                aria-controls={`panel-${r.key}`}
+                tabIndex={selected ? 0 : -1}
+                onClick={() => setActive(r.key)}
+                className={`lift flex items-center gap-2 rounded-full border px-5 py-2.5 text-sm font-medium ${
+                  selected
+                    ? "border-amber bg-amber/10 text-amber shadow-sm"
+                    : "border-line bg-ink-2 text-steel hover:border-amber/40 hover:text-paper"
+                }`}
+              >
+                {r.icon}
+                {r.label}
+              </button>
+            );
+          })}
         </div>
 
-        <div className="mt-12 grid grid-cols-1 gap-14 lg:grid-cols-2 lg:items-center">
+        <div
+          role="tabpanel"
+          id={`panel-${role.key}`}
+          aria-labelledby={`tab-${role.key}`}
+          tabIndex={0}
+          key={role.key}
+          className="animate-fade-in mt-12 grid grid-cols-1 gap-14 lg:grid-cols-2 lg:items-center"
+        >
           <div>
             <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-amber/10 text-amber">
               {role.icon}
