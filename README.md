@@ -172,10 +172,150 @@ domain (create one in cPanel, switch `contact.php` from `mail()` to SMTP).
   during initial setup, so issuance kept failing. It should provision on a subsequent AutoSSL
   run now that HTTP works; if not, ask Namecheap support to trigger AutoSSL for the account.
   Once issued, add an HTTPS redirect to `.htaccess`.
-- **`/login` has no backend.** The form validates input and shows a "contact us"
-  message; it never authenticates, and credentials are not logged or persisted.
-  Wire it to a real endpoint before advertising the route. It is `noindex` and
-  disallowed in `robots.txt` in the meantime.
+- **Auth is built but must stay off until SSL is issued.** See Authentication
+  below — `require_https` refuses to serve the endpoints over plaintext HTTP,
+  which is correct and deliberate. Do not disable it to "get it working".
 - Pricing figures are placeholders pending a real pricing decision. The annual
   toggle derives its numbers from a flat 20% discount constant in `Pricing.jsx`.
 - Screenshots/mock panels throughout the site are illustrative, not live product.
+
+## Suppliers dashboard
+
+`/dashboard/suppliers` is an internal-style screen: glassmorphic cards, live
+sparklines, progress rings, a market ticker, a filter bar with dual range
+sliders, and a supplier table with risk gauges. `/dashboard` redirects to it.
+
+It is `noindex` and gated: `/dashboard/*` redirects to `/login` without a
+session. The route guard is a convenience — the server is the real boundary.
+
+### Wiring it to a real API
+
+Data access lives in `src/api/`. Set `VITE_API_BASE_URL` and the screen
+switches from fixtures to live data with no component changes:
+
+```bash
+VITE_API_BASE_URL=https://api.example.com npm run dev
+```
+
+Three endpoints are expected. Each may return a bare array or a wrapped object
+(`{ suppliers: [...] }`):
+
+| Endpoint | Returns |
+| --- | --- |
+| `GET /suppliers` | `Supplier[]` |
+| `GET /metrics` | `Metric[]` |
+| `GET /market-ticker` | `TickerItem[]` |
+
+```
+Supplier   { id, name, category, region, riskScore (0-100, higher = worse),
+             deliveryRate (0-100), fillRate, leadTimeDays,
+             status: "active"|"watch"|"at-risk", openOrders, spendYtd,
+             trend: number[] }
+Metric     { id, label, value, unit?, prefix?, delta, ring?,
+             accent: "blue"|"cyan"|"red"|"gold", series: number[] }
+TickerItem { id, label, change }
+```
+
+Requests send `credentials: "include"`, assuming cookie sessions. Suppliers and
+metrics poll every 30s, the ticker every 15s; polling pauses on a hidden tab.
+On a failed poll the last good data stays on screen with a retry prompt.
+
+Exact shapes and the fixture data live in `src/api/suppliers.js` and
+`src/api/fixtures.js`.
+
+## Authentication
+
+`/login` and `/register` are backed by PHP endpoints under `public/api/`,
+matching the existing `contact.php` pattern. Accounts are **approval-gated**:
+registering creates a `pending` row that cannot sign in until an admin activates
+it.
+
+| Endpoint | Method | Purpose |
+| --- | --- | --- |
+| `/api/me.php` | GET | Current user (or `null`) + a CSRF token |
+| `/api/register.php` | POST | Creates a `pending` account |
+| `/api/login.php` | POST | Authenticates an `active` account, starts a session |
+| `/api/logout.php` | POST | Destroys the session |
+| `/api/admin-users.php` | GET | Lists accounts + per-status counts (admin only) |
+| `/api/admin-user-status.php` | POST | Approve / suspend / reinstate (admin only) |
+
+### ⚠️ Do not enable before HTTPS
+
+`require_https` is `true` by default and the endpoints return `403
+https_required` over plaintext. This is deliberate: passwords and session
+cookies sent over HTTP are readable by anyone on the network path, and the
+session cookie's `Secure` flag means it won't be sent at all. **Get AutoSSL
+issued first** (see Outstanding), then this starts working on its own.
+
+Set `require_https` to `false` only for local development against
+`http://localhost`.
+
+### Server setup
+
+1. **Create the database** — cPanel → MySQL® Databases. Create a database and a
+   user, and grant the user all privileges on it. cPanel prefixes both with your
+   account name (e.g. `djstlime_djs`).
+
+2. **Import the schema** — phpMyAdmin → your database → Import →
+   `public_html/api/schema.sql`.
+
+3. **Create the config above the docroot:**
+
+   ```bash
+   cp public_html/api/config.example.php ~/djs-config.php
+   chmod 600 ~/djs-config.php
+   ```
+
+   Fill in the database credentials. It lives outside `public_html` on purpose:
+   nothing there is web-reachable even if PHP breaks, and the deploy's
+   `rsync --delete` can't wipe it. `bootstrap.php` also accepts a `DJS_CONFIG`
+   env var, or `api/config.php` for local development (gitignored).
+
+### Approving an account
+
+Registration emails the address in `admin_email`. Approve or decline at
+**`/dashboard/admin`** — no SQL required.
+
+`status` is `pending` | `active` | `suspended`. Only `active` can sign in;
+suspending takes effect on the user's *next request*, not their next login, so
+a suspended user is cut off mid-session.
+
+An admin cannot suspend their own account — doing so would lock them out of the
+only screen that could undo it.
+
+### Creating the first admin
+
+The admin screen is gated on `role = 'admin'`, and registration always creates
+`role = 'member'`. Promote the first one by hand, once:
+
+```sql
+UPDATE users SET role = 'admin', status = 'active', approved_at = UTC_TIMESTAMP()
+ WHERE email = 'you@example.com';
+```
+
+After that, approvals happen in the UI. The **Accounts** item only appears in
+the sidebar for admins, but that is presentation — `admin-users.php` and
+`admin-user-status.php` reject non-admins with 403 regardless of what the
+client renders.
+
+### Security properties
+
+- Passwords hashed with `password_hash()` (bcrypt by default), rehashed on
+  login when the algorithm default moves.
+- **No user enumeration.** Login returns one message for unknown-email and
+  wrong-password, and always runs a hash comparison so response time doesn't
+  differ. Register returns the same response whether or not the address exists.
+- **Throttled** on two axes — failures per email and per IP, default 5 and 20 in
+  a 15-minute window. Only failures count.
+- Session cookie is `HttpOnly`, `SameSite=Lax`, and `Secure` under HTTPS. The ID
+  is regenerated on login to defeat fixation.
+- CSRF token required on every state-changing request.
+- `api/.htaccess` denies direct access to `config.php`, `bootstrap.php`, and
+  `schema.sql`, so a broken PHP handler can't serve credentials as plaintext.
+- DB errors are logged server-side and returned to the client as a generic
+  `server_error` — no driver messages or SQL reach the browser.
+
+### Not built yet
+
+Password reset, email verification of the registrant's own address, and
+"remember me".

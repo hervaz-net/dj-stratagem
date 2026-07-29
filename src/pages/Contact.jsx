@@ -8,7 +8,7 @@ const roleOptions = ["General Contractor", "Subcontractor", "Supplier", "Enginee
 const MESSAGE_MAX = 1000;
 
 const inputClass =
-  "w-full rounded-md border bg-ink px-3.5 py-2.5 text-sm text-paper outline-none transition-colors " +
+  "w-full rounded-md border bg-ink px-3.5 py-2.5 text-sm text-paper outline-hidden transition-colors " +
   "placeholder:text-steel/70 focus:border-amber";
 
 function validate(values) {
