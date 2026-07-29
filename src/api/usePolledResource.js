@@ -19,8 +19,13 @@ export default function usePolledResource(fetcher, { intervalMs = 30000, initial
   const [updatedAt, setUpdatedAt] = useState(null);
 
   const fetcherRef = useRef(fetcher);
-  fetcherRef.current = fetcher;
   const abortRef = useRef(null);
+
+  // Writing the ref during render would be impure: React can replay or discard
+  // a render, leaving the ref pointing at work that never committed.
+  useEffect(() => {
+    fetcherRef.current = fetcher;
+  }, [fetcher]);
 
   const load = useCallback(async () => {
     abortRef.current?.abort();

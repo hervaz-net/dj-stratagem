@@ -50,6 +50,17 @@ if ($hash === false) {
     fail(500, 'server_error');
 }
 
+/**
+ * Throttle checked after validation, deliberately: malformed submissions are
+ * rejected without touching the database, and — more importantly — a user who
+ * mistypes their email three times doesn't burn their own quota. A flooder
+ * must send well-formed payloads to reach this, which is what the cap stops.
+ */
+assert_registration_allowed();
+record_registration_attempt();
+
+$newId = null;
+
 try {
     $stmt = db()->prepare(
         'INSERT INTO users (email, password_hash, full_name, company, phone, status, created_at)
@@ -57,6 +68,7 @@ try {
     );
     $stmt->execute([$email, $hash, $fullName, $company, $phone !== '' ? $phone : null]);
     $isNew = true;
+    $newId = (int) db()->lastInsertId();
 } catch (PDOException $e) {
     // 23000 = duplicate key. Don't confirm the address exists — that would
     // turn this endpoint into an account oracle. Fall through to the same
@@ -73,14 +85,34 @@ if ($isNew) {
     global $config;
     $to      = $config['admin_email'];
     $subject = 'New D&J Stratagem account awaiting approval';
-    $body    = "A new account is pending approval.\n\n"
-             . "Name:    {$fullName}\n"
-             . "Company: {$company}\n"
-             . "Email:   {$email}\n"
-             . "Phone:   " . ($phone !== '' ? $phone : '—') . "\n\n"
-             . "Approve with:\n"
-             . "  UPDATE users SET status='active', approved_at=UTC_TIMESTAMP() WHERE email='{$email}';\n";
-    @mail($to, $subject, $body, "From: no-reply@djstratageminc.com\r\nContent-Type: text/plain; charset=UTF-8");
+
+    /**
+     * The approval command references the row by integer id, never by the
+     * submitted email. FILTER_VALIDATE_EMAIL accepts quoted local-parts
+     * containing an apostrophe, so interpolating the address into a
+     * copy-pasteable UPDATE would hand an attacker SQL injection against
+     * whoever pasted it into a client.
+     */
+    $body = "A new account is pending approval.\n\n"
+          . "Name:    {$fullName}\n"
+          . "Company: {$company}\n"
+          . "Email:   {$email}\n"
+          . "Phone:   " . ($phone !== '' ? $phone : '—') . "\n\n"
+          . "Approve by id (values above are user-submitted — do not paste them into SQL):\n"
+          . "  UPDATE users SET status='active', approved_at=UTC_TIMESTAMP() WHERE id = {$newId};\n";
+
+    $sent = @mail(
+        $to,
+        $subject,
+        $body,
+        "From: no-reply@djstratageminc.com\r\nContent-Type: text/plain; charset=UTF-8"
+    );
+
+    // Every other failure path here logs; a silently dropped notice would
+    // leave pending accounts sitting unnoticed with no operational signal.
+    if (!$sent) {
+        error_log("auth: admin approval notice failed to send for user id {$newId}");
+    }
 }
 
 // Identical response either way.

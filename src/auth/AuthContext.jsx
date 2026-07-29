@@ -85,6 +85,16 @@ export function AuthProvider({ children }) {
     } finally {
       // Clear locally even if the request failed — the user asked to be out.
       setUser(null);
+      // The old token died with the session. Without a fresh one, the next
+      // login or register from this same page instance would post a stale
+      // token and be rejected with 403.
+      setCsrf(null);
+      try {
+        const fresh = await call("me.php", { method: "GET" });
+        setCsrf(fresh.csrf);
+      } catch {
+        // Offline or server down — the next page load re-mints one.
+      }
     }
   }, [csrf]);
 

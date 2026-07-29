@@ -56,7 +56,7 @@ export default function FilterBar({
             value={query}
             onChange={(e) => onQueryChange(e.target.value)}
             placeholder="Supplier, category, or region"
-            className="w-full rounded-lg border border-line bg-ink px-3.5 py-2.5 text-sm text-paper outline-none transition-colors placeholder:text-steel/70 focus:border-amber"
+            className="w-full rounded-lg border border-line bg-ink px-3.5 py-2.5 text-sm text-paper outline-hidden transition-colors placeholder:text-steel/70 focus:border-amber"
           />
 
           <div className="mt-4 flex flex-wrap gap-2">

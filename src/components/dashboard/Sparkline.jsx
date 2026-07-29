@@ -27,8 +27,18 @@ export default function Sparkline({
   const gradientId = useId();
   const stroke = ACCENTS[accent] ?? ACCENTS.blue;
 
+  // A labelled sparkline must keep its accessible name even with no line to
+  // draw, otherwise the reading disappears entirely for screen readers.
   if (data.length < 2) {
-    return <div className={className} style={{ width, height }} aria-hidden="true" />;
+    return (
+      <div
+        className={className}
+        style={{ width, height }}
+        role={label ? "img" : undefined}
+        aria-label={label}
+        aria-hidden={label ? undefined : "true"}
+      />
+    );
   }
 
   const min = Math.min(...data);

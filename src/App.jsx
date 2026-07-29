@@ -74,20 +74,21 @@ function App() {
     <AuthProvider>
       <ScrollToTop />
       <Routes>
+        {/* One guarded parent, so protection is structural: every nested
+            dashboard route inherits it rather than opting in. Without this a
+            future /dashboard/foo would silently fall through to the public
+            catch-all instead of redirecting to /login. */}
         <Route
-          path="/dashboard"
-          element={
-            <RequireAuth>
-              <Navigate to="/dashboard/suppliers" replace />
-            </RequireAuth>
-          }
-        />
-        <Route
-          path="/dashboard/suppliers"
+          path="/dashboard/*"
           element={
             <RequireAuth>
               <DashboardShell>
-                <SuppliersDashboard />
+                <Routes>
+                  <Route index element={<Navigate to="suppliers" replace />} />
+                  <Route path="suppliers" element={<SuppliersDashboard />} />
+                  {/* Unknown dashboard paths stay inside the guarded subtree. */}
+                  <Route path="*" element={<Navigate to="suppliers" replace />} />
+                </Routes>
               </DashboardShell>
             </RequireAuth>
           }

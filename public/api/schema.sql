@@ -31,5 +31,9 @@ CREATE TABLE IF NOT EXISTS login_attempts (
   attempted_at DATETIME      NOT NULL,
   PRIMARY KEY (id),
   KEY idx_attempts_ip (ip, attempted_at),
-  KEY idx_attempts_email (email, attempted_at)
+  KEY idx_attempts_email (email, attempted_at),
+  -- Neither composite index leads with attempted_at, so the opportunistic
+  -- cleanup DELETE would scan the whole table — exactly when it is largest,
+  -- during the brute-force flood the throttle exists to contain.
+  KEY idx_attempts_attempted_at (attempted_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

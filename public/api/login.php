@@ -27,10 +27,15 @@ $user = $stmt->fetch();
 
 /**
  * Always run a hash comparison, even when no account matched, so the response
- * time doesn't reveal whether the address exists. The dummy hash is a real
- * bcrypt digest so the work factor matches.
+ * time doesn't reveal whether the address exists.
+ *
+ * This MUST be a well-formed 60-character bcrypt digest at the same cost as
+ * real hashes. A malformed string makes password_verify() bail immediately
+ * instead of doing the work, which reintroduces exactly the timing difference
+ * this exists to erase. Generated with password_hash() over random bytes; no
+ * password produces it.
  */
-$dummy = '$2y$10$usesomesillystringfore.dummyhashvaluethatneververifiesXXXXXX';
+$dummy = '$2y$12$poddYuaqAnnhJkfwxNKq5.FZSpeYJLtYKxtILWgO4oL7HLs9Ar88G';
 $valid = password_verify($password, $user['password_hash'] ?? $dummy);
 
 if (!$user || !$valid) {
@@ -40,6 +45,13 @@ if (!$user || !$valid) {
     fail(401, 'invalid_credentials', 'That email and password combination doesn\'t match an account.');
 }
 
+/**
+ * Account state is disclosed only past the credential check above, so a caller
+ * learns it only by already knowing the password — which tells them the
+ * account exists anyway. Folding these into the generic 401 would cost a
+ * legitimate approved-pending user any way to understand why they can't get
+ * in, without denying an attacker anything.
+ */
 if ($user['status'] === 'pending') {
     record_attempt($email, false);
     fail(403, 'account_pending', 'Your account is awaiting approval. We\'ll email you once it\'s active.');

@@ -44,7 +44,7 @@ function Field({ id, label, value, onChange, onBlur, error, required, ...rest })
         onBlur={onBlur}
         aria-invalid={error ? true : undefined}
         aria-describedby={error ? `${id}-error` : undefined}
-        className={`w-full rounded-md border bg-ink px-4 py-2.5 text-sm text-paper outline-none transition-colors placeholder:text-steel/60 focus:border-amber ${
+        className={`w-full rounded-md border bg-ink px-4 py-2.5 text-sm text-paper outline-hidden transition-colors placeholder:text-steel/60 focus:border-amber ${
           error ? "border-danger" : "border-line"
         }`}
         {...rest}
@@ -200,6 +200,9 @@ export default function Register() {
                   value={values.password}
                   onChange={set("password")}
                   invalid={Boolean(touched.password && errors.password)}
+                  describedBy={
+                    touched.password && errors.password ? "password-error" : undefined
+                  }
                   hint={
                     touched.password && errors.password
                       ? undefined
@@ -207,7 +210,9 @@ export default function Register() {
                   }
                 />
                 {touched.password && errors.password && (
-                  <p className="-mt-2 text-xs text-danger">{errors.password}</p>
+                  <p id="password-error" className="-mt-2 text-xs text-danger">
+                    {errors.password}
+                  </p>
                 )}
 
                 <PasswordField
@@ -217,9 +222,12 @@ export default function Register() {
                   value={values.confirm}
                   onChange={set("confirm")}
                   invalid={Boolean(touched.confirm && errors.confirm)}
+                  describedBy={touched.confirm && errors.confirm ? "confirm-error" : undefined}
                 />
                 {touched.confirm && errors.confirm && (
-                  <p className="-mt-2 text-xs text-danger">{errors.confirm}</p>
+                  <p id="confirm-error" className="-mt-2 text-xs text-danger">
+                    {errors.confirm}
+                  </p>
                 )}
 
                 <div aria-live="polite" role="status">

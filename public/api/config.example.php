@@ -25,7 +25,16 @@ return [
     ],
 
     // Where "a new account is awaiting approval" notices are sent.
-    'admin_email' => 'yeheca@icloud.com',
+    'admin_email' => 'admin@example.com',
+
+    /**
+     * IPs of reverse proxies allowed to assert X-Forwarded-Proto.
+     *
+     * Leave empty unless a terminator genuinely sits in front of PHP. Any
+     * client can send that header, so trusting it from arbitrary sources
+     * would let an attacker bypass require_https over plaintext.
+     */
+    'trusted_proxies' => [],
 
     /**
      * Refuse to serve auth endpoints over plaintext HTTP.

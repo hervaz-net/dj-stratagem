@@ -59,14 +59,31 @@ $config = require $configPath;
 
 function is_https(): bool
 {
+    global $config;
+
     if (!empty($_SERVER['HTTPS']) && strtolower((string) $_SERVER['HTTPS']) !== 'off') {
         return true;
     }
-    // LiteSpeed/Apache behind a proxy or terminator.
-    if (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https') {
+    if (((int) ($_SERVER['SERVER_PORT'] ?? 0)) === 443) {
         return true;
     }
-    return ((int) ($_SERVER['SERVER_PORT'] ?? 0)) === 443;
+
+    /**
+     * X-Forwarded-Proto is trusted ONLY when the request actually came from a
+     * configured proxy. Any client can set this header, so honouring it
+     * unconditionally would let an attacker send `X-Forwarded-Proto: https`
+     * over plaintext and walk straight through the require_https gate.
+     *
+     * Empty trusted_proxies (the default) means the header is ignored, which
+     * is correct for cPanel/LiteSpeed with no terminator in front.
+     */
+    $trusted = $config['trusted_proxies'] ?? [];
+    if ($trusted && in_array($_SERVER['REMOTE_ADDR'] ?? '', $trusted, true)) {
+        $proto = strtolower(trim(explode(',', (string) ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? ''))[0]));
+        return $proto === 'https';
+    }
+
+    return false;
 }
 
 if (!empty($config['require_https']) && !is_https()) {
@@ -127,7 +144,7 @@ function respond(array $payload, int $status = 200): never
     exit;
 }
 
-function fail(int $status, string $error, string $message = null, array $extra = []): never
+function fail(int $status, string $error, ?string $message = null, array $extra = []): never
 {
     respond(array_merge(['ok' => false, 'error' => $error], $message ? ['message' => $message] : [], $extra), $status);
 }
@@ -230,6 +247,41 @@ function assert_not_throttled(string $email): void
     if ($emailHits >= (int) $config['max_attempts_per_email'] || $ipHits >= (int) $config['max_attempts_per_ip']) {
         fail(429, 'too_many_attempts', "Too many attempts. Try again in {$window} minutes.");
     }
+}
+
+/**
+ * Per-IP throttle for account creation.
+ *
+ * Without this, register.php can be flooded to fill `users` with pending rows
+ * and spam the admin inbox with one approval email per unique address. Signups
+ * are recorded under a reserved sentinel so they share the table but never
+ * collide with a real address (the schema requires a non-null email, and no
+ * valid address contains a space).
+ */
+const REGISTER_SENTINEL = '@register attempt';
+
+function assert_registration_allowed(): void
+{
+    global $config;
+    $window = (int) $config['attempt_window_minutes'];
+    $limit  = (int) ($config['max_registrations_per_ip'] ?? 5);
+
+    $stmt = db()->prepare(
+        'SELECT COUNT(*) c FROM login_attempts
+          WHERE ip = ? AND email = ? AND attempted_at > (UTC_TIMESTAMP() - INTERVAL ? MINUTE)'
+    );
+    $stmt->execute([client_ip_binary(), REGISTER_SENTINEL, $window]);
+
+    if ((int) $stmt->fetch()['c'] >= $limit) {
+        fail(429, 'too_many_attempts', "Too many requests. Try again in {$window} minutes.");
+    }
+}
+
+function record_registration_attempt(): void
+{
+    db()->prepare(
+        'INSERT INTO login_attempts (ip, email, succeeded, attempted_at) VALUES (?, ?, 1, UTC_TIMESTAMP())'
+    )->execute([client_ip_binary(), REGISTER_SENTINEL]);
 }
 
 // ── current user ────────────────────────────────────────────────────────────

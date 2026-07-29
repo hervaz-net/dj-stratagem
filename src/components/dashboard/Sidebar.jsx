@@ -65,9 +65,12 @@ export default function Sidebar() {
     setSigningOut(true);
     try {
       await logout();
-      navigate("/login", { replace: true });
+    } catch {
+      // Local state is cleared regardless, so send them on either way rather
+      // than leaking an unhandled rejection out of the click handler.
     } finally {
       setSigningOut(false);
+      navigate("/login", { replace: true });
     }
   };
 

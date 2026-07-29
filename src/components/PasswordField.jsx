@@ -16,7 +16,7 @@ export default function PasswordField({
   const hintId = hint ? `${id}-hint` : undefined;
 
   const inputClass =
-    "w-full rounded-md border bg-ink px-4 py-2.5 pr-12 text-sm text-paper outline-none " +
+    "w-full rounded-md border bg-ink px-4 py-2.5 pr-12 text-sm text-paper outline-hidden " +
     "transition-colors placeholder:text-steel/60 focus:border-amber " +
     (invalid ? "border-danger" : "border-line");
 

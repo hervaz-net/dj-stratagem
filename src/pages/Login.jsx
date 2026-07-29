@@ -57,7 +57,7 @@ export default function Login() {
   };
 
   const inputClass =
-    "w-full rounded-md border border-line bg-ink px-4 py-2.5 text-sm text-paper outline-none " +
+    "w-full rounded-md border border-line bg-ink px-4 py-2.5 text-sm text-paper outline-hidden " +
     "transition-colors placeholder:text-steel/60 focus:border-amber";
 
   return (
@@ -87,7 +87,9 @@ export default function Login() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
                 aria-invalid={invalid === "email" ? true : undefined}
-                aria-describedby={error ? errorId : undefined}
+                // Field-specific: describing both inputs with the same message
+                // would announce the email error on the password field too.
+                aria-describedby={invalid === "email" ? errorId : undefined}
                 className={inputClass}
               />
             </div>
@@ -99,7 +101,7 @@ export default function Login() {
               value={password}
               onChange={setPassword}
               invalid={invalid === "password"}
-              describedBy={error ? errorId : undefined}
+              describedBy={invalid === "password" ? errorId : undefined}
             />
 
             <div aria-live="polite" role="status" id={errorId}>
