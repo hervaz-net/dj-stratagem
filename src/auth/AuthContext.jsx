@@ -99,8 +99,10 @@ export function AuthProvider({ children }) {
   }, [csrf]);
 
   const value = useMemo(
-    () => ({ user, loading, login, register, logout, authBase: AUTH_BASE }),
-    [user, loading, login, register, logout],
+    // `csrf` is exposed so admin endpoints can post with the same token this
+    // provider already owns, rather than minting a second one.
+    () => ({ user, loading, csrf, login, register, logout, authBase: AUTH_BASE }),
+    [user, loading, csrf, login, register, logout],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

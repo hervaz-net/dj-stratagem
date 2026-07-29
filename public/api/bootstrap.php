@@ -351,6 +351,26 @@ function current_user(): ?array
     return $user;
 }
 
+/**
+ * Gate an endpoint to administrators.
+ *
+ * Returns the admin's own row so callers can guard against self-lockout. The
+ * signed-out and non-admin cases answer differently on purpose: a member who
+ * is genuinely signed in benefits from being told they lack the role, and
+ * they already know the endpoint exists.
+ */
+function require_admin(): array
+{
+    $user = current_user();
+    if (!$user) {
+        fail(401, 'not_authenticated', 'Sign in to continue.');
+    }
+    if (($user['role'] ?? '') !== 'admin') {
+        fail(403, 'forbidden', 'This area is restricted to administrators.');
+    }
+    return $user;
+}
+
 function public_user(array $u): array
 {
     return [

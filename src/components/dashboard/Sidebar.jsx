@@ -25,6 +25,11 @@ const items = [
   { to: "/dashboard/alerts", label: "Alerts", status: "at-risk", ready: false, icon: (
     <><path d="M18 8a6 6 0 1 0-12 0c0 7-3 8-3 8h18s-3-1-3-8" /><path d="M13.7 21a2 2 0 0 1-3.4 0" /></>
   ) },
+  // Hidden from non-admins. This is presentation only — the endpoints do the
+  // actual enforcing.
+  { to: "/dashboard/admin", label: "Accounts", status: "active", ready: true, adminOnly: true, icon: (
+    <><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" /></>
+  ) },
 ];
 
 function ItemIcon({ item }) {
@@ -84,7 +89,9 @@ export default function Sidebar() {
         </div>
 
         <nav aria-label="Dashboard" className="flex gap-1 overflow-x-auto lg:flex-col lg:overflow-visible">
-          {items.map((item) =>
+          {items
+            .filter((item) => !item.adminOnly || user?.role === "admin")
+            .map((item) =>
             item.ready ? (
               <NavLink
                 key={item.to}

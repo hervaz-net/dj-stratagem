@@ -87,19 +87,21 @@ if ($isNew) {
     $subject = 'New D&J Stratagem account awaiting approval';
 
     /**
-     * The approval command references the row by integer id, never by the
-     * submitted email. FILTER_VALIDATE_EMAIL accepts quoted local-parts
-     * containing an apostrophe, so interpolating the address into a
-     * copy-pasteable UPDATE would hand an attacker SQL injection against
-     * whoever pasted it into a client.
+     * No runnable SQL in this email. The values below are user-submitted, and
+     * FILTER_VALIDATE_EMAIL accepts quoted local-parts containing an
+     * apostrophe — a copy-pasteable UPDATE built from them would hand an
+     * attacker injection against whoever pasted it. Approvals happen on the
+     * admin screen instead.
      */
     $body = "A new account is pending approval.\n\n"
           . "Name:    {$fullName}\n"
           . "Company: {$company}\n"
           . "Email:   {$email}\n"
-          . "Phone:   " . ($phone !== '' ? $phone : '—') . "\n\n"
-          . "Approve by id (values above are user-submitted — do not paste them into SQL):\n"
-          . "  UPDATE users SET status='active', approved_at=UTC_TIMESTAMP() WHERE id = {$newId};\n";
+          . "Phone:   " . ($phone !== '' ? $phone : '—') . "\n"
+          . "User ID: {$newId}\n\n"
+          . "Approve or decline at:\n"
+          . "  https://djstratageminc.com/dashboard/admin\n\n"
+          . "The details above were entered by the applicant and have not been verified.\n";
 
     $sent = @mail(
         $to,

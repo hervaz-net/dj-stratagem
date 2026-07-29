@@ -236,6 +236,8 @@ it.
 | `/api/register.php` | POST | Creates a `pending` account |
 | `/api/login.php` | POST | Authenticates an `active` account, starts a session |
 | `/api/logout.php` | POST | Destroys the session |
+| `/api/admin-users.php` | GET | Lists accounts + per-status counts (admin only) |
+| `/api/admin-user-status.php` | POST | Approve / suspend / reinstate (admin only) |
 
 ### ⚠️ Do not enable before HTTPS
 
@@ -271,15 +273,30 @@ Set `require_https` to `false` only for local development against
 
 ### Approving an account
 
-Registration emails the address in `admin_email`. To activate:
-
-```sql
-UPDATE users SET status = 'active', approved_at = UTC_TIMESTAMP()
- WHERE email = 'person@example.com';
-```
+Registration emails the address in `admin_email`. Approve or decline at
+**`/dashboard/admin`** — no SQL required.
 
 `status` is `pending` | `active` | `suspended`. Only `active` can sign in;
-suspending takes effect on the user's next request, not their next login.
+suspending takes effect on the user's *next request*, not their next login, so
+a suspended user is cut off mid-session.
+
+An admin cannot suspend their own account — doing so would lock them out of the
+only screen that could undo it.
+
+### Creating the first admin
+
+The admin screen is gated on `role = 'admin'`, and registration always creates
+`role = 'member'`. Promote the first one by hand, once:
+
+```sql
+UPDATE users SET role = 'admin', status = 'active', approved_at = UTC_TIMESTAMP()
+ WHERE email = 'you@example.com';
+```
+
+After that, approvals happen in the UI. The **Accounts** item only appears in
+the sidebar for admins, but that is presentation — `admin-users.php` and
+`admin-user-status.php` reject non-admins with 403 regardless of what the
+client renders.
 
 ### Security properties
 
@@ -300,5 +317,5 @@ suspending takes effect on the user's next request, not their next login.
 
 ### Not built yet
 
-Password reset, email verification of the registrant's own address, "remember
-me", and an admin UI for approvals (approval is a SQL update today).
+Password reset, email verification of the registrant's own address, and
+"remember me".

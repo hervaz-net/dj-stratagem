@@ -14,6 +14,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
 import SuppliersDashboard from "./pages/dashboard/Suppliers";
+import AdminUsers from "./pages/dashboard/Admin";
 import { AuthProvider } from "./auth/AuthContext";
 import RequireAuth from "./auth/RequireAuth";
 
@@ -86,6 +87,10 @@ function App() {
                 <Routes>
                   <Route index element={<Navigate to="suppliers" replace />} />
                   <Route path="suppliers" element={<SuppliersDashboard />} />
+                  {/* Admin-only in practice: the endpoints reject non-admins,
+                      so reaching this route without the role shows an error
+                      rather than any data. */}
+                  <Route path="admin" element={<AdminUsers />} />
                   {/* Unknown dashboard paths stay inside the guarded subtree. */}
                   <Route path="*" element={<Navigate to="suppliers" replace />} />
                 </Routes>
