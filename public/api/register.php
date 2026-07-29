@@ -44,20 +44,20 @@ if ($errors) {
     fail(422, 'validation_failed', null, ['fields' => $errors]);
 }
 
+/**
+ * Claimed after validation but BEFORE hashing, on both counts:
+ *   - password_hash() at the default cost is ~250ms of CPU, so hashing first
+ *     would let a flood burn the box before ever reaching the cap.
+ *   - Checking before validation would instead let a user who mistypes their
+ *     email three times exhaust their own quota.
+ */
+claim_registration_slot();
+
 $hash = password_hash($password, PASSWORD_DEFAULT);
 if ($hash === false) {
     error_log('auth: password_hash failed');
     fail(500, 'server_error');
 }
-
-/**
- * Throttle checked after validation, deliberately: malformed submissions are
- * rejected without touching the database, and — more importantly — a user who
- * mistypes their email three times doesn't burn their own quota. A flooder
- * must send well-formed payloads to reach this, which is what the cap stops.
- */
-assert_registration_allowed();
-record_registration_attempt();
 
 $newId = null;
 

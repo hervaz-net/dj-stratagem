@@ -260,28 +260,37 @@ function assert_not_throttled(string $email): void
  */
 const REGISTER_SENTINEL = '@register attempt';
 
-function assert_registration_allowed(): void
+/**
+ * Claims one registration slot for this IP, or fails with 429.
+ *
+ * The count and the insert are a SINGLE statement on purpose. Doing them as
+ * separate queries lets concurrent requests all read a below-limit count
+ * before any of them inserts, so a burst slips through together. Here the
+ * gate subquery and the insert are evaluated atomically by InnoDB: the row is
+ * written only if the window still has room, and rowCount() reports whether
+ * this caller won a slot.
+ */
+function claim_registration_slot(): void
 {
     global $config;
     $window = (int) $config['attempt_window_minutes'];
     $limit  = (int) ($config['max_registrations_per_ip'] ?? 5);
+    $ip     = client_ip_binary();
 
     $stmt = db()->prepare(
-        'SELECT COUNT(*) c FROM login_attempts
-          WHERE ip = ? AND email = ? AND attempted_at > (UTC_TIMESTAMP() - INTERVAL ? MINUTE)'
+        'INSERT INTO login_attempts (ip, email, succeeded, attempted_at)
+         SELECT ?, ?, 1, UTC_TIMESTAMP()
+           FROM (SELECT COUNT(*) AS taken
+                   FROM login_attempts
+                  WHERE ip = ? AND email = ?
+                    AND attempted_at > (UTC_TIMESTAMP() - INTERVAL ? MINUTE)) AS gate
+          WHERE gate.taken < ?'
     );
-    $stmt->execute([client_ip_binary(), REGISTER_SENTINEL, $window]);
+    $stmt->execute([$ip, REGISTER_SENTINEL, $ip, REGISTER_SENTINEL, $window, $limit]);
 
-    if ((int) $stmt->fetch()['c'] >= $limit) {
+    if ($stmt->rowCount() === 0) {
         fail(429, 'too_many_attempts', "Too many requests. Try again in {$window} minutes.");
     }
-}
-
-function record_registration_attempt(): void
-{
-    db()->prepare(
-        'INSERT INTO login_attempts (ip, email, succeeded, attempted_at) VALUES (?, ?, 1, UTC_TIMESTAMP())'
-    )->execute([client_ip_binary(), REGISTER_SENTINEL]);
 }
 
 // ── current user ────────────────────────────────────────────────────────────

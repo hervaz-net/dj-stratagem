@@ -45,8 +45,14 @@ return [
      */
     'require_https' => true,
 
-    // Login throttling.
+    // Login throttling: failed attempts allowed per email / per IP in the
+    // window below. Only failures count.
     'max_attempts_per_email' => 5,
     'max_attempts_per_ip'    => 20,
+
+    // Account-creation throttling: new registrations allowed per IP in the
+    // same window.
+    'max_registrations_per_ip' => 5,
+
     'attempt_window_minutes' => 15,
 ];
