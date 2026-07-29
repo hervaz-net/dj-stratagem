@@ -61,7 +61,11 @@ if (password_needs_rehash($user['password_hash'], PASSWORD_DEFAULT)) {
 // New session ID on privilege change, so a pre-login fixated ID is useless.
 session_regenerate_id(true);
 $_SESSION['uid'] = (int) $user['id'];
-csrf_token(); // mint a fresh token bound to the new session
+
+// regenerate_id keeps the session *data*, so the pre-login CSRF token would
+// otherwise survive the privilege change. Drop it and mint a fresh one.
+unset($_SESSION['csrf']);
+csrf_token();
 
 db()->prepare('UPDATE users SET last_login_at = UTC_TIMESTAMP() WHERE id = ?')->execute([$user['id']]);
 record_attempt($email, true);
