@@ -55,6 +55,26 @@ if ($configPath === null) {
 }
 $config = require $configPath;
 
+// ── last-resort error handling ──────────────────────────────────────────────
+
+/**
+ * Any throwable that escapes an endpoint must still leave the client with
+ * well-formed JSON and the detail in the server log.
+ *
+ * Without this, an uncaught PDOException (a deadlock, a lock-wait timeout, a
+ * dropped connection) emits PHP's own error output after the JSON
+ * Content-Type header has already been sent — a malformed body at best, and
+ * with display_errors on, the query and connection details at worst.
+ */
+set_exception_handler(static function (Throwable $e): void {
+    error_log('auth: uncaught ' . get_class($e) . ' — ' . $e->getMessage());
+    if (!headers_sent()) {
+        http_response_code(500);
+        header('Content-Type: application/json');
+    }
+    echo json_encode(['ok' => false, 'error' => 'server_error']);
+});
+
 // ── transport security ──────────────────────────────────────────────────────
 
 function is_https(): bool
@@ -277,16 +297,30 @@ function claim_registration_slot(): void
     $limit  = (int) ($config['max_registrations_per_ip'] ?? 5);
     $ip     = client_ip_binary();
 
-    $stmt = db()->prepare(
-        'INSERT INTO login_attempts (ip, email, succeeded, attempted_at)
-         SELECT ?, ?, 1, UTC_TIMESTAMP()
-           FROM (SELECT COUNT(*) AS taken
-                   FROM login_attempts
-                  WHERE ip = ? AND email = ?
-                    AND attempted_at > (UTC_TIMESTAMP() - INTERVAL ? MINUTE)) AS gate
-          WHERE gate.taken < ?'
-    );
-    $stmt->execute([$ip, REGISTER_SENTINEL, $ip, REGISTER_SENTINEL, $window, $limit]);
+    try {
+        $stmt = db()->prepare(
+            'INSERT INTO login_attempts (ip, email, succeeded, attempted_at)
+             SELECT ?, ?, 1, UTC_TIMESTAMP()
+               FROM (SELECT COUNT(*) AS taken
+                       FROM login_attempts
+                      WHERE ip = ? AND email = ?
+                        AND attempted_at > (UTC_TIMESTAMP() - INTERVAL ? MINUTE)) AS gate
+              WHERE gate.taken < ?'
+        );
+        $stmt->execute([$ip, REGISTER_SENTINEL, $ip, REGISTER_SENTINEL, $window, $limit]);
+    } catch (PDOException $e) {
+        // This statement takes locks, so heavy contention can raise a deadlock
+        // (1213) or lock-wait timeout (1205). Both mean "too busy right now",
+        // not "broken" — answer like a throttle rather than a 500. Anything
+        // else is a real fault and goes to the generic handler.
+        $code = $e->errorInfo[1] ?? 0;
+        if ($code === 1213 || $code === 1205) {
+            error_log("auth: registration slot contention (driver {$code})");
+            fail(429, 'too_many_attempts', 'Too busy right now. Please try again in a moment.');
+        }
+        error_log('auth: registration slot claim failed — ' . $e->getMessage());
+        fail(500, 'server_error');
+    }
 
     if ($stmt->rowCount() === 0) {
         fail(429, 'too_many_attempts', "Too many requests. Try again in {$window} minutes.");
