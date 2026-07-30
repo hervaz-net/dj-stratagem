@@ -24,6 +24,12 @@ const DENSITY_OPTIONS = [
 const DENSITY_PY = { compact: "py-2", default: "py-3.5", comfortable: "py-5" };
 const money = (n) => (n >= 1000 ? `$${(n / 1000).toFixed(0)}k` : `$${n}`);
 
+/**
+ * Render a supplier value according to its column type.
+ * @param {string} colKey - The column key that determines the rendered content.
+ * @param {Object} s - The supplier row containing the value to render.
+ * @returns {JSX.Element|string|number|null} The formatted cell content, or null for unsupported columns.
+ */
 function CellContent({ colKey, s }) {
   switch (colKey) {
     case "riskScore":
@@ -52,6 +58,17 @@ function CellContent({ colKey, s }) {
   }
 }
 
+/**
+ * Display an interactive, sortable table of suppliers.
+ * @param {Object[]} rows - Supplier records to display.
+ * @param {{key: string, dir: "asc"|"desc"}} sort - Current sort column and direction.
+ * @param {Function} onSort - Called with the requested sort column and direction.
+ * @param {boolean} loading - Whether to display the loading state when no rows are available.
+ * @param {Function} [onRowClick] - Called with a supplier record when its row is clicked.
+ * @param {Set} [selected] - IDs of currently selected suppliers.
+ * @param {Function} [onToggleSelect] - Called with a supplier ID when its selection changes.
+ * @param {Function} [onSelectAll] - Called with the set of supplier IDs to select.
+ */
 export default function SupplierTable({
   rows,
   sort,

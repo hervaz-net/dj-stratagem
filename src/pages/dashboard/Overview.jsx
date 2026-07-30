@@ -32,6 +32,10 @@ const quickLinks = [
 
 const trend = [62, 65, 61, 68, 72, 70, 74, 78, 76, 82, 80, 85, 83, 87, 91];
 
+/**
+ * Render the dashboard overview with KPI summaries, recent activity, network health, and quick navigation.
+ * @returns {JSX.Element} The dashboard overview page.
+ */
 export default function Overview() {
   return (
     <>

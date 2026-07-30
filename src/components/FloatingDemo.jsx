@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { IconCalendar } from "./icons";
 
+/**
+ * Renders a floating link for booking a demo that appears after a short delay.
+ */
 export default function FloatingDemo() {
   const [visible, setVisible] = useState(false);
 

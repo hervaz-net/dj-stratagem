@@ -28,6 +28,9 @@ const values = [
   },
 ];
 
+/**
+ * Renders the About page, including company details, platform capabilities, core principles, statistics, and a growth-focused call to action.
+ */
 export default function About() {
   return (
     <>

@@ -24,6 +24,10 @@ const LS_PRESETS = "djs-filter-presets";
 
 const NO_ROWS = [];
 
+/**
+ * Downloads supplier rows as a CSV file.
+ * @param {Array<Object>} rows - Supplier records to include in the export.
+ */
 function exportCsv(rows) {
   const headers = ["Name", "Category", "Region", "Status", "Risk Score", "Delivery %", "Lead Days", "Open Orders", "Spend YTD"];
   const lines = rows.map((s) =>
@@ -38,6 +42,9 @@ function exportCsv(rows) {
   URL.revokeObjectURL(url);
 }
 
+/**
+ * Render the supplier network dashboard with live data, filtering, sorting, selection, and export controls.
+ */
 export default function SuppliersDashboard() {
   const suppliers = usePolledResource(fetchSuppliers, { intervalMs: 30000, initialData: [] });
   const metrics = usePolledResource(fetchMetrics, { intervalMs: 30000, initialData: [] });

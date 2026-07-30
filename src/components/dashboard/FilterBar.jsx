@@ -3,6 +3,14 @@ import GlassCard from "./GlassCard";
 import RangeSlider from "./RangeSlider";
 import { IconDownload, IconBookmark } from "../icons";
 
+/**
+ * Render a pill-style toggle button with optional status indicator and active-state glow.
+ * @param {boolean} active - Whether the toggle is active.
+ * @param {Function} onClick - Handler invoked when the button is clicked.
+ * @param {React.ReactNode} children - Content displayed inside the button.
+ * @param {string} [dotColor] - Optional color for the status indicator.
+ * @returns {JSX.Element} The toggle button.
+ */
 function GlowToggle({ active, onClick, children, dotColor }) {
   return (
     <button
@@ -36,6 +44,27 @@ function GlowToggle({ active, onClick, children, dotColor }) {
   );
 }
 
+/**
+ * Render filter controls, result counts, saved presets, and filter actions.
+ * @param {Array} statuses - Available status options.
+ * @param {Array} activeStatuses - Keys of the currently selected statuses.
+ * @param {Function} onToggleStatus - Handles status selection changes.
+ * @param {number} risk - Current risk score filter.
+ * @param {Function} onRiskChange - Handles risk score changes.
+ * @param {number} delivery - Current delivery rate filter.
+ * @param {Function} onDeliveryChange - Handles delivery rate changes.
+ * @param {string} query - Current supplier search query.
+ * @param {Function} onQueryChange - Handles search query changes.
+ * @param {Function} onReset - Resets the filters.
+ * @param {Function} onExport - Exports the filtered results.
+ * @param {number} resultCount - Number of results matching the filters.
+ * @param {number} totalCount - Total number of suppliers.
+ * @param {Array} [presets] - Saved filter presets.
+ * @param {Function} [onSavePreset] - Saves a named filter preset.
+ * @param {Function} [onLoadPreset] - Loads a saved filter preset.
+ * @param {Function} [onDeletePreset] - Deletes a saved filter preset by name.
+ * @param {Object} [searchRef] - Ref attached to the supplier search input.
+ */
 export default function FilterBar({
   statuses,
   activeStatuses,

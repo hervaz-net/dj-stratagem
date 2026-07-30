@@ -24,12 +24,25 @@ const AVATAR_COLORS = [
   "bg-[var(--viz-gold)]/20 text-[var(--viz-gold)]",
 ];
 
+/**
+ * Generates uppercase initials from a name.
+ * @param {string} [name=""] - The name from which to derive initials.
+ * @return {string} The first two characters for a single-part name, or the first characters of the first and last parts for a multi-part name.
+ */
 function getInitials(name = "") {
   const parts = name.trim().split(/\s+/);
   if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
   return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 }
 
+/**
+ * Render a user's initials with a status indicator.
+ * @param {Object} props - The avatar properties.
+ * @param {string} props.name - The user's name.
+ * @param {number} props.id - The user's identifier used to select the avatar color.
+ * @param {string} props.status - The user's account status.
+ * @returns {JSX.Element} The rendered user avatar.
+ */
 function UserAvatar({ name, id, status }) {
   const color = AVATAR_COLORS[(id ?? 0) % AVATAR_COLORS.length];
   return (
@@ -42,6 +55,11 @@ function UserAvatar({ name, id, status }) {
   );
 }
 
+/**
+ * Formats a date value for display.
+ * @param {string} value - The date value to format.
+ * @return {string} A localized date string, or "—" for missing or invalid values.
+ */
 function formatDate(value) {
   if (!value) return "—";
   const d = new Date(value.replace(" ", "T") + "Z");
@@ -50,6 +68,13 @@ function formatDate(value) {
     : d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
 }
 
+/**
+ * Render a dashboard statistic card.
+ * @param {Object} props - The card properties.
+ * @param {string} props.label - The statistic label.
+ * @param {*} props.value - The statistic value, or a placeholder when absent.
+ * @param {boolean} props.highlight - Whether to emphasize the value.
+ */
 function StatCard({ label, value, highlight }) {
   return (
     <GlassCard className="px-5 py-4">
@@ -61,6 +86,9 @@ function StatCard({ label, value, highlight }) {
   );
 }
 
+/**
+ * Manage platform accounts by reviewing statuses, filtering users, and updating account access.
+ */
 export default function AdminUsers() {
   const { user, csrf } = useAuth();
   const [filter, setFilter] = useState("pending");

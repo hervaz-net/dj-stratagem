@@ -23,12 +23,19 @@ const columns = [
   },
 ];
 
-/** Feature 15: newsletter signup */
+/**
+ * Render a newsletter signup form with email validation and subscription confirmation.
+ * @returns {JSX.Element} The signup form or a subscribed confirmation message.
+ */
 function Newsletter() {
   const [email, setEmail] = useState("");
   const [done, setDone] = useState(false);
   const [error, setError] = useState("");
 
+  /**
+   * Validates the newsletter email and completes the signup when valid.
+   * @param {Event} e - The form submission event.
+   */
   function handleSubmit(e) {
     e.preventDefault();
     if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -78,6 +85,9 @@ function Newsletter() {
   );
 }
 
+/**
+ * Render the site footer with branding, navigation, newsletter signup, contact information, and copyright details.
+ */
 export default function Footer() {
   return (
     <footer className="no-print border-t border-line bg-ink-2">

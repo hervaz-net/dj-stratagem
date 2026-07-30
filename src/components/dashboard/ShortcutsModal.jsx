@@ -9,6 +9,10 @@ const shortcuts = [
   { keys: ["↑", "↓"], desc: "Sort column (click header first)" },
 ];
 
+/**
+ * Render a dialog displaying available keyboard shortcuts.
+ * @param {Function} onClose - Callback invoked when the dialog is dismissed.
+ */
 export default function ShortcutsModal({ onClose }) {
   useEffect(() => {
     const onKey = (e) => { if (e.key === "Escape") onClose(); };

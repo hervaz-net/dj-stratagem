@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 
+/**
+ * Displays a progress bar indicating the reader's vertical position on the page.
+ */
 export default function ReadingProgress() {
   const [pct, setPct] = useState(0);
 

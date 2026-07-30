@@ -26,6 +26,9 @@ const seedAlerts = [
   { id: 9, type: "price", title: "Lumber prices down 4.1%", detail: "Dimensional lumber index retreated from July peak. Good timing for upcoming POs.", supplier: null, time: "3 days ago", read: true },
 ];
 
+/**
+ * Display and manage supply-chain alerts with category filters and read-state actions.
+ */
 export default function Alerts() {
   const [filter, setFilter] = useState("all");
   const [alerts, setAlerts] = useState(seedAlerts);

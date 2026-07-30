@@ -11,6 +11,11 @@ const MIN_PASSWORD = 12;
 
 const EMPTY = { fullName: "", company: "", email: "", phone: "", password: "", confirm: "" };
 
+/**
+ * Calculates a password strength score from zero to four.
+ * @param {string} pw - The password to evaluate.
+ * @return {number} A score from 0 to 4 based on password length and character variety.
+ */
 function passwordStrength(pw) {
   if (!pw) return 0;
   let score = 0;
@@ -26,6 +31,12 @@ const STRENGTH_LABEL = ["", "Weak", "Fair", "Strong", "Very strong"];
 const STRENGTH_COLOR = ["", "bg-[var(--viz-red)]", "bg-[var(--viz-gold)]", "bg-[var(--viz-cyan)]", "bg-[var(--viz-green)]"];
 const STRENGTH_TEXT = ["", "text-[var(--viz-red)]", "text-[var(--viz-gold)]", "text-[var(--viz-cyan)]", "text-[var(--viz-green)]"];
 
+/**
+ * Displays a segmented visual indicator and label for password strength.
+ * @param {Object} props - Component properties.
+ * @param {string} props.password - The password to evaluate.
+ * @return {JSX.Element|null} The strength meter, or `null` when no password is provided.
+ */
 function PasswordStrengthMeter({ password }) {
   const score = passwordStrength(password);
   if (!password) return null;
@@ -48,6 +59,11 @@ function PasswordStrengthMeter({ password }) {
   );
 }
 
+/**
+ * Validates registration form values and collects field-specific error messages.
+ * @param {Object} v - The registration form values.
+ * @return {Object} An object containing validation errors keyed by field name.
+ */
 function validate(v) {
   const e = {};
   if (!v.fullName.trim()) e.fullName = "Enter your full name.";
@@ -95,6 +111,9 @@ function Field({ id, label, value, onChange, onBlur, error, required, ...rest })
   );
 }
 
+/**
+ * Render the account access request form and confirmation view.
+ */
 export default function Register() {
   const { user, loading, register } = useAuth();
   const [values, setValues] = useState(EMPTY);

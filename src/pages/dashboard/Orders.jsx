@@ -28,6 +28,9 @@ const orders = [
 const money = (n) => `$${n.toLocaleString()}`;
 const fmt = (d) => d && d !== "—" ? new Date(d).toLocaleDateString(undefined, { month: "short", day: "numeric" }) : "—";
 
+/**
+ * Display purchase orders with summary metrics, status filters, and tracking details.
+ */
 export default function Orders() {
   const [filter, setFilter] = useState("all");
 

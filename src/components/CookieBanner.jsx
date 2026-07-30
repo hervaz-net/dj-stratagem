@@ -2,6 +2,10 @@ import { useState } from "react";
 
 const KEY = "djs-cookie-consent";
 
+/**
+ * Retrieves the stored cookie consent decision.
+ * @return {Object|null} The parsed consent data, or `null` when no valid data is available.
+ */
 function getConsent() {
   try {
     const raw = localStorage.getItem(KEY);
@@ -12,12 +16,19 @@ function getConsent() {
   }
 }
 
+/**
+ * Persists the user's cookie consent decision.
+ * @param {boolean} accepted - Whether the user accepted cookie consent.
+ */
 function setConsent(accepted) {
   try {
     localStorage.setItem(KEY, JSON.stringify({ accepted, ts: Date.now() }));
   } catch {}
 }
 
+/**
+ * Render a cookie consent banner until the user accepts or declines cookie usage.
+ */
 export default function CookieBanner() {
   const [dismissed, setDismissed] = useState(() => getConsent() !== null);
 

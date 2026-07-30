@@ -1,6 +1,13 @@
 import Button from "./Button";
 import Section from "./Section";
 
+/**
+ * Render a call-to-action section with customizable messaging and navigation buttons.
+ * @param {Object} props - Component properties.
+ * @param {string} [props.title="Win more projects. Build bigger business."] - The heading text.
+ * @param {string} [props.subtitle="Walk through the platform with our team and see exactly where it fits your workflow."] - The supporting text.
+ * @returns {JSX.Element} The rendered call-to-action section.
+ */
 export default function CTASection({
   title = "Win more projects. Build bigger business.",
   subtitle = "Walk through the platform with our team and see exactly where it fits your workflow.",

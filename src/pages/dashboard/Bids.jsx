@@ -28,6 +28,9 @@ const bids = [
 const money = (n) => `$${(n / 1000).toFixed(0)}k`;
 const fmt = (d) => d ? new Date(d).toLocaleDateString(undefined, { month: "short", day: "numeric" }) : "—";
 
+/**
+ * Render the bids dashboard with status filtering, sortable bid details, and aggregate values.
+ */
 export default function Bids() {
   const [filter, setFilter] = useState("all");
   const [sort, setSort] = useState({ key: "id", dir: "desc" });
