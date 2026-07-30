@@ -5,6 +5,7 @@ import Footer from "./components/Footer";
 import BackToTop from "./components/BackToTop";
 import CookieBanner from "./components/CookieBanner";
 import FloatingDemo from "./components/FloatingDemo";
+import ReadingProgress from "./components/ReadingProgress";
 import Home from "./pages/Home";
 import Platform from "./pages/Platform";
 import Solutions from "./pages/Solutions";
@@ -60,6 +61,7 @@ function MarketingLayout({ children }) {
       <BackToTop />
       <FloatingDemo />
       <CookieBanner />
+      <ReadingProgress />
     </div>
   );
 }

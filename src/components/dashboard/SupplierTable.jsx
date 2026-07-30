@@ -233,7 +233,7 @@ export default function SupplierTable({
                 <tr
                   key={s.id}
                   onClick={() => onRowClick?.(s)}
-                  className={`border-b border-line/60 transition-colors last:border-0 hover:bg-ink-3/60 ${
+                  className={`group border-b border-line/60 transition-colors last:border-0 hover:bg-ink-3/60 ${
                     onRowClick ? "cursor-pointer" : ""
                   } ${isSelected ? "bg-amber/5" : ""}`}
                 >
@@ -268,12 +268,17 @@ export default function SupplierTable({
                               size={8}
                               pulse={s.status !== "active"}
                             />
-                            <div className="min-w-0">
+                            <div className="min-w-0 flex-1">
                               <p className="truncate font-semibold text-paper">{s.name}</p>
                               <p className="truncate text-xs text-steel">
                                 {s.category} &middot; {s.region}
                               </p>
                             </div>
+                            {onRowClick && (
+                              <span className="shrink-0 text-xs text-steel/40 opacity-0 transition-opacity group-hover:opacity-100">
+                                View →
+                              </span>
+                            )}
                           </div>
                         </th>
                       );

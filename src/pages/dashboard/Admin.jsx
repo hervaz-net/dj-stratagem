@@ -16,6 +16,32 @@ const FILTERS = [
 
 const DOT = { pending: "watch", active: "active", suspended: "at-risk" };
 
+const AVATAR_COLORS = [
+  "bg-[var(--viz-blue)]/20 text-[var(--viz-blue)]",
+  "bg-[var(--viz-cyan)]/20 text-[var(--viz-cyan)]",
+  "bg-[var(--viz-green)]/20 text-[var(--viz-green)]",
+  "bg-[var(--color-brand)]/15 text-[var(--color-brand)]",
+  "bg-[var(--viz-gold)]/20 text-[var(--viz-gold)]",
+];
+
+function getInitials(name = "") {
+  const parts = name.trim().split(/\s+/);
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
+
+function UserAvatar({ name, id, status }) {
+  const color = AVATAR_COLORS[(id ?? 0) % AVATAR_COLORS.length];
+  return (
+    <div className={`relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${color}`}>
+      {getInitials(name)}
+      <span className="absolute -bottom-0.5 -right-0.5">
+        <StatusDot status={DOT[status]} size={8} pulse={status === "pending"} />
+      </span>
+    </div>
+  );
+}
+
 function formatDate(value) {
   if (!value) return "—";
   const d = new Date(value.replace(" ", "T") + "Z");
@@ -293,7 +319,7 @@ export default function AdminUsers() {
                           onClick={() => setExpandedId(expanded ? null : u.id)}
                         >
                           <div className="flex items-center gap-3">
-                            <StatusDot status={DOT[u.status]} pulse={u.status === "pending"} />
+                            <UserAvatar name={u.name} id={u.id} status={u.status} />
                             <div className="min-w-0">
                               <p className="truncate font-semibold text-paper">
                                 {u.name}

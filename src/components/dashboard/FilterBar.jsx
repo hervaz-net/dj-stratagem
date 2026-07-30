@@ -54,6 +54,7 @@ export default function FilterBar({
   onSavePreset,
   onLoadPreset,
   onDeletePreset,
+  searchRef,
 }) {
   const [savingName, setSavingName] = useState("");
   const [showSaveInput, setShowSaveInput] = useState(false);
@@ -109,6 +110,7 @@ export default function FilterBar({
             Search
           </label>
           <input
+            ref={searchRef}
             id="supplier-search"
             type="search"
             value={query}
