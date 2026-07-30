@@ -7,22 +7,22 @@ import useAuth from "../../auth/useAuth";
 /* `ready: false` sections have no route yet — they render as disabled rather
    than as links that would drop the user on the marketing 404. */
 const items = [
-  { to: "/dashboard/overview", label: "Overview", status: "active", ready: false, icon: (
+  { to: "/dashboard/overview", label: "Overview", status: "active", ready: true, icon: (
     <><rect x="3" y="3" width="7" height="9" rx="1.5" /><rect x="14" y="3" width="7" height="5" rx="1.5" /><rect x="14" y="12" width="7" height="9" rx="1.5" /><rect x="3" y="16" width="7" height="5" rx="1.5" /></>
   ) },
   { to: "/dashboard/suppliers", label: "Suppliers", status: "active", ready: true, icon: (
     <><path d="M3 21V8l6-4 6 4v13" /><path d="M15 21V11l6 3v7" /><path d="M9 21v-5h3v5" /></>
   ) },
-  { to: "/dashboard/bids", label: "Bids", status: "active", ready: false, icon: (
+  { to: "/dashboard/bids", label: "Bids", status: "active", ready: true, icon: (
     <><path d="M4 20h16" /><path d="M6 16V9M12 16V5M18 16v-4" /></>
   ) },
-  { to: "/dashboard/orders", label: "Orders", status: "watch", ready: false, icon: (
+  { to: "/dashboard/orders", label: "Orders", status: "watch", ready: true, icon: (
     <><rect x="3" y="7" width="18" height="13" rx="2" /><path d="M8 7V5a4 4 0 0 1 8 0v2" /></>
   ) },
-  { to: "/dashboard/analytics", label: "Analytics", status: "active", ready: false, icon: (
+  { to: "/dashboard/analytics", label: "Analytics", status: "active", ready: true, icon: (
     <><path d="M4 19V5" /><path d="M4 15l5-5 4 3 7-8" /></>
   ) },
-  { to: "/dashboard/alerts", label: "Alerts", status: "at-risk", ready: false, icon: (
+  { to: "/dashboard/alerts", label: "Alerts", status: "at-risk", ready: true, icon: (
     <><path d="M18 8a6 6 0 1 0-12 0c0 7-3 8-3 8h18s-3-1-3-8" /><path d="M13.7 21a2 2 0 0 1-3.4 0" /></>
   ) },
   // Hidden from non-admins. This is presentation only — the endpoints do the

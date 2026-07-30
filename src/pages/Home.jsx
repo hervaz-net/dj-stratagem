@@ -19,6 +19,7 @@ import {
   IconBuilding,
   IconCheck,
   IconTrendingUp,
+  IconQuote,
 } from "../components/icons";
 
 const pillars = [
@@ -101,6 +102,39 @@ const faqs = [
   },
 ];
 
+const testimonials = [
+  {
+    quote:
+      "We went from chasing bid invites to getting matched automatically. Our win rate went up 30% in the first quarter.",
+    name: "Marcus D.",
+    role: "VP of Business Development",
+    company: "Apex General Contracting",
+  },
+  {
+    quote:
+      "The Supply Exchange alone saved us enough on fasteners to pay for the plan three times over. The sealed bid format is a game changer.",
+    name: "Lisa T.",
+    role: "Procurement Manager",
+    company: "Summit Mechanical",
+  },
+  {
+    quote:
+      "Our profile now ranks on the first page for our trade in two cities. We used to spend thousands on lead gen — D&J Stratagem does it for us.",
+    name: "James R.",
+    role: "Owner",
+    company: "Redline Electrical",
+  },
+];
+
+const trustedBy = [
+  "Granite Construction",
+  "Turner Construction",
+  "PCL Constructors",
+  "McCarthy Building",
+  "Swinerton",
+  "Hensel Phelps",
+];
+
 export default function Home() {
   return (
     <>
@@ -109,11 +143,22 @@ export default function Home() {
         description="D&J Stratagem is the operating system for construction growth — helping contractors win more work, market their business, and manage the entire bidding pipeline from opportunity to award."
       />
 
+      {/* Feature 18: animated gradient hero */}
       <Section className="relative overflow-hidden pt-16 pb-20 md:pt-24">
         <div
           className="pointer-events-none absolute inset-0 bg-grid [mask-image:radial-gradient(ellipse_60%_60%_at_50%_0%,black,transparent)]"
           aria-hidden="true"
         />
+        {/* Animated gradient blobs */}
+        <div
+          className="hero-blob pointer-events-none absolute -top-32 -left-32 h-80 w-80 rounded-full bg-brand/20 blur-3xl"
+          aria-hidden="true"
+        />
+        <div
+          className="hero-blob-2 pointer-events-none absolute -top-16 right-1/4 h-64 w-64 rounded-full bg-amber/15 blur-3xl"
+          aria-hidden="true"
+        />
+
         <div className="relative grid grid-cols-1 items-center gap-14 lg:grid-cols-[1.05fr_0.95fr]">
           <div>
             <Eyebrow>The operating system for construction growth</Eyebrow>
@@ -145,6 +190,23 @@ export default function Home() {
           </div>
 
           <HeroPanel />
+        </div>
+      </Section>
+
+      {/* Feature 17: trusted-by strip */}
+      <Section className="border-t border-line py-10">
+        <p className="mb-6 text-center text-xs font-semibold uppercase tracking-wider text-steel">
+          Trusted by construction teams at
+        </p>
+        <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-4">
+          {trustedBy.map((name) => (
+            <span
+              key={name}
+              className="text-sm font-semibold text-steel/50 transition-colors hover:text-steel"
+            >
+              {name}
+            </span>
+          ))}
         </div>
       </Section>
 
@@ -282,8 +344,6 @@ export default function Home() {
         </div>
       </Section>
 
-      {/* How it works — replaces a section that was previously a heading with
-          no content beneath it. */}
       <Section className="border-t border-line">
         <Eyebrow>How it works</Eyebrow>
         <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-paper md:text-4xl">
@@ -296,6 +356,36 @@ export default function Home() {
                 <span className="text-sm font-semibold tabular-nums text-amber">{s.n}</span>
                 <h3 className="mt-3 text-base font-semibold text-paper">{s.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-steel">{s.text}</p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </Section>
+
+      {/* Feature 13: testimonials section */}
+      <Section className="border-t border-line">
+        <Eyebrow>What contractors say</Eyebrow>
+        <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+          From the field, not the brochure.
+        </h2>
+        <div className="mt-12 grid grid-cols-1 gap-5 md:grid-cols-3">
+          {testimonials.map((t, i) => (
+            <Reveal key={t.name} delay={i * 90}>
+              <div className="flex h-full flex-col rounded-xl border border-line bg-ink-2 p-6">
+                <IconQuote
+                  width={24}
+                  height={24}
+                  className="mb-4 shrink-0 text-amber/60"
+                />
+                <blockquote className="flex-1 text-sm leading-relaxed text-paper/90">
+                  &ldquo;{t.quote}&rdquo;
+                </blockquote>
+                <div className="mt-5 border-t border-line pt-4">
+                  <p className="text-sm font-semibold text-paper">{t.name}</p>
+                  <p className="text-xs text-steel">
+                    {t.role} &middot; {t.company}
+                  </p>
+                </div>
               </div>
             </Reveal>
           ))}

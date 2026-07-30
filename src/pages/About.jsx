@@ -48,6 +48,23 @@ export default function About() {
         </p>
       </Section>
 
+      {/* Stats strip */}
+      <Section className="border-t border-line py-12">
+        <div className="grid grid-cols-2 gap-6 sm:grid-cols-4">
+          {[
+            { value: "2,400+", label: "Contractors" },
+            { value: "50+", label: "Markets" },
+            { value: "4.8★", label: "Avg. rating" },
+            { value: "$2B+", label: "Bids managed" },
+          ].map((stat) => (
+            <div key={stat.label} className="text-center">
+              <p className="text-3xl font-semibold tracking-tight text-paper">{stat.value}</p>
+              <p className="mt-1 text-sm text-steel">{stat.label}</p>
+            </div>
+          ))}
+        </div>
+      </Section>
+
       <Section className="border-t border-line">
         <div className="grid grid-cols-1 gap-14 lg:grid-cols-2">
           <div>

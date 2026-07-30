@@ -10,6 +10,7 @@ import {
   IconPackage,
   IconSparkle,
   IconCheck,
+  IconPlay,
 } from "../components/icons";
 
 const modules = [
@@ -202,6 +203,38 @@ export default function Platform() {
             </a>
           ))}
         </nav>
+      </Section>
+
+      {/* Watch it in action */}
+      <Section className="border-t border-line">
+        <Reveal>
+          <div className="text-center">
+            <Eyebrow>See it live</Eyebrow>
+            <h2 className="mt-3 text-balance text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+              Watch it in action.
+            </h2>
+            <p className="mx-auto mt-4 max-w-xl text-base text-steel">
+              A five-minute walkthrough of the full bidding workflow — from posting a project to awarding the contract.
+            </p>
+          </div>
+
+          <div className="relative mx-auto mt-10 max-w-3xl overflow-hidden rounded-2xl border border-line bg-ink-2">
+            <div className="flex aspect-video items-center justify-center bg-gradient-to-br from-ink-2 to-ink">
+              <div className="absolute inset-0 bg-grid opacity-30" aria-hidden="true" />
+              <button
+                type="button"
+                aria-label="Play platform walkthrough video"
+                className="relative flex h-20 w-20 items-center justify-center rounded-full bg-brand/90 text-white shadow-lg transition-transform hover:scale-105 hover:bg-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2"
+              >
+                <IconPlay width={28} height={28} className="ml-1" />
+              </button>
+            </div>
+            <div className="border-t border-line px-6 py-4">
+              <p className="text-sm font-medium text-paper">Platform walkthrough &mdash; 5 min</p>
+              <p className="text-xs text-steel">Bidding, sub matching, and AI features</p>
+            </div>
+          </div>
+        </Reveal>
       </Section>
 
       {modules.map((m, i) => (

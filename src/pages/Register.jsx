@@ -11,6 +11,43 @@ const MIN_PASSWORD = 12;
 
 const EMPTY = { fullName: "", company: "", email: "", phone: "", password: "", confirm: "" };
 
+function passwordStrength(pw) {
+  if (!pw) return 0;
+  let score = 0;
+  if (pw.length >= 8) score++;
+  if (pw.length >= 12) score++;
+  if (/[A-Z]/.test(pw)) score++;
+  if (/[0-9]/.test(pw)) score++;
+  if (/[^A-Za-z0-9]/.test(pw)) score++;
+  return Math.min(4, score);
+}
+
+const STRENGTH_LABEL = ["", "Weak", "Fair", "Strong", "Very strong"];
+const STRENGTH_COLOR = ["", "bg-[var(--viz-red)]", "bg-[var(--viz-gold)]", "bg-[var(--viz-cyan)]", "bg-[var(--viz-green)]"];
+const STRENGTH_TEXT = ["", "text-[var(--viz-red)]", "text-[var(--viz-gold)]", "text-[var(--viz-cyan)]", "text-[var(--viz-green)]"];
+
+function PasswordStrengthMeter({ password }) {
+  const score = passwordStrength(password);
+  if (!password) return null;
+  return (
+    <div className="mt-2 space-y-1.5">
+      <div className="flex gap-1" aria-hidden="true">
+        {[1, 2, 3, 4].map((seg) => (
+          <div
+            key={seg}
+            className={`h-1 flex-1 rounded-full transition-colors duration-300 ${
+              score >= seg ? STRENGTH_COLOR[score] : "bg-line"
+            }`}
+          />
+        ))}
+      </div>
+      <p className={`text-xs font-medium ${STRENGTH_TEXT[score]}`} aria-live="polite">
+        {STRENGTH_LABEL[score]}
+      </p>
+    </div>
+  );
+}
+
 function validate(v) {
   const e = {};
   if (!v.fullName.trim()) e.fullName = "Enter your full name.";
@@ -209,6 +246,7 @@ export default function Register() {
                       : `At least ${MIN_PASSWORD} characters. Length matters more than symbols.`
                   }
                 />
+                <PasswordStrengthMeter password={values.password} />
                 {touched.password && errors.password && (
                   <p id="password-error" className="-mt-2 text-xs text-danger">
                     {errors.password}
