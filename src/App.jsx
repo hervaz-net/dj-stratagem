@@ -18,6 +18,11 @@ import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
 import SuppliersDashboard from "./pages/dashboard/Suppliers";
 import AdminUsers from "./pages/dashboard/Admin";
+import Overview from "./pages/dashboard/Overview";
+import Bids from "./pages/dashboard/Bids";
+import Orders from "./pages/dashboard/Orders";
+import Analytics from "./pages/dashboard/Analytics";
+import Alerts from "./pages/dashboard/Alerts";
 import { AuthProvider } from "./auth/AuthContext";
 import RequireAuth from "./auth/RequireAuth";
 
@@ -91,14 +96,19 @@ function App() {
             <RequireAuth>
               <DashboardShell>
                 <Routes>
-                  <Route index element={<Navigate to="suppliers" replace />} />
+                  <Route index element={<Navigate to="overview" replace />} />
+                  <Route path="overview" element={<Overview />} />
                   <Route path="suppliers" element={<SuppliersDashboard />} />
+                  <Route path="bids" element={<Bids />} />
+                  <Route path="orders" element={<Orders />} />
+                  <Route path="analytics" element={<Analytics />} />
+                  <Route path="alerts" element={<Alerts />} />
                   {/* Admin-only in practice: the endpoints reject non-admins,
                       so reaching this route without the role shows an error
                       rather than any data. */}
                   <Route path="admin" element={<AdminUsers />} />
                   {/* Unknown dashboard paths stay inside the guarded subtree. */}
-                  <Route path="*" element={<Navigate to="suppliers" replace />} />
+                  <Route path="*" element={<Navigate to="overview" replace />} />
                 </Routes>
               </DashboardShell>
             </RequireAuth>
