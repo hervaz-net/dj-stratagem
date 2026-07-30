@@ -1,5 +1,7 @@
+import { useState } from "react";
 import GlassCard from "./GlassCard";
 import RangeSlider from "./RangeSlider";
+import { IconDownload, IconBookmark } from "../icons";
 
 function GlowToggle({ active, onClick, children, dotColor }) {
   return (
@@ -14,12 +16,20 @@ function GlowToggle({ active, onClick, children, dotColor }) {
       }`}
       style={
         active
-          ? { boxShadow: `0 0 16px -4px color-mix(in srgb, ${dotColor ?? "var(--brand)"} 70%, transparent)` }
+          ? {
+              boxShadow: `0 0 16px -4px color-mix(in srgb, ${
+                dotColor ?? "var(--brand)"
+              } 70%, transparent)`,
+            }
           : undefined
       }
     >
       {dotColor && (
-        <span className="h-1.5 w-1.5 rounded-full" style={{ background: dotColor }} aria-hidden="true" />
+        <span
+          className="h-1.5 w-1.5 rounded-full"
+          style={{ background: dotColor }}
+          aria-hidden="true"
+        />
       )}
       {children}
     </button>
@@ -37,11 +47,59 @@ export default function FilterBar({
   query,
   onQueryChange,
   onReset,
+  onExport,
   resultCount,
   totalCount,
+  presets,
+  onSavePreset,
+  onLoadPreset,
+  onDeletePreset,
 }) {
+  const [savingName, setSavingName] = useState("");
+  const [showSaveInput, setShowSaveInput] = useState(false);
+
+  function handleSave(e) {
+    e.preventDefault();
+    const name = savingName.trim();
+    if (!name) return;
+    onSavePreset?.(name);
+    setSavingName("");
+    setShowSaveInput(false);
+  }
+
   return (
     <GlassCard className="p-5">
+      {/* Feature 5: saved filter presets strip */}
+      {presets?.length > 0 && (
+        <div className="mb-4 flex flex-wrap items-center gap-2">
+          <span className="text-xs font-semibold uppercase tracking-wider text-steel">
+            Presets
+          </span>
+          {presets.map((p) => (
+            <div
+              key={p.name}
+              className="group flex items-center rounded-full border border-line"
+            >
+              <button
+                type="button"
+                onClick={() => onLoadPreset?.(p)}
+                className="rounded-l-full px-3 py-1 text-xs font-medium text-paper hover:text-amber"
+              >
+                {p.name}
+              </button>
+              <button
+                type="button"
+                onClick={() => onDeletePreset?.(p.name)}
+                aria-label={`Delete preset ${p.name}`}
+                className="rounded-r-full px-2 py-1 text-steel opacity-0 transition-opacity group-hover:opacity-100 hover:text-danger"
+              >
+                ×
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.1fr_1fr_1fr]">
         <div>
           <label
@@ -99,13 +157,62 @@ export default function FilterBar({
           Showing <span className="font-semibold text-paper">{resultCount}</span> of {totalCount}{" "}
           suppliers
         </p>
-        <button
-          type="button"
-          onClick={onReset}
-          className="text-xs font-semibold text-amber transition-colors hover:text-amber-2"
-        >
-          Reset filters
-        </button>
+
+        <div className="flex flex-wrap items-center gap-3">
+          {/* Feature 5: save preset */}
+          {showSaveInput ? (
+            <form onSubmit={handleSave} className="flex items-center gap-2">
+              <input
+                type="text"
+                value={savingName}
+                onChange={(e) => setSavingName(e.target.value)}
+                placeholder="Preset name"
+                autoFocus
+                className="w-32 rounded-md border border-line bg-ink px-2.5 py-1 text-xs text-paper outline-hidden focus:border-amber"
+              />
+              <button type="submit" className="text-xs font-semibold text-amber hover:text-amber-2">
+                Save
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowSaveInput(false);
+                  setSavingName("");
+                }}
+                className="text-xs text-steel hover:text-paper"
+              >
+                Cancel
+              </button>
+            </form>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setShowSaveInput(true)}
+              className="flex items-center gap-1.5 text-xs font-semibold text-steel transition-colors hover:text-paper"
+            >
+              <IconBookmark width={13} height={13} />
+              Save preset
+            </button>
+          )}
+
+          {/* Feature 1: CSV export */}
+          <button
+            type="button"
+            onClick={onExport}
+            className="flex items-center gap-1.5 text-xs font-semibold text-steel transition-colors hover:text-paper"
+          >
+            <IconDownload width={13} height={13} />
+            Export CSV
+          </button>
+
+          <button
+            type="button"
+            onClick={onReset}
+            className="text-xs font-semibold text-amber transition-colors hover:text-amber-2"
+          >
+            Reset filters
+          </button>
+        </div>
       </div>
     </GlassCard>
   );

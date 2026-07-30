@@ -3,6 +3,8 @@ import { useEffect } from "react";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import BackToTop from "./components/BackToTop";
+import CookieBanner from "./components/CookieBanner";
+import FloatingDemo from "./components/FloatingDemo";
 import Home from "./pages/Home";
 import Platform from "./pages/Platform";
 import Solutions from "./pages/Solutions";
@@ -45,7 +47,7 @@ const SkipLink = () => (
   </a>
 );
 
-/** Public marketing pages: site navbar, footer, back-to-top. */
+/** Public marketing pages: site navbar, footer, back-to-top, cookie banner, floating CTA. */
 function MarketingLayout({ children }) {
   return (
     <div className="flex min-h-screen flex-col">
@@ -56,6 +58,8 @@ function MarketingLayout({ children }) {
       </main>
       <Footer />
       <BackToTop />
+      <FloatingDemo />
+      <CookieBanner />
     </div>
   );
 }

@@ -1,10 +1,11 @@
-import { useCallback, useEffect, useState } from "react";
+import { Fragment, useCallback, useEffect, useState } from "react";
 import DashboardLayout from "../../components/dashboard/DashboardLayout";
 import GlassCard from "../../components/dashboard/GlassCard";
 import StatusDot from "../../components/dashboard/StatusDot";
 import Seo from "../../components/Seo";
 import useAuth from "../../auth/useAuth";
 import { fetchAdminUsers, setUserStatus } from "../../api/admin";
+import { IconSearch } from "../../components/icons";
 
 const FILTERS = [
   { key: "pending", label: "Pending" },
@@ -13,17 +14,25 @@ const FILTERS = [
   { key: "all", label: "All" },
 ];
 
-/** Maps account status onto the dashboard's shared indicator vocabulary. */
 const DOT = { pending: "watch", active: "active", suspended: "at-risk" };
 
 function formatDate(value) {
   if (!value) return "—";
-  // The API returns UTC without a zone marker; make that explicit so the
-  // browser doesn't read it as local time.
   const d = new Date(value.replace(" ", "T") + "Z");
   return Number.isNaN(d.getTime())
     ? "—"
     : d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+}
+
+function StatCard({ label, value, highlight }) {
+  return (
+    <GlassCard className="px-5 py-4">
+      <p className="text-xs font-semibold uppercase tracking-wider text-steel">{label}</p>
+      <p className={`mt-1 text-2xl font-semibold tabular-nums ${highlight ? "text-amber" : "text-paper"}`}>
+        {value ?? "—"}
+      </p>
+    </GlassCard>
+  );
 }
 
 export default function AdminUsers() {
@@ -34,6 +43,10 @@ export default function AdminUsers() {
   const [error, setError] = useState("");
   const [busyId, setBusyId] = useState(null);
   const [notice, setNotice] = useState("");
+  const [search, setSearch] = useState("");
+  const [bulkSelected, setBulkSelected] = useState(new Set());
+  const [bulkBusy, setBulkBusy] = useState(false);
+  const [expandedId, setExpandedId] = useState(null);
 
   const load = useCallback(
     async (signal) => {
@@ -42,6 +55,7 @@ export default function AdminUsers() {
         const res = await fetchAdminUsers({ status: filter, signal });
         setData({ users: res.users, counts: res.counts });
         setError("");
+        setBulkSelected(new Set());
       } catch (err) {
         if (err?.name !== "AbortError") setError(err.message);
       } finally {
@@ -76,7 +90,58 @@ export default function AdminUsers() {
     }
   }
 
+  async function bulkApprove() {
+    setBulkBusy(true);
+    setError("");
+    setNotice("");
+    try {
+      for (const id of bulkSelected) {
+        const target = data.users.find((u) => u.id === id);
+        if (target) await setUserStatus({ id, status: "active", csrf });
+      }
+      setNotice(`${bulkSelected.size} account${bulkSelected.size !== 1 ? "s" : ""} approved.`);
+      await load();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setBulkBusy(false);
+    }
+  }
+
   const counts = data.counts ?? {};
+
+  const displayed = data.users.filter((u) => {
+    if (!search.trim()) return true;
+    const q = search.trim().toLowerCase();
+    return [u.name, u.email, u.company].some((f) => f?.toLowerCase().includes(q));
+  });
+
+  const approvable = displayed.filter((u) => u.status === "pending" && bulkSelected.has(u.id));
+
+  const allPendingChecked =
+    displayed.filter((u) => u.status === "pending").length > 0 &&
+    displayed.filter((u) => u.status === "pending").every((u) => bulkSelected.has(u.id));
+
+  function toggleBulk(id) {
+    setBulkSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  }
+
+  function toggleAllPending() {
+    const pending = displayed.filter((u) => u.status === "pending").map((u) => u.id);
+    if (allPendingChecked) {
+      setBulkSelected((prev) => {
+        const next = new Set(prev);
+        pending.forEach((id) => next.delete(id));
+        return next;
+      });
+    } else {
+      setBulkSelected((prev) => new Set([...prev, ...pending]));
+    }
+  }
 
   return (
     <>
@@ -91,6 +156,15 @@ export default function AdminUsers() {
         title="Accounts"
         subtitle="Approve new access requests and manage existing accounts."
       >
+        {/* Stats cards */}
+        <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
+          <StatCard label="Total" value={counts.all ?? (counts.pending ?? 0) + (counts.active ?? 0) + (counts.suspended ?? 0)} />
+          <StatCard label="Pending" value={counts.pending} highlight={counts.pending > 0} />
+          <StatCard label="Active" value={counts.active} />
+          <StatCard label="Suspended" value={counts.suspended} />
+        </div>
+
+        {/* Filter toggles */}
         <div className="flex flex-wrap gap-2">
           {FILTERS.map((f) => {
             const active = filter === f.key;
@@ -99,7 +173,7 @@ export default function AdminUsers() {
               <button
                 key={f.key}
                 type="button"
-                onClick={() => setFilter(f.key)}
+                onClick={() => { setFilter(f.key); setSearch(""); }}
                 aria-pressed={active}
                 className={`lift inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-semibold ${
                   active
@@ -116,6 +190,22 @@ export default function AdminUsers() {
           })}
         </div>
 
+        {/* Search */}
+        <div className="relative mt-4 max-w-sm">
+          <IconSearch
+            width={14}
+            height={14}
+            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-steel"
+          />
+          <input
+            type="search"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Filter by name, email, or company"
+            className="w-full rounded-lg border border-line bg-ink py-2 pl-8 pr-3.5 text-sm text-paper outline-hidden placeholder:text-steel/70 focus:border-amber"
+          />
+        </div>
+
         <div aria-live="polite" className="mt-4 empty:mt-0">
           {error && (
             <GlassCard className="mb-4 px-5 py-3">
@@ -129,12 +219,39 @@ export default function AdminUsers() {
           )}
         </div>
 
+        {/* Bulk action bar */}
+        {approvable.length > 0 && (
+          <GlassCard className="mt-4 flex flex-wrap items-center justify-between gap-3 px-5 py-3">
+            <p className="text-sm text-steel">
+              <span className="font-semibold text-paper">{approvable.length}</span>{" "}
+              pending {approvable.length === 1 ? "account" : "accounts"} selected
+            </p>
+            <button
+              type="button"
+              disabled={bulkBusy}
+              onClick={bulkApprove}
+              className="lift rounded-full bg-gradient-to-br from-brand to-amber-2 px-4 py-1.5 text-xs font-semibold text-white disabled:opacity-60"
+            >
+              {bulkBusy ? "Approving…" : `Approve ${approvable.length}`}
+            </button>
+          </GlassCard>
+        )}
+
         <GlassCard className="mt-6 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full min-w-[54rem] border-collapse text-sm">
               <caption className="sr-only">Accounts with status and available actions</caption>
               <thead>
                 <tr className="border-b border-line">
+                  <th scope="col" className="w-10 px-4 py-3.5">
+                    <input
+                      type="checkbox"
+                      checked={allPendingChecked}
+                      onChange={toggleAllPending}
+                      aria-label="Select all pending"
+                      className="accent-amber"
+                    />
+                  </th>
                   {["Person", "Status", "Requested", "Last sign-in", "Actions"].map((h) => (
                     <th
                       key={h}
@@ -149,67 +266,110 @@ export default function AdminUsers() {
                 </tr>
               </thead>
               <tbody>
-                {data.users.map((u) => {
+                {displayed.map((u) => {
                   const isSelf = u.id === user?.id;
                   const busy = busyId === u.id;
+                  const expanded = expandedId === u.id;
                   return (
-                    <tr key={u.id} className="border-b border-line/60 last:border-0">
-                      <th scope="row" className="px-4 py-3.5 text-left font-normal">
-                        <div className="flex items-center gap-3">
-                          <StatusDot status={DOT[u.status]} pulse={u.status === "pending"} />
-                          <div className="min-w-0">
-                            <p className="truncate font-semibold text-paper">
-                              {u.name}
-                              {isSelf && <span className="ml-2 text-xs text-steel">(you)</span>}
-                            </p>
-                            <p className="truncate text-xs text-steel">
-                              {u.email} &middot; {u.company}
-                            </p>
+                    <Fragment key={u.id}>
+                      <tr
+                        className={`border-b border-line/60 transition-colors last:border-0 hover:bg-ink-3/60 ${expanded ? "bg-ink-3/40" : ""}`}
+                      >
+                        <td
+                          className="w-10 px-4 py-3.5"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={bulkSelected.has(u.id)}
+                            onChange={() => toggleBulk(u.id)}
+                            aria-label={`Select ${u.name}`}
+                            className="accent-amber"
+                          />
+                        </td>
+                        <th
+                          scope="row"
+                          className="cursor-pointer px-4 py-3.5 text-left font-normal"
+                          onClick={() => setExpandedId(expanded ? null : u.id)}
+                        >
+                          <div className="flex items-center gap-3">
+                            <StatusDot status={DOT[u.status]} pulse={u.status === "pending"} />
+                            <div className="min-w-0">
+                              <p className="truncate font-semibold text-paper">
+                                {u.name}
+                                {isSelf && <span className="ml-2 text-xs text-steel">(you)</span>}
+                              </p>
+                              <p className="truncate text-xs text-steel">
+                                {u.email} &middot; {u.company}
+                              </p>
+                            </div>
                           </div>
-                        </div>
-                      </th>
-                      <td className="px-4 py-3.5 capitalize text-paper">{u.status}</td>
-                      <td className="px-4 py-3.5 text-steel">{formatDate(u.createdAt)}</td>
-                      <td className="px-4 py-3.5 text-steel">{formatDate(u.lastLoginAt)}</td>
-                      <td className="px-4 py-3.5">
-                        <div className="flex justify-end gap-2">
-                          {u.status !== "active" && (
-                            <button
-                              type="button"
-                              disabled={busy}
-                              onClick={() => change(u, "active")}
-                              className="lift rounded-full bg-gradient-to-br from-brand to-amber-2 px-3.5 py-1.5 text-xs font-semibold text-white disabled:opacity-60"
-                            >
-                              {busy ? "Working…" : u.status === "pending" ? "Approve" : "Reinstate"}
-                            </button>
-                          )}
-                          {u.status !== "suspended" && !isSelf && (
-                            <button
-                              type="button"
-                              disabled={busy}
-                              onClick={() => change(u, "suspended")}
-                              className="lift rounded-full border border-line px-3.5 py-1.5 text-xs font-semibold text-steel hover:border-danger/50 hover:text-danger disabled:opacity-60"
-                            >
-                              Suspend
-                            </button>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
+                        </th>
+                        <td className="px-4 py-3.5 capitalize text-paper">{u.status}</td>
+                        <td className="px-4 py-3.5 text-steel">{formatDate(u.createdAt)}</td>
+                        <td className="px-4 py-3.5 text-steel">{formatDate(u.lastLoginAt)}</td>
+                        <td className="px-4 py-3.5">
+                          <div className="flex justify-end gap-2">
+                            {u.status !== "active" && (
+                              <button
+                                type="button"
+                                disabled={busy}
+                                onClick={() => change(u, "active")}
+                                className="lift rounded-full bg-gradient-to-br from-brand to-amber-2 px-3.5 py-1.5 text-xs font-semibold text-white disabled:opacity-60"
+                              >
+                                {busy ? "Working…" : u.status === "pending" ? "Approve" : "Reinstate"}
+                              </button>
+                            )}
+                            {u.status !== "suspended" && !isSelf && (
+                              <button
+                                type="button"
+                                disabled={busy}
+                                onClick={() => change(u, "suspended")}
+                                className="lift rounded-full border border-line px-3.5 py-1.5 text-xs font-semibold text-steel hover:border-danger/50 hover:text-danger disabled:opacity-60"
+                              >
+                                Suspend
+                              </button>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+
+                      {expanded && (
+                        <tr className="border-b border-line/40 bg-ink/60">
+                          <td colSpan={6} className="px-8 py-4">
+                            <dl className="grid grid-cols-2 gap-x-10 gap-y-2 text-xs sm:grid-cols-4">
+                              {[
+                                { label: "Phone", value: u.phone || "—" },
+                                { label: "Role", value: u.role || "—" },
+                                { label: "Approved", value: formatDate(u.approvedAt) },
+                                { label: "User ID", value: `#${u.id}` },
+                              ].map(({ label, value }) => (
+                                <div key={label}>
+                                  <dt className="font-semibold uppercase tracking-wider text-steel">{label}</dt>
+                                  <dd className="mt-0.5 text-paper">{value}</dd>
+                                </div>
+                              ))}
+                            </dl>
+                          </td>
+                        </tr>
+                      )}
+                    </Fragment>
                   );
                 })}
               </tbody>
             </table>
           </div>
 
-          {!data.users.length && (
+          {!displayed.length && (
             <div className="px-6 py-14 text-center">
               <p className="text-sm font-medium text-paper">
                 {loading
                   ? "Loading accounts…"
-                  : filter === "pending"
-                    ? "Nothing waiting for approval."
-                    : "No accounts with this status."}
+                  : search
+                    ? "No accounts match that search."
+                    : filter === "pending"
+                      ? "Nothing waiting for approval."
+                      : "No accounts with this status."}
               </p>
             </div>
           )}

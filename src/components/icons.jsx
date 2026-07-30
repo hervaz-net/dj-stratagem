@@ -193,3 +193,77 @@ export const IconLock = (p) => (
     <path d="M8 10.5V7.5a4 4 0 0 1 8 0v3" />
   </svg>
 );
+
+export const IconX = (p) => (
+  <svg {...common} {...p}>
+    <path d="M18 6 6 18M6 6l12 12" />
+  </svg>
+);
+
+export const IconDownload = (p) => (
+  <svg {...common} {...p}>
+    <path d="M12 3v12M7 10l5 5 5-5" />
+    <path d="M3 17v2a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-2" />
+  </svg>
+);
+
+export const IconPlay = (p) => (
+  <svg {...common} {...p}>
+    <circle cx="12" cy="12" r="9" />
+    <path d="M10 8.5l6 3.5-6 3.5z" fill="currentColor" stroke="none" />
+  </svg>
+);
+
+export const IconCalendar = (p) => (
+  <svg {...common} {...p}>
+    <rect x="3" y="5" width="18" height="16" rx="2" />
+    <path d="M3 10h18M8 3v4M16 3v4" />
+  </svg>
+);
+
+export const IconQuote = (p) => (
+  <svg {...common} {...p}>
+    <path d="M3 21c3 0 7-1 7-8V5H4v8h3c0 3.5-1 5.5-4 6zM14 21c3 0 7-1 7-8V5h-6v8h3c0 3.5-1 5.5-4 6z" fill="currentColor" stroke="none" opacity="0.9" />
+  </svg>
+);
+
+export const IconMail = (p) => (
+  <svg {...common} {...p}>
+    <rect x="2" y="4" width="20" height="16" rx="2" />
+    <path d="M2 7l10 7 10-7" />
+  </svg>
+);
+
+export const IconSearch = (p) => (
+  <svg {...common} {...p}>
+    <circle cx="10.5" cy="10.5" r="6.5" />
+    <path d="m21 21-5-5" />
+  </svg>
+);
+
+export const IconColumns = (p) => (
+  <svg {...common} {...p}>
+    <rect x="3" y="3" width="18" height="18" rx="2" />
+    <path d="M9 3v18M15 3v18" />
+  </svg>
+);
+
+export const IconRows = (p) => (
+  <svg {...common} {...p}>
+    <rect x="3" y="3" width="18" height="18" rx="2" />
+    <path d="M3 9h18M3 15h18" />
+  </svg>
+);
+
+export const IconBookmark = (p) => (
+  <svg {...common} {...p}>
+    <path d="M19 21 12 16 5 21V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+  </svg>
+);
+
+export const IconKeyboard = (p) => (
+  <svg {...common} {...p}>
+    <rect x="2" y="6" width="20" height="13" rx="2" />
+    <path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M8 14h8M6 14h.01M18 14h.01" />
+  </svg>
+);
