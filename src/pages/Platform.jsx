@@ -173,6 +173,10 @@ function Panel({ panel }) {
   );
 }
 
+/**
+ * Render the platform overview page and its suite details.
+ * @returns {JSX.Element} The platform page layout.
+ */
 export default function Platform() {
   return (
     <>

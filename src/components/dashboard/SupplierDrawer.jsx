@@ -22,6 +22,11 @@ const metrics = (s) => [
   { label: "Spend YTD", value: money(s.spendYtd) },
 ];
 
+/**
+ * Display detailed supplier information in a side drawer.
+ * @param {Object} supplier - The supplier whose details should be displayed.
+ * @param {Function} onClose - Callback invoked when the drawer is closed.
+ */
 export default function SupplierDrawer({ supplier, onClose }) {
   useEffect(() => {
     if (!supplier) return;

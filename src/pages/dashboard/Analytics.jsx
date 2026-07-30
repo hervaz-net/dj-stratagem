@@ -25,6 +25,12 @@ const topSuppliers = [
   { name: "Apex Materials", spend: "$148k", orders: 9, delivery: "89%" },
 ];
 
+/**
+ * Renders a labeled horizontal progress bar with a formatted value and percentage.
+ * @param {string} label - The label displayed beside the progress bar.
+ * @param {number} pct - The percentage represented by the progress bar.
+ * @param {string} value - The formatted value displayed with the percentage.
+ */
 function BarRow({ label, pct, value }) {
   return (
     <div>
@@ -43,6 +49,10 @@ function BarRow({ label, pct, value }) {
   );
 }
 
+/**
+ * Render the supply chain analytics dashboard.
+ * @returns {JSX.Element} The analytics dashboard page.
+ */
 export default function Analytics() {
   return (
     <>

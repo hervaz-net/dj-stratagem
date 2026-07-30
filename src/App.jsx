@@ -53,7 +53,11 @@ const SkipLink = () => (
   </a>
 );
 
-/** Public marketing pages: site navbar, footer, back-to-top, cookie banner, floating CTA. */
+/**
+ * Wraps marketing page content with site navigation, footer, accessibility, and engagement components.
+ * @param {React.ReactNode} children - The page content rendered in the main region.
+ * @returns {JSX.Element} The marketing page layout.
+ */
 function MarketingLayout({ children }) {
   return (
     <div className="flex min-h-screen flex-col">
@@ -81,6 +85,10 @@ function DashboardShell({ children }) {
   );
 }
 
+/**
+ * Renders the application with authentication context and public and protected routes.
+ * @return {JSX.Element} The application routing tree.
+ */
 function App() {
   return (
     <AuthProvider>

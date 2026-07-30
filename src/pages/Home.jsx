@@ -135,6 +135,10 @@ const trustedBy = [
   "Hensel Phelps",
 ];
 
+/**
+ * Render the D&J Stratagem marketing landing page.
+ * @returns {JSX.Element} The complete landing-page layout.
+ */
 export default function Home() {
   return (
     <>
