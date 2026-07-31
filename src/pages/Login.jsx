@@ -11,8 +11,9 @@ export default function Login() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(() => localStorage.getItem("login_email") ?? "");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(() => !!localStorage.getItem("login_email"));
   const [error, setError] = useState("");
   const [invalid, setInvalid] = useState(null);
   const [submitting, setSubmitting] = useState(false);
@@ -42,6 +43,11 @@ export default function Login() {
     setSubmitting(true);
     try {
       await login(email, password);
+      if (rememberMe) {
+        localStorage.setItem("login_email", email);
+      } else {
+        localStorage.removeItem("login_email");
+      }
       navigate(destination, { replace: true });
     } catch (err) {
       setError(err.message);
@@ -103,6 +109,21 @@ export default function Login() {
               invalid={invalid === "password"}
               describedBy={invalid === "password" ? errorId : undefined}
             />
+
+            <div className="flex items-center justify-between">
+              <label className="flex items-center gap-2 text-sm text-steel">
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="h-3.5 w-3.5 accent-amber"
+                />
+                Remember me
+              </label>
+              <Link to="/forgot-password" className="text-sm font-medium text-amber hover:text-amber-2">
+                Forgot password?
+              </Link>
+            </div>
 
             <div aria-live="polite" role="status" id={errorId}>
               {error && (

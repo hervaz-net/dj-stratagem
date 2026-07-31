@@ -152,6 +152,55 @@ export default function Solutions() {
         </div>
       </Section>
 
+      {/* Case studies */}
+      <Section className="border-t border-line">
+        <Eyebrow>Case studies</Eyebrow>
+        <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+          Real results from real contractors.
+        </h2>
+        <div className="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
+          {[
+            {
+              company: "Apex General Contracting",
+              role: "General Contractor · Denver, CO",
+              result: "Win rate up 30%",
+              detail: "Switched from BuildingConnected to D&J Stratagem and consolidated bid management, CRM, and supplier sourcing under one login. Saved 12 hours a week on bid admin.",
+              metric: "30%",
+              metricLabel: "Win rate increase",
+            },
+            {
+              company: "Summit Mechanical",
+              role: "Mechanical Sub · Phoenix, AZ",
+              result: "Supply costs down 14%",
+              detail: "Used Supply Exchange to consolidate fastener and conduit purchasing. Sealed bidding eliminated the race-to-the-bottom and locked in volume pricing with two preferred suppliers.",
+              metric: "14%",
+              metricLabel: "Supply cost reduction",
+            },
+            {
+              company: "Redline Electrical",
+              role: "Electrical Sub · Dallas, TX",
+              result: "3× pipeline in 6 months",
+              detail: "Profile-driven lead gen replaced a $2,400/month agency. Ranked page-1 for electrical in two cities within 90 days and filled the bid calendar without cold outreach.",
+              metric: "3×",
+              metricLabel: "Pipeline growth",
+            },
+          ].map((cs) => (
+            <div key={cs.company} className="flex flex-col rounded-2xl border border-line bg-ink-2 p-6">
+              <div className="mb-4 rounded-xl bg-amber/8 px-4 py-3 text-center">
+                <p className="text-3xl font-semibold tabular-nums text-amber">{cs.metric}</p>
+                <p className="mt-0.5 text-xs font-semibold uppercase tracking-wider text-steel">{cs.metricLabel}</p>
+              </div>
+              <p className="text-sm font-semibold text-paper">{cs.result}</p>
+              <p className="mt-2 flex-1 text-sm leading-relaxed text-steel">{cs.detail}</p>
+              <div className="mt-5 border-t border-line pt-4">
+                <p className="text-sm font-semibold text-paper">{cs.company}</p>
+                <p className="text-xs text-steel">{cs.role}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Section>
+
       <CTASection
         title="Find your fit on the platform."
         subtitle="Tell us about your business and we'll show you exactly how D&J Stratagem helps you win more."

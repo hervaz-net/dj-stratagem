@@ -1,11 +1,13 @@
+import { useState, useEffect, useCallback } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
-import { useEffect } from "react";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import BackToTop from "./components/BackToTop";
 import CookieBanner from "./components/CookieBanner";
 import FloatingDemo from "./components/FloatingDemo";
 import ReadingProgress from "./components/ReadingProgress";
+import CommandPalette from "./components/CommandPalette";
+import LiveChat from "./components/LiveChat";
 import Home from "./pages/Home";
 import Platform from "./pages/Platform";
 import Solutions from "./pages/Solutions";
@@ -15,6 +17,9 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import ForgotPassword from "./pages/ForgotPassword";
+import VerifyEmail from "./pages/VerifyEmail";
+import Changelog from "./pages/Changelog";
 import NotFound from "./pages/NotFound";
 import SuppliersDashboard from "./pages/dashboard/Suppliers";
 import AdminUsers from "./pages/dashboard/Admin";
@@ -23,14 +28,15 @@ import Bids from "./pages/dashboard/Bids";
 import Orders from "./pages/dashboard/Orders";
 import Analytics from "./pages/dashboard/Analytics";
 import Alerts from "./pages/dashboard/Alerts";
+import Settings from "./pages/dashboard/Settings";
 import { AuthProvider } from "./auth/AuthContext";
 import RequireAuth from "./auth/RequireAuth";
+import { ToastProvider } from "./contexts/ToastContext";
 
 function ScrollToTop() {
   const { pathname, hash } = useLocation();
 
   useEffect(() => {
-    // An in-page anchor should keep its target rather than snapping to top.
     if (hash) {
       const el = document.querySelector(hash);
       if (el) {
@@ -55,10 +61,26 @@ const SkipLink = () => (
 
 /** Public marketing pages: site navbar, footer, back-to-top, cookie banner, floating CTA. */
 function MarketingLayout({ children }) {
+  const [paletteOpen, setPaletteOpen] = useState(false);
+
+  const openPalette = useCallback(() => setPaletteOpen(true), []);
+  const closePalette = useCallback(() => setPaletteOpen(false), []);
+
+  useEffect(() => {
+    const handler = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setPaletteOpen((v) => !v);
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, []);
+
   return (
     <div className="flex min-h-screen flex-col">
       <SkipLink />
-      <Navbar />
+      <Navbar onOpenPalette={openPalette} />
       <main id="main" className="flex-1">
         {children}
       </main>
@@ -67,6 +89,8 @@ function MarketingLayout({ children }) {
       <FloatingDemo />
       <CookieBanner />
       <ReadingProgress />
+      <LiveChat />
+      <CommandPalette open={paletteOpen} onClose={closePalette} />
     </div>
   );
 }
@@ -84,48 +108,54 @@ function DashboardShell({ children }) {
 function App() {
   return (
     <AuthProvider>
-      <ScrollToTop />
-      <Routes>
-        {/* One guarded parent, so protection is structural: every nested
-            dashboard route inherits it rather than opting in. Without this a
-            future /dashboard/foo would silently fall through to the public
-            catch-all instead of redirecting to /login. */}
-        <Route
-          path="/dashboard/*"
-          element={
-            <RequireAuth>
-              <DashboardShell>
-                <Routes>
-                  <Route index element={<Navigate to="overview" replace />} />
-                  <Route path="overview" element={<Overview />} />
-                  <Route path="suppliers" element={<SuppliersDashboard />} />
-                  <Route path="bids" element={<Bids />} />
-                  <Route path="orders" element={<Orders />} />
-                  <Route path="analytics" element={<Analytics />} />
-                  <Route path="alerts" element={<Alerts />} />
-                  {/* Admin-only in practice: the endpoints reject non-admins,
-                      so reaching this route without the role shows an error
-                      rather than any data. */}
-                  <Route path="admin" element={<AdminUsers />} />
-                  {/* Unknown dashboard paths stay inside the guarded subtree. */}
-                  <Route path="*" element={<Navigate to="overview" replace />} />
-                </Routes>
-              </DashboardShell>
-            </RequireAuth>
-          }
-        />
+      <ToastProvider>
+        <ScrollToTop />
+        <Routes>
+          {/* One guarded parent, so protection is structural: every nested
+              dashboard route inherits it rather than opting in. Without this a
+              future /dashboard/foo would silently fall through to the public
+              catch-all instead of redirecting to /login. */}
+          <Route
+            path="/dashboard/*"
+            element={
+              <RequireAuth>
+                <DashboardShell>
+                  <Routes>
+                    <Route index element={<Navigate to="overview" replace />} />
+                    <Route path="overview" element={<Overview />} />
+                    <Route path="suppliers" element={<SuppliersDashboard />} />
+                    <Route path="bids" element={<Bids />} />
+                    <Route path="orders" element={<Orders />} />
+                    <Route path="analytics" element={<Analytics />} />
+                    <Route path="alerts" element={<Alerts />} />
+                    <Route path="settings" element={<Settings />} />
+                    {/* Admin-only in practice: the endpoints reject non-admins,
+                        so reaching this route without the role shows an error
+                        rather than any data. */}
+                    <Route path="admin" element={<AdminUsers />} />
+                    {/* Unknown dashboard paths stay inside the guarded subtree. */}
+                    <Route path="*" element={<Navigate to="overview" replace />} />
+                  </Routes>
+                </DashboardShell>
+              </RequireAuth>
+            }
+          />
 
-        <Route path="/" element={<MarketingLayout><Home /></MarketingLayout>} />
-        <Route path="/platform" element={<MarketingLayout><Platform /></MarketingLayout>} />
-        <Route path="/solutions" element={<MarketingLayout><Solutions /></MarketingLayout>} />
-        <Route path="/supply" element={<MarketingLayout><Supply /></MarketingLayout>} />
-        <Route path="/pricing" element={<MarketingLayout><Pricing /></MarketingLayout>} />
-        <Route path="/about" element={<MarketingLayout><About /></MarketingLayout>} />
-        <Route path="/contact" element={<MarketingLayout><Contact /></MarketingLayout>} />
-        <Route path="/login" element={<MarketingLayout><Login /></MarketingLayout>} />
-        <Route path="/register" element={<MarketingLayout><Register /></MarketingLayout>} />
-        <Route path="*" element={<MarketingLayout><NotFound /></MarketingLayout>} />
-      </Routes>
+          <Route path="/" element={<MarketingLayout><Home /></MarketingLayout>} />
+          <Route path="/platform" element={<MarketingLayout><Platform /></MarketingLayout>} />
+          <Route path="/solutions" element={<MarketingLayout><Solutions /></MarketingLayout>} />
+          <Route path="/supply" element={<MarketingLayout><Supply /></MarketingLayout>} />
+          <Route path="/pricing" element={<MarketingLayout><Pricing /></MarketingLayout>} />
+          <Route path="/about" element={<MarketingLayout><About /></MarketingLayout>} />
+          <Route path="/contact" element={<MarketingLayout><Contact /></MarketingLayout>} />
+          <Route path="/login" element={<MarketingLayout><Login /></MarketingLayout>} />
+          <Route path="/register" element={<MarketingLayout><Register /></MarketingLayout>} />
+          <Route path="/forgot-password" element={<MarketingLayout><ForgotPassword /></MarketingLayout>} />
+          <Route path="/verify-email" element={<MarketingLayout><VerifyEmail /></MarketingLayout>} />
+          <Route path="/changelog" element={<MarketingLayout><Changelog /></MarketingLayout>} />
+          <Route path="*" element={<MarketingLayout><NotFound /></MarketingLayout>} />
+        </Routes>
+      </ToastProvider>
     </AuthProvider>
   );
 }

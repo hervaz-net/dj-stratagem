@@ -28,6 +28,11 @@ const bids = [
 const money = (n) => `$${(n / 1000).toFixed(0)}k`;
 const fmt = (d) => d ? new Date(d).toLocaleDateString(undefined, { month: "short", day: "numeric" }) : "—";
 
+// Win rate: awarded / (awarded + lost)
+const awardedCount = bids.filter((b) => b.status === "awarded").length;
+const decidedCount = bids.filter((b) => ["awarded", "lost"].includes(b.status)).length;
+const winRate = decidedCount > 0 ? Math.round((awardedCount / decidedCount) * 100) : 0;
+
 export default function Bids() {
   const [filter, setFilter] = useState("all");
   const [sort, setSort] = useState({ key: "id", dir: "desc" });
@@ -60,10 +65,7 @@ export default function Bids() {
       <Seo title="Bids" description="Track bids from draft to award." noindex />
 
       <DashboardLayout
-        breadcrumbs={[
-          { label: "Home", to: "/" },
-          { label: "Bids" },
-        ]}
+        breadcrumbs={[{ label: "Home", to: "/" }, { label: "Bids" }]}
         title="Bids"
         subtitle="Track every bid from draft to award."
       >
@@ -73,11 +75,19 @@ export default function Bids() {
             { label: "Total bids", value: bids.length },
             { label: "Submitted", value: counts.submitted + counts.review },
             { label: "Awarded", value: counts.awarded },
-            { label: "Pipeline value", value: money(bids.filter(b => ["draft","submitted","review"].includes(b.status)).reduce((s,b)=>s+b.value,0)) },
+            { label: "Win rate", value: `${winRate}%`, highlight: true },
           ].map((s) => (
             <GlassCard key={s.label} className="px-5 py-4">
               <p className="text-xs font-semibold uppercase tracking-wider text-steel">{s.label}</p>
-              <p className="mt-1 text-2xl font-semibold tabular-nums text-paper">{s.value}</p>
+              <p className={`mt-1 text-2xl font-semibold tabular-nums ${s.highlight ? "text-[var(--viz-green)]" : "text-paper"}`}>
+                {s.value}
+              </p>
+              {s.label === "Win rate" && (
+                <p className="mt-0.5 text-xs text-steel">{awardedCount} of {decidedCount} decided</p>
+              )}
+              {s.label === "Submitted" && (
+                <p className="mt-0.5 text-xs text-steel">Pipeline value: {money(bids.filter(b => ["draft","submitted","review"].includes(b.status)).reduce((s,b)=>s+b.value,0))}</p>
+              )}
             </GlassCard>
           ))}
         </div>

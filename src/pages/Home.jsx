@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import Section, { Eyebrow } from "../components/Section";
 import Button from "../components/Button";
 import FeatureCard from "../components/FeatureCard";
@@ -389,6 +390,68 @@ export default function Home() {
               </div>
             </Reveal>
           ))}
+        </div>
+      </Section>
+
+      {/* Blog / news teaser */}
+      <Section className="border-t border-line">
+        <div className="flex items-end justify-between gap-4">
+          <div>
+            <Eyebrow>From the blog</Eyebrow>
+            <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+              Insights for contractors who want to grow.
+            </h2>
+          </div>
+          <Link to="/changelog" className="hidden shrink-0 text-sm font-medium text-amber hover:text-amber-2 sm:block">
+            View all posts →
+          </Link>
+        </div>
+        <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-3">
+          {[
+            {
+              tag: "Strategy",
+              title: "How to improve your bid win rate without cutting price",
+              excerpt: "Win rate is a function of targeting, presentation, and follow-up — not just the bottom line. Here's what top subs do differently.",
+              date: "Jul 28, 2026",
+              readTime: "6 min",
+            },
+            {
+              tag: "Supply chain",
+              title: "Why sealed bidding beats open RFQs for material procurement",
+              excerpt: "Open reverse auctions push suppliers to race to the bottom. Sealed, scored bidding gets you better prices AND better fill rates.",
+              date: "Jul 21, 2026",
+              readTime: "5 min",
+            },
+            {
+              tag: "Marketing",
+              title: "The contractor's guide to ranking on Google in your market",
+              excerpt: "A well-optimized contractor profile earns organic leads at a fraction of the cost of a pay-per-lead service. Here's exactly how to set it up.",
+              date: "Jul 14, 2026",
+              readTime: "8 min",
+            },
+          ].map((post) => (
+            <Reveal key={post.title} className="h-full">
+              <div className="lift flex h-full flex-col rounded-xl border border-line bg-ink-2 overflow-hidden hover:border-amber/40">
+                <div className="h-2 w-full bg-gradient-to-r from-brand to-amber-2" aria-hidden="true" />
+                <div className="flex flex-1 flex-col p-6">
+                  <span className="mb-3 inline-block rounded-full border border-line px-2.5 py-0.5 text-xs font-semibold text-steel">
+                    {post.tag}
+                  </span>
+                  <h3 className="text-sm font-semibold leading-snug text-paper flex-1">{post.title}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-steel">{post.excerpt}</p>
+                  <div className="mt-5 flex items-center justify-between text-xs text-steel">
+                    <span>{post.date}</span>
+                    <span>{post.readTime} read</span>
+                  </div>
+                </div>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+        <div className="mt-6 sm:hidden">
+          <Link to="/changelog" className="text-sm font-medium text-amber hover:text-amber-2">
+            View all posts →
+          </Link>
         </div>
       </Section>
 

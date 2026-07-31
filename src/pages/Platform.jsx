@@ -265,6 +265,54 @@ export default function Platform() {
         </Section>
       ))}
 
+      {/* Integrations */}
+      <Section className="border-t border-line">
+        <Reveal>
+          <div className="text-center">
+            <Eyebrow>Integrations</Eyebrow>
+            <h2 className="mt-3 text-balance text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+              Works with the tools you already use.
+            </h2>
+            <p className="mx-auto mt-4 max-w-xl text-base text-steel">
+              D&amp;J Stratagem connects to the systems your office and field teams rely on every day &mdash; no rip-and-replace required.
+            </p>
+          </div>
+        </Reveal>
+        <div className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+          {[
+            { name: "QuickBooks", category: "Accounting" },
+            { name: "Procore", category: "Project mgmt" },
+            { name: "Autodesk", category: "BIM & design" },
+            { name: "DocuSign", category: "E-signatures" },
+            { name: "Sage 300", category: "ERP" },
+            { name: "Microsoft 365", category: "Productivity" },
+            { name: "Bluebeam", category: "Takeoffs" },
+            { name: "Plangrid", category: "Field tools" },
+            { name: "Google Workspace", category: "Productivity" },
+            { name: "Xero", category: "Accounting" },
+            { name: "Slack", category: "Messaging" },
+            { name: "Zapier", category: "Automation" },
+          ].map((int) => (
+            <div
+              key={int.name}
+              className="lift flex flex-col items-center rounded-xl border border-line bg-ink-2 px-4 py-5 text-center transition-colors hover:border-amber/40"
+            >
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber/10 text-xs font-bold text-amber">
+                {int.name.slice(0, 2).toUpperCase()}
+              </div>
+              <p className="mt-3 text-xs font-semibold text-paper">{int.name}</p>
+              <p className="mt-0.5 text-[10px] text-steel">{int.category}</p>
+            </div>
+          ))}
+        </div>
+        <p className="mt-8 text-center text-sm text-steel">
+          Don&rsquo;t see your tool?{" "}
+          <a href="/contact" className="font-medium text-amber hover:text-amber-2">
+            Request an integration →
+          </a>
+        </p>
+      </Section>
+
       <CTASection
         title="See it on your next bid."
         subtitle="We'll walk through your current workflow and show you exactly where the platform fits."

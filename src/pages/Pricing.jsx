@@ -5,7 +5,7 @@ import CTASection from "../components/CTASection";
 import Reveal from "../components/Reveal";
 import Accordion from "../components/Accordion";
 import Seo from "../components/Seo";
-import { IconCheck } from "../components/icons";
+import { IconCheck, IconQuote } from "../components/icons";
 
 /** Paid annually up front, billed as a monthly-equivalent rate. */
 const ANNUAL_DISCOUNT = 0.2;
@@ -118,6 +118,69 @@ const pricingFaqs = [
     a: "Annual plans are paid up front and shown here as the equivalent monthly rate, a 20% saving against paying month to month.",
   },
 ];
+
+function RoiCalculator() {
+  const [avgBid, setAvgBid] = useState(250);
+  const [bidsPerMonth, setBidsPerMonth] = useState(8);
+  const [currentWinRate, setCurrentWinRate] = useState(25);
+  const [improvedWinRate, setImprovedWinRate] = useState(35);
+
+  const extraWinsPerYear = Math.round(bidsPerMonth * 12 * (improvedWinRate - currentWinRate) / 100);
+  const extraRevenue = extraWinsPerYear * avgBid * 1000;
+  const planCost = 249 * 12;
+  const roi = planCost > 0 ? Math.round((extraRevenue / planCost) * 10) / 10 : 0;
+
+  const fmt = (n) => n >= 1000 ? `$${(n / 1000).toFixed(0)}k` : `$${n.toLocaleString()}`;
+
+  const sliders = [
+    { label: "Average bid value", value: avgBid, min: 25, max: 2500, step: 25, set: setAvgBid, display: `$${avgBid}k` },
+    { label: "Bids submitted per month", value: bidsPerMonth, min: 1, max: 40, step: 1, set: setBidsPerMonth, display: bidsPerMonth },
+    { label: "Current win rate", value: currentWinRate, min: 5, max: 70, step: 1, set: setCurrentWinRate, display: `${currentWinRate}%` },
+    { label: "Target win rate", value: improvedWinRate, min: 5, max: 80, step: 1, set: setImprovedWinRate, display: `${improvedWinRate}%` },
+  ];
+
+  return (
+    <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-2">
+      <div className="space-y-6">
+        {sliders.map((s) => (
+          <div key={s.label}>
+            <div className="mb-2 flex items-center justify-between text-sm">
+              <label className="font-medium text-paper">{s.label}</label>
+              <span className="tabular-nums font-semibold text-amber">{s.display}</span>
+            </div>
+            <input
+              type="range"
+              min={s.min}
+              max={s.max}
+              step={s.step}
+              value={s.value}
+              onChange={(e) => s.set(Number(e.target.value))}
+              className="w-full accent-amber"
+            />
+          </div>
+        ))}
+      </div>
+      <div className="flex flex-col justify-center rounded-2xl border border-amber/30 bg-amber/5 p-8 text-center">
+        <p className="text-xs font-semibold uppercase tracking-wider text-steel">Extra revenue per year</p>
+        <p className="mt-2 text-5xl font-semibold tracking-tight text-paper tabular-nums">{fmt(extraRevenue)}</p>
+        <p className="mt-2 text-sm text-steel">{extraWinsPerYear} additional won bid{extraWinsPerYear !== 1 ? "s" : ""} per year</p>
+        <div className="mt-6 grid grid-cols-2 gap-4 text-center">
+          <div className="rounded-xl border border-line bg-ink/60 p-4">
+            <p className="text-2xl font-semibold text-amber tabular-nums">{roi}×</p>
+            <p className="mt-1 text-xs text-steel">ROI vs. Growth plan</p>
+          </div>
+          <div className="rounded-xl border border-line bg-ink/60 p-4">
+            <p className="text-2xl font-semibold text-paper tabular-nums">${planCost / 100}/mo</p>
+            <p className="mt-1 text-xs text-steel">Growth plan annual</p>
+          </div>
+        </div>
+        <p className="mt-4 text-xs text-steel/60">
+          Illustrative estimate based on your inputs. Actual results vary.
+        </p>
+      </div>
+    </div>
+  );
+}
 
 export default function Pricing() {
   const [annual, setAnnual] = useState(false);
@@ -308,6 +371,56 @@ export default function Pricing() {
             </Reveal>
           ))}
         </div>
+      </Section>
+
+      {/* Testimonials */}
+      <Section className="border-t border-line">
+        <Eyebrow>From contractors</Eyebrow>
+        <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+          Plans that pay for themselves fast.
+        </h2>
+        <div className="mt-12 grid grid-cols-1 gap-5 md:grid-cols-3">
+          {[
+            {
+              quote: "We won a $680k contract in the second month of using the platform. That's more than six years of Professional plan fees in one deal.",
+              name: "Tony K.",
+              role: "Owner, TKM General Contracting",
+            },
+            {
+              quote: "The Supply Exchange saved us $34k on materials last quarter. It basically funded the plan for the whole year.",
+              name: "Sandra L.",
+              role: "Procurement Lead, Peak Mechanical",
+            },
+            {
+              quote: "We used to pay an agency $2,500 a month for leads. The Growth plan does more for $249. It wasn't a hard decision.",
+              name: "Derek O.",
+              role: "VP Sales, Crestline Electrical",
+            },
+          ].map((t, i) => (
+            <Reveal key={t.name} delay={i * 90} className="h-full">
+              <div className="flex h-full flex-col rounded-xl border border-line bg-ink-2 p-6">
+                <IconQuote width={22} height={22} className="mb-4 shrink-0 text-amber/50" />
+                <blockquote className="flex-1 text-sm leading-relaxed text-paper/90">&ldquo;{t.quote}&rdquo;</blockquote>
+                <div className="mt-5 border-t border-line pt-4">
+                  <p className="text-sm font-semibold text-paper">{t.name}</p>
+                  <p className="text-xs text-steel">{t.role}</p>
+                </div>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </Section>
+
+      {/* ROI calculator */}
+      <Section className="border-t border-line">
+        <Eyebrow>ROI calculator</Eyebrow>
+        <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+          See what one extra win is worth.
+        </h2>
+        <p className="mt-5 max-w-xl text-base leading-relaxed text-steel">
+          Even a modest improvement in win rate pays for the platform many times over.
+        </p>
+        <RoiCalculator />
       </Section>
 
       <Section className="border-t border-line">
