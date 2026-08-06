@@ -1,7 +1,9 @@
+import { useState } from "react";
 import Section, { Eyebrow } from "../components/Section";
 import CTASection from "../components/CTASection";
 import Reveal from "../components/Reveal";
 import Seo from "../components/Seo";
+import WalkthroughModal from "../components/WalkthroughModal";
 import {
   IconGavel,
   IconHelmet,
@@ -174,6 +176,8 @@ function Panel({ panel }) {
 }
 
 export default function Platform() {
+  const [walkthroughOpen, setWalkthroughOpen] = useState(false);
+
   return (
     <>
       <Seo
@@ -223,7 +227,8 @@ export default function Platform() {
               <div className="absolute inset-0 bg-grid opacity-30" aria-hidden="true" />
               <button
                 type="button"
-                aria-label="Play platform walkthrough video"
+                onClick={() => setWalkthroughOpen(true)}
+                aria-label="Play platform walkthrough"
                 className="relative flex h-20 w-20 items-center justify-center rounded-full bg-brand/90 text-white shadow-lg transition-transform hover:scale-105 hover:bg-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2"
               >
                 <IconPlay width={28} height={28} className="ml-1" />
@@ -317,6 +322,8 @@ export default function Platform() {
         title="See it on your next bid."
         subtitle="We'll walk through your current workflow and show you exactly where the platform fits."
       />
+
+      <WalkthroughModal open={walkthroughOpen} onClose={() => setWalkthroughOpen(false)} />
     </>
   );
 }
