@@ -114,9 +114,9 @@ export default function Contact() {
               },
               {
                 icon: <IconChat width={18} height={18} />,
-                title: "hello@djstratagem.com",
+                title: "hello@djstratageminc.com",
                 detail: "General inquiries and demo requests.",
-                href: "mailto:hello@djstratagem.com",
+                href: "mailto:hello@djstratageminc.com",
               },
               {
                 icon: <IconClock width={18} height={18} />,
@@ -258,7 +258,7 @@ export default function Contact() {
                   {error && (
                     <p className="rounded-md border border-danger/30 bg-danger/10 px-4 py-2.5 text-sm text-danger">
                       Something went wrong sending your message. Please try again, or email us
-                      directly at hello@djstratagem.com.
+                      directly at hello@djstratageminc.com.
                     </p>
                   )}
                 </div>

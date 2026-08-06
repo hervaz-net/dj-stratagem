@@ -117,10 +117,10 @@ export default function Footer() {
             </p>
             <Newsletter />
             <a
-              href="mailto:hello@djstratagem.com"
+              href="mailto:hello@djstratageminc.com"
               className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-amber transition-colors hover:text-amber-2"
             >
-              hello@djstratagem.com
+              hello@djstratageminc.com
             </a>
             <p className="mt-2 text-sm text-steel">Los Angeles, California</p>
           </div>

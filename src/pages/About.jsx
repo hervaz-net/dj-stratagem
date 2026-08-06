@@ -176,7 +176,7 @@ export default function About() {
         </div>
         <p className="mt-6 text-sm text-steel">
           Don&rsquo;t see the right role?{" "}
-          <a href="mailto:careers@djstratagem.com" className="font-medium text-amber hover:text-amber-2">
+          <a href="mailto:careers@djstratageminc.com" className="font-medium text-amber hover:text-amber-2">
             Send us your resume anyway.
           </a>
         </p>
