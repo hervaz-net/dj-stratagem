@@ -13,6 +13,9 @@ import Login from "./pages/Login";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsAndConditions from "./pages/TermsAndConditions";
 import BrandGuidelines from "./pages/BrandGuidelines";
+import FleetCards from "./pages/FleetCards";
+import Receipts from "./pages/Receipts";
+import Signage from "./pages/Signage";
 import NotFound from "./pages/NotFound";
 
 function ScrollToTop() {
@@ -41,6 +44,9 @@ function App() {
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/terms" element={<TermsAndConditions />} />
           <Route path="/brand" element={<BrandGuidelines />} />
+          <Route path="/marketing/fleet-cards" element={<FleetCards />} />
+          <Route path="/marketing/receipts" element={<Receipts />} />
+          <Route path="/marketing/signage" element={<Signage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
