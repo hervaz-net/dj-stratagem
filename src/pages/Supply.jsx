@@ -12,7 +12,6 @@ import {
   IconTruck,
   IconShield,
   IconClock,
-  IconCheck,
   IconArrowRight,
 } from "../components/icons";
 
@@ -95,7 +94,7 @@ const efficiencies = [
   },
 ];
 
-const supplierProtections = [
+const _supplierProtections = [
   "Set floor pricing per SKU so a quote can never be scored below your margin",
   "Win on lead time, fill rate, and reliability — not just by being cheapest",
   "Pooled orders mean fewer, larger, committed POs instead of constant small quotes",

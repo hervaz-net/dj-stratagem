@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Button from "../components/Button";
 
 export default function Login() {
-  const navigate = useNavigate();
+  const _navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -33,10 +33,10 @@ export default function Login() {
       setTimeout(() => {
         // TODO: Handle actual authentication
         console.log("Login attempt:", { email, password });
-        // navigate("/dashboard"); // Redirect after successful login
+        // _navigate("/dashboard"); // Redirect after successful login
         setLoading(false);
       }, 500);
-    } catch (err) {
+    } catch {
       setError("An error occurred. Please try again.");
       setLoading(false);
     }

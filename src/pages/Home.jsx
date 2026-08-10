@@ -48,7 +48,7 @@ const pillars = [
   },
 ];
 
-const competitors = [
+const _competitors = [
   { name: "PlanHub", does: "Finding bids" },
   { name: "Dodge Construction Network", does: "Project leads" },
   { name: "BuildingConnected", does: "Bid invitations" },
