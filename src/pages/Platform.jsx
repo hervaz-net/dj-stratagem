@@ -1,5 +1,9 @@
+import { useState } from "react";
 import Section, { Eyebrow } from "../components/Section";
 import CTASection from "../components/CTASection";
+import Reveal from "../components/Reveal";
+import Seo from "../components/Seo";
+import WalkthroughModal from "../components/WalkthroughModal";
 import {
   IconGavel,
   IconHelmet,
@@ -8,6 +12,7 @@ import {
   IconPackage,
   IconSparkle,
   IconCheck,
+  IconPlay,
 } from "../components/icons";
 
 const modules = [
@@ -145,6 +150,12 @@ const modules = [
   },
 ];
 
+const slug = (s) =>
+  s
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+
 function Panel({ panel }) {
   return (
     <div className="rounded-2xl border border-line bg-ink-2 p-6">
@@ -165,8 +176,15 @@ function Panel({ panel }) {
 }
 
 export default function Platform() {
+  const [walkthroughOpen, setWalkthroughOpen] = useState(false);
+
   return (
     <>
+      <Seo
+        title="Platform"
+        description="Six connected suites — bidding, subcontractor tools, marketing, Supply Exchange, business tools, and AI — replacing the patchwork of point tools contractors juggle today."
+      />
+
       <Section className="pt-16 pb-8 md:pt-24">
         <Eyebrow>The platform</Eyebrow>
         <h1 className="text-balance max-w-3xl text-4xl font-semibold leading-tight tracking-tight text-paper sm:text-5xl">
@@ -176,12 +194,58 @@ export default function Platform() {
           Six connected suites replace the patchwork of point tools contractors juggle today
           &mdash; from the first opportunity to the final invoice.
         </p>
+
+        {/* Jump links — the page runs six long sections deep. */}
+        <nav aria-label="Platform suites" className="mt-10 flex flex-wrap gap-2">
+          {modules.map((m) => (
+            <a
+              key={m.eyebrow}
+              href={`#${slug(m.eyebrow)}`}
+              className="lift rounded-full border border-line bg-ink-2 px-4 py-2 text-xs font-medium text-steel hover:border-amber/50 hover:text-amber"
+            >
+              {m.eyebrow}
+            </a>
+          ))}
+        </nav>
+      </Section>
+
+      {/* Watch it in action */}
+      <Section className="border-t border-line">
+        <Reveal>
+          <div className="text-center">
+            <Eyebrow>See it live</Eyebrow>
+            <h2 className="mt-3 text-balance text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+              Watch it in action.
+            </h2>
+            <p className="mx-auto mt-4 max-w-xl text-base text-steel">
+              A five-minute walkthrough of the full bidding workflow — from posting a project to awarding the contract.
+            </p>
+          </div>
+
+          <div className="relative mx-auto mt-10 max-w-3xl overflow-hidden rounded-2xl border border-line bg-ink-2">
+            <div className="flex aspect-video items-center justify-center bg-gradient-to-br from-ink-2 to-ink">
+              <div className="absolute inset-0 bg-grid opacity-30" aria-hidden="true" />
+              <button
+                type="button"
+                onClick={() => setWalkthroughOpen(true)}
+                aria-label="Play platform walkthrough"
+                className="relative flex h-20 w-20 items-center justify-center rounded-full bg-brand/90 text-white shadow-lg transition-transform hover:scale-105 hover:bg-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2"
+              >
+                <IconPlay width={28} height={28} className="ml-1" />
+              </button>
+            </div>
+            <div className="border-t border-line px-6 py-4">
+              <p className="text-sm font-medium text-paper">Platform walkthrough &mdash; 5 min</p>
+              <p className="text-xs text-steel">Bidding, sub matching, and AI features</p>
+            </div>
+          </div>
+        </Reveal>
       </Section>
 
       {modules.map((m, i) => (
-        <Section key={m.eyebrow} className="border-t border-line">
+        <Section key={m.eyebrow} id={slug(m.eyebrow)} className="border-t border-line">
           <div className={`grid grid-cols-1 items-center gap-14 lg:grid-cols-2 ${i % 2 ? "lg:[&>*:first-child]:order-2" : ""}`}>
-            <div>
+            <Reveal>
               <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-amber/10 text-amber">
                 {m.icon}
               </div>
@@ -198,16 +262,68 @@ export default function Platform() {
                   </li>
                 ))}
               </ul>
-            </div>
-            <Panel panel={m.panel} />
+            </Reveal>
+            <Reveal delay={140}>
+              <Panel panel={m.panel} />
+            </Reveal>
           </div>
         </Section>
       ))}
+
+      {/* Integrations */}
+      <Section className="border-t border-line">
+        <Reveal>
+          <div className="text-center">
+            <Eyebrow>Integrations</Eyebrow>
+            <h2 className="mt-3 text-balance text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+              Works with the tools you already use.
+            </h2>
+            <p className="mx-auto mt-4 max-w-xl text-base text-steel">
+              D&amp;J Stratagem connects to the systems your office and field teams rely on every day &mdash; no rip-and-replace required.
+            </p>
+          </div>
+        </Reveal>
+        <div className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+          {[
+            { name: "QuickBooks", category: "Accounting" },
+            { name: "Procore", category: "Project mgmt" },
+            { name: "Autodesk", category: "BIM & design" },
+            { name: "DocuSign", category: "E-signatures" },
+            { name: "Sage 300", category: "ERP" },
+            { name: "Microsoft 365", category: "Productivity" },
+            { name: "Bluebeam", category: "Takeoffs" },
+            { name: "Plangrid", category: "Field tools" },
+            { name: "Google Workspace", category: "Productivity" },
+            { name: "Xero", category: "Accounting" },
+            { name: "Slack", category: "Messaging" },
+            { name: "Zapier", category: "Automation" },
+          ].map((int) => (
+            <div
+              key={int.name}
+              className="lift flex flex-col items-center rounded-xl border border-line bg-ink-2 px-4 py-5 text-center transition-colors hover:border-amber/40"
+            >
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber/10 text-xs font-bold text-amber">
+                {int.name.slice(0, 2).toUpperCase()}
+              </div>
+              <p className="mt-3 text-xs font-semibold text-paper">{int.name}</p>
+              <p className="mt-0.5 text-[10px] text-steel">{int.category}</p>
+            </div>
+          ))}
+        </div>
+        <p className="mt-8 text-center text-sm text-steel">
+          Don&rsquo;t see your tool?{" "}
+          <a href="/contact" className="font-medium text-amber hover:text-amber-2">
+            Request an integration →
+          </a>
+        </p>
+      </Section>
 
       <CTASection
         title="See it on your next bid."
         subtitle="We'll walk through your current workflow and show you exactly where the platform fits."
       />
+
+      <WalkthroughModal open={walkthroughOpen} onClose={() => setWalkthroughOpen(false)} />
     </>
   );
 }

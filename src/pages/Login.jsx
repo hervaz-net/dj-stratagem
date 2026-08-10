@@ -1,117 +1,165 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import Button from "../components/Button";
+import Logo from "../components/Logo";
+import Seo from "../components/Seo";
+import PasswordField from "../components/PasswordField";
+import useAuth from "../auth/useAuth";
 
 export default function Login() {
-  const _navigate = useNavigate();
-  const [email, setEmail] = useState("");
+  const { user, loading, login } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const [email, setEmail] = useState(() => localStorage.getItem("login_email") ?? "");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(() => !!localStorage.getItem("login_email"));
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [invalid, setInvalid] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
+  const errorId = "login-error";
+
+  // Send an already-authenticated visitor onward rather than showing the form.
+  const destination = location.state?.from ?? "/dashboard/suppliers";
+  if (!loading && user) return <Navigate to={destination} replace />;
+
+  const fail = (field, message) => {
+    setInvalid(field);
+    setError(message);
+    document.getElementById(field)?.focus();
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    setLoading(true);
+    setInvalid(null);
 
+    if (!email) return fail("email", "Enter your email address.");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return fail("email", "Enter a valid email address.");
+    }
+    if (!password) return fail("password", "Enter your password.");
+
+    setSubmitting(true);
     try {
-      // TODO: Replace with actual login API endpoint
-      // For now, this is a placeholder for client-side validation
-      if (!email || !password) {
-        setError("Please fill in all fields");
-        setLoading(false);
-        return;
+      await login(email, password);
+      if (rememberMe) {
+        localStorage.setItem("login_email", email);
+      } else {
+        localStorage.removeItem("login_email");
       }
-
-      if (!email.includes("@")) {
-        setError("Please enter a valid email address");
-        setLoading(false);
-        return;
+      navigate(destination, { replace: true });
+    } catch (err) {
+      setError(err.message);
+      // Focus the email field for a credentials failure so a retry is one
+      // keystroke away; leave focus alone for server-side problems.
+      if (err.code === "invalid_credentials") {
+        setInvalid("email");
+        document.getElementById("email")?.focus();
       }
-
-      // Simulate API call
-      setTimeout(() => {
-        // TODO: Handle actual authentication
-        console.log("Login attempt:", { email, password });
-        // _navigate("/dashboard"); // Redirect after successful login
-        setLoading(false);
-      }, 500);
-    } catch {
-      setError("An error occurred. Please try again.");
-      setLoading(false);
+    } finally {
+      setSubmitting(false);
     }
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-ink via-ink-2 to-ink">
-      <div className="mx-auto flex min-h-screen max-w-md flex-col justify-center px-6 py-12">
-        <div className="rounded-lg border border-line/50 bg-ink/80 backdrop-blur p-8">
-          <h1 className="mb-2 text-3xl font-bold text-paper">Sign In</h1>
-          <p className="mb-8 text-steel">Access your D&J Stratagem account</p>
+  const inputClass =
+    "w-full rounded-md border border-line bg-ink px-4 py-2.5 text-sm text-paper outline-hidden " +
+    "transition-colors placeholder:text-steel/60 focus:border-amber";
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+  return (
+    <>
+      <Seo title="Sign in" description="Sign in to your D&J Stratagem account." noindex />
+
+      <div className="mx-auto flex w-full max-w-md flex-col justify-center px-6 py-16 md:py-24">
+        <div className="rounded-2xl border border-line bg-ink-2 p-8 shadow-xl shadow-brand/5">
+          <Link to="/" className="inline-block" aria-label="D&J Stratagem — home">
+            <Logo />
+          </Link>
+
+          <h1 className="mt-8 text-3xl font-semibold tracking-tight text-paper">Sign in</h1>
+          <p className="mt-2 text-sm text-steel">Access your D&amp;J Stratagem account.</p>
+
+          <form onSubmit={handleSubmit} className="mt-8 space-y-4" noValidate>
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-paper mb-2">
-                Email Address
+              <label htmlFor="email" className="mb-2 block text-sm font-medium text-paper">
+                Email address
               </label>
               <input
                 id="email"
+                name="email"
                 type="email"
+                autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
-                className="w-full rounded-md border border-line bg-ink-2 px-4 py-2.5 text-paper placeholder-steel/50 transition-colors focus:border-amber focus:outline-none focus:ring-1 focus:ring-amber/20"
+                aria-invalid={invalid === "email" ? true : undefined}
+                // Field-specific: describing both inputs with the same message
+                // would announce the email error on the password field too.
+                aria-describedby={invalid === "email" ? errorId : undefined}
+                className={inputClass}
               />
             </div>
 
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-paper mb-2">
-                Password
+            <PasswordField
+              id="password"
+              label="Password"
+              autoComplete="current-password"
+              value={password}
+              onChange={setPassword}
+              invalid={invalid === "password"}
+              describedBy={invalid === "password" ? errorId : undefined}
+            />
+
+            <div className="flex items-center justify-between">
+              <label className="flex items-center gap-2 text-sm text-steel">
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="h-3.5 w-3.5 accent-amber"
+                />
+                Remember me
               </label>
-              <input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full rounded-md border border-line bg-ink-2 px-4 py-2.5 text-paper placeholder-steel/50 transition-colors focus:border-amber focus:outline-none focus:ring-1 focus:ring-amber/20"
-              />
+              <Link to="/forgot-password" className="text-sm font-medium text-amber hover:text-amber-2">
+                Forgot password?
+              </Link>
             </div>
 
-            {error && <div className="rounded-md bg-red-500/10 border border-red-500/30 px-4 py-2.5 text-sm text-red-400">{error}</div>}
+            <div aria-live="polite" role="status" id={errorId}>
+              {error && (
+                <div className="rounded-md border border-danger/30 bg-danger/10 px-4 py-2.5 text-sm text-danger">
+                  {error}
+                </div>
+              )}
+            </div>
 
-            <Button type="submit" variant="primary" className="w-full mt-6" disabled={loading}>
-              {loading ? "Signing in..." : "Sign In"}
+            <Button type="submit" variant="primary" className="mt-2 w-full" disabled={submitting}>
+              {submitting ? "Signing in…" : "Sign in"}
             </Button>
           </form>
 
-          <div className="mt-6 space-y-3">
-            <p className="text-center text-sm text-steel">
-              Don't have an account?{" "}
-              <a href="#" className="text-amber hover:text-amber-2 font-medium">
-                Contact us for access
-              </a>
-            </p>
+          <div className="mt-6 space-y-4">
             <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-line"></div>
+              <div className="absolute inset-0 flex items-center" aria-hidden="true">
+                <div className="w-full border-t border-line" />
               </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="bg-ink px-2 text-steel">Or</span>
+              <div className="relative flex justify-center">
+                <span className="bg-ink-2 px-3 text-xs uppercase tracking-wider text-steel">Or</span>
               </div>
             </div>
             <p className="text-center text-sm text-steel">
-              <a href="#" className="text-amber hover:text-amber-2 font-medium">
-                Forgot your password?
-              </a>
+              Don&rsquo;t have an account?{" "}
+              <Link to="/register" className="font-medium text-amber hover:text-amber-2">
+                Request access
+              </Link>
             </p>
           </div>
         </div>
 
         <p className="mt-8 text-center text-xs text-steel">
-          This is a secure login portal for D&J Stratagem platform users.
+          Accounts are approved by our team before first sign-in.
         </p>
       </div>
-    </div>
+    </>
   );
 }

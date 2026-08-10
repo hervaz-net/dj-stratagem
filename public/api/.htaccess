@@ -1,0 +1,25 @@
+# Never serve these as files. config.php holds database credentials — if the
+# PHP handler is ever misconfigured or disabled, an unprotected .php file is
+# served as plaintext and the password leaks. Deny at the web-server level so
+# that failure mode can't happen.
+
+<FilesMatch "^(config\.php|config\.example\.php|bootstrap\.php|schema\.sql)$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>
+
+# Auth responses must never be cached by a proxy or the browser.
+<FilesMatch "\.php$">
+  <IfModule mod_headers.c>
+    Header always set Cache-Control "no-store, no-cache, must-revalidate"
+    Header always set X-Content-Type-Options "nosniff"
+  </IfModule>
+</FilesMatch>
+
+# Directory listing would expose which endpoints exist.
+Options -Indexes

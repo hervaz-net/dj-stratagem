@@ -1,4 +1,8 @@
 User-agent: *
 Allow: /
+Disallow: /login
+Disallow: /register
+Disallow: /dashboard
+Disallow: /api/
 
 Sitemap: https://djstratageminc.com/sitemap.xml
