@@ -1,0 +1,4 @@
+# The deploy branch holds only the built site that rsyncs to public_html.
+# Source-tree artifacts must never land here.
+node_modules/
+dist/
