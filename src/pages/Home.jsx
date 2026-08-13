@@ -4,6 +4,7 @@ import Button from "../components/Button";
 import FeatureCard from "../components/FeatureCard";
 import CTASection from "../components/CTASection";
 import HeroPanel from "../components/HeroPanel";
+import OpportunityPreview from "../components/OpportunityPreview";
 import Reveal from "../components/Reveal";
 import Accordion from "../components/Accordion";
 import StatCounter from "../components/StatCounter";
@@ -20,7 +21,6 @@ import {
   IconBuilding,
   IconCheck,
   IconTrendingUp,
-  IconQuote,
 } from "../components/icons";
 
 const pillars = [
@@ -65,18 +65,23 @@ const stats = [
 const steps = [
   {
     n: "01",
-    title: "Set up your profile",
-    text: "Add your trades, territory, licenses, and past work. Verification happens once and travels with every bid you submit.",
+    title: "Create your company profile",
+    text: "Tell us your trades, locations, project types, capacity, and certifications. Verification happens once and travels with every bid you submit.",
   },
   {
     n: "02",
-    title: "Get matched and bid",
-    text: "Projects that fit your trade land in your dashboard. Submit structured digital bids and track every deadline in one place.",
+    title: "Discover matched opportunities",
+    text: "The platform scores construction projects against your profile and surfaces the ones worth your time — with alerts when new work fits.",
   },
   {
     n: "03",
-    title: "Win, deliver, repeat",
-    text: "Award or get awarded, then run the job with CRM, estimating, invoicing, and change orders connected to the same record.",
+    title: "Manage your bid pipeline",
+    text: "Track opportunities, deadlines, documents, contacts, and bid status in one place, so nothing dies in an inbox.",
+  },
+  {
+    n: "04",
+    title: "Win more work",
+    text: "Use marketing, analytics, and follow-up tools to turn opportunities into revenue — then learn from what you win and lose.",
   },
 ];
 
@@ -103,45 +108,36 @@ const faqs = [
   },
 ];
 
-const testimonials = [
+/** Who the platform serves. Drives the "Who it's for" section. */
+const audiences = [
   {
-    quote:
-      "We went from chasing bid invites to getting matched automatically. Our win rate went up 30% in the first quarter.",
-    name: "Marcus D.",
-    role: "VP of Business Development",
-    company: "Apex General Contracting",
+    icon: <IconGavel />,
+    title: "General contractors",
+    text: "Find projects and manage your entire bid pipeline — post packages, invite subs, compare bids, and award with a clear paper trail.",
   },
   {
-    quote:
-      "The Supply Exchange alone saved us enough on fasteners to pay for the plan three times over. The sealed bid format is a game changer.",
-    name: "Lisa T.",
-    role: "Procurement Manager",
-    company: "Summit Mechanical",
+    icon: <IconHelmet />,
+    title: "Subcontractors",
+    text: "Find work matching your trades and service area, submit structured digital bids, and build a bid history that wins more of them.",
   },
   {
-    quote:
-      "Our profile now ranks on the first page for our trade in two cities. We used to spend thousands on lead gen — D&J Stratagem does it for us.",
-    name: "James R.",
-    role: "Owner",
-    company: "Redline Electrical",
+    icon: <IconPackage />,
+    title: "Suppliers",
+    text: "Identify upcoming projects and the contractors who need your products, then quote into sealed RFQs that protect your margin.",
   },
-];
-
-const trustedBy = [
-  "Granite Construction",
-  "Turner Construction",
-  "PCL Constructors",
-  "McCarthy Building",
-  "Swinerton",
-  "Hensel Phelps",
+  {
+    icon: <IconMegaphone />,
+    title: "Construction service providers",
+    text: "Generate qualified commercial construction leads from a profile that ranks, instead of paying an agency per lead.",
+  },
 ];
 
 export default function Home() {
   return (
     <>
       <Seo
-        title="Win More Projects. Build Bigger Business."
-        description="D&J Stratagem is the operating system for construction growth — helping contractors win more work, market their business, and manage the entire bidding pipeline from opportunity to award."
+        title="Find Construction Projects. Bid Smarter. Win More Work."
+        description="D&J Stratagem gives contractors, subcontractors, and suppliers the tools to discover construction bid opportunities, manage their pipeline, market their capabilities, and win more projects."
       />
 
       {/* Feature 18: animated gradient hero */}
@@ -162,21 +158,21 @@ export default function Home() {
 
         <div className="relative grid grid-cols-1 items-center gap-14 lg:grid-cols-[1.05fr_0.95fr]">
           <div>
-            <Eyebrow>The operating system for construction growth</Eyebrow>
+            <Eyebrow>Bid intelligence for construction</Eyebrow>
             <h1 className="text-balance text-4xl font-semibold leading-[1.08] tracking-tight text-paper sm:text-5xl md:text-6xl">
-              Win more projects. Build bigger business.
+              Find better construction projects. Bid smarter. Win more work.
             </h1>
             <p className="mt-6 max-w-lg text-lg leading-relaxed text-steel">
-              D&amp;J Stratagem helps contractors win more work, market their business, and
-              manage the entire bidding pipeline from opportunity to award &mdash; all in one
-              platform.
+              D&amp;J Stratagem gives contractors, subcontractors, and suppliers the tools to
+              discover bid opportunities, manage their pipeline, market their capabilities, and
+              turn more opportunities into awarded projects.
             </p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-              <Button to="/contact" variant="primary" size="lg">
-                Request a demo <IconArrowRight width={16} height={16} />
+              <Button to="/register" variant="primary" size="lg">
+                Find construction projects <IconArrowRight width={16} height={16} />
               </Button>
               <Button to="/platform" variant="secondary" size="lg">
-                Explore the platform
+                See how it works
               </Button>
             </div>
             <div className="mt-10 flex flex-wrap gap-x-6 gap-y-2 text-sm text-steel">
@@ -194,20 +190,29 @@ export default function Home() {
         </div>
       </Section>
 
-      {/* Feature 17: trusted-by strip */}
-      <Section className="border-t border-line py-10">
-        <p className="mb-6 text-center text-xs font-semibold uppercase tracking-wider text-steel">
-          Trusted by construction teams at
+      {/* Pre-launch status. Replaces claimed customer logos until there are real
+          ones to show — see PROOF.md for what may go here and what may not. */}
+      <Section className="border-t border-line py-8">
+        <p className="text-center text-sm text-steel">
+          Built for contractors.{" "}
+          <span className="font-semibold text-paper">Currently onboarding early users.</span>
         </p>
-        <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-4">
-          {trustedBy.map((name) => (
-            <span
-              key={name}
-              className="text-sm font-semibold text-steel/50 transition-colors hover:text-steel"
-            >
-              {name}
-            </span>
-          ))}
+      </Section>
+
+      {/* Product view: show the thing rather than describe it. */}
+      <Section className="border-t border-line">
+        <div className="mx-auto max-w-2xl text-center">
+          <Eyebrow>What you get</Eyebrow>
+          <h2 className="text-balance text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+            Matched opportunities, not a firehose of RFPs.
+          </h2>
+          <p className="mt-5 text-base leading-relaxed text-steel">
+            Every project is scored against your trade, service area, project size, and past
+            work &mdash; so you spend your time on the bids you can actually win.
+          </p>
+        </div>
+        <div className="mt-12">
+          <OpportunityPreview />
         </div>
       </Section>
 
@@ -350,7 +355,7 @@ export default function Home() {
         <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-paper md:text-4xl">
           Designed for contractors who are serious about growth.
         </h2>
-        <div className="mt-12 grid grid-cols-1 gap-5 md:grid-cols-3">
+        <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {steps.map((s, i) => (
             <Reveal key={s.n} delay={i * 110}>
               <div className="relative h-full rounded-xl border border-line bg-ink-2 p-6">
@@ -361,32 +366,28 @@ export default function Home() {
             </Reveal>
           ))}
         </div>
+        <div className="mt-10">
+          <Button to="/register" variant="primary" size="lg">
+            Start finding projects <IconArrowRight width={16} height={16} />
+          </Button>
+        </div>
       </Section>
 
-      {/* Feature 13: testimonials section */}
+      {/* Who it's for */}
       <Section className="border-t border-line">
-        <Eyebrow>What contractors say</Eyebrow>
+        <Eyebrow>Who it&rsquo;s for</Eyebrow>
         <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-paper md:text-4xl">
-          From the field, not the brochure.
+          Built for every side of the deal.
         </h2>
-        <div className="mt-12 grid grid-cols-1 gap-5 md:grid-cols-3">
-          {testimonials.map((t, i) => (
-            <Reveal key={t.name} delay={i * 90}>
-              <div className="flex h-full flex-col rounded-xl border border-line bg-ink-2 p-6">
-                <IconQuote
-                  width={24}
-                  height={24}
-                  className="mb-4 shrink-0 text-amber/60"
-                />
-                <blockquote className="flex-1 text-sm leading-relaxed text-paper/90">
-                  &ldquo;{t.quote}&rdquo;
-                </blockquote>
-                <div className="mt-5 border-t border-line pt-4">
-                  <p className="text-sm font-semibold text-paper">{t.name}</p>
-                  <p className="text-xs text-steel">
-                    {t.role} &middot; {t.company}
-                  </p>
+        <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2">
+          {audiences.map((a, i) => (
+            <Reveal key={a.title} delay={(i % 2) * 100} className="h-full">
+              <div className="lift h-full rounded-xl border border-line bg-ink-2 p-6 hover:border-amber/40">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber/10 text-amber">
+                  {a.icon}
                 </div>
+                <h3 className="mt-5 text-base font-semibold text-paper">{a.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-steel">{a.text}</p>
               </div>
             </Reveal>
           ))}

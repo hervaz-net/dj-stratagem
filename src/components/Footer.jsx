@@ -3,14 +3,24 @@ import { Link } from "react-router-dom";
 import Logo from "./Logo";
 import { IconMail, IconArrowRight } from "./icons";
 
+// Only routes that actually exist are linked. Resources and per-trade landing
+// pages are P1 — add a column here when those pages ship, not before.
 const columns = [
   {
     heading: "Product",
     links: [
       { to: "/platform", label: "Platform" },
-      { to: "/solutions", label: "Solutions" },
       { to: "/supply", label: "Supply Exchange" },
       { to: "/pricing", label: "Pricing" },
+      { to: "/changelog", label: "Changelog" },
+    ],
+  },
+  {
+    heading: "Solutions",
+    links: [
+      { to: "/solutions", label: "General contractors" },
+      { to: "/solutions", label: "Subcontractors" },
+      { to: "/solutions", label: "Suppliers" },
     ],
   },
   {
@@ -19,6 +29,14 @@ const columns = [
       { to: "/about", label: "About" },
       { to: "/contact", label: "Contact" },
       { to: "/login", label: "Sign in" },
+      { to: "/register", label: "Create account" },
+    ],
+  },
+  {
+    heading: "Legal",
+    links: [
+      { to: "/privacy", label: "Privacy Policy" },
+      { to: "/terms", label: "Terms & Conditions" },
     ],
   },
 ];
@@ -82,38 +100,14 @@ export default function Footer() {
   return (
     <footer className="no-print border-t border-line bg-ink-2">
       <div className="mx-auto max-w-6xl px-6 py-14">
-        <div className="grid grid-cols-1 gap-10 md:grid-cols-[2fr_1fr_1fr_1.4fr]">
-          <div>
+        <div className="grid grid-cols-2 gap-10 md:grid-cols-3 lg:grid-cols-6">
+          {/* Brand + newsletter share the wide left block so the four link
+              columns stay evenly sized. */}
+          <div className="col-span-2 md:col-span-3 lg:col-span-2">
             <Logo />
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-steel">
-              The operating system for construction growth &mdash; bidding, marketing, and
-              business tools that help contractors win more work.
-            </p>
-          </div>
-
-          {columns.map((col) => (
-            <div key={col.heading}>
-              <h4 className="text-xs font-semibold uppercase tracking-wider text-steel">
-                {col.heading}
-              </h4>
-              <ul className="mt-4 space-y-3 text-sm">
-                {col.links.map((l) => (
-                  <li key={l.to}>
-                    <Link to={l.to} className="text-paper/80 transition-colors hover:text-amber">
-                      {l.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-
-          <div>
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-steel">
-              Stay informed
-            </h4>
-            <p className="mt-4 text-sm leading-relaxed text-paper/80">
-              Market updates and platform news, direct to your inbox.
+              Bid intelligence for construction &mdash; discover opportunities, manage your
+              pipeline, and win more work.
             </p>
             <Newsletter />
             <a
@@ -124,14 +118,29 @@ export default function Footer() {
             </a>
             <p className="mt-2 text-sm text-steel">Los Angeles, California</p>
           </div>
+
+          {columns.map((col) => (
+            <div key={col.heading}>
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-steel">
+                {col.heading}
+              </h4>
+              <ul className="mt-4 space-y-3 text-sm">
+                {col.links.map((l) => (
+                  // Keyed by label: several Solutions entries share one route.
+                  <li key={l.label}>
+                    <Link to={l.to} className="text-paper/80 transition-colors hover:text-amber">
+                      {l.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
 
         <div className="mt-12 flex flex-col items-start justify-between gap-4 border-t border-line pt-6 text-xs text-steel md:flex-row md:items-center">
           <p>&copy; {new Date().getFullYear()} D&amp;J Stratagem, Inc. All rights reserved.</p>
-          <div className="flex gap-6">
-            <a href="/privacy" className="text-steel hover:text-paper">Privacy Policy</a>
-            <a href="/terms" className="text-steel hover:text-paper">Terms &amp; Conditions</a>
-          </div>
+          <p>Find better projects. Bid smarter. Win more work.</p>
         </div>
       </div>
     </footer>

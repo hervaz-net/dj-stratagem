@@ -2,8 +2,14 @@ import Button from "./Button";
 import Section from "./Section";
 
 export default function CTASection({
-  title = "Win more projects. Build bigger business.",
-  subtitle = "Walk through the platform with our team and see exactly where it fits your workflow.",
+  title = "Start finding better projects.",
+  subtitle = "Create your company profile and see the opportunities that match your trade, territory, and project size.",
+  // One primary action across the site — "Find projects" — with the demo as
+  // the secondary path, so the CTAs stop competing with each other.
+  primaryLabel = "Find construction projects",
+  primaryTo = "/register",
+  secondaryLabel = "Request a demo",
+  secondaryTo = "/contact",
 }) {
   return (
     <Section className="border-t border-line">
@@ -24,11 +30,11 @@ export default function CTASection({
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-base text-steel">{subtitle}</p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Button to="/contact" variant="primary">
-              Request a demo
+            <Button to={primaryTo} variant="primary">
+              {primaryLabel}
             </Button>
-            <Button to="/platform" variant="secondary">
-              Explore the platform
+            <Button to={secondaryTo} variant="secondary">
+              {secondaryLabel}
             </Button>
           </div>
         </div>

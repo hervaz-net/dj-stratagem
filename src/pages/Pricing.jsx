@@ -5,7 +5,7 @@ import CTASection from "../components/CTASection";
 import Reveal from "../components/Reveal";
 import Accordion from "../components/Accordion";
 import Seo from "../components/Seo";
-import { IconCheck, IconQuote } from "../components/icons";
+import { IconCheck } from "../components/icons";
 
 /** Paid annually up front, billed as a monthly-equivalent rate. */
 const ANNUAL_DISCOUNT = 0.2;
@@ -373,43 +373,8 @@ export default function Pricing() {
         </div>
       </Section>
 
-      {/* Testimonials */}
-      <Section className="border-t border-line">
-        <Eyebrow>From contractors</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-paper md:text-4xl">
-          Plans that pay for themselves fast.
-        </h2>
-        <div className="mt-12 grid grid-cols-1 gap-5 md:grid-cols-3">
-          {[
-            {
-              quote: "We won a $680k contract in the second month of using the platform. That's more than six years of Professional plan fees in one deal.",
-              name: "Tony K.",
-              role: "Owner, TKM General Contracting",
-            },
-            {
-              quote: "The Supply Exchange saved us $34k on materials last quarter. It basically funded the plan for the whole year.",
-              name: "Sandra L.",
-              role: "Procurement Lead, Peak Mechanical",
-            },
-            {
-              quote: "We used to pay an agency $2,500 a month for leads. The Growth plan does more for $249. It wasn't a hard decision.",
-              name: "Derek O.",
-              role: "VP Sales, Crestline Electrical",
-            },
-          ].map((t, i) => (
-            <Reveal key={t.name} delay={i * 90} className="h-full">
-              <div className="flex h-full flex-col rounded-xl border border-line bg-ink-2 p-6">
-                <IconQuote width={22} height={22} className="mb-4 shrink-0 text-amber/50" />
-                <blockquote className="flex-1 text-sm leading-relaxed text-paper/90">&ldquo;{t.quote}&rdquo;</blockquote>
-                <div className="mt-5 border-t border-line pt-4">
-                  <p className="text-sm font-semibold text-paper">{t.name}</p>
-                  <p className="text-xs text-steel">{t.role}</p>
-                </div>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </Section>
+      {/* Customer quotes go here once they are real and attributable —
+          see PROOF.md. */}
 
       {/* ROI calculator */}
       <Section className="border-t border-line">
