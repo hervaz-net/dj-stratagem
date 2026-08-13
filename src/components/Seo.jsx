@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 const SITE = "https://djstratageminc.com";
 const SUFFIX = "D&J Stratagem, Inc.";
 const DEFAULT_DESCRIPTION =
-  "The operating system for construction growth — bidding, marketing, CRM, and AI tools that help contractors win more work and grow revenue.";
+  "Find construction bid opportunities, manage your pipeline, and win more work. D&J Stratagem gives contractors, subcontractors, and suppliers the tools to discover projects that match their trade and territory.";
 
 function setMeta(selector, attr, value) {
   let el = document.head.querySelector(selector);
