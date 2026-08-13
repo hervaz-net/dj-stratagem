@@ -84,10 +84,21 @@ Rules while the feed is illustrative:
 When the real feed lands, replace the module with the API client and drop
 `PreviewNotice` from the pages backed by live data — not before.
 
+## Also removed: the phantom blog (2026-08-13)
+
+`Home.jsx` carried a "From the blog" section advertising three articles with
+titles, excerpts, publication dates, and read times. None were written, and
+the cards were not even clickable. A teaser for content that does not exist is
+a broken promise in the same family as invented proof, so it came down.
+
+Put it back when there are posts. It needs real articles at real URLs — not
+cards that link to `/changelog`, which is a changelog, not a blog.
+
 ## Still outstanding
 
-- `Home.jsx` has a "From the blog" section with three posts that do not exist.
-  Either write them or drop the section — a teaser for nothing is a broken
-  promise, even if it is not a proof claim.
 - `Pricing.jsx` FAQ references a free Starter tier and free trials. Confirm
   those are the actual commercial terms before launch.
+- The document pages still pull webfonts from `fonts.googleapis.com`. Unlike
+  the React dependency (see below) this degrades gracefully — the text renders
+  in a fallback face — so it is cosmetic rather than a correctness problem.
+  Worth self-hosting eventually.
