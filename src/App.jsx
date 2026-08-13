@@ -12,6 +12,9 @@ import Home from "./pages/Home";
 import Platform from "./pages/Platform";
 import Solutions from "./pages/Solutions";
 import Supply from "./pages/Supply";
+import Projects from "./pages/Projects";
+import ProjectDetail from "./pages/ProjectDetail";
+import TradeLocation from "./pages/TradeLocation";
 import Pricing from "./pages/Pricing";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
@@ -152,6 +155,14 @@ function App() {
           <Route path="/platform" element={<MarketingLayout><Platform /></MarketingLayout>} />
           <Route path="/solutions" element={<MarketingLayout><Solutions /></MarketingLayout>} />
           <Route path="/supply" element={<MarketingLayout><Supply /></MarketingLayout>} />
+          {/* Public project preview. The detail route must come after the index
+              so /projects itself is not swallowed by the :slug param. */}
+          <Route path="/projects" element={<MarketingLayout><Projects /></MarketingLayout>} />
+          <Route path="/projects/:slug" element={<MarketingLayout><ProjectDetail /></MarketingLayout>} />
+          <Route
+            path="/construction-projects/:city/:trade"
+            element={<MarketingLayout><TradeLocation /></MarketingLayout>}
+          />
           <Route path="/pricing" element={<MarketingLayout><Pricing /></MarketingLayout>} />
           <Route path="/about" element={<MarketingLayout><About /></MarketingLayout>} />
           <Route path="/contact" element={<MarketingLayout><Contact /></MarketingLayout>} />

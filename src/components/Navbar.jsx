@@ -6,6 +6,7 @@ import ThemeToggle from "./ThemeToggle";
 import ScrollProgress from "./ScrollProgress";
 
 const links = [
+  { to: "/projects", label: "Projects" },
   { to: "/platform", label: "Platform" },
   { to: "/solutions", label: "Solutions" },
   { to: "/fleet", label: "Fleet" },

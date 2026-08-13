@@ -61,6 +61,29 @@ dashboard mockups in `WalkthroughModal.jsx`.
 The line: **showing what the product does** is fine. **Claiming someone
 used it and got a result** requires proof.
 
+### Sample project listings carry a higher duty
+
+`src/data/sampleProjects.js` feeds `/projects`, the project detail pages, and
+the trade/location landing pages. These are illustrative, not a live feed.
+
+This matters more than a mockup on a marketing page. A contractor who mistakes
+a sample listing for a real solicitation loses real hours — chasing a bid,
+pulling a team onto an estimate, calling an owner who never posted the work.
+So every surface that renders this data shows `PreviewNotice`: a full-width
+banner stating plainly that the listings are not live solicitations and cannot
+be bid on.
+
+Rules while the feed is illustrative:
+
+- Never remove `PreviewNotice` from a page rendering `sampleProjects`.
+- Never present a sample listing as biddable — no live countdowns implying a
+  real deadline, no downloadable "plans" that do not exist.
+- Owner and GC names must stay clearly generic or explicitly marked sample.
+  Do not name a real GC as the contractor on an invented project.
+
+When the real feed lands, replace the module with the API client and drop
+`PreviewNotice` from the pages backed by live data — not before.
+
 ## Still outstanding
 
 - `Home.jsx` has a "From the blog" section with three posts that do not exist.
