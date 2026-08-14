@@ -1,0 +1,89 @@
+/*
+ * Self-hosted webfonts.
+ *
+ * These previously came from fonts.googleapis.com on every page load, which
+ * meant each visitor's IP was disclosed to a third party before they had
+ * agreed to anything — awkward for a site that ships a cookie banner and a
+ * privacy policy, and a point German courts have ruled on under GDPR.
+ * Serving them ourselves also drops two DNS lookups and a TLS handshake off
+ * the critical path.
+ *
+ * Files are the latin subsets from @fontsource (v5.3.0), which repackages the
+ * upstream Google Fonts releases. Only the weights the site actually uses are
+ * included; see public/fonts/README.md to add more.
+ *
+ * font-display: swap matches the previous &display=swap behaviour — text
+ * paints immediately in the fallback and reflows once the face arrives.
+ */
+
+/* ---------------------------------------------------------------- Inter
+   App UI. */
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/inter-latin-400-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/fonts/inter-latin-500-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/inter-latin-600-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/inter-latin-700-normal.woff2") format("woff2");
+}
+
+/* -------------------------------------------------------------- Archivo
+   Document pages (privacy, terms, brand sheets). */
+@font-face {
+  font-family: "Archivo";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/archivo-latin-400-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Archivo";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/archivo-latin-600-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Archivo";
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url("/fonts/archivo-latin-800-normal.woff2") format("woff2");
+}
+
+/* -------------------------------------------------------- Courier Prime
+   Monospaced detail on the marketing sheets. */
+@font-face {
+  font-family: "Courier Prime";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/courier-prime-latin-400-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Courier Prime";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/courier-prime-latin-700-normal.woff2") format("woff2");
+}
