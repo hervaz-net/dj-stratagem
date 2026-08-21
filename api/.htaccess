@@ -3,7 +3,7 @@
 # served as plaintext and the password leaks. Deny at the web-server level so
 # that failure mode can't happen.
 
-<FilesMatch "^(config\.php|config\.example\.php|bootstrap\.php|schema\.sql)$">
+<FilesMatch "^(config\.php|config\.example\.php|bootstrap\.php|ops\.php|schema\.sql)$">
   <IfModule mod_authz_core.c>
     Require all denied
   </IfModule>

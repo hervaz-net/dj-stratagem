@@ -37,3 +37,7 @@ CREATE TABLE IF NOT EXISTS login_attempts (
   -- during the brute-force flood the throttle exists to contain.
   KEY idx_attempts_attempted_at (attempted_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Dashboard ops tables (suppliers, bids, orders, alerts, settings) are created
+-- and seeded automatically on first authenticated request via ops.php. You do
+-- not need to import them here. Re-importing this file is still safe for auth.
