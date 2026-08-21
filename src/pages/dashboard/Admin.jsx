@@ -256,7 +256,7 @@ export default function AdminUsers() {
               type="button"
               disabled={bulkBusy}
               onClick={bulkApprove}
-              className="lift rounded-full bg-gradient-to-br from-brand to-amber-2 px-4 py-1.5 text-xs font-semibold text-white disabled:opacity-60"
+              className="lift rounded-full bg-cta hover:bg-cta-hover px-4 py-1.5 text-xs font-semibold text-white disabled:opacity-60"
             >
               {bulkBusy ? "Approving…" : `Approve ${approvable.length}`}
             </button>
@@ -341,7 +341,7 @@ export default function AdminUsers() {
                                 type="button"
                                 disabled={busy}
                                 onClick={() => change(u, "active")}
-                                className="lift rounded-full bg-gradient-to-br from-brand to-amber-2 px-3.5 py-1.5 text-xs font-semibold text-white disabled:opacity-60"
+                                className="lift rounded-full bg-cta hover:bg-cta-hover px-3.5 py-1.5 text-xs font-semibold text-white disabled:opacity-60"
                               >
                                 {busy ? "Working…" : u.status === "pending" ? "Approve" : "Reinstate"}
                               </button>

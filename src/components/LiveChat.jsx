@@ -55,7 +55,7 @@ export default function LiveChat() {
           type="button"
           onClick={() => setOpen((o) => !o)}
           aria-label={open ? "Close chat" : "Open chat"}
-          className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-brand to-amber-2 shadow-lg shadow-brand/30 transition-transform hover:scale-105"
+          className="flex h-12 w-12 items-center justify-center rounded-full bg-cta hover:bg-cta-hover shadow-lg shadow-cta/30 transition-transform hover:scale-105"
         >
           {open ? (
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12" /></svg>
@@ -65,8 +65,8 @@ export default function LiveChat() {
         </button>
         {!open && (
           <span className="absolute -right-1 -top-1 flex h-3 w-3">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber opacity-75" />
-            <span className="relative inline-flex h-3 w-3 rounded-full bg-amber" />
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-warning opacity-75" />
+            <span className="relative inline-flex h-3 w-3 rounded-full bg-warning" />
           </span>
         )}
       </div>
@@ -80,7 +80,7 @@ export default function LiveChat() {
         >
           {/* Header */}
           <div className="flex items-center gap-3 border-b border-line bg-ink-3 px-4 py-3">
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-brand to-amber-2 text-xs font-semibold text-white">
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-cta hover:bg-cta-hover text-xs font-semibold text-white">
               DJ
             </span>
             <div>

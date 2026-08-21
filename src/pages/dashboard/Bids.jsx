@@ -11,11 +11,11 @@ import { fetchBids, updateBidStatus, isConfigured } from "../../api/dashboard";
 import { bidFixtures } from "../../api/fixtures";
 
 const STATUS = {
-  draft: { label: "Draft", dot: "watch", color: "text-[var(--viz-gold)] bg-[var(--viz-gold)]/10" },
+  draft: { label: "Draft", dot: "watch", color: "text-warning bg-warning/10" },
   submitted: { label: "Submitted", dot: "active", color: "text-[var(--viz-cyan)] bg-[var(--viz-cyan)]/10" },
   awarded: { label: "Awarded", dot: "active", color: "text-[var(--viz-green)] bg-[var(--viz-green)]/10" },
   lost: { label: "Lost", dot: "at-risk", color: "text-steel bg-line" },
-  review: { label: "Under review", dot: "watch", color: "text-amber bg-amber/10" },
+  review: { label: "Under review", dot: "watch", color: "text-warning bg-warning/10" },
 };
 
 const FILTERS = ["all", "draft", "submitted", "review", "awarded", "lost"];

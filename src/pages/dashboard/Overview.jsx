@@ -21,7 +21,7 @@ const ALERT_DOT = { risk: "at-risk", delivery: "watch", bid: "active", price: "w
 function deadlineColor(d) {
   if (d <= 0) return "text-danger";
   if (d <= 2) return "text-danger";
-  if (d <= 5) return "text-amber";
+  if (d <= 5) return "text-warning";
   return "text-steel";
 }
 

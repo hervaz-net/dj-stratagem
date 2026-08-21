@@ -74,15 +74,17 @@ and performance ratings that compound into better future matching.
 ## Design system
 
 Colors are semantic tokens, not literal names — `ink` is the recessed surface,
-`ink-2` the raised card surface, `paper` the text color, `steel` muted text,
-`line` borders, and `amber` the accent. Each Tailwind token in `src/index.css`
-is declared inside `@theme inline` and resolves through a second variable
-(`--surface`, `--text`, `--accent`, …), so `[data-theme="dark"]` swaps the whole
-palette without touching a single component.
+`ink-2` the raised card surface, `paper` the text color, `steel` muted text
+(chroma-free, so it never reads as a link), `line` borders, and `amber` the
+accent text. Each Tailwind token in `src/index.css` is declared inside
+`@theme inline` and resolves through a second variable (`--surface`, `--text`,
+`--accent`, …), so `[data-theme="dark"]` swaps the whole palette without
+touching a single component.
 
-Two accent tokens exist on purpose: `amber` is contrast-tuned per theme and is
-what text and icons use, while `brand` is the fixed `#ff7a1a` and is only ever
-used for fills, gradients, and glows — it fails contrast as text on white.
+Chromatic tokens have one job each: `amber` is contrast-tuned electric-blue
+text and selected chrome; `brand` is the `#001cf7` identity fill; `cta` is
+coral primary buttons (white-on-cta ≥ 4.5:1); `warning` is watch/caution
+gold; `danger` and `success` are status. CTA is never the same hex as danger.
 
 The theme follows the OS by default and remembers an explicit choice in
 `localStorage` under `djs-theme`. A small inline script in `index.html` applies
@@ -209,7 +211,7 @@ Set `VITE_API_BASE_URL` only if the PHP host is on another origin.
 | `/api/orders.php` | GET list; POST `{action:"cancel", ids}` | Orders |
 | `/api/analytics.php?range=7d\|30d\|90d` | GET live aggregates | Analytics |
 | `/api/alerts.php` | GET list; POST `{action: read\|read_all\|dismiss\|snooze, id?}` | Alerts |
-| `/api/settings.php` | GET; POST `{action: profile\|notifications\|twofa}` | Settings |
+| `/api/settings.php` | GET; POST `{action: profile\|notifications\|twofa\|billing\|account_type\|fund}` | Settings |
 
 All of the above require a signed-in `active` session. A 401 is never
 swallowed as sample data.

@@ -11,8 +11,8 @@ import { alertFixtures } from "../../api/fixtures";
 
 const TYPES = {
   risk: { label: "Risk", dot: "at-risk", bg: "bg-danger/8 border-danger/25" },
-  delivery: { label: "Delivery", dot: "watch", bg: "bg-amber/8 border-amber/25" },
-  price: { label: "Price", dot: "watch", bg: "bg-[var(--viz-gold)]/8 border-[var(--viz-gold)]/25" },
+  delivery: { label: "Delivery", dot: "watch", bg: "bg-warning/8 border-warning/25" },
+  price: { label: "Price", dot: "watch", bg: "bg-warning/8 border-warning/25" },
   bid: { label: "Bid", dot: "active", bg: "bg-[var(--viz-cyan)]/8 border-[var(--viz-cyan)]/25" },
   system: { label: "System", dot: "active", bg: "bg-ink border-line" },
 };

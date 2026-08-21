@@ -15,7 +15,7 @@ export default function AddSupplierButton({ onCreated, floating = false }) {
   const { toast } = useToast();
 
   const base =
-    "lift glow-brand inline-flex items-center gap-2 rounded-full bg-gradient-to-br from-brand to-amber-2 " +
+    "lift glow-brand inline-flex items-center gap-2 rounded-full bg-cta hover:bg-cta-hover " +
     "px-5 py-3 text-sm font-semibold text-white";
 
   const submit = async (e) => {

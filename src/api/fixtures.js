@@ -198,6 +198,15 @@ export function settingsFixture(user) {
       phone: user?.phone ?? "",
       title: "",
     },
+    billing: {
+      name: user?.name ?? "",
+      email: user?.email ?? "",
+      phone: user?.phone ?? "",
+      accountType: "credit",
+      funded: true,
+      walletBalance: 0,
+      creditLimit: 50000,
+    },
     notifications: {
       email_bids: true,
       email_orders: true,

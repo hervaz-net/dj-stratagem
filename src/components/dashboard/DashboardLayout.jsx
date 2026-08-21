@@ -30,10 +30,10 @@ export default function DashboardLayout({
           <div className="mt-6 flex flex-wrap items-end justify-between gap-4">
             <div>
               <Breadcrumbs items={breadcrumbs} className="mb-2" />
-              <h1 className="text-2xl font-semibold tracking-tight text-paper sm:text-3xl">
+              <h1 className="font-display text-3xl font-semibold tracking-tight text-paper sm:text-4xl">
                 {title}
               </h1>
-              {subtitle && <p className="mt-1.5 max-w-2xl text-sm text-steel">{subtitle}</p>}
+              {subtitle && <p className="mt-2 max-w-2xl text-base font-medium text-steel">{subtitle}</p>}
             </div>
             {actions}
           </div>

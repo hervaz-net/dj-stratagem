@@ -9,7 +9,7 @@ const money = (n) => (n >= 1000 ? `$${(n / 1000).toFixed(0)}k` : `$${n}`);
 const STATUS_LABEL = { active: "Active", watch: "Watch", "at-risk": "At risk" };
 const STATUS_COLOR = {
   active: "text-success bg-success/10",
-  watch: "text-amber bg-amber/10",
+  watch: "text-warning bg-warning/10",
   "at-risk": "text-danger bg-danger/10",
 };
 

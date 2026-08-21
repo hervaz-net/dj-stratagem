@@ -10,9 +10,9 @@ import { fetchOrders, cancelOrders, isConfigured } from "../../api/dashboard";
 import { orderFixtures } from "../../api/fixtures";
 
 const STATUS = {
-  pending: { label: "Pending", dot: "watch", color: "text-[var(--viz-gold)] bg-[var(--viz-gold)]/10", step: 0 },
+  pending: { label: "Pending", dot: "watch", color: "text-warning bg-warning/10", step: 0 },
   confirmed: { label: "Confirmed", dot: "active", color: "text-[var(--viz-cyan)] bg-[var(--viz-cyan)]/10", step: 1 },
-  shipped: { label: "Shipped", dot: "watch", color: "text-amber bg-amber/10", step: 2 },
+  shipped: { label: "Shipped", dot: "watch", color: "text-warning bg-warning/10", step: 2 },
   delivered: { label: "Delivered", dot: "active", color: "text-[var(--viz-green)] bg-[var(--viz-green)]/10", step: 3 },
   cancelled: { label: "Cancelled", dot: "at-risk", color: "text-steel bg-line", step: -1 },
 };

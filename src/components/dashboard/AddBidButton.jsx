@@ -38,7 +38,7 @@ export default function AddBidButton({ onCreated }) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="lift glow-brand inline-flex items-center gap-2 rounded-full bg-gradient-to-br from-brand to-amber-2 px-5 py-3 text-sm font-semibold text-white"
+        className="lift glow-brand inline-flex items-center gap-2 rounded-full bg-cta hover:bg-cta-hover px-5 py-3 text-sm font-semibold text-white"
       >
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true">
           <path d="M12 5v14M5 12h14" />

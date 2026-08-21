@@ -44,7 +44,7 @@ const matchReasons = [
 
 /** Above 90 reads as a strong fit and earns the accent; the rest stay neutral. */
 const toneFor = (score) =>
-  score >= 90 ? "text-success" : score >= 80 ? "text-amber" : "text-steel";
+  score >= 90 ? "text-success" : score >= 80 ? "text-warning" : "text-steel";
 
 export default function OpportunityPreview() {
   return (
@@ -52,7 +52,7 @@ export default function OpportunityPreview() {
       {/* window chrome */}
       <div className="flex items-center gap-2 border-b border-line bg-ink px-4 py-3">
         <span className="h-2.5 w-2.5 rounded-full bg-danger/70" />
-        <span className="h-2.5 w-2.5 rounded-full bg-amber/70" />
+        <span className="h-2.5 w-2.5 rounded-full bg-warning/70" />
         <span className="h-2.5 w-2.5 rounded-full bg-success/70" />
         <span className="ml-2 text-xs text-steel">Project Opportunities</span>
         <span className="ml-auto rounded-full border border-line px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-steel">

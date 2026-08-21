@@ -17,7 +17,7 @@ function BarRow({ label, pct, value }) {
       </div>
       <div className="h-2 overflow-hidden rounded-full bg-line">
         <div
-          className="h-full rounded-full bg-gradient-to-r from-brand to-amber-2 transition-all duration-700"
+          className="h-full rounded-full bg-gradient-to-r from-brand to-cta transition-all duration-700"
           style={{ width: `${pct}%` }}
           role="presentation"
         />
@@ -159,7 +159,7 @@ export default function Analytics() {
                     <td className="px-4 py-3 text-right tabular-nums text-paper">{s.spend}</td>
                     <td className="px-4 py-3 text-right tabular-nums text-steel">{s.orders}</td>
                     <td className="px-4 py-3 text-right tabular-nums">
-                      <span className={parseInt(s.delivery, 10) >= 95 ? "text-[var(--viz-green)]" : parseInt(s.delivery, 10) >= 90 ? "text-amber" : "text-[var(--viz-red)]"}>
+                      <span className={parseInt(s.delivery, 10) >= 95 ? "text-[var(--viz-green)]" : parseInt(s.delivery, 10) >= 90 ? "text-warning" : "text-[var(--viz-red)]"}>
                         {s.delivery}
                       </span>
                     </td>

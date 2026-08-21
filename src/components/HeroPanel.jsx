@@ -57,7 +57,7 @@ export default function HeroPanel() {
             <span>Scored on price, schedule, and past performance</span>
           </div>
           <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-ink">
-            <div className="h-full w-[94%] rounded-full bg-gradient-to-r from-brand to-amber-2" />
+            <div className="h-full w-[94%] rounded-full bg-gradient-to-r from-brand to-cta" />
           </div>
         </div>
       </div>

@@ -31,7 +31,7 @@ export default function ScrollProgress() {
   return (
     <div className="absolute inset-x-0 bottom-0 h-0.5 overflow-hidden" aria-hidden="true">
       <div
-        className="h-full origin-left bg-gradient-to-r from-brand to-amber-2"
+        className="h-full origin-left bg-gradient-to-r from-brand to-cta"
         style={{ transform: `scaleX(${progress})` }}
       />
     </div>

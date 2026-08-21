@@ -18,8 +18,8 @@ export default function Logo({ className = "" }) {
           strokeOpacity="0.55"
         />
       </svg>
-      <span className="text-lg font-semibold tracking-tight text-paper">
-        D&amp;J <span className="font-normal text-steel">Stratagem</span>
+      <span className="font-display text-lg font-semibold tracking-tight text-paper">
+        D&amp;J <span className="font-medium text-steel">Stratagem</span>
       </span>
     </span>
   );

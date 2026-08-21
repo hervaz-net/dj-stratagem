@@ -107,17 +107,27 @@ function seed_day(DateTimeImmutable $today, int $offset): string
     return $today->modify(sprintf('%+d days', $offset))->format('Y-m-d');
 }
 
+function ensure_column(string $table, string $column, string $definition): void
+{
+    static $allowed = ['users' => true, 'user_settings' => true];
+    if (!isset($allowed[$table]) || !preg_match('/^[a-z_]+$/', $column)) {
+        return;
+    }
+    try {
+        $pdo = db();
+        $exists = $pdo->query('SHOW COLUMNS FROM ' . $table . ' LIKE ' . $pdo->quote($column))->fetch();
+        if (!$exists) {
+            $pdo->exec("ALTER TABLE {$table} ADD COLUMN {$definition}");
+        }
+    } catch (PDOException $e) {
+        error_log("ops: {$table}.{$column} migrate skipped — " . $e->getMessage());
+    }
+}
+
 function ensure_ops_schema(): void
 {
     $pdo = db();
-    try {
-        $col = $pdo->query("SHOW COLUMNS FROM users LIKE 'phone'")->fetch();
-        if (!$col) {
-            $pdo->exec('ALTER TABLE users ADD COLUMN phone VARCHAR(40) NULL AFTER company');
-        }
-    } catch (PDOException $e) {
-        error_log('ops: users.phone migrate skipped — ' . $e->getMessage());
-    }
+    ensure_column('users', 'phone', 'phone VARCHAR(40) NULL AFTER company');
     $pdo->exec(
         "CREATE TABLE IF NOT EXISTS suppliers (
             id VARCHAR(32) NOT NULL,
@@ -213,10 +223,25 @@ function ensure_ops_schema(): void
             email_alerts TINYINT(1) NOT NULL DEFAULT 1,
             email_weekly TINYINT(1) NOT NULL DEFAULT 0,
             twofa_enabled TINYINT(1) NOT NULL DEFAULT 0,
+            billing_name VARCHAR(120) NULL,
+            billing_email VARCHAR(255) NULL,
+            billing_phone VARCHAR(40) NULL,
+            account_type ENUM('credit','prepaid') NOT NULL DEFAULT 'credit',
+            account_funded TINYINT(1) NOT NULL DEFAULT 0,
+            wallet_balance DECIMAL(14,2) NOT NULL DEFAULT 0,
+            credit_limit DECIMAL(14,2) NOT NULL DEFAULT 50000,
             updated_at DATETIME NOT NULL,
             PRIMARY KEY (user_id)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci"
     );
+
+    ensure_column('user_settings', 'billing_name', 'billing_name VARCHAR(120) NULL');
+    ensure_column('user_settings', 'billing_email', 'billing_email VARCHAR(255) NULL');
+    ensure_column('user_settings', 'billing_phone', 'billing_phone VARCHAR(40) NULL');
+    ensure_column('user_settings', 'account_type', "account_type ENUM('credit','prepaid') NOT NULL DEFAULT 'credit'");
+    ensure_column('user_settings', 'account_funded', 'account_funded TINYINT(1) NOT NULL DEFAULT 0');
+    ensure_column('user_settings', 'wallet_balance', 'wallet_balance DECIMAL(14,2) NOT NULL DEFAULT 0');
+    ensure_column('user_settings', 'credit_limit', 'credit_limit DECIMAL(14,2) NOT NULL DEFAULT 50000');
 
     seed_ops_if_empty();
 }

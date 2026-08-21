@@ -1,26 +1,28 @@
 @import "tailwindcss";
 
 /* ---------------------------------------------------------------------------
-   Design tokens
+   Design tokens — construction.com / Dodge language, one job per name.
 
-   Semantic names, not literal colors:
-     ink     recessed base surface (page wells, input fields, nested rows)
+   Neutrals (no chroma — they must never read as links or brand):
+     ink     recessed surface (page wells, inputs, nested rows)
      ink-2   raised surface (cards, panels, footer)
      ink-3   hover/active surface
      line    borders and dividers
      paper   primary text
      steel   muted/secondary text
-     amber   accent, tuned per theme so it passes contrast as *text*
-     brand   the fixed brand orange, only for fills/glows/logo — never text
 
-   Every token resolves through a second variable so `[data-theme]` can swap
-   the whole palette. `@theme inline` is what makes that work: it emits
-   utilities that point at `--surface` etc. directly instead of freezing the
-   value at :root.
+   Chromatic (one job each):
+     amber   accent TEXT / selected chrome (electric blue, contrast-safe)
+     brand   identity blue FILLS (#001cf7)
+     cta     primary buttons only (coral, white-on-cta ≥ 4.5:1)
+     warning watch / caution / mid-score (gold — never brand blue)
+     danger  errors / at-risk (not the same as cta)
+     success positive / healthy
 --------------------------------------------------------------------------- */
 
 @theme inline {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Zalando Sans SemiExpanded", "DM Sans", ui-sans-serif, system-ui, sans-serif;
 
   --color-ink: var(--surface);
   --color-ink-2: var(--surface-raised);
@@ -31,13 +33,12 @@
   --color-paper-2: var(--text-strong);
   --color-steel: var(--text-muted);
 
-  /* Same intent as the orange accent fix on main, kept indirect so the dark
-     theme can swap it. The literals live in :root / [data-theme] below and
-     are darker than #f97316, which is only ~3:1 on white — short of 4.5:1
-     for the body text, eyebrows, and links that use this token. */
   --color-amber: var(--accent);
   --color-amber-2: var(--accent-hover);
   --color-brand: var(--brand);
+  --color-cta: var(--cta);
+  --color-cta-hover: var(--cta-hover);
+  --color-warning: var(--warning);
 
   --color-danger: var(--danger);
   --color-success: var(--success);
@@ -46,86 +47,89 @@
 :root {
   color-scheme: light;
 
-  --surface: #f4f4f7;
+  /* Recessed vs raised so cards lift off the page. Neutrals stay gray. */
+  --surface: #eef2f8;
   --surface-raised: #ffffff;
-  --surface-hover: #fafafc;
-  --border: #e3e3e8;
+  --surface-hover: #e6ecf6;
+  --border: #d5deec;
 
-  --text: #1d1d1f;
-  --text-strong: #000000;
-  --text-muted: #6b6b73;
+  --text: #15161f;
+  --text-strong: #15161f;
+  --text-muted: #5a6275;
 
-  /* #ff7a1a is only ~2.4:1 on white, so accent *text* uses a darker ramp. */
-  --accent: #c2500a;
-  --accent-hover: #9c3f06;
-  --brand: #ff7a1a;
+  --accent: #0015c4;
+  --accent-hover: #0011a3;
+  --brand: #001cf7;
+  --cta: #c81e32;
+  --cta-hover: #a8182a;
+  --warning: #b45309;
 
   --danger: #b42318;
-  --success: #197a3d;
+  --success: #0f7a45;
 
-  --page-bg: #fef5f0;
-  --page-glow-1: rgba(255, 140, 70, 0.16);
-  --page-glow-2: rgba(255, 200, 120, 0.1);
-  --page-glow-3: rgba(255, 160, 90, 0.16);
+  --page-bg: #f5f7fc;
+  --page-glow-1: rgba(0, 28, 247, 0.045);
+  --page-glow-2: rgba(200, 30, 50, 0.025);
+  --page-glow-3: rgba(245, 247, 252, 0.92);
 
-  --grid-line: rgba(0, 0, 0, 0.035);
-  --glass-bg: rgba(255, 255, 255, 0.68);
-  --glass-border: rgba(255, 255, 255, 0.6);
-  --shadow-color: 20 12 4;
+  --grid-line: rgba(21, 22, 31, 0.06);
+  --glass-bg: rgba(255, 255, 255, 0.78);
+  --glass-border: rgba(213, 222, 236, 0.9);
+  --shadow-color: 21 22 31;
 
-  /* Dashboard: data accents. Chosen to stay distinguishable in both themes
-     and to hold up for the colour-blind — they differ in lightness, not just
-     hue, and every use is paired with a label or shape. */
-  --viz-blue: #2563eb;
-  --viz-cyan: #0e7490;
-  --viz-red: #c2334a;
-  --viz-gold: #a16207;
-  --viz-green: #157f4a;
+  --viz-blue: #001cf7;
+  --viz-cyan: #1863dc;
+  --viz-red: #b42318;
+  --viz-gold: #b45309;
+  --viz-green: #0f7a45;
 
-  --panel-bg: rgba(255, 255, 255, 0.72);
-  --panel-border: rgba(255, 255, 255, 0.75);
-  --panel-glow: rgba(255, 122, 26, 0.16);
-  --panel-shadow: 0 10px 30px -12px rgba(20, 12, 4, 0.28);
+  --panel-bg: rgba(255, 255, 255, 0.86);
+  --panel-border: rgba(213, 222, 236, 0.95);
+  --panel-glow: rgba(0, 28, 247, 0.1);
+  --panel-shadow: 0 10px 30px -12px rgba(21, 22, 31, 0.16);
 }
 
 [data-theme="dark"] {
   color-scheme: dark;
 
-  --surface: #141418;
-  --surface-raised: #1b1b21;
-  --surface-hover: #22222a;
-  --border: #2e2e37;
+  --surface: #12141c;
+  --surface-raised: #1a1d28;
+  --surface-hover: #222636;
+  --border: #2a3044;
 
-  --text: #f2f2f5;
+  --text: #eef2f8;
   --text-strong: #ffffff;
-  --text-muted: #a0a0ac;
+  --text-muted: #98a2b8;
 
-  --accent: #ff9d52;
-  --accent-hover: #ffb87d;
-  --brand: #ff7a1a;
+  --accent: #8fb4ff;
+  --accent-hover: #c5d6ff;
+  --brand: #6d8cff;
+  --cta: #d92d32;
+  --cta-hover: #c42128;
+  --warning: #fbbf24;
 
-  --danger: #f97066;
+  --danger: #ff6b6e;
   --success: #4ade80;
 
-  --page-bg: #0e0e11;
-  --page-glow-1: rgba(255, 122, 26, 0.14);
-  --page-glow-2: rgba(255, 160, 90, 0.05);
-  --page-glow-3: rgba(255, 122, 26, 0.12);
+  --page-bg: #0e1016;
+  --page-glow-1: rgba(0, 28, 247, 0.14);
+  --page-glow-2: rgba(217, 45, 50, 0.05);
+  --page-glow-3: rgba(14, 16, 22, 0.92);
 
-  --grid-line: rgba(255, 255, 255, 0.045);
-  --glass-bg: rgba(30, 30, 36, 0.68);
-  --glass-border: rgba(255, 255, 255, 0.08);
+  --grid-line: rgba(152, 162, 184, 0.08);
+  --glass-bg: rgba(26, 29, 40, 0.72);
+  --glass-border: rgba(152, 162, 184, 0.14);
   --shadow-color: 0 0 0;
 
-  --viz-blue: #60a5fa;
-  --viz-cyan: #22d3ee;
-  --viz-red: #fb7185;
+  --viz-blue: #6d8cff;
+  --viz-cyan: #7eb0ff;
+  --viz-red: #ff6b6e;
   --viz-gold: #fbbf24;
   --viz-green: #4ade80;
 
-  --panel-bg: rgba(28, 28, 35, 0.66);
-  --panel-border: rgba(255, 255, 255, 0.1);
-  --panel-glow: rgba(255, 122, 26, 0.2);
+  --panel-bg: rgba(26, 29, 40, 0.72);
+  --panel-border: rgba(152, 162, 184, 0.16);
+  --panel-glow: rgba(109, 140, 255, 0.2);
   --panel-shadow: 0 14px 40px -14px rgba(0, 0, 0, 0.7);
 }
 
@@ -135,6 +139,9 @@ html {
   scroll-behavior: smooth;
   /* Keep anchor targets clear of the sticky header. */
   scroll-padding-top: 6rem;
+  font-size: 18px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
@@ -150,6 +157,10 @@ body {
   background-attachment: fixed;
   color: var(--text);
   font-family: var(--font-sans);
+  font-optical-sizing: auto;
+  font-weight: 500;
+  letter-spacing: -0.011em;
+  line-height: 1.55;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   transition: background-color 300ms ease, color 300ms ease;
@@ -215,6 +226,25 @@ body {
    so a stray border-radius here would square off `rounded-full` on focus.
    The outline follows the element's own radius, so none is set. */
 @layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled),
+  [role="radio"]:not(:disabled),
+  [role="switch"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+    color: var(--text-strong);
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
   :focus-visible {
     outline: 2px solid var(--accent);
     outline-offset: 2px;
@@ -355,19 +385,19 @@ body {
   pointer-events: none;
 }
 
-/* Soft bloom behind an element, used on the primary action button. */
+/* Soft bloom behind the primary (coral) action button. */
 .glow-brand {
   box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--brand) 35%, transparent),
-    0 8px 24px -6px color-mix(in srgb, var(--brand) 55%, transparent),
-    0 0 36px -8px color-mix(in srgb, var(--brand) 45%, transparent);
+    0 0 0 1px color-mix(in srgb, var(--cta) 35%, transparent),
+    0 8px 24px -6px color-mix(in srgb, var(--cta) 55%, transparent),
+    0 0 36px -8px color-mix(in srgb, var(--cta) 45%, transparent);
 }
 
 .glow-brand:hover {
   box-shadow:
-    0 0 0 1px color-mix(in srgb, var(--brand) 55%, transparent),
-    0 10px 30px -6px color-mix(in srgb, var(--brand) 70%, transparent),
-    0 0 52px -8px color-mix(in srgb, var(--brand) 60%, transparent);
+    0 0 0 1px color-mix(in srgb, var(--cta) 55%, transparent),
+    0 10px 30px -6px color-mix(in srgb, var(--cta) 70%, transparent),
+    0 0 52px -8px color-mix(in srgb, var(--cta) 60%, transparent);
 }
 
 @keyframes status-pulse {

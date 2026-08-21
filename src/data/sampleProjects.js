@@ -265,4 +265,4 @@ export function formatDue(iso) {
 
 /** Above 90 reads as a strong fit; keep this in step with OpportunityPreview. */
 export const matchTone = (score) =>
-  score >= 90 ? "text-success" : score >= 80 ? "text-amber" : "text-steel";
+  score >= 90 ? "text-success" : score >= 80 ? "text-warning" : "text-steel";

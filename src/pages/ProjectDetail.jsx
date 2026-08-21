@@ -62,7 +62,7 @@ export default function ProjectDetail() {
               <Fact
                 label="Time remaining"
                 value={days === 0 ? "Closed" : `${days} days`}
-                tone={days <= 14 && days > 0 ? "text-amber" : undefined}
+                tone={days <= 14 && days > 0 ? "text-warning" : undefined}
               />
             </div>
 

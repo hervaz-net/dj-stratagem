@@ -1,8 +1,8 @@
 const STATUS = {
-  active: { color: "var(--viz-green)", pulse: "rgba(34, 197, 94, 0.55)", label: "Active" },
-  watch: { color: "var(--viz-gold)", pulse: "rgba(234, 179, 8, 0.5)", label: "Watch" },
-  "at-risk": { color: "var(--viz-red)", pulse: "rgba(244, 63, 94, 0.5)", label: "At risk" },
-  idle: { color: "var(--text-muted)", pulse: "rgba(148, 163, 184, 0.4)", label: "Idle" },
+  active: { color: "var(--viz-green)", pulse: "color-mix(in srgb, var(--viz-green) 55%, transparent)", label: "Active" },
+  watch: { color: "var(--viz-gold)", pulse: "color-mix(in srgb, var(--viz-gold) 50%, transparent)", label: "Watch" },
+  "at-risk": { color: "var(--viz-red)", pulse: "color-mix(in srgb, var(--viz-red) 50%, transparent)", label: "At risk" },
+  idle: { color: "var(--text-muted)", pulse: "color-mix(in srgb, var(--text-muted) 40%, transparent)", label: "Idle" },
 };
 
 /**

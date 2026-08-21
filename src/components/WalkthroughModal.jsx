@@ -204,7 +204,7 @@ function Panel({ kind }) {
           <Stat value="$387,400" label="Base Bid" />
           <Stat value="+$42,000" label="Alternates" />
         </div>
-        <div className="rounded bg-amber py-2 text-center text-[11px] font-bold text-ink">
+        <div className="rounded bg-brand py-2 text-center text-[11px] font-bold text-white">
           Submit &amp; E-Sign →
         </div>
       </>
@@ -402,7 +402,7 @@ export default function WalkthroughModal({ open, onClose }) {
         <div className="flex shrink-0 items-center justify-between border-b border-line px-5 py-3">
           <div className="flex items-center gap-2.5">
             <span className="text-xs font-bold text-paper">Platform Walkthrough</span>
-            <span className="rounded bg-amber px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-ink">
+            <span className="rounded bg-brand px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-white">
               5 min
             </span>
           </div>
@@ -449,7 +449,7 @@ export default function WalkthroughModal({ open, onClose }) {
                 <Link
                   to="/contact"
                   onClick={onClose}
-                  className="rounded-lg bg-amber px-6 py-2.5 text-sm font-bold text-ink transition-colors hover:bg-amber-2"
+                  className="rounded-lg bg-cta px-6 py-2.5 text-sm font-bold text-white transition-colors hover:bg-cta-hover"
                 >
                   Request a Demo
                 </Link>
@@ -532,7 +532,7 @@ export default function WalkthroughModal({ open, onClose }) {
           <button
             type="button"
             onClick={isLast ? onClose : next}
-            className="flex items-center gap-1.5 rounded-lg bg-amber px-4 py-2 text-xs font-bold text-ink transition-colors hover:bg-amber-2 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-amber"
+            className="flex items-center gap-1.5 rounded-lg bg-cta px-4 py-2 text-xs font-bold text-white transition-colors hover:bg-cta-hover focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-cta"
           >
             {isLast ? "Close" : "Next"}
             {!isLast && <IconArrowRight width={12} height={12} />}

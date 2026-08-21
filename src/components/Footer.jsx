@@ -86,7 +86,7 @@ function Newsletter() {
         </div>
         <button
           type="submit"
-          className="flex shrink-0 items-center gap-1 rounded-lg bg-gradient-to-br from-brand to-amber-2 px-3 py-2 text-xs font-semibold text-white"
+          className="flex shrink-0 items-center gap-1 rounded-lg bg-cta hover:bg-cta-hover px-3 py-2 text-xs font-semibold text-white"
         >
           <IconArrowRight width={13} height={13} />
         </button>

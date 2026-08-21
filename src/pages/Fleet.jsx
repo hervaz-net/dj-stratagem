@@ -309,7 +309,7 @@ export default function Fleet() {
                 </div>
 
                 {/* View Details Button */}
-                <button className="mt-4 w-full flex items-center justify-center gap-2 rounded-md bg-amber/10 py-2 text-xs font-semibold text-amber transition-all hover:bg-amber/20 group-hover:bg-amber group-hover:text-paper">
+                <button className="mt-4 w-full flex items-center justify-center gap-2 rounded-md bg-amber/10 py-2 text-xs font-semibold text-amber transition-all hover:bg-amber/20 group-hover:bg-brand group-hover:text-white">
                   View Details <IconArrowRight className="h-3 w-3" />
                 </button>
               </div>
@@ -428,7 +428,7 @@ export default function Fleet() {
                 }`}
               >
                 {plan.highlight && (
-                  <div className="absolute -top-3 left-6 bg-amber px-3 py-1 text-xs font-bold text-paper">
+                  <div className="absolute -top-3 left-6 bg-brand px-3 py-1 text-xs font-bold text-white">
                     MOST POPULAR
                   </div>
                 )}

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 
 const base =
-  "lift inline-flex items-center justify-center gap-2 rounded-lg font-semibold whitespace-nowrap " +
+  "lift inline-flex items-center justify-center gap-2 rounded-full font-semibold whitespace-nowrap " +
   "disabled:opacity-60 disabled:cursor-not-allowed disabled:pointer-events-none";
 
 const sizes = {
@@ -12,12 +12,12 @@ const sizes = {
 
 const variants = {
   primary:
-    "bg-gradient-to-br from-brand to-amber-2 text-white shadow-lg shadow-brand/30 " +
-    "hover:shadow-xl hover:shadow-brand/40 hover:brightness-105",
+    "bg-cta text-white shadow-lg shadow-cta/25 " +
+    "hover:bg-cta-hover hover:shadow-xl hover:shadow-cta/35",
   secondary:
-    "bg-ink-2 text-paper border border-line shadow-sm hover:border-amber/60 hover:bg-ink-3 hover:shadow-md",
+    "bg-ink-2 text-paper border border-line shadow-sm hover:border-brand/50 hover:bg-ink-3 hover:shadow-md",
   ghost:
-    "text-paper border border-transparent hover:text-amber hover:border-amber/30 hover:bg-amber/8",
+    "text-paper border border-transparent hover:text-amber hover:border-brand/30 hover:bg-brand/8",
 };
 
 export default function Button({

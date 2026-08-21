@@ -89,7 +89,7 @@ function NavItem({ item }) {
     <NavLink
       to={item.to}
       className={({ isActive }) =>
-        `group relative flex shrink-0 items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors ${
+        `group relative flex shrink-0 items-center gap-3 rounded-xl px-3 py-2.5 text-base font-semibold transition-colors ${
           isActive ? "bg-amber/12 text-amber" : "text-steel hover:bg-ink-3 hover:text-paper"
         }`
       }
@@ -174,7 +174,7 @@ export default function Sidebar() {
                 <span
                   className={`flex h-5 w-5 items-center justify-center rounded-full text-[10px] transition-transform ${
                     dark
-                      ? "translate-x-5 bg-amber text-ink"
+                      ? "translate-x-5 bg-brand text-white"
                       : "translate-x-0 bg-steel/40 text-paper"
                   }`}
                   aria-hidden="true"

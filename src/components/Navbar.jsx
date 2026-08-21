@@ -84,9 +84,9 @@ export default function Navbar() {
               key={l.to}
               to={l.to}
               className={({ isActive }) =>
-                `relative py-1 text-sm font-medium transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:origin-left after:rounded-full after:bg-brand after:transition-transform after:duration-300 ${
+                `relative py-1 text-sm font-semibold transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:origin-left after:rounded-full after:bg-cta after:transition-transform after:duration-300 ${
                   isActive
-                    ? "text-amber after:scale-x-100"
+                    ? "text-cta after:scale-x-100"
                     : "text-steel after:scale-x-0 hover:text-paper hover:after:scale-x-100"
                 }`
               }
@@ -141,7 +141,7 @@ export default function Navbar() {
                 onClick={close}
                 className={({ isActive }) =>
                   `rounded-lg px-3 py-2.5 text-base font-medium transition-colors ${
-                    isActive ? "bg-amber/10 text-amber" : "text-paper hover:bg-ink-3"
+                    isActive ? "bg-cta/10 text-cta" : "text-paper hover:bg-ink-3"
                   }`
                 }
               >

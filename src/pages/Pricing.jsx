@@ -229,7 +229,7 @@ export default function Pricing() {
                 aria-pressed={annual === opt.key}
                 className={`rounded-full px-5 py-2 text-sm font-medium transition-colors ${
                   annual === opt.key
-                    ? "bg-gradient-to-br from-brand to-amber-2 text-white shadow-sm"
+                    ? "bg-cta hover:bg-cta-hover text-white shadow-sm"
                     : "text-steel hover:text-paper"
                 }`}
               >

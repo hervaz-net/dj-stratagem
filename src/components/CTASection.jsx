@@ -20,7 +20,7 @@ export default function CTASection({
           aria-hidden="true"
         />
         <div
-          className="cta-glow-pulse pointer-events-none absolute -bottom-20 right-1/4 h-48 w-48 rounded-full bg-amber/20 blur-3xl"
+          className="cta-glow-pulse pointer-events-none absolute -bottom-20 right-1/4 h-48 w-48 rounded-full bg-cta/20 blur-3xl"
           style={{ animationDelay: "-3s" }}
           aria-hidden="true"
         />
