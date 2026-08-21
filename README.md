@@ -179,49 +179,59 @@ domain (create one in cPanel, switch `contact.php` from `mail()` to SMTP).
   toggle derives its numbers from a flat 20% discount constant in `Pricing.jsx`.
 - Screenshots/mock panels throughout the site are illustrative, not live product.
 
-## Suppliers dashboard
+## Operations dashboard
 
-`/dashboard/suppliers` is an internal-style screen: glassmorphic cards, live
-sparklines, progress rings, a market ticker, a filter bar with dual range
-sliders, and a supplier table with risk gauges. `/dashboard` redirects to it.
+`/dashboard/*` is session-gated (`noindex`). `/dashboard` redirects to
+`/dashboard/overview`. The route guard is a convenience — the PHP APIs
+are the real boundary.
 
-It is `noindex` and gated: `/dashboard/*` redirects to `/login` without a
-session. The route guard is a convenience — the server is the real boundary.
+Screens: **Overview**, **Suppliers**, **Bids**, **Orders**, **Analytics**,
+**Alerts**, **Settings**, plus **Accounts** for admins.
 
-### Wiring it to a real API
+### Dashboard APIs
 
-Data access lives in `src/api/`. Set `VITE_API_BASE_URL` and the screen
-switches from fixtures to live data with no component changes:
+Every dashboard screen talks to same-origin `/api/*.php` (session cookie
+`djs_session`). POSTs send `X-CSRF-Token`. Tables are created and seeded
+automatically on the first authenticated request (`ops.php`).
 
-```bash
-VITE_API_BASE_URL=https://api.example.com npm run dev
-```
+`npm run dev` has no PHP runtime, so fetchers fall back to fixtures in
+`src/api/fixtures.js`. Mutations (add supplier, new bid, cancel order,
+alert actions, settings saves) toast an error locally — that is expected.
+Set `VITE_API_BASE_URL` only if the PHP host is on another origin.
 
-Three endpoints are expected. Each may return a bare array or a wrapped object
-(`{ suppliers: [...] }`):
+| Endpoint | Methods | Used by |
+| --- | --- | --- |
+| `/api/suppliers.php` | GET list, POST create (`name`, `category`, `region`) | Suppliers |
+| `/api/metrics.php` | GET (computed from suppliers) | Suppliers |
+| `/api/market-ticker.php` | GET | Suppliers ticker |
+| `/api/overview.php` | GET KPIs, activity, deadlines, alerts, health | Overview |
+| `/api/bids.php` | GET list; POST `{action:"create"}` or `{action:"status", id, status}` | Bids |
+| `/api/orders.php` | GET list; POST `{action:"cancel", ids}` | Orders |
+| `/api/analytics.php?range=7d\|30d\|90d` | GET live aggregates | Analytics |
+| `/api/alerts.php` | GET list; POST `{action: read\|read_all\|dismiss\|snooze, id?}` | Alerts |
+| `/api/settings.php` | GET; POST `{action: profile\|notifications\|twofa}` | Settings |
 
-| Endpoint | Returns |
-| --- | --- |
-| `GET /suppliers` | `Supplier[]` |
-| `GET /metrics` | `Metric[]` |
-| `GET /market-ticker` | `TickerItem[]` |
+All of the above require a signed-in `active` session. A 401 is never
+swallowed as sample data.
 
 ```
 Supplier   { id, name, category, region, riskScore (0-100, higher = worse),
              deliveryRate (0-100), fillRate, leadTimeDays,
              status: "active"|"watch"|"at-risk", openOrders, spendYtd,
              trend: number[] }
-Metric     { id, label, value, unit?, prefix?, delta, ring?,
-             accent: "blue"|"cyan"|"red"|"gold", series: number[] }
-TickerItem { id, label, change }
+Bid        { id, project, gc, trade, value, status, due, submitted }
+             status: "draft"|"submitted"|"review"|"awarded"|"lost"
+Order      { id, supplier, items, category, qty, value, status, ordered, eta }
+             status: "pending"|"confirmed"|"shipped"|"delivered"|"cancelled"
+Alert      { id, type, title, detail, supplier, time, group, read }
+             type: "risk"|"delivery"|"price"|"bid"|"system"
 ```
 
-Requests send `credentials: "include"`, assuming cookie sessions. Suppliers and
-metrics poll every 30s, the ticker every 15s; polling pauses on a hidden tab.
-On a failed poll the last good data stays on screen with a retry prompt.
+Suppliers/metrics poll every 30s, the ticker every 15s; polling pauses
+on a hidden tab. On a failed poll the last good data stays on screen
+with a retry prompt.
 
-Exact shapes and the fixture data live in `src/api/suppliers.js` and
-`src/api/fixtures.js`.
+Exact shapes live in `src/api/dashboard.js` and `src/api/fixtures.js`.
 
 ## Authentication
 

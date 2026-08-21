@@ -2,7 +2,13 @@ import { useMemo, useState } from "react";
 import DashboardLayout from "../../components/dashboard/DashboardLayout";
 import GlassCard from "../../components/dashboard/GlassCard";
 import StatusDot from "../../components/dashboard/StatusDot";
+import AddBidButton from "../../components/dashboard/AddBidButton";
 import Seo from "../../components/Seo";
+import { useToast } from "../../contexts/ToastContext";
+import useAuth from "../../auth/useAuth";
+import usePolledResource from "../../api/usePolledResource";
+import { fetchBids, updateBidStatus, isConfigured } from "../../api/dashboard";
+import { bidFixtures } from "../../api/fixtures";
 
 const STATUS = {
   draft: { label: "Draft", dot: "watch", color: "text-[var(--viz-gold)] bg-[var(--viz-gold)]/10" },
@@ -14,28 +20,16 @@ const STATUS = {
 
 const FILTERS = ["all", "draft", "submitted", "review", "awarded", "lost"];
 
-const bids = [
-  { id: "2041", project: "Riverside Medical Office", gc: "Turner Construction", trade: "Electrical", value: 412000, status: "awarded", due: "2026-07-20", submitted: "2026-07-18" },
-  { id: "2040", project: "Summit Ridge Apartments", gc: "PCL Construction", trade: "Electrical", value: 288500, status: "review", due: "2026-07-28", submitted: "2026-07-22" },
-  { id: "2039", project: "Gateway Logistics Hub", gc: "McCarthy Building", trade: "Low voltage", value: 195000, status: "submitted", due: "2026-08-02", submitted: "2026-07-30" },
-  { id: "2038", project: "Harborview Office Tower", gc: "Hensel Phelps", trade: "Electrical", value: 680000, status: "submitted", due: "2026-08-10", submitted: null },
-  { id: "2037", project: "Crestwood Elementary", gc: "Swinerton", trade: "Low voltage", value: 142000, status: "draft", due: "2026-08-15", submitted: null },
-  { id: "2036", project: "Metro Rail Station B", gc: "Granite Construction", trade: "Electrical", value: 925000, status: "lost", due: "2026-07-10", submitted: "2026-07-08" },
-  { id: "2035", project: "Canyon View Retail", gc: "Turner Construction", trade: "Electrical", value: 218000, status: "awarded", due: "2026-07-05", submitted: "2026-07-03" },
-  { id: "2034", project: "North Harbor Warehouse", gc: "PCL Construction", trade: "Low voltage", value: 87000, status: "lost", due: "2026-06-28", submitted: "2026-06-25" },
-];
-
 const money = (n) => `$${(n / 1000).toFixed(0)}k`;
-const fmt = (d) => d ? new Date(d).toLocaleDateString(undefined, { month: "short", day: "numeric" }) : "—";
-
-// Win rate: awarded / (awarded + lost)
-const awardedCount = bids.filter((b) => b.status === "awarded").length;
-const decidedCount = bids.filter((b) => ["awarded", "lost"].includes(b.status)).length;
-const winRate = decidedCount > 0 ? Math.round((awardedCount / decidedCount) * 100) : 0;
+const fmt = (d) => (d ? new Date(d).toLocaleDateString(undefined, { month: "short", day: "numeric" }) : "—");
 
 export default function Bids() {
+  const resource = usePolledResource(fetchBids, { intervalMs: 30000, initialData: bidFixtures });
+  const bids = resource.data ?? bidFixtures;
   const [filter, setFilter] = useState("all");
   const [sort, setSort] = useState({ key: "id", dir: "desc" });
+  const { csrf } = useAuth();
+  const { toast } = useToast();
 
   const setSort2 = (key) => {
     setSort((prev) =>
@@ -51,14 +45,30 @@ export default function Bids() {
       if (typeof av === "string") return av.localeCompare(bv) * dir;
       return (av - bv) * dir;
     });
-  }, [filter, sort]);
+  }, [bids, filter, sort]);
 
   const counts = FILTERS.reduce((acc, f) => {
     acc[f] = f === "all" ? bids.length : bids.filter((b) => b.status === f).length;
     return acc;
   }, {});
 
+  const awardedCount = bids.filter((b) => b.status === "awarded").length;
+  const decidedCount = bids.filter((b) => ["awarded", "lost"].includes(b.status)).length;
+  const winRate = decidedCount > 0 ? Math.round((awardedCount / decidedCount) * 100) : 0;
   const totalValue = rows.reduce((s, b) => s + b.value, 0);
+  const pipelineValue = bids
+    .filter((b) => ["draft", "submitted", "review"].includes(b.status))
+    .reduce((s, b) => s + b.value, 0);
+
+  const changeStatus = async (id, status) => {
+    try {
+      await updateBidStatus({ id, status, csrf });
+      await resource.refresh();
+      toast(`Bid #${id} marked ${STATUS[status]?.label ?? status}.`, { type: "success" });
+    } catch (err) {
+      toast(err.message ?? "Couldn’t update that bid.", { type: "error" });
+    }
+  };
 
   return (
     <>
@@ -68,8 +78,24 @@ export default function Bids() {
         breadcrumbs={[{ label: "Home", to: "/" }, { label: "Bids" }]}
         title="Bids"
         subtitle="Track every bid from draft to award."
+        actions={<AddBidButton onCreated={() => resource.refresh()} />}
       >
-        {/* Summary strip */}
+        {!isConfigured && (
+          <GlassCard className="mb-6 px-5 py-3 text-sm text-steel">
+            <span className="font-semibold uppercase tracking-wider text-amber">Sample data</span>
+            {" "}— live bids load from `/api/bids.php` on the hosted server.
+          </GlassCard>
+        )}
+
+        {resource.error && (
+          <GlassCard className="mb-6 px-5 py-3" role="status">
+            <p className="text-sm text-danger">
+              Couldn&rsquo;t reach the API.{" "}
+              <button type="button" onClick={() => resource.refresh()} className="font-semibold underline underline-offset-2">Retry</button>
+            </p>
+          </GlassCard>
+        )}
+
         <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
           {[
             { label: "Total bids", value: bids.length },
@@ -86,13 +112,12 @@ export default function Bids() {
                 <p className="mt-0.5 text-xs text-steel">{awardedCount} of {decidedCount} decided</p>
               )}
               {s.label === "Submitted" && (
-                <p className="mt-0.5 text-xs text-steel">Pipeline value: {money(bids.filter(b => ["draft","submitted","review"].includes(b.status)).reduce((s,b)=>s+b.value,0))}</p>
+                <p className="mt-0.5 text-xs text-steel">Pipeline value: {money(pipelineValue)}</p>
               )}
             </GlassCard>
           ))}
         </div>
 
-        {/* Filters */}
         <div className="mb-4 flex flex-wrap gap-2">
           {FILTERS.map((f) => (
             <button
@@ -147,7 +172,7 @@ export default function Bids() {
               </thead>
               <tbody>
                 {rows.map((b) => {
-                  const s = STATUS[b.status];
+                  const s = STATUS[b.status] ?? STATUS.draft;
                   return (
                     <tr key={b.id} className="border-b border-line/60 transition-colors last:border-0 hover:bg-ink-3/60">
                       <td className="px-4 py-3.5 font-mono text-xs text-steel">#{b.id}</td>
@@ -159,9 +184,19 @@ export default function Bids() {
                       <td className="px-4 py-3.5 text-right tabular-nums text-paper">{money(b.value)}</td>
                       <td className="px-4 py-3.5 text-right text-steel">{fmt(b.due)}</td>
                       <td className="px-4 py-3.5">
-                        <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ${s.color}`}>
+                        <label className="sr-only" htmlFor={`bid-status-${b.id}`}>Status for bid {b.id}</label>
+                        <span className={`inline-flex items-center gap-1.5 rounded-full px-2 py-1 text-xs font-semibold ${s.color}`}>
                           <StatusDot status={s.dot} size={5} />
-                          {s.label}
+                          <select
+                            id={`bid-status-${b.id}`}
+                            value={b.status}
+                            onChange={(e) => changeStatus(b.id, e.target.value)}
+                            className="bg-transparent font-semibold outline-none"
+                          >
+                            {FILTERS.filter((f) => f !== "all").map((f) => (
+                              <option key={f} value={f}>{STATUS[f].label}</option>
+                            ))}
+                          </select>
                         </span>
                       </td>
                     </tr>

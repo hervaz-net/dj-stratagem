@@ -4,6 +4,10 @@ import GlassCard from "../../components/dashboard/GlassCard";
 import StatusDot from "../../components/dashboard/StatusDot";
 import Seo from "../../components/Seo";
 import { useToast } from "../../contexts/ToastContext";
+import useAuth from "../../auth/useAuth";
+import usePolledResource from "../../api/usePolledResource";
+import { fetchOrders, cancelOrders, isConfigured } from "../../api/dashboard";
+import { orderFixtures } from "../../api/fixtures";
 
 const STATUS = {
   pending: { label: "Pending", dot: "watch", color: "text-[var(--viz-gold)] bg-[var(--viz-gold)]/10", step: 0 },
@@ -16,24 +20,12 @@ const STATUS = {
 const STEPS = ["Ordered", "Confirmed", "Shipped", "Delivered"];
 const FILTERS = ["all", "pending", "confirmed", "shipped", "delivered", "cancelled"];
 
-const orders = [
-  { id: "PO-1188", supplier: "Metro Supply Co.", items: "Fasteners & hardware", category: "Hardware", qty: 1200, value: 4840, status: "confirmed", ordered: "2026-07-28", eta: "2026-08-01" },
-  { id: "PO-1187", supplier: "Ironline Distribution", items: "Structural steel connectors", category: "Steel", qty: 400, value: 12600, status: "shipped", ordered: "2026-07-25", eta: "2026-07-31" },
-  { id: "PO-1186", supplier: "Cardinal Hardware", items: "Power tools & accessories", category: "Tools", qty: 18, value: 6320, status: "pending", ordered: "2026-07-29", eta: "2026-08-05" },
-  { id: "PO-1185", supplier: "Summit Fasteners", items: "Conduit & fittings", category: "Electrical", qty: 900, value: 3190, status: "shipped", ordered: "2026-07-22", eta: "2026-07-30" },
-  { id: "PO-1184", supplier: "Cardinal Hardware", items: "Lumber — dimensional", category: "Lumber", qty: 560, value: 8750, status: "delivered", ordered: "2026-07-18", eta: "2026-07-25" },
-  { id: "PO-1183", supplier: "Metro Supply Co.", items: "PVC pipe & fittings", category: "Plumbing", qty: 300, value: 2940, status: "delivered", ordered: "2026-07-15", eta: "2026-07-22" },
-  { id: "PO-1182", supplier: "Ironline Distribution", items: "Rebar — #4 & #5", category: "Steel", qty: 2000, value: 18200, status: "delivered", ordered: "2026-07-10", eta: "2026-07-17" },
-  { id: "PO-1181", supplier: "Apex Materials", items: "Drywall sheets", category: "Drywall", qty: 240, value: 3600, status: "cancelled", ordered: "2026-07-08", eta: "—" },
-];
-
-const today = new Date("2026-07-31");
 const money = (n) => `$${n.toLocaleString()}`;
-const fmt = (d) => d && d !== "—" ? new Date(d).toLocaleDateString(undefined, { month: "short", day: "numeric" }) : "—";
+const fmt = (d) => (d && d !== "—" ? new Date(d).toLocaleDateString(undefined, { month: "short", day: "numeric" }) : "—");
 
 function daysOverdue(eta) {
   if (!eta || eta === "—") return 0;
-  const diff = Math.floor((today - new Date(eta)) / 86400000);
+  const diff = Math.floor((Date.now() - new Date(eta).getTime()) / 86400000);
   return diff > 0 ? diff : 0;
 }
 
@@ -57,14 +49,18 @@ function TimelineBar({ step }) {
 }
 
 export default function Orders() {
+  const resource = usePolledResource(fetchOrders, { intervalMs: 30000, initialData: orderFixtures });
+  const orders = resource.data ?? orderFixtures;
   const [filter, setFilter] = useState("all");
   const [selected, setSelected] = useState(new Set());
   const [showCancelModal, setShowCancelModal] = useState(false);
+  const [cancelling, setCancelling] = useState(false);
   const { toast } = useToast();
+  const { csrf } = useAuth();
 
   const rows = useMemo(
-    () => filter === "all" ? orders : orders.filter((o) => o.status === filter),
-    [filter],
+    () => (filter === "all" ? orders : orders.filter((o) => o.status === filter)),
+    [filter, orders],
   );
 
   const counts = FILTERS.reduce((acc, f) => {
@@ -81,10 +77,22 @@ export default function Orders() {
     return next;
   });
 
-  const confirmCancel = () => {
-    setShowCancelModal(false);
-    setSelected(new Set());
-    toast(`${selected.size} order${selected.size !== 1 ? "s" : ""} cancelled.`, { type: "warning" });
+  const confirmCancel = async () => {
+    setCancelling(true);
+    try {
+      const next = await cancelOrders({ ids: [...selected], csrf });
+      resource.refresh();
+      if (Array.isArray(next) && next.length) {
+        /* refresh() reloads; keep selection clear */
+      }
+      toast(`${selected.size} order${selected.size !== 1 ? "s" : ""} cancelled.`, { type: "warning" });
+      setSelected(new Set());
+      setShowCancelModal(false);
+    } catch (err) {
+      toast(err.message ?? "Couldn’t cancel those orders.", { type: "error" });
+    } finally {
+      setCancelling(false);
+    }
   };
 
   return (
@@ -96,7 +104,13 @@ export default function Orders() {
         title="Orders"
         subtitle="Purchase orders across your supply network."
       >
-        {/* Summary */}
+        {!isConfigured && (
+          <GlassCard className="mb-6 px-5 py-3 text-sm text-steel">
+            <span className="font-semibold uppercase tracking-wider text-amber">Sample data</span>
+            {" "}— live orders load from `/api/orders.php` on the hosted server.
+          </GlassCard>
+        )}
+
         <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
           {[
             { label: "Total orders", value: orders.length },
@@ -111,7 +125,6 @@ export default function Orders() {
           ))}
         </div>
 
-        {/* Filters + bulk actions */}
         <div className="mb-4 flex flex-wrap items-center gap-2">
           {FILTERS.map((f) => (
             <button
@@ -162,7 +175,7 @@ export default function Orders() {
               </thead>
               <tbody>
                 {rows.map((o) => {
-                  const s = STATUS[o.status];
+                  const s = STATUS[o.status] ?? STATUS.pending;
                   const overdue = o.status === "shipped" ? daysOverdue(o.eta) : 0;
                   return (
                     <tr key={o.id} className={`border-b border-line/60 transition-colors last:border-0 hover:bg-ink-3/60 ${selected.has(o.id) ? "bg-amber/5" : ""}`}>
@@ -214,7 +227,6 @@ export default function Orders() {
           )}
         </GlassCard>
 
-        {/* Cancel confirmation modal */}
         {showCancelModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4" onClick={() => setShowCancelModal(false)}>
             <div className="w-full max-w-sm rounded-2xl border border-line bg-ink-2 p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
@@ -224,8 +236,8 @@ export default function Orders() {
                 <button type="button" onClick={() => setShowCancelModal(false)} className="px-4 py-2 text-sm font-semibold text-steel hover:text-paper">
                   Keep orders
                 </button>
-                <button type="button" onClick={confirmCancel} className="rounded-lg bg-danger/15 px-4 py-2 text-sm font-semibold text-danger hover:bg-danger/25">
-                  Yes, cancel
+                <button type="button" onClick={confirmCancel} disabled={cancelling} className="rounded-lg bg-danger/15 px-4 py-2 text-sm font-semibold text-danger hover:bg-danger/25 disabled:opacity-60">
+                  {cancelling ? "Cancelling…" : "Yes, cancel"}
                 </button>
               </div>
             </div>

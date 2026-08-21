@@ -98,11 +98,15 @@ export function AuthProvider({ children }) {
     }
   }, [csrf]);
 
+  const applyUser = useCallback((next) => {
+    setUser(next);
+  }, []);
+
   const value = useMemo(
     // `csrf` is exposed so admin endpoints can post with the same token this
     // provider already owns, rather than minting a second one.
-    () => ({ user, loading, csrf, login, register, logout, authBase: AUTH_BASE }),
-    [user, loading, csrf, login, register, logout],
+    () => ({ user, loading, csrf, login, register, logout, applyUser, authBase: AUTH_BASE }),
+    [user, loading, csrf, login, register, logout, applyUser],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

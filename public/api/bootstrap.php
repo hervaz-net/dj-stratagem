@@ -336,7 +336,7 @@ function current_user(): ?array
     }
 
     $stmt = db()->prepare(
-        'SELECT id, email, full_name, company, role, status FROM users WHERE id = ? LIMIT 1'
+        'SELECT id, email, full_name, company, phone, role, status FROM users WHERE id = ? LIMIT 1'
     );
     $stmt->execute([$_SESSION['uid']]);
     $user = $stmt->fetch();
@@ -378,6 +378,7 @@ function public_user(array $u): array
         'email'   => $u['email'],
         'name'    => $u['full_name'],
         'company' => $u['company'],
+        'phone'   => $u['phone'] ?? '',
         'role'    => $u['role'],
     ];
 }

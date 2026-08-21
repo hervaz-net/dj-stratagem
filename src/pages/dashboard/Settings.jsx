@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DashboardLayout from "../../components/dashboard/DashboardLayout";
 import GlassCard from "../../components/dashboard/GlassCard";
 import Seo from "../../components/Seo";
 import useAuth from "../../auth/useAuth";
 import { useToast } from "../../contexts/ToastContext";
+import { fetchSettings, saveSettings, isConfigured } from "../../api/dashboard";
+import { settingsFixture } from "../../api/fixtures";
 
 function Section({ title, description, children }) {
   return (
@@ -36,38 +38,72 @@ const NOTIFICATION_OPTIONS = [
 ];
 
 export default function Settings() {
-  const { user } = useAuth();
+  const { user, csrf, applyUser } = useAuth();
   const { toast } = useToast();
 
-  const [profile, setProfile] = useState({
-    name: user?.name ?? "",
-    email: user?.email ?? "",
-    company: user?.company ?? "",
-    phone: "",
-    title: "",
-  });
-
-  const [notifications, setNotifications] = useState({
-    email_bids: true,
-    email_orders: true,
-    email_alerts: true,
-    email_weekly: false,
-  });
-
+  const [profile, setProfile] = useState(settingsFixture(user).profile);
+  const [notifications, setNotifications] = useState(settingsFixture(user).notifications);
   const [twofa, setTwofa] = useState(false);
   const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const s = await fetchSettings();
+        if (cancelled) return;
+        const merged = s.profile?.name || s.profile?.email ? s : settingsFixture(user);
+        setProfile(merged.profile);
+        setNotifications(merged.notifications);
+        setTwofa(!!merged.twofa);
+      } catch {
+        const fallback = settingsFixture(user);
+        if (!cancelled) {
+          setProfile(fallback.profile);
+          setNotifications(fallback.notifications);
+        }
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [user]);
 
   const saveProfile = async (e) => {
     e.preventDefault();
     setSaving(true);
-    await new Promise((r) => setTimeout(r, 700));
-    setSaving(false);
-    toast("Profile updated.", { type: "success" });
+    try {
+      const data = await saveSettings({ action: "profile", ...profile }, { csrf });
+      if (data.settings?.profile) setProfile(data.settings.profile);
+      if (data.user && applyUser) applyUser(data.user);
+      toast("Profile updated.", { type: "success" });
+    } catch (err) {
+      toast(err.message ?? "Couldn’t save profile.", { type: "error" });
+    } finally {
+      setSaving(false);
+    }
   };
 
-  const toggleNotif = (key) => {
-    setNotifications((prev) => ({ ...prev, [key]: !prev[key] }));
-    toast("Notification preference saved.", { type: "info" });
+  const toggleNotif = async (key) => {
+    const next = { ...notifications, [key]: !notifications[key] };
+    setNotifications(next);
+    try {
+      await saveSettings({ action: "notifications", ...next }, { csrf });
+      toast("Notification preference saved.", { type: "info" });
+    } catch (err) {
+      setNotifications(notifications);
+      toast(err.message ?? "Couldn’t save that preference.", { type: "error" });
+    }
+  };
+
+  const toggleTwofa = async () => {
+    const next = !twofa;
+    setTwofa(next);
+    try {
+      await saveSettings({ action: "twofa", enabled: next }, { csrf });
+      toast(next ? "2FA flag enabled on this account." : "2FA disabled.", { type: next ? "success" : "warning" });
+    } catch (err) {
+      setTwofa(!next);
+      toast(err.message ?? "Couldn’t update 2FA.", { type: "error" });
+    }
   };
 
   return (
@@ -82,8 +118,14 @@ export default function Settings() {
         title="Settings"
         subtitle="Manage your account, notifications, and security."
       >
+        {!isConfigured && (
+          <GlassCard className="mb-6 px-5 py-3 text-sm text-steel">
+            <span className="font-semibold uppercase tracking-wider text-amber">Sample data</span>
+            {" "}— profile and notification saves hit `/api/settings.php` on the hosted server.
+          </GlassCard>
+        )}
+
         <div className="space-y-6">
-          {/* Profile */}
           <Section title="Profile" description="Your public-facing account information.">
             <form onSubmit={saveProfile} className="space-y-4">
               <Field label="Full name" id="name">
@@ -113,7 +155,6 @@ export default function Settings() {
             </form>
           </Section>
 
-          {/* Notifications */}
           <Section title="Email notifications" description="Choose which emails you receive from D&J Stratagem.">
             <ul className="space-y-4">
               {NOTIFICATION_OPTIONS.map((opt) => (
@@ -142,38 +183,27 @@ export default function Settings() {
             </ul>
           </Section>
 
-          {/* Security */}
           <Section title="Security" description="Manage your password and two-factor authentication.">
             <div className="space-y-5">
               <div className="flex items-center justify-between gap-4">
                 <div>
                   <p className="text-sm font-medium text-paper">Password</p>
-                  <p className="text-xs text-steel">Last changed: never</p>
+                  <p className="text-xs text-steel">Reset is not enabled yet. Use forgot-password on the login page when it ships.</p>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => toast("Password reset email sent.", { type: "info" })}
-                  className="text-xs font-semibold text-amber hover:text-amber-2"
-                >
-                  Change password
-                </button>
               </div>
 
               <div className="flex items-center justify-between gap-4">
                 <div>
                   <p className="text-sm font-medium text-paper">Two-factor authentication</p>
                   <p className="text-xs text-steel">
-                    {twofa ? "Enabled via authenticator app." : "Add an extra layer of security to your account."}
+                    {twofa ? "Flag enabled on this account. Authenticator enrollment ships next." : "Add an extra layer of security to your account."}
                   </p>
                 </div>
                 <button
                   type="button"
                   role="switch"
                   aria-checked={twofa}
-                  onClick={() => {
-                    setTwofa((v) => !v);
-                    toast(twofa ? "2FA disabled." : "2FA enabled — check your authenticator app.", { type: twofa ? "warning" : "success" });
-                  }}
+                  onClick={toggleTwofa}
                   className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 transition-colors ${
                     twofa ? "border-amber bg-amber" : "border-line bg-ink"
                   }`}
@@ -181,24 +211,9 @@ export default function Settings() {
                   <span className={`inline-block h-3.5 w-3.5 transform rounded-full bg-white shadow transition-transform ${twofa ? "translate-x-4" : "translate-x-0"}`} />
                 </button>
               </div>
-
-              <div className="flex items-center justify-between gap-4">
-                <div>
-                  <p className="text-sm font-medium text-paper">Active sessions</p>
-                  <p className="text-xs text-steel">1 active session (this device)</p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => toast("All other sessions signed out.", { type: "success" })}
-                  className="text-xs font-semibold text-danger hover:text-danger/80"
-                >
-                  Sign out other devices
-                </button>
-              </div>
             </div>
           </Section>
 
-          {/* Danger zone */}
           <Section title="Account">
             <div className="flex items-center justify-between gap-4">
               <div>

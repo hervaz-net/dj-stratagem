@@ -172,7 +172,7 @@ export default function SuppliersDashboard() {
             >
               <IconKeyboard width={16} height={16} />
             </button>
-            <AddSupplierButton />
+            <AddSupplierButton onCreated={() => { suppliers.refresh(); metrics.refresh(); }} />
           </div>
         }
       >
@@ -182,8 +182,7 @@ export default function SuppliersDashboard() {
               Sample data
             </span>
             <span className="text-sm text-steel">
-              Set <code className="rounded bg-ink px-1.5 py-0.5 text-xs text-paper">VITE_API_BASE_URL</code>{" "}
-              to load live suppliers, metrics, and market data.
+              Live APIs activate on the hosted PHP server after you sign in.
             </span>
           </GlassCard>
         )}
@@ -270,7 +269,7 @@ export default function SuppliersDashboard() {
           />
         </div>
 
-        <AddSupplierButton floating />
+        <AddSupplierButton floating onCreated={() => { suppliers.refresh(); metrics.refresh(); }} />
       </DashboardLayout>
 
       <SupplierDrawer supplier={drawerSupplier} onClose={() => setDrawerSupplier(null)} />

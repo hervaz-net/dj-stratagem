@@ -4,54 +4,41 @@ import GlassCard from "../../components/dashboard/GlassCard";
 import StatusDot from "../../components/dashboard/StatusDot";
 import Seo from "../../components/Seo";
 import { useToast } from "../../contexts/ToastContext";
+import useAuth from "../../auth/useAuth";
+import usePolledResource from "../../api/usePolledResource";
+import { fetchAlerts, mutateAlert, isConfigured } from "../../api/dashboard";
+import { alertFixtures } from "../../api/fixtures";
 
 const TYPES = {
-  risk: { label: "Risk", dot: "at-risk", bg: "bg-danger/8 border-danger/25", icon: "⚠" },
-  delivery: { label: "Delivery", dot: "watch", bg: "bg-amber/8 border-amber/25", icon: "🚚" },
-  price: { label: "Price", dot: "watch", bg: "bg-[var(--viz-gold)]/8 border-[var(--viz-gold)]/25", icon: "↑$" },
-  bid: { label: "Bid", dot: "active", bg: "bg-[var(--viz-cyan)]/8 border-[var(--viz-cyan)]/25", icon: "📋" },
-  system: { label: "System", dot: "active", bg: "bg-ink border-line", icon: "ℹ" },
+  risk: { label: "Risk", dot: "at-risk", bg: "bg-danger/8 border-danger/25" },
+  delivery: { label: "Delivery", dot: "watch", bg: "bg-amber/8 border-amber/25" },
+  price: { label: "Price", dot: "watch", bg: "bg-[var(--viz-gold)]/8 border-[var(--viz-gold)]/25" },
+  bid: { label: "Bid", dot: "active", bg: "bg-[var(--viz-cyan)]/8 border-[var(--viz-cyan)]/25" },
+  system: { label: "System", dot: "active", bg: "bg-ink border-line" },
 };
 
 const FILTERS = ["all", "risk", "delivery", "price", "bid", "system"];
-
-const seedAlerts = [
-  { id: 1, type: "risk", title: "GlobalParts risk score exceeded 65", detail: "Score rose from 52 → 68 over 7 days. Consider sourcing alternatives for critical SKUs.", supplier: "GlobalParts Ltd.", time: "14 min ago", group: "today", read: false },
-  { id: 2, type: "delivery", title: "IronLine on-time delivery dropped below 90%", detail: "3 of the last 4 orders arrived late. Current 30-day rate: 87.5%.", supplier: "Ironline Distribution", time: "1 hr ago", group: "today", read: false },
-  { id: 3, type: "bid", title: "Bid #2040 under review — deadline in 48 hrs", detail: "Summit Ridge Apartments bid closes Aug 2. No response from GC yet.", supplier: null, time: "2 hr ago", group: "today", read: false },
-  { id: 4, type: "price", title: "Structural steel index up 6.4% this week", detail: "Market movement may affect PO-1187 final pricing. Review before approval.", supplier: "Ironline Distribution", time: "4 hr ago", group: "today", read: true },
-  { id: 5, type: "risk", title: "Apex Materials fill rate below SLA", detail: "Fill rate fell to 82% this month against a 90% SLA threshold.", supplier: "Apex Materials", time: "Yesterday, 3pm", group: "yesterday", read: true },
-  { id: 6, type: "delivery", title: "PO-1185 shipment delayed 2 days", detail: "Summit Fasteners reported carrier delay. New ETA: Aug 1.", supplier: "Summit Fasteners", time: "Yesterday, 11am", group: "yesterday", read: true },
-  { id: 7, type: "system", title: "Supplier data refresh completed", detail: "All 124 supplier risk scores and delivery rates updated from last night's feed.", supplier: null, time: "Yesterday, 2am", group: "yesterday", read: true },
-  { id: 8, type: "bid", title: "Bid #2041 awarded — Apex Electrical", detail: "Riverside Medical Office awarded. Contract value: $412k.", supplier: null, time: "2 days ago", group: "older", read: true },
-  { id: 9, type: "price", title: "Lumber prices down 4.1%", detail: "Dimensional lumber index retreated from July peak. Good timing for upcoming POs.", supplier: null, time: "3 days ago", group: "older", read: true },
-];
-
 const GROUP_LABELS = { today: "Today", yesterday: "Yesterday", older: "Older" };
 
 export default function Alerts() {
+  const resource = usePolledResource(fetchAlerts, { intervalMs: 30000, initialData: alertFixtures });
+  const alerts = resource.data ?? alertFixtures;
   const [filter, setFilter] = useState("all");
-  const [alerts, setAlerts] = useState(seedAlerts);
-  const [snoozed, setSnoozed] = useState(new Set());
   const [soundEnabled, setSoundEnabled] = useState(false);
   const { toast } = useToast();
+  const { csrf } = useAuth();
 
-  const visible = (filter === "all" ? alerts : alerts.filter((a) => a.type === filter))
-    .filter((a) => !snoozed.has(a.id));
+  const visible = filter === "all" ? alerts : alerts.filter((a) => a.type === filter);
   const unread = alerts.filter((a) => !a.read).length;
 
-  const markRead = (id) => setAlerts((prev) => prev.map((a) => a.id === id ? { ...a, read: true } : a));
-  const markAllRead = () => {
-    setAlerts((prev) => prev.map((a) => ({ ...a, read: true })));
-    toast("All alerts marked as read.", { type: "success" });
-  };
-  const dismiss = (id) => {
-    setAlerts((prev) => prev.filter((a) => a.id !== id));
-    toast("Alert dismissed.", { type: "info" });
-  };
-  const snooze = (id) => {
-    setSnoozed((prev) => new Set([...prev, id]));
-    toast("Snoozed until next refresh.", { type: "info" });
+  const run = async (action, id, okMsg) => {
+    try {
+      await mutateAlert({ action, id, csrf });
+      await resource.refresh();
+      if (okMsg) toast(okMsg, { type: "info" });
+    } catch (err) {
+      toast(err.message ?? "Couldn’t update that alert.", { type: "error" });
+    }
   };
 
   const counts = FILTERS.reduce((acc, f) => {
@@ -94,7 +81,7 @@ export default function Alerts() {
             {unread > 0 && (
               <button
                 type="button"
-                onClick={markAllRead}
+                onClick={() => run("read_all", undefined, "All alerts marked as read.")}
                 className="text-xs font-semibold text-amber transition-colors hover:text-amber-2"
               >
                 Mark all read
@@ -103,7 +90,13 @@ export default function Alerts() {
           </div>
         }
       >
-        {/* Filters */}
+        {!isConfigured && (
+          <GlassCard className="mb-6 px-5 py-3 text-sm text-steel">
+            <span className="font-semibold uppercase tracking-wider text-amber">Sample data</span>
+            {" "}— live alerts load from `/api/alerts.php`. Read/dismiss persist per account.
+          </GlassCard>
+        )}
+
         <div className="mb-5 flex flex-wrap gap-2">
           {FILTERS.map((f) => (
             <button
@@ -139,7 +132,7 @@ export default function Alerts() {
               <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-steel/70">{label}</p>
               <div className="space-y-3">
                 {items.map((a) => {
-                  const t = TYPES[a.type];
+                  const t = TYPES[a.type] ?? TYPES.system;
                   return (
                     <GlassCard key={a.id} className={`border px-5 py-4 transition-opacity ${a.read ? "opacity-70" : ""} ${t.bg}`}>
                       <div className="flex items-start gap-3">
@@ -165,14 +158,14 @@ export default function Alerts() {
                               <span className="text-xs text-steel">{a.time}</span>
                               <div className="flex gap-3">
                                 {!a.read && (
-                                  <button type="button" onClick={() => markRead(a.id)} className="text-xs font-semibold text-amber transition-colors hover:text-amber-2">
+                                  <button type="button" onClick={() => run("read", a.id)} className="text-xs font-semibold text-amber transition-colors hover:text-amber-2">
                                     Mark read
                                   </button>
                                 )}
-                                <button type="button" onClick={() => snooze(a.id)} className="text-xs text-steel transition-colors hover:text-paper" aria-label="Snooze alert">
+                                <button type="button" onClick={() => run("snooze", a.id, "Snoozed for an hour.")} className="text-xs text-steel transition-colors hover:text-paper" aria-label="Snooze alert">
                                   Snooze
                                 </button>
-                                <button type="button" onClick={() => dismiss(a.id)} className="text-xs text-steel transition-colors hover:text-danger" aria-label="Dismiss alert">
+                                <button type="button" onClick={() => run("dismiss", a.id, "Alert dismissed.")} className="text-xs text-steel transition-colors hover:text-danger" aria-label="Dismiss alert">
                                   Dismiss
                                 </button>
                               </div>

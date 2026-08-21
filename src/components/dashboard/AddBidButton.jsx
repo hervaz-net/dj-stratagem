@@ -1,58 +1,49 @@
 import { useState } from "react";
 import useAuth from "../../auth/useAuth";
 import { useToast } from "../../contexts/ToastContext";
-import { createSupplier } from "../../api/dashboard";
+import { createBid } from "../../api/dashboard";
 
-/**
- * Primary action. Rendered inline in the header on large screens and as a
- * floating pill on small ones, so it never covers table rows on desktop.
- */
-export default function AddSupplierButton({ onCreated, floating = false }) {
+export default function AddBidButton({ onCreated }) {
   const [open, setOpen] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [form, setForm] = useState({ name: "", category: "", region: "" });
+  const [form, setForm] = useState({ project: "", gc: "", trade: "Electrical", value: "", due: "" });
   const { csrf } = useAuth();
   const { toast } = useToast();
 
-  const base =
-    "lift glow-brand inline-flex items-center gap-2 rounded-full bg-gradient-to-br from-brand to-amber-2 " +
-    "px-5 py-3 text-sm font-semibold text-white";
-
   const submit = async (e) => {
     e.preventDefault();
-    if (!form.name.trim() || !form.category.trim() || !form.region.trim()) {
-      toast("Name, category, and region are required.", { type: "warning" });
+    const value = Number(form.value);
+    if (!form.project.trim() || !form.gc.trim() || !form.trade.trim() || !(value > 0)) {
+      toast("Project, GC, trade, and a positive value are required.", { type: "warning" });
       return;
     }
     setSaving(true);
     try {
-      await createSupplier({ ...form, csrf });
-      toast(`${form.name} added to the network.`, { type: "success" });
-      setForm({ name: "", category: "", region: "" });
+      await createBid({ ...form, value, csrf });
+      toast(`Bid created for ${form.project}.`, { type: "success" });
+      setForm({ project: "", gc: "", trade: "Electrical", value: "", due: "" });
       setOpen(false);
       onCreated?.();
     } catch (err) {
-      toast(err.message ?? "Couldn’t add that supplier.", { type: "error" });
+      toast(err.message ?? "Couldn’t create that bid.", { type: "error" });
     } finally {
       setSaving(false);
     }
   };
+
+  const set = (key) => (e) => setForm((p) => ({ ...p, [key]: e.target.value }));
 
   return (
     <>
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className={
-          floating
-            ? `${base} no-print fixed bottom-6 right-6 z-40 shadow-xl lg:hidden`
-            : `${base} hidden lg:inline-flex`
-        }
+        className="lift glow-brand inline-flex items-center gap-2 rounded-full bg-gradient-to-br from-brand to-amber-2 px-5 py-3 text-sm font-semibold text-white"
       >
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true">
           <path d="M12 5v14M5 12h14" />
         </svg>
-        Add Supplier
+        New bid
       </button>
 
       {open && (
@@ -62,19 +53,22 @@ export default function AddSupplierButton({ onCreated, floating = false }) {
             className="w-full max-w-md rounded-2xl border border-line bg-ink-2 p-6 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="text-base font-semibold text-paper">Add supplier</h2>
-            <p className="mt-1 text-sm text-steel">Creates a network record. Risk and delivery scores start at a healthy default.</p>
+            <h2 className="text-base font-semibold text-paper">New bid</h2>
+            <p className="mt-1 text-sm text-steel">Starts as a draft. You can move it to submitted or review from the table.</p>
             <div className="mt-4 space-y-3">
               {[
-                ["name", "Name", "Metro Supply Co."],
-                ["category", "Category", "Fasteners & hardware"],
-                ["region", "Region", "Southwest"],
-              ].map(([key, label, ph]) => (
+                ["project", "Project", "Harborview Office Tower", "text"],
+                ["gc", "General contractor", "Turner Construction", "text"],
+                ["trade", "Trade", "Electrical", "text"],
+                ["value", "Value (USD)", "250000", "number"],
+                ["due", "Due date", "", "date"],
+              ].map(([key, label, ph, type]) => (
                 <label key={key} className="block">
                   <span className="text-xs font-medium text-steel">{label}</span>
                   <input
+                    type={type}
                     value={form[key]}
-                    onChange={(e) => setForm((p) => ({ ...p, [key]: e.target.value }))}
+                    onChange={set(key)}
                     placeholder={ph}
                     className="mt-1 w-full rounded-md border border-line bg-ink px-3 py-2 text-sm text-paper outline-none focus:border-amber"
                   />
@@ -86,7 +80,7 @@ export default function AddSupplierButton({ onCreated, floating = false }) {
                 Cancel
               </button>
               <button type="submit" disabled={saving} className="rounded-lg bg-amber/15 px-4 py-2 text-sm font-semibold text-amber hover:bg-amber/25 disabled:opacity-60">
-                {saving ? "Saving…" : "Add supplier"}
+                {saving ? "Saving…" : "Create bid"}
               </button>
             </div>
           </form>
