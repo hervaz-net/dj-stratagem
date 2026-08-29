@@ -12,6 +12,7 @@ const columns = [
       { to: "/platform", label: "Platform" },
       { to: "/projects", label: "Projects" },
       { to: "/supply", label: "Supply Exchange" },
+      { to: "/fleet", label: "Fleet" },
       { to: "/pricing", label: "Pricing" },
       { to: "/changelog", label: "Changelog" },
     ],
@@ -91,6 +92,7 @@ function Newsletter() {
         </div>
         <button
           type="submit"
+          aria-label="Request market updates"
           className="flex shrink-0 items-center gap-1 rounded-lg bg-cta hover:bg-cta-hover px-3 py-2 text-xs font-semibold text-white"
         >
           <IconArrowRight width={13} height={13} />
