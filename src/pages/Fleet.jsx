@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import Section, { Eyebrow } from "../components/Section";
 import Button from "../components/Button";
 import CTASection from "../components/CTASection";
+import Seo from "../components/Seo";
 import {
   IconTruck,
   IconClock,
@@ -11,7 +12,7 @@ import {
   IconPackage,
 } from "../components/icons";
 
-// Mock fleet data
+// Sample fleet data for the public preview board.
 const FLEET_DATA = [
   {
     id: "FL-001",
@@ -20,9 +21,9 @@ const FLEET_DATA = [
     status: "in-use",
     location: "Los Angeles, CA",
     utilization: 89,
-    lastMaintenance: "2024-08-01",
-    nextScheduled: "2024-09-15",
-    operator: "John Martinez",
+    lastMaintenance: "2026-07-01",
+    nextScheduled: "2026-09-15",
+    operator: "Assigned crew",
     capacity: "3 cubic yards",
     hourlyRate: "$125",
   },
@@ -33,9 +34,9 @@ const FLEET_DATA = [
     status: "in-use",
     location: "Orange County, CA",
     utilization: 76,
-    lastMaintenance: "2024-07-20",
-    nextScheduled: "2024-10-01",
-    operator: "Sarah Chen",
+    lastMaintenance: "2026-06-20",
+    nextScheduled: "2026-10-01",
+    operator: "Assigned crew",
     capacity: "20 ton",
     hourlyRate: "$450",
   },
@@ -46,8 +47,8 @@ const FLEET_DATA = [
     status: "available",
     location: "San Diego, CA",
     utilization: 42,
-    lastMaintenance: "2024-08-05",
-    nextScheduled: "2024-08-28",
+    lastMaintenance: "2026-07-05",
+    nextScheduled: "2026-08-28",
     operator: "Available",
     capacity: "15 ton",
     hourlyRate: "$85",
@@ -59,9 +60,9 @@ const FLEET_DATA = [
     status: "maintenance",
     location: "Riverside, CA",
     utilization: 0,
-    lastMaintenance: "2024-08-08",
-    nextScheduled: "2024-08-18",
-    operator: "Technician",
+    lastMaintenance: "2026-07-08",
+    nextScheduled: "2026-08-18",
+    operator: "Shop tech",
     capacity: "3000 sq ft",
     hourlyRate: "$200",
   },
@@ -72,8 +73,8 @@ const FLEET_DATA = [
     status: "available",
     location: "Ventura, CA",
     utilization: 55,
-    lastMaintenance: "2024-07-15",
-    nextScheduled: "2024-09-20",
+    lastMaintenance: "2026-06-15",
+    nextScheduled: "2026-09-20",
     operator: "Available",
     capacity: "500 kW",
     hourlyRate: "$350",
@@ -85,19 +86,19 @@ const FLEET_DATA = [
     status: "in-use",
     location: "Long Beach, CA",
     utilization: 92,
-    lastMaintenance: "2024-08-02",
-    nextScheduled: "2024-09-10",
-    operator: "Mike Rodriguez",
+    lastMaintenance: "2026-07-02",
+    nextScheduled: "2026-09-10",
+    operator: "Assigned crew",
     capacity: "65 ft reach",
     hourlyRate: "$200",
   },
 ];
 
 const STATS = [
-  { label: "Total Fleet Assets", value: "156", icon: IconTruck },
-  { label: "Utilization Rate", value: "71%", icon: IconPackage },
-  { label: "Available Now", value: "42", icon: IconCheck },
-  { label: "In Maintenance", value: "8", icon: IconClock },
+  { label: "Sample assets on this page", value: "6", icon: IconTruck },
+  { label: "Avg. sample utilization", value: "59%", icon: IconPackage },
+  { label: "Available in the sample", value: "2", icon: IconCheck },
+  { label: "In maintenance (sample)", value: "1", icon: IconClock },
 ];
 
 export default function Fleet() {
@@ -154,26 +155,38 @@ export default function Fleet() {
 
   return (
     <>
-      {/* Hero Section */}
+      <Seo
+        title="Fleet"
+        description="Preview of the D&J Stratagem fleet board — sample assets only. Request access to talk about live equipment tracking."
+      />
       <Section className="relative overflow-hidden pt-16 pb-8 md:pt-24">
         <div className="pointer-events-none absolute inset-0 bg-grid [mask-image:radial-gradient(ellipse_60%_60%_at_50%_0%,black,transparent)]" />
         <div className="relative mx-auto max-w-6xl px-6">
           <Eyebrow>Fleet Management</Eyebrow>
           <h1 className="mt-6 text-5xl font-bold leading-tight text-paper md:text-6xl">
-            Track, manage, and optimize your entire fleet in real time.
+            See how equipment would look on the board.
           </h1>
           <p className="mt-6 max-w-2xl text-lg text-steel">
-            Real-time asset tracking, predictive maintenance, utilization analytics, and
-            automated scheduling. Keep every piece of equipment working smarter.
+            This page is a product preview: status filters, utilization, and asset cards
+            using sample machines. It is not a live tracker for a real fleet.
           </p>
+          <div
+            role="note"
+            className="mt-6 max-w-2xl rounded-xl border border-amber/40 bg-amber/8 px-5 py-4"
+          >
+            <p className="text-sm font-semibold text-amber">Preview &mdash; sample assets</p>
+            <p className="mt-1 text-sm leading-relaxed text-steel">
+              Names, rates, and operators below are illustrative. They are not a customer
+              fleet and cannot be dispatched from this page.
+            </p>
+          </div>
           <div className="mt-10 flex flex-wrap gap-4">
-            <Button variant="primary">Start Free Trial</Button>
-            <Button variant="secondary">Watch Demo</Button>
+            <Button to="/register" variant="primary">Request access</Button>
+            <Button to="/contact" variant="secondary">Request a demo</Button>
           </div>
         </div>
       </Section>
 
-      {/* Stats Grid */}
       <Section className="py-16">
         <div className="mx-auto max-w-6xl px-6">
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
@@ -198,7 +211,6 @@ export default function Fleet() {
         </div>
       </Section>
 
-      {/* Controls Section */}
       <Section className="py-8 border-b border-line/20">
         <div className="mx-auto max-w-6xl px-6">
           <div className="flex flex-wrap items-center gap-4">
@@ -215,7 +227,6 @@ export default function Fleet() {
                 <option value="maintenance">Maintenance</option>
               </select>
             </div>
-
             <div className="flex items-center gap-2">
               <label className="text-sm font-medium text-steel">Sort by:</label>
               <select
@@ -228,7 +239,6 @@ export default function Fleet() {
                 <option value="status">Status</option>
               </select>
             </div>
-
             <div className="ml-auto text-xs text-steel">
               Showing {filteredFleet.length} of {FLEET_DATA.length} assets
             </div>
@@ -236,7 +246,6 @@ export default function Fleet() {
         </div>
       </Section>
 
-      {/* Fleet Grid */}
       <Section className="py-12">
         <div className="mx-auto max-w-6xl px-6">
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -246,7 +255,6 @@ export default function Fleet() {
                 onClick={() => setSelectedAsset(asset)}
                 className="group cursor-pointer rounded-lg border border-line/30 bg-gradient-to-br from-ink via-ink-2 to-ink-3 p-6 backdrop-blur-sm transition-all hover:border-amber/30 hover:shadow-lg hover:scale-105"
               >
-                {/* Header */}
                 <div className="mb-4 flex items-start justify-between">
                   <div>
                     <p className="text-xs font-semibold uppercase tracking-wider text-steel">
@@ -255,16 +263,10 @@ export default function Fleet() {
                     <h3 className="mt-1 text-lg font-bold text-paper">{asset.name}</h3>
                     <p className="text-xs text-steel">{asset.id}</p>
                   </div>
-                  <span
-                    className={`rounded-full border px-3 py-1 text-xs font-semibold ${getStatusColor(
-                      asset.status
-                    )}`}
-                  >
+                  <span className={`rounded-full border px-3 py-1 text-xs font-semibold ${getStatusColor(asset.status)}`}>
                     {getStatusLabel(asset.status)}
                   </span>
                 </div>
-
-                {/* Utilization Bar */}
                 <div className="mb-4">
                   <div className="mb-2 flex items-center justify-between">
                     <span className="text-xs font-medium text-steel">Utilization</span>
@@ -277,8 +279,6 @@ export default function Fleet() {
                     />
                   </div>
                 </div>
-
-                {/* Info Grid */}
                 <div className="mb-4 space-y-2 border-t border-line/20 pt-4">
                   <div className="flex justify-between text-xs">
                     <span className="text-steel">Location:</span>
@@ -297,8 +297,6 @@ export default function Fleet() {
                     <span className="font-medium text-paper">{asset.capacity}</span>
                   </div>
                 </div>
-
-                {/* Maintenance Status */}
                 <div className="border-t border-line/20 pt-4">
                   <p className="text-xs text-steel">
                     Last maintenance: <span className="font-medium text-paper">{asset.lastMaintenance}</span>
@@ -307,8 +305,6 @@ export default function Fleet() {
                     Next scheduled: <span className="font-medium text-paper">{asset.nextScheduled}</span>
                   </p>
                 </div>
-
-                {/* View Details Button */}
                 <button className="mt-4 w-full flex items-center justify-center gap-2 rounded-md bg-amber/10 py-2 text-xs font-semibold text-amber transition-all hover:bg-amber/20 group-hover:bg-brand group-hover:text-white">
                   View Details <IconArrowRight className="h-3 w-3" />
                 </button>
@@ -318,7 +314,6 @@ export default function Fleet() {
         </div>
       </Section>
 
-      {/* Feature Highlights */}
       <Section className="py-16 border-t border-line/20">
         <div className="mx-auto max-w-6xl px-6">
           <div className="mb-12 text-center">
@@ -327,39 +322,14 @@ export default function Fleet() {
               Built for modern construction operations
             </h2>
           </div>
-
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {[
-              {
-                icon: IconTruck,
-                title: "Real-Time Tracking",
-                desc: "GPS-enabled asset tracking with live updates every 10 seconds.",
-              },
-              {
-                icon: IconClock,
-                title: "Predictive Maintenance",
-                desc: "AI-powered alerts before problems happen, reducing downtime by 40%.",
-              },
-              {
-                icon: IconPackage,
-                title: "Utilization Analytics",
-                desc: "Comprehensive dashboards showing ROI per asset and usage patterns.",
-              },
-              {
-                icon: IconUsers,
-                title: "Team Coordination",
-                desc: "Assign, track, and communicate with operators in real time.",
-              },
-              {
-                icon: IconCheck,
-                title: "Compliance Tracking",
-                desc: "Automated inspection checklists, certifications, and audit logs.",
-              },
-              {
-                icon: IconArrowRight,
-                title: "Seamless Integration",
-                desc: "Connect with your existing ERP, accounting, and PM software.",
-              },
+              { icon: IconTruck, title: "Asset status board", desc: "See what is in use, available, or in the shop without inventing GPS pings." },
+              { icon: IconClock, title: "Maintenance dates", desc: "Keep last service and next due on the card so the shop list is visible." },
+              { icon: IconPackage, title: "Utilization snapshot", desc: "A simple rate per asset so idle machines are obvious in the sample set." },
+              { icon: IconUsers, title: "Crew assignment", desc: "Show who is on the machine, or that it is waiting for a crew." },
+              { icon: IconCheck, title: "Inspection notes", desc: "A place for checklists and cert dates when the live module ships." },
+              { icon: IconArrowRight, title: "Works with the rest of the product", desc: "Fleet sits next to bids, orders, and suppliers — not a standalone toy site." },
             ].map((feature, idx) => {
               const Icon = feature.icon;
               return (
@@ -377,47 +347,19 @@ export default function Fleet() {
         </div>
       </Section>
 
-      {/* Pricing Section */}
       <Section className="py-16 border-t border-line/20">
         <div className="mx-auto max-w-6xl px-6">
           <div className="mb-12 text-center">
             <Eyebrow>Simple Pricing</Eyebrow>
             <h2 className="mt-4 text-3xl font-bold text-paper">
-              Scale from 10 to 1,000+ assets
+              Fleet add-on pricing is not live yet
             </h2>
           </div>
-
           <div className="grid gap-6 md:grid-cols-3">
             {[
-              {
-                name: "Starter",
-                price: "$199",
-                period: "/month",
-                features: ["Up to 25 assets", "Basic tracking", "Email support", "Monthly reports"],
-                cta: "Get Started",
-              },
-              {
-                name: "Professional",
-                price: "$599",
-                period: "/month",
-                highlight: true,
-                features: [
-                  "Up to 250 assets",
-                  "Advanced analytics",
-                  "Priority support",
-                  "Real-time alerts",
-                  "API access",
-                  "Team collaboration",
-                ],
-                cta: "Start Free Trial",
-              },
-              {
-                name: "Enterprise",
-                price: "Custom",
-                period: "pricing",
-                features: ["Unlimited assets", "White label", "Dedicated support", "Custom integration", "On-premise option"],
-                cta: "Contact Sales",
-              },
+              { name: "Starter", price: "$199", period: "/month", features: ["Up to 25 assets", "Basic tracking", "Email support", "Monthly reports"] },
+              { name: "Professional", price: "$599", period: "/month", highlight: true, features: ["Up to 250 assets", "Advanced analytics", "Priority support", "Real-time alerts", "API access", "Team collaboration"] },
+              { name: "Enterprise", price: "Custom", period: "pricing", features: ["Unlimited assets", "White label", "Dedicated support", "Custom integration", "On-premise option"] },
             ].map((plan, idx) => (
               <div
                 key={idx}
@@ -446,10 +388,11 @@ export default function Fleet() {
                   ))}
                 </ul>
                 <Button
+                  to={plan.name === "Enterprise" ? "/contact" : "/register"}
                   variant={plan.highlight ? "primary" : "secondary"}
                   className="mt-8 w-full"
                 >
-                  {plan.cta}
+                  {plan.name === "Enterprise" ? "Talk to us" : "Request access"}
                 </Button>
               </div>
             ))}
@@ -457,15 +400,15 @@ export default function Fleet() {
         </div>
       </Section>
 
-      {/* CTA Section */}
       <CTASection
-        title="Ready to transform your fleet operations?"
-        description="Join 500+ construction companies using D&J Stratagem to optimize asset utilization and cut maintenance costs by up to 35%."
-        primaryCTA="Start Your Free Trial"
-        secondaryCTA="Schedule a Demo"
+        title="Want this board on your own equipment?"
+        subtitle="Request access and tell us what you run. There is no live fleet feed on this public page."
+        primaryLabel="Request access"
+        primaryTo="/register"
+        secondaryLabel="Request a demo"
+        secondaryTo="/contact"
       />
 
-      {/* Modal - Asset Details */}
       {selectedAsset && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4" onClick={() => setSelectedAsset(null)}>
           <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-ink-2 p-8" onClick={(e) => e.stopPropagation()}>
@@ -474,35 +417,22 @@ export default function Fleet() {
                 <h2 className="text-2xl font-bold text-paper">{selectedAsset.name}</h2>
                 <p className="mt-1 text-sm text-steel">{selectedAsset.id}</p>
               </div>
-              <button
-                onClick={() => setSelectedAsset(null)}
-                className="text-2xl text-steel hover:text-paper"
-              >
+              <button onClick={() => setSelectedAsset(null)} className="text-2xl text-steel hover:text-paper">
                 ✕
               </button>
             </div>
-
             <div className="space-y-6">
-              {/* Status Row */}
               <div className="border-b border-line pb-4">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-steel">Current Status</p>
-                    <p className="mt-1 text-lg font-bold text-paper">
-                      {getStatusLabel(selectedAsset.status)}
-                    </p>
+                    <p className="mt-1 text-lg font-bold text-paper">{getStatusLabel(selectedAsset.status)}</p>
                   </div>
-                  <span
-                    className={`rounded-full border px-4 py-2 text-sm font-semibold ${getStatusColor(
-                      selectedAsset.status
-                    )}`}
-                  >
+                  <span className={`rounded-full border px-4 py-2 text-sm font-semibold ${getStatusColor(selectedAsset.status)}`}>
                     {getStatusLabel(selectedAsset.status)}
                   </span>
                 </div>
               </div>
-
-              {/* Details Grid */}
               <div className="grid gap-6 md:grid-cols-2">
                 {[
                   { label: "Type", value: selectedAsset.type },
@@ -518,8 +448,6 @@ export default function Fleet() {
                   </div>
                 ))}
               </div>
-
-              {/* Utilization */}
               <div className="border-t border-line pt-6">
                 <p className="text-xs font-semibold uppercase text-steel">Utilization</p>
                 <div className="mt-4 flex items-baseline gap-4">
@@ -534,16 +462,11 @@ export default function Fleet() {
                   <span className="text-2xl font-bold text-paper">{selectedAsset.utilization}%</span>
                 </div>
               </div>
-
-              {/* Action Buttons */}
-              <div className="border-t border-line pt-6 flex gap-3">
-                <Button variant="primary" className="flex-1">
-                  Schedule Maintenance
-                </Button>
-                <Button variant="secondary" className="flex-1">
-                  View Full History
-                </Button>
-              </div>
+              <p className="border-t border-line pt-6 text-sm text-steel">
+                Schedule and history actions are not wired on this preview. Use{" "}
+                <a href="/contact" className="font-medium text-amber hover:text-amber-2">/contact</a>{" "}
+                if you want this on a real fleet.
+              </p>
             </div>
           </div>
         </div>
