@@ -20,9 +20,9 @@ const columns = [
   {
     heading: "Solutions",
     links: [
-      { to: "/solutions", label: "General contractors" },
-      { to: "/solutions", label: "Subcontractors" },
-      { to: "/solutions", label: "Suppliers" },
+      { to: "/solutions#gc", label: "General contractors" },
+      { to: "/solutions#sub", label: "Subcontractors" },
+      { to: "/solutions#supplier", label: "Suppliers" },
     ],
   },
   {

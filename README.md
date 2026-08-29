@@ -172,14 +172,13 @@ domain (create one in cPanel, switch `contact.php` from `mail()` to SMTP).
 
 ## Outstanding
 
-- **SSL is not yet issued.** `https://` fails; the site currently serves over HTTP only.
-  Namecheap Stellar includes free AutoSSL, which validates over port 80 — that was broken
-  during initial setup, so issuance kept failing. It should provision on a subsequent AutoSSL
-  run now that HTTP works; if not, ask Namecheap support to trigger AutoSSL for the account.
-  Once issued, add an HTTPS redirect to `.htaccess`.
-- **Auth is built but must stay off until SSL is issued.** See Authentication
-  below — `require_https` refuses to serve the endpoints over plaintext HTTP,
-  which is correct and deliberate. Do not disable it to "get it working".
+- **Namecheap account is suspended.** `https://djstratageminc.com` currently 302s every
+  path to `/cgi-sys/suspendedpage.cgi`. That is a billing/host lock, not a git or Vite
+  failure. Unsuspend the Stellar account in Namecheap before `./deploy.sh` or a cPanel
+  pull can serve the site. AutoSSL is already terminating HTTPS; the lock is the account.
+- **Auth stays off until the host is unsuspended.** See Authentication below —
+  `require_https` refuses to serve the endpoints over plaintext HTTP, which is
+  correct and deliberate. Do not disable it to "get it working".
 - Pricing figures are placeholders pending a real pricing decision. The annual
   toggle derives its numbers from a flat 20% discount constant in `Pricing.jsx`.
 - Screenshots/mock panels throughout the site are illustrative, not live product.
@@ -205,7 +204,7 @@ alert actions, settings saves) toast an error locally — that is expected.
 Set `VITE_API_BASE_URL` only if the PHP host is on another origin.
 
 | Endpoint | Methods | Used by |
-| --- | --- | --- |
+| --- | --- |
 | `/api/suppliers.php` | GET list, POST create (`name`, `category`, `region`) | Suppliers |
 | `/api/metrics.php` | GET (computed from suppliers) | Suppliers |
 | `/api/market-ticker.php` | GET | Suppliers ticker |
@@ -246,7 +245,7 @@ registering creates a `pending` row that cannot sign in until an admin activates
 it.
 
 | Endpoint | Method | Purpose |
-| --- | --- | --- |
+| --- | --- |
 | `/api/me.php` | GET | Current user (or `null`) + a CSRF token |
 | `/api/register.php` | POST | Creates a `pending` account |
 | `/api/login.php` | POST | Authenticates an `active` account, starts a session |
