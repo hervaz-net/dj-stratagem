@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { Link } from "react-router-dom";
 import Section, { Eyebrow } from "../components/Section";
 import Button from "../components/Button";
 import CTASection from "../components/CTASection";
@@ -107,7 +108,9 @@ export default function Fleet() {
   const [selectedAsset, setSelectedAsset] = useState(null);
 
   const filteredFleet = useMemo(() => {
-    let result = FLEET_DATA;
+    // Copy first. Sorting the module-level FLEET_DATA array in place
+    // permanently reorders the source list after the first render.
+    let result = [...FLEET_DATA];
 
     if (filterStatus !== "all") {
       result = result.filter((item) => item.status === filterStatus);
@@ -305,7 +308,7 @@ export default function Fleet() {
                     Next scheduled: <span className="font-medium text-paper">{asset.nextScheduled}</span>
                   </p>
                 </div>
-                <button className="mt-4 w-full flex items-center justify-center gap-2 rounded-md bg-amber/10 py-2 text-xs font-semibold text-amber transition-all hover:bg-amber/20 group-hover:bg-brand group-hover:text-white">
+                <button type="button" className="mt-4 w-full flex items-center justify-center gap-2 rounded-md bg-amber/10 py-2 text-xs font-semibold text-amber transition-all hover:bg-amber/20 group-hover:bg-brand group-hover:text-white">
                   View Details <IconArrowRight className="h-3 w-3" />
                 </button>
               </div>
@@ -464,7 +467,7 @@ export default function Fleet() {
               </div>
               <p className="border-t border-line pt-6 text-sm text-steel">
                 Schedule and history actions are not wired on this preview. Use{" "}
-                <a href="/contact" className="font-medium text-amber hover:text-amber-2">/contact</a>{" "}
+                <Link to="/contact" className="font-medium text-amber hover:text-amber-2">the contact form</Link>{" "}
                 if you want this on a real fleet.
               </p>
             </div>
