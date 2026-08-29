@@ -1,4 +1,5 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import Section, { Eyebrow } from "../components/Section";
 import CTASection from "../components/CTASection";
 import Seo from "../components/Seo";
@@ -46,10 +47,30 @@ const roles = [
   },
 ];
 
+function tabFromHash(hash) {
+  const key = (hash || "").replace(/^#/, "").toLowerCase();
+  if (key === "gc" || key === "general" || key === "general-contractors") return "gc";
+  if (key === "sub" || key === "subcontractor" || key === "subcontractors") return "sub";
+  if (key === "supplier" || key === "suppliers") return "supplier";
+  return null;
+}
+
 export default function Solutions() {
-  const [active, setActive] = useState(roles[0].key);
-  const role = roles.find((r) => r.key === active);
+  const { hash } = useLocation();
+  const navigate = useNavigate();
+  const [active, setActive] = useState(() => tabFromHash(hash) || roles[0].key);
+  const role = roles.find((r) => r.key === active) || roles[0];
   const tabRefs = useRef([]);
+
+  useEffect(() => {
+    const next = tabFromHash(hash);
+    if (next) setActive(next);
+  }, [hash]);
+
+  const selectTab = (key) => {
+    setActive(key);
+    if (hash !== `#${key}`) navigate(`/solutions#${key}`, { replace: true });
+  };
 
   // Arrow keys move between tabs, per the WAI-ARIA tabs pattern.
   const onTabKeyDown = (e) => {
@@ -63,7 +84,7 @@ export default function Solutions() {
     else return;
 
     e.preventDefault();
-    setActive(roles[next].key);
+    selectTab(roles[next].key);
     tabRefs.current[next]?.focus();
   };
 
@@ -106,7 +127,7 @@ export default function Solutions() {
                 aria-selected={selected}
                 aria-controls={`panel-${r.key}`}
                 tabIndex={selected ? 0 : -1}
-                onClick={() => setActive(r.key)}
+                onClick={() => selectTab(r.key)}
                 className={`lift flex items-center gap-2 rounded-full border px-5 py-2.5 text-sm font-medium ${
                   selected
                     ? "border-amber bg-amber/10 text-amber shadow-sm"
