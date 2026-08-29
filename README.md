@@ -130,29 +130,32 @@ Two branches:
 
 ### Shipping a change
 
+Preferred path, from a machine that has Node, git, curl, and `~/.cpanel_token`:
+
 ```bash
-npm run build
+git checkout main && git pull origin main
+./deploy.sh
 ```
 
-Then refresh the `deploy` branch with the new `dist/` contents and push it. From a scratch
-clone of `deploy`: replace everything except `.git`, copy in `dist/`, restore `.cpanel.yml`,
-commit, push.
+That script builds `dist/`, replaces the `deploy` branch, asks cPanel to pull, runs
+`.cpanel.yml`, and checks that the live homepage JS hash matches the build.
 
-`.cpanel.yml` runs on deploy:
+Do **not** copy the old one-liner `rsync -a` into `.cpanel.yml`. `-a` copies perms and
+group from the git checkout (`djstlime:djstlime` mode `0700`). The web server runs as
+`nobody`, so every `/assets/*` GET 404s while the directory index can still render.
+`deploy.sh` writes `-rltD` plus chmod/chgrp tasks so `public_html` ends as
+`djstlime:nobody` mode `0750`.
 
-```yaml
----
-deployment:
-  tasks:
-    - /usr/bin/rsync -a --delete --exclude='.git' --exclude='.cpanel.yml' ./ /home/djstlime/public_html/
-```
-
-Finally, in cPanel → **Git™ Version Control** → the `dj-stratagem` repo → **Pull or Deploy**:
-click **Update from Remote**, then **Deploy HEAD Commit**.
+If you cannot run `deploy.sh`, after someone has already pushed a fresh `deploy` tip:
+cPanel → **Git™ Version Control** → `dj-stratagem` → **Update from Remote** →
+**Deploy HEAD Commit**.
 
 > Note: `rsync --delete` briefly empties `public_html` mid-sync. A request during that window
 > can return a directory listing or 404s. Re-check ~10 seconds after deploying before
 > concluding something broke.
+
+> Namecheap account suspension (`/cgi-sys/suspendedpage.cgi`) is a billing/host lock,
+> not a git failure. Unsuspend the Stellar account before any cPanel pull will go live.
 
 ### Contact form
 
