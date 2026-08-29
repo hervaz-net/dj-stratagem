@@ -29,14 +29,14 @@ export default function VerifyEmail() {
             </p>
 
             <div className="mt-8 space-y-3">
-              <p className="text-xs text-steel">Didn't receive it?</p>
-              <button
-                type="button"
-                className="text-sm font-medium text-amber hover:text-amber-2"
-                onClick={() => alert("Verification email resent.")}
-              >
-                Resend verification email
-              </button>
+              <p className="text-xs text-steel">Didn&rsquo;t receive it?</p>
+              <p className="text-sm leading-relaxed text-steel">
+                Automated resend is not live yet. Email{" "}
+                <a href="mailto:hello@djstratageminc.com" className="font-medium text-amber hover:text-amber-2">
+                  hello@djstratageminc.com
+                </a>{" "}
+                and we will confirm the account.
+              </p>
             </div>
 
             <div className="mt-8 border-t border-line pt-6">

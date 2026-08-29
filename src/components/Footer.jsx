@@ -10,6 +10,7 @@ const columns = [
     heading: "Product",
     links: [
       { to: "/platform", label: "Platform" },
+      { to: "/projects", label: "Projects" },
       { to: "/supply", label: "Supply Exchange" },
       { to: "/pricing", label: "Pricing" },
       { to: "/changelog", label: "Changelog" },
@@ -59,8 +60,12 @@ function Newsletter() {
 
   if (done) {
     return (
-      <p className="mt-4 flex items-center gap-2 text-sm text-success">
-        <span aria-hidden="true">✓</span> You&rsquo;re subscribed!
+      <p className="mt-4 text-sm leading-relaxed text-steel">
+        Thanks. A mailing list is not live yet &mdash; email{" "}
+        <a href="mailto:hello@djstratageminc.com" className="font-medium text-amber hover:text-amber-2">
+          hello@djstratageminc.com
+        </a>{" "}
+        if you want updates.
       </p>
     );
   }
