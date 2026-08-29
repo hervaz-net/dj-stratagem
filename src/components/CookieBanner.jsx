@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const KEY = "djs-cookie-consent";
 
@@ -15,7 +16,9 @@ function getConsent() {
 function setConsent(accepted) {
   try {
     localStorage.setItem(KEY, JSON.stringify({ accepted, ts: Date.now() }));
-  } catch {}
+  } catch {
+    /* private mode / blocked storage */
+  }
 }
 
 export default function CookieBanner() {
@@ -23,8 +26,14 @@ export default function CookieBanner() {
 
   if (dismissed) return null;
 
-  const accept = () => { setConsent(true); setDismissed(true); };
-  const decline = () => { setConsent(false); setDismissed(true); };
+  const accept = () => {
+    setConsent(true);
+    setDismissed(true);
+  };
+  const decline = () => {
+    setConsent(false);
+    setDismissed(true);
+  };
 
   return (
     <div
@@ -34,10 +43,13 @@ export default function CookieBanner() {
     >
       <div className="mx-auto flex max-w-6xl flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-sm leading-relaxed text-steel">
-          We use cookies to improve your experience and analyze site usage.{" "}
-          <a href="/about" className="font-medium text-amber underline underline-offset-2 hover:text-amber-2">
-            Learn more
-          </a>
+          This site stores theme preference and this consent choice on your device. There is no analytics or advertising pixel.{" "}
+          <Link
+            to="/privacy"
+            className="font-medium text-amber underline underline-offset-2 hover:text-amber-2"
+          >
+            Privacy Policy
+          </Link>
           .
         </p>
         <div className="flex shrink-0 gap-2">
@@ -46,14 +58,14 @@ export default function CookieBanner() {
             onClick={decline}
             className="rounded-full border border-line px-4 py-1.5 text-xs font-semibold text-steel hover:border-line/70 hover:text-paper"
           >
-            Decline
+            Dismiss
           </button>
           <button
             type="button"
             onClick={accept}
-            className="rounded-full bg-cta hover:bg-cta-hover px-4 py-1.5 text-xs font-semibold text-white"
+            className="rounded-full bg-cta px-4 py-1.5 text-xs font-semibold text-white hover:bg-cta-hover"
           >
-            Accept all
+            OK
           </button>
         </div>
       </div>

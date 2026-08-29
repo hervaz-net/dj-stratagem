@@ -1,9 +1,5 @@
+import DocFrame from "../components/DocFrame";
+
 export default function Receipts() {
-  return (
-    <iframe
-      src="/receipts.html"
-      className="h-screen w-full border-0"
-      title="Receipts"
-    />
-  );
+  return <DocFrame src="/receipts.html" title="Receipts" />;
 }
