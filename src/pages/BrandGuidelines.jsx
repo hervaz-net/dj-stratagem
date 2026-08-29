@@ -1,9 +1,5 @@
+import DocFrame from "../components/DocFrame";
+
 export default function BrandGuidelines() {
-  return (
-    <iframe
-      src="/brand-guidelines.html"
-      className="h-screen w-full border-0"
-      title="Brand Guidelines"
-    />
-  );
+  return <DocFrame src="/brand-guidelines.html" title="Brand Guidelines" />;
 }
