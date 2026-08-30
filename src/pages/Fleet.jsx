@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Section, { Eyebrow } from "../components/Section";
 import Button from "../components/Button";
@@ -106,6 +106,15 @@ export default function Fleet() {
   const [filterStatus, setFilterStatus] = useState("all");
   const [sortBy, setSortBy] = useState("utilization");
   const [selectedAsset, setSelectedAsset] = useState(null);
+
+  useEffect(() => {
+    if (!selectedAsset) return undefined;
+    const onKey = (e) => {
+      if (e.key === "Escape") setSelectedAsset(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [selectedAsset]);
 
   const filteredFleet = useMemo(() => {
     // Copy first. Sorting the module-level FLEET_DATA array in place
@@ -308,7 +317,14 @@ export default function Fleet() {
                     Next scheduled: <span className="font-medium text-paper">{asset.nextScheduled}</span>
                   </p>
                 </div>
-                <button type="button" className="mt-4 w-full flex items-center justify-center gap-2 rounded-md bg-amber/10 py-2 text-xs font-semibold text-amber transition-all hover:bg-amber/20 group-hover:bg-brand group-hover:text-white">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedAsset(asset);
+                  }}
+                  className="mt-4 w-full flex items-center justify-center gap-2 rounded-md bg-amber/10 py-2 text-xs font-semibold text-amber transition-all hover:bg-amber/20 group-hover:bg-brand group-hover:text-white"
+                >
                   View Details <IconArrowRight className="h-3 w-3" />
                 </button>
               </div>
@@ -420,7 +436,12 @@ export default function Fleet() {
                 <h2 className="text-2xl font-bold text-paper">{selectedAsset.name}</h2>
                 <p className="mt-1 text-sm text-steel">{selectedAsset.id}</p>
               </div>
-              <button onClick={() => setSelectedAsset(null)} className="text-2xl text-steel hover:text-paper">
+              <button
+                type="button"
+                onClick={() => setSelectedAsset(null)}
+                aria-label="Close asset details"
+                className="text-2xl text-steel hover:text-paper"
+              >
                 ✕
               </button>
             </div>
