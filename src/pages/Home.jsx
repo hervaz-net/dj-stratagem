@@ -164,7 +164,7 @@ export default function Home() {
               turn more opportunities into awarded projects.
             </p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-              <Button to="/register" variant="primary" size="lg">
+              <Button to="/projects" variant="primary" size="lg">
                 Find construction projects <IconArrowRight width={16} height={16} />
               </Button>
               <Button to="/platform" variant="secondary" size="lg">
@@ -344,7 +344,7 @@ export default function Home() {
           ))}
         </div>
         <div className="mt-10">
-          <Button to="/register" variant="primary" size="lg">
+          <Button to="/projects" variant="primary" size="lg">
             Start finding projects <IconArrowRight width={16} height={16} />
           </Button>
         </div>
