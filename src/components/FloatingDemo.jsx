@@ -12,7 +12,7 @@ export default function FloatingDemo() {
 
   return (
     <div
-      className={`fixed bottom-32 right-6 z-[90] transition-all duration-500 ${
+      className={`fixed bottom-32 right-6 z-[90] transition-all duration-500 [[data-cookie-banner="1"]_&]:bottom-48 ${
         visible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0 pointer-events-none"
       }`}
     >

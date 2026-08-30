@@ -20,7 +20,7 @@ export default function Login() {
   const errorId = "login-error";
 
   // Send an already-authenticated visitor onward rather than showing the form.
-  const destination = location.state?.from ?? "/dashboard/suppliers";
+  const destination = location.state?.from ?? "/dashboard/overview";
   if (!loading && user) return <Navigate to={destination} replace />;
 
   const fail = (field, message) => {

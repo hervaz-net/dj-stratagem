@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 const KEY = "djs-cookie-consent";
@@ -23,6 +23,17 @@ function setConsent(accepted) {
 
 export default function CookieBanner() {
   const [dismissed, setDismissed] = useState(() => getConsent() !== null);
+
+  useEffect(() => {
+    if (dismissed) {
+      delete document.documentElement.dataset.cookieBanner;
+    } else {
+      document.documentElement.dataset.cookieBanner = "1";
+    }
+    return () => {
+      delete document.documentElement.dataset.cookieBanner;
+    };
+  }, [dismissed]);
 
   if (dismissed) return null;
 

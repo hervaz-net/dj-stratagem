@@ -5,6 +5,18 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.5",
+    date: "August 2026",
+    tag: "Fix",
+    items: [
+      { type: "improved", text: "Cookie banner no longer covers the support button, demo chip, or back-to-top control." },
+      { type: "improved", text: "Fleet asset cards are keyboard-reachable; the details modal is a real dialog." },
+      { type: "improved", text: "Sign-in now lands on dashboard overview instead of the suppliers table." },
+      { type: "improved", text: "Auth and reset pages stay out of robots.txt." },
+      { type: "improved", text: "Command palette hides dashboard routes until you are signed in." },
+    ],
+  },
+  {
     version: "1.4",
     date: "July 2026",
     tag: "Major",
@@ -80,6 +92,7 @@ const TAG_COLOR = {
   Feature: "bg-amber/10 text-amber border-amber/30",
   Foundation: "bg-[var(--viz-cyan)]/10 text-[var(--viz-cyan)] border-[var(--viz-cyan)]/30",
   Launch: "bg-[var(--viz-green)]/10 text-[var(--viz-green)] border-[var(--viz-green)]/30",
+  Fix: "bg-warning/10 text-warning border-warning/30",
 };
 
 export default function Changelog() {
