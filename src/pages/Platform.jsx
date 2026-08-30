@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import Section, { Eyebrow } from "../components/Section";
 import CTASection from "../components/CTASection";
 import Reveal from "../components/Reveal";
@@ -195,7 +196,6 @@ export default function Platform() {
           &mdash; from the first opportunity to the final invoice.
         </p>
 
-        {/* Jump links — the page runs six long sections deep. */}
         <nav aria-label="Platform suites" className="mt-10 flex flex-wrap gap-2">
           {modules.map((m) => (
             <a
@@ -209,7 +209,6 @@ export default function Platform() {
         </nav>
       </Section>
 
-      {/* Watch it in action */}
       <Section className="border-t border-line">
         <Reveal>
           <div className="text-center">
@@ -270,7 +269,6 @@ export default function Platform() {
         </Section>
       ))}
 
-      {/* Integrations */}
       <Section className="border-t border-line">
         <Reveal>
           <div className="text-center">
@@ -312,9 +310,9 @@ export default function Platform() {
         </div>
         <p className="mt-8 text-center text-sm text-steel">
           Don&rsquo;t see your tool?{" "}
-          <a href="/contact" className="font-medium text-amber hover:text-amber-2">
+          <Link to="/contact" className="font-medium text-amber hover:text-amber-2">
             Request an integration →
-          </a>
+          </Link>
         </p>
       </Section>
 
