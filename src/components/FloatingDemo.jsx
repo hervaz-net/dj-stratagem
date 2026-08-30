@@ -1,14 +1,24 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { IconCalendar } from "./icons";
+
+const HIDDEN_ON = new Set(["/contact", "/login", "/register", "/forgot-password", "/verify-email"]);
 
 export default function FloatingDemo() {
   const [visible, setVisible] = useState(false);
+  const { pathname } = useLocation();
+  const hide = HIDDEN_ON.has(pathname);
 
   useEffect(() => {
+    if (hide) {
+      setVisible(false);
+      return undefined;
+    }
     const timer = setTimeout(() => setVisible(true), 2500);
     return () => clearTimeout(timer);
-  }, []);
+  }, [hide]);
+
+  if (hide) return null;
 
   return (
     <div

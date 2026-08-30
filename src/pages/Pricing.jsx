@@ -126,8 +126,10 @@ function RoiCalculator() {
 
   const extraWinsPerYear = Math.round(bidsPerMonth * 12 * (improvedWinRate - currentWinRate) / 100);
   const extraRevenue = extraWinsPerYear * avgBid * 1000;
-  const planCost = 249 * 12;
-  const roi = planCost > 0 ? Math.round((extraRevenue / planCost) * 10) / 10 : 0;
+  // Growth list price is $249/mo. Annual cost is 12× that — do not divide
+  // by 100 (that rendered as "$29.88/mo" under "Growth plan annual").
+  const planCostAnnual = 249 * 12;
+  const roi = planCostAnnual > 0 ? Math.round((extraRevenue / planCostAnnual) * 10) / 10 : 0;
 
   const fmt = (n) => n >= 1000 ? `$${(n / 1000).toFixed(0)}k` : `$${n.toLocaleString()}`;
 
@@ -169,8 +171,8 @@ function RoiCalculator() {
             <p className="mt-1 text-xs text-steel">ROI vs. Growth plan</p>
           </div>
           <div className="rounded-xl border border-line bg-ink/60 p-4">
-            <p className="text-2xl font-semibold text-paper tabular-nums">${planCost / 100}/mo</p>
-            <p className="mt-1 text-xs text-steel">Growth plan annual</p>
+            <p className="text-2xl font-semibold text-paper tabular-nums">${planCostAnnual.toLocaleString()}/yr</p>
+            <p className="mt-1 text-xs text-steel">Growth plan, billed annually</p>
           </div>
         </div>
         <p className="mt-4 text-xs text-steel/60">Illustrative estimate based on your inputs. Actual results vary.</p>

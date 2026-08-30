@@ -148,15 +148,17 @@ export default function Fleet() {
   }, [filterStatus, sortBy]);
 
   const getStatusColor = (status) => {
+    // Use design tokens, not Tailwind default greens/oranges. Those 700
+    // text colors disappear against the dark theme ink surfaces.
     switch (status) {
       case "in-use":
-        return "bg-green-500/10 text-green-700 border-green-200";
+        return "bg-success/10 text-success border-success/30";
       case "available":
-        return "bg-blue-500/10 text-blue-700 border-blue-200";
+        return "bg-amber/10 text-amber border-amber/30";
       case "maintenance":
-        return "bg-orange-500/10 text-orange-700 border-orange-200";
+        return "bg-warning/10 text-warning border-warning/30";
       default:
-        return "bg-gray-500/10 text-gray-700 border-gray-200";
+        return "bg-ink-3 text-steel border-line";
     }
   };
 
