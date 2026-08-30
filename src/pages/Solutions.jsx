@@ -72,7 +72,6 @@ export default function Solutions() {
     if (hash !== `#${key}`) navigate(`/solutions#${key}`, { replace: true });
   };
 
-  // Arrow keys move between tabs, per the WAI-ARIA tabs pattern.
   const onTabKeyDown = (e) => {
     const index = roles.findIndex((r) => r.key === active);
     let next = null;
@@ -113,6 +112,9 @@ export default function Solutions() {
           onKeyDown={onTabKeyDown}
           className="flex flex-wrap gap-3"
         >
+          <span id="gc" className="sr-only" />
+          <span id="sub" className="sr-only" />
+          <span id="supplier" className="sr-only" />
           {roles.map((r, i) => {
             const selected = active === r.key;
             return (
@@ -172,9 +174,6 @@ export default function Solutions() {
           </div>
         </div>
       </Section>
-
-      {/* Case studies go here once there are real engagements to write up —
-          see PROOF.md. */}
 
       <CTASection
         title="Find your fit on the platform."
