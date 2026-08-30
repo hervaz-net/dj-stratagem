@@ -14,7 +14,7 @@ const entries = [
       { type: "new", text: "Orders: Visual timeline progress bar, days-overdue badge, and bulk cancel." },
       { type: "new", text: "Analytics: Date-range toggle (7d/30d/90d) and month-over-month KPI deltas." },
       { type: "new", text: "Bids: Win rate metric in the summary strip." },
-      { type: "improved", text: "Supplier drawer now shows risk trend badge (↑↓→) alongside the risk score." },
+      { type: "improved", text: "Supplier drawer now shows risk trend badge alongside the risk score." },
     ],
   },
   {
@@ -22,9 +22,9 @@ const entries = [
     date: "June 2026",
     tag: "Feature",
     items: [
-      { type: "new", text: "Command palette (⌘K / Ctrl+K) for instant navigation across all pages." },
+      { type: "new", text: "Command palette (Cmd+K / Ctrl+K) for instant navigation across all pages." },
       { type: "new", text: "Toast notification system for feedback on actions (export, read, dismiss)." },
-      { type: "new", text: "Live chat widget — available on all marketing pages." },
+      { type: "new", text: "Support widget on marketing pages — routes to /contact, no fake live agent." },
       { type: "new", text: "Theme toggle in the dashboard sidebar (dark / light, persisted)." },
       { type: "new", text: "Mobile bottom navigation for dashboard on small screens." },
       { type: "new", text: "User Settings page at /dashboard/settings." },
@@ -96,7 +96,7 @@ export default function Changelog() {
           What's new on the platform.
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-steel">
-          Every release, improvement, and fix — most recent first. Subscribe via the contact page for email digests.
+          Every release, improvement, and fix — most recent first. There is no email digest yet.
         </p>
       </Section>
 
@@ -105,7 +105,6 @@ export default function Changelog() {
           {entries.map((entry, i) => (
             <Reveal key={entry.version} delay={i * 60}>
               <div className="flex gap-6 sm:gap-10">
-                {/* Timeline spine */}
                 <div className="flex flex-col items-center">
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-amber/40 bg-amber/10 text-xs font-semibold text-amber">
                     {entry.version}
@@ -114,8 +113,6 @@ export default function Changelog() {
                     <div className="mt-3 flex-1 w-px bg-line" aria-hidden="true" />
                   )}
                 </div>
-
-                {/* Content */}
                 <div className="min-w-0 flex-1 pb-8">
                   <div className="flex flex-wrap items-center gap-3">
                     <time className="text-sm font-semibold text-paper">{entry.date}</time>
@@ -142,7 +139,7 @@ export default function Changelog() {
 
       <CTASection
         title="Want early access to new features?"
-        subtitle="Join the beta program and help shape what we build next."
+        subtitle="Create an account or request a demo. There is no email digest list yet."
       />
     </>
   );
