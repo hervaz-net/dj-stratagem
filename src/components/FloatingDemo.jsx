@@ -12,7 +12,7 @@ export default function FloatingDemo() {
 
   return (
     <div
-      className={`fixed bottom-24 right-6 z-40 transition-all duration-500 ${
+      className={`fixed bottom-32 right-6 z-[90] transition-all duration-500 ${
         visible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0 pointer-events-none"
       }`}
     >
