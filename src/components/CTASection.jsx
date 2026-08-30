@@ -7,7 +7,7 @@ export default function CTASection({
   // One primary action across the site — "Find projects" — with the demo as
   // the secondary path, so the CTAs stop competing with each other.
   primaryLabel = "Find construction projects",
-  primaryTo = "/register",
+  primaryTo = "/projects",
   secondaryLabel = "Request a demo",
   secondaryTo = "/contact",
 }) {

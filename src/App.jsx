@@ -47,14 +47,17 @@ function ScrollToTop() {
   const { pathname, hash } = useLocation();
 
   useEffect(() => {
-    if (hash) {
-      const el = document.querySelector(hash);
-      if (el) {
-        el.scrollIntoView();
-        return;
+    const id = window.requestAnimationFrame(() => {
+      if (hash) {
+        const el = document.querySelector(hash);
+        if (el) {
+          el.scrollIntoView();
+          return;
+        }
       }
-    }
-    window.scrollTo(0, 0);
+      window.scrollTo(0, 0);
+    });
+    return () => window.cancelAnimationFrame(id);
   }, [pathname, hash]);
 
   return null;
@@ -121,10 +124,6 @@ function App() {
       <ToastProvider>
         <ScrollToTop />
         <Routes>
-          {/* One guarded parent, so protection is structural: every nested
-              dashboard route inherits it rather than opting in. Without this a
-              future /dashboard/foo would silently fall through to the public
-              catch-all instead of redirecting to /login. */}
           <Route
             path="/dashboard/*"
             element={
@@ -139,11 +138,7 @@ function App() {
                     <Route path="analytics" element={<Analytics />} />
                     <Route path="alerts" element={<Alerts />} />
                     <Route path="settings" element={<Settings />} />
-                    {/* Admin-only in practice: the endpoints reject non-admins,
-                        so reaching this route without the role shows an error
-                        rather than any data. */}
                     <Route path="admin" element={<AdminUsers />} />
-                    {/* Unknown dashboard paths stay inside the guarded subtree. */}
                     <Route path="*" element={<Navigate to="overview" replace />} />
                   </Routes>
                 </DashboardShell>
@@ -155,8 +150,6 @@ function App() {
           <Route path="/platform" element={<MarketingLayout><Platform /></MarketingLayout>} />
           <Route path="/solutions" element={<MarketingLayout><Solutions /></MarketingLayout>} />
           <Route path="/supply" element={<MarketingLayout><Supply /></MarketingLayout>} />
-          {/* Public project preview. The detail route must come after the index
-              so /projects itself is not swallowed by the :slug param. */}
           <Route path="/projects" element={<MarketingLayout><Projects /></MarketingLayout>} />
           <Route path="/projects/:slug" element={<MarketingLayout><ProjectDetail /></MarketingLayout>} />
           <Route
