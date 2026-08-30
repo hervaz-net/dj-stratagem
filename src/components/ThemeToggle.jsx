@@ -3,9 +3,25 @@ import { useEffect, useState } from "react";
 const STORAGE_KEY = "djs-theme";
 const THEME_EVENT = "djs-theme-change";
 
+function readStoredTheme() {
+  try {
+    return window.localStorage.getItem(STORAGE_KEY);
+  } catch {
+    return null;
+  }
+}
+
+function writeStoredTheme(value) {
+  try {
+    window.localStorage.setItem(STORAGE_KEY, value);
+  } catch {
+    /* private mode / blocked storage */
+  }
+}
+
 function readTheme() {
   if (typeof window === "undefined") return "light";
-  const stored = window.localStorage.getItem(STORAGE_KEY);
+  const stored = readStoredTheme();
   if (stored === "light" || stored === "dark") return stored;
   return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
@@ -30,7 +46,7 @@ export default function ThemeToggle({ className = "" }) {
   useEffect(() => {
     const mq = window.matchMedia("(prefers-color-scheme: dark)");
     const onChange = (e) => {
-      if (!window.localStorage.getItem(STORAGE_KEY)) setTheme(e.matches ? "dark" : "light");
+      if (!readStoredTheme()) setTheme(e.matches ? "dark" : "light");
     };
     mq.addEventListener("change", onChange);
     return () => mq.removeEventListener("change", onChange);
@@ -40,7 +56,7 @@ export default function ThemeToggle({ className = "" }) {
   // would make the guard above permanently false, so OS changes would stop
   // being followed after the very first render.
   const chooseTheme = (next) => {
-    window.localStorage.setItem(STORAGE_KEY, next);
+    writeStoredTheme(next);
     setTheme(next);
     window.dispatchEvent(new Event(THEME_EVENT));
   };
