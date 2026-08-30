@@ -101,7 +101,7 @@ export default function Navbar() {
           <Button to="/login" variant="secondary" size="sm">
             Sign In
           </Button>
-          <Button to="/register" variant="primary" size="sm">
+          <Button to="/projects" variant="primary" size="sm">
             Find projects
           </Button>
         </div>
@@ -152,7 +152,7 @@ export default function Navbar() {
               <Button to="/login" variant="secondary" className="w-full" onClick={close}>
                 Sign In
               </Button>
-              <Button to="/register" variant="primary" className="w-full" onClick={close}>
+              <Button to="/projects" variant="primary" className="w-full" onClick={close}>
                 Find projects
               </Button>
             </div>
