@@ -92,6 +92,7 @@ const TAG_COLOR = {
   Feature: "bg-amber/10 text-amber border-amber/30",
   Foundation: "bg-[var(--viz-cyan)]/10 text-[var(--viz-cyan)] border-[var(--viz-cyan)]/30",
   Launch: "bg-[var(--viz-green)]/10 text-[var(--viz-green)] border-[var(--viz-green)]/30",
+  Fix: "bg-warning/10 text-warning border-warning/30",
 };
 
 export default function Changelog() {
