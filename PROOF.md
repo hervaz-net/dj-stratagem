@@ -96,8 +96,9 @@ cards that link to `/changelog`, which is a changelog, not a blog.
 
 ## Still outstanding
 
-- `Pricing.jsx` FAQ references a free Starter tier and free trials. Confirm
-  those are the actual commercial terms before launch.
+- Starter stays free. Paid tiers are request-access only until billing
+  actually exists. Do not put “free trial / no credit card” back on Pricing
+  or Home unless a real trial is wired.
 - The document pages still pull webfonts from `fonts.googleapis.com`. Unlike
   the React dependency (see below) this degrades gracefully — the text renders
   in a fallback face — so it is cosmetic rather than a correctness problem.
