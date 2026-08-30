@@ -10,6 +10,7 @@ const NAV_ITEMS = [
   { label: "Analytics", to: "/dashboard/analytics", group: "Dashboard" },
   { label: "Alerts", to: "/dashboard/alerts", group: "Dashboard" },
   { label: "Settings", to: "/dashboard/settings", group: "Dashboard" },
+  { label: "Accounts", to: "/dashboard/admin", group: "Dashboard", adminOnly: true },
   { label: "Home", to: "/", group: "Marketing" },
   { label: "Platform", to: "/platform", group: "Marketing" },
   { label: "Solutions", to: "/solutions", group: "Marketing" },
@@ -39,10 +40,14 @@ export default function CommandPalette({ open, onClose }) {
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  const catalog = useMemo(
-    () => (user ? NAV_ITEMS : NAV_ITEMS.filter((i) => i.group !== "Dashboard")),
-    [user],
-  );
+  const catalog = useMemo(() => {
+    const signedIn = Boolean(user);
+    return NAV_ITEMS.filter((i) => {
+      if (i.group === "Dashboard" && !signedIn) return false;
+      if (i.adminOnly && user?.role !== "admin") return false;
+      return true;
+    });
+  }, [user]);
 
   const results = query.trim()
     ? catalog.filter((i) => score(i, query) > 0).sort((a, b) => score(b, query) - score(a, query))
