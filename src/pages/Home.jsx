@@ -103,11 +103,10 @@ const faqs = [
   },
   {
     q: "Can I try it before committing?",
-    a: "Yes. Starter is free, and Professional and Growth both include a free trial with no credit card required. Enterprise starts with a guided pilot.",
+    a: "Starter is free: profile, matching, and a small bid cap. Paid plans are not self-serve trials. Request access or email hello@djstratageminc.com and we will open the right plan after review.",
   },
 ];
 
-/** Who the platform serves. Drives the "Who it's for" section. */
 const audiences = [
   {
     icon: <IconGavel />,
@@ -139,13 +138,11 @@ export default function Home() {
         description="D&J Stratagem gives contractors, subcontractors, and suppliers the tools to discover construction bid opportunities, manage their pipeline, market their capabilities, and win more projects."
       />
 
-      {/* Feature 18: animated gradient hero */}
       <Section className="relative overflow-hidden pt-16 pb-20 md:pt-24">
         <div
           className="pointer-events-none absolute inset-0 bg-grid [mask-image:radial-gradient(ellipse_60%_60%_at_50%_0%,black,transparent)]"
           aria-hidden="true"
         />
-        {/* Animated gradient blobs */}
         <div
           className="hero-blob pointer-events-none absolute -top-32 -left-32 h-80 w-80 rounded-full bg-brand/20 blur-3xl"
           aria-hidden="true"
@@ -184,13 +181,10 @@ export default function Home() {
               </span>
             </div>
           </div>
-
           <HeroPanel />
         </div>
       </Section>
 
-      {/* Pre-launch status. Replaces claimed customer logos until there are real
-          ones to show — see PROOF.md for what may go here and what may not. */}
       <Section className="border-t border-line py-8">
         <p className="text-center text-sm text-steel">
           Built for contractors.{" "}
@@ -198,7 +192,6 @@ export default function Home() {
         </p>
       </Section>
 
-      {/* Product view: show the thing rather than describe it. */}
       <Section className="border-t border-line">
         <div className="mx-auto max-w-2xl text-center">
           <Eyebrow>What you get</Eyebrow>
@@ -215,7 +208,6 @@ export default function Home() {
         </div>
       </Section>
 
-      {/* Stats band */}
       <Section className="border-t border-line py-12 md:py-14">
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
           {stats.map((s, i) => (
@@ -309,16 +301,9 @@ export default function Home() {
           <Reveal delay={120}>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="rounded-xl border border-line bg-ink p-5">
-                <p className="text-xs font-semibold uppercase tracking-wider text-steel">
-                  Without a platform
-                </p>
+                <p className="text-xs font-semibold uppercase tracking-wider text-steel">Without a platform</p>
                 <ul className="mt-4 space-y-2.5 text-sm text-steel">
-                  {[
-                    "Five subscriptions, five logins",
-                    "Bid data retyped into the CRM",
-                    "Marketing handled by an outside agency",
-                    "Follow-ups lost in an inbox",
-                  ].map((t) => (
+                  {["Five subscriptions, five logins", "Bid data retyped into the CRM", "Marketing handled by an outside agency", "Follow-ups lost in an inbox"].map((t) => (
                     <li key={t} className="flex items-start gap-2.5">
                       <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-steel" />
                       {t}
@@ -327,16 +312,9 @@ export default function Home() {
                 </ul>
               </div>
               <div className="rounded-xl border border-amber/40 bg-amber/8 p-5">
-                <p className="text-xs font-semibold uppercase tracking-wider text-amber">
-                  On D&amp;J Stratagem
-                </p>
+                <p className="text-xs font-semibold uppercase tracking-wider text-amber">On D&amp;J Stratagem</p>
                 <ul className="mt-4 space-y-2.5 text-sm text-paper/90">
-                  {[
-                    "One platform, one login",
-                    "Bids, awards, and CRM share a record",
-                    "Marketing runs from the same dashboard",
-                    "Every opportunity tracked to a decision",
-                  ].map((t) => (
+                  {["One platform, one login", "Bids, awards, and CRM share a record", "Marketing runs from the same dashboard", "Every opportunity tracked to a decision"].map((t) => (
                     <li key={t} className="flex items-start gap-2.5">
                       <IconCheck width={14} height={14} className="mt-0.5 shrink-0 text-amber" />
                       {t}
@@ -372,7 +350,6 @@ export default function Home() {
         </div>
       </Section>
 
-      {/* Who it's for */}
       <Section className="border-t border-line">
         <Eyebrow>Who it&rsquo;s for</Eyebrow>
         <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-paper md:text-4xl">
@@ -382,9 +359,7 @@ export default function Home() {
           {audiences.map((a, i) => (
             <Reveal key={a.title} delay={(i % 2) * 100} className="h-full">
               <div className="lift h-full rounded-xl border border-line bg-ink-2 p-6 hover:border-amber/40">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber/10 text-amber">
-                  {a.icon}
-                </div>
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber/10 text-amber">{a.icon}</div>
                 <h3 className="mt-5 text-base font-semibold text-paper">{a.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-steel">{a.text}</p>
               </div>
@@ -392,10 +367,6 @@ export default function Home() {
           ))}
         </div>
       </Section>
-
-      {/* A blog teaser belongs here once posts exist. It previously advertised
-          three articles with dates and read times that were never written —
-          see PROOF.md. */}
 
       <Section className="border-t border-line">
         <Eyebrow>Questions</Eyebrow>

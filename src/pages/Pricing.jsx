@@ -7,7 +7,6 @@ import Accordion from "../components/Accordion";
 import Seo from "../components/Seo";
 import { IconCheck } from "../components/icons";
 
-/** Paid annually up front, billed as a monthly-equivalent rate. */
 const ANNUAL_DISCOUNT = 0.2;
 
 const tiers = [
@@ -40,7 +39,7 @@ const tiers = [
       "Supply Exchange RFQs with scored auto-award",
       "Premium profile placement",
     ],
-    cta: "Start free trial",
+    cta: "Request access",
     highlighted: true,
   },
   {
@@ -58,7 +57,7 @@ const tiers = [
       "Standing price books and pooled-demand buying",
       "Priority support",
     ],
-    cta: "Start free trial",
+    cta: "Request access",
     highlighted: false,
   },
   {
@@ -106,8 +105,8 @@ const pricingFaqs = [
     a: "Yes. Upgrade or downgrade at any time — changes prorate against your current billing period, and nothing is locked behind an annual commitment unless you choose annual billing.",
   },
   {
-    q: "What happens when the free trial ends?",
-    a: "Your account drops to Starter rather than shutting off. Your profile, bid history, and documents stay intact; the paid features simply pause until you subscribe.",
+    q: "Is there a free trial?",
+    a: "Not yet. Starter is the free plan: profile, matching, and a small monthly bid cap. Paid features start after we approve an account and you pick Professional, Growth, or Enterprise. There is no card-on-file trial that auto-converts.",
   },
   {
     q: "Do you charge per bid or take a cut of awards?",
@@ -174,9 +173,7 @@ function RoiCalculator() {
             <p className="mt-1 text-xs text-steel">Growth plan annual</p>
           </div>
         </div>
-        <p className="mt-4 text-xs text-steel/60">
-          Illustrative estimate based on your inputs. Actual results vary.
-        </p>
+        <p className="mt-4 text-xs text-steel/60">Illustrative estimate based on your inputs. Actual results vary.</p>
       </div>
     </div>
   );
@@ -196,7 +193,7 @@ export default function Pricing() {
     <>
       <Seo
         title="Pricing"
-        description="Starter, Professional, Growth, and Enterprise plans for contractors — plus add-ons. Start free, upgrade when you're ready to grow."
+        description="Starter, Professional, Growth, and Enterprise plans for contractors — plus add-ons. Start on the free Starter plan, then request access to paid tiers."
       />
 
       <Section className="pt-16 pb-8 md:pt-24">
@@ -205,32 +202,22 @@ export default function Pricing() {
           Plans that pay for themselves with one won bid.
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-steel">
-          Start free, upgrade when you're ready to grow. Professional and Growth include a free
-          trial &mdash; no credit card required. Enterprise starts with a guided pilot.
+          Start on the free Starter plan, then request access when you are ready for paid
+          features. Enterprise begins with a conversation, not a self-serve checkout.
         </p>
       </Section>
 
       <Section className="border-t border-line">
-        {/* Billing period switch */}
         <div className="flex flex-col items-center gap-3">
-          <div
-            role="group"
-            aria-label="Billing period"
-            className="inline-flex items-center rounded-full border border-line bg-ink-2 p-1"
-          >
-            {[
-              { key: false, label: "Monthly" },
-              { key: true, label: "Annual" },
-            ].map((opt) => (
+          <div role="group" aria-label="Billing period" className="inline-flex items-center rounded-full border border-line bg-ink-2 p-1">
+            {[{ key: false, label: "Monthly" }, { key: true, label: "Annual" }].map((opt) => (
               <button
                 key={opt.label}
                 type="button"
                 onClick={() => setAnnual(opt.key)}
                 aria-pressed={annual === opt.key}
                 className={`rounded-full px-5 py-2 text-sm font-medium transition-colors ${
-                  annual === opt.key
-                    ? "bg-cta hover:bg-cta-hover text-white shadow-sm"
-                    : "text-steel hover:text-paper"
+                  annual === opt.key ? "bg-cta hover:bg-cta-hover text-white shadow-sm" : "text-steel hover:text-paper"
                 }`}
               >
                 {opt.label}
@@ -247,25 +234,17 @@ export default function Pricing() {
             const { amount, period } = priceFor(t);
             return (
               <Reveal key={t.name} delay={i * 80} className="h-full">
-                <div
-                  className={`lift flex h-full flex-col rounded-2xl border p-6 ${
-                    t.highlighted
-                      ? "border-amber bg-amber/5 shadow-lg shadow-brand/10 xl:-my-2 xl:py-8"
-                      : "border-line bg-ink-2 hover:border-amber/40"
-                  }`}
-                >
+                <div className={`lift flex h-full flex-col rounded-2xl border p-6 ${
+                  t.highlighted ? "border-amber bg-amber/5 shadow-lg shadow-brand/10 xl:-my-2 xl:py-8" : "border-line bg-ink-2 hover:border-amber/40"
+                }`}>
                   <div className="flex items-center justify-between gap-2">
                     <h3 className="text-base font-semibold text-paper">{t.name}</h3>
                     {t.highlighted && (
-                      <span className="rounded-full bg-amber/15 px-3 py-1 text-xs font-medium text-amber">
-                        Most popular
-                      </span>
+                      <span className="rounded-full bg-amber/15 px-3 py-1 text-xs font-medium text-amber">Most popular</span>
                     )}
                   </div>
                   <div className="mt-4 flex items-baseline gap-1">
-                    <span className="text-4xl font-semibold tracking-tight text-paper tabular-nums">
-                      {amount}
-                    </span>
+                    <span className="text-4xl font-semibold tracking-tight text-paper tabular-nums">{amount}</span>
                     {period && <span className="text-sm text-steel">{period}</span>}
                   </div>
                   {annual && t.monthly > 0 && (
@@ -282,11 +261,7 @@ export default function Pricing() {
                       </li>
                     ))}
                   </ul>
-                  <Button
-                    to="/contact"
-                    variant={t.highlighted ? "primary" : "secondary"}
-                    className="mt-8 w-full"
-                  >
+                  <Button to="/contact" variant={t.highlighted ? "primary" : "secondary"} className="mt-8 w-full">
                     {t.cta}
                   </Button>
                 </div>
@@ -294,59 +269,32 @@ export default function Pricing() {
             );
           })}
         </div>
-        <p className="mt-6 text-center text-xs text-steel">
-          Introductory pricing. Plans and pricing may change as new features launch.
-        </p>
+        <p className="mt-6 text-center text-xs text-steel">Introductory pricing. Plans and pricing may change as new features launch.</p>
       </Section>
 
       <Section className="border-t border-line">
         <Eyebrow>Compare</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-paper md:text-4xl">
-          Every plan, side by side.
-        </h2>
+        <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-paper md:text-4xl">Every plan, side by side.</h2>
         <div className="mt-10 -mx-6 overflow-x-auto px-6">
           <table className="w-full min-w-[640px] border-collapse text-sm">
             <caption className="sr-only">Feature comparison across all four plans</caption>
             <thead>
               <tr className="border-b border-line">
-                <th scope="col" className="py-4 pr-4 text-left font-semibold text-paper">
-                  Feature
-                </th>
+                <th scope="col" className="py-4 pr-4 text-left font-semibold text-paper">Feature</th>
                 {tiers.map((t) => (
-                  <th
-                    key={t.name}
-                    scope="col"
-                    className={`px-4 py-4 text-left font-semibold ${
-                      t.highlighted ? "text-amber" : "text-paper"
-                    }`}
-                  >
-                    {t.name}
-                  </th>
+                  <th key={t.name} scope="col" className={`px-4 py-4 text-left font-semibold ${t.highlighted ? "text-amber" : "text-paper"}`}>{t.name}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {comparison.map((row) => (
                 <tr key={row.feature} className="border-b border-line/70 last:border-0">
-                  <th scope="row" className="py-3.5 pr-4 text-left font-medium text-paper/90">
-                    {row.feature}
-                  </th>
+                  <th scope="row" className="py-3.5 pr-4 text-left font-medium text-paper/90">{row.feature}</th>
                   {row.values.map((v, i) => (
-                    <td
-                      key={`${row.feature}-${tiers[i].name}`}
-                      className={`px-4 py-3.5 ${v === "—" ? "text-steel/60" : "text-steel"}`}
-                    >
+                    <td key={`${row.feature}-${tiers[i].name}`} className={`px-4 py-3.5 ${v === "—" ? "text-steel/60" : "text-steel"}`}>
                       {v === "Yes" ? (
-                        <IconCheck
-                          width={16}
-                          height={16}
-                          className="text-amber"
-                          role="img"
-                          aria-label="Included"
-                        />
-                      ) : (
-                        v
-                      )}
+                        <IconCheck width={16} height={16} className="text-amber" role="img" aria-label="Included" />
+                      ) : v}
                     </td>
                   ))}
                 </tr>
@@ -358,9 +306,7 @@ export default function Pricing() {
 
       <Section className="border-t border-line">
         <Eyebrow>Add-ons</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-paper md:text-4xl">
-          Scale up only where you need it.
-        </h2>
+        <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-paper md:text-4xl">Scale up only where you need it.</h2>
         <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {addOns.map((a, i) => (
             <Reveal key={a.name} delay={(i % 3) * 90} className="h-full">
@@ -373,26 +319,16 @@ export default function Pricing() {
         </div>
       </Section>
 
-      {/* Customer quotes go here once they are real and attributable —
-          see PROOF.md. */}
-
-      {/* ROI calculator */}
       <Section className="border-t border-line">
         <Eyebrow>ROI calculator</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-paper md:text-4xl">
-          See what one extra win is worth.
-        </h2>
-        <p className="mt-5 max-w-xl text-base leading-relaxed text-steel">
-          Even a modest improvement in win rate pays for the platform many times over.
-        </p>
+        <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-paper md:text-4xl">See what one extra win is worth.</h2>
+        <p className="mt-5 max-w-xl text-base leading-relaxed text-steel">Even a modest improvement in win rate pays for the platform many times over.</p>
         <RoiCalculator />
       </Section>
 
       <Section className="border-t border-line">
         <Eyebrow>Billing questions</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-paper md:text-4xl">
-          The fine print, in plain language.
-        </h2>
+        <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-paper md:text-4xl">The fine print, in plain language.</h2>
         <div className="mt-10 max-w-3xl">
           <Accordion items={pricingFaqs} />
         </div>
