@@ -261,7 +261,7 @@ export default function Pricing() {
                       </li>
                     ))}
                   </ul>
-                  <Button to="/contact" variant={t.highlighted ? "primary" : "secondary"} className="mt-8 w-full">
+                  <Button to={t.monthly === 0 ? "/register" : "/contact"} variant={t.highlighted ? "primary" : "secondary"} className="mt-8 w-full">
                     {t.cta}
                   </Button>
                 </div>
