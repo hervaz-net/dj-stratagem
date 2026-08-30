@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import StatusDot from "./StatusDot";
 import Logo from "../Logo";
+import ThemeToggle, { useThemeMode } from "../ThemeToggle";
 import useAuth from "../../auth/useAuth";
 
 const items = [
@@ -37,29 +38,6 @@ const settingsItem = {
     <><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" /></>
   ),
 };
-
-function useTheme() {
-  const [dark, setDark] = useState(() => {
-    const stored = localStorage.getItem("theme");
-    if (stored) return stored === "dark";
-    return window.matchMedia("(prefers-color-scheme: dark)").matches;
-  });
-
-  useEffect(() => {
-    const root = document.documentElement;
-    if (dark) {
-      root.classList.remove("light");
-      root.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-    } else {
-      root.classList.remove("dark");
-      root.classList.add("light");
-      localStorage.setItem("theme", "light");
-    }
-  }, [dark]);
-
-  return [dark, setDark];
-}
 
 function ItemIcon({ item }) {
   return (
@@ -126,7 +104,7 @@ export default function Sidebar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [signingOut, setSigningOut] = useState(false);
-  const [dark, setDark] = useTheme();
+  const { theme } = useThemeMode();
 
   const signOut = async () => {
     setSigningOut(true);
@@ -163,25 +141,9 @@ export default function Sidebar() {
             {/* Theme toggle */}
             <div className="mb-3 flex items-center justify-between rounded-xl border border-line bg-ink/60 px-3 py-2.5">
               <span className="text-xs font-semibold text-steel">
-                {dark ? "Dark mode" : "Light mode"}
+                {theme === "dark" ? "Dark mode" : "Light mode"}
               </span>
-              <button
-                type="button"
-                onClick={() => setDark((v) => !v)}
-                aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
-                className="flex h-7 w-12 items-center rounded-full border border-line bg-ink p-0.5 transition-colors"
-              >
-                <span
-                  className={`flex h-5 w-5 items-center justify-center rounded-full text-[10px] transition-transform ${
-                    dark
-                      ? "translate-x-5 bg-brand text-white"
-                      : "translate-x-0 bg-steel/40 text-paper"
-                  }`}
-                  aria-hidden="true"
-                >
-                  {dark ? "☾" : "☀"}
-                </span>
-              </button>
+              <ThemeToggle />
             </div>
 
             {/* Settings */}
