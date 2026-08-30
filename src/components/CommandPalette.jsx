@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import useAuth from "../auth/useAuth";
 
 const NAV_ITEMS = [
   { label: "Overview", to: "/dashboard/overview", group: "Dashboard" },
@@ -36,10 +37,16 @@ export default function CommandPalette({ open, onClose }) {
   const [cursor, setCursor] = useState(0);
   const inputRef = useRef(null);
   const navigate = useNavigate();
+  const { user } = useAuth();
+
+  const catalog = useMemo(
+    () => (user ? NAV_ITEMS : NAV_ITEMS.filter((i) => i.group !== "Dashboard")),
+    [user],
+  );
 
   const results = query.trim()
-    ? NAV_ITEMS.filter((i) => score(i, query) > 0).sort((a, b) => score(b, query) - score(a, query))
-    : NAV_ITEMS;
+    ? catalog.filter((i) => score(i, query) > 0).sort((a, b) => score(b, query) - score(a, query))
+    : catalog;
 
   useEffect(() => {
     if (open) {
