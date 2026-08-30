@@ -14,6 +14,9 @@ const entries = [
       { type: "improved", text: "Sign-in now lands on dashboard overview instead of the suppliers table." },
       { type: "improved", text: "Auth and reset pages stay out of robots.txt." },
       { type: "improved", text: "Command palette hides dashboard routes until you are signed in." },
+      { type: "improved", text: "Theme toggle no longer throws when the browser blocks localStorage." },
+      { type: "improved", text: "Sign-in only follows internal return paths after a successful login." },
+      { type: "improved", text: "Fleet details dialog moves focus to Close and restores it on dismiss." },
     ],
   },
   {
