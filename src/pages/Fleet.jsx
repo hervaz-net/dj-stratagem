@@ -227,8 +227,9 @@ export default function Fleet() {
         <div className="mx-auto max-w-6xl px-6">
           <div className="flex flex-wrap items-center gap-4">
             <div className="flex items-center gap-2">
-              <label className="text-sm font-medium text-steel">Filter by Status:</label>
+              <label htmlFor="fleet-filter-status" className="text-sm font-medium text-steel">Filter by Status:</label>
               <select
+                id="fleet-filter-status"
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value)}
                 className="rounded-md border border-line/50 bg-ink-2 px-3 py-2 text-sm text-paper transition-colors hover:border-line focus:outline-none focus:ring-2 focus:ring-amber/20"
@@ -240,8 +241,9 @@ export default function Fleet() {
               </select>
             </div>
             <div className="flex items-center gap-2">
-              <label className="text-sm font-medium text-steel">Sort by:</label>
+              <label htmlFor="fleet-sort-by" className="text-sm font-medium text-steel">Sort by:</label>
               <select
+                id="fleet-sort-by"
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
                 className="rounded-md border border-line/50 bg-ink-2 px-3 py-2 text-sm text-paper transition-colors hover:border-line focus:outline-none focus:ring-2 focus:ring-amber/20"
@@ -262,10 +264,9 @@ export default function Fleet() {
         <div className="mx-auto max-w-6xl px-6">
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {filteredFleet.map((asset) => (
-              <div
+              <article
                 key={asset.id}
-                onClick={() => setSelectedAsset(asset)}
-                className="group cursor-pointer rounded-lg border border-line/30 bg-gradient-to-br from-ink via-ink-2 to-ink-3 p-6 backdrop-blur-sm transition-all hover:border-amber/30 hover:shadow-lg hover:scale-105"
+                className="group rounded-lg border border-line/30 bg-gradient-to-br from-ink via-ink-2 to-ink-3 p-6 backdrop-blur-sm transition-all hover:border-amber/30 hover:shadow-lg"
               >
                 <div className="mb-4 flex items-start justify-between">
                   <div>
@@ -319,15 +320,13 @@ export default function Fleet() {
                 </div>
                 <button
                   type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setSelectedAsset(asset);
-                  }}
+                  aria-haspopup="dialog"
+                  onClick={() => setSelectedAsset(asset)}
                   className="mt-4 w-full flex items-center justify-center gap-2 rounded-md bg-amber/10 py-2 text-xs font-semibold text-amber transition-all hover:bg-amber/20 group-hover:bg-brand group-hover:text-white"
                 >
                   View Details <IconArrowRight className="h-3 w-3" />
                 </button>
-              </div>
+              </article>
             ))}
           </div>
         </div>
@@ -430,10 +429,16 @@ export default function Fleet() {
 
       {selectedAsset && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4" onClick={() => setSelectedAsset(null)}>
-          <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-ink-2 p-8" onClick={(e) => e.stopPropagation()}>
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="fleet-asset-title"
+            className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-ink-2 p-8"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="mb-6 flex items-start justify-between">
               <div>
-                <h2 className="text-2xl font-bold text-paper">{selectedAsset.name}</h2>
+                <h2 id="fleet-asset-title" className="text-2xl font-bold text-paper">{selectedAsset.name}</h2>
                 <p className="mt-1 text-sm text-steel">{selectedAsset.id}</p>
               </div>
               <button
