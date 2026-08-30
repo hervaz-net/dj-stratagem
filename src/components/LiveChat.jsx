@@ -13,7 +13,7 @@ export default function LiveChat() {
   return (
     <>
       <div
-        className={`fixed bottom-6 left-6 z-[100] transition-all duration-500 ${
+        className={`fixed bottom-24 left-6 z-[100] transition-all duration-500 ${
           appeared ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
         }`}
       >
@@ -34,7 +34,7 @@ export default function LiveChat() {
 
       {open && (
         <div
-          className="fixed bottom-22 left-6 z-[100] flex w-80 flex-col overflow-hidden rounded-2xl border border-line bg-ink-2 shadow-2xl shadow-brand/15"
+          className="fixed bottom-40 left-6 z-[100] flex w-80 flex-col overflow-hidden rounded-2xl border border-line bg-ink-2 shadow-2xl shadow-brand/15"
           role="dialog"
           aria-label="Contact support"
         >
