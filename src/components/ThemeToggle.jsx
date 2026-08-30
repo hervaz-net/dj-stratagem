@@ -26,16 +26,16 @@ function readTheme() {
   return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
 
-export default function ThemeToggle({ className = "" }) {
+/** Shared so the dashboard sidebar label and every toggle stay on one store. */
+export function useThemeMode() {
   const [theme, setTheme] = useState(readTheme);
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
   }, [theme]);
 
-  // Navbar mounts this twice (desktop + mobile); both stay in the DOM with
-  // only CSS hiding one. Without this, toggling one leaves the other's icon
-  // stale after a resize across the `md` breakpoint.
+  // Navbar / dashboard mount this more than once. Without the event, toggling
+  // one control leaves the others (and the sidebar "Dark mode" label) stale.
   useEffect(() => {
     const sync = () => setTheme(readTheme());
     window.addEventListener(THEME_EVENT, sync);
@@ -52,15 +52,17 @@ export default function ThemeToggle({ className = "" }) {
     return () => mq.removeEventListener("change", onChange);
   }, []);
 
-  // Persist only on an explicit choice. Writing the inferred theme on mount
-  // would make the guard above permanently false, so OS changes would stop
-  // being followed after the very first render.
   const chooseTheme = (next) => {
     writeStoredTheme(next);
     setTheme(next);
     window.dispatchEvent(new Event(THEME_EVENT));
   };
 
+  return { theme, chooseTheme };
+}
+
+export default function ThemeToggle({ className = "" }) {
+  const { theme, chooseTheme } = useThemeMode();
   const isDark = theme === "dark";
 
   return (

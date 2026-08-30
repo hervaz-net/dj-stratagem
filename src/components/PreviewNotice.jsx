@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 /**
  * Persistent, unmissable notice that the projects on screen are illustrative.
  *
@@ -16,9 +18,9 @@ export default function PreviewNotice({ className = "" }) {
         These projects are illustrative examples showing how opportunities appear on the
         platform. They are <strong className="font-semibold text-paper">not live solicitations</strong> and
         cannot be bid on. The real project feed opens to early users first &mdash;{" "}
-        <a href="/register" className="font-medium text-amber underline hover:text-amber-2">
+        <Link to="/register" className="font-medium text-amber underline hover:text-amber-2">
           request access
-        </a>
+        </Link>
         .
       </p>
     </div>
