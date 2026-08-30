@@ -11,16 +11,36 @@ export default function Login() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [email, setEmail] = useState(() => localStorage.getItem("login_email") ?? "");
+  const [email, setEmail] = useState(() => {
+    try {
+      return localStorage.getItem("login_email") ?? "";
+    } catch {
+      return "";
+    }
+  });
   const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(() => !!localStorage.getItem("login_email"));
+  const [rememberMe, setRememberMe] = useState(() => {
+    try {
+      return !!localStorage.getItem("login_email");
+    } catch {
+      return false;
+    }
+  });
   const [error, setError] = useState("");
   const [invalid, setInvalid] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const errorId = "login-error";
 
-  // Send an already-authenticated visitor onward rather than showing the form.
-  const destination = location.state?.from ?? "/dashboard/overview";
+  // Only follow same-origin paths. A poisoned history state must not send
+  // a signed-in visitor to //evil.example or an external URL.
+  const requested = location.state?.from;
+  const destination =
+    typeof requested === "string" &&
+    requested.startsWith("/") &&
+    !requested.startsWith("//") &&
+    !requested.includes("\\")
+      ? requested
+      : "/dashboard/overview";
   if (!loading && user) return <Navigate to={destination} replace />;
 
   const fail = (field, message) => {
@@ -43,10 +63,11 @@ export default function Login() {
     setSubmitting(true);
     try {
       await login(email, password);
-      if (rememberMe) {
-        localStorage.setItem("login_email", email);
-      } else {
-        localStorage.removeItem("login_email");
+      try {
+        if (rememberMe) localStorage.setItem("login_email", email);
+        else localStorage.removeItem("login_email");
+      } catch {
+        /* private mode / blocked storage */
       }
       navigate(destination, { replace: true });
     } catch (err) {

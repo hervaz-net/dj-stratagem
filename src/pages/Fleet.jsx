@@ -109,11 +109,19 @@ export default function Fleet() {
 
   useEffect(() => {
     if (!selectedAsset) return undefined;
+    const previous = document.activeElement;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    document.getElementById("fleet-asset-close")?.focus();
     const onKey = (e) => {
       if (e.key === "Escape") setSelectedAsset(null);
     };
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = previousOverflow;
+      if (previous instanceof HTMLElement) previous.focus();
+    };
   }, [selectedAsset]);
 
   const filteredFleet = useMemo(() => {
@@ -353,7 +361,7 @@ export default function Fleet() {
               return (
                 <div
                   key={idx}
-                  className="rounded-lg border border-line/20 bg-gradient-to-br from-ink/50 via-ink-2/50 to-ink-3/50 p-6 backdrop-blur-sm transition-all hover:border-line hover:bg-gradient-to-br hover:from-ink via-ink-2 hover:to-ink-3"
+                  className="rounded-lg border border-line/20 bg-gradient-to-br from-ink/50 via-ink-2/50 to-ink-3/50 p-6 backdrop-blur-sm transition-all hover:border-line hover:from-ink hover:via-ink-2 hover:to-ink-3"
                 >
                   <Icon className="h-8 w-8 text-amber" />
                   <h3 className="mt-4 text-lg font-bold text-paper">{feature.title}</h3>
@@ -442,6 +450,7 @@ export default function Fleet() {
                 <p className="mt-1 text-sm text-steel">{selectedAsset.id}</p>
               </div>
               <button
+                id="fleet-asset-close"
                 type="button"
                 onClick={() => setSelectedAsset(null)}
                 aria-label="Close asset details"
