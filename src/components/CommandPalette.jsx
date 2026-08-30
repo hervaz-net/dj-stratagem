@@ -49,12 +49,22 @@ export default function CommandPalette({ open, onClose }) {
     : catalog;
 
   useEffect(() => {
-    if (open) {
-      setQuery("");
-      setCursor(0);
-      setTimeout(() => inputRef.current?.focus(), 10);
-    }
-  }, [open]);
+    if (!open) return undefined;
+    setQuery("");
+    setCursor(0);
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const focusTimer = window.setTimeout(() => inputRef.current?.focus(), 10);
+    const onDocKey = (e) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onDocKey);
+    return () => {
+      window.clearTimeout(focusTimer);
+      window.removeEventListener("keydown", onDocKey);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [open, onClose]);
 
   useEffect(() => { setCursor(0); }, [query]);
 
