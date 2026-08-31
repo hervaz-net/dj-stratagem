@@ -104,7 +104,7 @@ export default function Register() {
   const [serverError, setServerError] = useState("");
   const [done, setDone] = useState(false);
 
-  if (!loading && user) return <Navigate to="/dashboard/suppliers" replace />;
+  if (!loading && user) return <Navigate to="/dashboard/overview" replace />;
 
   const set = (name) => (val) => {
     const next = { ...values, [name]: val };

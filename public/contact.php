@@ -4,7 +4,9 @@
 
 header('Content-Type: application/json');
 
-$destination = 'yeheca@icloud.com';
+$destination = 'hello@djstratageminc.com';
+// Owner mailbox still receives a copy so a missing hello@ alias cannot drop leads.
+$bcc = 'yeheca@icloud.com';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -56,6 +58,7 @@ $body = "New contact form submission from $host\n\n"
 $headers = [
     'From: no-reply@' . $host,
     'Reply-To: ' . $email,
+    'Bcc: ' . $bcc,
     'Content-Type: text/plain; charset=UTF-8',
     'X-Mailer: PHP/' . phpversion(),
 ];
