@@ -1,14 +1,25 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+
+const HIDDEN_ON = new Set(["/contact", "/login", "/register", "/forgot-password", "/verify-email"]);
 
 export default function LiveChat() {
   const [open, setOpen] = useState(false);
   const [appeared, setAppeared] = useState(false);
+  const { pathname } = useLocation();
+  const hide = HIDDEN_ON.has(pathname);
 
   useEffect(() => {
+    if (hide) {
+      setAppeared(false);
+      setOpen(false);
+      return undefined;
+    }
     const t = setTimeout(() => setAppeared(true), 4000);
     return () => clearTimeout(t);
-  }, []);
+  }, [hide]);
+
+  if (hide) return null;
 
   return (
     <>
