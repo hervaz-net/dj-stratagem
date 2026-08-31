@@ -1,4 +1,5 @@
 import { Fragment, useCallback, useEffect, useState } from "react";
+import { Navigate } from "react-router-dom";
 import DashboardLayout from "../../components/dashboard/DashboardLayout";
 import GlassCard from "../../components/dashboard/GlassCard";
 import StatusDot from "../../components/dashboard/StatusDot";
@@ -169,6 +170,10 @@ export default function AdminUsers() {
     }
   }
 
+  if (user && user.role !== "admin") {
+    return <Navigate to="/dashboard/overview" replace />;
+  }
+
   return (
     <>
       <Seo title="Accounts" description="Approve and manage platform accounts." noindex />
@@ -182,7 +187,6 @@ export default function AdminUsers() {
         title="Accounts"
         subtitle="Approve new access requests and manage existing accounts."
       >
-        {/* Stats cards */}
         <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
           <StatCard label="Total" value={counts.all ?? (counts.pending ?? 0) + (counts.active ?? 0) + (counts.suspended ?? 0)} />
           <StatCard label="Pending" value={counts.pending} highlight={counts.pending > 0} />
@@ -190,7 +194,6 @@ export default function AdminUsers() {
           <StatCard label="Suspended" value={counts.suspended} />
         </div>
 
-        {/* Filter toggles */}
         <div className="flex flex-wrap gap-2">
           {FILTERS.map((f) => {
             const active = filter === f.key;
@@ -216,7 +219,6 @@ export default function AdminUsers() {
           })}
         </div>
 
-        {/* Search */}
         <div className="relative mt-4 max-w-sm">
           <IconSearch
             width={14}
@@ -245,7 +247,6 @@ export default function AdminUsers() {
           )}
         </div>
 
-        {/* Bulk action bar */}
         {approvable.length > 0 && (
           <GlassCard className="mt-4 flex flex-wrap items-center justify-between gap-3 px-5 py-3">
             <p className="text-sm text-steel">
