@@ -4,13 +4,27 @@
   RewriteEngine On
   RewriteBase /
 
+  # Hashed Vite files must never fall through to the SPA. A stale index.html
+  # that points at a bundle that is not on disk used to 200 with HTML, which
+  # LiteSpeed then served as application/javascript and the app never booted.
+  RewriteRule ^assets/ - [L]
+
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule ^ index.html [L]
 </IfModule>
 
+# index.html is the only pointer to the current hashed bundle. Cache it and
+# a deploy that only updates public_html/assets looks like it never shipped.
+<IfModule mod_headers.c>
+  <FilesMatch "\.(html)$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+</IfModule>
+
 <IfModule mod_expires.c>
   ExpiresActive On
+  ExpiresByType text/html "access plus 0 seconds"
   ExpiresByType text/css "access plus 1 year"
   ExpiresByType application/javascript "access plus 1 year"
   ExpiresByType image/svg+xml "access plus 1 year"
