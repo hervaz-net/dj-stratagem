@@ -38,6 +38,7 @@ const staticPaths = [
   ["/changelog", "0.4"],
   ["/privacy", "0.3"],
   ["/terms", "0.3"],
+  ["/brand", "0.3"],
 ];
 
 const urls = [
