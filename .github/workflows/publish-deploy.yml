@@ -46,16 +46,20 @@ jobs:
           cd "$WORK/repo"
           find . -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
           cp -R "$GITHUB_WORKSPACE/dist/." .
-          cat > .cpanel.yml <<'YML'
-          ---
-          deployment:
-            tasks:
-              - /usr/bin/rsync -rltD --delete --exclude='.git' --exclude='.cpanel.yml' ./ /home/djstlime/public_html/
-              - /usr/bin/find /home/djstlime/public_html -type d -exec /bin/chmod 0755 {} +
-              - /usr/bin/find /home/djstlime/public_html -type f -exec /bin/chmod 0644 {} +
-              - /bin/chgrp nobody /home/djstlime/public_html
-              - /bin/chmod 0750 /home/djstlime/public_html
-          YML
+          python3 - <<'PY'
+          from pathlib import Path
+          Path(".cpanel.yml").write_text(
+          """---\n"
+          "deployment:\n"
+          "  tasks:\n"
+          "    - /usr/bin/rsync -rltD --delete --exclude='.git' --exclude='.cpanel.yml' ./ /home/djstlime/public_html/\n"
+          "    - /usr/bin/find /home/djstlime/public_html -type d -exec /bin/chmod 0755 {} +\n"
+          "    - /usr/bin/find /home/djstlime/public_html -type f -exec /bin/chmod 0644 {} +\n"
+          "    - /bin/chgrp nobody /home/djstlime/public_html\n"
+          "    - /bin/chmod 0750 /home/djstlime/public_html\n"
+          """
+          )
+          PY
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
