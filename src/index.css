@@ -133,11 +133,8 @@
   --panel-shadow: 0 14px 40px -14px rgba(0, 0, 0, 0.7);
 }
 
-/* --------------------------------------------------------------------------- */
-
 html {
   scroll-behavior: smooth;
-  /* Keep anchor targets clear of the sticky header. */
   scroll-padding-top: 6rem;
   font-size: 18px;
   -webkit-font-smoothing: antialiased;
@@ -171,7 +168,6 @@ body {
   color: #fff;
 }
 
-/* Themed scrollbar so the dark theme doesn't get a bright gutter. */
 * {
   scrollbar-color: var(--text-muted) transparent;
 }
@@ -215,16 +211,6 @@ body {
   border: 1px solid var(--glass-border);
 }
 
-/* ---------------------------------------------------------------------------
-   Focus
-
-   One visible ring everywhere, drawn from the accent so it reads in both
-   themes. `:focus-visible` only, so mouse users never see it.
---------------------------------------------------------------------------- */
-
-/* Must live in `base` — an unlayered rule outranks every Tailwind utility,
-   so a stray border-radius here would square off `rounded-full` on focus.
-   The outline follows the element's own radius, so none is set. */
 @layer base {
   button:not(:disabled),
   [role="button"]:not(:disabled),
@@ -250,13 +236,6 @@ body {
     outline-offset: 2px;
   }
 }
-
-/* ---------------------------------------------------------------------------
-   Motion
-
-   Scoped to opt-in classes rather than blanket `button, a { transition: all }`,
-   which previously animated the hamburger, the select, and every inline link.
---------------------------------------------------------------------------- */
 
 .lift {
   transition:
@@ -286,12 +265,8 @@ body {
 }
 
 @keyframes fade-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes menu-in {
@@ -306,26 +281,15 @@ body {
 }
 
 @keyframes float-slow {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
 }
 
 @keyframes shimmer {
-  from {
-    background-position: 200% 0;
-  }
-  to {
-    background-position: -200% 0;
-  }
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
 }
 
-/* Scroll-reveal: elements start hidden only once JS has marked them, so a
-   no-JS or failed-hydration render still shows all content. */
 [data-reveal] {
   opacity: 0;
 }
@@ -346,12 +310,6 @@ body {
   animation: float-slow 7s ease-in-out infinite;
 }
 
-/* ---------------------------------------------------------------------------
-   Dashboard surfaces
---------------------------------------------------------------------------- */
-
-/* Frosted panel with a luminous rim. The rim is a masked gradient border via
-   two backgrounds, so it stays crisp at any radius without a wrapper element. */
 .panel {
   position: relative;
   background: var(--panel-bg);
@@ -385,7 +343,6 @@ body {
   pointer-events: none;
 }
 
-/* Soft bloom behind the primary (coral) action button. */
 .glow-brand {
   box-shadow:
     0 0 0 1px color-mix(in srgb, var(--cta) 35%, transparent),
@@ -401,15 +358,9 @@ body {
 }
 
 @keyframes status-pulse {
-  0% {
-    box-shadow: 0 0 0 0 var(--pulse-color, rgba(34, 197, 94, 0.55));
-  }
-  70% {
-    box-shadow: 0 0 0 7px rgba(0, 0, 0, 0);
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
-  }
+  0% { box-shadow: 0 0 0 0 var(--pulse-color, rgba(34, 197, 94, 0.55)); }
+  70% { box-shadow: 0 0 0 7px rgba(0, 0, 0, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(0, 0, 0, 0); }
 }
 
 .pulse-dot::after {
@@ -421,13 +372,8 @@ body {
 }
 
 @keyframes ticker-scroll {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    /* The track renders its items twice; -50% lands on the seam. */
-    transform: translateX(-50%);
-  }
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
 }
 
 .ticker-track {
@@ -440,12 +386,8 @@ body {
 }
 
 @keyframes sheen {
-  from {
-    transform: translateX(-120%);
-  }
-  to {
-    transform: translateX(320%);
-  }
+  from { transform: translateX(-120%); }
+  to { transform: translateX(320%); }
 }
 
 .animate-sheen {
@@ -457,8 +399,6 @@ body {
     scroll-behavior: auto;
   }
 
-  /* The live-data affordances are decorative; freeze them rather than let
-     them run at 0.01ms, which would strobe. */
   .ticker-track,
   .pulse-dot::after,
   .animate-sheen {
@@ -486,10 +426,6 @@ body {
   }
 }
 
-/* Native form controls follow the theme instead of rendering system-light.
-   Layered, and deliberately no `color: inherit` — unlayered it beat every
-   text-color utility, so `text-white` on a primary <button> lost to the
-   inherited body color. Inputs opt in individually. */
 @layer base {
   input,
   select,
@@ -529,7 +465,15 @@ body {
   animation: cta-pulse 6s ease-in-out infinite;
 }
 
-/* Print: drop the fixed gradient and chrome so pages print legibly. */
+/* Cookie banner covers hero CTAs and form fields unless the page lifts. */
+html[data-cookie-banner="1"] {
+  scroll-padding-bottom: 7rem;
+}
+
+html[data-cookie-banner="1"] body {
+  padding-bottom: 6.5rem;
+}
+
 @media print {
   body {
     background: #fff;
