@@ -99,7 +99,6 @@ cards that link to `/changelog`, which is a changelog, not a blog.
 - Starter stays free. Paid tiers are request-access only until billing
   actually exists. Do not put “free trial / no credit card” back on Pricing
   or Home unless a real trial is wired.
-- The document pages still pull webfonts from `fonts.googleapis.com`. Unlike
-  the React dependency (see below) this degrades gracefully — the text renders
-  in a fallback face — so it is cosmetic rather than a correctness problem.
-  Worth self-hosting eventually.
+- Document pages (`privacy.html`, `terms.html`, brand/fleet/receipts/signage)
+  now use the system UI stack and in-repo SVG marks. Do not put
+  `fonts.googleapis.com` or missing `uploads/*.png` paths back.
