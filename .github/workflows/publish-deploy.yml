@@ -85,3 +85,28 @@ jobs:
             --data-urlencode "repository_root=${ROOT}" \
             "${HOST}/execute/VersionControlDeployment/create"
           echo
+
+      - name: Verify live bundle hash
+        run: |
+          set -euo pipefail
+          EXPECTED="$(grep -oE 'assets/index-[A-Za-z0-9_-]+\.js' dist/index.html | head -1)"
+          echo "expected ${EXPECTED}"
+          LIVE=""
+          for i in 1 2 3 4 5 6; do
+            LIVE="$(curl -sS --max-time 30 https://djstratageminc.com/ | grep -oE 'assets/index-[A-Za-z0-9_-]+\.js' | head -1 || true)"
+            echo "attempt ${i}: live ${LIVE:-<none>}"
+            if [ "${LIVE}" = "${EXPECTED}" ]; then
+              echo "live matches dist"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "::error::Live site still serving ${LIVE:-<none>}; dist built ${EXPECTED}."
+          echo "cPanel did not pull deploy. On the host:"
+          echo "  cPanel → Git Version Control → dj-stratagem"
+          echo "  1. branch deploy"
+          echo "  2. Update from Remote"
+          echo "  3. Deploy HEAD Commit"
+          echo "Or run ./deploy.sh on a machine with ~/.cpanel_token."
+          echo "Confirm public_html is djstlime:nobody mode 0750."
+          exit 1
