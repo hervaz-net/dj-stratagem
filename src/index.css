@@ -465,15 +465,6 @@ body {
   animation: cta-pulse 6s ease-in-out infinite;
 }
 
-/* Cookie banner covers hero CTAs and form fields unless the page lifts. */
-html[data-cookie-banner="1"] {
-  scroll-padding-bottom: 7rem;
-}
-
-html[data-cookie-banner="1"] body {
-  padding-bottom: 6.5rem;
-}
-
 @media print {
   body {
     background: #fff;

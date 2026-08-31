@@ -1,0 +1,87 @@
+name: Publish deploy branch
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-deploy
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install and build
+        run: |
+          npm ci
+          npm run build
+          test -f dist/index.html
+
+      - name: Refresh deploy branch from dist/
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          SHORT="$(git rev-parse --short HEAD)"
+          WORK="$(mktemp -d)"
+          git clone --quiet --branch deploy --single-branch \
+            "https://x-access-token:${GH_TOKEN}@github.com/hervaz-net/dj-stratagem.git" \
+            "$WORK/repo"
+          cd "$WORK/repo"
+          find . -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
+          cp -R "$GITHUB_WORKSPACE/dist/." .
+          cp "$GITHUB_WORKSPACE/scripts/cpanel.yml" .cpanel.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "deploy branch already matches this build"
+          else
+            git commit -m "Deploy ${SHORT}"
+            git push origin deploy
+            echo "pushed deploy $(git rev-parse --short HEAD) from main ${SHORT}"
+          fi
+
+      - name: Pull and deploy on cPanel
+        env:
+          CPANEL_TOKEN: ${{ secrets.CPANEL_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -z "${CPANEL_TOKEN}" ]; then
+            echo "No CPANEL_TOKEN repo secret. Deploy branch is updated."
+            echo "Finish on a token machine with ./deploy.sh --no-build, or:"
+            echo "cPanel → Git Version Control → dj-stratagem → Update from Remote → Deploy HEAD"
+            exit 0
+          fi
+          AUTH="cpanel djstlime:${CPANEL_TOKEN}"
+          HOST="https://server247.web-hosting.com:2083"
+          ROOT="/home/djstlime/repositories/dj-stratagem"
+          echo "Pulling deploy on the server"
+          curl -sS --max-time 90 -H "Authorization: ${AUTH}" \
+            --get \
+            --data-urlencode "repository_root=${ROOT}" \
+            --data-urlencode "branch=deploy" \
+            "${HOST}/execute/VersionControl/update"
+          echo
+          echo "Triggering cPanel deployment"
+          curl -sS --max-time 90 -H "Authorization: ${AUTH}" \
+            -X POST \
+            --data-urlencode "repository_root=${ROOT}" \
+            "${HOST}/execute/VersionControlDeployment/create"
+          echo
