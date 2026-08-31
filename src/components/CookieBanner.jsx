@@ -50,35 +50,33 @@ export default function CookieBanner() {
     <div
       role="region"
       aria-label="Cookie consent"
-      className="fixed bottom-0 left-0 right-0 z-[110] border-t border-line bg-ink-2/95 px-4 py-4 backdrop-blur-md sm:px-6"
+      className="fixed bottom-4 right-4 z-[110] w-[min(22rem,calc(100vw-2rem))] rounded-2xl border border-line bg-ink-2/95 p-4 shadow-xl shadow-brand/10 backdrop-blur-md"
     >
-      <div className="mx-auto flex max-w-6xl flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-sm leading-relaxed text-steel">
-          This site stores theme preference and this consent choice on your device. There is no analytics or advertising pixel.{" "}
-          <Link
-            to="/privacy"
-            className="font-medium text-amber underline underline-offset-2 hover:text-amber-2"
-          >
-            Privacy Policy
-          </Link>
-          .
-        </p>
-        <div className="flex shrink-0 gap-2">
-          <button
-            type="button"
-            onClick={decline}
-            className="rounded-full border border-line px-4 py-1.5 text-xs font-semibold text-steel hover:border-line/70 hover:text-paper"
-          >
-            Dismiss
-          </button>
-          <button
-            type="button"
-            onClick={accept}
-            className="rounded-full bg-cta px-4 py-1.5 text-xs font-semibold text-white hover:bg-cta-hover"
-          >
-            OK
-          </button>
-        </div>
+      <p className="text-sm leading-relaxed text-steel">
+        This site stores theme preference and this consent choice on your device. There is no analytics or advertising pixel.{" "}
+        <Link
+          to="/privacy"
+          className="font-medium text-amber underline underline-offset-2 hover:text-amber-2"
+        >
+          Privacy Policy
+        </Link>
+        .
+      </p>
+      <div className="mt-3 flex shrink-0 justify-end gap-2">
+        <button
+          type="button"
+          onClick={decline}
+          className="rounded-full border border-line px-4 py-1.5 text-xs font-semibold text-steel hover:border-line/70 hover:text-paper"
+        >
+          Dismiss
+        </button>
+        <button
+          type="button"
+          onClick={accept}
+          className="rounded-full bg-cta px-4 py-1.5 text-xs font-semibold text-white hover:bg-cta-hover"
+        >
+          OK
+        </button>
       </div>
     </div>
   );
