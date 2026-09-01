@@ -9,6 +9,11 @@
   # LiteSpeed then served as application/javascript and the app never booted.
   RewriteRule ^assets/ - [L]
 
+  # Brand marks and other static uploads must 404 when missing. On the Aug 21
+  # live tree, /uploads/*.svg was rewritten to index.html and served as the
+  # document mark, so privacy/terms rendered a broken HTML "image".
+  RewriteRule ^uploads/ - [L]
+
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule ^ index.html [L]
