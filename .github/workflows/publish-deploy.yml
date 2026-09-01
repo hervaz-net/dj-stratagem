@@ -59,16 +59,19 @@ jobs:
           fi
 
       - name: Pull and deploy on cPanel
+        id: cpanel
         env:
           CPANEL_TOKEN: ${{ secrets.CPANEL_TOKEN }}
         run: |
           set -euo pipefail
           if [ -z "${CPANEL_TOKEN}" ]; then
+            echo "pulled=false" >> "$GITHUB_OUTPUT"
             echo "No CPANEL_TOKEN repo secret. Deploy branch is updated."
             echo "Finish on a token machine with ./deploy.sh --no-build, or:"
             echo "cPanel → Git Version Control → dj-stratagem → Update from Remote → Deploy HEAD"
             exit 0
           fi
+          echo "pulled=true" >> "$GITHUB_OUTPUT"
           AUTH="cpanel djstlime:${CPANEL_TOKEN}"
           HOST="https://server247.web-hosting.com:2083"
           ROOT="/home/djstlime/repositories/dj-stratagem"
@@ -86,7 +89,16 @@ jobs:
             "${HOST}/execute/VersionControlDeployment/create"
           echo
 
+      - name: Report live vs dist hash
+        run: |
+          set -euo pipefail
+          EXPECTED="$(grep -oE 'assets/index-[A-Za-z0-9_-]+\.js' dist/index.html | head -1)"
+          LIVE="$(curl -sS --max-time 30 https://djstratageminc.com/ | grep -oE 'assets/index-[A-Za-z0-9_-]+\.js' | head -1 || true)"
+          echo "expected ${EXPECTED}"
+          echo "live     ${LIVE:-<none>}"
+
       - name: Verify live bundle hash
+        if: steps.cpanel.outputs.pulled == 'true'
         run: |
           set -euo pipefail
           EXPECTED="$(grep -oE 'assets/index-[A-Za-z0-9_-]+\.js' dist/index.html | head -1)"
