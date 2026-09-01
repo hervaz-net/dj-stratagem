@@ -4,14 +4,22 @@
   RewriteEngine On
   RewriteBase /
 
+  # One public origin. www must not keep its own cookie/cache universe.
+  RewriteCond %{HTTP_HOST} ^www\.djstratageminc\.com$ [NC]
+  RewriteRule ^ https://djstratageminc.com%{REQUEST_URI} [R=301,L]
+
   # Hashed Vite files must never fall through to the SPA. A stale index.html
   # that points at a bundle that is not on disk used to 200 with HTML, which
   # LiteSpeed then served as application/javascript and the app never booted.
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^assets/ - [R=404,L]
   RewriteRule ^assets/ - [L]
 
   # Brand marks and other static uploads must 404 when missing. On the Aug 21
   # live tree, /uploads/*.svg was rewritten to index.html and served as the
   # document mark, so privacy/terms rendered a broken HTML "image".
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^uploads/ - [R=404,L]
   RewriteRule ^uploads/ - [L]
 
   RewriteCond %{REQUEST_FILENAME} !-f
