@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 const KEY = "djs-cookie-consent";
+
+// Same surfaces as the support widget: keep form fields and auth inputs
+// clickable instead of parking the consent card on top of them.
+const HIDDEN_ON = new Set(["/contact", "/login", "/register", "/forgot-password", "/verify-email"]);
 
 function getConsent() {
   try {
@@ -22,10 +26,12 @@ function setConsent(accepted) {
 }
 
 export default function CookieBanner() {
+  const { pathname } = useLocation();
+  const hide = HIDDEN_ON.has(pathname);
   const [dismissed, setDismissed] = useState(() => getConsent() !== null);
 
   useEffect(() => {
-    if (dismissed) {
+    if (dismissed || hide) {
       delete document.documentElement.dataset.cookieBanner;
     } else {
       document.documentElement.dataset.cookieBanner = "1";
@@ -33,9 +39,9 @@ export default function CookieBanner() {
     return () => {
       delete document.documentElement.dataset.cookieBanner;
     };
-  }, [dismissed]);
+  }, [dismissed, hide]);
 
-  if (dismissed) return null;
+  if (dismissed || hide) return null;
 
   const accept = () => {
     setConsent(true);

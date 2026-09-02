@@ -45,6 +45,14 @@ export const slugify = (s) =>
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
 
+/** Sample due dates stay ahead of "today" so the preview never looks expired. */
+function isoDaysFromToday(days) {
+  const d = new Date();
+  d.setHours(12, 0, 0, 0);
+  d.setDate(d.getDate() + days);
+  return d.toISOString().slice(0, 10);
+}
+
 export const projects = [
   {
     slug: "downtown-medical-office-renovation",
@@ -56,7 +64,7 @@ export const projects = [
     type: "Healthcare",
     value: 4_200_000,
     valueLabel: "$4.2M",
-    bidDue: "2026-09-12",
+    bidDue: isoDaysFromToday(21),
     procurement: "Competitive Bid",
     owner: "Meridian Health Partners",
     gc: "Turner-style GC (sample)",
@@ -81,7 +89,7 @@ export const projects = [
     type: "Commercial",
     value: 850_000,
     valueLabel: "$850K",
-    bidDue: "2026-10-16",
+    bidDue: isoDaysFromToday(44),
     procurement: "Invited Bid",
     owner: "Wilshire Property Group",
     gc: "Sample GC",
@@ -106,7 +114,7 @@ export const projects = [
     type: "Municipal",
     value: 2_400_000,
     valueLabel: "$2.4M",
-    bidDue: "2026-10-22",
+    bidDue: isoDaysFromToday(50),
     procurement: "Public Bid",
     owner: "City of Riverside",
     gc: "Open solicitation",
@@ -130,7 +138,7 @@ export const projects = [
     type: "Education",
     value: 640_000,
     valueLabel: "$640K",
-    bidDue: "2026-10-08",
+    bidDue: isoDaysFromToday(36),
     procurement: "Public Bid",
     owner: "Anaheim Union High School District",
     gc: "Open solicitation",
@@ -154,7 +162,7 @@ export const projects = [
     type: "Industrial",
     value: 2_800_000,
     valueLabel: "$2.8M",
-    bidDue: "2026-10-22",
+    bidDue: isoDaysFromToday(50),
     procurement: "Invited Bid",
     owner: "Pacific Logistics Trust",
     gc: "Sample GC",
@@ -174,7 +182,7 @@ export const projects = [
     type: "Municipal",
     value: 1_150_000,
     valueLabel: "$1.15M",
-    bidDue: "2026-09-19",
+    bidDue: isoDaysFromToday(17),
     procurement: "Public Bid",
     owner: "City of Pasadena",
     gc: "Open solicitation",
@@ -199,7 +207,7 @@ export const projects = [
     type: "Industrial",
     value: 3_100_000,
     valueLabel: "$3.1M",
-    bidDue: "2026-10-05",
+    bidDue: isoDaysFromToday(33),
     procurement: "Invited Bid",
     owner: "Inland Industrial Partners",
     gc: "Sample GC",
@@ -219,7 +227,7 @@ export const projects = [
     type: "Residential",
     value: 920_000,
     valueLabel: "$920K",
-    bidDue: "2026-09-26",
+    bidDue: isoDaysFromToday(24),
     procurement: "Invited Bid",
     owner: "Sierra Housing Development",
     gc: "Sample GC",
