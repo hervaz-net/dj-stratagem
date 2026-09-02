@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-
-const HIDDEN_ON = new Set(["/contact", "/login", "/register", "/signup", "/forgot-password", "/verify-email"]);
+import { hideMarketingChrome } from "../chrome/formRoutes";
 
 export default function LiveChat() {
   const [open, setOpen] = useState(false);
   const [appeared, setAppeared] = useState(false);
   const { pathname } = useLocation();
-  const hide = HIDDEN_ON.has(pathname);
+  const hide = hideMarketingChrome(pathname);
 
   useEffect(() => {
     if (hide) {
