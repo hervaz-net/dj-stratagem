@@ -22,7 +22,7 @@ export default function BackToTop() {
       aria-label="Back to top"
       tabIndex={visible ? 0 : -1}
       aria-hidden={!visible}
-      className={`no-print lift fixed bottom-52 right-6 z-[90] flex h-11 w-11 items-center justify-center rounded-full border border-line bg-ink-2/90 text-paper shadow-lg backdrop-blur transition-all hover:border-amber/60 hover:text-amber [[data-cookie-banner="1"]_&]:bottom-72 ${
+      className={`no-print lift fixed bottom-52 right-6 z-[90] flex h-11 w-11 items-center justify-center rounded-full border border-line bg-ink-2/90 text-paper shadow-lg backdrop-blur transition-all hover:border-amber/60 hover:text-amber [[data-cookie-banner="1"]_&]:invisible [[data-cookie-banner="1"]_&]:pointer-events-none ${
         visible ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-3 opacity-0"
       }`}
     >
