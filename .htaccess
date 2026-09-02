@@ -22,6 +22,13 @@
   RewriteRule ^uploads/ - [R=404,L]
   RewriteRule ^uploads/ - [L]
 
+  # PHP endpoints must not 200 the SPA. A missing or mistyped /api/*.php used
+  # to return index.html, so fetch() parsed marketing HTML as JSON and the
+  # dashboard looked like the API was up.
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^api/ - [R=404,L]
+  RewriteRule ^api/ - [L]
+
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule ^ index.html [L]
