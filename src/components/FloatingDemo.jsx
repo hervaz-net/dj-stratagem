@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { IconCalendar } from "./icons";
 
-const HIDDEN_ON = new Set(["/contact", "/login", "/register", "/forgot-password", "/verify-email"]);
+const HIDDEN_ON = new Set(["/contact", "/login", "/register", "/signup", "/forgot-password", "/verify-email"]);
 
 export default function FloatingDemo() {
   const [visible, setVisible] = useState(false);
@@ -23,7 +23,7 @@ export default function FloatingDemo() {
   return (
     <div
       className={`fixed bottom-32 right-6 z-[90] transition-all duration-500 [[data-cookie-banner="1"]_&]:bottom-48 ${
-        visible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0 pointer-events-none"
+        visible ? "translate-y-0 opacity-100" : "translate-y-6 opacity-100 pointer-events-none".replace("opacity-100 pointer", "opacity-0 pointer")
       }`}
     >
       <Link
