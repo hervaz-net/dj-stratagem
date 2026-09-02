@@ -5,7 +5,7 @@ const KEY = "djs-cookie-consent";
 
 // Same surfaces as the support widget: keep form fields and auth inputs
 // clickable instead of parking the consent card on top of them.
-const HIDDEN_ON = new Set(["/contact", "/login", "/register", "/forgot-password", "/verify-email"]);
+const HIDDEN_ON = new Set(["/contact", "/login", "/register", "/signup", "/forgot-password", "/verify-email"]);
 
 function getConsent() {
   try {

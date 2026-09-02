@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { IconCalendar } from "./icons";
 
-const HIDDEN_ON = new Set(["/contact", "/login", "/register", "/forgot-password", "/verify-email"]);
+const HIDDEN_ON = new Set(["/contact", "/login", "/register", "/signup", "/forgot-password", "/verify-email"]);
 
 export default function FloatingDemo() {
   const [visible, setVisible] = useState(false);
