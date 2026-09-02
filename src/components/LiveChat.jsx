@@ -23,7 +23,7 @@ export default function LiveChat() {
   return (
     <>
       <div
-        className={`fixed bottom-24 left-6 z-[100] transition-all duration-500 [[data-cookie-banner="1"]_&]:bottom-52 ${
+        className={`fixed bottom-24 left-6 z-[100] transition-all duration-500 [[data-cookie-banner="1"]_&]:invisible [[data-cookie-banner="1"]_&]:pointer-events-none ${
           appeared ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
         }`}
       >
@@ -44,7 +44,7 @@ export default function LiveChat() {
 
       {open && (
         <div
-          className={`fixed bottom-40 left-6 z-[100] flex w-80 max-w-[calc(100vw-3rem)] flex-col overflow-hidden rounded-2xl border border-line bg-ink-2 shadow-2xl shadow-brand/15 [[data-cookie-banner="1"]_&]:bottom-64`}
+          className="fixed bottom-40 left-6 z-[100] flex w-80 max-w-[calc(100vw-3rem)] flex-col overflow-hidden rounded-2xl border border-line bg-ink-2 shadow-2xl shadow-brand/15 [[data-cookie-banner="1"]_&]:invisible [[data-cookie-banner="1"]_&]:pointer-events-none"
           role="dialog"
           aria-label="Contact support"
         >

@@ -36,8 +36,13 @@
 
 # index.html is the only pointer to the current hashed bundle. Cache it and
 # a deploy that only updates public_html/assets looks like it never shipped.
+# robots.txt / sitemap.xml must also skip long-lived cache or a cPanel pull
+# can look like it never updated crawler files.
 <IfModule mod_headers.c>
   <FilesMatch "\.(html)$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+  <FilesMatch "^(robots\.txt|sitemap\.xml)$">
     Header set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
 </IfModule>
@@ -45,6 +50,9 @@
 <IfModule mod_expires.c>
   ExpiresActive On
   ExpiresByType text/html "access plus 0 seconds"
+  ExpiresByType text/plain "access plus 0 seconds"
+  ExpiresByType application/xml "access plus 0 seconds"
+  ExpiresByType text/xml "access plus 0 seconds"
   ExpiresByType text/css "access plus 1 year"
   ExpiresByType application/javascript "access plus 1 year"
   ExpiresByType image/svg+xml "access plus 1 year"
