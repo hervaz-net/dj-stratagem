@@ -1,13 +1,12 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { IconCalendar } from "./icons";
-
-const HIDDEN_ON = new Set(["/contact", "/login", "/register", "/signup", "/forgot-password", "/verify-email"]);
+import { hideMarketingChrome } from "../chrome/formRoutes";
 
 export default function FloatingDemo() {
   const [visible, setVisible] = useState(false);
   const { pathname } = useLocation();
-  const hide = HIDDEN_ON.has(pathname);
+  const hide = hideMarketingChrome(pathname);
 
   useEffect(() => {
     if (hide) {
@@ -30,7 +29,6 @@ export default function FloatingDemo() {
         to="/contact"
         className="group relative flex items-center gap-2.5 rounded-full bg-cta hover:bg-cta-hover px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-cta/30 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-cta/40"
       >
-        {/* Pulsing ring */}
         <span className="relative flex h-2 w-2 shrink-0">
           <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-60" />
           <span className="relative inline-flex h-2 w-2 rounded-full bg-white" />
