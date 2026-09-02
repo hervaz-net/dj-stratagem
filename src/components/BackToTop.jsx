@@ -1,19 +1,29 @@
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import { hideMarketingChrome } from "../chrome/formRoutes";
 
 export default function BackToTop() {
   const [visible, setVisible] = useState(false);
+  const { pathname } = useLocation();
+  const hide = hideMarketingChrome(pathname);
 
   useEffect(() => {
+    if (hide) {
+      setVisible(false);
+      return undefined;
+    }
     const onScroll = () => setVisible(window.scrollY > 800);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [hide]);
 
   const toTop = () => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     window.scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" });
   };
+
+  if (hide) return null;
 
   return (
     <button
