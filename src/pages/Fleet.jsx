@@ -13,6 +13,15 @@ import {
   IconPackage,
 } from "../components/icons";
 
+// Sample service dates stay relative to today so the preview board
+// never shows a next-scheduled date that already passed.
+function isoDaysFromToday(days) {
+  const d = new Date();
+  d.setHours(12, 0, 0, 0);
+  d.setDate(d.getDate() + days);
+  return d.toISOString().slice(0, 10);
+}
+
 // Sample fleet data for the public preview board.
 const FLEET_DATA = [
   {
@@ -22,8 +31,8 @@ const FLEET_DATA = [
     status: "in-use",
     location: "Los Angeles, CA",
     utilization: 89,
-    lastMaintenance: "2026-07-01",
-    nextScheduled: "2026-09-15",
+    lastMaintenance: isoDaysFromToday(-63),
+    nextScheduled: isoDaysFromToday(13),
     operator: "Assigned crew",
     capacity: "3 cubic yards",
     hourlyRate: "$125",
@@ -35,8 +44,8 @@ const FLEET_DATA = [
     status: "in-use",
     location: "Orange County, CA",
     utilization: 76,
-    lastMaintenance: "2026-06-20",
-    nextScheduled: "2026-10-01",
+    lastMaintenance: isoDaysFromToday(-74),
+    nextScheduled: isoDaysFromToday(29),
     operator: "Assigned crew",
     capacity: "20 ton",
     hourlyRate: "$450",
@@ -48,8 +57,8 @@ const FLEET_DATA = [
     status: "available",
     location: "San Diego, CA",
     utilization: 42,
-    lastMaintenance: "2026-07-05",
-    nextScheduled: "2026-10-12",
+    lastMaintenance: isoDaysFromToday(-59),
+    nextScheduled: isoDaysFromToday(40),
     operator: "Available",
     capacity: "15 ton",
     hourlyRate: "$85",
@@ -61,8 +70,8 @@ const FLEET_DATA = [
     status: "maintenance",
     location: "Riverside, CA",
     utilization: 0,
-    lastMaintenance: "2026-08-08",
-    nextScheduled: "2026-09-22",
+    lastMaintenance: isoDaysFromToday(-25),
+    nextScheduled: isoDaysFromToday(20),
     operator: "Shop tech",
     capacity: "3000 sq ft",
     hourlyRate: "$200",
@@ -74,8 +83,8 @@ const FLEET_DATA = [
     status: "available",
     location: "Ventura, CA",
     utilization: 55,
-    lastMaintenance: "2026-06-15",
-    nextScheduled: "2026-09-20",
+    lastMaintenance: isoDaysFromToday(-79),
+    nextScheduled: isoDaysFromToday(18),
     operator: "Available",
     capacity: "500 kW",
     hourlyRate: "$350",
@@ -87,8 +96,8 @@ const FLEET_DATA = [
     status: "in-use",
     location: "Long Beach, CA",
     utilization: 92,
-    lastMaintenance: "2026-07-02",
-    nextScheduled: "2026-09-10",
+    lastMaintenance: isoDaysFromToday(-62),
+    nextScheduled: isoDaysFromToday(21),
     operator: "Assigned crew",
     capacity: "65 ft reach",
     hourlyRate: "$200",
