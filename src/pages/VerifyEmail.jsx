@@ -25,11 +25,11 @@ export default function VerifyEmail() {
               New accounts stay pending until someone on the team approves them. There is no automated verification email and no 24-hour link.
             </p>
             <p className="mt-3 text-sm text-steel">
-              If you just requested access, wait for an email from us. If you never submitted a request, start at{" "}
+              If you just requested access, wait for an email from us. If you never submitted a request, start at the{" "}
               <Link to="/register" className="font-medium text-amber hover:text-amber-2">
-                /register
-              </Link>
-              .
+                create account
+              </Link>{" "}
+              page.
             </p>
 
             <div className="mt-8 space-y-3">
