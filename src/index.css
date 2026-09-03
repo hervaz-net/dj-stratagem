@@ -1,47 +1,67 @@
 @import "tailwindcss";
 
 /* ---------------------------------------------------------------------------
-   Design tokens — construction.com / Dodge language, one job per name.
+  Bid Platform Design System — Steel + High-Vis
+  Modern, corporate, construction bidding marketplace
 
-   Neutrals (no chroma — they must never read as links or brand):
-     ink     recessed surface (page wells, inputs, nested rows)
-     ink-2   raised surface (cards, panels, footer)
-     ink-3   hover/active surface
-     line    borders and dividers
-     paper   primary text
-     steel   muted/secondary text
+  Brand Core (locked):
+    bid-navy    #0B1F33  — primary identity, headers, sidebars
+    bid-orange  #E85D04  — call-to-action (place bid, submit, award)
+    bid-blue    #2B6A8A  — secondary actions, hover states
 
-   Chromatic (one job each):
-     amber   accent TEXT / selected chrome (electric blue, contrast-safe)
-     brand   identity blue FILLS (#001cf7)
-     cta     primary buttons only (coral, white-on-cta ≥ 4.5:1)
-     warning watch / caution / mid-score (gold — never brand blue)
-     danger  errors / at-risk (not the same as cta)
-     success positive / healthy
---------------------------------------------------------------------------- */
+  Neutrals (no chroma — always gray for structure):
+    text        #1A2330  — primary body text, dark & bold
+    surface     #F4F5F7  — page background, light & clean
+    card        #FFFFFF  — card/panel background
+    border      #E0E2E6  — dividers, input borders
+    muted       #6B7280  — secondary text, hints, disabled
+
+  Semantic (status chips, badges):
+    success     #15803D  — awarded, won, active
+    warning     #D97706  — submitted, pending review
+    danger      #B91C1C  — rejected, overdue, at-risk
+  --------------------------------------------------------------------------- */
 
 @theme inline {
-  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Zalando Sans SemiExpanded", "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 
-  --color-ink: var(--surface);
-  --color-ink-2: var(--surface-raised);
-  --color-ink-3: var(--surface-hover);
-  --color-line: var(--border);
+  /* Brand core — locked */
+  --color-bid-navy: #0B1F33;
+  --color-bid-navy-hover: #051629;
+  --color-bid-blue: #2B6A8A;
+  --color-bid-blue-hover: #1F4F66;
+  --color-bid-orange: #E85D04;
+  --color-bid-orange-hover: #C44A02;
 
-  --color-paper: var(--text);
-  --color-paper-2: var(--text-strong);
-  --color-steel: var(--text-muted);
+  /* Neutrals — clean, corporate */
+  --color-text: #1A2330;
+  --color-text-muted: #6B7280;
+  --color-surface: #F4F5F7;
+  --color-card: #FFFFFF;
+  --color-border: #E0E2E6;
 
-  --color-amber: var(--accent);
-  --color-amber-2: var(--accent-hover);
-  --color-brand: var(--brand);
-  --color-cta: var(--cta);
-  --color-cta-hover: var(--cta-hover);
-  --color-warning: var(--warning);
+  /* Semantic — status at a glance */
+  --color-success: #15803D;
+  --color-success-light: #DCFCE7;
+  --color-warning: #D97706;
+  --color-warning-light: #FEF3C7;
+  --color-danger: #B91C1C;
+  --color-danger-light: #FEE2E2;
 
-  --color-danger: var(--danger);
-  --color-success: var(--success);
+  /* Aliases for construction.com compat */
+  --color-ink: var(--color-surface);
+  --color-ink-2: var(--color-card);
+  --color-ink-3: #F0F1F3;
+  --color-line: var(--color-border);
+  --color-paper: var(--color-text);
+  --color-paper-2: #0F1419;
+  --color-steel: var(--color-text-muted);
+  --color-amber: var(--color-bid-orange);
+  --color-amber-2: var(--color-bid-orange-hover);
+  --color-brand: var(--color-bid-navy);
+  --color-cta: var(--color-bid-orange);
+  --color-cta-hover: var(--color-bid-orange-hover);
 }
 
 :root {
