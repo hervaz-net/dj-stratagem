@@ -97,8 +97,10 @@ jobs:
           echo "expected ${EXPECTED}"
           echo "live     ${LIVE:-<none>}"
 
+      # Always compare hashes. Skipping this when CPANEL_TOKEN is missing
+      # marked the job green while djstratageminc.com kept serving an old
+      # bundle (index-Clfgkqwf.js vs deploy's index-X-bBSPML.js).
       - name: Verify live bundle hash
-        if: steps.cpanel.outputs.pulled == 'true'
         run: |
           set -euo pipefail
           EXPECTED="$(grep -oE 'assets/index-[A-Za-z0-9_-]+\.js' dist/index.html | head -1)"
@@ -120,5 +122,6 @@ jobs:
           echo "  2. Update from Remote"
           echo "  3. Deploy HEAD Commit"
           echo "Or run ./deploy.sh on a machine with ~/.cpanel_token."
+          echo "Add repo secret CPANEL_TOKEN so this workflow can pull the host."
           echo "Confirm public_html is djstlime:nobody mode 0750."
           exit 1
