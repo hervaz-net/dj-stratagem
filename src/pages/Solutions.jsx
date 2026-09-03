@@ -112,9 +112,6 @@ export default function Solutions() {
           onKeyDown={onTabKeyDown}
           className="flex flex-wrap gap-3"
         >
-          <span id="gc" className="sr-only" />
-          <span id="sub" className="sr-only" />
-          <span id="supplier" className="sr-only" />
           {roles.map((r, i) => {
             const selected = active === r.key;
             return (
@@ -125,7 +122,7 @@ export default function Solutions() {
                 }}
                 type="button"
                 role="tab"
-                id={`tab-${r.key}`}
+                id={r.key}
                 aria-selected={selected}
                 aria-controls={`panel-${r.key}`}
                 tabIndex={selected ? 0 : -1}
@@ -146,7 +143,7 @@ export default function Solutions() {
         <div
           role="tabpanel"
           id={`panel-${role.key}`}
-          aria-labelledby={`tab-${role.key}`}
+          aria-labelledby={role.key}
           tabIndex={0}
           key={role.key}
           className="animate-fade-in mt-12 grid grid-cols-1 gap-14 lg:grid-cols-2 lg:items-center"
