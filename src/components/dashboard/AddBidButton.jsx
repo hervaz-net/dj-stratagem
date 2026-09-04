@@ -58,7 +58,7 @@ export default function AddBidButton({ onCreated }) {
             <div className="mt-4 space-y-3">
               {[
                 ["project", "Project", "Harborview Office Tower", "text"],
-                ["gc", "General contractor", "Turner Construction", "text"],
+                ["gc", "General contractor", "Sample GC", "text"],
                 ["trade", "Trade", "Electrical", "text"],
                 ["value", "Value (USD)", "250000", "number"],
                 ["due", "Due date", "", "date"],
