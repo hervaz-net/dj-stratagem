@@ -24,8 +24,8 @@
 
   # PHP endpoints must not 200 the SPA. A missing or mistyped /api/*.php used
   # to return index.html, so fetch() parsed marketing HTML as JSON and the
-  # dashboard looked like the API was up. Serve a JSON 404 instead of the
-  # LiteSpeed HTML error page so clients fail cleanly.
+  # dashboard looked like the API was up. Send the request into /api/ so the
+  # directory .htaccess can emit a JSON 404 (LiteSpeed HTML 404 is not parseable).
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule ^api/ api/not-found.php [L]
 
