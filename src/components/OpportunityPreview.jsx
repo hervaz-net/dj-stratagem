@@ -1,4 +1,5 @@
 import { IconCheck } from "./icons";
+import { findProject, formatDue } from "../data/sampleProjects";
 
 /**
  * A product view of matched bid opportunities, shown on the homepage so visitors
@@ -6,34 +7,30 @@ import { IconCheck } from "./icons";
  *
  * The rows are representative sample data, not customer records — the "Sample
  * view" label keeps that unambiguous while the product is pre-launch.
+ * Due dates come from sampleProjects so the preview never shows an expired bid.
  */
 
-const opportunities = [
-  {
-    project: "Commercial HVAC Upgrade",
-    location: "Los Angeles, CA",
-    trade: "HVAC",
-    value: "$850K",
-    due: "Aug 28",
-    match: 94,
-  },
-  {
-    project: "Municipal Facility Renovation",
-    location: "Riverside, CA",
-    trade: "General",
-    value: "$2.4M",
-    due: "Sep 3",
-    match: 81,
-  },
-  {
-    project: "School Modernization",
-    location: "Anaheim, CA",
-    trade: "Electrical",
-    value: "$640K",
-    due: "Sep 8",
-    match: 76,
-  },
+const PREVIEW_SLUGS = [
+  "commercial-hvac-upgrade-la",
+  "municipal-facility-renovation-riverside",
+  "school-modernization-anaheim",
 ];
+
+function formatDueShort(iso) {
+  return formatDue(iso).replace(/,\s*\d{4}$/, "");
+}
+
+const opportunities = PREVIEW_SLUGS.map((slug) => {
+  const p = findProject(slug);
+  return {
+    project: p.title.replace(/\s+—\s+Electrical Package$/, ""),
+    location: `${p.city}, ${p.state}`,
+    trade: p.trade,
+    value: p.valueLabel,
+    due: formatDueShort(p.bidDue),
+    match: p.match,
+  };
+});
 
 const matchReasons = [
   "Trade: HVAC",
