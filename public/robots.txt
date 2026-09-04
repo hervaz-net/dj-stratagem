@@ -6,6 +6,7 @@ Disallow: /signup
 Disallow: /forgot-password
 Disallow: /verify-email
 Disallow: /dashboard
+Disallow: /admin
 Disallow: /api/
 
 Sitemap: https://djstratageminc.com/sitemap.xml
