@@ -23,3 +23,12 @@
 
 # Directory listing would expose which endpoints exist.
 Options -Indexes
+
+# LiteSpeed often ignores the document-root rewrite for missing /api/* paths
+# and serves its HTML 404 page. Handle the miss here so fetch() always gets
+# JSON instead of marketing HTML.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^ not-found.php [L]
+</IfModule>
