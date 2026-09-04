@@ -101,7 +101,7 @@ export const alertFixtures = [
   { id: 6, type: "delivery", title: "PO-1185 shipment delayed 2 days", detail: `Summit Fasteners reported carrier delay. New ETA: ${shortDays(-2)}.`, supplier: "Summit Fasteners", time: "Yesterday, 11am", group: "yesterday", read: true },
   { id: 7, type: "system", title: "Supplier data refresh completed", detail: "All 124 supplier risk scores and delivery rates updated from last night's feed.", supplier: null, time: "Yesterday, 2am", group: "yesterday", read: true },
   { id: 8, type: "bid", title: "Bid #2041 awarded — Apex Electrical", detail: "Riverside Medical Office awarded. Contract value: $412k.", supplier: null, time: "2 days ago", group: "older", read: true },
-  { id: 9, type: "price", title: "Lumber prices down 4.1%", detail: "Dimensional lumber index retreated from July peak. Good timing for upcoming POs.", supplier: null, time: "3 days ago", group: "older", read: true },
+  { id: 9, type: "price", title: "Lumber prices down 4.1%", detail: "Dimensional lumber index retreated from the recent peak. Good timing for upcoming POs.", supplier: null, time: "3 days ago", group: "older", read: true },
 ];
 
 export const overviewFixtures = {
