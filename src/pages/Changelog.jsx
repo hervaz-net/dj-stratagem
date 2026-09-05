@@ -5,6 +5,14 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.8",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "improved", text: "Walkthrough mock bids no longer name real GCs or hard-code October ship and due dates." },
+    ],
+  },
+  {
     version: "1.7",
     date: "September 2026",
     tag: "Fix",
@@ -68,7 +76,7 @@ const entries = [
   },
   {
     version: "1.2",
-    date: "May 2026",
+    date: "April 2026",
     tag: "Feature",
     items: [
       { type: "new", text: "Supplier drawer with full profile, metrics, risk gauge, and 30-day sparkline." },
