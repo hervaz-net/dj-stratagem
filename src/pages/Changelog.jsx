@@ -5,6 +5,14 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.9",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "improved", text: "PHP dashboard seed bids now use the same sample GC labels as the JS fixtures instead of real contractor names." },
+    ],
+  },
+  {
     version: "1.8",
     date: "September 2026",
     tag: "Fix",
