@@ -280,14 +280,14 @@ function seed_ops_if_empty(): void
     $today = new DateTimeImmutable('today', new DateTimeZone('UTC'));
 
     $bids = [
-        ['2041', 'Riverside Medical Office', 'Turner Construction', 'Electrical', 412000, 'awarded', seed_day($today, -31), seed_day($today, -33)],
-        ['2040', 'Summit Ridge Apartments', 'PCL Construction', 'Electrical', 288500, 'review', seed_day($today, 2), seed_day($today, -6)],
-        ['2039', 'Gateway Logistics Hub', 'McCarthy Building', 'Low voltage', 195000, 'submitted', seed_day($today, 8), seed_day($today, -3)],
-        ['2038', 'Harborview Office Tower', 'Hensel Phelps', 'Electrical', 680000, 'submitted', seed_day($today, 14), null],
-        ['2037', 'Crestwood Elementary', 'Swinerton', 'Low voltage', 142000, 'draft', seed_day($today, 21), null],
-        ['2036', 'Metro Rail Station B', 'Granite Construction', 'Electrical', 925000, 'lost', seed_day($today, -41), seed_day($today, -43)],
-        ['2035', 'Canyon View Retail', 'Turner Construction', 'Electrical', 218000, 'awarded', seed_day($today, -46), seed_day($today, -48)],
-        ['2034', 'North Harbor Warehouse', 'PCL Construction', 'Low voltage', 87000, 'lost', seed_day($today, -53), seed_day($today, -56)],
+        ['2041', 'Riverside Medical Office', 'Ridgeview Builders (sample)', 'Electrical', 412000, 'awarded', seed_day($today, -31), seed_day($today, -33)],
+        ['2040', 'Summit Ridge Apartments', 'Harborline GC (sample)', 'Electrical', 288500, 'review', seed_day($today, 2), seed_day($today, -6)],
+        ['2039', 'Gateway Logistics Hub', 'Westfork Building (sample)', 'Low voltage', 195000, 'submitted', seed_day($today, 8), seed_day($today, -3)],
+        ['2038', 'Harborview Office Tower', 'Northspan Construction (sample)', 'Electrical', 680000, 'submitted', seed_day($today, 14), null],
+        ['2037', 'Crestwood Elementary', 'Mesa & Vale GC (sample)', 'Low voltage', 142000, 'draft', seed_day($today, 21), null],
+        ['2036', 'Metro Rail Station B', 'Stoneway Civil (sample)', 'Electrical', 925000, 'lost', seed_day($today, -41), seed_day($today, -43)],
+        ['2035', 'Canyon View Retail', 'Ridgeview Builders (sample)', 'Electrical', 218000, 'awarded', seed_day($today, -46), seed_day($today, -48)],
+        ['2034', 'North Harbor Warehouse', 'Harborline GC (sample)', 'Low voltage', 87000, 'lost', seed_day($today, -53), seed_day($today, -56)],
     ];
     $insB = $pdo->prepare(
         'INSERT INTO bids (id, project, gc, trade, value, status, due_date, submitted_at) VALUES (?,?,?,?,?,?,?,?)'
