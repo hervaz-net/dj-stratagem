@@ -10,6 +10,7 @@ const entries = [
     tag: "Fix",
     items: [
       { type: "improved", text: "Dashboard seed alerts no longer hard-code August and July calendar dates that have already passed." },
+      { type: "improved", text: "Sample bid GCs and walkthrough panels use generic sample names instead of real contractors." },
     ],
   },
   {

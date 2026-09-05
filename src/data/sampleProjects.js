@@ -67,7 +67,7 @@ export const projects = [
     bidDue: isoDaysFromToday(21),
     procurement: "Competitive Bid",
     owner: "Meridian Health Partners",
-    gc: "Turner-style GC (sample)",
+    gc: "Pacific Ridge GC (sample)",
     match: 92,
     matchReasons: [
       "Trade: Electrical",
