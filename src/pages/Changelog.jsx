@@ -76,7 +76,7 @@ const entries = [
   },
   {
     version: "1.2",
-    date: "April 2026",
+    date: "May 2026",
     tag: "Feature",
     items: [
       { type: "new", text: "Supplier drawer with full profile, metrics, risk gauge, and 30-day sparkline." },
