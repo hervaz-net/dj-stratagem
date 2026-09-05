@@ -317,13 +317,13 @@ function seed_ops_if_empty(): void
     $alerts = [
         [1, 'risk', 'GlobalParts risk score exceeded 65', 'Score rose from 52 → 68 over 7 days. Consider sourcing alternatives for critical SKUs.', 'GlobalParts Ltd.', $now->modify('-14 minutes')],
         [2, 'delivery', 'IronLine on-time delivery dropped below 90%', '3 of the last 4 orders arrived late. Current 30-day rate: 87.5%.', 'Ironline Distribution', $now->modify('-1 hour')],
-        [3, 'bid', 'Bid #2040 under review — deadline in 48 hrs', 'Summit Ridge Apartments bid closes Aug 2. No response from GC yet.', null, $now->modify('-2 hours')],
+        [3, 'bid', 'Bid #2040 under review — deadline in 48 hrs', 'Summit Ridge Apartments bid closes in two days. No response from GC yet.', null, $now->modify('-2 hours')],
         [4, 'price', 'Structural steel index up 6.4% this week', 'Market movement may affect PO-1187 final pricing. Review before approval.', 'Ironline Distribution', $now->modify('-4 hours')],
         [5, 'risk', 'Apex Materials fill rate below SLA', 'Fill rate fell to 82% this month against a 90% SLA threshold.', 'Apex Materials', $now->modify('-27 hours')],
-        [6, 'delivery', 'PO-1185 shipment delayed 2 days', 'Summit Fasteners reported carrier delay. New ETA: Aug 1.', 'Summit Fasteners', $now->modify('-31 hours')],
+        [6, 'delivery', 'PO-1185 shipment delayed 2 days', 'Summit Fasteners reported a carrier delay. New ETA is two days out.', 'Summit Fasteners', $now->modify('-31 hours')],
         [7, 'system', 'Supplier data refresh completed', "All supplier risk scores and delivery rates updated from last night's feed.", null, $now->modify('-36 hours')],
         [8, 'bid', 'Bid #2041 awarded — Apex Electrical', 'Riverside Medical Office awarded. Contract value: $412k.', null, $now->modify('-2 days')],
-        [9, 'price', 'Lumber prices down 4.1%', 'Dimensional lumber index retreated from July peak. Good timing for upcoming POs.', null, $now->modify('-3 days')],
+        [9, 'price', 'Lumber prices down 4.1%', 'Dimensional lumber index retreated from the recent peak. Good timing for upcoming POs.', null, $now->modify('-3 days')],
     ];
     $insA = $pdo->prepare(
         'INSERT INTO alerts (id, type, title, detail, supplier_name, created_at) VALUES (?,?,?,?,?,?)'
