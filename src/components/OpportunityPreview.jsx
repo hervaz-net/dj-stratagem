@@ -20,30 +20,27 @@ function formatDueShort(iso) {
   return formatDue(iso).replace(/,\s*\d{4}$/, "");
 }
 
-const opportunities = PREVIEW_SLUGS.map((slug) => {
-  const p = findProject(slug);
-  return {
-    project: p.title.replace(/\s+—\s+Electrical Package$/, ""),
-    location: `${p.city}, ${p.state}`,
-    trade: p.trade,
-    value: p.valueLabel,
-    due: formatDueShort(p.bidDue),
-    match: p.match,
-  };
-});
+const previewProjects = PREVIEW_SLUGS.map((slug) => findProject(slug)).filter(Boolean);
 
-const matchReasons = [
-  "Trade: HVAC",
-  "Service area: Los Angeles",
-  "Project size: $500K–$2M",
-  "Healthcare experience",
-];
+const opportunities = previewProjects.map((p) => ({
+  project: p.title.replace(/\s+—\s+Electrical Package$/, ""),
+  location: `${p.city}, ${p.state}`,
+  trade: p.trade,
+  value: p.valueLabel,
+  due: formatDueShort(p.bidDue),
+  match: p.match,
+}));
+
+const featured = previewProjects[0];
+const matchReasons = featured?.matchReasons ?? [];
 
 /** Above 90 reads as a strong fit and earns the accent; the rest stay neutral. */
 const toneFor = (score) =>
   score >= 90 ? "text-success" : score >= 80 ? "text-warning" : "text-steel";
 
 export default function OpportunityPreview() {
+  if (!featured) return null;
+
   return (
     <div className="overflow-hidden rounded-2xl border border-line bg-ink-2 shadow-2xl">
       {/* window chrome */}
@@ -97,9 +94,11 @@ export default function OpportunityPreview() {
       {/* match explanation */}
       <div className="border-t border-line bg-ink p-4">
         <div className="flex items-baseline gap-2">
-          <span className="text-2xl font-bold tabular-nums text-success">94%</span>
+          <span className={`text-2xl font-bold tabular-nums ${toneFor(featured.match)}`}>
+            {featured.match}%
+          </span>
           <span className="text-xs font-semibold uppercase tracking-wider text-steel">
-            match &mdash; Commercial HVAC Upgrade
+            match &mdash; {featured.title}
           </span>
         </div>
         <p className="mt-1.5 text-xs leading-relaxed text-steel">

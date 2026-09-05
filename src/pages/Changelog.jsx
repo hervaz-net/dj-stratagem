@@ -5,6 +5,18 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.6",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "improved", text: "Homepage opportunity preview now uses the featured project's own match reasons instead of leftover healthcare copy on a commercial HVAC job." },
+      { type: "improved", text: "Cookie banner, demo chip, and support widget stay off auth, contact, and legal routes so form fields stay clickable." },
+      { type: "improved", text: "Missing /api paths return JSON 404s instead of LiteSpeed HTML, so the dashboard never treats marketing markup as API data." },
+      { type: "improved", text: "Sample project, fleet, receipt, and alert dates stay relative to today so previews do not expire after a deploy." },
+      { type: "improved", text: "robots.txt hides /signup and /admin from crawlers." },
+    ],
+  },
+  {
     version: "1.5",
     date: "August 2026",
     tag: "Fix",
@@ -108,7 +120,7 @@ export default function Changelog() {
 
       <Section className="pt-16 pb-8 md:pt-24">
         <Eyebrow>Changelog</Eyebrow>
-        <h1 className="text-balance max-w-3xl text-4xl font-semibold leading-tight tracking-tight text-paper sm:text-5xl">
+        <h1 className="text-balance max-w-3xl text-4xl font-semibold tracking-tight text-paper sm:text-5xl">
           What's new on the platform.
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-steel">
