@@ -5,6 +5,14 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.7",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "improved", text: "Dashboard seed alerts no longer hard-code August and July calendar dates that have already passed." },
+    ],
+  },
+  {
     version: "1.6",
     date: "September 2026",
     tag: "Fix",
