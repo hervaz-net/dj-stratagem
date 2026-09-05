@@ -71,14 +71,14 @@ export const tickerFixtures = [
 ];
 
 export const bidFixtures = [
-  { id: "2041", project: "Riverside Medical Office", gc: "Turner Construction", trade: "Electrical", value: 412000, status: "awarded", due: isoDays(-31), submitted: isoDays(-33) },
-  { id: "2040", project: "Summit Ridge Apartments", gc: "PCL Construction", trade: "Electrical", value: 288500, status: "review", due: isoDays(2), submitted: isoDays(-6) },
-  { id: "2039", project: "Gateway Logistics Hub", gc: "McCarthy Building", trade: "Low voltage", value: 195000, status: "submitted", due: isoDays(8), submitted: isoDays(-3) },
-  { id: "2038", project: "Harborview Office Tower", gc: "Hensel Phelps", trade: "Electrical", value: 680000, status: "submitted", due: isoDays(14), submitted: null },
-  { id: "2037", project: "Crestwood Elementary", gc: "Swinerton", trade: "Low voltage", value: 142000, status: "draft", due: isoDays(21), submitted: null },
-  { id: "2036", project: "Metro Rail Station B", gc: "Granite Construction", trade: "Electrical", value: 925000, status: "lost", due: isoDays(-41), submitted: isoDays(-43) },
-  { id: "2035", project: "Canyon View Retail", gc: "Turner Construction", trade: "Electrical", value: 218000, status: "awarded", due: isoDays(-46), submitted: isoDays(-48) },
-  { id: "2034", project: "North Harbor Warehouse", gc: "PCL Construction", trade: "Low voltage", value: 87000, status: "lost", due: isoDays(-53), submitted: isoDays(-56) },
+  { id: "2041", project: "Riverside Medical Office", gc: "Ridgeview Builders (sample)", trade: "Electrical", value: 412000, status: "awarded", due: isoDays(-31), submitted: isoDays(-33) },
+  { id: "2040", project: "Summit Ridge Apartments", gc: "Harborline GC (sample)", trade: "Electrical", value: 288500, status: "review", due: isoDays(2), submitted: isoDays(-6) },
+  { id: "2039", project: "Gateway Logistics Hub", gc: "Westfork Building (sample)", trade: "Low voltage", value: 195000, status: "submitted", due: isoDays(8), submitted: isoDays(-3) },
+  { id: "2038", project: "Harborview Office Tower", gc: "Northspan Construction (sample)", trade: "Electrical", value: 680000, status: "submitted", due: isoDays(14), submitted: null },
+  { id: "2037", project: "Crestwood Elementary", gc: "Mesa & Vale GC (sample)", trade: "Low voltage", value: 142000, status: "draft", due: isoDays(21), submitted: null },
+  { id: "2036", project: "Metro Rail Station B", gc: "Stoneway Civil (sample)", trade: "Electrical", value: 925000, status: "lost", due: isoDays(-41), submitted: isoDays(-43) },
+  { id: "2035", project: "Canyon View Retail", gc: "Ridgeview Builders (sample)", trade: "Electrical", value: 218000, status: "awarded", due: isoDays(-46), submitted: isoDays(-48) },
+  { id: "2034", project: "North Harbor Warehouse", gc: "Harborline GC (sample)", trade: "Low voltage", value: 87000, status: "lost", due: isoDays(-53), submitted: isoDays(-56) },
 ];
 
 export const orderFixtures = [
