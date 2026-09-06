@@ -26,9 +26,9 @@
   # to return index.html, so fetch() parsed marketing HTML as JSON and the
   # dashboard looked like the API was up. Send the request into /api/ so the
   # directory .htaccess can emit a JSON 404 (LiteSpeed HTML 404 is not parseable).
-  RewriteRule ^api/?$ api/not-found.php [L]
+  RewriteRule ^api/?$ api/index.php [L]
   RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteRule ^api/ api/not-found.php [L]
+  RewriteRule ^api/ api/index.php [L]
 
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
