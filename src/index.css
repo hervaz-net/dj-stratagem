@@ -218,6 +218,46 @@ body {
   background-clip: content-box;
 }
 
+/* Compact dashboard helpers */
+.compact-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.compact-row {
+  transition: background-color 160ms ease, transform 120ms ease;
+}
+.compact-row:focus {
+  outline: 2px solid rgba(11,31,51,0.08);
+  outline-offset: 2px;
+}
+
+.inline-input {
+  border: 1px solid var(--panel-border);
+  background: var(--panel-bg);
+  padding: 6px 8px;
+  border-radius: 6px;
+  min-width: 90px;
+}
+.inline-input:focus {
+  outline: 2px solid rgba(43,106,138,0.12);
+  background: rgba(255,255,255,0.98);
+}
+
+.compact-row:hover {
+  background: linear-gradient(90deg, rgba(43,106,138,0.02), transparent);
+}
+
+.compact-row .text-sm { font-size: 13px; }
+
+/* small screen tweaks */
+@media (max-width: 640px) {
+  .compact-row { grid-template-columns: repeat(6, minmax(0,1fr)); }
+  .inline-input { min-width: 60px; }
+}
+
 .bg-grid {
   background-image:
     linear-gradient(to right, var(--grid-line) 1px, transparent 1px),

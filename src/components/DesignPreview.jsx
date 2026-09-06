@@ -1,6 +1,6 @@
 import React from 'react';
 import { PremiumHero } from './PremiumHero';
-import { BiddingDashboard } from './BiddingDashboard';
+import { CompactDashboard } from './CompactDashboard';
 import { ModernNavbar } from './ModernNavbar';
 
 export function DesignPreview() {
@@ -46,7 +46,7 @@ export function DesignPreview() {
         {activeTab === 'dashboard' && (
           <div>
             <ModernNavbar isLoggedIn={true} />
-            <BiddingDashboard />
+            <CompactDashboard />
           </div>
         )}
 
