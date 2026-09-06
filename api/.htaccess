@@ -24,6 +24,12 @@
 # Directory listing would expose which endpoints exist.
 Options -Indexes
 
+# /api/ is a real directory. LiteSpeed otherwise serves its HTML 404 for the
+# directory URL and for any missing file under it. Point both cases at the
+# JSON helper so fetch() never parses marketing markup.
+DirectoryIndex not-found.php
+ErrorDocument 404 /api/not-found.php
+
 # LiteSpeed often ignores the document-root rewrite for missing /api/* paths
 # and serves its HTML 404 page. Handle the miss here so fetch() always gets
 # JSON instead of marketing HTML.
