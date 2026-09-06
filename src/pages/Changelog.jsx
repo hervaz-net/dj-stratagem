@@ -5,6 +5,14 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.10",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "improved", text: "/api/ and missing API files now prefer DirectoryIndex and ErrorDocument JSON 404s so LiteSpeed HTML cannot leak into dashboard fetch()." },
+    ],
+  },
+  {
     version: "1.9",
     date: "September 2026",
     tag: "Fix",
