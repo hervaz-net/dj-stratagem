@@ -5,6 +5,14 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.13",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "improved", text: "Phone consent card is a short bottom bar so hero CTAs stay tappable. Body padding no longer pretends to lift first-fold buttons out from under a tall overlay." },
+    ],
+  },
+  {
     version: "1.12",
     date: "September 2026",
     tag: "Fix",
