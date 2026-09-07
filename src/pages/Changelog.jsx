@@ -5,6 +5,14 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.14",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "improved", text: "/fleet-cards, /receipts, and /signage now redirect to the marketing document frames instead of the 404 page." },
+    ],
+  },
+  {
     version: "1.13",
     date: "September 2026",
     tag: "Fix",
