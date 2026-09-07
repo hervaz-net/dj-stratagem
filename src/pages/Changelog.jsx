@@ -5,6 +5,14 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.15",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "improved", text: "Phone consent is a full-width bottom bar instead of a tall floating card, so first-fold hero CTAs stay tappable before anyone dismisses it." },
+    ],
+  },
+  {
     version: "1.14",
     date: "September 2026",
     tag: "Fix",

@@ -150,7 +150,7 @@ html[data-cookie-banner="1"] body {
 
 @media (max-width: 768px) {
   html[data-cookie-banner="1"] body {
-    padding-bottom: 9rem;
+    padding-bottom: 5.5rem;
   }
 }
 
