@@ -141,9 +141,17 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Keep first-fold CTAs and form fields above the compact consent card. */
+/* Keep first-fold CTAs and form fields above the compact consent card.
+   On phones the card wraps taller than the desktop rail, so reserve more
+   space or the hero buttons sit under Dismiss/OK. */
 html[data-cookie-banner="1"] body {
   padding-bottom: 8.5rem;
+}
+
+@media (max-width: 640px) {
+  html[data-cookie-banner="1"] body {
+    padding-bottom: 12.5rem;
+  }
 }
 
 body {

@@ -8,6 +8,10 @@ export const FORM_CHROME_HIDDEN = new Set([
   "/verify-email",
   "/privacy",
   "/terms",
+  "/brand",
+  "/marketing/fleet-cards",
+  "/marketing/receipts",
+  "/marketing/signage",
 ]);
 
 /** Treat /login/ the same as /login. LiteSpeed keeps the trailing slash. */

@@ -56,7 +56,12 @@ export default function CookieBanner() {
       className="fixed bottom-4 right-4 z-[110] w-[min(22rem,calc(100vw-2rem))] rounded-2xl border border-line bg-ink-2/95 p-4 shadow-xl shadow-brand/10 backdrop-blur-md"
     >
       <p className="text-sm leading-relaxed text-steel">
-        This site stores theme preference and this consent choice on your device. There is no analytics or advertising pixel.{" "}
+        <span className="sm:hidden">
+          Theme and this consent stay on your device. No analytics.{" "}
+        </span>
+        <span className="hidden sm:inline">
+          This site stores theme preference and this consent choice on your device. There is no analytics or advertising pixel.{" "}
+        </span>
         <Link
           to="/privacy"
           className="font-medium text-amber underline underline-offset-2 hover:text-amber-2"
