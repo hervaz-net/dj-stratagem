@@ -150,6 +150,12 @@ uapi VersionControlDeployment create -X POST \
 
 # ------------------------------------------------------------------ verify
 step "Verifying live site"
+if ! python3 -c 'import socket,sys; socket.getaddrinfo("djstratageminc.com", 443)' >/dev/null 2>&1; then
+  printf "${RED}error:${NC} djstratageminc.com has no public A/AAAA record.\n"
+  printf "  Namecheap → Advanced DNS → A @ 199.188.200.92 (server247.web-hosting.com)\n"
+  printf "  CNAME www → djstratageminc.com.\n"
+  exit 1
+fi
 EXPECTED="$(grep -o 'assets/index-[A-Za-z0-9_-]*\.js' "$REPO_DIR/dist/index.html" | head -1)"
 for i in 1 2 3 4 5 6; do
   sleep 5

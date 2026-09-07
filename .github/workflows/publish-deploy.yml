@@ -100,11 +100,22 @@ jobs:
       # Always compare hashes. Skipping this when CPANEL_TOKEN is missing
       # marked the job green while djstratageminc.com kept serving an old
       # bundle (index-Clfgkqwf.js vs deploy's index-X-bBSPML.js).
+      # If the apex has no A/AAAA record, say so — do not blame a cPanel miss.
       - name: Verify live bundle hash
         run: |
           set -euo pipefail
           EXPECTED="$(grep -oE 'assets/index-[A-Za-z0-9_-]+\.js' dist/index.html | head -1)"
           echo "expected ${EXPECTED}"
+          if ! python3 -c 'import socket,sys; socket.getaddrinfo("djstratageminc.com", 443)'; then
+            echo "::error::djstratageminc.com has no public A/AAAA record. GitHub deploy is current; the host is unreachable."
+            echo "Namecheap → Domain List → Manage → Advanced DNS:"
+            echo "  A     @     199.188.200.92"
+            echo "  CNAME www   djstratageminc.com."
+            echo "That IPv4 is server247.web-hosting.com (cPanel user djstlime)."
+            echo "Wait for DNS, then: cPanel → Git Version Control → Update from Remote → Deploy HEAD."
+            echo "Or run ./deploy.sh on a machine with ~/.cpanel_token after DNS answers."
+            exit 1
+          fi
           LIVE=""
           for i in 1 2 3 4 5 6; do
             LIVE="$(curl -sS --max-time 30 https://djstratageminc.com/ | grep -oE 'assets/index-[A-Za-z0-9_-]+\.js' | head -1 || true)"
