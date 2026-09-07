@@ -170,6 +170,9 @@ function App() {
           <Route path="/terms" element={<MarketingLayout><TermsAndConditions /></MarketingLayout>} />
           <Route path="/brand" element={<MarketingLayout><BrandGuidelines /></MarketingLayout>} />
           <Route path="/fleet" element={<MarketingLayout><Fleet /></MarketingLayout>} />
+          <Route path="/fleet-cards" element={<Navigate to="/marketing/fleet-cards" replace />} />
+          <Route path="/receipts" element={<Navigate to="/marketing/receipts" replace />} />
+          <Route path="/signage" element={<Navigate to="/marketing/signage" replace />} />
           <Route path="/marketing/fleet-cards" element={<MarketingLayout><FleetCards /></MarketingLayout>} />
           <Route path="/marketing/receipts" element={<MarketingLayout><Receipts /></MarketingLayout>} />
           <Route path="/marketing/signage" element={<MarketingLayout><Signage /></MarketingLayout>} />
