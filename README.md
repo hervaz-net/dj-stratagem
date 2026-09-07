@@ -173,6 +173,11 @@ domain (create one in cPanel, switch `contact.php` from `mail()` to SMTP).
 
 ## Outstanding
 
+- **Apex DNS has no A record.** Namecheap Advanced DNS must publish
+  `A @ 199.188.200.92` (server247.web-hosting.com) and `CNAME www` →
+  `djstratageminc.com.`. Without those records the domain does not resolve,
+  Actions verify fails with `<none>`, and no cPanel pull can make the site
+  reachable.
 - **cPanel is behind GitHub.** `main` and `deploy` can be current while
   `https://djstratageminc.com` still serves an older hashed bundle
   (`assets/index-*.js`). Actions can refresh `deploy` but cannot pull the host
@@ -312,7 +317,7 @@ UPDATE users SET role = 'admin', status = 'active', approved_at = UTC_TIMESTAMP(
 ```
 
 After that, approvals happen in the UI. The **Accounts** item only appears in
-the sidebar for admins, but that is presentation — `admin-users.php` and
+The sidebar for admins, but that is presentation — `admin-users.php` and
 `admin-user-status.php` reject non-admins with 403 regardless of what the
 client renders.
 
