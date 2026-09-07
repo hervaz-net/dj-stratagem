@@ -5,6 +5,15 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.12",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "improved", text: "Consent card uses the short phone copy through the 768px breakpoint and reserves more bottom space so closing CTAs stay tappable." },
+      { type: "improved", text: "Password fields no longer use a bullet placeholder that looks like a filled-in password." },
+    ],
+  },
+  {
     version: "1.11",
     date: "September 2026",
     tag: "Fix",

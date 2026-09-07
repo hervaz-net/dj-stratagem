@@ -141,16 +141,17 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Keep first-fold CTAs and form fields above the compact consent card.
-   On phones the card wraps taller than the desktop rail, so reserve more
-   space or the hero buttons sit under Dismiss/OK. */
+/* Keep page CTAs and form fields above the compact consent card.
+   html font-size is 18px, so rem padding is larger than a 16px root.
+   The card is fixed to the bottom-right and still covered the final
+   CTA row at 8.5rem. */
 html[data-cookie-banner="1"] body {
-  padding-bottom: 8.5rem;
+  padding-bottom: 12rem;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   html[data-cookie-banner="1"] body {
-    padding-bottom: 12.5rem;
+    padding-bottom: 15rem;
   }
 }
 

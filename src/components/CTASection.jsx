@@ -12,7 +12,7 @@ export default function CTASection({
   secondaryTo = "/contact",
 }) {
   return (
-    <Section className="border-t border-line">
+    <Section className="border-t border-line [[data-cookie-banner='1']_&]:pb-8">
       <div className="relative overflow-hidden rounded-2xl border border-line bg-ink-2 px-8 py-16 text-center md:px-16">
         <div className="pointer-events-none absolute inset-0 bg-grid opacity-40" aria-hidden="true" />
         <div

@@ -10,7 +10,7 @@ export default function PasswordField({
   invalid = false,
   describedBy,
   hint,
-  placeholder = "••••••••",
+  placeholder = "",
 }) {
   const [show, setShow] = useState(false);
   const hintId = hint ? `${id}-hint` : undefined;
