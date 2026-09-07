@@ -35,6 +35,7 @@ import SuppliersDashboard from "./pages/dashboard/Suppliers";
 import AdminUsers from "./pages/dashboard/Admin";
 import Overview from "./pages/dashboard/Overview";
 import Bids from "./pages/dashboard/Bids";
+import BidsCompact from "./pages/dashboard/BidsCompact";
 import Orders from "./pages/dashboard/Orders";
 import Analytics from "./pages/dashboard/Analytics";
 import Alerts from "./pages/dashboard/Alerts";
@@ -134,6 +135,7 @@ function App() {
                     <Route path="overview" element={<Overview />} />
                     <Route path="suppliers" element={<SuppliersDashboard />} />
                     <Route path="bids" element={<Bids />} />
+                    <Route path="bids-compact" element={<BidsCompact />} />
                     <Route path="orders" element={<Orders />} />
                     <Route path="analytics" element={<Analytics />} />
                     <Route path="alerts" element={<Alerts />} />

@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Search, ChevronRight, Edit2, Trash2, Plus, Save, X } from 'lucide-react';
 
 // Compact, keyboard-forward dashboard with inline editing and bulk actions.
 export function CompactDashboard() {
@@ -84,7 +83,7 @@ export function CompactDashboard() {
 
         <div className="flex items-center gap-2">
           <div className="relative">
-            <Search className="absolute left-3 top-3 w-4 h-4 text-text-muted" />
+            <span className="absolute left-3 top-3 text-text-muted text-sm">🔍</span>
             <input
               ref={searchRef}
               value={query}
@@ -95,7 +94,7 @@ export function CompactDashboard() {
           </div>
 
           <button onClick={()=>setQuickAddOpen(true)} className="px-3 py-2 bg-bid-orange text-white rounded-md flex items-center gap-2">
-            <Plus className="w-4 h-4" /> Quick Add
+            <span>➕</span> Quick Add
           </button>
 
         </div>
@@ -178,10 +177,10 @@ export function CompactDashboard() {
               {/* actions */}
               <div className="col-span-1 flex items-center gap-2 justify-end">
                 <button title="Edit" onClick={() => setEditingId(bid.id)} className="p-1 rounded hover:bg-surface">
-                  <Edit2 className="w-4 h-4" />
+                  <span className="text-sm">✎</span>
                 </button>
                 <button title="Quick View" className="p-1 rounded hover:bg-surface">
-                  <ChevronRight className="w-4 h-4" />
+                  <span className="text-sm">›</span>
                 </button>
               </div>
             </div>
@@ -197,7 +196,7 @@ export function CompactDashboard() {
           <div className="w-full max-w-xl bg-white rounded-md p-6">
             <div className="flex items-center justify-between">
               <h3 className="font-bold text-bid-navy">Quick Add Bid</h3>
-              <button onClick={()=>setQuickAddOpen(false)} className="p-2"><X className="w-4 h-4" /></button>
+              <button onClick={()=>setQuickAddOpen(false)} className="p-2 text-lg">✕</button>
             </div>
             <QuickAddForm onCancel={()=>setQuickAddOpen(false)} onSave={addQuick} />
           </div>
