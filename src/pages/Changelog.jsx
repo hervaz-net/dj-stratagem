@@ -5,6 +5,14 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.18",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "improved", text: "Body padding under the consent bar matches the short full-width bar instead of the old floating card, so the footer is not sitting in empty space." },
+    ],
+  },
+  {
     version: "1.17",
     date: "September 2026",
     tag: "Fix",

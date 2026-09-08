@@ -141,16 +141,15 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Keep footer CTAs above the consent card. Body padding-bottom cannot lift
-   first-fold hero buttons out from under a tall fixed card — that card is
-   now a short bar on phones so the hero CTAs stay tappable. */
+/* Consent is a short full-width bar on every breakpoint. Only reserve
+   enough footer space for that bar — the old 8rem card gap left a hole. */
 html[data-cookie-banner="1"] body {
-  padding-bottom: 8rem;
+  padding-bottom: 4.5rem;
 }
 
 @media (max-width: 768px) {
   html[data-cookie-banner="1"] body {
-    padding-bottom: 5.5rem;
+    padding-bottom: 4.75rem;
   }
 }
 
