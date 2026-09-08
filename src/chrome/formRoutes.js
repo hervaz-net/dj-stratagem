@@ -2,6 +2,8 @@
 export const FORM_CHROME_HIDDEN = new Set([
   "/contact",
   "/login",
+  "/signin",
+  "/sign-in",
   "/register",
   "/signup",
   "/forgot-password",

@@ -160,6 +160,8 @@ function App() {
           <Route path="/about" element={<MarketingLayout><About /></MarketingLayout>} />
           <Route path="/contact" element={<MarketingLayout><Contact /></MarketingLayout>} />
           <Route path="/login" element={<MarketingLayout><Login /></MarketingLayout>} />
+          <Route path="/signin" element={<Navigate to="/login" replace />} />
+          <Route path="/sign-in" element={<Navigate to="/login" replace />} />
           <Route path="/register" element={<MarketingLayout><Register /></MarketingLayout>} />
           <Route path="/signup" element={<Navigate to="/register" replace />} />
           <Route path="/admin" element={<Navigate to="/dashboard/admin" replace />} />

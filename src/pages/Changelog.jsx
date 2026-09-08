@@ -5,6 +5,14 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.16",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "improved", text: "/signin and /sign-in now redirect to /login instead of the 404 page." },
+    ],
+  },
+  {
     version: "1.15",
     date: "September 2026",
     tag: "Fix",

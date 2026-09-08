@@ -1,6 +1,8 @@
 User-agent: *
 Allow: /
 Disallow: /login
+Disallow: /signin
+Disallow: /sign-in
 Disallow: /register
 Disallow: /signup
 Disallow: /forgot-password
