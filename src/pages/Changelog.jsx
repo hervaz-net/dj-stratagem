@@ -5,6 +5,14 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.17",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "improved", text: "Desktop consent is a full-width bottom bar instead of a floating card, so the first-fold hero mockup and pricing toggle stay visible before anyone dismisses it." },
+    ],
+  },
+  {
     version: "1.16",
     date: "September 2026",
     tag: "Fix",
