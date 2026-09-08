@@ -53,9 +53,9 @@ export default function CookieBanner() {
     <div
       role="region"
       aria-label="Cookie consent"
-      className="fixed inset-x-0 bottom-0 z-[110] border-t border-line bg-ink-2/95 px-3 py-2 shadow-[0_-8px_24px_-12px_rgba(15,18,28,0.45)] backdrop-blur-md md:inset-x-auto md:right-4 md:bottom-4 md:w-[min(22rem,calc(100vw-2rem))] md:rounded-2xl md:border md:px-4 md:py-4 md:shadow-xl md:shadow-brand/10"
+      className="fixed inset-x-0 bottom-0 z-[110] border-t border-line bg-ink-2/95 px-3 py-2 shadow-[0_-8px_24px_-12px_rgba(15,18,28,0.45)] backdrop-blur-md md:px-4 md:py-2.5"
     >
-      <div className="mx-auto flex max-w-6xl items-center gap-3 md:mx-0 md:flex-col md:items-stretch">
+      <div className="mx-auto flex max-w-6xl items-center gap-3">
         <p className="min-w-0 flex-1 text-xs leading-snug text-steel md:text-sm">
           <span className="md:hidden">
             Theme and this consent stay on your device. No analytics.{" "}
