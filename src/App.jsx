@@ -159,7 +159,9 @@ function App() {
           />
           <Route path="/pricing" element={<MarketingLayout><Pricing /></MarketingLayout>} />
           <Route path="/about" element={<MarketingLayout><About /></MarketingLayout>} />
+          <Route path="/about-us" element={<Navigate to="/about" replace />} />
           <Route path="/contact" element={<MarketingLayout><Contact /></MarketingLayout>} />
+          <Route path="/contact-us" element={<Navigate to="/contact" replace />} />
           <Route path="/login" element={<MarketingLayout><Login /></MarketingLayout>} />
           <Route path="/signin" element={<Navigate to="/login" replace />} />
           <Route path="/sign-in" element={<Navigate to="/login" replace />} />
@@ -180,7 +182,10 @@ function App() {
           <Route path="/verify-email" element={<MarketingLayout><VerifyEmail /></MarketingLayout>} />
           <Route path="/changelog" element={<MarketingLayout><Changelog /></MarketingLayout>} />
           <Route path="/privacy" element={<MarketingLayout><PrivacyPolicy /></MarketingLayout>} />
+          <Route path="/privacy-policy" element={<Navigate to="/privacy" replace />} />
           <Route path="/terms" element={<MarketingLayout><TermsAndConditions /></MarketingLayout>} />
+          <Route path="/terms-of-service" element={<Navigate to="/terms" replace />} />
+          <Route path="/tos" element={<Navigate to="/terms" replace />} />
           <Route path="/brand" element={<MarketingLayout><BrandGuidelines /></MarketingLayout>} />
           <Route path="/brand-guidelines" element={<Navigate to="/brand" replace />} />
           <Route path="/fleet" element={<MarketingLayout><Fleet /></MarketingLayout>} />
