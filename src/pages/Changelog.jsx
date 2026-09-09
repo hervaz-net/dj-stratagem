@@ -5,6 +5,16 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.22",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "improved", text: "/faq, /book-demo, and /request-demo now land on contact instead of the 404 page." },
+      { type: "improved", text: "/trial, /start, and /get-started redirect to register. /account redirects to sign-in." },
+      { type: "improved", text: "/forgot, /reset, and /reset-password redirect to the password reset page. /company and /services map to about and platform." },
+    ],
+  },
+  {
     version: "1.21",
     date: "September 2026",
     tag: "Fix",

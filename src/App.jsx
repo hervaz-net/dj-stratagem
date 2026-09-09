@@ -164,11 +164,19 @@ function App() {
           <Route path="/signin" element={<Navigate to="/login" replace />} />
           <Route path="/sign-in" element={<Navigate to="/login" replace />} />
           <Route path="/log-in" element={<Navigate to="/login" replace />} />
+          <Route path="/account" element={<Navigate to="/login" replace />} />
           <Route path="/register" element={<MarketingLayout><Register /></MarketingLayout>} />
           <Route path="/signup" element={<Navigate to="/register" replace />} />
           <Route path="/sign-up" element={<Navigate to="/register" replace />} />
+          <Route path="/trial" element={<Navigate to="/register" replace />} />
+          <Route path="/start" element={<Navigate to="/register" replace />} />
+          <Route path="/get-started" element={<Navigate to="/register" replace />} />
           <Route path="/admin" element={<Navigate to="/dashboard/admin" replace />} />
           <Route path="/forgot-password" element={<MarketingLayout><ForgotPassword /></MarketingLayout>} />
+          <Route path="/forgot" element={<Navigate to="/forgot-password" replace />} />
+          <Route path="/reset-password" element={<Navigate to="/forgot-password" replace />} />
+          <Route path="/reset" element={<Navigate to="/forgot-password" replace />} />
+          <Route path="/password" element={<Navigate to="/forgot-password" replace />} />
           <Route path="/verify-email" element={<MarketingLayout><VerifyEmail /></MarketingLayout>} />
           <Route path="/changelog" element={<MarketingLayout><Changelog /></MarketingLayout>} />
           <Route path="/privacy" element={<MarketingLayout><PrivacyPolicy /></MarketingLayout>} />
@@ -182,10 +190,18 @@ function App() {
           <Route path="/home" element={<Navigate to="/" replace />} />
           <Route path="/features" element={<Navigate to="/platform" replace />} />
           <Route path="/product" element={<Navigate to="/platform" replace />} />
+          <Route path="/services" element={<Navigate to="/platform" replace />} />
           <Route path="/docs" element={<Navigate to="/changelog" replace />} />
           <Route path="/help" element={<Navigate to="/contact" replace />} />
           <Route path="/support" element={<Navigate to="/contact" replace />} />
           <Route path="/demo" element={<Navigate to="/contact" replace />} />
+          <Route path="/faq" element={<Navigate to="/contact" replace />} />
+          <Route path="/faqs" element={<Navigate to="/contact" replace />} />
+          <Route path="/book" element={<Navigate to="/contact" replace />} />
+          <Route path="/book-demo" element={<Navigate to="/contact" replace />} />
+          <Route path="/request-demo" element={<Navigate to="/contact" replace />} />
+          <Route path="/company" element={<Navigate to="/about" replace />} />
+          <Route path="/team" element={<Navigate to="/about" replace />} />
           <Route path="/marketing/fleet-cards" element={<MarketingLayout><FleetCards /></MarketingLayout>} />
           <Route path="/marketing/receipts" element={<MarketingLayout><Receipts /></MarketingLayout>} />
           <Route path="/marketing/signage" element={<MarketingLayout><Signage /></MarketingLayout>} />
