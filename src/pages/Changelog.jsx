@@ -5,6 +5,14 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.19",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "improved", text: "/brand-guidelines now redirects to /brand instead of the 404 page." },
+    ],
+  },
+  {
     version: "1.18",
     date: "September 2026",
     tag: "Fix",
