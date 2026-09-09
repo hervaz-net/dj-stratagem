@@ -53,6 +53,8 @@
   RewriteRule ^features$ /platform [R=301,L]
   RewriteRule ^product$ /platform [R=301,L]
   RewriteRule ^services$ /platform [R=301,L]
+  RewriteRule ^how-it-works$ /platform [R=301,L]
+  RewriteRule ^howitworks$ /platform [R=301,L]
   RewriteRule ^blog$ /changelog [R=301,L]
   RewriteRule ^news$ /changelog [R=301,L]
   RewriteRule ^press$ /changelog [R=301,L]

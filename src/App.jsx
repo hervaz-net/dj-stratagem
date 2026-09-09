@@ -199,6 +199,8 @@ function App() {
           <Route path="/features" element={<Navigate to="/platform" replace />} />
           <Route path="/product" element={<Navigate to="/platform" replace />} />
           <Route path="/services" element={<Navigate to="/platform" replace />} />
+          <Route path="/how-it-works" element={<Navigate to="/platform" replace />} />
+          <Route path="/howitworks" element={<Navigate to="/platform" replace />} />
           <Route path="/docs" element={<Navigate to="/changelog" replace />} />
           <Route path="/help" element={<Navigate to="/contact" replace />} />
           <Route path="/support" element={<Navigate to="/contact" replace />} />
