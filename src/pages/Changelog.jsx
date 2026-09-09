@@ -5,6 +5,16 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.23",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "improved", text: "/blog, /news, and /press now land on the changelog instead of the 404 page." },
+      { type: "improved", text: "/careers and /jobs redirect to contact. /cookies, /cookie, and /gdpr redirect to privacy." },
+      { type: "improved", text: "/status, /security, /investors, and /partners map to about. /solutions#contractors opens the GC tab." },
+    ],
+  },
+  {
     version: "1.22",
     date: "September 2026",
     tag: "Fix",

@@ -49,7 +49,16 @@ const roles = [
 
 function tabFromHash(hash) {
   const key = (hash || "").replace(/^#/, "").toLowerCase();
-  if (key === "gc" || key === "general" || key === "general-contractors") return "gc";
+  if (
+    key === "gc" ||
+    key === "general" ||
+    key === "contractor" ||
+    key === "contractors" ||
+    key === "general-contractor" ||
+    key === "general-contractors"
+  ) {
+    return "gc";
+  }
   if (key === "sub" || key === "subcontractor" || key === "subcontractors") return "sub";
   if (key === "supplier" || key === "suppliers") return "supplier";
   return null;

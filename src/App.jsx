@@ -202,6 +202,19 @@ function App() {
           <Route path="/request-demo" element={<Navigate to="/contact" replace />} />
           <Route path="/company" element={<Navigate to="/about" replace />} />
           <Route path="/team" element={<Navigate to="/about" replace />} />
+          <Route path="/blog" element={<Navigate to="/changelog" replace />} />
+          <Route path="/news" element={<Navigate to="/changelog" replace />} />
+          <Route path="/press" element={<Navigate to="/changelog" replace />} />
+          <Route path="/careers" element={<Navigate to="/contact" replace />} />
+          <Route path="/jobs" element={<Navigate to="/contact" replace />} />
+          <Route path="/cookies" element={<Navigate to="/privacy" replace />} />
+          <Route path="/cookie" element={<Navigate to="/privacy" replace />} />
+          <Route path="/cookie-policy" element={<Navigate to="/privacy" replace />} />
+          <Route path="/gdpr" element={<Navigate to="/privacy" replace />} />
+          <Route path="/status" element={<Navigate to="/about" replace />} />
+          <Route path="/security" element={<Navigate to="/about" replace />} />
+          <Route path="/investors" element={<Navigate to="/about" replace />} />
+          <Route path="/partners" element={<Navigate to="/about" replace />} />
           <Route path="/marketing/fleet-cards" element={<MarketingLayout><FleetCards /></MarketingLayout>} />
           <Route path="/marketing/receipts" element={<MarketingLayout><Receipts /></MarketingLayout>} />
           <Route path="/marketing/signage" element={<MarketingLayout><Signage /></MarketingLayout>} />
