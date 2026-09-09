@@ -5,6 +5,15 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.20",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "improved", text: "/project now redirects to /projects. /log-in and /sign-up redirect to the real auth pages." },
+      { type: "improved", text: "Docs no longer claim the apex domain has no A record. djstratageminc.com resolves; the live host is just behind the deploy branch until cPanel pulls." },
+    ],
+  },
+  {
     version: "1.19",
     date: "September 2026",
     tag: "Fix",
