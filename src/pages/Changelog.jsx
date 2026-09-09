@@ -5,6 +5,15 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.21",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "improved", text: "/docs, /help, /support, and /demo now land on changelog or contact instead of the 404 page." },
+      { type: "improved", text: "/home redirects home. /features and /product redirect to /platform." },
+    ],
+  },
+  {
     version: "1.20",
     date: "September 2026",
     tag: "Fix",

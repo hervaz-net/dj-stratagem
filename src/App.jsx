@@ -179,6 +179,13 @@ function App() {
           <Route path="/fleet-cards" element={<Navigate to="/marketing/fleet-cards" replace />} />
           <Route path="/receipts" element={<Navigate to="/marketing/receipts" replace />} />
           <Route path="/signage" element={<Navigate to="/marketing/signage" replace />} />
+          <Route path="/home" element={<Navigate to="/" replace />} />
+          <Route path="/features" element={<Navigate to="/platform" replace />} />
+          <Route path="/product" element={<Navigate to="/platform" replace />} />
+          <Route path="/docs" element={<Navigate to="/changelog" replace />} />
+          <Route path="/help" element={<Navigate to="/contact" replace />} />
+          <Route path="/support" element={<Navigate to="/contact" replace />} />
+          <Route path="/demo" element={<Navigate to="/contact" replace />} />
           <Route path="/marketing/fleet-cards" element={<MarketingLayout><FleetCards /></MarketingLayout>} />
           <Route path="/marketing/receipts" element={<MarketingLayout><Receipts /></MarketingLayout>} />
           <Route path="/marketing/signage" element={<MarketingLayout><Signage /></MarketingLayout>} />
