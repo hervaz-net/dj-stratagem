@@ -5,6 +5,14 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.25",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "improved", text: "/how-it-works and /howitworks now land on /platform instead of the 404 page." },
+    ],
+  },
+  {
     version: "1.24",
     date: "September 2026",
     tag: "Fix",
@@ -114,7 +122,7 @@ const entries = [
     tag: "Fix",
     items: [
       { type: "improved", text: "Consent card uses the short phone copy through the 768px breakpoint and reserves more bottom space so closing CTAs stay tappable." },
-      { type: "improved", text: "Password fields no longer use a bullet placeholder that looks like a filled-in password." },
+      { type: "improved", text: "Password fields no longer use a bullet placeholder that looks pre-filled." },
     ],
   },
   {
