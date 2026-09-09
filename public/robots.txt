@@ -3,8 +3,10 @@ Allow: /
 Disallow: /login
 Disallow: /signin
 Disallow: /sign-in
+Disallow: /log-in
 Disallow: /register
 Disallow: /signup
+Disallow: /sign-up
 Disallow: /forgot-password
 Disallow: /verify-email
 Disallow: /dashboard
