@@ -66,10 +66,15 @@ jobs:
           set -euo pipefail
           if [ -z "${CPANEL_TOKEN}" ]; then
             echo "pulled=false" >> "$GITHUB_OUTPUT"
-            echo "No CPANEL_TOKEN repo secret. Deploy branch is updated."
-            echo "Finish on a token machine with ./deploy.sh --no-build, or:"
-            echo "cPanel → Git Version Control → dj-stratagem → Update from Remote → Deploy HEAD"
-            exit 0
+            echo "::error::CPANEL_TOKEN repo secret is missing."
+            echo "GitHub deploy branch is current. public_html was not pulled."
+            echo "Add repo secret CPANEL_TOKEN (cPanel API token for djstlime), or:"
+            echo "  cPanel → Git Version Control → dj-stratagem"
+            echo "  1. branch deploy"
+            echo "  2. Update from Remote"
+            echo "  3. Deploy HEAD Commit"
+            echo "Or run ./deploy.sh on a machine with ~/.cpanel_token."
+            exit 1
           fi
           echo "pulled=true" >> "$GITHUB_OUTPUT"
           AUTH="cpanel djstlime:${CPANEL_TOKEN}"
