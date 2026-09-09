@@ -11,6 +11,7 @@ export const FORM_CHROME_HIDDEN = new Set([
   "/privacy",
   "/terms",
   "/brand",
+  "/brand-guidelines",
   "/fleet-cards",
   "/receipts",
   "/signage",

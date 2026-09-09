@@ -171,6 +171,7 @@ function App() {
           <Route path="/privacy" element={<MarketingLayout><PrivacyPolicy /></MarketingLayout>} />
           <Route path="/terms" element={<MarketingLayout><TermsAndConditions /></MarketingLayout>} />
           <Route path="/brand" element={<MarketingLayout><BrandGuidelines /></MarketingLayout>} />
+          <Route path="/brand-guidelines" element={<Navigate to="/brand" replace />} />
           <Route path="/fleet" element={<MarketingLayout><Fleet /></MarketingLayout>} />
           <Route path="/fleet-cards" element={<Navigate to="/marketing/fleet-cards" replace />} />
           <Route path="/receipts" element={<Navigate to="/marketing/receipts" replace />} />
