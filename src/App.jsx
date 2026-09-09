@@ -151,6 +151,7 @@ function App() {
           <Route path="/solutions" element={<MarketingLayout><Solutions /></MarketingLayout>} />
           <Route path="/supply" element={<MarketingLayout><Supply /></MarketingLayout>} />
           <Route path="/projects" element={<MarketingLayout><Projects /></MarketingLayout>} />
+          <Route path="/project" element={<Navigate to="/projects" replace />} />
           <Route path="/projects/:slug" element={<MarketingLayout><ProjectDetail /></MarketingLayout>} />
           <Route
             path="/construction-projects/:city/:trade"
@@ -162,8 +163,10 @@ function App() {
           <Route path="/login" element={<MarketingLayout><Login /></MarketingLayout>} />
           <Route path="/signin" element={<Navigate to="/login" replace />} />
           <Route path="/sign-in" element={<Navigate to="/login" replace />} />
+          <Route path="/log-in" element={<Navigate to="/login" replace />} />
           <Route path="/register" element={<MarketingLayout><Register /></MarketingLayout>} />
           <Route path="/signup" element={<Navigate to="/register" replace />} />
+          <Route path="/sign-up" element={<Navigate to="/register" replace />} />
           <Route path="/admin" element={<Navigate to="/dashboard/admin" replace />} />
           <Route path="/forgot-password" element={<MarketingLayout><ForgotPassword /></MarketingLayout>} />
           <Route path="/verify-email" element={<MarketingLayout><VerifyEmail /></MarketingLayout>} />
