@@ -186,6 +186,9 @@ function App() {
           <Route path="/terms" element={<MarketingLayout><TermsAndConditions /></MarketingLayout>} />
           <Route path="/terms-of-service" element={<Navigate to="/terms" replace />} />
           <Route path="/tos" element={<Navigate to="/terms" replace />} />
+          <Route path="/legal" element={<Navigate to="/terms" replace />} />
+          <Route path="/eula" element={<Navigate to="/terms" replace />} />
+          <Route path="/unsubscribe" element={<Navigate to="/privacy" replace />} />
           <Route path="/brand" element={<MarketingLayout><BrandGuidelines /></MarketingLayout>} />
           <Route path="/brand-guidelines" element={<Navigate to="/brand" replace />} />
           <Route path="/fleet" element={<MarketingLayout><Fleet /></MarketingLayout>} />
@@ -220,6 +223,8 @@ function App() {
           <Route path="/security" element={<Navigate to="/about" replace />} />
           <Route path="/investors" element={<Navigate to="/about" replace />} />
           <Route path="/partners" element={<Navigate to="/about" replace />} />
+          <Route path="/accessibility" element={<Navigate to="/about" replace />} />
+          <Route path="/a11y" element={<Navigate to="/about" replace />} />
           <Route path="/marketing/fleet-cards" element={<MarketingLayout><FleetCards /></MarketingLayout>} />
           <Route path="/marketing/receipts" element={<MarketingLayout><Receipts /></MarketingLayout>} />
           <Route path="/marketing/signage" element={<MarketingLayout><Signage /></MarketingLayout>} />
