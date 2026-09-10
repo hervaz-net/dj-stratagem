@@ -1,9 +1,13 @@
-# Namecheap LiteSpeed (server247) injects a PHP handler into public_html/.htaccess
-# when MultiPHP is set. rsync --delete replaces this file on every deploy, so
-# that block vanishes and every .php request returns an empty HTML 500 —
-# contact form, /api/me.php, login, the lot. Keep the handler in source.
+# Namecheap LiteSpeed on server247 uses CloudLinux alt-php, not EasyApache.
+# Live responses advertise PHP/8.1.34. The previous ea-php82___lsphp handler
+# is not installed on this account, so LiteSpeed started PHP then returned
+# an empty HTML 500 for every .php request (contact form, /api/me.php, login).
+# Keep the handler in source: rsync --delete wipes the MultiPHP-injected block.
+<FilesMatch "\.php$">
+  SetHandler application/x-httpd-alt-php81
+</FilesMatch>
 <IfModule mime_module>
-  AddHandler application/x-httpd-ea-php82___lsphp .php .php8 .phtml
+  AddHandler application/x-httpd-alt-php81 .php .php8 .phtml
 </IfModule>
 
 # Serve real files/directories (assets, contact.php) as-is; everything
