@@ -20,6 +20,7 @@ const root = resolve(here, "..");
 const { projects, landingPairs } = await import(
   resolve(root, "src/data/sampleProjects.js")
 );
+const { posts } = await import(resolve(root, "src/data/blogPosts.js"));
 
 const SITE = "https://djstratageminc.com";
 
@@ -35,6 +36,7 @@ const staticPaths = [
   ["/pricing", "0.8"],
   ["/about", "0.6"],
   ["/contact", "0.6"],
+  ["/blog", "0.6"],
   ["/changelog", "0.4"],
   ["/privacy", "0.3"],
   ["/terms", "0.3"],
@@ -44,6 +46,7 @@ const staticPaths = [
 const urls = [
   ...staticPaths.map(([path, priority]) => ({ path, priority })),
   ...projects.map((p) => ({ path: `/projects/${p.slug}`, priority: "0.7" })),
+  ...posts.map((p) => ({ path: `/blog/${p.slug}`, priority: "0.5" })),
   ...landingPairs().map((p) => ({
     path: `/construction-projects/${p.citySlug}/${p.tradeSlug}`,
     priority: "0.7",

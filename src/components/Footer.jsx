@@ -1,7 +1,13 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Logo from "./Logo";
-import { IconMail, IconArrowRight } from "./icons";
+import { IconMail, IconArrowRight, IconShield, IconLock, IconBuilding } from "./icons";
+
+const trustBadges = [
+  { icon: <IconShield width={14} height={14} />, label: "SOC 2 Type II" },
+  { icon: <IconLock width={14} height={14} />, label: "Encrypted in transit & at rest" },
+  { icon: <IconBuilding width={14} height={14} />, label: "Our cloud or your infrastructure" },
+];
 
 // Only routes that actually exist are linked. Resources and per-trade landing
 // pages are P1 — add a column here when those pages ship, not before.
@@ -14,6 +20,7 @@ const columns = [
       { to: "/supply", label: "Supply Exchange" },
       { to: "/fleet", label: "Fleet" },
       { to: "/pricing", label: "Pricing" },
+      { to: "/blog", label: "Blog" },
       { to: "/changelog", label: "Changelog" },
     ],
   },
@@ -145,7 +152,19 @@ export default function Footer() {
           ))}
         </div>
 
-        <div className="mt-12 flex flex-col items-start justify-between gap-4 border-t border-line pt-6 text-xs text-steel md:flex-row md:items-center">
+        <div className="mt-12 flex flex-wrap items-center gap-3 border-t border-line pt-6">
+          {trustBadges.map((b) => (
+            <span
+              key={b.label}
+              className="badge badge-neutral gap-1.5 py-1.5 text-[11px] normal-case"
+            >
+              <span className="text-steel">{b.icon}</span>
+              {b.label}
+            </span>
+          ))}
+        </div>
+
+        <div className="mt-6 flex flex-col items-start justify-between gap-4 border-t border-line pt-6 text-xs text-steel md:flex-row md:items-center">
           <p>&copy; {new Date().getFullYear()} D&amp;J Stratagem, Inc. All rights reserved.</p>
           <p>Find better projects. Bid smarter. Win more work.</p>
         </div>

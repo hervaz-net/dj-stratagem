@@ -5,6 +5,15 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.26",
+    date: "September 2026",
+    tag: "New",
+    items: [
+      { type: "new", text: "/blog is a real page now, not a redirect to the changelog. Four posts up: why the platform is one connected system instead of five tools, how sealed bidding works on Supply Exchange, what our SOC 2 Type II report actually covers, and how bid scoring weighs more than price." },
+      { type: "new", text: "Footer shows our actual security posture — SOC 2 Type II, encryption in transit and at rest, self-host or SaaS — instead of only mentioning it in body copy on the Supply page." },
+    ],
+  },
+  {
     version: "1.25",
     date: "September 2026",
     tag: "Fix",
