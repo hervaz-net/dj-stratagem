@@ -1,3 +1,11 @@
+# Namecheap LiteSpeed (server247) injects a PHP handler into public_html/.htaccess
+# when MultiPHP is set. rsync --delete replaces this file on every deploy, so
+# that block vanishes and every .php request returns an empty HTML 500 —
+# contact form, /api/me.php, login, the lot. Keep the handler in source.
+<IfModule mime_module>
+  AddHandler application/x-httpd-ea-php82___lsphp .php .php8 .phtml
+</IfModule>
+
 # Serve real files/directories (assets, contact.php) as-is; everything
 # else falls through to index.html so React Router can handle the route.
 <IfModule mod_rewrite.c>
@@ -106,10 +114,10 @@
 # robots.txt / sitemap.xml must also skip long-lived cache or a cPanel pull
 # can look like it never updated crawler files.
 <IfModule mod_headers.c>
-  <FilesMatch "\.(html)$">
+  <FilesMatch "\\.(html)$">
     Header set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
-  <FilesMatch "^(robots\.txt|sitemap\.xml)$">
+  <FilesMatch "^(robots\\.txt|sitemap\\.xml)$">
     Header set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
 </IfModule>
