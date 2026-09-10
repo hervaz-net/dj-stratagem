@@ -64,19 +64,43 @@ export function AuthProvider({ children }) {
     return () => controller.abort();
   }, []);
 
+  const refreshSession = useCallback(async () => {
+    const data = await call("me.php", { method: "GET" });
+    setUser(data.user);
+    if (data.csrf) setCsrf(data.csrf);
+    return data;
+  }, []);
+
+  // me.php 500s leave csrf null. Mint a token immediately before login/register
+  // so a recovered PHP host does not still fail with csrf_failed.
+  const ensureCsrf = useCallback(async () => {
+    if (csrf) return csrf;
+    const data = await refreshSession();
+    if (!data.csrf) {
+      throw new AuthError("Couldn't reach the account service. Reload and try again.", {
+        code: "server_error",
+      });
+    }
+    return data.csrf;
+  }, [csrf, refreshSession]);
+
   const login = useCallback(
     async (email, password) => {
-      const data = await call("login.php", { body: { email, password }, csrf });
+      const token = await ensureCsrf();
+      const data = await call("login.php", { body: { email, password }, csrf: token });
       setUser(data.user);
       if (data.csrf) setCsrf(data.csrf);
       return data.user;
     },
-    [csrf],
+    [ensureCsrf],
   );
 
   const register = useCallback(
-    async (payload) => call("register.php", { body: payload, csrf }),
-    [csrf],
+    async (payload) => {
+      const token = await ensureCsrf();
+      return call("register.php", { body: payload, csrf: token });
+    },
+    [ensureCsrf],
   );
 
   const logout = useCallback(async () => {
