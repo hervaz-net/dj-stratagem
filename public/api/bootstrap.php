@@ -9,10 +9,40 @@
 
 declare(strict_types=1);
 
+ini_set('display_errors', '0');
+
 header('Content-Type: application/json');
 header('Cache-Control: no-store');
 header('X-Content-Type-Options: nosniff');
 header('Referrer-Policy: same-origin');
+
+// ── last-resort error handling (before config, so a bad require still JSON) ──
+
+set_exception_handler(static function (Throwable $e): void {
+    error_log('auth: uncaught ' . get_class($e) . ' — ' . $e->getMessage());
+    if (!headers_sent()) {
+        http_response_code(500);
+        header('Content-Type: application/json');
+    }
+    echo json_encode(['ok' => false, 'error' => 'server_error']);
+});
+
+register_shutdown_function(static function (): void {
+    $err = error_get_last();
+    if ($err === null) {
+        return;
+    }
+    $fatal = [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR];
+    if (!in_array($err['type'], $fatal, true)) {
+        return;
+    }
+    error_log('auth: fatal ' . $err['message']);
+    if (!headers_sent()) {
+        http_response_code(500);
+        header('Content-Type: application/json');
+    }
+    echo json_encode(['ok' => false, 'error' => 'server_error']);
+});
 
 // ── config ──────────────────────────────────────────────────────────────────
 
@@ -48,32 +78,18 @@ function locate_config(): ?string
 $configPath = locate_config();
 if ($configPath === null) {
     http_response_code(500);
-    // Deliberately vague to the client; the detail goes to the error log.
     error_log('auth: config not found — expected ~/djs-config.php (see README)');
     echo json_encode(['ok' => false, 'error' => 'server_not_configured']);
     exit;
 }
+
 $config = require $configPath;
-
-// ── last-resort error handling ──────────────────────────────────────────────
-
-/**
- * Any throwable that escapes an endpoint must still leave the client with
- * well-formed JSON and the detail in the server log.
- *
- * Without this, an uncaught PDOException (a deadlock, a lock-wait timeout, a
- * dropped connection) emits PHP's own error output after the JSON
- * Content-Type header has already been sent — a malformed body at best, and
- * with display_errors on, the query and connection details at worst.
- */
-set_exception_handler(static function (Throwable $e): void {
-    error_log('auth: uncaught ' . get_class($e) . ' — ' . $e->getMessage());
-    if (!headers_sent()) {
-        http_response_code(500);
-        header('Content-Type: application/json');
-    }
-    echo json_encode(['ok' => false, 'error' => 'server_error']);
-});
+if (!is_array($config) || empty($config['db']) || !is_array($config['db'])) {
+    http_response_code(500);
+    error_log('auth: config at ' . $configPath . ' is not a valid array');
+    echo json_encode(['ok' => false, 'error' => 'server_not_configured']);
+    exit;
+}
 
 // ── transport security ──────────────────────────────────────────────────────
 
@@ -119,14 +135,19 @@ if (!empty($config['require_https']) && !is_https()) {
 // ── session ─────────────────────────────────────────────────────────────────
 
 session_set_cookie_params([
-    'lifetime' => 0,          // session cookie; dies with the browser session
+    'lifetime' => 0,
     'path'     => '/',
-    'secure'   => is_https(), // never send the cookie over plaintext
-    'httponly' => true,       // not readable from JS, so XSS can't lift it
-    'samesite' => 'Lax',      // blocks cross-site POST replay
+    'secure'   => is_https(),
+    'httponly' => true,
+    'samesite' => 'Lax',
 ]);
 session_name('djs_session');
-session_start();
+if (session_status() !== PHP_SESSION_ACTIVE && !@session_start()) {
+    error_log('auth: session_start failed');
+    http_response_code(500);
+    echo json_encode(['ok' => false, 'error' => 'server_error']);
+    exit;
+}
 
 // ── database ────────────────────────────────────────────────────────────────
 
@@ -139,13 +160,18 @@ function db(): PDO
 
     global $config;
     $d = $config['db'];
-    $dsn = sprintf('mysql:host=%s;dbname=%s;charset=%s', $d['host'], $d['name'], $d['charset']);
+    $dsn = sprintf(
+        'mysql:host=%s;dbname=%s;charset=%s',
+        $d['host'] ?? 'localhost',
+        $d['name'] ?? '',
+        $d['charset'] ?? 'utf8mb4'
+    );
 
     try {
-        $pdo = new PDO($dsn, $d['user'], $d['password'], [
+        $pdo = new PDO($dsn, (string) ($d['user'] ?? ''), (string) ($d['password'] ?? ''), [
             PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            PDO::ATTR_EMULATE_PREPARES   => false, // real prepared statements
+            PDO::ATTR_EMULATE_PREPARES   => false,
         ]);
     } catch (PDOException $e) {
         error_log('auth: db connect failed — ' . $e->getMessage());
@@ -206,10 +232,6 @@ function csrf_token(): string
     return $_SESSION['csrf'];
 }
 
-/**
- * SameSite=Lax already blocks the cross-site POST case, but a token costs
- * little and covers same-site injection and older clients.
- */
 function require_csrf(): void
 {
     $sent = $_SERVER['HTTP_X_CSRF_TOKEN'] ?? (input()['csrf'] ?? '');
@@ -235,17 +257,11 @@ function record_attempt(string $email, bool $succeeded): void
     $stmt->execute([client_ip_binary(), $email, $succeeded ? 1 : 0]);
 }
 
-/**
- * Blocks brute force on both axes: many guesses at one account, and one host
- * spraying many accounts. Only failures count, so a legitimate user isn't
- * locked out by their own successful logins.
- */
 function assert_not_throttled(string $email): void
 {
     global $config;
     $window = (int) $config['attempt_window_minutes'];
 
-    // Opportunistic cleanup keeps the table from growing without a cron job.
     db()->prepare('DELETE FROM login_attempts WHERE attempted_at < (UTC_TIMESTAMP() - INTERVAL ? MINUTE)')
         ->execute([max($window * 4, 60)]);
 
@@ -269,27 +285,8 @@ function assert_not_throttled(string $email): void
     }
 }
 
-/**
- * Per-IP throttle for account creation.
- *
- * Without this, register.php can be flooded to fill `users` with pending rows
- * and spam the admin inbox with one approval email per unique address. Signups
- * are recorded under a reserved sentinel so they share the table but never
- * collide with a real address (the schema requires a non-null email, and no
- * valid address contains a space).
- */
 const REGISTER_SENTINEL = '@register attempt';
 
-/**
- * Claims one registration slot for this IP, or fails with 429.
- *
- * The count and the insert are a SINGLE statement on purpose. Doing them as
- * separate queries lets concurrent requests all read a below-limit count
- * before any of them inserts, so a burst slips through together. Here the
- * gate subquery and the insert are evaluated atomically by InnoDB: the row is
- * written only if the window still has room, and rowCount() reports whether
- * this caller won a slot.
- */
 function claim_registration_slot(): void
 {
     global $config;
@@ -309,10 +306,6 @@ function claim_registration_slot(): void
         );
         $stmt->execute([$ip, REGISTER_SENTINEL, $ip, REGISTER_SENTINEL, $window, $limit]);
     } catch (PDOException $e) {
-        // This statement takes locks, so heavy contention can raise a deadlock
-        // (1213) or lock-wait timeout (1205). Both mean "too busy right now",
-        // not "broken" — answer like a throttle rather than a 500. Anything
-        // else is a real fault and goes to the generic handler.
         $code = $e->errorInfo[1] ?? 0;
         if ($code === 1213 || $code === 1205) {
             error_log("auth: registration slot contention (driver {$code})");
@@ -341,8 +334,6 @@ function current_user(): ?array
     $stmt->execute([$_SESSION['uid']]);
     $user = $stmt->fetch();
 
-    // A session outlives an account that was suspended or deleted mid-session;
-    // treat those as signed out immediately rather than at next login.
     if (!$user || $user['status'] !== 'active') {
         session_destroy();
         return null;
@@ -351,14 +342,6 @@ function current_user(): ?array
     return $user;
 }
 
-/**
- * Gate an endpoint to administrators.
- *
- * Returns the admin's own row so callers can guard against self-lockout. The
- * signed-out and non-admin cases answer differently on purpose: a member who
- * is genuinely signed in benefits from being told they lack the role, and
- * they already know the endpoint exists.
- */
 function require_admin(): array
 {
     $user = current_user();
