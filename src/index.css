@@ -54,85 +54,87 @@
 :root {
   color-scheme: light;
 
-  /* Flat, cool-gray page well. Cards are white and read as "raised" purely
-     via border + a 1px shadow, not via a background gradient. */
-  --surface: #f2f4f7;
+  /* Warm industrial — graphite ink on a warm (not blue-gray) paper ground,
+     one signal-orange accent. Matches the mark spec in
+     public/brand-guidelines.html: Ink #201E1D, Signal #EC3013,
+     Ground #F3F2F2, Surface #EAE9E9. */
+  --surface: #f3f2f2;
   --surface-raised: #ffffff;
-  --surface-hover: #eaeef3;
-  --surface-sunken: #eceff3;
-  --border: #d7dee6;
-  --border-strong: #b9c3d0;
+  --surface-hover: #eae9e9;
+  --surface-sunken: #ece9e7;
+  --border: #ddd9d6;
+  --border-strong: #bdb7b2;
 
-  --text: #1b2333;
-  --text-strong: #0b1220;
-  --text-muted: #5c6577;
+  --text: #201e1d;
+  --text-strong: #161514;
+  --text-muted: #6b655f;
 
-  --accent: #1d4a8f;
-  --accent-hover: #143867;
-  --brand: #0e1729;
-  --cta: #1d4a8f;
-  --cta-hover: #143867;
-  --warning: #92600a;
-  --warning-bg: #fbf0d9;
+  --accent: #c62a10;
+  --accent-hover: #a02209;
+  --brand: #201e1d;
+  --cta: #ec3013;
+  --cta-hover: #c62a10;
+  --warning: #9a5b00;
+  --warning-bg: #fbeed4;
 
   --danger: #b3261e;
   --danger-bg: #fbeae9;
-  --success: #146c43;
-  --success-bg: #e7f3ec;
+  --success: #3d6b2c;
+  --success-bg: #e9f0e4;
 
-  --page-bg: #f2f4f7;
-  --grid-line: rgba(14, 23, 41, 0.05);
+  --page-bg: #f3f2f2;
+  --grid-line: rgba(32, 30, 29, 0.055);
 
-  --viz-blue: #1d4a8f;
-  --viz-cyan: #146c8c;
-  --viz-red: #b3261e;
-  --viz-gold: #92600a;
-  --viz-green: #146c43;
+  --viz-blue: #5a5e6b;
+  --viz-cyan: #7a6a52;
+  --viz-red: #ec3013;
+  --viz-gold: #9a5b00;
+  --viz-green: #3d6b2c;
 
   --panel-bg: #ffffff;
-  --panel-border: #d7dee6;
-  --panel-shadow: 0 1px 2px rgba(14, 23, 41, 0.05);
+  --panel-border: #ddd9d6;
+  --panel-shadow: 0 1px 2px rgba(32, 30, 29, 0.06);
 }
 
 [data-theme="dark"] {
   color-scheme: dark;
 
-  --surface: #0e121a;
-  --surface-raised: #151b26;
-  --surface-hover: #1c2330;
-  --surface-sunken: #10151f;
-  --border: #29303f;
-  --border-strong: #3a4254;
+  --surface: #17140f;
+  --surface-raised: #211d18;
+  --surface-hover: #2b2620;
+  --surface-sunken: #1c1813;
+  --border: #38322a;
+  --border-strong: #4c4438;
 
-  --text: #e6eaf1;
+  --text: #ede8e2;
   --text-strong: #ffffff;
-  --text-muted: #93a0b6;
+  --text-muted: #a89e91;
 
-  --accent: #7fa6e8;
-  --accent-hover: #a1c0f2;
-  --brand: #101828;
-  --cta: #7fa6e8;
-  --cta-hover: #a1c0f2;
-  --warning: #dba039;
-  --warning-bg: #2c2410;
+  --accent: #ff7a4d;
+  --accent-hover: #ff9a72;
+  --brand: #ede8e2;
+  --cta: #ff5a2b;
+  --cta-hover: #ff7a4d;
+  --warning: #e0a53c;
+  --warning-bg: #2e2410;
 
-  --danger: #e28782;
-  --danger-bg: #2b1615;
-  --success: #5fbf8b;
-  --success-bg: #12271d;
+  --danger: #ff6f61;
+  --danger-bg: #2c1712;
+  --success: #7fb35e;
+  --success-bg: #1a2414;
 
-  --page-bg: #0b0e15;
-  --grid-line: rgba(230, 234, 241, 0.045);
+  --page-bg: #141210;
+  --grid-line: rgba(237, 232, 226, 0.05);
 
-  --viz-blue: #7fa6e8;
-  --viz-cyan: #6fc3e8;
-  --viz-red: #e28782;
-  --viz-gold: #dba039;
-  --viz-green: #5fbf8b;
+  --viz-blue: #9a9184;
+  --viz-cyan: #c2a878;
+  --viz-red: #ff6f61;
+  --viz-gold: #e0a53c;
+  --viz-green: #7fb35e;
 
-  --panel-bg: #151b26;
-  --panel-border: #29303f;
-  --panel-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+  --panel-bg: #211d18;
+  --panel-border: #38322a;
+  --panel-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
 }
 
 html {

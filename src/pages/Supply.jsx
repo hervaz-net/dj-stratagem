@@ -16,6 +16,10 @@ import {
   IconClock,
   IconArrowRight,
   IconCheck,
+  IconBuilding,
+  IconSparkle,
+  IconWallet,
+  IconTarget,
 } from "../components/icons";
 
 const categories = [
@@ -94,6 +98,39 @@ const efficiencies = [
     icon: <IconUsers />,
     title: "Pooled demand",
     text: "The platform aggregates the same SKU across every contractor buying it that week. A two-crew shop gets inside a volume tier it could never reach alone, and the supplier gets one large committed block instead of forty small ones.",
+  },
+];
+
+const commerceEngine = [
+  {
+    icon: <IconBuilding />,
+    title: "Built for B2B, B2C, and B2B2X",
+    text: "The same commerce engine runs a contractor account, a walk-up retail buyer, and a franchise or marketplace network selling under your suppliers' own storefronts — no separate systems to stitch together.",
+  },
+  {
+    icon: <IconSparkle />,
+    title: "Front-end, CMS, AI, search, and CRM — out of the box",
+    text: "A modern storefront, content management, AI-assisted matching, product search, and a built-in CRM ship together as one stack. Deploy on our SOC 2 Type II–compliant SaaS or on your own infrastructure.",
+  },
+  {
+    icon: <IconLayers />,
+    title: "One portal, the whole buyer relationship",
+    text: "Products, live pricing, order history, and invoices sit in a single responsive portal — with personalized search, quick reorder, order tracking, and shipping and payment integrations built in for a faster checkout.",
+  },
+  {
+    icon: <IconTarget />,
+    title: "A workflow engine you can actually read",
+    text: "Automate order approvals, promotions, and exceptions with a visual builder — tailored by customer, role, or rule, not by a developer's backlog.",
+  },
+  {
+    icon: <IconScale />,
+    title: "Pricing that's synced, not spreadsheet-managed",
+    text: "Contract pricing, order minimums, units of measure, kits, and bundles stay synced everywhere they're quoted, so the price a buyer sees is always the price you meant to give them — no manual workarounds.",
+  },
+  {
+    icon: <IconWallet />,
+    title: "Self-service payments, real-time cash visibility",
+    text: "Give buyers instant, self-service payment options and give your team real-time cash flow visibility — backed by enterprise-grade security and lower transaction fees than a typical card processor.",
   },
 ];
 
@@ -242,6 +279,37 @@ export default function Supply() {
             </div>
           ))}
         </div>
+      </Section>
+
+      <Section className="border-t border-line">
+        <Eyebrow>The commerce engine</Eyebrow>
+        <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">
+          Supply Exchange runs on a full B2B commerce platform, not a bid form bolted onto a
+          catalog.
+        </h2>
+        <p className="mt-5 max-w-2xl text-base leading-relaxed text-steel">
+          Sealed bidding gets you a fair price. What handles everything after the award &mdash;
+          the storefront, the account, the invoice, the reorder &mdash; is the same engine
+          underneath the rest of the platform.
+        </p>
+        <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {commerceEngine.map((c, i) => (
+            <Reveal key={c.title} delay={(i % 3) * 80} className="h-full">
+              <div className="lift h-full rounded-xl border border-line bg-ink-2 p-6 hover:border-amber/40">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber/10 text-amber">
+                  {c.icon}
+                </div>
+                <h3 className="mt-5 text-base font-semibold text-paper">{c.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-steel">{c.text}</p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+        <p className="mt-8 max-w-2xl text-sm leading-relaxed text-steel">
+          Underneath the portal: automated inventory management, order fulfillment, pricing
+          calculations, and shipping logistics &mdash; so a bigger order book doesn't mean a
+          bigger back office.
+        </p>
       </Section>
 
       <Section className="border-t border-line">
