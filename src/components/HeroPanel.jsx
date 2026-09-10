@@ -13,28 +13,21 @@ const bids = [
  */
 export default function HeroPanel() {
   return (
-    <div className="relative">
-      <div
-        className="pointer-events-none absolute -inset-8 rounded-full bg-brand/20 blur-3xl"
-        aria-hidden="true"
-      />
-
-      <div className="glass animate-float relative rounded-2xl p-5 shadow-2xl shadow-brand/10">
+    <div>
+      <div className="card-corp relative rounded-lg p-5">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-xs uppercase tracking-wider text-steel">Bid comparison</p>
+            <p className="text-xs font-semibold uppercase tracking-wider text-steel">Bid comparison</p>
             <p className="mt-1 text-sm font-semibold text-paper">Riverside Medical Office</p>
           </div>
-          <span className="rounded-full bg-success/10 px-3 py-1 text-xs font-medium text-success">
-            3 bids in
-          </span>
+          <span className="badge badge-success">3 bids in</span>
         </div>
 
-        <div className="mt-5 space-y-2.5">
+        <div className="mt-4 space-y-2">
           {bids.map((b) => (
             <div
               key={b.name}
-              className={`flex items-center justify-between gap-4 rounded-xl border px-4 py-3 ${
+              className={`flex items-center justify-between gap-4 rounded-sm border px-3 py-2.5 ${
                 b.best ? "border-amber/40 bg-amber/8" : "border-line bg-ink"
               }`}
             >
@@ -52,12 +45,12 @@ export default function HeroPanel() {
           ))}
         </div>
 
-        <div className="mt-5 border-t border-line pt-4">
+        <div className="mt-4 border-t border-line pt-3">
           <div className="flex items-center justify-between text-xs text-steel">
             <span>Scored on price, schedule, and past performance</span>
           </div>
-          <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-ink">
-            <div className="h-full w-[94%] rounded-full bg-gradient-to-r from-brand to-cta" />
+          <div className="mt-2.5 h-1 overflow-hidden rounded-full bg-ink">
+            <div className="h-full w-[94%] rounded-full bg-cta" />
           </div>
         </div>
       </div>

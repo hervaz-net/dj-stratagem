@@ -7,8 +7,8 @@ export default function VerifyEmail() {
     <>
       <Seo title="Account review" description="New D&J Stratagem accounts are approved by the team. There is no automated verification email." noindex />
 
-      <div className="mx-auto flex w-full max-w-md flex-col justify-center px-6 py-16 md:py-24">
-        <div className="rounded-2xl border border-line bg-ink-2 p-8 shadow-xl shadow-brand/5">
+      <div className="mx-auto flex w-full max-w-md flex-col justify-center px-6 py-10 md:py-16">
+        <div className="rounded-md border border-line bg-ink-2 p-8 shadow-xl shadow-brand/5">
           <Link to="/" className="inline-block" aria-label="D&J Stratagem — home">
             <Logo />
           </Link>

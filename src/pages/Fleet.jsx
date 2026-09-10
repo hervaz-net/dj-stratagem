@@ -190,20 +190,20 @@ export default function Fleet() {
         title="Fleet"
         description="Preview of the D&J Stratagem fleet board — sample assets only. Request access to talk about live equipment tracking."
       />
-      <Section className="relative overflow-hidden pt-16 pb-8 md:pt-24">
+      <Section className="relative overflow-hidden pt-10 pb-6 md:pt-14">
         <div className="pointer-events-none absolute inset-0 bg-grid [mask-image:radial-gradient(ellipse_60%_60%_at_50%_0%,black,transparent)]" />
         <div className="relative mx-auto max-w-6xl px-6">
           <Eyebrow>Fleet Management</Eyebrow>
-          <h1 className="mt-6 text-5xl font-bold leading-tight text-paper md:text-6xl">
+          <h1 className="mt-4 text-2xl font-semibold leading-tight text-paper md:text-3xl">
             See how equipment would look on the board.
           </h1>
-          <p className="mt-6 max-w-2xl text-lg text-steel">
+          <p className="mt-4 max-w-2xl text-sm text-steel">
             This page is a product preview: status filters, utilization, and asset cards
             using sample machines. It is not a live tracker for a real fleet.
           </p>
           <div
             role="note"
-            className="mt-6 max-w-2xl rounded-xl border border-amber/40 bg-amber/8 px-5 py-4"
+            className="mt-5 max-w-2xl rounded-md border border-amber/40 bg-amber/8 px-4 py-3"
           >
             <p className="text-sm font-semibold text-amber">Preview &mdash; sample assets</p>
             <p className="mt-1 text-sm leading-relaxed text-steel">
@@ -211,7 +211,7 @@ export default function Fleet() {
               fleet and cannot be dispatched from this page.
             </p>
           </div>
-          <div className="mt-10 flex flex-wrap gap-4">
+          <div className="mt-6 flex flex-wrap gap-4">
             <Button to="/register" variant="primary">Request access</Button>
             <Button to="/contact" variant="secondary">Request a demo</Button>
           </div>

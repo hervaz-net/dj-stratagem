@@ -161,9 +161,9 @@ function RoiCalculator() {
           </div>
         ))}
       </div>
-      <div className="flex flex-col justify-center rounded-2xl border border-amber/30 bg-amber/5 p-8 text-center">
+      <div className="flex flex-col justify-center rounded-md border border-amber/30 bg-amber/5 p-8 text-center">
         <p className="text-xs font-semibold uppercase tracking-wider text-steel">Extra revenue per year</p>
-        <p className="mt-2 text-5xl font-semibold tracking-tight text-paper tabular-nums">{fmt(extraRevenue)}</p>
+        <p className="mt-2 text-3xl font-semibold tracking-tight text-paper tabular-nums">{fmt(extraRevenue)}</p>
         <p className="mt-2 text-sm text-steel">{extraWinsPerYear} additional won bid{extraWinsPerYear !== 1 ? "s" : ""} per year</p>
         <div className="mt-6 grid grid-cols-2 gap-4 text-center">
           <div className="rounded-xl border border-line bg-ink/60 p-4">
@@ -198,9 +198,9 @@ export default function Pricing() {
         description="Starter, Professional, Growth, and Enterprise plans for contractors — plus add-ons. Start on the free Starter plan, then request access to paid tiers."
       />
 
-      <Section className="pt-16 pb-8 md:pt-24">
+      <Section className="pt-10 pb-6 md:pt-14">
         <Eyebrow>Pricing</Eyebrow>
-        <h1 className="text-balance max-w-3xl text-4xl font-semibold leading-tight tracking-tight text-paper sm:text-5xl">
+        <h1 className="text-balance max-w-3xl text-2xl font-semibold leading-tight tracking-tight text-paper sm:text-3xl">
           Plans that pay for themselves with one won bid.
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-steel">
@@ -236,7 +236,7 @@ export default function Pricing() {
             const { amount, period } = priceFor(t);
             return (
               <Reveal key={t.name} delay={i * 80} className="h-full">
-                <div className={`lift flex h-full flex-col rounded-2xl border p-6 ${
+                <div className={`lift flex h-full flex-col rounded-md border p-6 ${
                   t.highlighted ? "border-amber bg-amber/5 shadow-lg shadow-brand/10 xl:-my-2 xl:py-8" : "border-line bg-ink-2 hover:border-amber/40"
                 }`}>
                   <div className="flex items-center justify-between gap-2">
@@ -276,7 +276,7 @@ export default function Pricing() {
 
       <Section className="border-t border-line">
         <Eyebrow>Compare</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-paper md:text-4xl">Every plan, side by side.</h2>
+        <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">Every plan, side by side.</h2>
         <div className="mt-10 -mx-6 overflow-x-auto px-6">
           <table className="w-full min-w-[640px] border-collapse text-sm">
             <caption className="sr-only">Feature comparison across all four plans</caption>
@@ -308,7 +308,7 @@ export default function Pricing() {
 
       <Section className="border-t border-line">
         <Eyebrow>Add-ons</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-paper md:text-4xl">Scale up only where you need it.</h2>
+        <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">Scale up only where you need it.</h2>
         <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {addOns.map((a, i) => (
             <Reveal key={a.name} delay={(i % 3) * 90} className="h-full">
@@ -323,14 +323,14 @@ export default function Pricing() {
 
       <Section className="border-t border-line">
         <Eyebrow>ROI calculator</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-paper md:text-4xl">See what one extra win is worth.</h2>
+        <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">See what one extra win is worth.</h2>
         <p className="mt-5 max-w-xl text-base leading-relaxed text-steel">Even a modest improvement in win rate pays for the platform many times over.</p>
         <RoiCalculator />
       </Section>
 
       <Section className="border-t border-line">
         <Eyebrow>Billing questions</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-paper md:text-4xl">The fine print, in plain language.</h2>
+        <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">The fine print, in plain language.</h2>
         <div className="mt-10 max-w-3xl">
           <Accordion items={pricingFaqs} />
         </div>

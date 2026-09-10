@@ -14,9 +14,7 @@ export default function AddSupplierButton({ onCreated, floating = false }) {
   const { csrf } = useAuth();
   const { toast } = useToast();
 
-  const base =
-    "lift glow-brand inline-flex items-center gap-2 rounded-full bg-cta hover:bg-cta-hover " +
-    "px-5 py-3 text-sm font-semibold text-white";
+  const base = "btn btn-primary lift";
 
   const submit = async (e) => {
     e.preventDefault();
@@ -59,7 +57,7 @@ export default function AddSupplierButton({ onCreated, floating = false }) {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4" onClick={() => setOpen(false)}>
           <form
             onSubmit={submit}
-            className="w-full max-w-md rounded-2xl border border-line bg-ink-2 p-6 shadow-2xl"
+            className="card-corp w-full max-w-md rounded-lg p-6"
             onClick={(e) => e.stopPropagation()}
           >
             <h2 className="text-base font-semibold text-paper">Add supplier</h2>
@@ -76,7 +74,7 @@ export default function AddSupplierButton({ onCreated, floating = false }) {
                     value={form[key]}
                     onChange={(e) => setForm((p) => ({ ...p, [key]: e.target.value }))}
                     placeholder={ph}
-                    className="mt-1 w-full rounded-md border border-line bg-ink px-3 py-2 text-sm text-paper outline-none focus:border-amber"
+                    className="field-corp mt-1 text-sm"
                   />
                 </label>
               ))}
@@ -85,7 +83,7 @@ export default function AddSupplierButton({ onCreated, floating = false }) {
               <button type="button" onClick={() => setOpen(false)} className="px-4 py-2 text-sm font-semibold text-steel hover:text-paper">
                 Cancel
               </button>
-              <button type="submit" disabled={saving} className="rounded-lg bg-amber/15 px-4 py-2 text-sm font-semibold text-amber hover:bg-amber/25 disabled:opacity-60">
+              <button type="submit" disabled={saving} className="btn btn-primary">
                 {saving ? "Saving…" : "Add supplier"}
               </button>
             </div>

@@ -340,7 +340,7 @@ export default function Settings() {
                       role="radio"
                       aria-checked={on}
                       onClick={() => setAccountType(t.key)}
-                      className={`rounded-2xl border px-5 py-4 text-left transition-colors ${
+                      className={`rounded-md border px-5 py-4 text-left transition-colors ${
                         on
                           ? "border-amber/60 bg-amber/10"
                           : "border-line bg-ink/40 hover:border-amber/35"
@@ -354,7 +354,7 @@ export default function Settings() {
               </div>
             </div>
 
-            <div className="mt-6 rounded-2xl border border-line bg-ink/50 px-5 py-5">
+            <div className="mt-6 rounded-md border border-line bg-ink/50 px-5 py-5">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
                   <p className="text-sm font-bold uppercase tracking-wider text-steel">Account funded</p>

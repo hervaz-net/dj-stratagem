@@ -8,7 +8,7 @@ export default function Accordion({ items }) {
   const [open, setOpen] = useState(null);
 
   return (
-    <div className="divide-y divide-line overflow-hidden rounded-2xl border border-line bg-ink-2">
+    <div className="divide-y divide-line overflow-hidden rounded-md border border-line bg-ink-2">
       {items.map((item, i) => {
         const isOpen = open === i;
         return (

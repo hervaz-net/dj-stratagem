@@ -96,7 +96,7 @@ export default function CommandPalette({ open, onClose }) {
       aria-label="Command palette"
     >
       <div
-        className="w-full max-w-lg overflow-hidden rounded-2xl border border-line bg-ink-2 shadow-2xl shadow-brand/20"
+        className="w-full max-w-lg overflow-hidden rounded-md border border-line bg-ink-2 shadow-2xl shadow-brand/20"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center gap-3 border-b border-line px-4 py-3.5">

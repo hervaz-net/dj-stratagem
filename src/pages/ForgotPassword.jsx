@@ -27,8 +27,8 @@ export default function ForgotPassword() {
     <>
       <Seo title="Forgot password" description="Reset your D&J Stratagem password." noindex />
 
-      <div className="mx-auto flex w-full max-w-md flex-col justify-center px-6 py-16 md:py-24">
-        <div className="rounded-2xl border border-line bg-ink-2 p-8 shadow-xl shadow-brand/5">
+      <div className="mx-auto flex w-full max-w-md flex-col justify-center px-6 py-10 md:py-16">
+        <div className="rounded-md border border-line bg-ink-2 p-8 shadow-xl shadow-brand/5">
           <Link to="/" className="inline-block" aria-label="D&J Stratagem — home">
             <Logo />
           </Link>

@@ -29,7 +29,7 @@ export default function ProjectDetail() {
         description={`${project.summary} Estimated value ${project.valueLabel}. Bids due ${formatDue(project.bidDue)}. ${project.procurement}.`}
       />
 
-      <Section className="pt-12 pb-8 md:pt-16">
+      <Section className="pt-8 pb-6 md:pt-10">
         <nav aria-label="Breadcrumb" className="mb-6 text-sm text-steel">
           <Link to="/projects" className="transition-colors hover:text-amber">
             Projects
@@ -41,7 +41,7 @@ export default function ProjectDetail() {
         </nav>
 
         <Eyebrow>{project.type}</Eyebrow>
-        <h1 className="text-balance max-w-3xl text-4xl font-semibold leading-tight tracking-tight text-paper sm:text-5xl">
+        <h1 className="text-balance max-w-3xl text-2xl font-semibold leading-tight tracking-tight text-paper sm:text-3xl">
           {project.title}
         </h1>
         <p className="mt-4 text-lg text-steel">
@@ -111,7 +111,7 @@ export default function ProjectDetail() {
 
           {/* sidebar: company fit */}
           <aside className="lg:sticky lg:top-24">
-            <div className="rounded-2xl border border-line bg-ink-2 p-6">
+            <div className="rounded-md border border-line bg-ink-2 p-6">
               <p className="text-xs font-semibold uppercase tracking-wider text-steel">
                 Company fit
               </p>
@@ -141,7 +141,7 @@ export default function ProjectDetail() {
               </div>
             </div>
 
-            <div className="mt-4 rounded-2xl border border-line bg-ink-2 p-6">
+            <div className="mt-4 rounded-md border border-line bg-ink-2 p-6">
               <p className="text-sm font-semibold text-paper">
                 More {project.trade} work in {project.city}
               </p>

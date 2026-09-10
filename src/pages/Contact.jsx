@@ -92,9 +92,9 @@ export default function Contact() {
         description="Request a demo of D&J Stratagem. Tell us how your team bids, procures, and coordinates today, and we'll show you where the platform fits."
       />
 
-      <Section className="pt-16 pb-8 md:pt-24">
+      <Section className="pt-10 pb-6 md:pt-14">
         <Eyebrow>Contact</Eyebrow>
-        <h1 className="text-balance max-w-3xl text-4xl font-semibold leading-tight tracking-tight text-paper sm:text-5xl">
+        <h1 className="text-balance max-w-3xl text-2xl font-semibold leading-tight tracking-tight text-paper sm:text-3xl">
           Let&rsquo;s talk about your next project.
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-steel">
@@ -145,7 +145,7 @@ export default function Contact() {
             ))}
           </div>
 
-          <div className="rounded-2xl border border-line bg-ink-2 p-6 sm:p-8">
+          <div className="rounded-md border border-line bg-ink-2 p-6 sm:p-8">
             {submitted ? (
               <div className="animate-fade-in flex flex-col items-start gap-4 py-10">
                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-success/10 text-success">

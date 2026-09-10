@@ -159,7 +159,7 @@ const slug = (s) =>
 
 function Panel({ panel }) {
   return (
-    <div className="rounded-2xl border border-line bg-ink-2 p-6">
+    <div className="rounded-md border border-line bg-ink-2 p-6">
       <p className="text-xs uppercase tracking-wider text-steel">{panel.title}</p>
       <div className="mt-4 space-y-3">
         {panel.rows.map((row) => (
@@ -186,9 +186,9 @@ export default function Platform() {
         description="Six connected suites — bidding, subcontractor tools, marketing, Supply Exchange, business tools, and AI — replacing the patchwork of point tools contractors juggle today."
       />
 
-      <Section className="pt-16 pb-8 md:pt-24">
+      <Section className="pt-10 pb-6 md:pt-14">
         <Eyebrow>The platform</Eyebrow>
-        <h1 className="text-balance max-w-3xl text-4xl font-semibold leading-tight tracking-tight text-paper sm:text-5xl">
+        <h1 className="text-balance max-w-3xl text-2xl font-semibold leading-tight tracking-tight text-paper sm:text-3xl">
           One platform to win work, market your business, and grow revenue.
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-steel">
@@ -213,7 +213,7 @@ export default function Platform() {
         <Reveal>
           <div className="text-center">
             <Eyebrow>See it live</Eyebrow>
-            <h2 className="mt-3 text-balance text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+            <h2 className="mt-3 text-balance text-xl font-semibold tracking-tight text-paper md:text-2xl">
               Watch it in action.
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-base text-steel">
@@ -221,7 +221,7 @@ export default function Platform() {
             </p>
           </div>
 
-          <div className="relative mx-auto mt-10 max-w-3xl overflow-hidden rounded-2xl border border-line bg-ink-2">
+          <div className="relative mx-auto mt-10 max-w-3xl overflow-hidden rounded-md border border-line bg-ink-2">
             <div className="flex aspect-video items-center justify-center bg-gradient-to-br from-ink-2 to-ink">
               <div className="absolute inset-0 bg-grid opacity-30" aria-hidden="true" />
               <button
@@ -249,7 +249,7 @@ export default function Platform() {
                 {m.icon}
               </div>
               <p className="mt-5 text-xs font-semibold uppercase tracking-widest text-amber">{m.eyebrow}</p>
-              <h2 className="text-balance mt-3 text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+              <h2 className="text-balance mt-3 text-xl font-semibold tracking-tight text-paper md:text-2xl">
                 {m.title}
               </h2>
               <p className="mt-4 text-base leading-relaxed text-steel">{m.text}</p>
@@ -273,7 +273,7 @@ export default function Platform() {
         <Reveal>
           <div className="text-center">
             <Eyebrow>Integrations</Eyebrow>
-            <h2 className="mt-3 text-balance text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+            <h2 className="mt-3 text-balance text-xl font-semibold tracking-tight text-paper md:text-2xl">
               Works with the tools you already use.
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-base text-steel">

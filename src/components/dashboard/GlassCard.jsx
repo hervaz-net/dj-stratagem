@@ -1,19 +1,10 @@
 /**
- * Frosted-glass surface with an optional luminous rim and depth shadow.
+ * Flat corporate card surface — hairline border, minimal shadow, no blur.
  * `as` lets it render as a section/article without losing the styling.
  */
-export default function GlassCard({
-  as: Tag = "div",
-  luminous = true,
-  className = "",
-  children,
-  ...rest
-}) {
+export default function GlassCard({ as: Tag = "div", className = "", children, ...rest }) {
   return (
-    <Tag
-      className={`panel ${luminous ? "panel-lum" : ""} rounded-2xl ${className}`}
-      {...rest}
-    >
+    <Tag className={`card-corp rounded-md ${className}`} {...rest}>
       {children}
     </Tag>
   );

@@ -281,9 +281,9 @@ export default function Changelog() {
         description="Every update, feature, and improvement to D&J Stratagem — newest first."
       />
 
-      <Section className="pt-16 pb-8 md:pt-24">
+      <Section className="pt-10 pb-6 md:pt-14">
         <Eyebrow>Changelog</Eyebrow>
-        <h1 className="text-balance max-w-3xl text-4xl font-semibold tracking-tight text-paper sm:text-5xl">
+        <h1 className="text-balance max-w-3xl text-2xl font-semibold tracking-tight text-paper sm:text-3xl">
           What's new on the platform.
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-steel">

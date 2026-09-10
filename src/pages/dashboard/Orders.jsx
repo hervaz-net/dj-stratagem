@@ -229,7 +229,7 @@ export default function Orders() {
 
         {showCancelModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4" onClick={() => setShowCancelModal(false)}>
-            <div className="w-full max-w-sm rounded-2xl border border-line bg-ink-2 p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            <div className="w-full max-w-sm rounded-md border border-line bg-ink-2 p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
               <h2 className="text-base font-semibold text-paper">Cancel {selected.size} order{selected.size !== 1 ? "s" : ""}?</h2>
               <p className="mt-2 text-sm text-steel">This will mark the selected orders as cancelled. This action cannot be undone.</p>
               <div className="mt-6 flex gap-3 justify-end">

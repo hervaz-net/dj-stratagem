@@ -396,7 +396,7 @@ export default function WalkthroughModal({ open, onClose }) {
         aria-label="Platform walkthrough"
         tabIndex={-1}
         onClick={(e) => e.stopPropagation()}
-        className="flex max-h-[92vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-line bg-ink-2 shadow-2xl outline-hidden"
+        className="flex max-h-[92vh] w-full max-w-4xl flex-col overflow-hidden rounded-md border border-line bg-ink-2 shadow-2xl outline-hidden"
       >
         <div className="flex shrink-0 items-center justify-between border-b border-line px-5 py-3">
           <div className="flex items-center gap-2.5">

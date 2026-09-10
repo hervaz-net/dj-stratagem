@@ -38,7 +38,7 @@ export default function AddBidButton({ onCreated }) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="lift glow-brand inline-flex items-center gap-2 rounded-full bg-cta hover:bg-cta-hover px-5 py-3 text-sm font-semibold text-white"
+        className="btn btn-primary lift"
       >
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true">
           <path d="M12 5v14M5 12h14" />
@@ -50,7 +50,7 @@ export default function AddBidButton({ onCreated }) {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4" onClick={() => setOpen(false)}>
           <form
             onSubmit={submit}
-            className="w-full max-w-md rounded-2xl border border-line bg-ink-2 p-6 shadow-2xl"
+            className="card-corp w-full max-w-md rounded-lg p-6"
             onClick={(e) => e.stopPropagation()}
           >
             <h2 className="text-base font-semibold text-paper">New bid</h2>
@@ -70,7 +70,7 @@ export default function AddBidButton({ onCreated }) {
                     value={form[key]}
                     onChange={set(key)}
                     placeholder={ph}
-                    className="mt-1 w-full rounded-md border border-line bg-ink px-3 py-2 text-sm text-paper outline-none focus:border-amber"
+                    className="field-corp mt-1 text-sm"
                   />
                 </label>
               ))}
@@ -79,7 +79,7 @@ export default function AddBidButton({ onCreated }) {
               <button type="button" onClick={() => setOpen(false)} className="px-4 py-2 text-sm font-semibold text-steel hover:text-paper">
                 Cancel
               </button>
-              <button type="submit" disabled={saving} className="rounded-lg bg-amber/15 px-4 py-2 text-sm font-semibold text-amber hover:bg-amber/25 disabled:opacity-60">
+              <button type="submit" disabled={saving} className="btn btn-primary">
                 {saving ? "Saving…" : "Create bid"}
               </button>
             </div>

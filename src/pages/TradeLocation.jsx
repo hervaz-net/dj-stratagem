@@ -44,11 +44,11 @@ export default function TradeLocation() {
         description={`Find ${trade.toLowerCase()} construction bid opportunities in ${city}, CA. Browse project values, bid deadlines, and scope — and get matched to the work that fits your business.`}
       />
 
-      <Section className="pt-16 pb-8 md:pt-24">
+      <Section className="pt-10 pb-6 md:pt-14">
         <Eyebrow>
           {trade} &middot; {city}, CA
         </Eyebrow>
-        <h1 className="text-balance max-w-3xl text-4xl font-semibold leading-tight tracking-tight text-paper sm:text-5xl">
+        <h1 className="text-balance max-w-3xl text-2xl font-semibold leading-tight tracking-tight text-paper sm:text-3xl">
           {title}
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-steel">

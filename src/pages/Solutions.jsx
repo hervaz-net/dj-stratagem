@@ -103,9 +103,9 @@ export default function Solutions() {
         description="Workflows built for each side of the bid — general contractors, subcontractors, and suppliers, all working from one platform."
       />
 
-      <Section className="pt-16 pb-8 md:pt-24">
+      <Section className="pt-10 pb-6 md:pt-14">
         <Eyebrow>Solutions</Eyebrow>
-        <h1 className="text-balance max-w-3xl text-4xl font-semibold leading-tight tracking-tight text-paper sm:text-5xl">
+        <h1 className="text-balance max-w-3xl text-2xl font-semibold leading-tight tracking-tight text-paper sm:text-3xl">
           Built for every side of the bid.
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-steel">
@@ -161,13 +161,13 @@ export default function Solutions() {
             <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-amber/10 text-amber">
               {role.icon}
             </div>
-            <h2 className="text-balance mt-5 text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+            <h2 className="text-balance mt-5 text-xl font-semibold tracking-tight text-paper md:text-2xl">
               {role.title}
             </h2>
             <p className="mt-4 text-base leading-relaxed text-steel">{role.text}</p>
           </div>
 
-          <div className="rounded-2xl border border-line bg-ink-2 p-6">
+          <div className="rounded-md border border-line bg-ink-2 p-6">
             <p className="text-xs uppercase tracking-wider text-steel">What you get</p>
             <ul className="mt-4 space-y-4">
               {role.points.map((pt) => (

@@ -27,7 +27,7 @@ export default function ShortcutsModal({ onClose }) {
         role="dialog"
         aria-modal="true"
         aria-label="Keyboard shortcuts"
-        className="fixed left-1/2 top-1/2 z-50 w-full max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-line bg-ink-2 p-6 shadow-2xl"
+        className="fixed left-1/2 top-1/2 z-50 w-full max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-md border border-line bg-ink-2 p-6 shadow-2xl"
       >
         <div className="mb-5 flex items-center justify-between">
           <div className="flex items-center gap-2.5">

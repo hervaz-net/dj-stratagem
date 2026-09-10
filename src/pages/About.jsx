@@ -36,9 +36,9 @@ export default function About() {
         description="D&J Stratagem, Inc. builds the platform where contractors win work, market their business, manage relationships, and grow revenue."
       />
 
-      <Section className="pt-16 pb-8 md:pt-24">
+      <Section className="pt-10 pb-6 md:pt-14">
         <Eyebrow>About D&amp;J Stratagem</Eyebrow>
-        <h1 className="text-balance max-w-3xl text-4xl font-semibold leading-tight tracking-tight text-paper sm:text-5xl">
+        <h1 className="text-balance max-w-3xl text-2xl font-semibold leading-tight tracking-tight text-paper sm:text-3xl">
           The operating system for construction growth.
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-steel">
@@ -66,7 +66,7 @@ export default function About() {
         <div className="grid grid-cols-1 gap-14 lg:grid-cols-2">
           <div>
             <Eyebrow>Why we exist</Eyebrow>
-            <h2 className="text-balance text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+            <h2 className="text-balance text-xl font-semibold tracking-tight text-paper md:text-2xl">
               Every competitor solves one problem.
             </h2>
             <p className="mt-5 text-base leading-relaxed text-steel">
@@ -78,7 +78,7 @@ export default function About() {
           </div>
           <div>
             <Eyebrow>What we build</Eyebrow>
-            <h2 className="text-balance text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+            <h2 className="text-balance text-xl font-semibold tracking-tight text-paper md:text-2xl">
               The whole pipeline, opportunity to award.
             </h2>
             <p className="mt-5 text-base leading-relaxed text-steel">
@@ -96,7 +96,7 @@ export default function About() {
 
       <Section className="border-t border-line">
         <Eyebrow>What we believe</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+        <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">
           The principles behind the platform.
         </h2>
         <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2">
@@ -118,7 +118,7 @@ export default function About() {
           they are real people and real openings — see PROOF.md. */}
       <Section className="border-t border-line">
         <Eyebrow>Careers</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+        <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">
           Help build the platform for construction growth.
         </h2>
         <p className="mt-5 max-w-xl text-base leading-relaxed text-steel">

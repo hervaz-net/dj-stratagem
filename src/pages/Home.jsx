@@ -138,40 +138,32 @@ export default function Home() {
         description="D&J Stratagem gives contractors, subcontractors, and suppliers the tools to discover construction bid opportunities, manage their pipeline, market their capabilities, and win more projects."
       />
 
-      <Section className="relative overflow-hidden pt-16 pb-20 md:pt-24">
+      <Section className="relative overflow-hidden pt-10 pb-12 md:pt-14">
         <div
           className="pointer-events-none absolute inset-0 bg-grid [mask-image:radial-gradient(ellipse_60%_60%_at_50%_0%,black,transparent)]"
           aria-hidden="true"
         />
-        <div
-          className="hero-blob pointer-events-none absolute -top-32 -left-32 h-80 w-80 rounded-full bg-brand/20 blur-3xl"
-          aria-hidden="true"
-        />
-        <div
-          className="hero-blob-2 pointer-events-none absolute -top-16 right-1/4 h-64 w-64 rounded-full bg-amber/15 blur-3xl"
-          aria-hidden="true"
-        />
 
-        <div className="relative grid grid-cols-1 items-center gap-14 lg:grid-cols-[1.05fr_0.95fr]">
+        <div className="relative grid grid-cols-1 items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
           <div>
             <Eyebrow>Bid intelligence for construction</Eyebrow>
-            <h1 className="text-balance text-4xl font-semibold leading-[1.08] tracking-tight text-paper sm:text-5xl md:text-6xl">
+            <h1 className="text-balance text-3xl font-semibold leading-[1.15] tracking-tight text-paper sm:text-4xl">
               Find better construction projects. Bid smarter. Win more work.
             </h1>
-            <p className="mt-6 max-w-lg text-lg leading-relaxed text-steel">
+            <p className="mt-4 max-w-lg text-base leading-relaxed text-steel">
               D&amp;J Stratagem gives contractors, subcontractors, and suppliers the tools to
               discover bid opportunities, manage their pipeline, market their capabilities, and
               turn more opportunities into awarded projects.
             </p>
-            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-              <Button to="/projects" variant="primary" size="lg">
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+              <Button to="/projects" variant="primary">
                 Find construction projects <IconArrowRight width={16} height={16} />
               </Button>
-              <Button to="/platform" variant="secondary" size="lg">
+              <Button to="/platform" variant="secondary">
                 See how it works
               </Button>
             </div>
-            <div className="mt-10 flex flex-wrap gap-x-6 gap-y-2 text-sm text-steel">
+            <div className="mt-7 flex flex-wrap gap-x-6 gap-y-2 text-sm text-steel">
               <span className="flex items-center gap-2">
                 <IconBuilding width={16} height={16} className="text-amber" /> Built for GCs and subs
               </span>
@@ -195,7 +187,7 @@ export default function Home() {
       <Section className="border-t border-line">
         <div className="mx-auto max-w-2xl text-center">
           <Eyebrow>What you get</Eyebrow>
-          <h2 className="text-balance text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+          <h2 className="text-balance text-xl font-semibold tracking-tight text-paper md:text-2xl">
             Matched opportunities, not a firehose of RFPs.
           </h2>
           <p className="mt-5 text-base leading-relaxed text-steel">
@@ -212,7 +204,7 @@ export default function Home() {
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
           {stats.map((s, i) => (
             <Reveal key={s.label} delay={i * 90} className="text-center sm:text-left">
-              <p className="text-4xl font-semibold tracking-tight text-paper md:text-5xl">
+              <p className="text-2xl font-semibold tracking-tight text-paper md:text-3xl">
                 <StatCounter value={s.value} suffix={s.suffix} />
               </p>
               <p className="mt-2 text-sm font-semibold text-amber">{s.label}</p>
@@ -226,7 +218,7 @@ export default function Home() {
         <div className="grid grid-cols-1 gap-16 lg:grid-cols-2 lg:items-start">
           <Reveal>
             <Eyebrow>The problem</Eyebrow>
-            <h2 className="text-balance text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+            <h2 className="text-balance text-xl font-semibold tracking-tight text-paper md:text-2xl">
               Most platforms solve one piece of the puzzle.
             </h2>
             <p className="mt-5 text-base leading-relaxed text-steel">
@@ -239,7 +231,7 @@ export default function Home() {
           </Reveal>
           <Reveal delay={120}>
             <Eyebrow>The platform</Eyebrow>
-            <h2 className="text-balance text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+            <h2 className="text-balance text-xl font-semibold tracking-tight text-paper md:text-2xl">
               We sell growth, not just access to bids.
             </h2>
             <p className="mt-5 text-base leading-relaxed text-steel">
@@ -266,7 +258,7 @@ export default function Home() {
 
       <Section className="border-t border-line">
         <Eyebrow>The platform</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+        <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">
           Everything a growing contractor needs.
         </h2>
         <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -289,7 +281,7 @@ export default function Home() {
         <div className="grid grid-cols-1 items-center gap-14 lg:grid-cols-2">
           <Reveal>
             <Eyebrow>Why it&rsquo;s different</Eyebrow>
-            <h2 className="text-balance text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+            <h2 className="text-balance text-xl font-semibold tracking-tight text-paper md:text-2xl">
               Once you rely on us, switching gets painful &mdash; in a good way.
             </h2>
             <p className="mt-5 text-base leading-relaxed text-steel">
@@ -300,7 +292,7 @@ export default function Home() {
           </Reveal>
           <Reveal delay={120}>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <div className="rounded-xl border border-line bg-ink p-5">
+              <div className="rounded-md border border-line bg-ink p-5">
                 <p className="text-xs font-semibold uppercase tracking-wider text-steel">Without a platform</p>
                 <ul className="mt-4 space-y-2.5 text-sm text-steel">
                   {["Five subscriptions, five logins", "Bid data retyped into the CRM", "Marketing handled by an outside agency", "Follow-ups lost in an inbox"].map((t) => (
@@ -311,7 +303,7 @@ export default function Home() {
                   ))}
                 </ul>
               </div>
-              <div className="rounded-xl border border-amber/40 bg-amber/8 p-5">
+              <div className="rounded-md border border-amber/40 bg-amber/8 p-5">
                 <p className="text-xs font-semibold uppercase tracking-wider text-amber">On D&amp;J Stratagem</p>
                 <ul className="mt-4 space-y-2.5 text-sm text-paper/90">
                   {["One platform, one login", "Bids, awards, and CRM share a record", "Marketing runs from the same dashboard", "Every opportunity tracked to a decision"].map((t) => (
@@ -329,13 +321,13 @@ export default function Home() {
 
       <Section className="border-t border-line">
         <Eyebrow>How it works</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+        <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">
           Designed for contractors who are serious about growth.
         </h2>
         <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {steps.map((s, i) => (
             <Reveal key={s.n} delay={i * 110}>
-              <div className="relative h-full rounded-xl border border-line bg-ink-2 p-6">
+              <div className="relative h-full rounded-md border border-line bg-ink-2 p-6">
                 <span className="text-sm font-semibold tabular-nums text-amber">{s.n}</span>
                 <h3 className="mt-3 text-base font-semibold text-paper">{s.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-steel">{s.text}</p>
@@ -344,7 +336,7 @@ export default function Home() {
           ))}
         </div>
         <div className="mt-10">
-          <Button to="/projects" variant="primary" size="lg">
+          <Button to="/projects" variant="primary">
             Start finding projects <IconArrowRight width={16} height={16} />
           </Button>
         </div>
@@ -352,13 +344,13 @@ export default function Home() {
 
       <Section className="border-t border-line">
         <Eyebrow>Who it&rsquo;s for</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+        <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">
           Built for every side of the deal.
         </h2>
         <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2">
           {audiences.map((a, i) => (
             <Reveal key={a.title} delay={(i % 2) * 100} className="h-full">
-              <div className="lift h-full rounded-xl border border-line bg-ink-2 p-6 hover:border-amber/40">
+              <div className="lift h-full rounded-md border border-line bg-ink-2 p-6 hover:border-amber/40">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber/10 text-amber">{a.icon}</div>
                 <h3 className="mt-5 text-base font-semibold text-paper">{a.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-steel">{a.text}</p>
@@ -370,7 +362,7 @@ export default function Home() {
 
       <Section className="border-t border-line">
         <Eyebrow>Questions</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+        <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">
           Answers before you book a demo.
         </h2>
         <div className="mt-10 max-w-3xl">

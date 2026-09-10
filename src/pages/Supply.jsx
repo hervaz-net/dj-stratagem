@@ -112,11 +112,11 @@ export default function Supply() {
         description="Source fasteners, lumber, conduit, PVC, plate, and power tools through sealed, scored bidding — fast enough for a same-day order, structured so suppliers stay at the table."
       />
 
-      <Section className="relative overflow-hidden pt-16 pb-8 md:pt-24">
+      <Section className="relative overflow-hidden pt-10 pb-6 md:pt-14">
         <div className="pointer-events-none absolute inset-0 bg-grid [mask-image:radial-gradient(ellipse_60%_60%_at_50%_0%,black,transparent)]" />
         <div className="relative">
           <Eyebrow>Supply Exchange</Eyebrow>
-          <h1 className="text-balance max-w-3xl text-4xl font-semibold leading-tight tracking-tight text-paper sm:text-5xl">
+          <h1 className="text-balance max-w-3xl text-2xl font-semibold leading-tight tracking-tight text-paper sm:text-3xl">
             The materials you always need, priced without the race to the bottom.
           </h1>
           <p className="mt-6 max-w-2xl text-lg leading-relaxed text-steel">
@@ -137,7 +137,7 @@ export default function Supply() {
 
       <Section className="border-t border-line">
         <Eyebrow>What you can source</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+        <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">
           The essentials, not the long tail.
         </h2>
         <p className="mt-5 max-w-2xl text-base leading-relaxed text-steel">
@@ -163,7 +163,7 @@ export default function Supply() {
         <div className="grid grid-cols-1 gap-14 lg:grid-cols-2 lg:items-start">
           <div>
             <Eyebrow>Why not a normal reverse auction</Eyebrow>
-            <h2 className="text-balance text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+            <h2 className="text-balance text-xl font-semibold tracking-tight text-paper md:text-2xl">
               Bid wars look like savings and cost you later.
             </h2>
             <p className="mt-5 text-base leading-relaxed text-steel">
@@ -175,7 +175,7 @@ export default function Supply() {
               It's also slow. Iterative bidding takes days, and materials rarely have days.
             </p>
           </div>
-          <div className="rounded-2xl border border-line bg-ink-2 p-6">
+          <div className="rounded-md border border-line bg-ink-2 p-6">
             <p className="text-xs uppercase tracking-wider text-steel">Award scoring</p>
             <div className="mt-4 space-y-3">
               {[
@@ -206,7 +206,7 @@ export default function Supply() {
 
       <Section className="border-t border-line">
         <Eyebrow>How the bidding works</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+        <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">
           Still competitive. Just not a knife fight.
         </h2>
         <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2">
@@ -224,7 +224,7 @@ export default function Supply() {
 
       <Section className="border-t border-line">
         <Eyebrow>Skip the RFQ entirely</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+        <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">
           Most orders shouldn't need a bid at all.
         </h2>
         <p className="mt-5 max-w-2xl text-base leading-relaxed text-steel">
@@ -248,7 +248,7 @@ export default function Supply() {
         <div className="grid grid-cols-1 items-center gap-14 lg:grid-cols-2">
           <div>
             <Eyebrow>For suppliers</Eyebrow>
-            <h2 className="text-balance text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+            <h2 className="text-balance text-xl font-semibold tracking-tight text-paper md:text-2xl">
               A channel worth quoting into.
             </h2>
             <p className="mt-5 text-base leading-relaxed text-steel">
@@ -264,7 +264,7 @@ export default function Supply() {
           </div>
           {/* Was an empty blurred gradient box; this is the supplier-protection
               list the page describes. */}
-          <div className="rounded-2xl border border-line bg-ink-2 p-6">
+          <div className="rounded-md border border-line bg-ink-2 p-6">
             <p className="text-xs uppercase tracking-wider text-steel">Supplier protections</p>
             <ul className="mt-4 space-y-4">
               {supplierProtections.map((pt) => (
