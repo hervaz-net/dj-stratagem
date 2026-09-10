@@ -26,6 +26,22 @@ function validate(values) {
 
 const EMPTY = { name: "", company: "", email: "", phone: "", message: "" };
 
+function composeMailto(values, role) {
+  const subject = encodeURIComponent(`Demo request from ${values.name} (${values.company})`);
+  const body = encodeURIComponent(
+    [
+      `Name: ${values.name}`,
+      `Company: ${values.company}`,
+      `Email: ${values.email}`,
+      `Phone: ${values.phone}`,
+      `Role: ${role}`,
+      "",
+      values.message || "(no message)",
+    ].join("\n"),
+  );
+  return `mailto:${MAILTO}?subject=${subject}&body=${body}`;
+}
+
 async function postDemo(url, form, signal) {
   const res = await fetch(url, { method: "POST", body: new FormData(form), signal });
   const type = res.headers.get("content-type") || "";
@@ -266,8 +282,11 @@ export default function Contact() {
                 <div aria-live="polite" role="status">
                   {error && (
                     <p className="rounded-md border border-danger/30 bg-danger/10 px-4 py-2.5 text-sm text-danger">
-                      Something went wrong sending your message. Please try again, or email us
-                      directly at {MAILTO}.
+                      Something went wrong sending your message.{" "}
+                      <a className="font-medium underline underline-offset-2" href={composeMailto(values, role)}>
+                        Email {MAILTO}
+                      </a>{" "}
+                      instead and we will follow up.
                     </p>
                   )}
                 </div>

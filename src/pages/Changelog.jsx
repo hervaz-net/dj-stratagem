@@ -5,6 +5,14 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.28",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "improved", text: "Contact form now offers a prefilled mailto to hello@djstratageminc.com when the live host still returns HTML 500s for /send-demo.php and /contact.php." },
+    ],
+  },
+  {
     version: "1.27",
     date: "September 2026",
     tag: "Fix",
