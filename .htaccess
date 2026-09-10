@@ -2,12 +2,14 @@
 # Live responses advertise PHP/8.1.34. The previous ea-php82___lsphp handler
 # is not installed on this account, so LiteSpeed started PHP then returned
 # an empty HTML 500 for every .php request (contact form, /api/me.php, login).
+# Use the CloudLinux lsphp MIME type (three underscores). The short
+# application/x-httpd-alt-php81 name is not registered on this host.
 # Keep the handler in source: rsync --delete wipes the MultiPHP-injected block.
 <FilesMatch "\.php$">
-  SetHandler application/x-httpd-alt-php81
+  SetHandler application/x-httpd-alt-php81___lsphp
 </FilesMatch>
 <IfModule mime_module>
-  AddHandler application/x-httpd-alt-php81 .php .php8 .phtml
+  AddHandler application/x-httpd-alt-php81___lsphp .php .php8 .phtml
 </IfModule>
 
 # Serve real files/directories (assets, contact.php) as-is; everything
