@@ -5,6 +5,14 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.27",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "improved", text: "LiteSpeed now targets application/x-httpd-alt-php81___lsphp, the CloudLinux handler registered on server247. The short alt-php81 name was not enough to stop empty PHP 500s." },
+    ],
+  },
+  {
     version: "1.26",
     date: "September 2026",
     tag: "Fix",
