@@ -5,6 +5,7 @@ import CTASection from "../components/CTASection";
 import Reveal from "../components/Reveal";
 import Seo from "../components/Seo";
 import WalkthroughModal from "../components/WalkthroughModal";
+import { PipelineArt } from "../components/illustrations";
 import {
   IconGavel,
   IconHelmet,
@@ -187,26 +188,31 @@ export default function Platform() {
       />
 
       <Section className="pt-10 pb-6 md:pt-14">
-        <Eyebrow>The platform</Eyebrow>
-        <h1 className="text-balance max-w-3xl text-2xl font-semibold leading-tight tracking-tight text-paper sm:text-3xl">
-          One platform to win work, market your business, and grow revenue.
-        </h1>
-        <p className="mt-6 max-w-2xl text-lg leading-relaxed text-steel">
-          Six connected suites replace the patchwork of point tools contractors juggle today
-          &mdash; from the first opportunity to the final invoice.
-        </p>
+        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">
+          <div>
+            <Eyebrow>The platform</Eyebrow>
+            <h1 className="text-balance max-w-3xl text-2xl font-semibold leading-tight tracking-tight text-paper sm:text-3xl">
+              One platform to win work, market your business, and grow revenue.
+            </h1>
+            <p className="mt-6 max-w-2xl text-lg leading-relaxed text-steel">
+              Six connected suites replace the patchwork of point tools contractors juggle today
+              &mdash; from the first opportunity to the final invoice.
+            </p>
 
-        <nav aria-label="Platform suites" className="mt-10 flex flex-wrap gap-2">
-          {modules.map((m) => (
-            <a
-              key={m.eyebrow}
-              href={`#${slug(m.eyebrow)}`}
-              className="lift rounded-full border border-line bg-ink-2 px-4 py-2 text-xs font-medium text-steel hover:border-amber/50 hover:text-amber"
-            >
-              {m.eyebrow}
-            </a>
-          ))}
-        </nav>
+            <nav aria-label="Platform suites" className="mt-10 flex flex-wrap gap-2">
+              {modules.map((m) => (
+                <a
+                  key={m.eyebrow}
+                  href={`#${slug(m.eyebrow)}`}
+                  className="lift rounded-full border border-line bg-ink-2 px-4 py-2 text-xs font-medium text-steel hover:border-amber/50 hover:text-amber"
+                >
+                  {m.eyebrow}
+                </a>
+              ))}
+            </nav>
+          </div>
+          <PipelineArt className="hidden w-full lg:block" />
+        </div>
       </Section>
 
       <Section className="border-t border-line">

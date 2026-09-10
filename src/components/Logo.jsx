@@ -1,9 +1,10 @@
 /**
- * The mark: a hard hat on a brim, cut by three graded rebar bands at 45°.
- * Built to the spec in public/brand-guidelines.html — that document existed
- * for months describing a mark that was never actually made; this is it.
+ * The mark: a cut-corner plate — the chamfer references the mark spec's
+ * "cut at 45°" language without trying to render a literal illustration
+ * (a hard hat rendered in flat vector read as a blob, not a hat — this
+ * reads clean at 16px and at poster size alike).
  */
-export function Mark({ size = 28, className = "", style }) {
+export function Mark({ size = 30, className = "", style }) {
   return (
     <svg
       width={size}
@@ -15,25 +16,11 @@ export function Mark({ size = 28, className = "", style }) {
       style={style}
       aria-hidden="true"
     >
-      <defs>
-        <clipPath id="djs-dome-clip">
-          <path d="M6 20A10 12 0 0 1 26 20Z" />
-        </clipPath>
-      </defs>
-      <ellipse cx="16" cy="20.5" rx="13" ry="2.6" fill="var(--djs-mark-ink, currentColor)" />
-      <path d="M6 20A10 12 0 0 1 26 20Z" fill="var(--djs-mark-accent, currentColor)" />
-      <g clipPath="url(#djs-dome-clip)" stroke="var(--djs-mark-ink, currentColor)" strokeWidth="1.4">
-        <line x1="2" y1="18" x2="14" y2="4" opacity="0.9" />
-        <line x1="8" y1="21" x2="22" y2="5" opacity="0.9" />
-        <line x1="15" y1="22" x2="29" y2="6" opacity="0.9" />
-      </g>
-      <circle cx="16" cy="9.5" r="1.4" fill="var(--djs-mark-ink, currentColor)" />
       <path
-        d="M25 22.5L29.5 27"
-        stroke="var(--djs-mark-ink, currentColor)"
-        strokeWidth="1.8"
-        strokeLinecap="square"
+        d="M12 2H27a3 3 0 0 1 3 3v15L20 30H5a3 3 0 0 1-3-3V12L12 2Z"
+        fill="var(--djs-mark-ink, currentColor)"
       />
+      <path d="M20 30V23a3 3 0 0 1 3-3h7L20 30Z" fill="var(--djs-mark-accent, currentColor)" />
     </svg>
   );
 }

@@ -4,11 +4,11 @@ import Section from "./Section";
 export default function CTASection({
   title = "Start finding better projects.",
   subtitle = "Create your company profile and see the opportunities that match your trade, territory, and project size.",
-  // One primary action across the site — "Find projects" — with the demo as
+  // One primary action across the site — "Find projects" — with contact as
   // the secondary path, so the CTAs stop competing with each other.
   primaryLabel = "Find construction projects",
   primaryTo = "/projects",
-  secondaryLabel = "Request a demo",
+  secondaryLabel = "Contact us",
   secondaryTo = "/contact",
 }) {
   return (

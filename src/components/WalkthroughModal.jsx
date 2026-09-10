@@ -437,23 +437,15 @@ export default function WalkthroughModal({ open, onClose }) {
                 Ready to win more work?
               </h3>
               <p className="mt-4 max-w-md text-sm leading-relaxed text-steel">
-                Request a demo and we&rsquo;ll show you where D&J Stratagem fits into how your
+                Get in touch and we&rsquo;ll show you where D&J Stratagem fits into how your
                 team already works &mdash; no slide deck, just a hands-on walkthrough.
               </p>
               <div className="mt-8 flex flex-wrap justify-center gap-2.5">
-                <Link
-                  to="/contact"
-                  onClick={onClose}
-                  className="rounded-lg bg-cta px-6 py-2.5 text-sm font-bold text-white transition-colors hover:bg-cta-hover"
-                >
-                  Request a Demo
+                <Link to="/contact" onClick={onClose} className="btn btn-primary">
+                  Contact us
                 </Link>
-                <Link
-                  to="/pricing"
-                  onClick={onClose}
-                  className="rounded-lg border border-line px-6 py-2.5 text-sm font-semibold text-steel transition-colors hover:border-steel hover:text-paper"
-                >
-                  View Pricing
+                <Link to="/pricing" onClick={onClose} className="btn btn-secondary">
+                  View pricing
                 </Link>
               </div>
               <p className="mt-7 text-[11px] text-steel">

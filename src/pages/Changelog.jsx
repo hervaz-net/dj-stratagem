@@ -330,7 +330,7 @@ export default function Changelog() {
 
       <CTASection
         title="Want early access to new features?"
-        subtitle="Create an account or request a demo. There is no email digest list yet."
+        subtitle="Create an account or send us a message. There is no email digest list yet."
       />
     </>
   );

@@ -9,6 +9,7 @@ import Accordion from "../components/Accordion";
 import StatCounter from "../components/StatCounter";
 import CompetitorList from "../components/CompetitorList";
 import Seo from "../components/Seo";
+import { BidStackArt, PipelineArt } from "../components/illustrations";
 import {
   IconGavel,
   IconHelmet,
@@ -280,6 +281,7 @@ export default function Home() {
       <Section className="border-t border-line">
         <div className="grid grid-cols-1 items-center gap-14 lg:grid-cols-2">
           <Reveal>
+            <BidStackArt className="mb-8 h-auto w-full max-w-sm" />
             <Eyebrow>Why it&rsquo;s different</Eyebrow>
             <h2 className="text-balance text-xl font-semibold tracking-tight text-paper md:text-2xl">
               Once you rely on us, switching gets painful &mdash; in a good way.
@@ -324,7 +326,8 @@ export default function Home() {
         <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">
           Designed for contractors who are serious about growth.
         </h2>
-        <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <PipelineArt className="mx-auto mt-10 hidden w-full max-w-xl sm:block" />
+        <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {steps.map((s, i) => (
             <Reveal key={s.n} delay={i * 110}>
               <div className="relative h-full rounded-md border border-line bg-ink-2 p-6">
@@ -363,7 +366,7 @@ export default function Home() {
       <Section className="border-t border-line">
         <Eyebrow>Questions</Eyebrow>
         <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">
-          Answers before you book a demo.
+          Answers before you sign up.
         </h2>
         <div className="mt-10 max-w-3xl">
           <Accordion items={faqs} />

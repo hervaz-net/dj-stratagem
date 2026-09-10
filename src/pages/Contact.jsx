@@ -89,7 +89,7 @@ export default function Contact() {
     <>
       <Seo
         title="Contact"
-        description="Request a demo of D&J Stratagem. Tell us how your team bids, procures, and coordinates today, and we'll show you where the platform fits."
+        description="Get in touch with D&J Stratagem. Tell us how your team bids, procures, and coordinates today, and we'll show you where the platform fits."
       />
 
       <Section className="pt-10 pb-6 md:pt-14">
@@ -115,7 +115,7 @@ export default function Contact() {
               {
                 icon: <IconChat width={18} height={18} />,
                 title: "hello@djstratageminc.com",
-                detail: "General inquiries and demo requests.",
+                detail: "General inquiries and support.",
                 href: "mailto:hello@djstratageminc.com",
               },
               {
@@ -264,11 +264,11 @@ export default function Contact() {
                 </div>
 
                 <Button type="submit" variant="primary" className="w-full" disabled={submitting}>
-                  {submitting ? "Sending…" : "Request a demo"}
+                  {submitting ? "Sending…" : "Send message"}
                 </Button>
 
                 <p className="text-center text-xs text-steel">
-                  We&rsquo;ll only use your details to follow up about a demo.
+                  We&rsquo;ll only use your details to follow up about your message.
                 </p>
               </form>
             )}

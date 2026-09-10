@@ -4,6 +4,7 @@ import Reveal from "../components/Reveal";
 import Seo from "../components/Seo";
 import CompetitorList from "../components/CompetitorList";
 import { IconTarget, IconLink, IconShield, IconTrendingUp } from "../components/icons";
+import { TeamArt } from "../components/illustrations";
 
 const values = [
   {
@@ -117,23 +118,28 @@ export default function About() {
       {/* Careers. Named team members and specific open roles go back only when
           they are real people and real openings — see PROOF.md. */}
       <Section className="border-t border-line">
-        <Eyebrow>Careers</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">
-          Help build the platform for construction growth.
-        </h2>
-        <p className="mt-5 max-w-xl text-base leading-relaxed text-steel">
-          We&rsquo;re a small team with big ambitions. If you care about construction, software,
-          and building things that actually get used &mdash; we&rsquo;d love to hear from you.
-        </p>
-        <p className="mt-6 text-sm text-steel">
-          <a
-            href="mailto:careers@djstratageminc.com"
-            className="font-medium text-amber hover:text-amber-2"
-          >
-            Send us your resume
-          </a>{" "}
-          and tell us what you&rsquo;d want to build.
-        </p>
+        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">
+          <div>
+            <Eyebrow>Careers</Eyebrow>
+            <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">
+              Help build the platform for construction growth.
+            </h2>
+            <p className="mt-5 max-w-xl text-base leading-relaxed text-steel">
+              We&rsquo;re a small team with big ambitions. If you care about construction, software,
+              and building things that actually get used &mdash; we&rsquo;d love to hear from you.
+            </p>
+            <p className="mt-6 text-sm text-steel">
+              <a
+                href="mailto:careers@djstratageminc.com"
+                className="font-medium text-amber hover:text-amber-2"
+              >
+                Send us your resume
+              </a>{" "}
+              and tell us what you&rsquo;d want to build.
+            </p>
+          </div>
+          <TeamArt className="hidden w-full lg:block" />
+        </div>
       </Section>
 
       <CTASection

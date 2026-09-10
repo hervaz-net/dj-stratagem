@@ -1,9 +1,3 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
-  <!-- Single-value reproduction: below 32px, or wherever only one ink is
-       available, drop the rebar hatch and run the dome-on-brim silhouette
-       solid. See "Reversal" in brand-guidelines.html. -->
-  <ellipse cx="16" cy="20.5" rx="13" ry="2.6" fill="#201e1d"/>
-  <path d="M6 20A10 12 0 0 1 26 20Z" fill="#201e1d"/>
-  <circle cx="16" cy="9.5" r="1.4" fill="#201e1d"/>
-  <path d="M25 22.5L29.5 27" stroke="#201e1d" stroke-width="1.8" stroke-linecap="square"/>
+  <path d="M12 2H27a3 3 0 0 1 3 3v15L20 30H5a3 3 0 0 1-3-3V12L12 2Z" fill="#201e1d"/>
 </svg>

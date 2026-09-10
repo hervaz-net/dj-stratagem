@@ -4,7 +4,6 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import BackToTop from "./components/BackToTop";
 import CookieBanner from "./components/CookieBanner";
-import FloatingDemo from "./components/FloatingDemo";
 import ReadingProgress from "./components/ReadingProgress";
 import CommandPalette from "./components/CommandPalette";
 import LiveChat from "./components/LiveChat";
@@ -99,7 +98,6 @@ function MarketingLayout({ children }) {
       </main>
       <Footer />
       <BackToTop />
-      <FloatingDemo />
       <CookieBanner />
       <ReadingProgress />
       <LiveChat />

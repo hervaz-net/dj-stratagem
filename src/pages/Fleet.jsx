@@ -12,6 +12,7 @@ import {
   IconUsers,
   IconPackage,
 } from "../components/icons";
+import { FleetArt } from "../components/illustrations";
 
 // Sample service dates stay relative to today so the preview board
 // never shows a next-scheduled date that already passed.
@@ -192,29 +193,32 @@ export default function Fleet() {
       />
       <Section className="relative overflow-hidden pt-10 pb-6 md:pt-14">
         <div className="pointer-events-none absolute inset-0 bg-grid [mask-image:radial-gradient(ellipse_60%_60%_at_50%_0%,black,transparent)]" />
-        <div className="relative mx-auto max-w-6xl px-6">
-          <Eyebrow>Fleet Management</Eyebrow>
-          <h1 className="mt-4 text-2xl font-semibold leading-tight text-paper md:text-3xl">
-            See how equipment would look on the board.
-          </h1>
-          <p className="mt-4 max-w-2xl text-sm text-steel">
-            This page is a product preview: status filters, utilization, and asset cards
-            using sample machines. It is not a live tracker for a real fleet.
-          </p>
-          <div
-            role="note"
-            className="mt-5 max-w-2xl rounded-md border border-amber/40 bg-amber/8 px-4 py-3"
-          >
-            <p className="text-sm font-semibold text-amber">Preview &mdash; sample assets</p>
-            <p className="mt-1 text-sm leading-relaxed text-steel">
-              Names, rates, and operators below are illustrative. They are not a customer
-              fleet and cannot be dispatched from this page.
+        <div className="relative mx-auto grid max-w-6xl grid-cols-1 items-center gap-10 px-6 lg:grid-cols-[1.1fr_0.9fr]">
+          <div>
+            <Eyebrow>Fleet Management</Eyebrow>
+            <h1 className="mt-4 text-2xl font-semibold leading-tight text-paper md:text-3xl">
+              See how equipment would look on the board.
+            </h1>
+            <p className="mt-4 max-w-2xl text-sm text-steel">
+              This page is a product preview: status filters, utilization, and asset cards
+              using sample machines. It is not a live tracker for a real fleet.
             </p>
+            <div
+              role="note"
+              className="mt-5 max-w-2xl rounded-md border border-amber/40 bg-amber/8 px-4 py-3"
+            >
+              <p className="text-sm font-semibold text-amber">Preview &mdash; sample assets</p>
+              <p className="mt-1 text-sm leading-relaxed text-steel">
+                Names, rates, and operators below are illustrative. They are not a customer
+                fleet and cannot be dispatched from this page.
+              </p>
+            </div>
+            <div className="mt-6 flex flex-wrap gap-4">
+              <Button to="/register" variant="primary">Request access</Button>
+              <Button to="/contact" variant="secondary">Contact us</Button>
+            </div>
           </div>
-          <div className="mt-6 flex flex-wrap gap-4">
-            <Button to="/register" variant="primary">Request access</Button>
-            <Button to="/contact" variant="secondary">Request a demo</Button>
-          </div>
+          <FleetArt className="hidden w-full lg:block" />
         </div>
       </Section>
 
@@ -442,7 +446,7 @@ export default function Fleet() {
         subtitle="Request access and tell us what you run. There is no live fleet feed on this public page."
         primaryLabel="Request access"
         primaryTo="/register"
-        secondaryLabel="Request a demo"
+        secondaryLabel="Contact us"
         secondaryTo="/contact"
       />
 

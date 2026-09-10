@@ -21,6 +21,7 @@ import {
   IconWallet,
   IconTarget,
 } from "../components/icons";
+import { SupplyStackArt } from "../components/illustrations";
 
 const categories = [
   {
@@ -151,24 +152,27 @@ export default function Supply() {
 
       <Section className="relative overflow-hidden pt-10 pb-6 md:pt-14">
         <div className="pointer-events-none absolute inset-0 bg-grid [mask-image:radial-gradient(ellipse_60%_60%_at_50%_0%,black,transparent)]" />
-        <div className="relative">
-          <Eyebrow>Supply Exchange</Eyebrow>
-          <h1 className="text-balance max-w-3xl text-2xl font-semibold leading-tight tracking-tight text-paper sm:text-3xl">
-            The materials you always need, priced without the race to the bottom.
-          </h1>
-          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-steel">
-            Fasteners, lumber, conduit, PVC, plate, and power tools move on every job you run.
-            Supply Exchange sources them through sealed, scored bidding &mdash; fast enough for a
-            same-day order, structured so suppliers stay at the table.
-          </p>
-          <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-            <Button to="/contact" variant="primary">
-              Request a demo <IconArrowRight width={16} height={16} />
-            </Button>
-            <Button to="/platform" variant="secondary">
-              See the full platform
-            </Button>
+        <div className="relative grid grid-cols-1 items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">
+          <div>
+            <Eyebrow>Supply Exchange</Eyebrow>
+            <h1 className="text-balance max-w-3xl text-2xl font-semibold leading-tight tracking-tight text-paper sm:text-3xl">
+              The materials you always need, priced without the race to the bottom.
+            </h1>
+            <p className="mt-6 max-w-2xl text-lg leading-relaxed text-steel">
+              Fasteners, lumber, conduit, PVC, plate, and power tools move on every job you run.
+              Supply Exchange sources them through sealed, scored bidding &mdash; fast enough for a
+              same-day order, structured so suppliers stay at the table.
+            </p>
+            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+              <Button to="/contact" variant="primary">
+                Contact us <IconArrowRight width={16} height={16} />
+              </Button>
+              <Button to="/platform" variant="secondary">
+                See the full platform
+              </Button>
+            </div>
           </div>
+          <SupplyStackArt className="hidden w-full lg:block" />
         </div>
       </Section>
 
