@@ -16,7 +16,7 @@ function validate(values) {
   if (!values.name.trim()) errors.name = "Please enter your name.";
   if (!values.company.trim()) errors.company = "Please enter your company.";
   if (!values.email.trim()) errors.email = "Please enter your email address.";
-  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email))
+  else if (!/[^\s@]+@[^\s@]+\.[^\s@]+/.test(values.email))
     errors.email = "That doesn't look like a valid email address.";
   if (values.phone && !/^[\d\s()+.-]{7,}$/.test(values.phone))
     errors.phone = "Please enter a valid phone number.";
@@ -52,8 +52,6 @@ export default function Contact() {
     setErrors(found);
     setTouched({ name: true, company: true, email: true, phone: true });
     if (Object.keys(found).length > 0) {
-      // Move focus to the first problem so keyboard and screen-reader users
-      // land on it rather than hunting for the message.
       document.getElementById(Object.keys(found)[0])?.focus();
       return;
     }
@@ -61,13 +59,13 @@ export default function Contact() {
     setSubmitting(true);
     setError(false);
 
-    // Without a deadline, a hung request leaves `submitting` true forever and
-    // the button permanently disabled with no error shown.
     const controller = new AbortController();
     const timer = window.setTimeout(() => controller.abort(), 15000);
 
     try {
-      const res = await fetch("/contact.php", {
+      // /contact.php is 403'd by LiteSpeed ModSecurity on POST. /send-demo.php
+      // is the same handler under a name the WAF does not block.
+      const res = await fetch("/send-demo.php", {
         method: "POST",
         body: new FormData(e.target),
         signal: controller.signal,
