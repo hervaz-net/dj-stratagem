@@ -121,7 +121,7 @@ cat > .cpanel.yml <<YML
 ---
 deployment:
   tasks:
-    - /usr/bin/rsync -rltD --delete --exclude='.git' --exclude='.cpanel.yml' ./ ${DOCROOT}/
+    - /usr/bin/rsync -rltD --delete --exclude='.git' --exclude='.cpanel.yml' --exclude='api/config.php' --exclude='djs-config.php' ./ ${DOCROOT}/
     - /usr/bin/find ${DOCROOT} -type d -exec /bin/chmod 0755 {} +
     - /usr/bin/find ${DOCROOT} -type f -exec /bin/chmod 0644 {} +
     - /bin/chgrp nobody ${DOCROOT}

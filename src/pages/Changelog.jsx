@@ -5,6 +5,15 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.26",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "improved", text: "PHP on the live host now uses Namecheap alt-php81. The EasyApache php82 handler was 500ing the contact form, sign-in, and every /api/*.php request." },
+      { type: "improved", text: "cPanel rsync keeps api/config.php and djs-config.php if they were added under public_html, instead of deleting them on every deploy." },
+    ],
+  },
+  {
     version: "1.25",
     date: "September 2026",
     tag: "Fix",
