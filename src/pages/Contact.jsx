@@ -6,6 +6,7 @@ import { IconMap, IconChat, IconClock, IconCheck } from "../components/icons";
 
 const roleOptions = ["General Contractor", "Subcontractor", "Supplier", "Engineer", "Other"];
 const MESSAGE_MAX = 1000;
+const MAILTO = "hello@djstratageminc.com";
 
 const inputClass =
   "w-full rounded-md border bg-ink px-3.5 py-2.5 text-sm text-paper outline-hidden transition-colors " +
@@ -24,6 +25,16 @@ function validate(values) {
 }
 
 const EMPTY = { name: "", company: "", email: "", phone: "", message: "" };
+
+async function postDemo(url, form, signal) {
+  const res = await fetch(url, { method: "POST", body: new FormData(form), signal });
+  const type = res.headers.get("content-type") || "";
+  if (!type.includes("json")) {
+    return { res, data: null };
+  }
+  const data = await res.json().catch(() => null);
+  return { res, data };
+}
 
 export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
@@ -61,17 +72,17 @@ export default function Contact() {
 
     const controller = new AbortController();
     const timer = window.setTimeout(() => controller.abort(), 15000);
+    const form = e.target;
 
     try {
       // /contact.php is 403'd by LiteSpeed ModSecurity on POST. /send-demo.php
-      // is the same handler under a name the WAF does not block.
-      const res = await fetch("/send-demo.php", {
-        method: "POST",
-        body: new FormData(e.target),
-        signal: controller.signal,
-      });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok || !data.ok) throw new Error("Submission failed");
+      // is the same handler under a name the WAF does not block. Fall back if
+      // the host is still serving the SPA HTML for a missing PHP file.
+      let { res, data } = await postDemo("/send-demo.php", form, controller.signal);
+      if (!data) {
+        ({ res, data } = await postDemo("/contact.php", form, controller.signal));
+      }
+      if (!res.ok || !data?.ok) throw new Error("Submission failed");
       setValues(EMPTY);
       setTouched({});
       setSubmitted(true);
@@ -112,9 +123,9 @@ export default function Contact() {
               },
               {
                 icon: <IconChat width={18} height={18} />,
-                title: "hello@djstratageminc.com",
+                title: MAILTO,
                 detail: "General inquiries and demo requests.",
-                href: "mailto:hello@djstratageminc.com",
+                href: `mailto:${MAILTO}`,
               },
               {
                 icon: <IconClock width={18} height={18} />,
@@ -256,7 +267,7 @@ export default function Contact() {
                   {error && (
                     <p className="rounded-md border border-danger/30 bg-danger/10 px-4 py-2.5 text-sm text-danger">
                       Something went wrong sending your message. Please try again, or email us
-                      directly at hello@djstratageminc.com.
+                      directly at {MAILTO}.
                     </p>
                   )}
                 </div>
