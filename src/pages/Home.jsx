@@ -201,7 +201,7 @@ export default function Home() {
         </div>
       </Section>
 
-      <Section className="border-t border-line py-12 md:py-14">
+      <Section tint className="border-t border-line py-12 md:py-14">
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
           {stats.map((s, i) => (
             <Reveal key={s.label} delay={i * 90} className="text-center sm:text-left">
@@ -257,7 +257,7 @@ export default function Home() {
         </div>
       </Section>
 
-      <Section className="border-t border-line">
+      <Section tint className="border-t border-line">
         <Eyebrow>The platform</Eyebrow>
         <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">
           Everything a growing contractor needs.
@@ -363,7 +363,7 @@ export default function Home() {
         </div>
       </Section>
 
-      <Section className="border-t border-line">
+      <Section tint className="border-t border-line">
         <Eyebrow>Questions</Eyebrow>
         <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">
           Answers before you sign up.
