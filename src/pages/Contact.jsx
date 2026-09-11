@@ -91,12 +91,12 @@ export default function Contact() {
     const form = e.target;
 
     try {
-      // /contact.php is 403'd by LiteSpeed ModSecurity on POST. /send-demo.php
-      // is the same handler under a name the WAF does not block. Fall back if
-      // the host is still serving the SPA HTML for a missing PHP file.
-      let { res, data } = await postDemo("/send-demo.php", form, controller.signal);
+      // Live public_html has sometimes shipped without send-demo.php, so LiteSpeed
+      // SPA-fallback returned index.html. /contact.php is present and accepts POST.
+      // Try it first; keep /send-demo.php as the WAF-safe alias.
+      let { res, data } = await postDemo("/contact.php", form, controller.signal);
       if (!data) {
-        ({ res, data } = await postDemo("/contact.php", form, controller.signal));
+        ({ res, data } = await postDemo("/send-demo.php", form, controller.signal));
       }
       if (!res.ok || !data?.ok) throw new Error("Submission failed");
       setValues(EMPTY);

@@ -86,6 +86,13 @@
   RewriteRule ^signage$ /marketing/signage [R=301,L]
   RewriteRule ^sitemap$ /sitemap.xml [R=301,L]
 
+  # Partial public_html trees have dropped send-demo.php and health.php.
+  # Do not SPA-fallback those URLs — the contact form treats HTML 200 as success-shaped noise.
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^send-demo\.php$ contact.php [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^health\.php$ contact.php [L]
+
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule ^assets/ - [R=404,L]
   RewriteRule ^assets/ - [L]
