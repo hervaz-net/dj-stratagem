@@ -5,6 +5,15 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.29",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "improved", text: "Missing /send-demo.php on a partial public_html tree now rewrites to contact.php instead of the SPA HTML shell." },
+      { type: "improved", text: "The demo form posts /contact.php first because that file is present on the live host, then falls back to /send-demo.php." },
+    ],
+  },
+  {
     version: "1.28",
     date: "September 2026",
     tag: "Fix",
