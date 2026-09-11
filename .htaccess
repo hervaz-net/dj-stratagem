@@ -1,17 +1,3 @@
-# Namecheap LiteSpeed on server247 uses CloudLinux alt-php, not EasyApache.
-# Live responses advertise PHP/8.1.34. The previous ea-php82___lsphp handler
-# is not installed on this account, so LiteSpeed started PHP then returned
-# an empty HTML 500 for every .php request (contact form, /api/me.php, login).
-# Use the CloudLinux lsphp MIME type (three underscores). The short
-# application/x-httpd-alt-php81 name is not registered on this host.
-# Keep the handler in source: rsync --delete wipes the MultiPHP-injected block.
-<FilesMatch "\.php$">
-  SetHandler application/x-httpd-alt-php81___lsphp
-</FilesMatch>
-<IfModule mime_module>
-  AddHandler application/x-httpd-alt-php81___lsphp .php .php8 .phtml
-</IfModule>
-
 # Serve real files/directories (assets, contact.php) as-is; everything
 # else falls through to index.html so React Router can handle the route.
 <IfModule mod_rewrite.c>
@@ -26,6 +12,8 @@
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule ^(.+)/$ /$1 [R=301,L]
 
+  # Intent aliases at the host. A stale SPA bundle used to 404 these even
+  # after GitHub had the client Navigate routes, because public_html lagged.
   RewriteRule ^signin$ /login [R=301,L]
   RewriteRule ^sign-in$ /login [R=301,L]
   RewriteRule ^log-in$ /login [R=301,L]
@@ -86,14 +74,24 @@
   RewriteRule ^signage$ /marketing/signage [R=301,L]
   RewriteRule ^sitemap$ /sitemap.xml [R=301,L]
 
+  # Hashed Vite files must never fall through to the SPA. A stale index.html
+  # that points at a bundle that is not on disk used to 200 with HTML, which
+  # LiteSpeed then served as application/javascript and the app never booted.
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule ^assets/ - [R=404,L]
   RewriteRule ^assets/ - [L]
 
+  # Brand marks and other static uploads must 404 when missing. On the Aug 21
+  # live tree, /uploads/*.svg was rewritten to index.html and served as the
+  # document mark, so privacy/terms rendered a broken HTML "image".
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule ^uploads/ - [R=404,L]
   RewriteRule ^uploads/ - [L]
 
+  # PHP endpoints must not 200 the SPA. A missing or mistyped /api/*.php used
+  # to return index.html, so fetch() parsed marketing HTML as JSON and the
+  # dashboard looked like the API was up. Send the request into /api/ so the
+  # directory .htaccess can emit a JSON 404 (LiteSpeed HTML 404 is not parseable).
   RewriteRule ^api/?$ api/index.php [L]
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule ^api/ api/index.php [L]
@@ -103,11 +101,15 @@
   RewriteRule ^ index.html [L]
 </IfModule>
 
+# index.html is the only pointer to the current hashed bundle. Cache it and
+# a deploy that only updates public_html/assets looks like it never shipped.
+# robots.txt / sitemap.xml must also skip long-lived cache or a cPanel pull
+# can look like it never updated crawler files.
 <IfModule mod_headers.c>
-  <FilesMatch "html$">
+  <FilesMatch "\.(html)$">
     Header set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
-  <FilesMatch "^(robots.txt|sitemap.xml)$">
+  <FilesMatch "^(robots\.txt|sitemap\.xml)$">
     Header set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
 </IfModule>
