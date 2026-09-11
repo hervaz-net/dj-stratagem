@@ -23,6 +23,8 @@ import Register from "./pages/Register";
 import ForgotPassword from "./pages/ForgotPassword";
 import VerifyEmail from "./pages/VerifyEmail";
 import Changelog from "./pages/Changelog";
+import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsAndConditions from "./pages/TermsAndConditions";
 import BrandGuidelines from "./pages/BrandGuidelines";
@@ -181,6 +183,8 @@ function App() {
           <Route path="/password" element={<Navigate to="/forgot-password" replace />} />
           <Route path="/verify-email" element={<MarketingLayout><VerifyEmail /></MarketingLayout>} />
           <Route path="/changelog" element={<MarketingLayout><Changelog /></MarketingLayout>} />
+          <Route path="/blog" element={<MarketingLayout><Blog /></MarketingLayout>} />
+          <Route path="/blog/:slug" element={<MarketingLayout><BlogPost /></MarketingLayout>} />
           <Route path="/privacy" element={<MarketingLayout><PrivacyPolicy /></MarketingLayout>} />
           <Route path="/privacy-policy" element={<Navigate to="/privacy" replace />} />
           <Route path="/terms" element={<MarketingLayout><TermsAndConditions /></MarketingLayout>} />
@@ -212,9 +216,8 @@ function App() {
           <Route path="/request-demo" element={<Navigate to="/contact" replace />} />
           <Route path="/company" element={<Navigate to="/about" replace />} />
           <Route path="/team" element={<Navigate to="/about" replace />} />
-          <Route path="/blog" element={<Navigate to="/changelog" replace />} />
-          <Route path="/news" element={<Navigate to="/changelog" replace />} />
-          <Route path="/press" element={<Navigate to="/changelog" replace />} />
+          <Route path="/news" element={<Navigate to="/blog" replace />} />
+          <Route path="/press" element={<Navigate to="/blog" replace />} />
           <Route path="/careers" element={<Navigate to="/contact" replace />} />
           <Route path="/jobs" element={<Navigate to="/contact" replace />} />
           <Route path="/cookies" element={<Navigate to="/privacy" replace />} />
