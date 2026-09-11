@@ -113,7 +113,7 @@
   <FilesMatch "html$">
     Header set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
-  <FilesMatch "^(robots.txt|sitemap.xml)$">
+  <FilesMatch "^(robots.txt|sitemap.xml|manifest.webmanifest)$">
     Header set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
 </IfModule>
@@ -124,6 +124,7 @@
   ExpiresByType text/plain "access plus 0 seconds"
   ExpiresByType application/xml "access plus 0 seconds"
   ExpiresByType text/xml "access plus 0 seconds"
+  ExpiresByType application/manifest+json "access plus 0 seconds"
   ExpiresByType text/css "access plus 1 year"
   ExpiresByType application/javascript "access plus 1 year"
   ExpiresByType image/svg+xml "access plus 1 year"
