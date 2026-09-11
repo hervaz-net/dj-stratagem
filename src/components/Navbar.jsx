@@ -5,24 +5,103 @@ import Button from "./Button";
 import ThemeToggle from "./ThemeToggle";
 import ScrollProgress from "./ScrollProgress";
 
-const links = [
+const groups = [
   { to: "/projects", label: "Projects" },
-  { to: "/platform", label: "Platform" },
-  { to: "/solutions", label: "Solutions" },
-  { to: "/fleet", label: "Fleet" },
-  { to: "/supply", label: "Supply" },
+  {
+    label: "Platform",
+    items: [
+      { to: "/platform", label: "Platform overview", desc: "Bidding, marketing, CRM, and AI in one place" },
+      { to: "/supply", label: "Supply Exchange", desc: "Sealed, scored bidding on materials" },
+      { to: "/fleet", label: "Fleet", desc: "Equipment status and utilization preview" },
+    ],
+  },
+  {
+    label: "Solutions",
+    items: [
+      { to: "/solutions#gc", label: "General contractors", desc: "Run every bid from posting to award" },
+      { to: "/solutions#sub", label: "Subcontractors", desc: "Find work, submit structured digital bids" },
+      { to: "/solutions#supplier", label: "Suppliers", desc: "Quote into sealed RFQs that protect margin" },
+    ],
+  },
   { to: "/pricing", label: "Pricing" },
-  { to: "/about", label: "About" },
-  { to: "/contact", label: "Contact" },
+  {
+    label: "Company",
+    items: [
+      { to: "/about", label: "About" },
+      { to: "/blog", label: "Blog" },
+      { to: "/contact", label: "Contact" },
+    ],
+  },
 ];
+
+function NavDropdown({ group, openLabel, setOpenLabel }) {
+  const open = openLabel === group.label;
+  const rootRef = useRef(null);
+
+  useEffect(() => {
+    if (!open) return undefined;
+    const onPointer = (e) => {
+      if (rootRef.current && !rootRef.current.contains(e.target)) setOpenLabel(null);
+    };
+    const onKey = (e) => {
+      if (e.key === "Escape") setOpenLabel(null);
+    };
+    document.addEventListener("mousedown", onPointer);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onPointer);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open, setOpenLabel]);
+
+  return (
+    <div ref={rootRef} className="relative">
+      <button
+        type="button"
+        onClick={() => setOpenLabel(open ? null : group.label)}
+        aria-expanded={open}
+        className={`flex items-center gap-1.5 py-1 text-sm font-semibold transition-colors ${
+          open ? "text-paper" : "text-steel hover:text-paper"
+        }`}
+      >
+        {group.label}
+        <svg
+          width="10"
+          height="10"
+          viewBox="0 0 10 10"
+          fill="none"
+          className={`transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          aria-hidden="true"
+        >
+          <path d="M2 3.5L5 6.5L8 3.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </button>
+      {open && (
+        <div className="card-corp animate-menu-in absolute left-1/2 top-full mt-3 w-72 -translate-x-1/2 rounded-lg p-2">
+          {group.items.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              onClick={() => setOpenLabel(null)}
+              className="block rounded-md px-3 py-2.5 transition-colors hover:bg-ink"
+            >
+              <span className="block text-sm font-semibold text-paper">{item.label}</span>
+              {item.desc && <span className="mt-0.5 block text-xs text-steel">{item.desc}</span>}
+            </NavLink>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function Navbar({ onOpenPalette }) {
   const [open, setOpen] = useState(false);
+  const [openLabel, setOpenLabel] = useState(null);
   const [scrolled, setScrolled] = useState(false);
   const { pathname } = useLocation();
   const toggleRef = useRef(null);
 
-  // Condense the header once the page has moved.
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
     onScroll();
@@ -30,14 +109,14 @@ export default function Navbar({ onOpenPalette }) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Close the mobile menu on navigation. Tapping a link for the route you're
-  // already on doesn't change `pathname`, so links close it directly too.
   const close = () => setOpen(false);
-  useEffect(() => setOpen(false), [pathname]);
-
-  // Escape closes the menu and returns focus to the button that opened it.
   useEffect(() => {
-    if (!open) return;
+    setOpen(false);
+    setOpenLabel(null);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!open) return undefined;
     const onKey = (e) => {
       if (e.key === "Escape") {
         setOpen(false);
@@ -48,15 +127,26 @@ export default function Navbar({ onOpenPalette }) {
     return () => document.removeEventListener("keydown", onKey);
   }, [open]);
 
-  // Lock the page behind the open menu so the background doesn't scroll.
   useEffect(() => {
-    if (!open) return;
+    if (!open) return undefined;
     const previous = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = previous;
     };
   }, [open]);
+
+  const linkClass = ({ isActive }) =>
+    `relative py-1 text-sm font-semibold transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:origin-left after:rounded-full after:bg-cta after:transition-transform after:duration-300 ${
+      isActive
+        ? "text-cta after:scale-x-100"
+        : "text-steel after:scale-x-0 hover:text-paper hover:after:scale-x-100"
+    }`;
+
+  const mobileLinkClass = ({ isActive }) =>
+    `rounded-lg px-3 py-2.5 text-base font-medium transition-colors ${
+      isActive ? "bg-cta/10 text-cta" : "text-paper hover:bg-ink-3"
+    }`;
 
   return (
     <header
@@ -67,7 +157,7 @@ export default function Navbar({ onOpenPalette }) {
       }`}
     >
       <div
-        className={`mx-auto flex max-w-6xl items-center justify-between px-6 transition-all duration-300 ${
+        className={`mx-auto flex max-w-6xl items-center justify-between gap-6 px-6 transition-all duration-300 ${
           scrolled ? "py-2.5" : "py-4"
         }`}
       >
@@ -75,25 +165,21 @@ export default function Navbar({ onOpenPalette }) {
           <Logo />
         </NavLink>
 
-        {/* lg:, not md: — six nav items overlap the actions at the md
-            breakpoint (fixed on main in 3d0f2fd), and the theme toggle
-            added here makes that row tighter still. */}
-        <nav className="hidden items-center gap-6 lg:flex" aria-label="Main">
-          {links.map((l) => (
-            <NavLink
-              key={l.to}
-              to={l.to}
-              className={({ isActive }) =>
-                `relative py-1 text-sm font-semibold transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:origin-left after:rounded-full after:bg-cta after:transition-transform after:duration-300 ${
-                  isActive
-                    ? "text-cta after:scale-x-100"
-                    : "text-steel after:scale-x-0 hover:text-paper hover:after:scale-x-100"
-                }`
-              }
-            >
-              {l.label}
-            </NavLink>
-          ))}
+        <nav className="hidden items-center gap-7 lg:flex" aria-label="Main">
+          {groups.map((group) =>
+            group.items ? (
+              <NavDropdown
+                key={group.label}
+                group={group}
+                openLabel={openLabel}
+                setOpenLabel={setOpenLabel}
+              />
+            ) : (
+              <NavLink key={group.to} to={group.to} className={linkClass}>
+                {group.label}
+              </NavLink>
+            ),
+          )}
         </nav>
 
         <div className="hidden items-center gap-3 lg:flex">
@@ -146,23 +232,27 @@ export default function Navbar({ onOpenPalette }) {
       {open && (
         <div
           id="mobile-menu"
-          className="animate-menu-in border-t border-line bg-ink px-6 pb-6 lg:hidden"
+          className="animate-menu-in max-h-[calc(100vh-4rem)] overflow-y-auto border-t border-line bg-ink px-6 pb-6 lg:hidden"
         >
           <nav className="flex flex-col gap-1 pt-3" aria-label="Mobile">
-            {links.map((l) => (
-              <NavLink
-                key={l.to}
-                to={l.to}
-                onClick={close}
-                className={({ isActive }) =>
-                  `rounded-lg px-3 py-2.5 text-base font-medium transition-colors ${
-                    isActive ? "bg-cta/10 text-cta" : "text-paper hover:bg-ink-3"
-                  }`
-                }
-              >
-                {l.label}
-              </NavLink>
-            ))}
+            {groups.map((group) =>
+              group.items ? (
+                <div key={group.label} className="py-2">
+                  <p className="px-3 text-xs font-semibold uppercase tracking-wider text-steel">{group.label}</p>
+                  <div className="mt-1 flex flex-col gap-1">
+                    {group.items.map((item) => (
+                      <NavLink key={item.to} to={item.to} onClick={close} className={mobileLinkClass}>
+                        {item.label}
+                      </NavLink>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <NavLink key={group.to} to={group.to} onClick={close} className={mobileLinkClass}>
+                  {group.label}
+                </NavLink>
+              ),
+            )}
             <div className="mt-3 flex flex-col gap-2 border-t border-line pt-4">
               <Button to="/login" variant="secondary" className="w-full" onClick={close}>
                 Sign In
