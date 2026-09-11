@@ -482,7 +482,7 @@ export default function WalkthroughModal({ open, onClose }) {
                   className="bg-grid pointer-events-none absolute inset-0 opacity-20"
                   aria-hidden="true"
                 />
-                <div className="relative w-full max-w-sm rounded-xl border border-line bg-ink-2 p-3.5 shadow-xl">
+                <div className="relative w-full max-w-sm card-corp rounded-lg p-3.5 shadow-xl">
                   <Panel kind={slide.panel} />
                 </div>
               </div>

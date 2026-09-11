@@ -158,17 +158,15 @@ export default function Fleet() {
   }, [filterStatus, sortBy]);
 
   const getStatusColor = (status) => {
-    // Use design tokens, not Tailwind default greens/oranges. Those 700
-    // text colors disappear against the dark theme ink surfaces.
     switch (status) {
       case "in-use":
-        return "bg-success/10 text-success border-success/30";
+        return "badge-success";
       case "available":
-        return "bg-amber/10 text-amber border-amber/30";
+        return "badge-brand";
       case "maintenance":
-        return "bg-warning/10 text-warning border-warning/30";
+        return "badge-warning";
       default:
-        return "bg-ink-3 text-steel border-line";
+        return "badge-neutral";
     }
   };
 
@@ -222,222 +220,205 @@ export default function Fleet() {
         </div>
       </Section>
 
-      <Section className="py-16">
-        <div className="mx-auto max-w-6xl px-6">
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-            {STATS.map((stat, index) => {
-              const Icon = stat.icon;
-              return (
-                <div
-                  key={index}
-                  className="rounded-lg border border-line/50 bg-gradient-to-br from-ink via-ink-2 to-ink-3 p-6 backdrop-blur-sm transition-all hover:border-line hover:shadow-lg"
-                >
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <p className="text-sm text-steel">{stat.label}</p>
-                      <p className="mt-2 text-3xl font-bold text-paper">{stat.value}</p>
-                    </div>
-                    <Icon className="h-8 w-8 text-amber opacity-60" />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </Section>
-
-      <Section className="py-8 border-b border-line/20">
-        <div className="mx-auto max-w-6xl px-6">
-          <div className="flex flex-wrap items-center gap-4">
-            <div className="flex items-center gap-2">
-              <label htmlFor="fleet-filter-status" className="text-sm font-medium text-steel">Filter by Status:</label>
-              <select
-                id="fleet-filter-status"
-                value={filterStatus}
-                onChange={(e) => setFilterStatus(e.target.value)}
-                className="rounded-md border border-line/50 bg-ink-2 px-3 py-2 text-sm text-paper transition-colors hover:border-line focus:outline-none focus:ring-2 focus:ring-amber/20"
-              >
-                <option value="all">All Assets</option>
-                <option value="in-use">In Use</option>
-                <option value="available">Available</option>
-                <option value="maintenance">Maintenance</option>
-              </select>
-            </div>
-            <div className="flex items-center gap-2">
-              <label htmlFor="fleet-sort-by" className="text-sm font-medium text-steel">Sort by:</label>
-              <select
-                id="fleet-sort-by"
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="rounded-md border border-line/50 bg-ink-2 px-3 py-2 text-sm text-paper transition-colors hover:border-line focus:outline-none focus:ring-2 focus:ring-amber/20"
-              >
-                <option value="utilization">Highest Utilization</option>
-                <option value="name">Name (A-Z)</option>
-                <option value="status">Status</option>
-              </select>
-            </div>
-            <div className="ml-auto text-xs text-steel">
-              Showing {filteredFleet.length} of {FLEET_DATA.length} assets
-            </div>
-          </div>
-        </div>
-      </Section>
-
-      <Section className="py-12">
-        <div className="mx-auto max-w-6xl px-6">
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {filteredFleet.map((asset) => (
-              <article
-                key={asset.id}
-                className="group rounded-lg border border-line/30 bg-gradient-to-br from-ink via-ink-2 to-ink-3 p-6 backdrop-blur-sm transition-all hover:border-amber/30 hover:shadow-lg"
-              >
-                <div className="mb-4 flex items-start justify-between">
+      <Section className="border-t border-line">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {STATS.map((stat, index) => {
+            const Icon = stat.icon;
+            return (
+              <div key={index} className="card-corp rounded-lg p-5">
+                <div className="flex items-start justify-between">
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-wider text-steel">
-                      {asset.type}
-                    </p>
-                    <h3 className="mt-1 text-lg font-bold text-paper">{asset.name}</h3>
-                    <p className="text-xs text-steel">{asset.id}</p>
+                    <p className="kpi-label">{stat.label}</p>
+                    <p className="kpi-value mt-2">{stat.value}</p>
                   </div>
-                  <span className={`rounded-full border px-3 py-1 text-xs font-semibold ${getStatusColor(asset.status)}`}>
-                    {getStatusLabel(asset.status)}
-                  </span>
+                  <Icon className="h-6 w-6 text-amber opacity-70" />
                 </div>
-                <div className="mb-4">
-                  <div className="mb-2 flex items-center justify-between">
-                    <span className="text-xs font-medium text-steel">Utilization</span>
-                    <span className="text-sm font-bold text-paper">{asset.utilization}%</span>
-                  </div>
-                  <div className="h-2 rounded-full bg-line/30">
-                    <div
-                      className="h-full rounded-full bg-gradient-to-r from-amber to-amber-2 transition-all"
-                      style={{ width: `${asset.utilization}%` }}
-                    />
-                  </div>
-                </div>
-                <div className="mb-4 space-y-2 border-t border-line/20 pt-4">
-                  <div className="flex justify-between text-xs">
-                    <span className="text-steel">Location:</span>
-                    <span className="font-medium text-paper">{asset.location}</span>
-                  </div>
-                  <div className="flex justify-between text-xs">
-                    <span className="text-steel">Operator:</span>
-                    <span className="font-medium text-paper">{asset.operator}</span>
-                  </div>
-                  <div className="flex justify-between text-xs">
-                    <span className="text-steel">Rate:</span>
-                    <span className="font-medium text-paper">{asset.hourlyRate}/hr</span>
-                  </div>
-                  <div className="flex justify-between text-xs">
-                    <span className="text-steel">Capacity:</span>
-                    <span className="font-medium text-paper">{asset.capacity}</span>
-                  </div>
-                </div>
-                <div className="border-t border-line/20 pt-4">
-                  <p className="text-xs text-steel">
-                    Last maintenance: <span className="font-medium text-paper">{asset.lastMaintenance}</span>
-                  </p>
-                  <p className="mt-1 text-xs text-steel">
-                    Next scheduled: <span className="font-medium text-paper">{asset.nextScheduled}</span>
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  aria-haspopup="dialog"
-                  onClick={() => setSelectedAsset(asset)}
-                  className="mt-4 w-full flex items-center justify-center gap-2 rounded-md bg-amber/10 py-2 text-xs font-semibold text-amber transition-all hover:bg-amber/20 group-hover:bg-brand group-hover:text-white"
-                >
-                  View Details <IconArrowRight className="h-3 w-3" />
-                </button>
-              </article>
-            ))}
-          </div>
-        </div>
-      </Section>
-
-      <Section className="py-16 border-t border-line/20">
-        <div className="mx-auto max-w-6xl px-6">
-          <div className="mb-12 text-center">
-            <Eyebrow>Powerful Features</Eyebrow>
-            <h2 className="mt-4 text-3xl font-bold text-paper">
-              Built for modern construction operations
-            </h2>
-          </div>
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {[
-              { icon: IconTruck, title: "Asset status board", desc: "See what is in use, available, or in the shop without inventing GPS pings." },
-              { icon: IconClock, title: "Maintenance dates", desc: "Keep last service and next due on the card so the shop list is visible." },
-              { icon: IconPackage, title: "Utilization snapshot", desc: "A simple rate per asset so idle machines are obvious in the sample set." },
-              { icon: IconUsers, title: "Crew assignment", desc: "Show who is on the machine, or that it is waiting for a crew." },
-              { icon: IconCheck, title: "Inspection notes", desc: "A place for checklists and cert dates when the live module ships." },
-              { icon: IconArrowRight, title: "Works with the rest of the product", desc: "Fleet sits next to bids, orders, and suppliers — not a standalone toy site." },
-            ].map((feature, idx) => {
-              const Icon = feature.icon;
-              return (
-                <div
-                  key={idx}
-                  className="rounded-lg border border-line/20 bg-gradient-to-br from-ink/50 via-ink-2/50 to-ink-3/50 p-6 backdrop-blur-sm transition-all hover:border-line hover:from-ink hover:via-ink-2 hover:to-ink-3"
-                >
-                  <Icon className="h-8 w-8 text-amber" />
-                  <h3 className="mt-4 text-lg font-bold text-paper">{feature.title}</h3>
-                  <p className="mt-2 text-sm text-steel leading-relaxed">{feature.desc}</p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </Section>
-
-      <Section className="py-16 border-t border-line/20">
-        <div className="mx-auto max-w-6xl px-6">
-          <div className="mb-12 text-center">
-            <Eyebrow>Simple Pricing</Eyebrow>
-            <h2 className="mt-4 text-3xl font-bold text-paper">
-              Fleet add-on pricing is not live yet
-            </h2>
-          </div>
-          <div className="grid gap-6 md:grid-cols-3">
-            {[
-              { name: "Starter", price: "$199", period: "/month", features: ["Up to 25 assets", "Basic tracking", "Email support", "Monthly reports"] },
-              { name: "Professional", price: "$599", period: "/month", highlight: true, features: ["Up to 250 assets", "Advanced analytics", "Priority support", "Real-time alerts", "API access", "Team collaboration"] },
-              { name: "Enterprise", price: "Custom", period: "pricing", features: ["Unlimited assets", "White label", "Dedicated support", "Custom integration", "On-premise option"] },
-            ].map((plan, idx) => (
-              <div
-                key={idx}
-                className={`relative rounded-lg border p-8 backdrop-blur-sm transition-all ${
-                  plan.highlight
-                    ? "border-amber/50 bg-gradient-to-br from-amber/10 via-amber/5 to-transparent ring-2 ring-amber/20 md:scale-105"
-                    : "border-line/30 bg-gradient-to-br from-ink via-ink-2 to-ink-3"
-                }`}
-              >
-                {plan.highlight && (
-                  <div className="absolute -top-3 left-6 bg-brand px-3 py-1 text-xs font-bold text-white">
-                    MOST POPULAR
-                  </div>
-                )}
-                <h3 className="text-lg font-bold text-paper">{plan.name}</h3>
-                <div className="mt-4">
-                  <span className="text-3xl font-bold text-paper">{plan.price}</span>
-                  <span className="text-sm text-steel ml-2">{plan.period}</span>
-                </div>
-                <ul className="mt-6 space-y-3">
-                  {plan.features.map((feature, fidx) => (
-                    <li key={fidx} className="flex items-center gap-3 text-sm text-steel">
-                      <IconCheck className="h-4 w-4 text-amber flex-shrink-0" />
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-                <Button
-                  to={plan.name === "Enterprise" ? "/contact" : "/register"}
-                  variant={plan.highlight ? "primary" : "secondary"}
-                  className="mt-8 w-full"
-                >
-                  {plan.name === "Enterprise" ? "Talk to us" : "Request access"}
-                </Button>
               </div>
-            ))}
+            );
+          })}
+        </div>
+      </Section>
+
+      {/* Catalog layout: same sidebar-facet pattern as Projects — an
+          equipment board is browsed the same way a bid list is. */}
+      <Section className="border-t border-line">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-[240px_1fr]">
+          <aside className="lg:sticky lg:top-20 lg:self-start">
+            <div className="card-corp rounded-lg p-4">
+              <p className="mb-1.5 text-xs font-semibold uppercase tracking-wider text-steel">Status</p>
+              <div className="flex flex-col gap-1">
+                {[
+                  { value: "all", label: "All assets" },
+                  { value: "in-use", label: "In use" },
+                  { value: "available", label: "Available" },
+                  { value: "maintenance", label: "Maintenance" },
+                ].map((opt) => (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    onClick={() => setFilterStatus(opt.value)}
+                    className={`rounded-sm px-2.5 py-1.5 text-left text-sm transition-colors ${
+                      filterStatus === opt.value ? "bg-cta/10 font-semibold text-cta" : "text-steel hover:bg-ink hover:text-paper"
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+
+              <div className="mt-5">
+                <label htmlFor="fleet-sort-by" className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-steel">
+                  Sort by
+                </label>
+                <select
+                  id="fleet-sort-by"
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="field-corp text-sm"
+                >
+                  <option value="utilization">Highest utilization</option>
+                  <option value="name">Name (A-Z)</option>
+                  <option value="status">Status</option>
+                </select>
+              </div>
+            </div>
+          </aside>
+
+          <div className="min-w-0">
+            <p className="mb-5 text-sm text-steel">
+              <span className="font-semibold text-paper">{filteredFleet.length}</span> of {FLEET_DATA.length} assets
+            </p>
+            <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+              {filteredFleet.map((asset) => (
+                <article key={asset.id} className="card-corp card-corp-hover rounded-lg p-5">
+                  <div className="mb-4 flex items-start justify-between">
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wider text-steel">
+                        {asset.type}
+                      </p>
+                      <h3 className="mt-1 text-base font-semibold text-paper">{asset.name}</h3>
+                      <p className="text-xs text-steel">{asset.id}</p>
+                    </div>
+                    <span className={`badge ${getStatusColor(asset.status)}`}>
+                      {getStatusLabel(asset.status)}
+                    </span>
+                  </div>
+                  <div className="mb-4">
+                    <div className="mb-2 flex items-center justify-between">
+                      <span className="text-xs font-medium text-steel">Utilization</span>
+                      <span className="text-sm font-semibold text-paper">{asset.utilization}%</span>
+                    </div>
+                    <div className="h-1.5 overflow-hidden rounded-full bg-ink">
+                      <div className="h-full rounded-full bg-cta" style={{ width: `${asset.utilization}%` }} />
+                    </div>
+                  </div>
+                  <div className="mb-4 space-y-2 border-t border-line pt-4">
+                    <div className="flex justify-between text-xs">
+                      <span className="text-steel">Location</span>
+                      <span className="font-medium text-paper">{asset.location}</span>
+                    </div>
+                    <div className="flex justify-between text-xs">
+                      <span className="text-steel">Operator</span>
+                      <span className="font-medium text-paper">{asset.operator}</span>
+                    </div>
+                    <div className="flex justify-between text-xs">
+                      <span className="text-steel">Rate</span>
+                      <span className="font-medium text-paper">{asset.hourlyRate}/hr</span>
+                    </div>
+                    <div className="flex justify-between text-xs">
+                      <span className="text-steel">Capacity</span>
+                      <span className="font-medium text-paper">{asset.capacity}</span>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    aria-haspopup="dialog"
+                    onClick={() => setSelectedAsset(asset)}
+                    className="btn btn-secondary w-full"
+                  >
+                    View details <IconArrowRight className="h-3 w-3" />
+                  </button>
+                </article>
+              ))}
+            </div>
           </div>
+        </div>
+      </Section>
+
+      <Section tint className="border-t border-line">
+        <div className="text-center">
+          <Eyebrow>Powerful features</Eyebrow>
+          <h2 className="text-balance mx-auto max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">
+            Built for modern construction operations.
+          </h2>
+        </div>
+        <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {[
+            { icon: IconTruck, title: "Asset status board", desc: "See what is in use, available, or in the shop without inventing GPS pings." },
+            { icon: IconClock, title: "Maintenance dates", desc: "Keep last service and next due on the card so the shop list is visible." },
+            { icon: IconPackage, title: "Utilization snapshot", desc: "A simple rate per asset so idle machines are obvious in the sample set." },
+            { icon: IconUsers, title: "Crew assignment", desc: "Show who is on the machine, or that it is waiting for a crew." },
+            { icon: IconCheck, title: "Inspection notes", desc: "A place for checklists and cert dates when the live module ships." },
+            { icon: IconArrowRight, title: "Works with the rest of the product", desc: "Fleet sits next to bids, orders, and suppliers — not a standalone toy site." },
+          ].map((feature, idx) => {
+            const Icon = feature.icon;
+            return (
+              <div key={idx} className="card-corp card-corp-hover rounded-lg p-5">
+                <div className="flex h-9 w-9 items-center justify-center rounded-sm bg-amber/10 text-amber">
+                  <Icon width={18} height={18} />
+                </div>
+                <h3 className="mt-4 text-sm font-semibold text-paper">{feature.title}</h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-steel">{feature.desc}</p>
+              </div>
+            );
+          })}
+        </div>
+      </Section>
+
+      <Section className="border-t border-line">
+        <div className="text-center">
+          <Eyebrow>Simple pricing</Eyebrow>
+          <h2 className="text-balance mx-auto max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">
+            Fleet add-on pricing is not live yet.
+          </h2>
+        </div>
+        <div className="mt-10 grid gap-5 md:grid-cols-3">
+          {[
+            { name: "Starter", price: "$199", period: "/month", features: ["Up to 25 assets", "Basic tracking", "Email support", "Monthly reports"] },
+            { name: "Professional", price: "$599", period: "/month", highlight: true, features: ["Up to 250 assets", "Advanced analytics", "Priority support", "Real-time alerts", "API access", "Team collaboration"] },
+            { name: "Enterprise", price: "Custom", period: "pricing", features: ["Unlimited assets", "White label", "Dedicated support", "Custom integration", "On-premise option"] },
+          ].map((plan, idx) => (
+            <div
+              key={idx}
+              className={`card-corp relative rounded-lg p-6 ${plan.highlight ? "border-amber" : ""}`}
+            >
+              {plan.highlight && (
+                <span className="badge badge-brand absolute -top-3 left-6 uppercase tracking-wider">
+                  Most popular
+                </span>
+              )}
+              <h3 className="text-base font-semibold text-paper">{plan.name}</h3>
+              <div className="mt-3">
+                <span className="text-2xl font-semibold text-paper">{plan.price}</span>
+                <span className="ml-1.5 text-sm text-steel">{plan.period}</span>
+              </div>
+              <ul className="mt-5 space-y-2.5">
+                {plan.features.map((feature, fidx) => (
+                  <li key={fidx} className="flex items-center gap-2.5 text-sm text-steel">
+                    <IconCheck className="h-4 w-4 shrink-0 text-amber" />
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+              <Button
+                to={plan.name === "Enterprise" ? "/contact" : "/register"}
+                variant={plan.highlight ? "primary" : "secondary"}
+                className="mt-6 w-full"
+              >
+                {plan.name === "Enterprise" ? "Talk to us" : "Request access"}
+              </Button>
+            </div>
+          ))}
         </div>
       </Section>
 
@@ -456,12 +437,12 @@ export default function Fleet() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="fleet-asset-title"
-            className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-ink-2 p-8"
+            className="card-corp max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg p-6"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="mb-6 flex items-start justify-between">
+            <div className="mb-5 flex items-start justify-between">
               <div>
-                <h2 id="fleet-asset-title" className="text-2xl font-bold text-paper">{selectedAsset.name}</h2>
+                <h2 id="fleet-asset-title" className="text-lg font-semibold text-paper">{selectedAsset.name}</h2>
                 <p className="mt-1 text-sm text-steel">{selectedAsset.id}</p>
               </div>
               <button
@@ -469,7 +450,7 @@ export default function Fleet() {
                 type="button"
                 onClick={() => setSelectedAsset(null)}
                 aria-label="Close asset details"
-                className="text-2xl text-steel hover:text-paper"
+                className="text-xl text-steel hover:text-paper"
               >
                 ✕
               </button>
@@ -477,16 +458,13 @@ export default function Fleet() {
             <div className="space-y-6">
               <div className="border-b border-line pb-4">
                 <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-steel">Current Status</p>
-                    <p className="mt-1 text-lg font-bold text-paper">{getStatusLabel(selectedAsset.status)}</p>
-                  </div>
-                  <span className={`rounded-full border px-4 py-2 text-sm font-semibold ${getStatusColor(selectedAsset.status)}`}>
+                  <p className="text-sm text-steel">Current status</p>
+                  <span className={`badge ${getStatusColor(selectedAsset.status)}`}>
                     {getStatusLabel(selectedAsset.status)}
                   </span>
                 </div>
               </div>
-              <div className="grid gap-6 md:grid-cols-2">
+              <div className="grid gap-5 md:grid-cols-2">
                 {[
                   { label: "Type", value: selectedAsset.type },
                   { label: "Location", value: selectedAsset.location },
@@ -496,8 +474,8 @@ export default function Fleet() {
                   { label: "Last Maintenance", value: selectedAsset.lastMaintenance },
                 ].map((item, idx) => (
                   <div key={idx}>
-                    <p className="text-xs font-semibold uppercase text-steel">{item.label}</p>
-                    <p className="mt-2 text-lg font-bold text-paper">{item.value}</p>
+                    <p className="text-xs font-semibold uppercase tracking-wider text-steel">{item.label}</p>
+                    <p className="mt-1.5 text-sm font-semibold text-paper">{item.value}</p>
                   </div>
                 ))}
               </div>
@@ -505,14 +483,11 @@ export default function Fleet() {
                 <p className="text-xs font-semibold uppercase text-steel">Utilization</p>
                 <div className="mt-4 flex items-baseline gap-4">
                   <div className="flex-1">
-                    <div className="h-4 rounded-full bg-line/30">
-                      <div
-                        className="h-full rounded-full bg-gradient-to-r from-amber to-amber-2"
-                        style={{ width: `${selectedAsset.utilization}%` }}
-                      />
+                    <div className="h-2 overflow-hidden rounded-full bg-ink">
+                      <div className="h-full rounded-full bg-cta" style={{ width: `${selectedAsset.utilization}%` }} />
                     </div>
                   </div>
-                  <span className="text-2xl font-bold text-paper">{selectedAsset.utilization}%</span>
+                  <span className="kpi-value">{selectedAsset.utilization}%</span>
                 </div>
               </div>
               <p className="border-t border-line pt-6 text-sm text-steel">

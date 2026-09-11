@@ -52,7 +52,7 @@ export default function About() {
       {/* Where we are. Usage metrics go here only once they are real and
           measured — see PROOF.md. */}
       <Section className="border-t border-line py-12">
-        <div className="mx-auto max-w-2xl rounded-xl border border-line bg-ink-2 p-6 text-center">
+        <div className="mx-auto max-w-2xl card-corp rounded-lg p-6 text-center">
           <p className="text-xs font-semibold uppercase tracking-wider text-amber">
             Where we are today
           </p>
@@ -95,7 +95,7 @@ export default function About() {
         </div>
       </Section>
 
-      <Section className="border-t border-line">
+      <Section tint className="border-t border-line">
         <Eyebrow>What we believe</Eyebrow>
         <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">
           The principles behind the platform.
@@ -103,7 +103,7 @@ export default function About() {
         <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2">
           {values.map((v, i) => (
             <Reveal key={v.title} delay={(i % 2) * 100} className="h-full">
-              <div className="lift h-full rounded-xl border border-line bg-ink-2 p-6 hover:border-amber/40">
+              <div className="lift h-full card-corp rounded-lg p-6 hover:border-amber/40">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber/10 text-amber">
                   {v.icon}
                 </div>

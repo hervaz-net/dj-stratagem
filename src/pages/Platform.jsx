@@ -169,7 +169,7 @@ function Panel({ panel }) {
               <p className="text-sm font-medium text-paper">{row.label}</p>
               <p className="text-xs text-steel">{row.value}</p>
             </div>
-            <span className="rounded-full border border-line px-3 py-1 text-xs text-steel">{row.tag}</span>
+            <span className="badge badge-neutral">{row.tag}</span>
           </div>
         ))}
       </div>
@@ -215,7 +215,7 @@ export default function Platform() {
         </div>
       </Section>
 
-      <Section className="border-t border-line">
+      <Section tint className="border-t border-line">
         <Reveal>
           <div className="text-center">
             <Eyebrow>See it live</Eyebrow>
@@ -228,7 +228,7 @@ export default function Platform() {
           </div>
 
           <div className="relative mx-auto mt-10 max-w-3xl overflow-hidden rounded-md border border-line bg-ink-2">
-            <div className="flex aspect-video items-center justify-center bg-gradient-to-br from-ink-2 to-ink">
+            <div className="flex aspect-video items-center justify-center bg-ink">
               <div className="absolute inset-0 bg-grid opacity-30" aria-hidden="true" />
               <button
                 type="button"
@@ -275,7 +275,7 @@ export default function Platform() {
         </Section>
       ))}
 
-      <Section className="border-t border-line">
+      <Section tint className="border-t border-line">
         <Reveal>
           <div className="text-center">
             <Eyebrow>Integrations</Eyebrow>
@@ -304,7 +304,7 @@ export default function Platform() {
           ].map((int) => (
             <div
               key={int.name}
-              className="lift flex flex-col items-center rounded-xl border border-line bg-ink-2 px-4 py-5 text-center transition-colors hover:border-amber/40"
+              className="lift flex flex-col items-center card-corp rounded-lg px-4 py-5 text-center transition-colors hover:border-amber/40"
             >
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber/10 text-xs font-bold text-amber">
                 {int.name.slice(0, 2).toUpperCase()}

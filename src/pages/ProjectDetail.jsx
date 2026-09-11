@@ -70,17 +70,14 @@ export default function ProjectDetail() {
             <p className="mt-3 text-base leading-relaxed text-steel">{project.summary}</p>
             <div className="mt-5 flex flex-wrap gap-2">
               {project.scope.map((s) => (
-                <span
-                  key={s}
-                  className="rounded-full border border-line bg-ink-2 px-3 py-1 text-sm text-paper/85"
-                >
+                <span key={s} className="badge badge-neutral">
                   {s}
                 </span>
               ))}
             </div>
 
             <h2 className="mt-10 text-lg font-semibold text-paper">Project details</h2>
-            <dl className="mt-4 divide-y divide-line rounded-xl border border-line bg-ink-2">
+            <dl className="mt-4 divide-y divide-line card-corp rounded-lg">
               {[
                 ["Owner", project.owner],
                 ["General contractor", project.gc],
@@ -167,7 +164,7 @@ export default function ProjectDetail() {
 
 function Fact({ label, value, tone }) {
   return (
-    <div className="rounded-xl border border-line bg-ink-2 p-4">
+    <div className="card-corp rounded-lg p-4">
       <p className="text-xs text-steel">{label}</p>
       <p className={`mt-1 text-sm font-semibold ${tone ?? "text-paper"}`}>{value}</p>
     </div>

@@ -71,7 +71,7 @@ export default function TradeLocation() {
             <li key={p.slug}>
               <Link
                 to={`/projects/${p.slug}`}
-                className="lift block rounded-xl border border-line bg-ink-2 p-5 transition-colors hover:border-amber/40"
+                className="lift block card-corp rounded-lg p-5 transition-colors hover:border-amber/40"
               >
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div className="min-w-0 flex-1">

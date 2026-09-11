@@ -114,7 +114,7 @@ export default function Solutions() {
         </p>
       </Section>
 
-      <Section className="border-t border-line">
+      <Section tint className="border-t border-line">
         <div
           role="tablist"
           aria-label="Choose your role"

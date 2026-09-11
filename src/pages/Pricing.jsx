@@ -274,7 +274,7 @@ export default function Pricing() {
         <p className="mt-6 text-center text-xs text-steel">Introductory pricing. Plans and pricing may change as new features launch.</p>
       </Section>
 
-      <Section className="border-t border-line">
+      <Section tint className="border-t border-line">
         <Eyebrow>Compare</Eyebrow>
         <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">Every plan, side by side.</h2>
         <div className="mt-10 -mx-6 overflow-x-auto px-6">
@@ -312,7 +312,7 @@ export default function Pricing() {
         <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {addOns.map((a, i) => (
             <Reveal key={a.name} delay={(i % 3) * 90} className="h-full">
-              <div className="lift h-full rounded-xl border border-line bg-ink-2 p-6 hover:border-amber/40">
+              <div className="lift h-full card-corp rounded-lg p-6 hover:border-amber/40">
                 <h3 className="text-base font-semibold text-paper">{a.name}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-steel">{a.detail}</p>
               </div>
@@ -328,7 +328,7 @@ export default function Pricing() {
         <RoiCalculator />
       </Section>
 
-      <Section className="border-t border-line">
+      <Section tint className="border-t border-line">
         <Eyebrow>Billing questions</Eyebrow>
         <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">The fine print, in plain language.</h2>
         <div className="mt-10 max-w-3xl">

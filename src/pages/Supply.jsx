@@ -188,12 +188,12 @@ export default function Supply() {
         <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {categories.map((c, i) => (
             <Reveal key={c.title} delay={(i % 4) * 80} className="h-full">
-              <div className="lift h-full rounded-xl border border-line bg-ink-2 p-6 hover:border-amber/40">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber/10 text-amber">
+              <div className="card-corp card-corp-hover lift h-full rounded-lg p-5">
+                <div className="flex h-9 w-9 items-center justify-center rounded-sm bg-amber/10 text-amber">
                   {c.icon}
                 </div>
-                <h3 className="mt-5 text-base font-semibold text-paper">{c.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-steel">{c.text}</p>
+                <h3 className="mt-4 text-sm font-semibold text-paper">{c.title}</h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-steel">{c.text}</p>
               </div>
             </Reveal>
           ))}
@@ -230,7 +230,7 @@ export default function Supply() {
                     <p className="text-sm font-medium text-paper">{row.label}</p>
                     <p className="text-xs text-steel">{row.value}</p>
                   </div>
-                  <span className="rounded-full border border-line px-3 py-1 text-xs text-steel">{row.tag}</span>
+                  <span className="badge badge-neutral">{row.tag}</span>
                 </div>
               ))}
               <div className="flex items-center justify-between rounded-lg border border-amber/40 bg-amber/10 px-4 py-3">
@@ -245,14 +245,14 @@ export default function Supply() {
         </div>
       </Section>
 
-      <Section className="border-t border-line">
+      <Section tint className="border-t border-line">
         <Eyebrow>How the bidding works</Eyebrow>
         <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">
           Still competitive. Just not a knife fight.
         </h2>
         <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2">
           {mechanics.map((m) => (
-            <div key={m.title} className="rounded-xl border border-line bg-ink-2 p-6">
+            <div key={m.title} className="card-corp rounded-lg p-6">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber/10 text-amber">
                 {m.icon}
               </div>
@@ -274,7 +274,7 @@ export default function Supply() {
         </p>
         <div className="mt-12 grid grid-cols-1 gap-5 lg:grid-cols-2">
           {efficiencies.map((e) => (
-            <div key={e.title} className="rounded-xl border border-line bg-ink-2 p-6">
+            <div key={e.title} className="card-corp rounded-lg p-6">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber/10 text-amber">
                 {e.icon}
               </div>
@@ -285,7 +285,7 @@ export default function Supply() {
         </div>
       </Section>
 
-      <Section className="border-t border-line">
+      <Section tint className="border-t border-line">
         <Eyebrow>The commerce engine</Eyebrow>
         <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">
           Supply Exchange runs on a full B2B commerce platform, not a bid form bolted onto a
@@ -299,12 +299,12 @@ export default function Supply() {
         <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {commerceEngine.map((c, i) => (
             <Reveal key={c.title} delay={(i % 3) * 80} className="h-full">
-              <div className="lift h-full rounded-xl border border-line bg-ink-2 p-6 hover:border-amber/40">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber/10 text-amber">
+              <div className="card-corp card-corp-hover lift h-full rounded-lg p-5">
+                <div className="flex h-9 w-9 items-center justify-center rounded-sm bg-amber/10 text-amber">
                   {c.icon}
                 </div>
-                <h3 className="mt-5 text-base font-semibold text-paper">{c.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-steel">{c.text}</p>
+                <h3 className="mt-4 text-sm font-semibold text-paper">{c.title}</h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-steel">{c.text}</p>
               </div>
             </Reveal>
           ))}
