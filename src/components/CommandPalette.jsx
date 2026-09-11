@@ -20,6 +20,7 @@ const NAV_ITEMS = [
   { label: "Pricing", to: "/pricing", group: "Marketing" },
   { label: "About", to: "/about", group: "Marketing" },
   { label: "Contact", to: "/contact", group: "Marketing" },
+  { label: "Blog", to: "/blog", group: "Marketing" },
   { label: "Changelog", to: "/changelog", group: "Marketing" },
   { label: "Sign in", to: "/login", group: "Auth" },
   { label: "Register", to: "/register", group: "Auth" },

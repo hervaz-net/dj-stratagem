@@ -3,8 +3,6 @@ import { Link } from "react-router-dom";
 import Logo from "./Logo";
 import { IconMail, IconArrowRight } from "./icons";
 
-// Only routes that actually exist are linked. Resources and per-trade landing
-// pages are P1 — add a column here when those pages ship, not before.
 const columns = [
   {
     heading: "Product",
@@ -14,6 +12,7 @@ const columns = [
       { to: "/supply", label: "Supply Exchange" },
       { to: "/fleet", label: "Fleet" },
       { to: "/pricing", label: "Pricing" },
+      { to: "/blog", label: "Blog" },
       { to: "/changelog", label: "Changelog" },
     ],
   },
@@ -43,7 +42,6 @@ const columns = [
   },
 ];
 
-/** Feature 15: newsletter signup */
 function Newsletter() {
   const [email, setEmail] = useState("");
   const [done, setDone] = useState(false);
@@ -108,8 +106,6 @@ export default function Footer() {
     <footer className="no-print border-t border-line bg-ink-2">
       <div className="mx-auto max-w-6xl px-6 py-14">
         <div className="grid grid-cols-2 gap-10 md:grid-cols-3 lg:grid-cols-6">
-          {/* Brand + newsletter share the wide left block so the four link
-              columns stay evenly sized. */}
           <div className="col-span-2 md:col-span-3 lg:col-span-2">
             <Logo />
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-steel">
@@ -133,7 +129,6 @@ export default function Footer() {
               </h4>
               <ul className="mt-4 space-y-3 text-sm">
                 {col.links.map((l) => (
-                  // Keyed by label: several Solutions entries share one route.
                   <li key={l.label}>
                     <Link to={l.to} className="text-paper/80 transition-colors hover:text-amber">
                       {l.label}
