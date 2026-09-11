@@ -140,7 +140,7 @@
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 5rem;
-  font-size: 16px;
+  font-size: 15px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -263,12 +263,14 @@ body {
 }
 
 @keyframes reveal-up {
+  /* Transform only, no opacity — content below the fold must never be
+     invisible while waiting to scroll into view. That read as "blank
+     gaps" in full-page screenshots, slow connections, and fast scrolling
+     alike, for a purely decorative flourish. */
   from {
-    opacity: 0;
     transform: translateY(10px);
   }
   to {
-    opacity: 1;
     transform: none;
   }
 }
@@ -287,10 +289,6 @@ body {
     opacity: 1;
     transform: none;
   }
-}
-
-[data-reveal] {
-  opacity: 0;
 }
 
 [data-reveal="in"] {

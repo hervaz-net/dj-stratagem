@@ -1,6 +1,6 @@
 export default function Section({ id, className = "", children, ...rest }) {
   return (
-    <section id={id} className={`px-6 py-12 md:py-16 ${className}`} {...rest}>
+    <section id={id} className={`px-6 py-10 md:py-14 ${className}`} {...rest}>
       <div className="mx-auto max-w-6xl">{children}</div>
     </section>
   );
