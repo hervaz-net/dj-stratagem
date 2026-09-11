@@ -5,6 +5,15 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.30",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "improved", text: "Missing .php probes and /manifest.webmanifest no longer fall through to the SPA HTML shell when public_html lags the deploy branch." },
+      { type: "improved", text: "cPanel public_html has been lagging the GitHub deploy branch; the next host pull ships health.php, send-demo.php, and the web manifest." },
+    ],
+  },
+  {
     version: "1.29",
     date: "September 2026",
     tag: "Fix",

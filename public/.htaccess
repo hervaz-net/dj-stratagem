@@ -85,12 +85,14 @@
   RewriteRule ^signage$ /marketing/signage [R=301,L]
   RewriteRule ^sitemap$ /sitemap.xml [R=301,L]
 
-  # Never SPA-fallback the PHP handlers. A missing send-demo.php used to
-  # return index.html (200 HTML) and the contact form treated that as noise.
-  # Always internally rewrite the alias onto the canonical handler.
+  # Never SPA-fallback PHP handlers or the PWA manifest. A stale public_html
+  # tree has been missing send-demo.php, health.php, and manifest.webmanifest,
+  # so LiteSpeed returned index.html (200 HTML) for those probes.
   RewriteRule ^send-demo\.php$ contact.php [L]
   RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteRule ^health\.php$ api/not-found.php [L]
+  RewriteRule \.php$ api/not-found.php [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^manifest\.webmanifest$ - [R=404,L]
 
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule ^assets/ - [R=404,L]
