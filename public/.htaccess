@@ -85,12 +85,12 @@
   RewriteRule ^signage$ /marketing/signage [R=301,L]
   RewriteRule ^sitemap$ /sitemap.xml [R=301,L]
 
-  # Partial public_html trees have dropped send-demo.php and health.php.
-  # Do not SPA-fallback those URLs — the contact form treats HTML 200 as success-shaped noise.
-  RewriteCond %{REQUEST_FILENAME} !-f
+  # Never SPA-fallback the PHP handlers. A missing send-demo.php used to
+  # return index.html (200 HTML) and the contact form treated that as noise.
+  # Always internally rewrite the alias onto the canonical handler.
   RewriteRule ^send-demo\.php$ contact.php [L]
   RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteRule ^health\.php$ contact.php [L]
+  RewriteRule ^health\.php$ api/not-found.php [L]
 
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule ^assets/ - [R=404,L]
