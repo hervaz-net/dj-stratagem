@@ -1,24 +1,6 @@
 @import "tailwindcss";
 
-/* ---------------------------------------------------------------------------
-   Design tokens — construction.com / Dodge language, one job per name.
-
-   Neutrals (no chroma — they must never read as links or brand):
-     ink     recessed surface (page wells, inputs, nested rows)
-     ink-2   raised surface (cards, panels, footer)
-     ink-3   hover/active surface
-     line    borders and dividers
-     paper   primary text
-     steel   muted/secondary text
-
-   Chromatic (one job each):
-     amber   accent TEXT / selected chrome (electric blue, contrast-safe)
-     brand   identity blue FILLS (#001cf7)
-     cta     primary buttons only (coral, white-on-cta ≥ 4.5:1)
-     warning watch / caution / mid-score (gold — never brand blue)
-     danger  errors / at-risk (not the same as cta)
-     success positive / healthy
---------------------------------------------------------------------------- */
+/* Design tokens — brand ground from public/brand-guidelines.html. */
 
 @theme inline {
   --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
@@ -47,102 +29,109 @@
 :root {
   color-scheme: light;
 
-  /* Recessed vs raised so cards lift off the page. Neutrals stay gray. */
-  --surface: #eef2f8;
+  --surface: #f3f2f2;
   --surface-raised: #ffffff;
-  --surface-hover: #e6ecf6;
-  --border: #d5deec;
+  --surface-hover: #eae9e9;
+  --surface-sunken: #ece9e7;
+  --border: #ddd9d6;
+  --border-strong: #bdb7b2;
 
-  --text: #15161f;
-  --text-strong: #15161f;
-  --text-muted: #5a6275;
+  --text: #201e1d;
+  --text-strong: #161514;
+  --text-muted: #6b655f;
 
-  --accent: #0015c4;
-  --accent-hover: #0011a3;
-  --brand: #001cf7;
-  --cta: #c81e32;
-  --cta-hover: #a8182a;
-  --warning: #b45309;
+  --accent: #c62a10;
+  --accent-hover: #a02209;
+  --brand: #201e1d;
+  --cta: #ec3013;
+  --cta-hover: #c62a10;
+  --warning: #9a5b00;
+  --warning-bg: #fbeed4;
 
-  --danger: #b42318;
-  --success: #0f7a45;
+  --danger: #b3261e;
+  --danger-bg: #fbeae9;
+  --success: #3d6b2c;
+  --success-bg: #e9f0e4;
 
-  --page-bg: #f5f7fc;
-  --page-glow-1: rgba(0, 28, 247, 0.045);
-  --page-glow-2: rgba(200, 30, 50, 0.025);
-  --page-glow-3: rgba(245, 247, 252, 0.92);
+  --page-bg: #f3f2f2;
+  --page-glow-1: rgba(236, 48, 19, 0.035);
+  --page-glow-2: rgba(32, 30, 29, 0.02);
+  --page-glow-3: rgba(243, 242, 242, 0.94);
 
-  --grid-line: rgba(21, 22, 31, 0.06);
-  --glass-bg: rgba(255, 255, 255, 0.78);
-  --glass-border: rgba(213, 222, 236, 0.9);
-  --shadow-color: 21 22 31;
+  --grid-line: rgba(32, 30, 29, 0.055);
+  --glass-bg: rgba(255, 255, 255, 0.82);
+  --glass-border: rgba(221, 217, 214, 0.92);
+  --shadow-color: 32 30 29;
 
-  --viz-blue: #001cf7;
-  --viz-cyan: #1863dc;
-  --viz-red: #b42318;
-  --viz-gold: #b45309;
-  --viz-green: #0f7a45;
+  --viz-blue: #5a5e6b;
+  --viz-cyan: #7a6a52;
+  --viz-red: #ec3013;
+  --viz-gold: #9a5b00;
+  --viz-green: #3d6b2c;
 
-  --panel-bg: rgba(255, 255, 255, 0.86);
-  --panel-border: rgba(213, 222, 236, 0.95);
-  --panel-glow: rgba(0, 28, 247, 0.1);
-  --panel-shadow: 0 10px 30px -12px rgba(21, 22, 31, 0.16);
+  --panel-bg: #ffffff;
+  --panel-border: #ddd9d6;
+  --panel-glow: rgba(236, 48, 19, 0.08);
+  --panel-shadow: 0 1px 2px rgba(32, 30, 29, 0.06);
 }
 
 [data-theme="dark"] {
   color-scheme: dark;
 
-  --surface: #12141c;
-  --surface-raised: #1a1d28;
-  --surface-hover: #222636;
-  --border: #2a3044;
+  --surface: #17140f;
+  --surface-raised: #211d18;
+  --surface-hover: #2b2620;
+  --surface-sunken: #1c1813;
+  --border: #38322a;
+  --border-strong: #4c4438;
 
-  --text: #eef2f8;
+  --text: #ede8e2;
   --text-strong: #ffffff;
-  --text-muted: #98a2b8;
+  --text-muted: #a89e91;
 
-  --accent: #8fb4ff;
-  --accent-hover: #c5d6ff;
-  --brand: #6d8cff;
-  --cta: #d92d32;
-  --cta-hover: #c42128;
-  --warning: #fbbf24;
+  --accent: #ff7a4d;
+  --accent-hover: #ff9a72;
+  --brand: #ede8e2;
+  --cta: #ff5a2b;
+  --cta-hover: #ff7a4d;
+  --warning: #e0a53c;
+  --warning-bg: #2e2410;
 
-  --danger: #ff6b6e;
-  --success: #4ade80;
+  --danger: #ff6f61;
+  --danger-bg: #2c1712;
+  --success: #7fb35e;
+  --success-bg: #1a2414;
 
-  --page-bg: #0e1016;
-  --page-glow-1: rgba(0, 28, 247, 0.14);
-  --page-glow-2: rgba(217, 45, 50, 0.05);
-  --page-glow-3: rgba(14, 16, 22, 0.92);
+  --page-bg: #141210;
+  --page-glow-1: rgba(255, 90, 43, 0.1);
+  --page-glow-2: rgba(0, 0, 0, 0.18);
+  --page-glow-3: rgba(20, 18, 16, 0.94);
 
-  --grid-line: rgba(152, 162, 184, 0.08);
-  --glass-bg: rgba(26, 29, 40, 0.72);
-  --glass-border: rgba(152, 162, 184, 0.14);
+  --grid-line: rgba(237, 232, 226, 0.05);
+  --glass-bg: rgba(33, 29, 24, 0.78);
+  --glass-border: rgba(56, 50, 42, 0.9);
   --shadow-color: 0 0 0;
 
-  --viz-blue: #6d8cff;
-  --viz-cyan: #7eb0ff;
-  --viz-red: #ff6b6e;
-  --viz-gold: #fbbf24;
-  --viz-green: #4ade80;
+  --viz-blue: #9a9184;
+  --viz-cyan: #c2a878;
+  --viz-red: #ff6f61;
+  --viz-gold: #e0a53c;
+  --viz-green: #7fb35e;
 
-  --panel-bg: rgba(26, 29, 40, 0.72);
-  --panel-border: rgba(152, 162, 184, 0.16);
-  --panel-glow: rgba(109, 140, 255, 0.2);
-  --panel-shadow: 0 14px 40px -14px rgba(0, 0, 0, 0.7);
+  --panel-bg: #211d18;
+  --panel-border: #38322a;
+  --panel-glow: rgba(255, 90, 43, 0.16);
+  --panel-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
 }
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 6rem;
-  font-size: 18px;
+  scroll-padding-top: 5rem;
+  font-size: 15px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Consent is a short full-width bar on every breakpoint. Only reserve
-   enough footer space for that bar — the old 8rem card gap left a hole. */
 html[data-cookie-banner="1"] body {
   padding-bottom: 4.5rem;
 }
@@ -247,6 +236,22 @@ body {
     outline: 2px solid var(--accent);
     outline-offset: 2px;
   }
+}
+
+.card-corp {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  box-shadow: var(--panel-shadow);
+  border-radius: 8px;
+}
+
+.card-corp-hover {
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.card-corp-hover:hover {
+  border-color: var(--border-strong);
+  box-shadow: 0 2px 8px rgba(14, 23, 41, 0.06);
 }
 
 .lift {
