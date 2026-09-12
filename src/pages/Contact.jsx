@@ -17,7 +17,7 @@ function validate(values) {
   if (!values.name.trim()) errors.name = "Please enter your name.";
   if (!values.company.trim()) errors.company = "Please enter your company.";
   if (!values.email.trim()) errors.email = "Please enter your email address.";
-  else if (!/[^\s@]+@[^\s@]+\.[^\s@]+/.test(values.email))
+  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email))
     errors.email = "That doesn't look like a valid email address.";
   if (values.phone && !/^[\d\s()+.-]{7,}$/.test(values.phone))
     errors.phone = "Please enter a valid phone number.";
@@ -124,7 +124,7 @@ export default function Contact() {
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-steel">
           Tell us a bit about how your team bids, procures, and coordinates today, and we&rsquo;ll
-          show you where D&amp;J Stratagem fits.
+          show you where D&J Stratagem fits.
         </p>
       </Section>
 
