@@ -5,6 +5,16 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.32",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "improved", text: "Committed public/sitemap.xml now includes /blog and the four indexed posts, matching the live sitemap and the build generator." },
+      { type: "improved", text: "Document head advertises /favicon.svg as the apple-touch-icon so iOS does not request a missing PNG that LiteSpeed used to SPA-fallback." },
+      { type: "improved", text: "GitHub deploy is current; public_html is still on assets/index-BaMj1nih.js. The next cPanel pull ships health.php, send-demo.php, manifest.webmanifest, and the icon rewrites." },
+    ],
+  },
+  {
     version: "1.31",
     date: "September 2026",
     tag: "Fix",
