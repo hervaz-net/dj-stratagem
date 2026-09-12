@@ -72,8 +72,6 @@ export default function Login() {
       navigate(destination, { replace: true });
     } catch (err) {
       setError(err.message);
-      // Focus the email field for a credentials failure so a retry is one
-      // keystroke away; leave focus alone for server-side problems.
       if (err.code === "invalid_credentials") {
         setInvalid("email");
         document.getElementById("email")?.focus();
@@ -98,7 +96,7 @@ export default function Login() {
           </Link>
 
           <h1 className="mt-8 text-3xl font-semibold tracking-tight text-paper">Sign in</h1>
-          <p className="mt-2 text-sm text-steel">Access your D&amp;J Stratagem account.</p>
+          <p className="mt-2 text-sm text-steel">Access your D&J Stratagem account.</p>
 
           <form onSubmit={handleSubmit} className="mt-8 space-y-4" noValidate>
             <div>
@@ -114,8 +112,6 @@ export default function Login() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
                 aria-invalid={invalid === "email" ? true : undefined}
-                // Field-specific: describing both inputs with the same message
-                // would announce the email error on the password field too.
                 aria-describedby={invalid === "email" ? errorId : undefined}
                 className={inputClass}
               />
@@ -127,6 +123,7 @@ export default function Login() {
               autoComplete="current-password"
               value={password}
               onChange={setPassword}
+              placeholder="Your password"
               invalid={invalid === "password"}
               describedBy={invalid === "password" ? errorId : undefined}
             />
