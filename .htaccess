@@ -94,6 +94,13 @@
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule ^manifest\.webmanifest$ - [R=404,L]
 
+  # Browsers still request /favicon.ico and /apple-touch-icon.png even when
+  # the document points at /favicon.svg. Do not hand them the SPA shell.
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^favicon\.ico$ favicon.svg [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^apple-touch-icon(-precomposed)?\.png$ favicon.svg [L]
+
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule ^assets/ - [R=404,L]
   RewriteRule ^assets/ - [L]
