@@ -18,6 +18,7 @@ const navGroups = [
     items: [
       { to: "/platform", label: "Platform overview", desc: "Bidding, marketing, CRM, and AI in one place" },
       { to: "/supply", label: "Supply Exchange", desc: "Sealed, scored bidding on materials" },
+      { to: "/supply/catalog", label: "Catalog", desc: "300+ SKUs with brand, type, and quantity" },
       { to: "/fleet", label: "Fleet", desc: "Equipment status and utilization preview" },
     ],
   },

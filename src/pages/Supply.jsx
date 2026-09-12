@@ -164,11 +164,11 @@ export default function Supply() {
               same-day order, structured so suppliers stay at the table.
             </p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-              <Button to="/contact" variant="primary">
-                Contact us <IconArrowRight width={16} height={16} />
+              <Button to="/supply/catalog" variant="primary">
+                Browse the catalog <IconArrowRight width={16} height={16} />
               </Button>
-              <Button to="/platform" variant="secondary">
-                See the full platform
+              <Button to="/contact" variant="secondary">
+                Contact us
               </Button>
             </div>
           </div>
@@ -197,6 +197,11 @@ export default function Supply() {
               </div>
             </Reveal>
           ))}
+        </div>
+        <div className="mt-8">
+          <Button to="/supply/catalog" variant="ghost">
+            Browse all 300+ SKUs in the catalog <IconArrowRight width={16} height={16} />
+          </Button>
         </div>
       </Section>
 

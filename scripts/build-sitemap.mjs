@@ -32,6 +32,7 @@ const staticPaths = [
   ["/platform", "0.8"],
   ["/solutions", "0.8"],
   ["/supply", "0.8"],
+  ["/supply/catalog", "0.7"],
   ["/fleet", "0.7"],
   ["/pricing", "0.8"],
   ["/about", "0.6"],
