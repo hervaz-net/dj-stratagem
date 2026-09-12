@@ -55,7 +55,7 @@ export default function Login() {
     setInvalid(null);
 
     if (!email) return fail("email", "Enter your email address.");
-    if (!/[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return fail("email", "Enter a valid email address.");
     }
     if (!password) return fail("password", "Enter your password.");
@@ -72,8 +72,6 @@ export default function Login() {
       navigate(destination, { replace: true });
     } catch (err) {
       setError(err.message);
-      // Focus the email field for a credentials failure so a retry is one
-      // keystroke away; leave focus alone for server-side problems.
       if (err.code === "invalid_credentials") {
         setInvalid("email");
         document.getElementById("email")?.focus();
@@ -98,7 +96,7 @@ export default function Login() {
           </Link>
 
           <h1 className="mt-8 text-3xl font-semibold tracking-tight text-paper">Sign in</h1>
-          <p className="mt-2 text-sm text-steel">Access your D&amp;J Stratagem account.</p>
+          <p className="mt-2 text-sm text-steel">Access your D&J Stratagem account.</p>
 
           <form onSubmit={handleSubmit} className="mt-8 space-y-4" noValidate>
             <div>
@@ -114,8 +112,6 @@ export default function Login() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
                 aria-invalid={invalid === "email" ? true : undefined}
-                // Field-specific: describing both inputs with the same message
-                // would announce the email error on the password field too.
                 aria-describedby={invalid === "email" ? errorId : undefined}
                 className={inputClass}
               />
