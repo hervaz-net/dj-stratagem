@@ -55,7 +55,7 @@ export default function Login() {
     setInvalid(null);
 
     if (!email) return fail("email", "Enter your email address.");
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (!/[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       return fail("email", "Enter a valid email address.");
     }
     if (!password) return fail("password", "Enter your password.");
@@ -127,6 +127,7 @@ export default function Login() {
               autoComplete="current-password"
               value={password}
               onChange={setPassword}
+              placeholder="Your password"
               invalid={invalid === "password"}
               describedBy={invalid === "password" ? errorId : undefined}
             />

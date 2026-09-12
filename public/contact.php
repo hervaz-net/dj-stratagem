@@ -50,7 +50,18 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
     exit;
 }
 
-if (!empty($_POST['bot-field'])) {
+$payload = $_POST;
+if ($payload === []) {
+    $raw = file_get_contents('php://input');
+    if (is_string($raw) && $raw !== '') {
+        $decoded = json_decode($raw, true);
+        if (is_array($decoded)) {
+            $payload = $decoded;
+        }
+    }
+}
+
+if (!empty($payload['bot-field'])) {
     echo json_encode(['ok' => true]);
     exit;
 }
@@ -61,12 +72,12 @@ function clean_field($value): string
     return preg_replace('/[\r\n]+/', ' ', $value) ?? '';
 }
 
-$name    = clean_field($_POST['name'] ?? '');
-$company = clean_field($_POST['company'] ?? '');
-$email   = clean_field($_POST['email'] ?? '');
-$phone   = clean_field($_POST['phone'] ?? '');
-$role    = clean_field($_POST['role'] ?? '');
-$message = trim(str_replace("\r\n", "\n", (string) ($_POST['message'] ?? '')));
+$name    = clean_field($payload['name'] ?? '');
+$company = clean_field($payload['company'] ?? '');
+$email   = clean_field($payload['email'] ?? '');
+$phone   = clean_field($payload['phone'] ?? '');
+$role    = clean_field($payload['role'] ?? '');
+$message = trim(str_replace("\r\n", "\n", (string) ($payload['message'] ?? '')));
 
 $errors = [];
 if ($name === '') {
