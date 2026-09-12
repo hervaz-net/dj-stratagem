@@ -5,6 +5,15 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.31",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "improved", text: "Missing /favicon.ico and /apple-touch-icon.png no longer fall through to the SPA HTML shell. LiteSpeed now serves favicon.svg instead." },
+      { type: "improved", text: "cPanel public_html is still behind GitHub deploy (live assets/index-BaMj1nih.js vs deploy assets/index-Bg4-UqOO.js). The next host pull ships send-demo.php, health.php, the web manifest, and relative fleet dates." },
+    ],
+  },
+  {
     version: "1.30",
     date: "September 2026",
     tag: "Fix",
