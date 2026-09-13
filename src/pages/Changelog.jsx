@@ -5,6 +5,16 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.35",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "improved", text: "Live public_html is still on assets/index-BaMj1nih.js (last-modified 11 Sep). GitHub deploy HEAD already has assets/index-KEqCkujv.js plus health.php, send-demo.php, manifest.webmanifest, and the apple-touch / favicon.ico rewrites." },
+      { type: "improved", text: "Until cPanel Update from Remote + Deploy HEAD, /health.php, /send-demo.php, /manifest.webmanifest, /favicon.ico, and /apple-touch-icon.png keep SPA-falling back to index.html. Alias paths such as /signin still return 200 instead of 301." },
+      { type: "improved", text: "Publish-deploy refreshes the GitHub deploy branch, then fails the host pull because repo secret CPANEL_TOKEN is not set. Add that secret, or pull deploy in cPanel, to make public_html match." },
+    ],
+  },
+  {
     version: "1.34",
     date: "September 2026",
     tag: "Fix",
