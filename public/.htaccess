@@ -28,6 +28,9 @@ AddType application/manifest+json .webmanifest
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule ^(.+)/$ /$1 [R=301,L]
 
+  # /blog and /blog/* are real SPA routes. Never 301 them to /changelog.
+  # A stale public_html copy of this file still did that and hid the index.
+
   RewriteRule ^signin$ /login [R=301,L]
   RewriteRule ^sign-in$ /login [R=301,L]
   RewriteRule ^log-in$ /login [R=301,L]
@@ -102,10 +105,9 @@ AddType application/manifest+json .webmanifest
   RewriteRule ^manifest\.webmanifest$ - [R=404,L]
 
   # Browsers still request /favicon.ico and /apple-touch-icon.png even when
-  # the document points at /favicon.svg. Do not hand them the SPA shell.
-  RewriteCond %{REQUEST_FILENAME} !-f
+  # the document points at /favicon.svg. Always serve the SVG mark — do not
+  # wait for !-f, and do not hand them the SPA shell.
   RewriteRule ^favicon\.ico$ favicon.svg [L]
-  RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule ^apple-touch-icon(-precomposed)?\.png$ favicon.svg [L]
 
   RewriteCond %{REQUEST_FILENAME} !-f
