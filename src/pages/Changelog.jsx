@@ -5,6 +5,16 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.36",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "improved", text: "Live public_html is still on assets/index-BaMj1nih.js (last-modified 11 Sep). GitHub deploy HEAD is assets/index-saRgJOp-.js with health.php, send-demo.php, manifest.webmanifest, and the icon rewrites." },
+      { type: "improved", text: "/api/health.php now serves public/api/health.php when that file exists, instead of always rewriting to the root health.php probe." },
+      { type: "improved", text: "Until cPanel Update from Remote + Deploy HEAD, /health.php, /send-demo.php, and /manifest.webmanifest keep SPA-falling back to index.html, and aliases such as /help and /signup stay at 200 instead of 301." },
+    ],
+  },
+  {
     version: "1.35",
     date: "September 2026",
     tag: "Fix",
