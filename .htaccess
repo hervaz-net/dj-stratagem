@@ -89,6 +89,10 @@
   # tree has been missing send-demo.php, health.php, and manifest.webmanifest,
   # so LiteSpeed returned index.html (200 HTML) for those probes.
   RewriteRule ^send-demo\.php$ contact.php [L]
+  # Prefer the real API probe. Only bounce to the root probe when
+  # public_html is missing api/health.php.
+  RewriteCond %{REQUEST_FILENAME} -f
+  RewriteRule ^api/health\.php$ - [L]
   RewriteRule ^api/health\.php$ health.php [L]
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule \.php$ api/not-found.php [L]
