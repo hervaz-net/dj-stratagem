@@ -5,6 +5,16 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.37",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "improved", text: "Live public_html now matches GitHub deploy: assets/index-BoLTTWBH.js from main 062bc70. /health.php, /api/health.php, /send-demo.php, and /manifest.webmanifest are real files, not SPA fallbacks." },
+      { type: "improved", text: "Intent aliases such as /signup, /signin, /help, /docs, and /how-it-works 301 at LiteSpeed to the canonical routes." },
+      { type: "improved", text: "LiteSpeed now advertises application/manifest+json for /manifest.webmanifest instead of application/octet-stream." },
+    ],
+  },
+  {
     version: "1.36",
     date: "September 2026",
     tag: "Fix",
