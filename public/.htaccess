@@ -5,7 +5,7 @@
 # Use the CloudLinux lsphp MIME type (three underscores). The short
 # application/x-httpd-alt-php81 name is not registered on this host.
 # Keep the handler in source: rsync --delete wipes the MultiPHP-injected block.
-<FilesMatch "\\.php$">
+<FilesMatch "\.php$">
   SetHandler application/x-httpd-alt-php81___lsphp
 </FilesMatch>
 <IfModule mime_module>
@@ -21,7 +21,7 @@ AddType application/manifest+json .webmanifest
   RewriteBase /
 
   # One public origin. www must not keep its own cookie/cache universe.
-  RewriteCond %{HTTP_HOST} ^www\\.djstratageminc\\.com$ [NC]
+  RewriteCond %{HTTP_HOST} ^www\.djstratageminc\.com$ [NC]
   RewriteRule ^ https://djstratageminc.com%{REQUEST_URI} [R=301,L]
 
   # Drop a trailing slash on non-directories so /login/ matches /login.
@@ -90,23 +90,23 @@ AddType application/manifest+json .webmanifest
   # Never SPA-fallback PHP handlers or the PWA manifest. A stale public_html
   # tree has been missing send-demo.php, health.php, and manifest.webmanifest,
   # so LiteSpeed returned index.html (200 HTML) for those probes.
-  RewriteRule ^send-demo\\.php$ contact.php [L]
+  RewriteRule ^send-demo\.php$ contact.php [L]
   # Prefer the real API probe. Only bounce to the root probe when
   # public_html is missing api/health.php.
   RewriteCond %{REQUEST_FILENAME} -f
-  RewriteRule ^api/health\\.php$ - [L]
-  RewriteRule ^api/health\\.php$ health.php [L]
+  RewriteRule ^api/health\.php$ - [L]
+  RewriteRule ^api/health\.php$ health.php [L]
   RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteRule \\.php$ api/not-found.php [L]
+  RewriteRule \.php$ api/not-found.php [L]
   RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteRule ^manifest\\.webmanifest$ - [R=404,L]
+  RewriteRule ^manifest\.webmanifest$ - [R=404,L]
 
   # Browsers still request /favicon.ico and /apple-touch-icon.png even when
   # the document points at /favicon.svg. Do not hand them the SPA shell.
   RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteRule ^favicon\\.ico$ favicon.svg [L]
+  RewriteRule ^favicon\.ico$ favicon.svg [L]
   RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteRule ^apple-touch-icon(-precomposed)?\\.png$ favicon.svg [L]
+  RewriteRule ^apple-touch-icon(-precomposed)?\.png$ favicon.svg [L]
 
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule ^assets/ - [R=404,L]
@@ -132,7 +132,7 @@ AddType application/manifest+json .webmanifest
   <FilesMatch "^(robots.txt|sitemap.xml|manifest.webmanifest)$">
     Header set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
-  <FilesMatch "\\.webmanifest$">
+  <FilesMatch "\.webmanifest$">
     Header set Content-Type "application/manifest+json"
   </FilesMatch>
 </IfModule>
