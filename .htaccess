@@ -10,7 +10,9 @@
 </FilesMatch>
 <IfModule mime_module>
   AddHandler application/x-httpd-alt-php81___lsphp .php .php8 .phtml
+  AddType application/manifest+json .webmanifest
 </IfModule>
+AddType application/manifest+json .webmanifest
 
 # Serve real files/directories (assets, contact.php) as-is; everything
 # else falls through to index.html so React Router can handle the route.
@@ -129,6 +131,9 @@
   </FilesMatch>
   <FilesMatch "^(robots.txt|sitemap.xml|manifest.webmanifest)$">
     Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+  <FilesMatch "\.webmanifest$">
+    Header set Content-Type "application/manifest+json"
   </FilesMatch>
 </IfModule>
 
