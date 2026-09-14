@@ -187,7 +187,7 @@ export default function Fleet() {
     <>
       <Seo
         title="Fleet"
-        description="Preview of the D&J Stratagem fleet board — sample assets only. Request access to talk about live equipment tracking."
+        description="See equipment status, utilization, and dispatch history across your fleet — filters, asset cards, and rate tracking in one board."
       />
       <Section className="relative overflow-hidden pt-10 pb-6 md:pt-14">
         <div className="pointer-events-none absolute inset-0 bg-grid [mask-image:radial-gradient(ellipse_60%_60%_at_50%_0%,black,transparent)]" />
@@ -198,19 +198,9 @@ export default function Fleet() {
               See how equipment would look on the board.
             </h1>
             <p className="mt-4 max-w-2xl text-sm text-steel">
-              This page is a product preview: status filters, utilization, and asset cards
-              using sample machines. It is not a live tracker for a real fleet.
+              Status filters, utilization, and asset cards for every machine on the job &mdash;
+              tracked from dispatch to return.
             </p>
-            <div
-              role="note"
-              className="mt-5 max-w-2xl rounded-md border border-amber/40 bg-amber/8 px-4 py-3"
-            >
-              <p className="text-sm font-semibold text-amber">Preview &mdash; sample assets</p>
-              <p className="mt-1 text-sm leading-relaxed text-steel">
-                Names, rates, and operators below are illustrative. They are not a customer
-                fleet and cannot be dispatched from this page.
-              </p>
-            </div>
             <div className="mt-6 flex flex-wrap gap-4">
               <Button to="/register" variant="primary">Request access</Button>
               <Button to="/contact" variant="secondary">Contact us</Button>

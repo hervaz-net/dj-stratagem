@@ -3,6 +3,7 @@ import CTASection from "../components/CTASection";
 import Reveal from "../components/Reveal";
 import Seo from "../components/Seo";
 import CompetitorList from "../components/CompetitorList";
+import DashboardShot from "../components/DashboardShot";
 import { IconTarget, IconLink, IconShield, IconTrendingUp } from "../components/icons";
 import { TeamArt } from "../components/illustrations";
 
@@ -112,6 +113,29 @@ export default function About() {
               </div>
             </Reveal>
           ))}
+        </div>
+      </Section>
+
+      <Section tint className="border-t border-line">
+        <div className="grid grid-cols-1 items-center gap-14 lg:grid-cols-2">
+          <DashboardShot
+            src="/screenshots/dash-admin.png"
+            alt="Platform admin dashboard showing pending account requests waiting for approval"
+            label="Accounts"
+          />
+          <div>
+            <Eyebrow>How accounts get vetted</Eyebrow>
+            <h2 className="text-balance text-xl font-semibold tracking-tight text-paper md:text-2xl">
+              Every account is reviewed before it goes live.
+            </h2>
+            <p className="mt-5 text-base leading-relaxed text-steel">
+              New sign-ups don&rsquo;t get network access automatically. Our team reviews each
+              one &mdash; company details, license and insurance information, the works &mdash;
+              before it can post a project, submit a bid, or quote into Supply Exchange. That
+              review is what makes the vendor ratings and verified credentials elsewhere on the
+              platform mean something.
+            </p>
+          </div>
         </div>
       </Section>
 

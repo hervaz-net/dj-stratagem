@@ -6,7 +6,7 @@ import Seo from "../../components/Seo";
 import { Link } from "react-router-dom";
 import useAuth from "../../auth/useAuth";
 import usePolledResource from "../../api/usePolledResource";
-import { fetchOverview, isConfigured } from "../../api/dashboard";
+import { fetchOverview } from "../../api/dashboard";
 import { overviewFixtures } from "../../api/fixtures";
 
 function greeting() {
@@ -57,15 +57,6 @@ export default function Overview() {
         title={`${greeting()}${user?.name ? `, ${user.name.split(" ")[0]}` : ""}.`}
         subtitle="Here's what's happening in your supply chain today."
       >
-        {!isConfigured && (
-          <GlassCard className="mb-6 flex flex-wrap items-center gap-x-2 gap-y-1 px-5 py-3">
-            <span className="text-xs font-semibold uppercase tracking-wider text-amber">Sample data</span>
-            <span className="text-sm text-steel">
-              Live APIs activate on the hosted PHP server after you sign in.
-            </span>
-          </GlassCard>
-        )}
-
         {overview.error && (
           <GlassCard className="mb-6 px-5 py-3" role="status">
             <p className="text-sm text-danger">

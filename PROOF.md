@@ -51,38 +51,36 @@ and approved for publication.
 methodology, not a single anecdote. If it is one customer's result, say so and
 say it is not typical.
 
-## Sample product data is fine, when labelled
+## Sample product data (2026-09-14: disclaimer labels removed)
 
-`OpportunityPreview.jsx` shows representative project rows. That is a product
-mockup, not a customer claim, and it carries a visible "Sample view" label.
-Keep that label as long as the data is illustrative. The same applies to the
-dashboard mockups in `WalkthroughModal.jsx`.
+`OpportunityPreview.jsx`, `HeroPanel.jsx`, the Fleet board, the Catalog, and
+the project listing pages (`sampleProjects.js` — `/projects`, project detail,
+trade/location pages) all show illustrative product mockups. Through
+2026-09-14 these carried visible labels: a "Sample view" chip on the two hero
+panels, a "Preview — sample X" banner (`PreviewNotice.jsx`) on Catalog,
+Fleet, Projects, ProjectDetail, and TradeLocation, and a "Sample data" strip
+on the Overview/Suppliers dashboards.
 
-The line: **showing what the product does** is fine. **Claiming someone
-used it and got a result** requires proof.
+The owner explicitly asked for these removed, was shown this section's
+original warning about the project-listing pages specifically (a contractor
+mistaking a sample listing for a real solicitation loses real hours chasing
+a bid that does not exist), and confirmed removal anyway. `PreviewNotice.jsx`
+was deleted; the "Sample view" and "Sample data" labels were removed from
+their components. A single small line was added to `Footer.jsx` instead:
+"Product data shown throughout this site — projects, bids, pricing, and
+catalog items — is illustrative." That is the only remaining disclosure.
 
-### Sample project listings carry a higher duty
+Rules that still apply regardless of labelling:
 
-`src/data/sampleProjects.js` feeds `/projects`, the project detail pages, and
-the trade/location landing pages. These are illustrative, not a live feed.
-
-This matters more than a mockup on a marketing page. A contractor who mistakes
-a sample listing for a real solicitation loses real hours — chasing a bid,
-pulling a team onto an estimate, calling an owner who never posted the work.
-So every surface that renders this data shows `PreviewNotice`: a full-width
-banner stating plainly that the listings are not live solicitations and cannot
-be bid on.
-
-Rules while the feed is illustrative:
-
-- Never remove `PreviewNotice` from a page rendering `sampleProjects`.
 - Never present a sample listing as biddable — no live countdowns implying a
   real deadline, no downloadable "plans" that do not exist.
 - Owner and GC names must stay clearly generic or explicitly marked sample.
   Do not name a real GC as the contractor on an invented project.
+- This is still not a customer claim or a testimonial — the line above ("showing
+  what the product does" is fine, "claiming someone used it and got a result"
+  requires proof) is unchanged and unaffected by this section.
 
-When the real feed lands, replace the module with the API client and drop
-`PreviewNotice` from the pages backed by live data — not before.
+When the real feed lands, replace `sampleProjects.js` with the API client.
 
 ## Also removed: the phantom blog (2026-08-13)
 

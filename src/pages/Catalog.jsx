@@ -1,8 +1,6 @@
 import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
 import Section, { Eyebrow } from "../components/Section";
 import Seo from "../components/Seo";
-import PreviewNotice from "../components/PreviewNotice";
 import CTASection from "../components/CTASection";
 import {
   IconLock,
@@ -175,15 +173,6 @@ export default function Catalog() {
           Pick a brand and type per item, set quantities, and see a running subtotal with an
           estimated delivery window &mdash; before tax and shipping are added at checkout.
         </p>
-        <PreviewNotice className="mt-8 max-w-2xl" title="Preview — sample catalog">
-          Prices, brands, and ETAs shown here are illustrative sample data, not a live
-          price list. The real catalog is priced per account through sealed, scored
-          bidding &mdash;{" "}
-          <Link to="/register" className="font-medium text-amber underline hover:text-amber-2">
-            request access
-          </Link>
-          .
-        </PreviewNotice>
       </Section>
 
       <Section className="border-t border-line">

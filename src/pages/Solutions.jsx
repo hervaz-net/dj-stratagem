@@ -3,7 +3,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Section, { Eyebrow } from "../components/Section";
 import CTASection from "../components/CTASection";
 import Seo from "../components/Seo";
-import { IconBuilding, IconHelmet, IconTruck, IconCheck } from "../components/icons";
+import DashboardShot from "../components/DashboardShot";
+import { IconBuilding, IconHelmet, IconTruck } from "../components/icons";
 
 const roles = [
   {
@@ -12,12 +13,11 @@ const roles = [
     label: "General Contractors",
     title: "Run the whole pipeline, not a dozen disconnected tools.",
     text: "Post projects, build a qualified sub list, and manage every bid, RFI, and deadline from one dashboard — then award and track performance so your next project starts smarter.",
-    points: [
-      "Post projects and invite the right subcontractors in minutes",
-      "Compare leveled bids side by side before awarding",
-      "Manage RFIs, addenda, and deadlines without email archaeology",
-      "Award contracts and rate vendor performance in one place",
-    ],
+    shot: {
+      src: "/screenshots/dash-overview.png",
+      label: "Overview",
+      alt: "D&J Stratagem account dashboard showing open bids, pending orders, alerts, and network health",
+    },
   },
   {
     key: "sub",
@@ -25,12 +25,11 @@ const roles = [
     label: "Subcontractors",
     title: "Get matched to work worth bidding — and win more of it.",
     text: "D&J Stratagem finds projects that fit your trade, helps you present a professional profile with verified credentials, and tracks your bid history so every submission gets sharper.",
-    points: [
-      "Automatic matching to projects in your trade and territory",
-      "Digital bid submission with a profile and portfolio that sells your work",
-      "License and insurance verification that builds GC trust",
-      "Bid analytics and a follow-up CRM so opportunities never go cold",
-    ],
+    shot: {
+      src: "/screenshots/dash-overview.png",
+      label: "Overview",
+      alt: "D&J Stratagem account dashboard showing open bids, pending orders, alerts, and network health",
+    },
   },
   {
     key: "supplier",
@@ -38,12 +37,11 @@ const roles = [
     label: "Suppliers",
     title: "Compete on what you're actually good at.",
     text: "Distributors and manufacturers quote into Supply Exchange without getting dragged into a margin-destroying bid war. Sealed quotes, scored awards, and pooled demand mean fewer, larger, better orders.",
-    points: [
-      "Sealed single-round quotes — competitors never see your number",
-      "Win on lead time, fill rate, and reliability, not just lowest price",
-      "Floor pricing per SKU so a quote is never scored below your margin",
-      "Pooled contractor demand delivers larger committed POs",
-    ],
+    shot: {
+      src: "/screenshots/dash-suppliers.png",
+      label: "Suppliers",
+      alt: "Supplier network dashboard showing risk score, delivery rate, and year-to-date spend per supplier",
+    },
   },
 ];
 
@@ -167,17 +165,7 @@ export default function Solutions() {
             <p className="mt-4 text-base leading-relaxed text-steel">{role.text}</p>
           </div>
 
-          <div className="rounded-md border border-line bg-ink-2 p-6">
-            <p className="text-xs uppercase tracking-wider text-steel">What you get</p>
-            <ul className="mt-4 space-y-4">
-              {role.points.map((pt) => (
-                <li key={pt} className="flex items-start gap-3 text-sm text-paper/90">
-                  <IconCheck width={16} height={16} className="mt-0.5 shrink-0 text-amber" />
-                  {pt}
-                </li>
-              ))}
-            </ul>
-          </div>
+          <DashboardShot src={role.shot.src} alt={role.shot.alt} label={role.shot.label} />
         </div>
       </Section>
 

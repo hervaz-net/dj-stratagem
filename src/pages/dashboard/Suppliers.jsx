@@ -176,17 +176,6 @@ export default function SuppliersDashboard() {
           </div>
         }
       >
-        {!isConfigured && (
-          <GlassCard className="mb-6 flex flex-wrap items-center gap-x-2 gap-y-1 px-5 py-3">
-            <span className="text-xs font-semibold uppercase tracking-wider text-amber">
-              Sample data
-            </span>
-            <span className="text-sm text-steel">
-              Live APIs activate on the hosted PHP server after you sign in.
-            </span>
-          </GlassCard>
-        )}
-
         {anyError && (
           <GlassCard className="mb-6 px-5 py-3" role="status">
             <p className="text-sm text-danger">

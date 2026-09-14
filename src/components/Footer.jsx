@@ -168,6 +168,10 @@ export default function Footer() {
           <p>&copy; {new Date().getFullYear()} D&amp;J Stratagem, Inc. All rights reserved.</p>
           <p>Find better projects. Bid smarter. Win more work.</p>
         </div>
+        <p className="mt-4 text-[11px] text-steel/70">
+          Product data shown throughout this site &mdash; projects, bids, pricing, and catalog
+          items &mdash; is illustrative.
+        </p>
       </div>
     </footer>
   );

@@ -22,9 +22,6 @@ export default function HeroPanel() {
           <span className="h-2.5 w-2.5 rounded-full bg-warning/70" />
           <span className="h-2.5 w-2.5 rounded-full bg-success/70" />
           <span className="ml-2 text-xs text-steel">Bid Comparison</span>
-          <span className="ml-auto rounded-full border border-line px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-steel">
-            Sample view
-          </span>
         </div>
 
         <div className="p-5">

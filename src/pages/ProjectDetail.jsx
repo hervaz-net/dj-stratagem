@@ -3,7 +3,6 @@ import Section, { Eyebrow } from "../components/Section";
 import Button from "../components/Button";
 import Seo from "../components/Seo";
 import CTASection from "../components/CTASection";
-import PreviewNotice from "../components/PreviewNotice";
 import { IconCheck, IconArrowRight } from "../components/icons";
 import { findProject, formatDue, matchTone, slugify } from "../data/sampleProjects";
 
@@ -47,8 +46,6 @@ export default function ProjectDetail() {
         <p className="mt-4 text-lg text-steel">
           {project.city}, {project.state}
         </p>
-
-        <PreviewNotice className="mt-8 max-w-2xl" />
       </Section>
 
       <Section className="border-t border-line">

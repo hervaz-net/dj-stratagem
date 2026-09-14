@@ -3,8 +3,9 @@
  * /projects and the trade/location landing pages.
  *
  * THIS IS SAMPLE DATA, NOT A LIVE FEED. Nothing here is a real solicitation.
- * Every surface that renders it must say so plainly — a contractor who
- * mistakes one of these for a real bid has wasted real time. See PROOF.md.
+ * On-page disclaimers were removed 2026-09-14 at the owner's request — see
+ * PROOF.md for that decision. This comment is the only remaining record that
+ * the data is illustrative; keep it accurate.
  *
  * When the real project feed lands, replace this module with the API client;
  * the shapes below are the contract to build against.
