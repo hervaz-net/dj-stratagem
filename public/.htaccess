@@ -30,6 +30,10 @@ AddType application/manifest+json .webmanifest
 
   # /blog and /blog/* are real SPA routes. Never 301 them to /changelog.
   # A stale public_html copy of this file still did that and hid the index.
+  # Serve the shell explicitly so an old RewriteRule ^blog$ /changelog cannot
+  # win if a host merge concatenates rules — first match is this one.
+  RewriteRule ^blog$ index.html [L]
+  RewriteRule ^blog/ index.html [L]
 
   RewriteRule ^signin$ /login [R=301,L]
   RewriteRule ^sign-in$ /login [R=301,L]
