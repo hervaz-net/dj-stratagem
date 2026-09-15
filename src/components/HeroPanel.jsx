@@ -27,7 +27,7 @@ export default function HeroPanel() {
         <div className="p-5">
           <div className="flex items-center justify-between">
             <p className="text-sm font-semibold text-paper">Riverside Medical Office</p>
-            <span className="badge badge-success">3 bids in</span>
+            <span className="label success">3 bids in</span>
           </div>
 
           <div className="mt-4 space-y-2">

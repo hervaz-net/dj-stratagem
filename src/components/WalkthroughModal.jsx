@@ -441,10 +441,10 @@ export default function WalkthroughModal({ open, onClose }) {
                 team already works &mdash; no slide deck, just a hands-on walkthrough.
               </p>
               <div className="mt-8 flex flex-wrap justify-center gap-2.5">
-                <Link to="/contact" onClick={onClose} className="btn btn-primary">
+                <Link to="/contact" onClick={onClose} className="button">
                   Contact us
                 </Link>
-                <Link to="/pricing" onClick={onClose} className="btn btn-secondary">
+                <Link to="/pricing" onClick={onClose} className="button secondary">
                   View pricing
                 </Link>
               </div>

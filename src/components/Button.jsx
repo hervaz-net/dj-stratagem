@@ -1,18 +1,18 @@
 import { Link } from "react-router-dom";
 
-const base = "lift btn whitespace-nowrap";
+const base = "lift button";
 
 const sizes = {
-  sm: "btn-sm",
+  sm: "small",
   md: "",
-  lg: "btn-lg",
+  lg: "large",
 };
 
 const variants = {
-  primary: "btn-primary",
-  secondary: "btn-secondary",
-  ghost: "btn-ghost",
-  "danger-outline": "btn-danger-outline",
+  primary: "",
+  secondary: "secondary",
+  ghost: "clear",
+  "danger-outline": "hollow alert",
 };
 
 export default function Button({

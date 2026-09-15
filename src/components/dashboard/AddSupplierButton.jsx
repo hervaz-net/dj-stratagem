@@ -83,7 +83,7 @@ export default function AddSupplierButton({ onCreated, floating = false }) {
               <button type="button" onClick={() => setOpen(false)} className="px-4 py-2 text-sm font-semibold text-steel hover:text-paper">
                 Cancel
               </button>
-              <button type="submit" disabled={saving} className="btn btn-primary">
+              <button type="submit" disabled={saving} className="button">
                 {saving ? "Saving…" : "Add supplier"}
               </button>
             </div>

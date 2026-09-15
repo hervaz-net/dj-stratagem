@@ -158,7 +158,7 @@ export default function Navbar({ onOpenPalette }) {
       }`}
     >
       <div
-        className={`mx-auto flex max-w-6xl items-center justify-between gap-6 px-6 transition-all duration-300 ${
+        className={`grid-container flex items-center justify-between gap-6 transition-all duration-300 ${
           scrolled ? "py-2.5" : "py-4"
         }`}
       >

@@ -40,7 +40,7 @@ export default function Blog() {
                 className="card-corp card-corp-hover lift flex h-full flex-col rounded-lg p-6"
               >
                 <div className="flex items-center gap-3 text-xs text-steel">
-                  <span className="badge badge-brand uppercase tracking-wider">{post.category}</span>
+                  <span className="label primary uppercase tracking-wider">{post.category}</span>
                   <span>{formatDate(post.date)}</span>
                   <span>&middot;</span>
                   <span>{post.readMins} min read</span>

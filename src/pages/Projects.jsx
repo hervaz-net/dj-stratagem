@@ -212,7 +212,7 @@ export default function Projects() {
                           </p>
                           <div className="mt-3 flex flex-wrap gap-1.5">
                             {p.scope.map((s) => (
-                              <span key={s} className="badge badge-neutral">
+                              <span key={s} className="label secondary">
                                 {s}
                               </span>
                             ))}

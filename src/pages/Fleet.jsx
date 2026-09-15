@@ -160,13 +160,13 @@ export default function Fleet() {
   const getStatusColor = (status) => {
     switch (status) {
       case "in-use":
-        return "badge-success";
+        return "success";
       case "available":
-        return "badge-brand";
+        return "primary";
       case "maintenance":
-        return "badge-warning";
+        return "warning";
       default:
-        return "badge-neutral";
+        return "secondary";
     }
   };
 
@@ -289,7 +289,7 @@ export default function Fleet() {
                       <h3 className="mt-1 text-base font-semibold text-paper">{asset.name}</h3>
                       <p className="text-xs text-steel">{asset.id}</p>
                     </div>
-                    <span className={`badge ${getStatusColor(asset.status)}`}>
+                    <span className={`label ${getStatusColor(asset.status)}`}>
                       {getStatusLabel(asset.status)}
                     </span>
                   </div>
@@ -324,7 +324,7 @@ export default function Fleet() {
                     type="button"
                     aria-haspopup="dialog"
                     onClick={() => setSelectedAsset(asset)}
-                    className="btn btn-secondary w-full"
+                    className="button secondary w-full"
                   >
                     View details <IconArrowRight className="h-3 w-3" />
                   </button>
@@ -383,7 +383,7 @@ export default function Fleet() {
               className={`card-corp relative rounded-lg p-6 ${plan.highlight ? "border-amber" : ""}`}
             >
               {plan.highlight && (
-                <span className="badge badge-brand absolute -top-3 left-6 uppercase tracking-wider">
+                <span className="label primary absolute -top-3 left-6 uppercase tracking-wider">
                   Most popular
                 </span>
               )}
@@ -449,7 +449,7 @@ export default function Fleet() {
               <div className="border-b border-line pb-4">
                 <div className="flex items-center justify-between">
                   <p className="text-sm text-steel">Current status</p>
-                  <span className={`badge ${getStatusColor(selectedAsset.status)}`}>
+                  <span className={`label ${getStatusColor(selectedAsset.status)}`}>
                     {getStatusLabel(selectedAsset.status)}
                   </span>
                 </div>

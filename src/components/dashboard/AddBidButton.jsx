@@ -38,7 +38,7 @@ export default function AddBidButton({ onCreated }) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="btn btn-primary lift"
+        className="button lift"
       >
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true">
           <path d="M12 5v14M5 12h14" />
@@ -79,7 +79,7 @@ export default function AddBidButton({ onCreated }) {
               <button type="button" onClick={() => setOpen(false)} className="px-4 py-2 text-sm font-semibold text-steel hover:text-paper">
                 Cancel
               </button>
-              <button type="submit" disabled={saving} className="btn btn-primary">
+              <button type="submit" disabled={saving} className="button">
                 {saving ? "Saving…" : "Create bid"}
               </button>
             </div>

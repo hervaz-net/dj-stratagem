@@ -1,10 +1,16 @@
 // D&J Stratagem — corporate design system (SASS)
 //
-// Component-level primitives for the B2B redesign: buttons, badges, tables,
-// KPI blocks. Colors read from the CSS custom properties defined in
-// index.css (:root / [data-theme="dark"]) so light/dark and the Tailwind
-// @theme mapping stay the single source of truth — this file adds structure
-// (size, radius, density), not a second color system.
+// Buttons, labels (pill badges), cards, and form fields build on Foundation
+// for Sites' real components (.button, .label, .card, input/select/textarea)
+// rather than bespoke classes — see _settings.scss for the Foundation Sass
+// variables (geometry: radius, padding, sizes) that get this most of the way
+// there. What's layered on top here is color: Foundation's own component
+// colors are compiled once at build time as static values, so they can't
+// respond to the [data-theme="dark"] switch. Every rule below re-points
+// color/background/border at the CSS custom properties in index.css instead,
+// which is what actually keeps light/dark theming working through Foundation
+// exactly as it did under Tailwind. Tables and KPI blocks have no Foundation
+// equivalent worth adopting, so they stay bespoke, unchanged.
 
 $radius-xs: 4px;
 $radius-sm: 6px;
@@ -42,25 +48,24 @@ $transition-base: 150ms ease;
 @layer components {
 
 // ============================================================
-// BUTTONS — rectangular, dense, no glow. Weight comes from a solid fill,
-// not size: primary/secondary/ghost/outline-danger share one geometry.
+// BUTTONS — Foundation's real .button component (geometry tuned in
+// _settings.scss), re-colored per variant against the CSS custom
+// properties so dark mode keeps working. `.button` alone (no modifier)
+// is primary/solid; `.secondary`/`.clear`/`.hollow.alert` cover the rest.
 // ============================================================
 
-.btn {
+.button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: $space-2;
-  border-radius: $radius-sm;
-  border: 1px solid transparent;
-  font-weight: 600;
-  font-size: $font-size-sm;
-  line-height: 1.2;
   white-space: nowrap;
-  cursor: pointer;
-  padding: 0.5rem 0.875rem;
-  transition: background-color $transition-base, border-color $transition-base, color $transition-base;
+  background: var(--cta);
+  color: #fff;
+  border-color: var(--cta);
   @include focus-ring;
+
+  &:hover:not(:disabled) { background: var(--cta-hover); border-color: var(--cta-hover); }
 
   &:disabled,
   &[aria-disabled="true"] {
@@ -68,65 +73,63 @@ $transition-base: 150ms ease;
     cursor: not-allowed;
     pointer-events: none;
   }
-}
 
-.btn-sm { padding: 0.375rem 0.625rem; font-size: $font-size-xs; }
-.btn-lg { padding: 0.625rem 1.125rem; font-size: $font-size-base; }
+  // Secondary — light surface, bordered, dark text. Foundation's own
+  // .secondary variant is a solid dark fill, which isn't the look we want,
+  // so it's fully re-colored rather than just re-pointed.
+  &.secondary {
+    background: var(--surface-raised);
+    color: var(--text);
+    border: 1px solid var(--border-strong);
 
-.btn-primary {
-  background: var(--cta);
-  color: #fff;
-  border-color: var(--cta);
+    &:hover:not(:disabled) { background: var(--surface-hover); border-color: var(--accent); }
+  }
 
-  &:hover:not(:disabled) { background: var(--cta-hover); border-color: var(--cta-hover); }
-}
+  // Ghost — Foundation calls a border-less, background-less button "clear".
+  &.clear {
+    background: transparent;
+    color: var(--text);
+    border-color: transparent;
 
-.btn-secondary {
-  background: var(--surface-raised);
-  color: var(--text);
-  border-color: var(--border-strong);
+    &:hover:not(:disabled) { background: var(--surface-hover); color: var(--accent); }
+  }
 
-  &:hover:not(:disabled) { background: var(--surface-hover); border-color: var(--accent); }
-}
+  // Danger-outline — Foundation's .hollow.alert combination (outlined,
+  // alert-colored) already matches the intent; just re-pointed to the
+  // theme-aware custom properties.
+  &.hollow.alert {
+    background: transparent;
+    color: var(--danger);
+    border-color: color-mix(in srgb, var(--danger) 45%, transparent);
 
-.btn-ghost {
-  background: transparent;
-  color: var(--text);
-  border-color: transparent;
-
-  &:hover:not(:disabled) { background: var(--surface-hover); color: var(--accent); }
-}
-
-.btn-danger-outline {
-  background: transparent;
-  color: var(--danger);
-  border-color: color-mix(in srgb, var(--danger) 45%, transparent);
-
-  &:hover:not(:disabled) { background: var(--danger-bg); }
+    &:hover:not(:disabled) { background: var(--danger-bg); }
+  }
 }
 
 // ============================================================
-// BADGES — status pills, but rectangular (small radius), not full pills.
+// LABELS — Foundation's small pill/tag component (status labels like
+// "Leveled", "Active"). Foundation's own .badge is a different, unrelated
+// component (a small circular count indicator), so labels — not badges —
+// are the right primitive here; geometry from _settings.scss, color
+// re-pointed at the CSS custom properties per variant.
 // ============================================================
 
-.badge {
+.label {
   display: inline-flex;
   align-items: center;
   gap: $space-1;
-  border-radius: $radius-xs;
-  padding: 0.1875rem 0.5rem;
-  font-size: $font-size-xs;
   font-weight: 600;
   letter-spacing: 0.01em;
   border: 1px solid transparent;
   line-height: 1.4;
-}
+  text-transform: none;
 
-.badge-neutral { background: var(--surface-hover); color: var(--text-muted); border-color: var(--border); }
-.badge-brand { background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent); border-color: color-mix(in srgb, var(--accent) 28%, transparent); }
-.badge-success { background: var(--success-bg); color: var(--success); border-color: color-mix(in srgb, var(--success) 30%, transparent); }
-.badge-warning { background: var(--warning-bg); color: var(--warning); border-color: color-mix(in srgb, var(--warning) 30%, transparent); }
-.badge-danger { background: var(--danger-bg); color: var(--danger); border-color: color-mix(in srgb, var(--danger) 30%, transparent); }
+  &.secondary { background: var(--surface-hover); color: var(--text-muted); border-color: var(--border); }
+  &.primary { background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent); border-color: color-mix(in srgb, var(--accent) 28%, transparent); }
+  &.success { background: var(--success-bg); color: var(--success); border-color: color-mix(in srgb, var(--success) 30%, transparent); }
+  &.warning { background: var(--warning-bg); color: var(--warning); border-color: color-mix(in srgb, var(--warning) 30%, transparent); }
+  &.alert { background: var(--danger-bg); color: var(--danger); border-color: color-mix(in srgb, var(--danger) 30%, transparent); }
+}
 
 // ============================================================
 // CARDS / PANELS — flat, hairline-bordered, minimal shadow.
@@ -215,8 +218,35 @@ $transition-base: 150ms ease;
 }
 
 // ============================================================
-// FORM CONTROLS
+// FORM CONTROLS — Foundation styles input/select/textarea elements
+// directly (not through a class), so every field site-wide picks up
+// theme-aware colors automatically now, not just ones explicitly marked
+// .field-corp. .field-corp stays defined, identically, for the handful of
+// pages still using it explicitly — it's redundant with the element
+// defaults below, not a conflicting second system.
 // ============================================================
+
+input:not([type="checkbox"]):not([type="radio"]),
+select,
+textarea {
+  border-radius: $radius-sm;
+  border: 1px solid var(--border-strong);
+  background: var(--surface-raised);
+  color: var(--text);
+  transition: border-color $transition-base;
+
+  &::placeholder { color: var(--text-muted); }
+
+  &:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 16%, transparent);
+  }
+
+  &:disabled {
+    background: var(--surface-hover);
+    cursor: not-allowed;
+  }
+}
 
 .field-corp {
   width: 100%;

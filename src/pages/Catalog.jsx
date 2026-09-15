@@ -236,11 +236,11 @@ export default function Catalog() {
 
             {totalPages > 1 && (
               <div className="mt-8 flex items-center justify-center gap-2">
-                <button type="button" onClick={() => setPageClamped(page - 1)} disabled={page === 1} className="btn btn-secondary btn-sm">
+                <button type="button" onClick={() => setPageClamped(page - 1)} disabled={page === 1} className="button secondary small">
                   Previous
                 </button>
                 <span className="px-2 text-sm text-steel">{page} / {totalPages}</span>
-                <button type="button" onClick={() => setPageClamped(page + 1)} disabled={page === totalPages} className="btn btn-secondary btn-sm">
+                <button type="button" onClick={() => setPageClamped(page + 1)} disabled={page === totalPages} className="button secondary small">
                   Next
                 </button>
               </div>
@@ -274,7 +274,7 @@ export default function Catalog() {
                   </div>
                   <p className="mt-1 text-xs text-steel">Excludes tax and shipping, calculated at checkout.</p>
                   {latestEtaDays > 0 && (
-                    <p className="mt-3 badge badge-brand">
+                    <p className="mt-3 label primary">
                       Full order ready by day {latestEtaDays}
                     </p>
                   )}

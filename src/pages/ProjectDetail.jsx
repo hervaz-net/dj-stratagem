@@ -67,7 +67,7 @@ export default function ProjectDetail() {
             <p className="mt-3 text-base leading-relaxed text-steel">{project.summary}</p>
             <div className="mt-5 flex flex-wrap gap-2">
               {project.scope.map((s) => (
-                <span key={s} className="badge badge-neutral">
+                <span key={s} className="label secondary">
                   {s}
                 </span>
               ))}

@@ -235,7 +235,7 @@ export default function Supply() {
                     <p className="text-sm font-medium text-paper">{row.label}</p>
                     <p className="text-xs text-steel">{row.value}</p>
                   </div>
-                  <span className="badge badge-neutral">{row.tag}</span>
+                  <span className="label secondary">{row.tag}</span>
                 </div>
               ))}
               <div className="flex items-center justify-between rounded-lg border border-amber/40 bg-amber/10 px-4 py-3">

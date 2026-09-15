@@ -113,7 +113,7 @@ function Newsletter() {
 export default function Footer() {
   return (
     <footer className="no-print border-t border-line bg-ink-2">
-      <div className="mx-auto max-w-6xl px-6 py-14">
+      <div className="grid-container py-14">
         <div className="grid grid-cols-2 gap-10 md:grid-cols-3 lg:grid-cols-6">
           {/* Brand + newsletter share the wide left block so the four link
               columns stay evenly sized. */}
@@ -156,7 +156,7 @@ export default function Footer() {
           {trustBadges.map((b) => (
             <span
               key={b.label}
-              className="badge badge-neutral gap-1.5 py-1.5 text-[11px] normal-case"
+              className="label secondary gap-1.5 py-1.5 text-[11px] normal-case"
             >
               <span className="text-steel">{b.icon}</span>
               {b.label}
