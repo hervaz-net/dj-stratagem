@@ -153,6 +153,7 @@ function App() {
           <Route path="/solutions" element={<MarketingLayout><Solutions /></MarketingLayout>} />
           <Route path="/supply" element={<MarketingLayout><Supply /></MarketingLayout>} />
           <Route path="/supply/catalog" element={<Navigate to="/supply" replace />} />
+          <Route path="/catalog" element={<Navigate to="/supply" replace />} />
           <Route path="/projects" element={<MarketingLayout><Projects /></MarketingLayout>} />
           <Route path="/project" element={<Navigate to="/projects" replace />} />
           <Route path="/projects/:slug" element={<MarketingLayout><ProjectDetail /></MarketingLayout>} />

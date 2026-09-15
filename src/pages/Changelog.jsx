@@ -5,6 +5,16 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.40",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "improved", text: "/catalog now aliases to /supply in the SPA and at LiteSpeed, matching /supply/catalog." },
+      { type: "improved", text: "/manifest.json rewrites to /manifest.webmanifest so PWA probes do not receive the marketing shell." },
+      { type: "improved", text: "Live public_html last-modified 15 Sep 00:53 UTC is still assets/index-BJ1N-w2t.js. GitHub deploy HEAD is assets/index-zkpD_dXt.js. /blog still 301s to /changelog, /health.php and /send-demo.php still SPA-fallback, and /api/health.php still returns not_found until cPanel Update from Remote + Deploy HEAD." },
+    ],
+  },
+  {
     version: "1.39",
     date: "September 2026",
     tag: "Fix",
