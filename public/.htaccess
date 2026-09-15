@@ -92,6 +92,8 @@ AddType application/manifest+json .webmanifest
   RewriteRule ^fleet-cards$ /marketing/fleet-cards [R=301,L]
   RewriteRule ^supply/catalog$ /supply [R=301,L]
   RewriteRule ^supply/catalog/ /supply [R=301,L]
+  RewriteRule ^catalog$ /supply [R=301,L]
+  RewriteRule ^catalog/ /supply [R=301,L]
   RewriteRule ^receipts$ /marketing/receipts [R=301,L]
   RewriteRule ^signage$ /marketing/signage [R=301,L]
   RewriteRule ^sitemap$ /sitemap.xml [R=301,L]
@@ -109,6 +111,8 @@ AddType application/manifest+json .webmanifest
   RewriteRule \.php$ api/not-found.php [L]
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule ^manifest\.webmanifest$ - [R=404,L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^manifest\.json$ manifest.webmanifest [L]
 
   # Browsers still request /favicon.ico and /apple-touch-icon.png even when
   # the document points at /favicon.svg. Always serve the SVG mark — do not
