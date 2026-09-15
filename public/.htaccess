@@ -90,6 +90,8 @@ AddType application/manifest+json .webmanifest
   RewriteRule ^eula$ /terms [R=301,L]
   RewriteRule ^brand-guidelines$ /brand [R=301,L]
   RewriteRule ^fleet-cards$ /marketing/fleet-cards [R=301,L]
+  RewriteRule ^supply/catalog$ /supply [R=301,L]
+  RewriteRule ^supply/catalog/ /supply [R=301,L]
   RewriteRule ^receipts$ /marketing/receipts [R=301,L]
   RewriteRule ^signage$ /marketing/signage [R=301,L]
   RewriteRule ^sitemap$ /sitemap.xml [R=301,L]
