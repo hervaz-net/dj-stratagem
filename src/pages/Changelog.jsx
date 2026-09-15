@@ -5,13 +5,23 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.38",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "improved", text: "Live public_html is on assets/index-BJ1N-w2t.js (last-modified 15 Sep 00:53 UTC). GitHub deploy HEAD is assets/index-BbhSxnbq.js. /blog still 301s to /changelog, /send-demo.php and /health.php still SPA-fallback, and /api/health.php still returns not_found until cPanel pulls deploy." },
+      { type: "improved", text: "/blog and /blog/* now rewrite to index.html before any alias rules, so a stale host copy cannot keep sending the blog index to /changelog." },
+      { type: "improved", text: "Publish-deploy refreshes the GitHub deploy branch; public_html only updates after cPanel Update from Remote + Deploy HEAD, or ./deploy.sh on a machine with ~/.cpanel_token." },
+    ],
+  },
+  {
     version: "1.37",
     date: "September 2026",
     tag: "Fix",
     items: [
-      { type: "improved", text: "Live public_html now matches GitHub deploy: assets/index-BoLTTWBH.js from main 062bc70. /health.php, /api/health.php, /send-demo.php, and /manifest.webmanifest are real files, not SPA fallbacks." },
-      { type: "improved", text: "Intent aliases such as /signup, /signin, /help, /docs, and /how-it-works 301 at LiteSpeed to the canonical routes." },
-      { type: "improved", text: "LiteSpeed now advertises application/manifest+json for /manifest.webmanifest instead of application/octet-stream." },
+      { type: "improved", text: "GitHub deploy advertised assets/index-BoLTTWBH.js from main 062bc70 with health.php, send-demo.php, and manifest.webmanifest. Live public_html did not stay on that hash." },
+      { type: "improved", text: "Intent aliases such as /signup, /signin, /help, /docs, and /how-it-works 301 at LiteSpeed to the canonical routes once the current .htaccess is on the host." },
+      { type: "improved", text: "LiteSpeed advertises application/manifest+json for /manifest.webmanifest when that file is present in public_html." },
     ],
   },
   {
