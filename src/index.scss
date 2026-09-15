@@ -1,4 +1,11 @@
-@import "tailwindcss";
+/* Tailwind's own bridge stylesheet (tailwind-bridge.css, imported directly
+   in main.jsx) stays active until every page is off it — see the note
+   there. This file is Foundation's, plus the design tokens both frameworks
+   read. Tailwind's `@import "tailwindcss"` can't live in this file: Vite's
+   Sass preprocessor consumes it before Tailwind's own Vite plugin gets a
+   chance to transform it, so it must sit in a plain, un-preprocessed .css
+   file instead. */
+@import "./styles/settings";
 
 /* ---------------------------------------------------------------------------
    Design tokens — corporate B2B (construction supply / contractor ops /
@@ -24,11 +31,15 @@
      success positive / healthy
 --------------------------------------------------------------------------- */
 
-@theme inline {
+:root {
   --font-sans: "DJS Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-display: var(--font-sans);
   --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
 
+  /* Semantic aliases kept from the pre-Foundation token set so every
+     component's custom CSS (design-system.scss and per-component styles)
+     can keep referencing one short, readable name per role instead of the
+     longer --surface-raised/--text-muted names below. */
   --color-ink: var(--surface);
   --color-ink-2: var(--surface-raised);
   --color-ink-3: var(--surface-hover);

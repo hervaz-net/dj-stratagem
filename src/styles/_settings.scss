@@ -1,0 +1,76 @@
+// Foundation for Sites — settings override.
+//
+// Foundation's own component colors are compiled once at build time (plain
+// Sass variables, not CSS custom properties), so they're set here to the
+// *light*-theme brand values. Dark mode still works exactly as it did under
+// Tailwind: the CSS custom properties in index.scss are the real runtime
+// theme switch, and component-level overrides in design-system.scss re-point
+// Foundation's classes at those custom properties wherever it matters
+// (backgrounds, text, borders) rather than at Foundation's compiled colors.
+
+@use 'sass:color';
+
+// Brand palette (warm-industrial — see public/brand-guidelines.html).
+$djs-ink: #201e1d;
+$djs-ground: #f3f2f2;
+$djs-surface: #ffffff;
+$djs-signal: #ec3013;
+$djs-border: #ddd9d6;
+
+$primary-color: $djs-signal;
+$secondary-color: $djs-ink;
+$success-color: #3d6b2c;
+$warning-color: #9a5b00;
+$alert-color: #b3261e;
+
+// Foundation's actual color source for anything generated per-variant
+// (.button.primary, .label.secondary, palette-driven badge/callout colors)
+// is this map, not the individual $x-color variables above — overriding
+// only those left every palette-derived class still Foundation's default
+// blue. Both need to point at the same brand values.
+$foundation-palette: (
+  "primary": $primary-color,
+  "secondary": $secondary-color,
+  "success": $success-color,
+  "warning": $warning-color,
+  "alert": $alert-color,
+);
+
+$light-gray: $djs-ground;
+$medium-gray: #bdb7b2;
+$dark-gray: #6b655f;
+$black: $djs-ink;
+$white: $djs-surface;
+
+$body-background: $djs-ground;
+$body-font-color: $djs-ink;
+$body-font-family:
+  'DJS Sans',
+  ui-sans-serif,
+  system-ui,
+  -apple-system,
+  'Segoe UI',
+  Roboto,
+  'Helvetica Neue',
+  Arial,
+  sans-serif;
+
+$global-width: rem-calc(1152);
+$global-radius: 0.375rem;
+$global-lineheight: 1.5;
+$global-margin: 1rem;
+$global-padding: 1rem;
+$global-border: 1px solid $djs-border;
+$global-flexbox: true;
+
+$header-font-family: $body-font-family;
+$header-font-weight: 600;
+$header-color: inherit;
+
+@import 'foundation-sites/scss/foundation';
+
+// Importing foundation.scss only defines its mixins — nothing is emitted as
+// real CSS until they're included. This call is what actually produces the
+// framework's output (grid, type, buttons, forms, cards, menus, etc.).
+@include foundation-everything;
+

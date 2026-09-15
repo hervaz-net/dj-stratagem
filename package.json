@@ -12,6 +12,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "foundation-sites": "^6.9.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-router-dom": "^7.18.1"

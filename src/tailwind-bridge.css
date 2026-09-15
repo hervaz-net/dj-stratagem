@@ -1,0 +1,42 @@
+/**
+ * Temporary migration scaffolding — Tailwind is being replaced by Foundation
+ * (src/index.scss + src/styles/), page by page. This file exists only so
+ * pages not yet converted keep rendering; it is not the target state.
+ *
+ * Tailwind v4's Vite plugin transforms `@import "tailwindcss"` itself, and
+ * needs to see it in a plain .css file — inside a .scss file, Vite's Sass
+ * preprocessor consumes the import first and the Tailwind plugin never gets
+ * a chance to run. Hence this file being .css, separate from index.scss.
+ *
+ * DELETE this file, its import in main.jsx, and the tailwindcss/@tailwindcss/
+ * vite devDependencies + vite.config.js plugin, all in the same commit that
+ * converts the last remaining page off Tailwind.
+ */
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: "DJS Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-display: var(--font-sans);
+  --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+
+  --color-ink: var(--surface);
+  --color-ink-2: var(--surface-raised);
+  --color-ink-3: var(--surface-hover);
+  --color-ink-4: var(--surface-sunken);
+  --color-line: var(--border);
+  --color-line-2: var(--border-strong);
+
+  --color-paper: var(--text);
+  --color-paper-2: var(--text-strong);
+  --color-steel: var(--text-muted);
+
+  --color-amber: var(--accent);
+  --color-amber-2: var(--accent-hover);
+  --color-brand: var(--brand);
+  --color-cta: var(--cta);
+  --color-cta-hover: var(--cta-hover);
+  --color-warning: var(--warning);
+
+  --color-danger: var(--danger);
+  --color-success: var(--success);
+}
