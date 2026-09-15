@@ -9,9 +9,8 @@ const entries = [
     date: "September 2026",
     tag: "Fix",
     items: [
-      { type: "improved", text: "Live public_html is still on assets/index-BJ1N-w2t.js (last-modified 15 Sep 00:53 UTC). GitHub deploy HEAD is assets/index-DAj40KlH.js from main 051e929. /blog and /news still 301 to /changelog, /health.php and /send-demo.php still SPA-fallback, /manifest.webmanifest is HTML, and /api/health.php still returns not_found until cPanel pulls deploy." },
-      { type: "improved", text: "/supply/catalog now 301s to /supply at LiteSpeed, matching the SPA redirect and the sitemap alias." },
-      { type: "improved", text: "Publish-deploy already refreshed the GitHub deploy branch. public_html only updates after cPanel Update from Remote + Deploy HEAD, or ./deploy.sh on a machine with ~/.cpanel_token. Repo secret CPANEL_TOKEN is still missing." },
+      { type: "improved", text: "/supply/catalog now 301s to /supply at LiteSpeed, matching the SPA redirect." },
+      { type: "improved", text: "Live public_html is still on assets/index-BJ1N-w2t.js. GitHub deploy is assets/index-DAj40KlH.js. cPanel must Update from Remote + Deploy HEAD (or add CPANEL_TOKEN) before /blog, health probes, and the web manifest go live." },
     ],
   },
   {
@@ -22,6 +21,32 @@ const entries = [
       { type: "improved", text: "Live public_html is on assets/index-BJ1N-w2t.js (last-modified 15 Sep 00:53 UTC). GitHub deploy HEAD is assets/index-BbhSxnbq.js. /blog still 301s to /changelog, /send-demo.php and /health.php still SPA-fallback, and /api/health.php still returns not_found until cPanel pulls deploy." },
       { type: "improved", text: "/blog and /blog/* now rewrite to index.html before any alias rules, so a stale host copy cannot keep sending the blog index to /changelog." },
       { type: "improved", text: "Publish-deploy refreshes the GitHub deploy branch; public_html only updates after cPanel Update from Remote + Deploy HEAD, or ./deploy.sh on a machine with ~/.cpanel_token." },
+    ],
+  },
+  {
+    version: "1.37",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "improved", text: "GitHub deploy advertised assets/index-BoLTTWBH.js from main 062bc70 with health.php, send-demo.php, and manifest.webmanifest. Live public_html did not stay on that hash." },
+      { type: "improved", text: "Intent aliases such as /signup, /signin, /help, /docs, and /how-it-works 301 at LiteSpeed to the canonical routes once the current .htaccess is on the host." },
+      { type: "improved", text: "LiteSpeed advertises application/manifest+json for /manifest.webmanifest when that file is present in public_html." },
+    ],
+  },
+  {
+    version: "1.5",
+    date: "August 2026",
+    tag: "Fix",
+    items: [
+      { type: "improved", text: "Cookie banner no longer covers the support button, demo chip, or back-to-top control." },
+    ],
+  },
+  {
+    version: "1.0",
+    date: "March 2026",
+    tag: "Launch",
+    items: [
+      { type: "new", text: "Initial platform launch — D&J Stratagem, Inc." },
     ],
   },
 ];
