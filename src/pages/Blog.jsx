@@ -32,9 +32,9 @@ export default function Blog() {
       </Section>
 
       <Section className="border-t border-line">
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+        <div className="grid-x grid-margin-x gap-y-5">
           {posts.map((post, i) => (
-            <Reveal key={post.slug} delay={(i % 2) * 90}>
+            <Reveal key={post.slug} delay={(i % 2) * 90} className="cell small-12 medium-6">
               <Link
                 to={`/blog/${post.slug}`}
                 className="card-corp card-corp-hover lift flex h-full flex-col rounded-lg p-6"

@@ -100,15 +100,15 @@ export default function TradeLocation() {
         <h2 className="text-balance max-w-2xl text-2xl font-semibold tracking-tight text-paper md:text-3xl">
           Bidding {trade.toLowerCase()} work in {city}
         </h2>
-        <div className="mt-6 grid grid-cols-1 gap-8 md:grid-cols-2">
-          <p className="text-base leading-relaxed text-steel">
+        <div className="mt-6 grid-x grid-margin-x gap-y-8">
+          <p className="cell small-12 medium-6 text-base leading-relaxed text-steel">
             Most {trade.toLowerCase()} subcontractors in the {city} market find work through a
             mix of plan rooms, GC relationships, and public procurement portals &mdash; each with
             its own login, its own format, and its own deadline calendar. Opportunities get
             missed less because a contractor could not compete and more because nobody saw the
             invitation in time.
           </p>
-          <p className="text-base leading-relaxed text-steel">
+          <p className="cell small-12 medium-6 text-base leading-relaxed text-steel">
             D&amp;J Stratagem pulls those opportunities into one feed and scores each against
             your profile &mdash; trade, service radius, typical project size, certifications, and
             the kind of work you have completed before &mdash; so the projects worth your
@@ -120,9 +120,9 @@ export default function TradeLocation() {
       {/* Internal linking: real navigation between related pages. */}
       {(sameTrade.length > 0 || sameCity.length > 0) && (
         <Section className="border-t border-line">
-          <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
+          <div className="grid-x grid-margin-x gap-y-10">
             {sameTrade.length > 0 && (
-              <div>
+              <div className="cell small-12 medium-6">
                 <h2 className="text-sm font-semibold uppercase tracking-wider text-steel">
                   {trade} projects in other markets
                 </h2>
@@ -141,7 +141,7 @@ export default function TradeLocation() {
               </div>
             )}
             {sameCity.length > 0 && (
-              <div>
+              <div className="cell small-12 medium-6">
                 <h2 className="text-sm font-semibold uppercase tracking-wider text-steel">
                   Other trades in {city}
                 </h2>

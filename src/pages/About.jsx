@@ -65,8 +65,8 @@ export default function About() {
       </Section>
 
       <Section className="border-t border-line">
-        <div className="grid grid-cols-1 gap-14 lg:grid-cols-2">
-          <div>
+        <div className="grid-x grid-margin-x gap-y-14">
+          <div className="cell small-12 large-6">
             <Eyebrow>Why we exist</Eyebrow>
             <h2 className="text-balance text-xl font-semibold tracking-tight text-paper md:text-2xl">
               Every competitor solves one problem.
@@ -78,7 +78,7 @@ export default function About() {
             </p>
             <CompetitorList className="mt-6" />
           </div>
-          <div>
+          <div className="cell small-12 large-6">
             <Eyebrow>What we build</Eyebrow>
             <h2 className="text-balance text-xl font-semibold tracking-tight text-paper md:text-2xl">
               The whole pipeline, opportunity to award.
@@ -101,9 +101,9 @@ export default function About() {
         <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">
           The principles behind the platform.
         </h2>
-        <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2">
+        <div className="mt-12 grid-x grid-margin-x gap-y-5">
           {values.map((v, i) => (
-            <Reveal key={v.title} delay={(i % 2) * 100} className="h-full">
+            <Reveal key={v.title} delay={(i % 2) * 100} className="cell small-12 medium-6 h-full">
               <div className="lift h-full card-corp rounded-lg p-6 hover:border-amber/40">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber/10 text-amber">
                   {v.icon}
@@ -117,13 +117,14 @@ export default function About() {
       </Section>
 
       <Section tint className="border-t border-line">
-        <div className="grid grid-cols-1 items-center gap-14 lg:grid-cols-2">
+        <div className="grid-x grid-margin-x items-center gap-y-14">
           <DashboardShot
             src="/screenshots/dash-admin.png"
             alt="Platform admin dashboard showing pending account requests waiting for approval"
             label="Accounts"
+            className="cell small-12 large-6"
           />
-          <div>
+          <div className="cell small-12 large-6">
             <Eyebrow>How accounts get vetted</Eyebrow>
             <h2 className="text-balance text-xl font-semibold tracking-tight text-paper md:text-2xl">
               Every account is reviewed before it goes live.
@@ -142,8 +143,8 @@ export default function About() {
       {/* Careers. Named team members and specific open roles go back only when
           they are real people and real openings — see PROOF.md. */}
       <Section className="border-t border-line">
-        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">
-          <div>
+        <div className="grid-x grid-margin-x items-center gap-y-10">
+          <div className="cell small-12 large-7">
             <Eyebrow>Careers</Eyebrow>
             <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">
               Help build the platform for construction growth.
@@ -162,7 +163,7 @@ export default function About() {
               and tell us what you&rsquo;d want to build.
             </p>
           </div>
-          <TeamArt className="hidden w-full lg:block" />
+          <TeamArt className="cell small-12 large-5 hidden w-full lg:block" />
         </div>
       </Section>
 

@@ -53,12 +53,12 @@ export default function BlogPost() {
       {more.length > 0 && (
         <Section className="border-t border-line">
           <Eyebrow>More from the blog</Eyebrow>
-          <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
+          <div className="mt-6 grid-x grid-margin-x gap-y-5">
             {more.map((p) => (
               <Link
                 key={p.slug}
                 to={`/blog/${p.slug}`}
-                className="card-corp card-corp-hover lift rounded-lg p-5"
+                className="cell small-12 medium-6 card-corp card-corp-hover lift rounded-lg p-5"
               >
                 <span className="text-xs text-steel">{formatDate(p.date)}</span>
                 <h3 className="mt-2 text-sm font-semibold text-paper">{p.title}</h3>

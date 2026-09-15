@@ -95,11 +95,11 @@ export default function Analytics() {
           </GlassCard>
         )}
 
-        <div className="grid grid-cols-2 gap-5 xl:grid-cols-4">
+        <div className="grid-x grid-margin-x gap-y-5">
           {kpis.map((k, i) => {
             const kd = d[k.key] ?? { value: "—", ring: 0, delta: "", series: [] };
             return (
-              <GlassCard key={k.label} className="p-5">
+              <GlassCard key={k.label} className="cell small-6 large-3 p-5">
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <p className="text-xs font-semibold uppercase tracking-wider text-steel">{k.label}</p>
@@ -121,8 +121,8 @@ export default function Analytics() {
           })}
         </div>
 
-        <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <GlassCard className="p-6">
+        <div className="mt-6 grid-x grid-margin-x gap-y-6">
+          <GlassCard className="cell small-12 large-6 p-6">
             <h2 className="text-xs font-semibold uppercase tracking-wider text-steel">Spend by category</h2>
             <p className="mt-0.5 text-2xl font-semibold text-paper">{d.spend?.value}</p>
             <p className="text-xs text-steel">{RANGE_LABELS[range]} total</p>
@@ -133,7 +133,7 @@ export default function Analytics() {
             </div>
           </GlassCard>
 
-          <GlassCard className="overflow-hidden">
+          <GlassCard className="cell small-12 large-6 overflow-hidden">
             <div className="border-b border-line px-5 py-3.5">
               <h2 className="text-xs font-semibold uppercase tracking-wider text-steel">Top suppliers by spend</h2>
             </div>

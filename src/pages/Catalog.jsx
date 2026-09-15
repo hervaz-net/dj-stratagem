@@ -220,16 +220,17 @@ export default function Catalog() {
                 <p className="text-sm font-semibold text-paper">No products match that search.</p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid-x grid-margin-x gap-y-4">
                 {pageItems.map((group) => (
-                  <ProductCard
-                    key={group.id}
-                    group={group}
-                    selection={selections[group.id]}
-                    onSelectVariant={(v) => setSelections((s) => ({ ...s, [group.id]: v }))}
-                    qty={quantities[group.id] ?? 0}
-                    onQty={(qty) => setQuantities((s) => ({ ...s, [group.id]: qty }))}
-                  />
+                  <div key={group.id} className="cell small-12 medium-6 large-4">
+                    <ProductCard
+                      group={group}
+                      selection={selections[group.id]}
+                      onSelectVariant={(v) => setSelections((s) => ({ ...s, [group.id]: v }))}
+                      qty={quantities[group.id] ?? 0}
+                      onQty={(qty) => setQuantities((s) => ({ ...s, [group.id]: qty }))}
+                    />
+                  </div>
                 ))}
               </div>
             )}

@@ -188,8 +188,8 @@ export default function Platform() {
       />
 
       <Section className="pt-10 pb-6 md:pt-14">
-        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">
-          <div>
+        <div className="grid-x grid-margin-x items-center gap-y-10">
+          <div className="cell small-12 large-6">
             <Eyebrow>The platform</Eyebrow>
             <h1 className="text-balance max-w-3xl text-2xl font-semibold leading-tight tracking-tight text-paper sm:text-3xl">
               One platform to win work, market your business, and grow revenue.
@@ -211,7 +211,7 @@ export default function Platform() {
               ))}
             </nav>
           </div>
-          <PipelineArt className="hidden w-full lg:block" />
+          <PipelineArt className="cell small-12 large-6 hidden w-full lg:block" />
         </div>
       </Section>
 
@@ -249,8 +249,8 @@ export default function Platform() {
 
       {modules.map((m, i) => (
         <Section key={m.eyebrow} id={slug(m.eyebrow)} className="border-t border-line">
-          <div className={`grid grid-cols-1 items-center gap-14 lg:grid-cols-2 ${i % 2 ? "lg:[&>*:first-child]:order-2" : ""}`}>
-            <Reveal>
+          <div className={`grid-x grid-margin-x items-center gap-y-14 ${i % 2 ? "lg:[&>*:first-child]:order-2" : ""}`}>
+            <Reveal className="cell small-12 large-6">
               <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-amber/10 text-amber">
                 {m.icon}
               </div>
@@ -268,7 +268,7 @@ export default function Platform() {
                 ))}
               </ul>
             </Reveal>
-            <Reveal delay={140}>
+            <Reveal delay={140} className="cell small-12 large-6">
               <Panel panel={m.panel} />
             </Reveal>
           </div>
@@ -287,7 +287,7 @@ export default function Platform() {
             </p>
           </div>
         </Reveal>
-        <div className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+        <div className="mt-12 grid-x grid-margin-x gap-y-4">
           {[
             { name: "QuickBooks", category: "Accounting" },
             { name: "Procore", category: "Project mgmt" },
@@ -304,7 +304,7 @@ export default function Platform() {
           ].map((int) => (
             <div
               key={int.name}
-              className="lift flex flex-col items-center card-corp rounded-lg px-4 py-5 text-center transition-colors hover:border-amber/40"
+              className="cell small-6 medium-4 large-2 lift flex flex-col items-center card-corp rounded-lg px-4 py-5 text-center transition-colors hover:border-amber/40"
             >
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber/10 text-xs font-bold text-amber">
                 {int.name.slice(0, 2).toUpperCase()}

@@ -52,15 +52,23 @@ export default function ProjectDetail() {
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1.4fr_1fr] lg:items-start">
           {/* main column */}
           <div>
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-              <Fact label="Project value" value={project.valueLabel} />
-              <Fact label="Bid deadline" value={formatDue(project.bidDue)} />
-              <Fact label="Procurement" value={project.procurement} />
-              <Fact
-                label="Time remaining"
-                value={days === 0 ? "Closed" : `${days} days`}
-                tone={days <= 14 && days > 0 ? "text-warning" : undefined}
-              />
+            <div className="grid-x grid-margin-x gap-y-4">
+              <div className="cell small-6 medium-3">
+                <Fact label="Project value" value={project.valueLabel} />
+              </div>
+              <div className="cell small-6 medium-3">
+                <Fact label="Bid deadline" value={formatDue(project.bidDue)} />
+              </div>
+              <div className="cell small-6 medium-3">
+                <Fact label="Procurement" value={project.procurement} />
+              </div>
+              <div className="cell small-6 medium-3">
+                <Fact
+                  label="Time remaining"
+                  value={days === 0 ? "Closed" : `${days} days`}
+                  tone={days <= 14 && days > 0 ? "text-warning" : undefined}
+                />
+              </div>
             </div>
 
             <h2 className="mt-10 text-lg font-semibold text-paper">Scope of work</h2>
@@ -90,11 +98,11 @@ export default function ProjectDetail() {
             </dl>
 
             <h2 className="mt-10 text-lg font-semibold text-paper">Documents</h2>
-            <ul className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
+            <ul className="mt-4 grid-x grid-margin-x gap-y-2">
               {project.documents.map((d) => (
                 <li
                   key={d}
-                  className="flex items-center justify-between rounded-lg border border-line bg-ink-2 px-4 py-3"
+                  className="cell small-12 medium-6 flex items-center justify-between rounded-lg border border-line bg-ink-2 px-4 py-3"
                 >
                   <span className="text-sm text-paper/85">{d}</span>
                   <span className="text-xs text-steel">Members only</span>

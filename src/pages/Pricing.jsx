@@ -141,8 +141,8 @@ function RoiCalculator() {
   ];
 
   return (
-    <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-2">
-      <div className="space-y-6">
+    <div className="mt-10 grid-x grid-margin-x gap-y-8">
+      <div className="cell small-12 large-6 space-y-6">
         {sliders.map((s) => (
           <div key={s.label}>
             <div className="mb-2 flex items-center justify-between text-sm">
@@ -161,16 +161,16 @@ function RoiCalculator() {
           </div>
         ))}
       </div>
-      <div className="flex flex-col justify-center rounded-md border border-amber/30 bg-amber/5 p-8 text-center">
+      <div className="cell small-12 large-6 flex flex-col justify-center rounded-md border border-amber/30 bg-amber/5 p-8 text-center">
         <p className="text-xs font-semibold uppercase tracking-wider text-steel">Extra revenue per year</p>
         <p className="mt-2 text-3xl font-semibold tracking-tight text-paper tabular-nums">{fmt(extraRevenue)}</p>
         <p className="mt-2 text-sm text-steel">{extraWinsPerYear} additional won bid{extraWinsPerYear !== 1 ? "s" : ""} per year</p>
-        <div className="mt-6 grid grid-cols-2 gap-4 text-center">
-          <div className="rounded-xl border border-line bg-ink/60 p-4">
+        <div className="mt-6 grid-x grid-margin-x gap-y-4 text-center">
+          <div className="cell small-6 rounded-xl border border-line bg-ink/60 p-4">
             <p className="text-2xl font-semibold text-amber tabular-nums">{roi}×</p>
             <p className="mt-1 text-xs text-steel">ROI vs. Growth plan</p>
           </div>
-          <div className="rounded-xl border border-line bg-ink/60 p-4">
+          <div className="cell small-6 rounded-xl border border-line bg-ink/60 p-4">
             <p className="text-2xl font-semibold text-paper tabular-nums">${planCostAnnual.toLocaleString()}/yr</p>
             <p className="mt-1 text-xs text-steel">Growth plan, billed annually</p>
           </div>
@@ -231,11 +231,11 @@ export default function Pricing() {
           </p>
         </div>
 
-        <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-4">
+        <div className="mt-10 grid-x grid-margin-x gap-y-5">
           {tiers.map((t, i) => {
             const { amount, period } = priceFor(t);
             return (
-              <Reveal key={t.name} delay={i * 80} className="h-full">
+              <Reveal key={t.name} delay={i * 80} className="cell small-12 medium-6 large-3 h-full">
                 <div className={`lift flex h-full flex-col rounded-md border p-6 ${
                   t.highlighted ? "border-amber bg-amber/5 shadow-lg shadow-brand/10 xl:-my-2 xl:py-8" : "border-line bg-ink-2 hover:border-amber/40"
                 }`}>
@@ -309,9 +309,9 @@ export default function Pricing() {
       <Section className="border-t border-line">
         <Eyebrow>Add-ons</Eyebrow>
         <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">Scale up only where you need it.</h2>
-        <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-12 grid-x grid-margin-x gap-y-5">
           {addOns.map((a, i) => (
-            <Reveal key={a.name} delay={(i % 3) * 90} className="h-full">
+            <Reveal key={a.name} delay={(i % 3) * 90} className="cell small-12 medium-6 large-4 h-full">
               <div className="lift h-full card-corp rounded-lg p-6 hover:border-amber/40">
                 <h3 className="text-base font-semibold text-paper">{a.name}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-steel">{a.detail}</p>

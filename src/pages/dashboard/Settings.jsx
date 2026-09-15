@@ -330,7 +330,7 @@ export default function Settings() {
 
             <div className="mt-8 border-t border-line pt-6">
               <p className="text-sm font-bold uppercase tracking-wider text-steel">Account type</p>
-              <div role="radiogroup" aria-label="Account type" className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <div role="radiogroup" aria-label="Account type" className="mt-3 grid-x grid-margin-x gap-y-3">
                 {ACCOUNT_TYPES.map((t) => {
                   const on = billing.accountType === t.key;
                   return (
@@ -340,7 +340,7 @@ export default function Settings() {
                       role="radio"
                       aria-checked={on}
                       onClick={() => setAccountType(t.key)}
-                      className={`rounded-md border px-5 py-4 text-left transition-colors ${
+                      className={`cell small-12 medium-6 rounded-md border px-5 py-4 text-left transition-colors ${
                         on
                           ? "border-amber/60 bg-amber/10"
                           : "border-line bg-ink/40 hover:border-amber/35"

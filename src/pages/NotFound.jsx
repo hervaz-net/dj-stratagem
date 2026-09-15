@@ -32,13 +32,13 @@ export default function NotFound() {
           </Button>
         </div>
 
-        <div className="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid-x grid-margin-x gap-y-4 mt-14">
           {suggestions.map((s) => (
             <Button
               key={s.to}
               to={s.to}
               variant="secondary"
-              className="!items-start !justify-start !whitespace-normal !px-5 !py-4 text-left"
+              className="cell small-12 medium-6 large-3 !items-start !justify-start !whitespace-normal !px-5 !py-4 text-left"
             >
               <span>
                 <span className="block text-sm font-semibold text-paper">{s.label}</span>

@@ -68,17 +68,19 @@ export default function Overview() {
           </GlassCard>
         )}
 
-        <div className="grid grid-cols-2 gap-4 xl:grid-cols-4">
+        <div className="grid-x grid-margin-x gap-y-4">
           {kpis.map((k) => (
-            <GlassCard key={k.label} className="p-5">
-              <p className="text-xs font-semibold uppercase tracking-wider text-steel">{k.label}</p>
-              <p className={`mt-2 text-3xl font-semibold tracking-tight tabular-nums ${k.danger ? "text-danger" : "text-paper"}`}>
-                {k.value}
-              </p>
-              <p className={`mt-1.5 text-xs font-medium ${k.up ? "text-[var(--viz-green)]" : "text-[var(--viz-gold)]"}`}>
-                {k.delta} since yesterday
-              </p>
-            </GlassCard>
+            <div key={k.label} className="cell small-6 large-3">
+              <GlassCard className="p-5">
+                <p className="text-xs font-semibold uppercase tracking-wider text-steel">{k.label}</p>
+                <p className={`mt-2 text-3xl font-semibold tracking-tight tabular-nums ${k.danger ? "text-danger" : "text-paper"}`}>
+                  {k.value}
+                </p>
+                <p className={`mt-1.5 text-xs font-medium ${k.up ? "text-[var(--viz-green)]" : "text-[var(--viz-gold)]"}`}>
+                  {k.delta} since yesterday
+                </p>
+              </GlassCard>
+            </div>
           ))}
         </div>
 

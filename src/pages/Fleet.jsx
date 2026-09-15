@@ -191,8 +191,8 @@ export default function Fleet() {
       />
       <Section className="relative overflow-hidden pt-10 pb-6 md:pt-14">
         <div className="pointer-events-none absolute inset-0 bg-grid [mask-image:radial-gradient(ellipse_60%_60%_at_50%_0%,black,transparent)]" />
-        <div className="relative mx-auto grid max-w-6xl grid-cols-1 items-center gap-10 px-6 lg:grid-cols-[1.1fr_0.9fr]">
-          <div>
+        <div className="relative mx-auto grid-x grid-margin-x max-w-6xl items-center gap-y-10 px-6">
+          <div className="cell small-12 large-7">
             <Eyebrow>Fleet Management</Eyebrow>
             <h1 className="mt-4 text-2xl font-semibold leading-tight text-paper md:text-3xl">
               See how equipment would look on the board.
@@ -206,16 +206,16 @@ export default function Fleet() {
               <Button to="/contact" variant="secondary">Contact us</Button>
             </div>
           </div>
-          <FleetArt className="hidden w-full lg:block" />
+          <FleetArt className="cell small-12 large-5 hidden w-full lg:block" />
         </div>
       </Section>
 
       <Section className="border-t border-line">
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid-x grid-margin-x gap-y-5">
           {STATS.map((stat, index) => {
             const Icon = stat.icon;
             return (
-              <div key={index} className="card-corp rounded-lg p-5">
+              <div key={index} className="cell small-12 medium-6 large-3 card-corp rounded-lg p-5">
                 <div className="flex items-start justify-between">
                   <div>
                     <p className="kpi-label">{stat.label}</p>
@@ -278,9 +278,9 @@ export default function Fleet() {
             <p className="mb-5 text-sm text-steel">
               <span className="font-semibold text-paper">{filteredFleet.length}</span> of {FLEET_DATA.length} assets
             </p>
-            <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+            <div className="grid-x grid-margin-x gap-y-5">
               {filteredFleet.map((asset) => (
-                <article key={asset.id} className="card-corp card-corp-hover rounded-lg p-5">
+                <article key={asset.id} className="cell small-12 medium-6 large-4 card-corp card-corp-hover rounded-lg p-5">
                   <div className="mb-4 flex items-start justify-between">
                     <div>
                       <p className="text-xs font-semibold uppercase tracking-wider text-steel">
@@ -342,7 +342,7 @@ export default function Fleet() {
             Built for modern construction operations.
           </h2>
         </div>
-        <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-10 grid-x grid-margin-x gap-y-5">
           {[
             { icon: IconTruck, title: "Asset status board", desc: "See what is in use, available, or in the shop without inventing GPS pings." },
             { icon: IconClock, title: "Maintenance dates", desc: "Keep last service and next due on the card so the shop list is visible." },
@@ -353,7 +353,7 @@ export default function Fleet() {
           ].map((feature, idx) => {
             const Icon = feature.icon;
             return (
-              <div key={idx} className="card-corp card-corp-hover rounded-lg p-5">
+              <div key={idx} className="cell small-12 medium-6 large-4 card-corp card-corp-hover rounded-lg p-5">
                 <div className="flex h-9 w-9 items-center justify-center rounded-sm bg-amber/10 text-amber">
                   <Icon width={18} height={18} />
                 </div>
@@ -372,7 +372,7 @@ export default function Fleet() {
             Fleet add-on pricing is not live yet.
           </h2>
         </div>
-        <div className="mt-10 grid gap-5 md:grid-cols-3">
+        <div className="mt-10 grid-x grid-margin-x gap-y-5">
           {[
             { name: "Starter", price: "$199", period: "/month", features: ["Up to 25 assets", "Basic tracking", "Email support", "Monthly reports"] },
             { name: "Professional", price: "$599", period: "/month", highlight: true, features: ["Up to 250 assets", "Advanced analytics", "Priority support", "Real-time alerts", "API access", "Team collaboration"] },
@@ -380,7 +380,7 @@ export default function Fleet() {
           ].map((plan, idx) => (
             <div
               key={idx}
-              className={`card-corp relative rounded-lg p-6 ${plan.highlight ? "border-amber" : ""}`}
+              className={`cell small-12 medium-4 card-corp relative rounded-lg p-6 ${plan.highlight ? "border-amber" : ""}`}
             >
               {plan.highlight && (
                 <span className="label primary absolute -top-3 left-6 uppercase tracking-wider">
@@ -454,7 +454,7 @@ export default function Fleet() {
                   </span>
                 </div>
               </div>
-              <div className="grid gap-5 md:grid-cols-2">
+              <div className="grid-x grid-margin-x gap-y-5">
                 {[
                   { label: "Type", value: selectedAsset.type },
                   { label: "Location", value: selectedAsset.location },
@@ -463,7 +463,7 @@ export default function Fleet() {
                   { label: "Capacity", value: selectedAsset.capacity },
                   { label: "Last Maintenance", value: selectedAsset.lastMaintenance },
                 ].map((item, idx) => (
-                  <div key={idx}>
+                  <div key={idx} className="cell small-12 medium-6">
                     <p className="text-xs font-semibold uppercase tracking-wider text-steel">{item.label}</p>
                     <p className="mt-1.5 text-sm font-semibold text-paper">{item.value}</p>
                   </div>

@@ -104,8 +104,8 @@ export default function Contact() {
       </Section>
 
       <Section className="border-t border-line">
-        <div className="grid grid-cols-1 gap-14 lg:grid-cols-[1fr_1.2fr]">
-          <div className="space-y-6">
+        <div className="grid-x grid-margin-x gap-y-14">
+          <div className="cell small-12 large-5 space-y-6">
             {[
               {
                 icon: <IconMap width={18} height={18} />,
@@ -145,7 +145,7 @@ export default function Contact() {
             ))}
           </div>
 
-          <div className="rounded-md border border-line bg-ink-2 p-6 sm:p-8">
+          <div className="cell small-12 large-7 rounded-md border border-line bg-ink-2 p-6 sm:p-8">
             {submitted ? (
               <div className="animate-fade-in flex flex-col items-start gap-4 py-10">
                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-success/10 text-success">
@@ -168,50 +168,58 @@ export default function Contact() {
                   </label>
                 </p>
 
-                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-                  <Field
-                    label="Full name"
-                    name="name"
-                    autoComplete="name"
-                    required
-                    value={values.name}
-                    onChange={setField("name")}
-                    onBlur={onBlur("name")}
-                    error={touched.name && errors.name}
-                  />
-                  <Field
-                    label="Company"
-                    name="company"
-                    autoComplete="organization"
-                    required
-                    value={values.company}
-                    onChange={setField("company")}
-                    onBlur={onBlur("company")}
-                    error={touched.company && errors.company}
-                  />
+                <div className="grid-x grid-margin-x gap-y-5">
+                  <div className="cell small-12 medium-6">
+                    <Field
+                      label="Full name"
+                      name="name"
+                      autoComplete="name"
+                      required
+                      value={values.name}
+                      onChange={setField("name")}
+                      onBlur={onBlur("name")}
+                      error={touched.name && errors.name}
+                    />
+                  </div>
+                  <div className="cell small-12 medium-6">
+                    <Field
+                      label="Company"
+                      name="company"
+                      autoComplete="organization"
+                      required
+                      value={values.company}
+                      onChange={setField("company")}
+                      onBlur={onBlur("company")}
+                      error={touched.company && errors.company}
+                    />
+                  </div>
                 </div>
-                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-                  <Field
-                    label="Email"
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    required
-                    value={values.email}
-                    onChange={setField("email")}
-                    onBlur={onBlur("email")}
-                    error={touched.email && errors.email}
-                  />
-                  <Field
-                    label="Phone"
-                    name="phone"
-                    type="tel"
-                    autoComplete="tel"
-                    value={values.phone}
-                    onChange={setField("phone")}
-                    onBlur={onBlur("phone")}
-                    error={touched.phone && errors.phone}
-                  />
+                <div className="grid-x grid-margin-x gap-y-5">
+                  <div className="cell small-12 medium-6">
+                    <Field
+                      label="Email"
+                      name="email"
+                      type="email"
+                      autoComplete="email"
+                      required
+                      value={values.email}
+                      onChange={setField("email")}
+                      onBlur={onBlur("email")}
+                      error={touched.email && errors.email}
+                    />
+                  </div>
+                  <div className="cell small-12 medium-6">
+                    <Field
+                      label="Phone"
+                      name="phone"
+                      type="tel"
+                      autoComplete="tel"
+                      value={values.phone}
+                      onChange={setField("phone")}
+                      onBlur={onBlur("phone")}
+                      error={touched.phone && errors.phone}
+                    />
+                  </div>
                 </div>
 
                 <div>

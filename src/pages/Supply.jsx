@@ -152,8 +152,8 @@ export default function Supply() {
 
       <Section className="relative overflow-hidden pt-10 pb-6 md:pt-14">
         <div className="pointer-events-none absolute inset-0 bg-grid [mask-image:radial-gradient(ellipse_60%_60%_at_50%_0%,black,transparent)]" />
-        <div className="relative grid grid-cols-1 items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">
-          <div>
+        <div className="relative grid-x grid-margin-x items-center gap-y-10">
+          <div className="cell small-12 large-6">
             <Eyebrow>Supply Exchange</Eyebrow>
             <h1 className="text-balance max-w-3xl text-2xl font-semibold leading-tight tracking-tight text-paper sm:text-3xl">
               The materials you always need, priced without the race to the bottom.
@@ -172,7 +172,7 @@ export default function Supply() {
               </Button>
             </div>
           </div>
-          <SupplyStackArt className="hidden w-full lg:block" />
+          <SupplyStackArt className="cell small-12 large-6 hidden w-full lg:block" />
         </div>
       </Section>
 
@@ -185,9 +185,9 @@ export default function Supply() {
           We focus on the categories that turn over constantly and never stop being needed &mdash;
           where a better price and a reliable fill rate compound across every job on your board.
         </p>
-        <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-12 grid-x grid-margin-x gap-y-5">
           {categories.map((c, i) => (
-            <Reveal key={c.title} delay={(i % 4) * 80} className="h-full">
+            <Reveal key={c.title} delay={(i % 4) * 80} className="cell small-12 medium-6 large-3 h-full">
               <div className="card-corp card-corp-hover lift h-full rounded-lg p-5">
                 <div className="flex h-9 w-9 items-center justify-center rounded-sm bg-amber/10 text-amber">
                   {c.icon}
@@ -206,8 +206,8 @@ export default function Supply() {
       </Section>
 
       <Section className="border-t border-line">
-        <div className="grid grid-cols-1 gap-14 lg:grid-cols-2 lg:items-start">
-          <div>
+        <div className="grid-x grid-margin-x gap-y-14 lg:items-start">
+          <div className="cell small-12 large-6">
             <Eyebrow>Why not a normal reverse auction</Eyebrow>
             <h2 className="text-balance text-xl font-semibold tracking-tight text-paper md:text-2xl">
               Bid wars look like savings and cost you later.
@@ -221,7 +221,7 @@ export default function Supply() {
               It's also slow. Iterative bidding takes days, and materials rarely have days.
             </p>
           </div>
-          <div className="rounded-md border border-line bg-ink-2 p-6">
+          <div className="cell small-12 large-6 rounded-md border border-line bg-ink-2 p-6">
             <p className="text-xs uppercase tracking-wider text-steel">Award scoring</p>
             <div className="mt-4 space-y-3">
               {[
@@ -255,9 +255,9 @@ export default function Supply() {
         <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">
           Still competitive. Just not a knife fight.
         </h2>
-        <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2">
+        <div className="mt-12 grid-x grid-margin-x gap-y-5">
           {mechanics.map((m) => (
-            <div key={m.title} className="card-corp rounded-lg p-6">
+            <div key={m.title} className="cell small-12 medium-6 card-corp rounded-lg p-6">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber/10 text-amber">
                 {m.icon}
               </div>
@@ -277,9 +277,9 @@ export default function Supply() {
           Running an auction to buy the same box of deck screws you bought last Tuesday is pure
           friction. Two mechanisms take the repeat volume off the bidding table completely.
         </p>
-        <div className="mt-12 grid grid-cols-1 gap-5 lg:grid-cols-2">
+        <div className="mt-12 grid-x grid-margin-x gap-y-5">
           {efficiencies.map((e) => (
-            <div key={e.title} className="card-corp rounded-lg p-6">
+            <div key={e.title} className="cell small-12 large-6 card-corp rounded-lg p-6">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber/10 text-amber">
                 {e.icon}
               </div>
@@ -301,9 +301,9 @@ export default function Supply() {
           the storefront, the account, the invoice, the reorder &mdash; is the same engine
           underneath the rest of the platform.
         </p>
-        <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-12 grid-x grid-margin-x gap-y-5">
           {commerceEngine.map((c, i) => (
-            <Reveal key={c.title} delay={(i % 3) * 80} className="h-full">
+            <Reveal key={c.title} delay={(i % 3) * 80} className="cell small-12 medium-6 large-4 h-full">
               <div className="card-corp card-corp-hover lift h-full rounded-lg p-5">
                 <div className="flex h-9 w-9 items-center justify-center rounded-sm bg-amber/10 text-amber">
                   {c.icon}
@@ -322,8 +322,8 @@ export default function Supply() {
       </Section>
 
       <Section className="border-t border-line">
-        <div className="grid grid-cols-1 items-center gap-14 lg:grid-cols-2">
-          <div>
+        <div className="grid-x grid-margin-x items-center gap-y-14">
+          <div className="cell small-12 large-6">
             <Eyebrow>For suppliers</Eyebrow>
             <h2 className="text-balance text-xl font-semibold tracking-tight text-paper md:text-2xl">
               A channel worth quoting into.
@@ -341,7 +341,7 @@ export default function Supply() {
           </div>
           {/* Was an empty blurred gradient box; this is the supplier-protection
               list the page describes. */}
-          <div className="rounded-md border border-line bg-ink-2 p-6">
+          <div className="cell small-12 large-6 rounded-md border border-line bg-ink-2 p-6">
             <p className="text-xs uppercase tracking-wider text-steel">Supplier protections</p>
             <ul className="mt-4 space-y-4">
               {supplierProtections.map((pt) => (

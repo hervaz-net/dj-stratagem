@@ -153,9 +153,9 @@ export default function Solutions() {
           aria-labelledby={role.key}
           tabIndex={0}
           key={role.key}
-          className="animate-fade-in mt-12 grid grid-cols-1 gap-14 lg:grid-cols-2 lg:items-center"
+          className="animate-fade-in mt-12 grid-x grid-margin-x gap-y-14 lg:items-center"
         >
-          <div>
+          <div className="cell small-12 large-6">
             <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-amber/10 text-amber">
               {role.icon}
             </div>
@@ -165,7 +165,7 @@ export default function Solutions() {
             <p className="mt-4 text-base leading-relaxed text-steel">{role.text}</p>
           </div>
 
-          <DashboardShot src={role.shot.src} alt={role.shot.alt} label={role.shot.label} />
+          <DashboardShot src={role.shot.src} alt={role.shot.alt} label={role.shot.label} className="cell small-12 large-6" />
         </div>
       </Section>
 

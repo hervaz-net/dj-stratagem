@@ -191,9 +191,11 @@ export default function SuppliersDashboard() {
           </GlassCard>
         )}
 
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="grid-x grid-margin-x gap-y-5">
           {(metrics.data ?? []).map((m) => (
-            <MetricCard key={m.id} metric={m} live={isConfigured && !metrics.error} />
+            <div key={m.id} className="cell small-12 medium-6 large-3">
+              <MetricCard metric={m} live={isConfigured && !metrics.error} />
+            </div>
           ))}
         </div>
 

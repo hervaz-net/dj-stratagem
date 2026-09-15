@@ -111,17 +111,19 @@ export default function Orders() {
           </GlassCard>
         )}
 
-        <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
+        <div className="mb-6 grid-x grid-margin-x gap-y-4">
           {[
             { label: "Total orders", value: orders.length },
             { label: "In transit", value: counts.shipped },
             { label: "Pending value", value: money(pendingValue) },
             { label: "Delivered (30d)", value: counts.delivered },
           ].map((s) => (
-            <GlassCard key={s.label} className="px-5 py-4">
-              <p className="text-xs font-semibold uppercase tracking-wider text-steel">{s.label}</p>
-              <p className="mt-1 text-2xl font-semibold tabular-nums text-paper">{s.value}</p>
-            </GlassCard>
+            <div key={s.label} className="cell small-6 medium-3">
+              <GlassCard className="px-5 py-4">
+                <p className="text-xs font-semibold uppercase tracking-wider text-steel">{s.label}</p>
+                <p className="mt-1 text-2xl font-semibold tabular-nums text-paper">{s.value}</p>
+              </GlassCard>
+            </div>
           ))}
         </div>
 
