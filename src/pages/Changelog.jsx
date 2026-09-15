@@ -5,6 +5,15 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.41",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "improved", text: "/api/index.php now answers /api/health.php when the dedicated health.php file is missing from public_html, so the probe is not a catch-all not_found." },
+      { type: "improved", text: "Live public_html last-modified 15 Sep 00:53 UTC is still assets/index-BJ1N-w2t.js. GitHub deploy HEAD is assets/index-BtCQzPLx.js. /blog still 301s to /changelog, /health.php still SPA-fallbacks, and /api/health.php still returns not_found until cPanel Update from Remote + Deploy HEAD." },
+    ],
+  },
+  {
     version: "1.40",
     date: "September 2026",
     tag: "Fix",
