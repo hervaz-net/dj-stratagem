@@ -11,6 +11,30 @@
 // which is what actually keeps light/dark theming working through Foundation
 // exactly as it did under Tailwind. Tables and KPI blocks have no Foundation
 // equivalent worth adopting, so they stay bespoke, unchanged.
+//
+// GRID CONVERSION PATTERN — when converting a page's Tailwind grid/flex
+// layout to Foundation, use exactly this shape:
+//
+//   <div className="grid-x grid-margin-x gap-y-N ...">
+//     <div className="cell small-12 medium-6 large-4">...</div>
+//     ...
+//   </div>
+//
+// Two easy-to-get-wrong points, both found the hard way converting Home.jsx:
+//
+// 1. Never combine bare `.grid-x`/`.cell` with Tailwind's `gap-N` (or
+//    `gap-x-N`) for horizontal spacing. Foundation's .cell width percentages
+//    are sized to sum to exactly 100% (three .large-4 cells = 100%, no
+//    headroom for a gap), so any column-gap forces an unwanted wrap — a row
+//    meant to hold 3 cards renders as 2+1. Always pair `.grid-x` with the
+//    `grid-margin-x` modifier, which is Foundation's own gutter system (it
+//    adjusts the cell width calculation to leave room for the gutter).
+//    `gap-y-N` (vertical only) is fine and necessary alongside grid-margin-x
+//    — Foundation's x-gutters don't add spacing between wrapped rows.
+// 2. Tailwind's breakpoints map cleanly to Foundation's for this purpose:
+//    sm: (640px) → medium:, lg: (1024px) → large:. Tailwind's md: (768px)
+//    has no Foundation equivalent — leave typography/spacing using md: as
+//    plain Tailwind utilities, only grid column counts need conversion.
 
 $radius-xs: 4px;
 $radius-sm: 6px;

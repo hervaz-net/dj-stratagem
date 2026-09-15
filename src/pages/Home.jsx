@@ -145,8 +145,8 @@ export default function Home() {
           aria-hidden="true"
         />
 
-        <div className="relative grid grid-cols-1 items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
-          <div>
+        <div className="relative grid-x grid-margin-x items-center gap-y-10">
+          <div className="cell small-12 large-6">
             <Eyebrow>Bid intelligence for construction</Eyebrow>
             <h1 className="text-balance text-3xl font-semibold leading-[1.15] tracking-tight text-paper sm:text-4xl">
               Find better construction projects. Bid smarter. Win more work.
@@ -174,7 +174,9 @@ export default function Home() {
               </span>
             </div>
           </div>
-          <HeroPanel />
+          <div className="cell small-12 large-6">
+            <HeroPanel />
+          </div>
         </div>
       </Section>
 
@@ -202,9 +204,9 @@ export default function Home() {
       </Section>
 
       <Section tint className="border-t border-line py-12 md:py-14">
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
+        <div className="grid-x grid-margin-x gap-y-8">
           {stats.map((s, i) => (
-            <Reveal key={s.label} delay={i * 90} className="text-center sm:text-left">
+            <Reveal key={s.label} delay={i * 90} className="cell small-12 medium-4 text-center sm:text-left">
               <p className="text-2xl font-semibold tracking-tight text-paper md:text-3xl">
                 <StatCounter value={s.value} suffix={s.suffix} />
               </p>
@@ -216,8 +218,8 @@ export default function Home() {
       </Section>
 
       <Section className="border-t border-line">
-        <div className="grid grid-cols-1 gap-16 lg:grid-cols-2 lg:items-start">
-          <Reveal>
+        <div className="grid-x grid-margin-x gap-y-16 lg:items-start">
+          <Reveal className="cell small-12 large-6">
             <Eyebrow>The problem</Eyebrow>
             <h2 className="text-balance text-xl font-semibold tracking-tight text-paper md:text-2xl">
               Most platforms solve one piece of the puzzle.
@@ -230,7 +232,7 @@ export default function Home() {
             </p>
             <CompetitorList className="mt-6" />
           </Reveal>
-          <Reveal delay={120}>
+          <Reveal delay={120} className="cell small-12 large-6">
             <Eyebrow>The platform</Eyebrow>
             <h2 className="text-balance text-xl font-semibold tracking-tight text-paper md:text-2xl">
               We sell growth, not just access to bids.
@@ -262,9 +264,9 @@ export default function Home() {
         <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">
           Everything a growing contractor needs.
         </h2>
-        <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-12 grid-x grid-margin-x gap-y-5">
           {pillars.map((f, i) => (
-            <Reveal key={f.title} delay={(i % 3) * 90}>
+            <Reveal key={f.title} delay={(i % 3) * 90} className="cell small-12 medium-6 large-4">
               <FeatureCard icon={f.icon} title={f.title} className="h-full">
                 {f.text}
               </FeatureCard>
@@ -279,8 +281,8 @@ export default function Home() {
       </Section>
 
       <Section className="border-t border-line">
-        <div className="grid grid-cols-1 items-center gap-14 lg:grid-cols-2">
-          <Reveal>
+        <div className="grid-x grid-margin-x items-center gap-y-14">
+          <Reveal className="cell small-12 large-6">
             <BidStackArt className="mb-8 h-auto w-full max-w-sm" />
             <Eyebrow>Why it&rsquo;s different</Eyebrow>
             <h2 className="text-balance text-xl font-semibold tracking-tight text-paper md:text-2xl">
@@ -292,9 +294,9 @@ export default function Home() {
               lead source, but by owning the entire pipeline from opportunity to award.
             </p>
           </Reveal>
-          <Reveal delay={120}>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <div className="rounded-md border border-line bg-ink p-5">
+          <Reveal delay={120} className="cell small-12 large-6">
+            <div className="grid-x grid-margin-x gap-y-4">
+              <div className="cell small-12 medium-6 rounded-md border border-line bg-ink p-5">
                 <p className="text-xs font-semibold uppercase tracking-wider text-steel">Without a platform</p>
                 <ul className="mt-4 space-y-2.5 text-sm text-steel">
                   {["Five subscriptions, five logins", "Bid data retyped into the CRM", "Marketing handled by an outside agency", "Follow-ups lost in an inbox"].map((t) => (
@@ -305,7 +307,7 @@ export default function Home() {
                   ))}
                 </ul>
               </div>
-              <div className="rounded-md border border-amber/40 bg-amber/8 p-5">
+              <div className="cell small-12 medium-6 rounded-md border border-amber/40 bg-amber/8 p-5">
                 <p className="text-xs font-semibold uppercase tracking-wider text-amber">On D&amp;J Stratagem</p>
                 <ul className="mt-4 space-y-2.5 text-sm text-paper/90">
                   {["One platform, one login", "Bids, awards, and CRM share a record", "Marketing runs from the same dashboard", "Every opportunity tracked to a decision"].map((t) => (
@@ -327,9 +329,9 @@ export default function Home() {
           Designed for contractors who are serious about growth.
         </h2>
         <PipelineArt className="mx-auto mt-10 hidden w-full max-w-xl sm:block" />
-        <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-8 grid-x grid-margin-x gap-y-5">
           {steps.map((s, i) => (
-            <Reveal key={s.n} delay={i * 110}>
+            <Reveal key={s.n} delay={i * 110} className="cell small-12 medium-6 large-3">
               <div className="relative h-full rounded-md border border-line bg-ink-2 p-6">
                 <span className="text-sm font-semibold tabular-nums text-amber">{s.n}</span>
                 <h3 className="mt-3 text-base font-semibold text-paper">{s.title}</h3>
@@ -350,9 +352,9 @@ export default function Home() {
         <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">
           Built for every side of the deal.
         </h2>
-        <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2">
+        <div className="mt-12 grid-x grid-margin-x gap-y-5">
           {audiences.map((a, i) => (
-            <Reveal key={a.title} delay={(i % 2) * 100} className="h-full">
+            <Reveal key={a.title} delay={(i % 2) * 100} className="cell small-12 medium-6 h-full">
               <div className="lift h-full rounded-md border border-line bg-ink-2 p-6 hover:border-amber/40">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber/10 text-amber">{a.icon}</div>
                 <h3 className="mt-5 text-base font-semibold text-paper">{a.title}</h3>
