@@ -132,17 +132,13 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
-html[data-cookie-banner="1"] {
-  scroll-padding-bottom: 5.5rem;
-}
-
 html[data-cookie-banner="1"] body {
-  padding-bottom: 5.5rem;
+  padding-bottom: 4.5rem;
 }
 
 @media (max-width: 768px) {
   html[data-cookie-banner="1"] body {
-    padding-bottom: 6rem;
+    padding-bottom: 4.75rem;
   }
 }
 
