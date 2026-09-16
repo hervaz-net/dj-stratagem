@@ -5,6 +5,15 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.42",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "fix", text: "Consent bar no longer covers the homepage \u201cWhat you get\u201d eyebrow on the first fold. Extra section padding applies while the banner is visible." },
+      { type: "improved", text: "GitHub deploy is current on main. Live public_html last-modified 15 Sep 00:53 UTC is still assets/index-BJ1N-w2t.js versus deploy assets/index-ojrrJhwR.js. /blog still 301s to /changelog, /health.php and /send-demo.php still SPA-fallback, and /api/health.php still returns not_found until cPanel Update from Remote + Deploy HEAD." },
+    ],
+  },
+  {
     version: "1.41",
     date: "September 2026",
     tag: "Fix",

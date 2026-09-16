@@ -185,14 +185,14 @@ export default function Home() {
         </div>
       </Section>
 
-      <Section className="border-t border-line py-8">
+      <Section className="border-t border-line py-8 [[data-cookie-banner='1']_&]:pb-24">
         <p className="text-center text-sm text-steel">
           Built for contractors.{" "}
           <span className="font-semibold text-paper">Currently onboarding early users.</span>
         </p>
       </Section>
 
-      <Section className="border-t border-line">
+      <Section className="border-t border-line [[data-cookie-banner='1']_&]:scroll-mt-24">
         <div className="mx-auto max-w-2xl text-center">
           <Eyebrow>What you get</Eyebrow>
           <h2 className="text-balance text-3xl font-semibold tracking-tight text-paper md:text-4xl">
