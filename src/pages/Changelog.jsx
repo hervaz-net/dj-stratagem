@@ -5,6 +5,16 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.43",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "fix", text: "Live audit on 16 Sep 2026: marketing pages, /contact, and /login render. The production defect is host lag, not a broken React tree." },
+      { type: "improved", text: "GitHub main 34e54f9 and deploy HEAD advertise assets/index-DXg6TMUn.js. Live public_html (last-modified 15 Sep 00:53 UTC) still serves assets/index-BJ1N-w2t.js, so the new consent-bar padding, /blog route, and PHP probes are not on the host." },
+      { type: "improved", text: "Until cPanel Update from Remote + Deploy HEAD (or ./deploy.sh with ~/.cpanel_token): /blog and /news 301 to /changelog, /health.php /send-demo.php /manifest.webmanifest /favicon.ico SPA-fallback to index.html, and /api/health.php returns {ok:false,error:not_found}. /contact.php POST and /api/me.php already execute PHP 8.1.34." },
+    ],
+  },
+  {
     version: "1.42",
     date: "September 2026",
     tag: "Fix",
@@ -74,7 +84,7 @@ const entries = [
     date: "March 2026",
     tag: "Launch",
     items: [
-      { type: "new", text: "Initial platform launch — D&J Stratagem, Inc." },
+      { type: "new", text: "Initial platform launch \u2014 D&J Stratagem, Inc." },
     ],
   },
 ];
@@ -98,7 +108,7 @@ export default function Changelog() {
     <>
       <Seo
         title="Changelog"
-        description="Every update, feature, and improvement to D&J Stratagem — newest first."
+        description="Every update, feature, and improvement to D&J Stratagem \u2014 newest first."
       />
 
       <Section className="pt-16 pb-8 md:pt-24">
@@ -107,7 +117,7 @@ export default function Changelog() {
           What's new on the platform.
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-steel">
-          Every release, improvement, and fix — most recent first. There is no email digest yet.
+          Every release, improvement, and fix \u2014 most recent first. There is no email digest yet.
         </p>
       </Section>
 
