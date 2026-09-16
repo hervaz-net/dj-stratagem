@@ -8,9 +8,16 @@ declare(strict_types=1);
 // If public_html is missing api/health.php, the directory rewrite lands here
 // and used to return {"ok":false,"error":"not_found"}. Answer the probe from
 // this catch-all so a partial tree still reports PHP is executing.
+//
+// LiteSpeed ErrorDocument / internal rewrite changes REQUEST_URI and
+// SCRIPT_NAME to /api/index.php while THE_REQUEST and REDIRECT_URL still
+// carry the original /api/health.php path. Check those too.
 $path = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) ?: '';
 $script = $_SERVER['SCRIPT_NAME'] ?? '';
-$isHealth = (bool) preg_match('#(?:^|/)api/health\.php$#', $path)
+$redirect = (string) ($_SERVER['REDIRECT_URL'] ?? $_SERVER['REDIRECT_REDIRECT_URL'] ?? '');
+$original = (string) ($_SERVER['THE_REQUEST'] ?? '');
+$haystack = $path . "\n" . $script . "\n" . $redirect . "\n" . $original;
+$isHealth = (bool) preg_match('#(?:^|/)api/health\.php(?:$|[\s?])#i', $haystack)
     || (bool) preg_match('#(?:^|/)health\.php$#', $script);
 
 if ($isHealth) {
