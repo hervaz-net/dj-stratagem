@@ -5,6 +5,16 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.44",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "fix", text: "Re-audit 16 Sep 2026 16:00 PDT: homepage, /contact, /login, /pricing, and /api/me.php still render. Live public_html last-modified 15 Sep 00:53 UTC is still assets/index-BJ1N-w2t.js." },
+      { type: "improved", text: "GitHub deploy HEAD is assets/index-C6dAv-jW.js. Until cPanel Update from Remote + Deploy HEAD: /blog and /news 301 to /changelog, /health.php /send-demo.php /manifest.webmanifest SPA-fallback to index.html, and /api/health.php returns {ok:false,error:not_found}." },
+      { type: "fix", text: "First-fold consent padding on the homepage onboarding band is larger (pb-36) so the What you get eyebrow clears the cookie bar on 900px laptop viewports after the host pull." },
+    ],
+  },
+  {
     version: "1.43",
     date: "September 2026",
     tag: "Fix",
@@ -19,7 +29,7 @@ const entries = [
     date: "September 2026",
     tag: "Fix",
     items: [
-      { type: "fix", text: "Consent bar no longer covers the homepage \u201cWhat you get\u201d eyebrow on the first fold. Extra section padding applies while the banner is visible." },
+      { type: "fix", text: "Consent bar no longer covers the homepage What you get eyebrow on the first fold. Extra section padding applies while the banner is visible." },
       { type: "improved", text: "GitHub deploy is current on main. Live public_html last-modified 15 Sep 00:53 UTC is still assets/index-BJ1N-w2t.js versus deploy assets/index-ojrrJhwR.js. /blog still 301s to /changelog, /health.php and /send-demo.php still SPA-fallback, and /api/health.php still returns not_found until cPanel Update from Remote + Deploy HEAD." },
     ],
   },
@@ -84,7 +94,7 @@ const entries = [
     date: "March 2026",
     tag: "Launch",
     items: [
-      { type: "new", text: "Initial platform launch \u2014 D&J Stratagem, Inc." },
+      { type: "new", text: "Initial platform launch — D&J Stratagem, Inc." },
     ],
   },
 ];
