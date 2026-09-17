@@ -10,15 +10,38 @@ declare(strict_types=1);
 // this catch-all so a partial tree still reports PHP is executing.
 //
 // LiteSpeed ErrorDocument / internal rewrite changes REQUEST_URI and
-// SCRIPT_NAME to /api/index.php while THE_REQUEST and REDIRECT_URL still
-// carry the original /api/health.php path. Check those too.
-$path = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) ?: '';
-$script = $_SERVER['SCRIPT_NAME'] ?? '';
-$redirect = (string) ($_SERVER['REDIRECT_URL'] ?? $_SERVER['REDIRECT_REDIRECT_URL'] ?? '');
-$original = (string) ($_SERVER['THE_REQUEST'] ?? '');
-$haystack = $path . "\n" . $script . "\n" . $redirect . "\n" . $original;
-$isHealth = (bool) preg_match('#(?:^|/)api/health\.php(?:$|[\s?])#i', $haystack)
-    || (bool) preg_match('#(?:^|/)health\.php$#', $script);
+// SCRIPT_NAME to /api/index.php. Scan every rewrite-related server field
+// plus QUERY_STRING so the original /api/health.php path still matches.
+function djs_server_haystack(): string
+{
+    $keys = [
+        'REQUEST_URI',
+        'SCRIPT_NAME',
+        'PHP_SELF',
+        'PATH_INFO',
+        'ORIG_PATH_INFO',
+        'REDIRECT_URL',
+        'REDIRECT_REDIRECT_URL',
+        'REDIRECT_REQUEST_URI',
+        'THE_REQUEST',
+        'HTTP_X_ORIGINAL_URL',
+        'HTTP_X_REWRITE_URL',
+        'UNENCODED_URL',
+        'QUERY_STRING',
+    ];
+    $parts = [];
+    foreach ($keys as $key) {
+        $value = $_SERVER[$key] ?? '';
+        if (is_string($value) && $value !== '') {
+            $parts[] = $value;
+        }
+    }
+    return implode("\n", $parts);
+}
+
+$haystack = djs_server_haystack();
+$isHealth = (bool) preg_match('#health\.php#i', $haystack)
+    || isset($_GET['health']);
 
 if ($isHealth) {
     http_response_code(200);
