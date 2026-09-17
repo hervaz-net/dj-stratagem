@@ -5,6 +5,17 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.46",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "fix", text: "Live audit on 17 Sep 2026 15:17 PDT: homepage, /platform, /pricing, /projects, /contact, /login, /register, /supply, /about, and /changelog render. /contact.php GET is 405 (POST-only). /api/me.php returns session JSON on PHP 8.1.34. The production defect is still host lag, not a broken React tree." },
+      { type: "improved", text: "GitHub deploy HEAD 9bf7be2 (Deploy ca3902c) built a newer hashed bundle. Live public_html last-modified 15 Sep 00:53 UTC still serves assets/index-BJ1N-w2t.js and assets/index-QEBngB6G.css." },
+      { type: "improved", text: "Until cPanel Update from Remote + Deploy HEAD (or ./deploy.sh with ~/.cpanel_token, or repo secret CPANEL_TOKEN): /blog and /news 301 to /changelog; /health.php, /send-demo.php, /manifest.webmanifest, and /favicon.ico SPA-fallback to index.html; /api/health.php returns {ok:false,error:not_found}. Publish-deploy run 203 failed the host pull because CPANEL_TOKEN is missing." },
+      { type: "improved", text: "/api/index.php now scans LiteSpeed rewrite fields (THE_REQUEST, REDIRECT_URL, X-Original-URL, QUERY_STRING) for health.php so the probe still answers when the dedicated file is missing after the host pull." },
+    ],
+  },
+  {
     version: "1.45",
     date: "September 2026",
     tag: "Fix",
