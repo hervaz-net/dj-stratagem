@@ -20,6 +20,12 @@ AddType application/manifest+json .webmanifest
   RewriteEngine On
   RewriteBase /
 
+  # Root probes and the PWA manifest must never SPA-fallback, even when a
+  # later host merge prepends stale alias rules.
+  RewriteRule ^health\.php$ - [L]
+  RewriteRule ^contact\.php$ - [L]
+  RewriteRule ^manifest\.webmanifest$ - [L]
+
   # One public origin. www must not keep its own cookie/cache universe.
   RewriteCond %{HTTP_HOST} ^www\.djstratageminc\.com$ [NC]
   RewriteRule ^ https://djstratageminc.com%{REQUEST_URI} [R=301,L]
