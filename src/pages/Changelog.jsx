@@ -5,6 +5,16 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.45",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "fix", text: "Live audit on 17 Sep 2026 13:17 PDT: homepage, /platform, /pricing, /projects, /contact, /login, /register, /supply, and /catalog render. /contact.php POST validates and /api/me.php returns session JSON on PHP 8.1.34. The production defect is still host lag, not a broken React tree." },
+      { type: "improved", text: "GitHub main 57c8186 and deploy 3e04ec7 (Deploy 57c8186) advertise assets/index-by7LUakr.js. Live public_html last-modified 15 Sep 00:53 UTC still serves assets/index-BJ1N-w2t.js." },
+      { type: "improved", text: "Until cPanel Update from Remote + Deploy HEAD (or ./deploy.sh with ~/.cpanel_token, or repo secret CPANEL_TOKEN): /blog and /news 301 to /changelog; /health.php, /send-demo.php, /manifest.webmanifest, and /favicon.ico SPA-fallback to index.html; /api/health.php returns {ok:false,error:not_found}. Publish-deploy runs 197–201 failed the host pull because CPANEL_TOKEN is missing." },
+    ],
+  },
+  {
     version: "1.44",
     date: "September 2026",
     tag: "Fix",
