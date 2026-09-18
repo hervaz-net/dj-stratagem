@@ -100,6 +100,8 @@ AddType application/manifest+json .webmanifest
   RewriteRule ^supply/catalog/ /supply [R=301,L]
   RewriteRule ^catalog$ /supply [R=301,L]
   RewriteRule ^catalog/ /supply [R=301,L]
+  RewriteRule ^suppliers$ /solutions [R=301,L]
+  RewriteRule ^supplier$ /solutions [R=301,L]
   RewriteRule ^receipts$ /marketing/receipts [R=301,L]
   RewriteRule ^signage$ /marketing/signage [R=301,L]
   RewriteRule ^sitemap$ /sitemap.xml [R=301,L]

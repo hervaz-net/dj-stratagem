@@ -5,6 +5,17 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.47",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "fix", text: "Live audit on 18 Sep 2026 11:20 PDT: homepage, /platform, /pricing, /projects, /contact, /login, /register, /supply, /about, and /changelog render. /contact.php GET is 405 (POST-only). /api/me.php returns session JSON on PHP 8.1.34. The production defect is still host lag, not a broken React tree." },
+      { type: "improved", text: "GitHub deploy HEAD 9c05c90 (Deploy 3f04e1e) advertises assets/index-DhPLhJqX.js. Live public_html last-modified 15 Sep 00:53 UTC still serves assets/index-BJ1N-w2t.js and assets/index-QEBngB6G.css." },
+      { type: "improved", text: "Until cPanel Update from Remote + Deploy HEAD (or ./deploy.sh with ~/.cpanel_token, or repo secret CPANEL_TOKEN): /blog and /news 301 to /changelog; /health.php, /send-demo.php, and /manifest.webmanifest SPA-fallback to index.html; /api/health.php returns {ok:false,error:not_found}. Publish-deploy run 209 failed the host pull because CPANEL_TOKEN is missing." },
+      { type: "fix", text: "/suppliers and /supplier now alias to /solutions in the SPA and at LiteSpeed so those URLs stop landing on the marketing 404 after the host pull." },
+    ],
+  },
+  {
     version: "1.46",
     date: "September 2026",
     tag: "Fix",
