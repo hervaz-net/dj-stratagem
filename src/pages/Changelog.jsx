@@ -5,6 +5,17 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.48",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "fix", text: "Re-audit 18 Sep 2026 16:18 PDT: homepage, /projects, /platform, /pricing, /contact, /login, /register, /supply, /about, /fleet, and /changelog render. Footer Suppliers already points at /solutions#supplier. Direct /suppliers and /supplier still render the marketing 404 because live JS is the 15 Sep bundle. /blog and /news still 301 to /changelog." },
+      { type: "improved", text: "GitHub main 7e26abe and deploy 2813e54 (Deploy 7e26abe) advertise assets/index-5GAwVC9D.js. Live public_html last-modified 15 Sep 00:53 UTC still serves assets/index-BJ1N-w2t.js and assets/index-QEBngB6G.css." },
+      { type: "improved", text: "Until cPanel Update from Remote + Deploy HEAD (or ./deploy.sh with ~/.cpanel_token, or repo secret CPANEL_TOKEN): /health.php and /send-demo.php SPA-fallback to index.html; /api/health.php returns {ok:false,error:not_found}. Publish-deploy runs 210–213 built GitHub deploy but failed the host pull because CPANEL_TOKEN is missing." },
+      { type: "fix", text: "/contact.php POST still executes PHP 8.1.34 (422 without company). /api/me.php still returns session JSON. www 301s to apex." },
+    ],
+  },
+  {
     version: "1.47",
     date: "September 2026",
     tag: "Fix",
