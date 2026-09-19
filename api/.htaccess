@@ -1,8 +1,4 @@
-# Never serve these as files. config.php holds database credentials — if the
-# PHP handler is ever misconfigured or disabled, an unprotected .php file is
-# served as plaintext and the password leaks. Deny at the web-server level so
-# that failure mode can't happen.
-
+# Never serve these as files. config.php holds database credentials.
 <FilesMatch "^(config\.php|config\.example.php|bootstrap\.php|ops\.php|schema\.sql)$">
   <IfModule mod_authz_core.c>
     Require all denied
@@ -21,7 +17,6 @@
 </FilesMatch>
 
 Options -Indexes
-
 DirectoryIndex index.php not-found.php
 ErrorDocument 404 /api/index.php
 
