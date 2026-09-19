@@ -66,7 +66,7 @@ jobs:
           else
             git commit -m "Deploy ${SHORT}"
             if ! git push origin deploy; then
-              echo "::warning::Push to deploy was rejected. The ~ALL branch ruleset blocks github-actions[bot]."
+              echo "::error::Push to deploy was rejected. The ~ALL branch ruleset blocks github-actions[bot]."
               echo "Add repo secret DEPLOY_PAT, or exclude refs/heads/deploy from ruleset 23688330."
               echo "cPanel will still pull the current deploy tip."
               echo "pushed=false" >> "$GITHUB_OUTPUT"
@@ -74,6 +74,16 @@ jobs:
             fi
             echo "pushed deploy $(git rev-parse --short HEAD) from main ${SHORT}"
             echo "pushed=true" >> "$GITHUB_OUTPUT"
+          fi
+          git fetch --quiet origin deploy
+          EXPECTED="$(grep -oE 'assets/index-[A-Za-z0-9_-]+[.]js' "$GITHUB_WORKSPACE/dist/index.html" | head -1 || true)"
+          REMOTE="$(git show origin/deploy:index.html | grep -oE 'assets/index-[A-Za-z0-9_-]+[.]js' | head -1 || true)"
+          echo "dist bundle   ${EXPECTED:-<none>}"
+          echo "deploy bundle ${REMOTE:-<none>}"
+          if [ -z "$EXPECTED" ] || [ "$EXPECTED" != "$REMOTE" ]; then
+            echo "::error::GitHub deploy index.html does not match this build. Host pull would ship a stale or stripped tree."
+            echo "pushed=false" >> "$GITHUB_OUTPUT"
+            exit 1
           fi
 
       - name: Pull and deploy on cPanel
