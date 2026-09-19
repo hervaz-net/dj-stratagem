@@ -5,6 +5,16 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.53",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "fix", text: "Re-audit 19 Sep 2026 14:15 PDT: marketing pages render on assets/index-BjqCrvkQ.js (public_html last-modified 19 Sep 10:26 UTC). /contact.php GET is JSON method_not_allowed. /health.php, /send-demo.php, /api/health.php, /api/me.php, /api/login.php, /manifest.webmanifest, and /privacy.html still SPA-fallback to index.html. www does not 301 to apex because live .htaccess is stale." },
+      { type: "fix", text: "Stop LiteSpeed from handing any .php URI to index.html. Existing PHP files pass through; missing PHP files rewrite to api/not-found.php when that file exists, otherwise to contact.php so fetch() never parses marketing markup." },
+      { type: "improved", text: "GitHub Actions publish-deploy run 230 built assets/index-DuRZRej4.js, left the deploy branch on BjqCrvkQ, and skipped the host pull because repo secret CPANEL_TOKEN is empty. Production still needs cPanel Update from Remote + Deploy HEAD or ./deploy.sh." },
+    ],
+  },
+  {
     version: "1.52",
     date: "September 2026",
     tag: "Fix",
