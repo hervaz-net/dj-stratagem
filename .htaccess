@@ -1,4 +1,4 @@
-# Namecheap LiteSpeed / CloudLinux alt-php81. Do not use ea-php82.
+# Namecheap LiteSpeed on server247 uses CloudLinux alt-php, not EasyApache.
 <FilesMatch "\.php$">
   SetHandler application/x-httpd-alt-php81___lsphp
 </FilesMatch>
@@ -14,7 +14,6 @@ AddType application/manifest+json .webmanifest
 
   RewriteRule ^health\.php$ - [L]
   RewriteRule ^contact\.php$ - [L]
-  RewriteRule ^send-demo\.php$ contact.php [L]
   RewriteRule ^manifest\.webmanifest$ - [L]
 
   RewriteCond %{HTTP_HOST} ^www\.djstratageminc\.com$ [NC]
@@ -25,27 +24,93 @@ AddType application/manifest+json .webmanifest
 
   RewriteRule ^blog$ index.html [L]
   RewriteRule ^blog/ index.html [L]
+
   RewriteRule ^signin$ /login [R=301,L]
   RewriteRule ^sign-in$ /login [R=301,L]
+  RewriteRule ^log-in$ /login [R=301,L]
+  RewriteRule ^account$ /login [R=301,L]
   RewriteRule ^signup$ /register [R=301,L]
   RewriteRule ^sign-up$ /register [R=301,L]
+  RewriteRule ^trial$ /register [R=301,L]
+  RewriteRule ^start$ /register [R=301,L]
+  RewriteRule ^get-started$ /register [R=301,L]
+  RewriteRule ^forgot$ /forgot-password [R=301,L]
+  RewriteRule ^reset-password$ /forgot-password [R=301,L]
+  RewriteRule ^reset$ /forgot-password [R=301,L]
+  RewriteRule ^password$ /forgot-password [R=301,L]
+  RewriteRule ^project$ /projects [R=301,L]
+  RewriteRule ^about-us$ /about [R=301,L]
+  RewriteRule ^company$ /about [R=301,L]
+  RewriteRule ^team$ /about [R=301,L]
+  RewriteRule ^status$ /about [R=301,L]
+  RewriteRule ^security$ /about [R=301,L]
+  RewriteRule ^investors$ /about [R=301,L]
+  RewriteRule ^partners$ /about [R=301,L]
+  RewriteRule ^accessibility$ /about [R=301,L]
+  RewriteRule ^a11y$ /about [R=301,L]
+  RewriteRule ^contact-us$ /contact [R=301,L]
+  RewriteRule ^help$ /contact [R=301,L]
+  RewriteRule ^support$ /contact [R=301,L]
+  RewriteRule ^demo$ /contact [R=301,L]
+  RewriteRule ^faq$ /contact [R=301,L]
+  RewriteRule ^faqs$ /contact [R=301,L]
+  RewriteRule ^book$ /contact [R=301,L]
+  RewriteRule ^book-demo$ /contact [R=301,L]
+  RewriteRule ^request-demo$ /contact [R=301,L]
+  RewriteRule ^careers$ /contact [R=301,L]
+  RewriteRule ^jobs$ /contact [R=301,L]
+  RewriteRule ^docs$ /changelog [R=301,L]
+  RewriteRule ^home$ / [R=301,L]
+  RewriteRule ^features$ /platform [R=301,L]
+  RewriteRule ^product$ /platform [R=301,L]
+  RewriteRule ^services$ /platform [R=301,L]
+  RewriteRule ^how-it-works$ /platform [R=301,L]
+  RewriteRule ^howitworks$ /platform [R=301,L]
+  RewriteRule ^news$ /blog [R=301,L]
+  RewriteRule ^press$ /blog [R=301,L]
+  RewriteRule ^privacy-policy$ /privacy [R=301,L]
+  RewriteRule ^cookies$ /privacy [R=301,L]
+  RewriteRule ^cookie$ /privacy [R=301,L]
+  RewriteRule ^cookie-policy$ /privacy [R=301,L]
+  RewriteRule ^gdpr$ /privacy [R=301,L]
+  RewriteRule ^unsubscribe$ /privacy [R=301,L]
+  RewriteRule ^terms-of-service$ /terms [R=301,L]
+  RewriteRule ^tos$ /terms [R=301,L]
+  RewriteRule ^legal$ /terms [R=301,L]
+  RewriteRule ^eula$ /terms [R=301,L]
+  RewriteRule ^brand-guidelines$ /brand [R=301,L]
+  RewriteRule ^fleet-cards$ /marketing/fleet-cards [R=301,L]
+  RewriteRule ^supply/catalog$ /supply [R=301,L]
+  RewriteRule ^supply/catalog/ /supply [R=301,L]
+  RewriteRule ^catalog$ /supply [R=301,L]
+  RewriteRule ^catalog/ /supply [R=301,L]
   RewriteRule ^suppliers$ /solutions [R=301,L]
   RewriteRule ^supplier$ /solutions [R=301,L]
-  RewriteRule ^catalog$ /supply [R=301,L]
-  RewriteRule ^features$ /platform [R=301,L]
-  RewriteRule ^how-it-works$ /platform [R=301,L]
-  RewriteRule ^news$ /blog [R=301,L]
-  RewriteRule ^help$ /contact [R=301,L]
-  RewriteRule ^demo$ /contact [R=301,L]
+  RewriteRule ^receipts$ /marketing/receipts [R=301,L]
+  RewriteRule ^signage$ /marketing/signage [R=301,L]
+  RewriteRule ^sitemap$ /sitemap.xml [R=301,L]
 
+  RewriteRule ^send-demo\.php$ contact.php [L]
   RewriteCond %{REQUEST_FILENAME} -f
   RewriteRule ^api/health\.php$ - [L]
   RewriteRule ^api/health\.php$ health.php [L]
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule \.php$ api/not-found.php [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^manifest\.webmanifest$ - [R=404,L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^manifest\.json$ manifest.webmanifest [L]
 
   RewriteRule ^favicon\.ico$ favicon.svg [L]
   RewriteRule ^apple-touch-icon(-precomposed)?\.png$ favicon.svg [L]
+
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^assets/ - [R=404,L]
+  RewriteRule ^assets/ - [L]
+
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^uploads/ - [R=404,L]
+  RewriteRule ^uploads/ - [L]
 
   RewriteRule ^api/?$ api/index.php [L]
   RewriteCond %{REQUEST_FILENAME} !-f
@@ -54,4 +119,16 @@ AddType application/manifest+json .webmanifest
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule ^ index.html [L]
+</IfModule>
+
+<IfModule mod_headers.c>
+  <FilesMatch "html$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+  <FilesMatch "^(robots.txt|sitemap.xml|manifest.webmanifest)$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+  <FilesMatch "\.webmanifest$">
+    Header set Content-Type "application/manifest+json"
+  </FilesMatch>
 </IfModule>
