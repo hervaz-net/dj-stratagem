@@ -31,10 +31,13 @@ jobs:
         run: |
           npm ci
           npm run build
+          bash scripts/verify-dist.sh dist
           test -f dist/index.html
           test -f dist/api/health.php
+          test -f dist/api/login.php
           test -f dist/.htaccess
           grep -q 'application/x-httpd-alt-php81___lsphp' dist/.htaccess
+          grep -oE 'assets/index-[A-Za-z0-9_-]+[.]js' dist/index.html | head -1
 
       - name: Refresh deploy branch from dist/
         id: refresh
@@ -101,8 +104,8 @@ jobs:
         if: always()
         run: |
           set -uo pipefail
-          EXPECTED="$(grep -oE 'assets/index-[A-Za-z0-9_-]+\\.js' dist/index.html | head -1 || true)"
-          LIVE="$(curl -sS --max-time 30 https://djstratageminc.com/ | grep -oE 'assets/index-[A-Za-z0-9_-]+\\.js' | head -1 || true)"
+          EXPECTED="$(grep -oE 'assets/index-[A-Za-z0-9_-]+[.]js' dist/index.html | head -1 || true)"
+          LIVE="$(curl -sS --max-time 30 https://djstratageminc.com/ | grep -oE 'assets/index-[A-Za-z0-9_-]+[.]js' | head -1 || true)"
           echo "expected ${EXPECTED:-<none>}"
           echo "live     ${LIVE:-<none>}"
 
@@ -112,7 +115,7 @@ jobs:
           set -euo pipefail
           fail=0
           html="$(curl -sS --max-time 30 https://djstratageminc.com/)"
-          LIVE="$(printf '%s' "$html" | grep -oE 'assets/index-[A-Za-z0-9_-]+\\.js' | head -1 || true)"
+          LIVE="$(printf '%s' "$html" | grep -oE 'assets/index-[A-Za-z0-9_-]+[.]js' | head -1 || true)"
           JS_CODE="$(curl -sS -o /dev/null -w '%{http_code}' --max-time 20 "https://djstratageminc.com/${LIVE}")"
           HEALTH="$(curl -sS --max-time 20 https://djstratageminc.com/health.php)"
           API_HEALTH="$(curl -sS --max-time 20 https://djstratageminc.com/api/health.php)"
