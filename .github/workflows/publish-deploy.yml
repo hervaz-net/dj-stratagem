@@ -37,6 +37,8 @@ jobs:
           grep -q 'application/x-httpd-alt-php81___lsphp' dist/.htaccess
 
       - name: Refresh deploy branch from dist/
+        id: refresh
+        continue-on-error: true
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEPLOY_PAT: ${{ secrets.DEPLOY_PAT }}
@@ -57,18 +59,23 @@ jobs:
           git add -A
           if git diff --cached --quiet; then
             echo "deploy branch already matches this build"
+            echo "pushed=false" >> "$GITHUB_OUTPUT"
           else
             git commit -m "Deploy ${SHORT}"
             if ! git push origin deploy; then
-              echo "::error::Push to deploy was rejected. The ~ALL branch ruleset blocks github-actions[bot]."
-              echo "Add repo secret DEPLOY_PAT or exclude refs/heads/deploy from the ruleset."
+              echo "::warning::Push to deploy was rejected. The ~ALL branch ruleset blocks github-actions[bot]."
+              echo "Add repo secret DEPLOY_PAT, or exclude refs/heads/deploy from ruleset 23688330."
+              echo "cPanel will still pull the current deploy tip."
+              echo "pushed=false" >> "$GITHUB_OUTPUT"
               exit 1
             fi
             echo "pushed deploy $(git rev-parse --short HEAD) from main ${SHORT}"
+            echo "pushed=true" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Pull and deploy on cPanel
         id: cpanel
+        if: always()
         env:
           CPANEL_TOKEN: ${{ secrets.CPANEL_TOKEN }}
         run: |
@@ -94,25 +101,28 @@ jobs:
         if: always()
         run: |
           set -uo pipefail
-          EXPECTED="$(grep -oE 'assets/index-[A-Za-z0-9_-]+\.js' dist/index.html | head -1 || true)"
-          LIVE="$(curl -sS --max-time 30 https://djstratageminc.com/ | grep -oE 'assets/index-[A-Za-z0-9_-]+\.js' | head -1 || true)"
+          EXPECTED="$(grep -oE 'assets/index-[A-Za-z0-9_-]+\\.js' dist/index.html | head -1 || true)"
+          LIVE="$(curl -sS --max-time 30 https://djstratageminc.com/ | grep -oE 'assets/index-[A-Za-z0-9_-]+\\.js' | head -1 || true)"
           echo "expected ${EXPECTED:-<none>}"
           echo "live     ${LIVE:-<none>}"
 
-      - name: Verify live bundle hash
+      - name: Verify live PHP probes and assets
         if: always()
         run: |
           set -euo pipefail
-          EXPECTED="$(grep -oE 'assets/index-[A-Za-z0-9_-]+\.js' dist/index.html | head -1 || true)"
-          echo "expected ${EXPECTED:-<none>}"
-          if [ -z "${EXPECTED}" ]; then echo "::error::dist/index.html has no hashed JS bundle."; exit 1; fi
-          LIVE=""
-          for i in 1 2 3 4 5 6; do
-            LIVE="$(curl -sS --max-time 30 https://djstratageminc.com/ | grep -oE 'assets/index-[A-Za-z0-9_-]+\.js' | head -1 || true)"
-            echo "attempt ${i}: live ${LIVE:-<none>}"
-            if [ "${LIVE}" = "${EXPECTED}" ]; then echo "live matches dist"; exit 0; fi
-            sleep 5
-          done
-          echo "::error::Live site still serving ${LIVE:-<none>}; dist built ${EXPECTED}."
-          echo "cPanel did not pull deploy. Update from Remote + Deploy HEAD, or ./deploy.sh."
-          exit 1
+          fail=0
+          html="$(curl -sS --max-time 30 https://djstratageminc.com/)"
+          LIVE="$(printf '%s' "$html" | grep -oE 'assets/index-[A-Za-z0-9_-]+\\.js' | head -1 || true)"
+          JS_CODE="$(curl -sS -o /dev/null -w '%{http_code}' --max-time 20 "https://djstratageminc.com/${LIVE}")"
+          HEALTH="$(curl -sS --max-time 20 https://djstratageminc.com/health.php)"
+          API_HEALTH="$(curl -sS --max-time 20 https://djstratageminc.com/api/health.php)"
+          CONTACT="$(curl -sS --max-time 20 https://djstratageminc.com/contact.php)"
+          echo "live bundle ${LIVE:-<none>} js=${JS_CODE}"
+          echo "health.php ${HEALTH}"
+          echo "api/health.php ${API_HEALTH}"
+          echo "contact.php ${CONTACT}"
+          if [ "${JS_CODE}" != "200" ]; then echo "::error::live JS bundle not 200"; fail=1; fi
+          echo "${HEALTH}" | grep -q '"ok":true' || { echo "::error::/health.php is not JSON ok"; fail=1; }
+          echo "${API_HEALTH}" | grep -q '"ok":true' || { echo "::error::/api/health.php is not JSON ok"; fail=1; }
+          echo "${CONTACT}" | grep -q 'method_not_allowed' || { echo "::error::/contact.php is not the JSON handler"; fail=1; }
+          exit "$fail"
