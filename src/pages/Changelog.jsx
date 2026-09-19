@@ -5,6 +5,16 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.55",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "fix", text: "Re-audit 19 Sep 2026 16:25 PDT: marketing pages still render on assets/index-BjqCrvkQ.js (public_html last-modified 19 Sep 10:26 UTC). Live JS still contains hello@djstratagem.com. /contact.php GET is JSON method_not_allowed. /health.php, /send-demo.php, /api/*, /manifest.webmanifest, /favicon.ico, /privacy.html, and /terms.html SPA-fallback to index.html. www, /signin, and /how-it-works do not 301." },
+      { type: "fix", text: "LiteSpeed .htaccess now 301s www first, then pass-through every existing file. That stops health.php and /api/*.php from inheriting a RewriteCond that only bound the next rule." },
+      { type: "improved", text: "GitHub Actions still builds a complete dist (run 234 advertised assets/index-CWgf_QDY.js) but cannot refresh deploy without DEPLOY_PAT and cannot pull public_html without CPANEL_TOKEN. Production still needs ./deploy.sh or cPanel Update from Remote + Deploy HEAD after a full deploy-tree push." },
+    ],
+  },
+  {
     version: "1.54",
     date: "September 2026",
     tag: "Fix",
@@ -44,7 +54,7 @@ const entries = [
       { type: "fix", text: "Re-audit 19 Sep 2026 12:02 PDT: homepage, /platform, /pricing, /contact, /login, /about, /solutions, and /supply render. Live bundle is assets/index-BjqCrvkQ.js (matches GitHub deploy index.html). /contact.php GET is 405 JSON; POST validates. /api/me.php, /api/health.php, /health.php, /send-demo.php, and /manifest.webmanifest SPA-fallback to index.html. Live robots.txt is still the 72-byte allow-all file. /help and /docs do not 301. www does not 301 to apex." },
       { type: "improved", text: "GitHub main a6d375c and deploy 8e35b21 advertise assets/index-BjqCrvkQ.js. public_html last-modified 19 Sep 2026 10:26 UTC received the hashed bundle and contact.php, but not the current .htaccess, robots.txt, health.php, or /api tree." },
       { type: "improved", text: "Until cPanel Update from Remote + Deploy HEAD (or ./deploy.sh with ~/.cpanel_token, or repo secret CPANEL_TOKEN): PHP probes and API routes keep returning the marketing shell. Publish-deploy run 226 built GitHub dist but skipped the host pull because CPANEL_TOKEN is empty." },
-      { type: "fix", text: "CI live-hash grep used a double-escaped \\.js pattern, so Actions printed expected/live <none> even when both HTML files contained assets/index-*.js. Match [.]js instead and run verify-dist.sh in the build job." },
+      { type: "fix", text: "CI live-hash grep used a double-escaped [.]js pattern, so Actions printed expected/live <none> even when both HTML files contained assets/index-*.js. Match [.]js instead and run verify-dist.sh in the build job." },
     ],
   },
   {
@@ -63,7 +73,7 @@ const entries = [
     date: "March 2026",
     tag: "Launch",
     items: [
-      { type: "new", text: "Initial platform launch — D&J Stratagem, Inc." },
+      { type: "new", text: "Initial platform launch \u2014 D&J Stratagem, Inc." },
     ],
   },
 ];
