@@ -5,6 +5,17 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.49",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "fix", text: "Re-audit 18 Sep 2026 17:05 PDT: homepage, /pricing, /contact, /login, /projects, /platform, /register, /about, and /fleet render. /contact.php POST returns JSON on PHP 8.1.34 (422 without company; honeypot 200). /api/me.php returns session JSON. Cookie bar still covers the homepage What you get eyebrow on the live 15 Sep bundle." },
+      { type: "improved", text: "GitHub deploy HEAD 27e0f23 advertises assets/index-BEOXrAwH.js. Live public_html last-modified 15 Sep 00:53 UTC still serves assets/index-BJ1N-w2t.js and assets/index-QEBngB6G.css." },
+      { type: "improved", text: "Until cPanel Update from Remote + Deploy HEAD (or ./deploy.sh with ~/.cpanel_token, or repo secret CPANEL_TOKEN): /blog and /news 301 to /changelog; /health.php, /send-demo.php, /manifest.webmanifest, and /favicon.ico SPA-fallback to index.html; /api/health.php returns {ok:false,error:not_found}; client /suppliers and /supplier 404 because live JS predates the alias. Publish-deploy run 215 built GitHub deploy but failed the host hash check." },
+      { type: "fix", text: "No new React-tree defect. The production gap is still the frozen public_html tree, not source on main." },
+    ],
+  },
+  {
     version: "1.48",
     date: "September 2026",
     tag: "Fix",
