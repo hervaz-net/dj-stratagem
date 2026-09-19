@@ -1,4 +1,6 @@
 <?php
+// Alias kept for older clients. LiteSpeed on this host has dropped this
+// file from public_html before; the live form posts /contact.php first.
 declare(strict_types=1);
 
 $handler = __DIR__ . '/contact.php';
