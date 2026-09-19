@@ -20,10 +20,15 @@ AddType application/manifest+json .webmanifest
   RewriteEngine On
   RewriteBase /
 
-  # Root probes and the PWA manifest must never SPA-fallback, even when a
-  # later host merge prepends stale alias rules.
+  # Root probes and the PWA manifest must never SPA-fallback when the
+  # file is on disk. If a probe file is missing, later rules may alias
+  # it onto contact.php instead of index.html.
+  RewriteCond %{REQUEST_FILENAME} -f
   RewriteRule ^health\.php$ - [L]
   RewriteRule ^contact\.php$ - [L]
+  RewriteCond %{REQUEST_FILENAME} -f
+  RewriteRule ^send-demo\.php$ - [L]
+  RewriteCond %{REQUEST_FILENAME} -f
   RewriteRule ^manifest\.webmanifest$ - [L]
 
   # One public origin. www must not keep its own cookie/cache universe.
@@ -34,10 +39,6 @@ AddType application/manifest+json .webmanifest
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule ^(.+)/$ /$1 [R=301,L]
 
-  # /blog and /blog/* are real SPA routes. Never 301 them to /changelog.
-  # A stale public_html copy of this file still did that and hid the index.
-  # Serve the shell explicitly so an old RewriteRule ^blog$ /changelog cannot
-  # win if a host merge concatenates rules — first match is this one.
   RewriteRule ^blog$ index.html [L]
   RewriteRule ^blog/ index.html [L]
 
@@ -106,25 +107,21 @@ AddType application/manifest+json .webmanifest
   RewriteRule ^signage$ /marketing/signage [R=301,L]
   RewriteRule ^sitemap$ /sitemap.xml [R=301,L]
 
-  # Never SPA-fallback PHP handlers or the PWA manifest. A stale public_html
-  # tree has been missing send-demo.php, health.php, and manifest.webmanifest,
-  # so LiteSpeed returned index.html (200 HTML) for those probes.
+  # Never SPA-fallback PHP handlers or the PWA manifest.
   RewriteRule ^send-demo\.php$ contact.php [L]
-  # Prefer the real API probe. Only bounce to the root probe when
-  # public_html is missing api/health.php.
   RewriteCond %{REQUEST_FILENAME} -f
   RewriteRule ^api/health\.php$ - [L]
   RewriteRule ^api/health\.php$ health.php [L]
   RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{DOCUMENT_ROOT}/api/not-found.php -f
   RewriteRule \.php$ api/not-found.php [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule \.php$ contact.php [L]
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule ^manifest\.webmanifest$ - [R=404,L]
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule ^manifest\.json$ manifest.webmanifest [L]
 
-  # Browsers still request /favicon.ico and /apple-touch-icon.png even when
-  # the document points at /favicon.svg. Always serve the SVG mark — do not
-  # wait for !-f, and do not hand them the SPA shell.
   RewriteRule ^favicon\.ico$ favicon.svg [L]
   RewriteRule ^apple-touch-icon(-precomposed)?\.png$ favicon.svg [L]
 
@@ -142,6 +139,7 @@ AddType application/manifest+json .webmanifest
 
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_URI} !\.php$ [NC]
   RewriteRule ^ index.html [L]
 </IfModule>
 

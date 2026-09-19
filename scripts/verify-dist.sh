@@ -48,8 +48,10 @@ grep -q 'application/x-httpd-alt-php81___lsphp' "$htaccess" \
   || die ".htaccess is missing the CloudLinux alt-php81 handler"
 grep -q 'RewriteRule \^api/' "$htaccess" \
   || die ".htaccess is missing the /api/ passthrough"
+grep -q 'REQUEST_URI.*\\.php' "$htaccess" \
+  || die ".htaccess is missing the PHP exclusion on the SPA fallback"
 
-bundle="$(grep -oE 'assets/index-[A-Za-z0-9_-]+\.js' "$DIST/index.html" | head -1 || true)"
+bundle="$(grep -oE 'assets/index-[A-Za-z0-9_-]+\\.js' "$DIST/index.html" | head -1 || true)"
 [[ -n "$bundle" ]] || die "index.html has no hashed JS bundle"
 [[ -f "$DIST/$bundle" ]] || die "hashed bundle $bundle is not in dist/"
 
