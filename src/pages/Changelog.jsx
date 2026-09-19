@@ -5,6 +5,17 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.50",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "fix", text: "Re-audit 18 Sep 2026 18:14 PDT: homepage, /platform, /pricing, /projects, /contact, /login, /register, /about, /fleet, and /changelog render. /contact.php POST returns JSON on PHP 8.1.34 (422 without company). /api/me.php returns session JSON. www and http 301 to https://djstratageminc.com/." },
+      { type: "improved", text: "GitHub main f893f46 and deploy 2ef92765 advertise assets/index-BFjaoiGk.js. Live public_html last-modified 15 Sep 00:53 UTC still serves assets/index-BJ1N-w2t.js and assets/index-QEBngB6G.css." },
+      { type: "improved", text: "Until cPanel Update from Remote + Deploy HEAD (or ./deploy.sh with ~/.cpanel_token, or repo secret CPANEL_TOKEN): /blog and /news 301 to /changelog; /health.php, /send-demo.php, /manifest.webmanifest, /favicon.ico, and /apple-touch-icon.png SPA-fallback to index.html; /api/health.php returns {ok:false,error:not_found}." },
+      { type: "fix", text: "No new React-tree defect. Source on main already has the /blog shell rule, favicon/manifest passthrough, supplier aliases, and consent-bar padding. The production gap is the frozen public_html tree." },
+    ],
+  },
+  {
     version: "1.49",
     date: "September 2026",
     tag: "Fix",
