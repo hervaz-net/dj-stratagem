@@ -85,6 +85,17 @@ jobs:
             echo "pushed=false" >> "$GITHUB_OUTPUT"
             exit 1
           fi
+          missing=0
+          for rel in privacy.html terms.html health.php send-demo.php manifest.webmanifest api/login.php api/register.php api/bootstrap.php api/logout.php api/.htaccess; do
+            if ! git cat-file -e "origin/deploy:${rel}" 2>/dev/null; then
+              echo "::error::GitHub deploy is missing ${rel} (stripped tree)."
+              missing=1
+            fi
+          done
+          if [ "$missing" -ne 0 ]; then
+            echo "pushed=false" >> "$GITHUB_OUTPUT"
+            exit 1
+          fi
 
       - name: Pull and deploy on cPanel
         id: cpanel
