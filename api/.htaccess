@@ -1,5 +1,9 @@
-# Never serve these as files. config.php holds database credentials.
-<FilesMatch "^(config\.php|config\.example.php|bootstrap\.php|ops\.php|schema\.sql)$">
+# Never serve these as files. config.php holds database credentials — if the
+# PHP handler is ever misconfigured or disabled, an unprotected .php file is
+# served as plaintext and the password leaks. Deny at the web-server level so
+# that failure mode can't happen.
+
+<FilesMatch "^(config\.php|config\.example\.php|bootstrap\.php|ops\.php|schema\.sql)$">
   <IfModule mod_authz_core.c>
     Require all denied
   </IfModule>
@@ -9,6 +13,7 @@
   </IfModule>
 </FilesMatch>
 
+# Auth responses must never be cached by a proxy or the browser.
 <FilesMatch "\.php$">
   <IfModule mod_headers.c>
     Header always set Cache-Control "no-store, no-cache, must-revalidate"
@@ -16,14 +21,25 @@
   </IfModule>
 </FilesMatch>
 
+# Directory listing would expose which endpoints exist.
 Options -Indexes
+
+# /api/ is a real directory. LiteSpeed otherwise serves its HTML 404 for the
+# directory URL and for any missing file under it. Prefer index.php because
+# that is LiteSpeed's default DirectoryIndex; keep not-found.php as the
+# ErrorDocument target so fetch() never parses marketing markup.
 DirectoryIndex index.php not-found.php
 ErrorDocument 404 /api/index.php
 
+# LiteSpeed often ignores the document-root rewrite for missing /api/* paths
+# and serves its HTML 404 page. Handle the miss here so fetch() always gets
+# JSON instead of marketing HTML.
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteRule ^index\.php$ - [L]
   RewriteRule ^not-found\.php$ - [L]
+  # The health probe is a real file. Do not send /api/health.php through the
+  # directory catch-all, which returns {"ok":false,"error":"not_found"}.
   RewriteRule ^health\.php$ - [L]
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule ^ index.php [L]
