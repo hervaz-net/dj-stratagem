@@ -20,14 +20,22 @@ AddType application/manifest+json .webmanifest
   RewriteEngine On
   RewriteBase /
 
+  # Root probes and the PWA manifest must never SPA-fallback when the
+  # file is on disk. If a probe file is missing, later rules may alias
+  # it onto contact.php instead of index.html.
+  RewriteCond %{REQUEST_FILENAME} -f
   RewriteRule ^health\.php$ - [L]
   RewriteRule ^contact\.php$ - [L]
+  RewriteCond %{REQUEST_FILENAME} -f
   RewriteRule ^send-demo\.php$ - [L]
+  RewriteCond %{REQUEST_FILENAME} -f
   RewriteRule ^manifest\.webmanifest$ - [L]
 
+  # One public origin. www must not keep its own cookie/cache universe.
   RewriteCond %{HTTP_HOST} ^www\.djstratageminc\.com$ [NC]
   RewriteRule ^ https://djstratageminc.com%{REQUEST_URI} [R=301,L]
 
+  # Drop a trailing slash on non-directories so /login/ matches /login.
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule ^(.+)/$ /$1 [R=301,L]
 
@@ -99,12 +107,16 @@ AddType application/manifest+json .webmanifest
   RewriteRule ^signage$ /marketing/signage [R=301,L]
   RewriteRule ^sitemap$ /sitemap.xml [R=301,L]
 
+  # Never SPA-fallback PHP handlers or the PWA manifest.
   RewriteRule ^send-demo\.php$ contact.php [L]
   RewriteCond %{REQUEST_FILENAME} -f
   RewriteRule ^api/health\.php$ - [L]
   RewriteRule ^api/health\.php$ health.php [L]
   RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{DOCUMENT_ROOT}/api/not-found.php -f
   RewriteRule \.php$ api/not-found.php [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule \.php$ contact.php [L]
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule ^manifest\.webmanifest$ - [R=404,L]
   RewriteCond %{REQUEST_FILENAME} !-f
@@ -127,6 +139,7 @@ AddType application/manifest+json .webmanifest
 
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_URI} !\.php$ [NC]
   RewriteRule ^ index.html [L]
 </IfModule>
 
