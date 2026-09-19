@@ -28,6 +28,10 @@ need_files=(
   api/index.php
   api/login.php
   api/register.php
+  api/bootstrap.php
+  api/logout.php
+  privacy.html
+  terms.html
 )
 
 missing=0
