@@ -5,6 +5,17 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.52",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "fix", text: "Re-audit 19 Sep 2026 13:05 PDT: marketing routes render. Live bundle is still assets/index-BjqCrvkQ.js (public_html last-modified 19 Sep 10:26 UTC). /contact.php GET is 405 JSON. /health.php, /send-demo.php, /api/health.php, /api/me.php, /api/login.php, /manifest.webmanifest, /privacy.html, and /terms.html SPA-fallback to index.html. www does not 301 to apex. /help and /docs stay on the SPA shell instead of the LiteSpeed aliases. Contact chrome still shows hello@djstratagem.com because the live JS predates the inc.com source fix." },
+      { type: "improved", text: "GitHub main cdcfefd builds assets/index-DelttQ7O.js. GitHub deploy HEAD 8e35b21 still advertises assets/index-BjqCrvkQ.js and is missing login.php, register.php, bootstrap.php, and the static legal HTML. Publish-deploy run 228 built a complete dist, left deploy unchanged, and skipped the host pull because CPANEL_TOKEN is empty." },
+      { type: "improved", text: "CI now fails the refresh step when GitHub deploy index.html does not advertise the just-built hashed bundle, so a ruleset-blocked push cannot look like a successful publish." },
+      { type: "fix", text: "No new React-tree defect. Source already aliases /suppliers, uses hello@djstratageminc.com, and keeps PHP off the SPA fallback. Production stays blocked on cPanel Update from Remote + Deploy HEAD after a full deploy-tree refresh." },
+    ],
+  },
+  {
     version: "1.51",
     date: "September 2026",
     tag: "Fix",
@@ -24,145 +35,6 @@ const entries = [
       { type: "improved", text: "GitHub main f893f46 and deploy 2ef92765 advertise assets/index-BFjaoiGk.js. Live public_html last-modified 15 Sep 00:53 UTC still serves assets/index-BJ1N-w2t.js and assets/index-QEBngB6G.css." },
       { type: "improved", text: "Until cPanel Update from Remote + Deploy HEAD (or ./deploy.sh with ~/.cpanel_token, or repo secret CPANEL_TOKEN): /blog and /news 301 to /changelog; /health.php, /send-demo.php, /manifest.webmanifest, /favicon.ico, and /apple-touch-icon.png SPA-fallback to index.html; /api/health.php returns {ok:false,error:not_found}." },
       { type: "fix", text: "No new React-tree defect. Source on main already has the /blog shell rule, favicon/manifest passthrough, supplier aliases, and consent-bar padding. The production gap is the frozen public_html tree." },
-    ],
-  },
-  {
-    version: "1.49",
-    date: "September 2026",
-    tag: "Fix",
-    items: [
-      { type: "fix", text: "Re-audit 18 Sep 2026 17:05 PDT: homepage, /pricing, /contact, /login, /projects, /platform, /register, /about, and /fleet render. /contact.php POST returns JSON on PHP 8.1.34 (422 without company; honeypot 200). /api/me.php returns session JSON. Cookie bar still covers the homepage What you get eyebrow on the live 15 Sep bundle." },
-      { type: "improved", text: "GitHub deploy HEAD 27e0f23 advertises assets/index-BEOXrAwH.js. Live public_html last-modified 15 Sep 00:53 UTC still serves assets/index-BJ1N-w2t.js and assets/index-QEBngB6G.css." },
-      { type: "improved", text: "Until cPanel Update from Remote + Deploy HEAD (or ./deploy.sh with ~/.cpanel_token, or repo secret CPANEL_TOKEN): /blog and /news 301 to /changelog; /health.php, /send-demo.php, /manifest.webmanifest, and /favicon.ico SPA-fallback to index.html; /api/health.php returns {ok:false,error:not_found}; client /suppliers and /supplier 404 because live JS predates the alias. Publish-deploy run 215 built GitHub deploy but failed the host hash check." },
-      { type: "fix", text: "No new React-tree defect. The production gap is still the frozen public_html tree, not source on main." },
-    ],
-  },
-  {
-    version: "1.48",
-    date: "September 2026",
-    tag: "Fix",
-    items: [
-      { type: "fix", text: "Re-audit 18 Sep 2026 16:18 PDT: homepage, /projects, /platform, /pricing, /contact, /login, /register, /supply, /about, /fleet, and /changelog render. Footer Suppliers already points at /solutions#supplier. Direct /suppliers and /supplier still render the marketing 404 because live JS is the 15 Sep bundle. /blog and /news still 301 to /changelog." },
-      { type: "improved", text: "GitHub main 7e26abe and deploy 2813e54 (Deploy 7e26abe) advertise assets/index-5GAwVC9D.js. Live public_html last-modified 15 Sep 00:53 UTC still serves assets/index-BJ1N-w2t.js and assets/index-QEBngB6G.css." },
-      { type: "improved", text: "Until cPanel Update from Remote + Deploy HEAD (or ./deploy.sh with ~/.cpanel_token, or repo secret CPANEL_TOKEN): /health.php and /send-demo.php SPA-fallback to index.html; /api/health.php returns {ok:false,error:not_found}. Publish-deploy runs 210–213 built GitHub deploy but failed the host pull because CPANEL_TOKEN is missing." },
-      { type: "fix", text: "/contact.php POST still executes PHP 8.1.34 (422 without company). /api/me.php still returns session JSON. www 301s to apex." },
-    ],
-  },
-  {
-    version: "1.47",
-    date: "September 2026",
-    tag: "Fix",
-    items: [
-      { type: "fix", text: "Live audit on 18 Sep 2026 11:20 PDT: homepage, /platform, /pricing, /projects, /contact, /login, /register, /supply, /about, and /changelog render. /contact.php GET is 405 (POST-only). /api/me.php returns session JSON on PHP 8.1.34. The production defect is still host lag, not a broken React tree." },
-      { type: "improved", text: "GitHub deploy HEAD 9c05c90 (Deploy 3f04e1e) advertises assets/index-DhPLhJqX.js. Live public_html last-modified 15 Sep 00:53 UTC still serves assets/index-BJ1N-w2t.js and assets/index-QEBngB6G.css." },
-      { type: "improved", text: "Until cPanel Update from Remote + Deploy HEAD (or ./deploy.sh with ~/.cpanel_token, or repo secret CPANEL_TOKEN): /blog and /news 301 to /changelog; /health.php, /send-demo.php, and /manifest.webmanifest SPA-fallback to index.html; /api/health.php returns {ok:false,error:not_found}. Publish-deploy run 209 failed the host pull because CPANEL_TOKEN is missing." },
-      { type: "fix", text: "/suppliers and /supplier now alias to /solutions in the SPA and at LiteSpeed so those URLs stop landing on the marketing 404 after the host pull." },
-    ],
-  },
-  {
-    version: "1.46",
-    date: "September 2026",
-    tag: "Fix",
-    items: [
-      { type: "fix", text: "Live audit on 17 Sep 2026 15:17 PDT: homepage, /platform, /pricing, /projects, /contact, /login, /register, /supply, /about, and /changelog render. /contact.php GET is 405 (POST-only). /api/me.php returns session JSON on PHP 8.1.34. The production defect is still host lag, not a broken React tree." },
-      { type: "improved", text: "GitHub deploy HEAD 9bf7be2 (Deploy ca3902c) built a newer hashed bundle. Live public_html last-modified 15 Sep 00:53 UTC still serves assets/index-BJ1N-w2t.js and assets/index-QEBngB6G.css." },
-      { type: "improved", text: "Until cPanel Update from Remote + Deploy HEAD (or ./deploy.sh with ~/.cpanel_token, or repo secret CPANEL_TOKEN): /blog and /news 301 to /changelog; /health.php, /send-demo.php, /manifest.webmanifest, and /favicon.ico SPA-fallback to index.html; /api/health.php returns {ok:false,error:not_found}. Publish-deploy run 203 failed the host pull because CPANEL_TOKEN is missing." },
-      { type: "improved", text: "/api/index.php now scans LiteSpeed rewrite fields (THE_REQUEST, REDIRECT_URL, X-Original-URL, QUERY_STRING) for health.php so the probe still answers when the dedicated file is missing after the host pull." },
-    ],
-  },
-  {
-    version: "1.45",
-    date: "September 2026",
-    tag: "Fix",
-    items: [
-      { type: "fix", text: "Live audit on 17 Sep 2026 13:17 PDT: homepage, /platform, /pricing, /projects, /contact, /login, /register, /supply, and /catalog render. /contact.php POST validates and /api/me.php returns session JSON on PHP 8.1.34. The production defect is still host lag, not a broken React tree." },
-      { type: "improved", text: "GitHub main 57c8186 and deploy 3e04ec7 (Deploy 57c8186) advertise assets/index-by7LUakr.js. Live public_html last-modified 15 Sep 00:53 UTC still serves assets/index-BJ1N-w2t.js." },
-      { type: "improved", text: "Until cPanel Update from Remote + Deploy HEAD (or ./deploy.sh with ~/.cpanel_token, or repo secret CPANEL_TOKEN): /blog and /news 301 to /changelog; /health.php, /send-demo.php, /manifest.webmanifest, and /favicon.ico SPA-fallback to index.html; /api/health.php returns {ok:false,error:not_found}. Publish-deploy runs 197–201 failed the host pull because CPANEL_TOKEN is missing." },
-    ],
-  },
-  {
-    version: "1.44",
-    date: "September 2026",
-    tag: "Fix",
-    items: [
-      { type: "fix", text: "Re-audit 16 Sep 2026 16:00 PDT: homepage, /contact, /login, /pricing, and /api/me.php still render. Live public_html last-modified 15 Sep 00:53 UTC is still assets/index-BJ1N-w2t.js." },
-      { type: "improved", text: "GitHub deploy HEAD is assets/index-C6dAv-jW.js. Until cPanel Update from Remote + Deploy HEAD: /blog and /news 301 to /changelog, /health.php /send-demo.php /manifest.webmanifest SPA-fallback to index.html, and /api/health.php returns {ok:false,error:not_found}." },
-      { type: "fix", text: "First-fold consent padding on the homepage onboarding band is larger (pb-36) so the What you get eyebrow clears the cookie bar on 900px laptop viewports after the host pull." },
-    ],
-  },
-  {
-    version: "1.43",
-    date: "September 2026",
-    tag: "Fix",
-    items: [
-      { type: "fix", text: "Live audit on 16 Sep 2026: marketing pages, /contact, and /login render. The production defect is host lag, not a broken React tree." },
-      { type: "improved", text: "GitHub main 34e54f9 and deploy HEAD advertise assets/index-DXg6TMUn.js. Live public_html (last-modified 15 Sep 00:53 UTC) still serves assets/index-BJ1N-w2t.js, so the new consent-bar padding, /blog route, and PHP probes are not on the host." },
-      { type: "improved", text: "Until cPanel Update from Remote + Deploy HEAD (or ./deploy.sh with ~/.cpanel_token): /blog and /news 301 to /changelog, /health.php /send-demo.php /manifest.webmanifest /favicon.ico SPA-fallback to index.html, and /api/health.php returns {ok:false,error:not_found}. /contact.php POST and /api/me.php already execute PHP 8.1.34." },
-    ],
-  },
-  {
-    version: "1.42",
-    date: "September 2026",
-    tag: "Fix",
-    items: [
-      { type: "fix", text: "Consent bar no longer covers the homepage What you get eyebrow on the first fold. Extra section padding applies while the banner is visible." },
-      { type: "improved", text: "GitHub deploy is current on main. Live public_html last-modified 15 Sep 00:53 UTC is still assets/index-BJ1N-w2t.js versus deploy assets/index-ojrrJhwR.js. /blog still 301s to /changelog, /health.php and /send-demo.php still SPA-fallback, and /api/health.php still returns not_found until cPanel Update from Remote + Deploy HEAD." },
-    ],
-  },
-  {
-    version: "1.41",
-    date: "September 2026",
-    tag: "Fix",
-    items: [
-      { type: "improved", text: "/api/index.php now answers /api/health.php when the dedicated health.php file is missing from public_html, so the probe is not a catch-all not_found." },
-      { type: "improved", text: "Live public_html last-modified 15 Sep 00:53 UTC is still assets/index-BJ1N-w2t.js. GitHub deploy HEAD is assets/index-BtCQzPLx.js. /blog still 301s to /changelog, /health.php still SPA-fallbacks, and /api/health.php still returns not_found until cPanel Update from Remote + Deploy HEAD." },
-    ],
-  },
-  {
-    version: "1.40",
-    date: "September 2026",
-    tag: "Fix",
-    items: [
-      { type: "improved", text: "/catalog now aliases to /supply in the SPA and at LiteSpeed, matching /supply/catalog." },
-      { type: "improved", text: "/manifest.json rewrites to /manifest.webmanifest so PWA probes do not receive the marketing shell." },
-      { type: "improved", text: "Live public_html last-modified 15 Sep 00:53 UTC is still assets/index-BJ1N-w2t.js. GitHub deploy HEAD is assets/index-zkpD_dXt.js. /blog still 301s to /changelog, /health.php and /send-demo.php still SPA-fallback, and /api/health.php still returns not_found until cPanel Update from Remote + Deploy HEAD." },
-    ],
-  },
-  {
-    version: "1.39",
-    date: "September 2026",
-    tag: "Fix",
-    items: [
-      { type: "improved", text: "/supply/catalog now 301s to /supply at LiteSpeed, matching the SPA redirect." },
-      { type: "improved", text: "Live public_html is still on assets/index-BJ1N-w2t.js. GitHub deploy is assets/index-DAj40KlH.js. cPanel must Update from Remote + Deploy HEAD (or add CPANEL_TOKEN) before /blog, health probes, and the web manifest go live." },
-    ],
-  },
-  {
-    version: "1.38",
-    date: "September 2026",
-    tag: "Fix",
-    items: [
-      { type: "improved", text: "Live public_html is on assets/index-BJ1N-w2t.js (last-modified 15 Sep 00:53 UTC). GitHub deploy HEAD is assets/index-BbhSxnbq.js. /blog still 301s to /changelog, /send-demo.php and /health.php still SPA-fallback, and /api/health.php still returns not_found until cPanel pulls deploy." },
-      { type: "improved", text: "/blog and /blog/* now rewrite to index.html before any alias rules, so a stale host copy cannot keep sending the blog index to /changelog." },
-      { type: "improved", text: "Publish-deploy refreshes the GitHub deploy branch; public_html only updates after cPanel Update from Remote + Deploy HEAD, or ./deploy.sh on a machine with ~/.cpanel_token." },
-    ],
-  },
-  {
-    version: "1.37",
-    date: "September 2026",
-    tag: "Fix",
-    items: [
-      { type: "improved", text: "GitHub deploy advertised assets/index-BoLTTWBH.js from main 062bc70 with health.php, send-demo.php, and manifest.webmanifest. Live public_html did not stay on that hash." },
-      { type: "improved", text: "Intent aliases such as /signup, /signin, /help, /docs, and /how-it-works 301 at LiteSpeed to the canonical routes once the current .htaccess is on the host." },
-      { type: "improved", text: "LiteSpeed advertises application/manifest+json for /manifest.webmanifest when that file is present in public_html." },
-    ],
-  },
-  {
-    version: "1.5",
-    date: "August 2026",
-    tag: "Fix",
-    items: [
-      { type: "improved", text: "Cookie banner no longer covers the support button, demo chip, or back-to-top control." },
     ],
   },
   {
