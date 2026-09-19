@@ -5,6 +5,17 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.54",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "fix", text: "Re-audit 19 Sep 2026 15:02 PDT: marketing pages still render on assets/index-BjqCrvkQ.js (public_html last-modified 19 Sep 10:26 UTC). /contact.php GET is JSON method_not_allowed and POST validates. /health.php, /send-demo.php, /api/*, /manifest.webmanifest, /favicon.ico, and /privacy.html SPA-fallback to index.html. www, /news, /how-it-works, /help, and /docs do not 301 because live .htaccess was not pulled." },
+      { type: "improved", text: "GitHub main ce3cfac and deploy ef41403 advertise the same hashed bundle. deploy is still a stripped tree (no login.php, register.php, bootstrap.php, privacy.html, or terms.html). Actions run 233 built a complete dist, could not push deploy (ruleset / no DEPLOY_PAT), and skipped the host pull because CPANEL_TOKEN is empty." },
+      { type: "fix", text: "Publish workflow now fails when origin/deploy is missing required public files even if the JS hash matches, so a blocked deploy push cannot look complete." },
+      { type: "fix", text: "No new React-tree defect. Production needs a full deploy-tree refresh plus cPanel Update from Remote + Deploy HEAD (or ./deploy.sh)." },
+    ],
+  },
+  {
     version: "1.53",
     date: "September 2026",
     tag: "Fix",
