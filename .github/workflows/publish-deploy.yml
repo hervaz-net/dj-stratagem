@@ -32,16 +32,21 @@ jobs:
           npm ci
           npm run build
           test -f dist/index.html
+          test -f dist/api/health.php
+          test -f dist/.htaccess
+          grep -q 'application/x-httpd-alt-php81___lsphp' dist/.htaccess
 
       - name: Refresh deploy branch from dist/
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEPLOY_PAT: ${{ secrets.DEPLOY_PAT }}
         run: |
           set -euo pipefail
           SHORT="$(git rev-parse --short HEAD)"
+          TOKEN="${DEPLOY_PAT:-${GH_TOKEN}}"
           WORK="$(mktemp -d)"
           git clone --quiet --branch deploy --single-branch \
-            "https://x-access-token:${GH_TOKEN}@github.com/hervaz-net/dj-stratagem.git" \
+            "https://x-access-token:${TOKEN}@github.com/hervaz-net/dj-stratagem.git" \
             "$WORK/repo"
           cd "$WORK/repo"
           find . -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
@@ -54,7 +59,11 @@ jobs:
             echo "deploy branch already matches this build"
           else
             git commit -m "Deploy ${SHORT}"
-            git push origin deploy
+            if ! git push origin deploy; then
+              echo "::error::Push to deploy was rejected. The ~ALL branch ruleset blocks github-actions[bot]."
+              echo "Add repo secret DEPLOY_PAT or exclude refs/heads/deploy from the ruleset."
+              exit 1
+            fi
             echo "pushed deploy $(git rev-parse --short HEAD) from main ${SHORT}"
           fi
 
@@ -68,11 +77,7 @@ jobs:
             echo "pulled=false" >> "$GITHUB_OUTPUT"
             echo "::error::CPANEL_TOKEN repo secret is missing."
             echo "GitHub deploy branch is current. public_html was not pulled."
-            echo "Add repo secret CPANEL_TOKEN (cPanel API token for djstlime), or:"
-            echo "  cPanel → Git Version Control → dj-stratagem"
-            echo "  1. branch deploy"
-            echo "  2. Update from Remote"
-            echo "  3. Deploy HEAD Commit"
+            echo "Add repo secret CPANEL_TOKEN, or cPanel Git Version Control: Update from Remote then Deploy HEAD."
             echo "Or run ./deploy.sh on a machine with ~/.cpanel_token."
             exit 1
           fi
@@ -80,18 +85,9 @@ jobs:
           AUTH="cpanel djstlime:${CPANEL_TOKEN}"
           HOST="https://server247.web-hosting.com:2083"
           ROOT="/home/djstlime/repositories/dj-stratagem"
-          echo "Pulling deploy on the server"
-          curl -sS --max-time 90 -H "Authorization: ${AUTH}" \
-            --get \
-            --data-urlencode "repository_root=${ROOT}" \
-            --data-urlencode "branch=deploy" \
-            "${HOST}/execute/VersionControl/update"
+          curl -sS --max-time 90 -H "Authorization: ${AUTH}" --get --data-urlencode "repository_root=${ROOT}" --data-urlencode "branch=deploy" "${HOST}/execute/VersionControl/update"
           echo
-          echo "Triggering cPanel deployment"
-          curl -sS --max-time 90 -H "Authorization: ${AUTH}" \
-            -X POST \
-            --data-urlencode "repository_root=${ROOT}" \
-            "${HOST}/execute/VersionControlDeployment/create"
+          curl -sS --max-time 90 -H "Authorization: ${AUTH}" -X POST --data-urlencode "repository_root=${ROOT}" "${HOST}/execute/VersionControlDeployment/create"
           echo
 
       - name: Report live vs dist hash
@@ -103,47 +99,20 @@ jobs:
           echo "expected ${EXPECTED:-<none>}"
           echo "live     ${LIVE:-<none>}"
 
-      # Always compare hashes. Skipping this when CPANEL_TOKEN is missing
-      # marked the job green while djstratageminc.com kept serving an old
-      # bundle (index-Clfgkqwf.js vs deploy's index-X-bBSPML.js).
-      # If the apex has no A/AAAA record, say so — do not blame a cPanel miss.
       - name: Verify live bundle hash
         if: always()
         run: |
           set -euo pipefail
           EXPECTED="$(grep -oE 'assets/index-[A-Za-z0-9_-]+\.js' dist/index.html | head -1 || true)"
           echo "expected ${EXPECTED:-<none>}"
-          if [ -z "${EXPECTED}" ]; then
-            echo "::error::dist/index.html has no hashed JS bundle."
-            exit 1
-          fi
-          if ! python3 -c 'import socket,sys; socket.getaddrinfo("djstratageminc.com", 443)'; then
-            echo "::error::djstratageminc.com has no public A/AAAA record. GitHub deploy is current; the host is unreachable."
-            echo "Namecheap → Domain List → Manage → Advanced DNS:"
-            echo "  A     @     199.188.200.92"
-            echo "  CNAME www   djstratageminc.com."
-            echo "That IPv4 is server247.web-hosting.com (cPanel user djstlime)."
-            echo "Wait for DNS, then: cPanel → Git Version Control → Update from Remote → Deploy HEAD."
-            echo "Or run ./deploy.sh on a machine with ~/.cpanel_token after DNS answers."
-            exit 1
-          fi
+          if [ -z "${EXPECTED}" ]; then echo "::error::dist/index.html has no hashed JS bundle."; exit 1; fi
           LIVE=""
           for i in 1 2 3 4 5 6; do
             LIVE="$(curl -sS --max-time 30 https://djstratageminc.com/ | grep -oE 'assets/index-[A-Za-z0-9_-]+\.js' | head -1 || true)"
             echo "attempt ${i}: live ${LIVE:-<none>}"
-            if [ "${LIVE}" = "${EXPECTED}" ]; then
-              echo "live matches dist"
-              exit 0
-            fi
+            if [ "${LIVE}" = "${EXPECTED}" ]; then echo "live matches dist"; exit 0; fi
             sleep 5
           done
           echo "::error::Live site still serving ${LIVE:-<none>}; dist built ${EXPECTED}."
-          echo "cPanel did not pull deploy. On the host:"
-          echo "  cPanel → Git Version Control → dj-stratagem"
-          echo "  1. branch deploy"
-          echo "  2. Update from Remote"
-          echo "  3. Deploy HEAD Commit"
-          echo "Or run ./deploy.sh on a machine with ~/.cpanel_token."
-          echo "Add repo secret CPANEL_TOKEN so this workflow can pull the host."
-          echo "Confirm public_html is djstlime:nobody mode 0750."
+          echo "cPanel did not pull deploy. Update from Remote + Deploy HEAD, or ./deploy.sh."
           exit 1
