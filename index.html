@@ -3,42 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="apple-touch-icon" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="manifest" href="/manifest.webmanifest" />
-    <meta name="theme-color" content="#f3f2f2" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#141210" media="(prefers-color-scheme: dark)" />
-    <script>
-      // Apply the stored theme before first paint so a dark-theme visitor
-      // never sees a white flash on load.
-      (function () {
-        try {
-          var stored = localStorage.getItem("djs-theme");
-          var theme =
-            stored === "light" || stored === "dark"
-              ? stored
-              : window.matchMedia("(prefers-color-scheme: dark)").matches
-                ? "dark"
-                : "light";
-          document.documentElement.dataset.theme = theme;
-        } catch (e) {
-          document.documentElement.dataset.theme = "light";
-        }
-      })();
-    </script>
-    <meta name="description" content="Find construction bid opportunities, manage your pipeline, and win more work. D&J Stratagem gives contractors, subcontractors, and suppliers tools matched to their trade and territory." />
+    <meta name="description" content="D&J Stratagem is the operating system for construction growth — helping contractors win more work, market their business, and manage the entire bidding pipeline from opportunity to award." />
     <link rel="canonical" href="https://djstratageminc.com/" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="D&J Stratagem, Inc." />
-    <meta property="og:title" content="D&J Stratagem, Inc. | Find Construction Projects. Bid Smarter. Win More Work." />
-    <meta property="og:description" content="Find construction bid opportunities, manage your pipeline, and win more work. Built for contractors, subcontractors, and suppliers." />
+    <meta property="og:title" content="D&J Stratagem, Inc. | Win More Projects. Build Bigger Business." />
+    <meta property="og:description" content="The operating system for construction growth — bidding, marketing, CRM, and AI tools that help contractors win more work and grow revenue." />
     <meta property="og:url" content="https://djstratageminc.com/" />
     <meta name="twitter:card" content="summary" />
-    <!-- Fonts: system stack in src/index.css. Do not load fonts.googleapis.com
-         here — that discloses visitor IPs before the cookie banner answers. -->
-    <title>D&J Stratagem, Inc. | Find Construction Projects. Bid Smarter. Win More Work.</title>
-    <script type="module" crossorigin src="/assets/index-Cu1duIbU.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-DAtk9SHx.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <title>D&J Stratagem, Inc. | Win More Projects. Build Bigger Business.</title>
+    <script type="module" crossorigin src="/assets/index-BjqCrvkQ.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-B7hItdR4.css">
   </head>
   <body>
     <div id="root"></div>

@@ -1,3 +1,0 @@
-<?php require __DIR__.'/bootstrap.php'; require_auth(); $pdo=get_db();
-if($_SERVER['REQUEST_METHOD']==='POST'){ csrf_check(); $d=json_decode(file_get_contents('php://input'),true)?:$_POST; $stmt=$pdo->prepare("INSERT INTO suppliers(name,category,region,riskScore,deliveryRate,fillRate,leadTimeDays,status,openOrders,spendYtd,trend) VALUES (?,?,?,?,?,?,?,?,?,?,?)"); $stmt->execute([$d['name']??'New Supplier',$d['category']??'general',$d['region']??'West',rand(15,60),rand(85,98),rand(85,99),rand(2,7),'active',0,0,'[70,75,80,85,88,90]']); json(['ok'=>true,'id'=>$pdo->lastInsertId()]); }
-$rows=$pdo->query("SELECT * FROM suppliers ORDER BY riskScore ASC")->fetchAll(); foreach($rows as &$r){ $r['trend']=json_decode($r['trend']??'[]',true); } json(['data'=>$rows]);

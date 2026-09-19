@@ -1,1 +1,0 @@
-<?php require __DIR__.'/bootstrap.php'; $u=require_auth(); if($u['role']!=='admin') json(['error'=>'forbidden'],403); $pdo=get_db(); json(['data'=>$pdo->query('SELECT id,email,name,business_name,business_type,status,created_at FROM users ORDER BY created_at DESC')->fetchAll()]);
