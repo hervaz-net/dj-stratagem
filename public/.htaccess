@@ -5,7 +5,7 @@
 # Use the CloudLinux lsphp MIME type (three underscores). The short
 # application/x-httpd-alt-php81 name is not registered on this host.
 # Keep the handler in source: rsync --delete wipes the MultiPHP-injected block.
-<FilesMatch "\.php$">
+<FilesMatch "\\.php$">
   SetHandler application/x-httpd-alt-php81___lsphp
 </FilesMatch>
 <IfModule mime_module>
@@ -20,20 +20,18 @@ AddType application/manifest+json .webmanifest
   RewriteEngine On
   RewriteBase /
 
-  # Root probes and the PWA manifest must never SPA-fallback when the
-  # file is on disk. If a probe file is missing, later rules may alias
-  # it onto contact.php instead of index.html.
-  RewriteCond %{REQUEST_FILENAME} -f
-  RewriteRule ^health\.php$ - [L]
-  RewriteRule ^contact\.php$ - [L]
-  RewriteCond %{REQUEST_FILENAME} -f
-  RewriteRule ^send-demo\.php$ - [L]
-  RewriteCond %{REQUEST_FILENAME} -f
-  RewriteRule ^manifest\.webmanifest$ - [L]
-
   # One public origin. www must not keep its own cookie/cache universe.
-  RewriteCond %{HTTP_HOST} ^www\.djstratageminc\.com$ [NC]
+  # This has to run before the existing-file pass-through, or www/ would
+  # serve index.html and never 301.
+  RewriteCond %{HTTP_HOST} ^www\\.djstratageminc\\.com$ [NC]
   RewriteRule ^ https://djstratageminc.com%{REQUEST_URI} [R=301,L]
+
+  # Any file that is actually on disk (PHP probes, /api/*, assets, legal
+  # HTML, manifest) is served as-is. Piecemeal -f rules left health.php
+  # and /api/me.php falling through to the SPA when RewriteCond did not
+  # attach to the next rule.
+  RewriteCond %{REQUEST_FILENAME} -f
+  RewriteRule ^ - [L]
 
   # Drop a trailing slash on non-directories so /login/ matches /login.
   RewriteCond %{REQUEST_FILENAME} !-d
@@ -108,22 +106,22 @@ AddType application/manifest+json .webmanifest
   RewriteRule ^sitemap$ /sitemap.xml [R=301,L]
 
   # Never SPA-fallback PHP handlers or the PWA manifest.
-  RewriteRule ^send-demo\.php$ contact.php [L]
+  RewriteRule ^send-demo\\.php$ contact.php [L]
   RewriteCond %{REQUEST_FILENAME} -f
-  RewriteRule ^api/health\.php$ - [L]
-  RewriteRule ^api/health\.php$ health.php [L]
+  RewriteRule ^api/health\\.php$ - [L]
+  RewriteRule ^api/health\\.php$ health.php [L]
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{DOCUMENT_ROOT}/api/not-found.php -f
-  RewriteRule \.php$ api/not-found.php [L]
+  RewriteRule \\.php$ api/not-found.php [L]
   RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteRule \.php$ contact.php [L]
+  RewriteRule \\.php$ contact.php [L]
   RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteRule ^manifest\.webmanifest$ - [R=404,L]
+  RewriteRule ^manifest\\.webmanifest$ - [R=404,L]
   RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteRule ^manifest\.json$ manifest.webmanifest [L]
+  RewriteRule ^manifest\\.json$ manifest.webmanifest [L]
 
-  RewriteRule ^favicon\.ico$ favicon.svg [L]
-  RewriteRule ^apple-touch-icon(-precomposed)?\.png$ favicon.svg [L]
+  RewriteRule ^favicon\\.ico$ favicon.svg [L]
+  RewriteRule ^apple-touch-icon(-precomposed)?\\.png$ favicon.svg [L]
 
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule ^assets/ - [R=404,L]
@@ -139,7 +137,7 @@ AddType application/manifest+json .webmanifest
 
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteCond %{REQUEST_URI} !\.php$ [NC]
+  RewriteCond %{REQUEST_URI} !\\.php$ [NC]
   RewriteRule ^ index.html [L]
 </IfModule>
 
@@ -150,7 +148,7 @@ AddType application/manifest+json .webmanifest
   <FilesMatch "^(robots.txt|sitemap.xml|manifest.webmanifest)$">
     Header set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
-  <FilesMatch "\.webmanifest$">
+  <FilesMatch "\\.webmanifest$">
     Header set Content-Type "application/manifest+json"
   </FilesMatch>
 </IfModule>
