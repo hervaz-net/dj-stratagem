@@ -37,6 +37,16 @@ AddType application/manifest+json .webmanifest
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule ^(.+)/$ /$1 [R=301,L]
 
+  # Pretty legal URLs should still reach the on-disk HTML if the SPA bundle
+  # is stale. React also renders /privacy and /terms; this is belt-and-suspenders
+  # for a host that has the files but an old hashed JS bundle.
+  RewriteCond %{DOCUMENT_ROOT}/privacy.html -f
+  RewriteRule ^privacy$ /privacy.html [L]
+  RewriteCond %{DOCUMENT_ROOT}/terms.html -f
+  RewriteRule ^terms$ /terms.html [L]
+  RewriteCond %{DOCUMENT_ROOT}/brand-guidelines.html -f
+  RewriteRule ^brand$ /brand-guidelines.html [L]
+
   RewriteRule ^blog$ index.html [L]
   RewriteRule ^blog/ index.html [L]
 
