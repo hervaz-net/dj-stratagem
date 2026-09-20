@@ -14,32 +14,24 @@
 </IfModule>
 AddType application/manifest+json .webmanifest
 
-# Serve real files/directories (assets, contact.php) as-is; everything
-# else falls through to index.html so React Router can handle the route.
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
 
-  # One public origin. www must not keep its own cookie/cache universe.
-  # This has to run before the existing-file pass-through, or www/ would
-  # serve index.html and never 301.
   RewriteCond %{HTTP_HOST} ^www[.]djstratageminc[.]com$ [NC]
   RewriteRule ^ https://djstratageminc.com%{REQUEST_URI} [R=301,L]
 
-  # Any file that is actually on disk (PHP probes, /api/*, assets, legal
-  # HTML, manifest) is served as-is. Piecemeal -f rules left health.php
-  # and /api/me.php falling through to the SPA when RewriteCond did not
-  # attach to the next rule.
   RewriteCond %{REQUEST_FILENAME} -f
   RewriteRule ^ - [L]
 
-  # Drop a trailing slash on non-directories so /login/ matches /login.
+  # Partial public_html trees have been missing /api/*.php and health.php.
+  # Never let those URLs become the marketing SPA — JSON or a PHP 404 only.
+  RewriteRule ^api/ api/index.php [L]
+  RewriteRule [.]php$ contact.php [L]
+
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule ^(.+)/$ /$1 [R=301,L]
 
-  # Pretty legal URLs should still reach the on-disk HTML if the SPA bundle
-  # is stale. React also renders /privacy and /terms; this is belt-and-suspenders
-  # for a host that has the files but an old hashed JS bundle.
   RewriteCond %{DOCUMENT_ROOT}/privacy.html -f
   RewriteRule ^privacy$ /privacy.html [L]
   RewriteCond %{DOCUMENT_ROOT}/terms.html -f
@@ -115,35 +107,12 @@ AddType application/manifest+json .webmanifest
   RewriteRule ^signage$ /marketing/signage [R=301,L]
   RewriteRule ^sitemap$ /sitemap.xml [R=301,L]
 
-  # Never SPA-fallback PHP handlers or the PWA manifest.
   RewriteRule ^send-demo[.]php$ contact.php [L]
-  RewriteCond %{REQUEST_FILENAME} -f
-  RewriteRule ^api/health[.]php$ - [L]
-  RewriteRule ^api/health[.]php$ health.php [L]
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{DOCUMENT_ROOT}/api/not-found.php -f
-  RewriteRule [.]php$ api/not-found.php [L]
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteRule [.]php$ contact.php [L]
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteRule ^manifest[.]webmanifest$ - [R=404,L]
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteRule ^manifest[.]json$ manifest.webmanifest [L]
-
   RewriteRule ^favicon[.]ico$ favicon.svg [L]
   RewriteRule ^apple-touch-icon(-precomposed)?[.]png$ favicon.svg [L]
 
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule ^assets/ - [R=404,L]
-  RewriteRule ^assets/ - [L]
-
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteRule ^uploads/ - [R=404,L]
-  RewriteRule ^uploads/ - [L]
-
-  RewriteRule ^api/?$ api/index.php [L]
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteRule ^api/ api/index.php [L]
 
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
