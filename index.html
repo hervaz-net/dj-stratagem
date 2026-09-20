@@ -9,10 +9,17 @@
     <meta name="theme-color" content="#f3f2f2" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#141210" media="(prefers-color-scheme: dark)" />
     <script>
-      // Apply the stored theme before first paint so a dark-theme visitor
-      // never sees a white flash on load.
       (function () {
         try {
+          if (location.hostname === "www.djstratageminc.com") {
+            location.replace(
+              "https://djstratageminc.com" +
+                location.pathname +
+                location.search +
+                location.hash,
+            );
+            return;
+          }
           var stored = localStorage.getItem("djs-theme");
           var theme =
             stored === "light" || stored === "dark"
@@ -34,8 +41,6 @@
     <meta property="og:description" content="Find construction bid opportunities, manage your pipeline, and win more work. Built for contractors, subcontractors, and suppliers." />
     <meta property="og:url" content="https://djstratageminc.com/" />
     <meta name="twitter:card" content="summary" />
-    <!-- Fonts: system stack in src/index.css. Do not load fonts.googleapis.com
-         here — that discloses visitor IPs before the cookie banner answers. -->
     <title>D&J Stratagem, Inc. | Find Construction Projects. Bid Smarter. Win More Work.</title>
   </head>
   <body>
