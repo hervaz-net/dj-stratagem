@@ -173,18 +173,18 @@ domain (create one in cPanel, switch `contact.php` from `mail()` to SMTP).
 
 ## Outstanding
 
-- **Apex DNS has no A record.** Namecheap Advanced DNS must publish
-  `A @ 199.188.200.92` (server247.web-hosting.com) and `CNAME www` →
-  `djstratageminc.com.`. Without those records the domain does not resolve,
-  Actions verify fails with `<none>`, and no cPanel pull can make the site
-  reachable.
-- **cPanel is behind GitHub.** `main` and `deploy` can be current while
-  `https://djstratageminc.com` still serves an older hashed bundle
-  (`assets/index-*.js`). Actions can refresh `deploy` but cannot pull the host
-  until repo secret `CPANEL_TOKEN` is set. Until then, finish with
-  `./deploy.sh` on a token machine, or cPanel → Git Version Control →
-  Update from Remote → Deploy HEAD Commit. Confirm `public_html` is
-  `djstlime:nobody` mode `0750`.
+- **Apex DNS resolves.** `https://djstratageminc.com` answers on
+  server247.web-hosting.com (LiteSpeed). Keep `A @ 199.188.200.92` and
+  `CNAME www` → `djstratageminc.com.` published. The live `.htaccess` still
+  does not 301 www → apex because cPanel has not pulled `deploy`.
+- **cPanel is behind GitHub.** As of 20 Sep 2026 14:10 PDT, live
+  `public_html` last-modified 19 Sep 10:26 UTC still serves
+  `assets/index-BjqCrvkQ.js`. GitHub `main` `7808b0f` and `deploy` `edb7fe2`
+  advertise `assets/index-CHXZTHsw.js` plus the full `public/` tree. Actions
+  can refresh `deploy` but cannot pull the host until repo secret
+  `CPANEL_TOKEN` is set. Until then, finish with `./deploy.sh` on a token
+  machine, or cPanel → Git Version Control → Update from Remote → Deploy
+  HEAD Commit. Confirm `public_html` is `djstlime:nobody` mode `0750`.
 - HTTPS is live (AutoSSL). Auth endpoints stay HTTPS-only via `require_https`.
   Do not disable that flag to "get it working" on plaintext.
 - Pricing figures are placeholders pending a real pricing decision. The annual

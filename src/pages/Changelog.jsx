@@ -5,6 +5,16 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.57",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "fix", text: "Re-audit 20 Sep 2026 14:10 PDT: marketing pages still render on assets/index-BjqCrvkQ.js (public_html last-modified 19 Sep 10:26 UTC). Live JS still contains hello@djstratagem.com. /contact.php GET is JSON method_not_allowed. /health.php, /send-demo.php, /api/*, /manifest.webmanifest, /favicon.ico, /privacy.html, and /terms.html SPA-fallback to the 1602-byte index.html. Live robots.txt is still the 72-byte allow-all file; live sitemap has 7 URLs. www does not 301 to apex. /how-it-works stays on the SPA shell." },
+      { type: "improved", text: "GitHub main 7808b0f and deploy edb7fe2 advertise assets/index-CHXZTHsw.js plus the full public/ tree (health.php, send-demo.php, api/login.php, api/register.php, robots.txt, sitemap). Apex DNS resolves; the remaining production gap is cPanel not pulling deploy." },
+      { type: "fix", text: "No new React-tree defect. Login, dashboard APIs, www canonical, favicon.ico, and the inc.com mailbox stay broken on the host until public_html receives deploy edb7fe2 via ./deploy.sh or cPanel Update from Remote + Deploy HEAD." },
+    ],
+  },
+  {
     version: "1.56",
     date: "September 2026",
     tag: "Fix",
