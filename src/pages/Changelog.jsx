@@ -5,6 +5,16 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.56",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "fix", text: "Re-audit 19 Sep 2026 18:15 PDT: marketing pages still render on assets/index-BjqCrvkQ.js (public_html last-modified 19 Sep 10:26 UTC). Contact chrome still shows hello@djstratagem.com. /contact.php GET is JSON method_not_allowed and POST validates. /health.php, /send-demo.php, /api/*, /manifest.webmanifest, /privacy.html, and /terms.html SPA-fallback to index.html. Live robots.txt is the 72-byte allow-all file. www does not 301 to apex." },
+      { type: "improved", text: "Source build on this release is assets/index-BkBODq4p.js with the full public/ tree (health.php, send-demo.php, api/login.php, api/register.php, robots.txt, sitemap 34 URLs). GitHub Actions cannot refresh deploy (ruleset ~ALL blocks github-actions[bot]) and cannot pull cPanel (CPANEL_TOKEN empty)." },
+      { type: "fix", text: "No new React-tree defect. Login, contact form, and dashboard stay broken on the host until public_html receives the current deploy tree via ./deploy.sh or cPanel Update from Remote + Deploy HEAD." },
+    ],
+  },
+  {
     version: "1.55",
     date: "September 2026",
     tag: "Fix",
