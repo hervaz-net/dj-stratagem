@@ -16,6 +16,8 @@ header('Cache-Control: no-store');
 header('X-Content-Type-Options: nosniff');
 header('Referrer-Policy: same-origin');
 
+// ── last-resort error handling (before config, so a bad require still JSON) ──
+
 set_exception_handler(static function (Throwable $e): void {
     error_log('auth: uncaught ' . get_class($e) . ' — ' . $e->getMessage());
     if (!headers_sent()) {
@@ -42,6 +44,16 @@ register_shutdown_function(static function (): void {
     echo json_encode(['ok' => false, 'error' => 'server_error']);
 });
 
+// ── config ──────────────────────────────────────────────────────────────────
+
+/**
+ * Preferred location is ABOVE the document root, for two reasons:
+ *   1. Nothing under public_html can ever serve it, even if PHP breaks.
+ *   2. The deploy runs `rsync --delete` into public_html, which would wipe a
+ *      config living inside it on every deploy (it is gitignored, so it is
+ *      never in the synced tree).
+ * The in-directory path is the local-development fallback.
+ */
 function locate_config(): ?string
 {
     $candidates = [];
@@ -79,6 +91,8 @@ if (!is_array($config) || empty($config['db']) || !is_array($config['db'])) {
     exit;
 }
 
+// ── transport security ──────────────────────────────────────────────────────
+
 function is_https(): bool
 {
     global $config;
@@ -90,6 +104,15 @@ function is_https(): bool
         return true;
     }
 
+    /**
+     * X-Forwarded-Proto is trusted ONLY when the request actually came from a
+     * configured proxy. Any client can set this header, so honouring it
+     * unconditionally would let an attacker send `X-Forwarded-Proto: https`
+     * over plaintext and walk straight through the require_https gate.
+     *
+     * Empty trusted_proxies (the default) means the header is ignored, which
+     * is correct for cPanel/LiteSpeed with no terminator in front.
+     */
     $trusted = $config['trusted_proxies'] ?? [];
     if ($trusted && in_array($_SERVER['REMOTE_ADDR'] ?? '', $trusted, true)) {
         $proto = strtolower(trim(explode(',', (string) ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? ''))[0]));
@@ -109,6 +132,8 @@ if (!empty($config['require_https']) && !is_https()) {
     exit;
 }
 
+// ── session ─────────────────────────────────────────────────────────────────
+
 session_set_cookie_params([
     'lifetime' => 0,
     'path'     => '/',
@@ -123,6 +148,8 @@ if (session_status() !== PHP_SESSION_ACTIVE && !@session_start()) {
     echo json_encode(['ok' => false, 'error' => 'server_error']);
     exit;
 }
+
+// ── database ────────────────────────────────────────────────────────────────
 
 function db(): PDO
 {
@@ -154,6 +181,8 @@ function db(): PDO
     return $pdo;
 }
 
+// ── responses ───────────────────────────────────────────────────────────────
+
 function respond(array $payload, int $status = 200): never
 {
     http_response_code($status);
@@ -173,6 +202,7 @@ function require_post(): void
     }
 }
 
+/** Reads a JSON body, falling back to form-encoded. */
 function input(): array
 {
     static $data = null;
@@ -192,6 +222,8 @@ function field(string $key): string
     return is_scalar($v) ? trim((string) $v) : '';
 }
 
+// ── CSRF ────────────────────────────────────────────────────────────────────
+
 function csrf_token(): string
 {
     if (empty($_SESSION['csrf'])) {
@@ -207,6 +239,8 @@ function require_csrf(): void
         fail(403, 'csrf_failed', 'Your session expired. Reload and try again.');
     }
 }
+
+// ── throttling ──────────────────────────────────────────────────────────────
 
 function client_ip_binary(): string
 {
@@ -285,6 +319,8 @@ function claim_registration_slot(): void
         fail(429, 'too_many_attempts', "Too many requests. Try again in {$window} minutes.");
     }
 }
+
+// ── current user ────────────────────────────────────────────────────────────
 
 function current_user(): ?array
 {

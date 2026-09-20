@@ -14,8 +14,6 @@
 </IfModule>
 AddType application/manifest+json .webmanifest
 
-# Serve real files/directories (assets, contact.php) as-is; everything
-# else falls through to index.html so React Router can handle the route.
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
@@ -25,6 +23,11 @@ AddType application/manifest+json .webmanifest
 
   RewriteCond %{REQUEST_FILENAME} -f
   RewriteRule ^ - [L]
+
+  # Partial public_html trees have been missing /api/*.php and health.php.
+  # Never let those URLs become the marketing SPA — JSON or a PHP 404 only.
+  RewriteRule ^api/ api/index.php [L]
+  RewriteRule [.]php$ contact.php [L]
 
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule ^(.+)/$ /$1 [R=301,L]
@@ -105,33 +108,11 @@ AddType application/manifest+json .webmanifest
   RewriteRule ^sitemap$ /sitemap.xml [R=301,L]
 
   RewriteRule ^send-demo[.]php$ contact.php [L]
-  RewriteCond %{REQUEST_FILENAME} -f
-  RewriteRule ^api/health[.]php$ - [L]
-  RewriteRule ^api/health[.]php$ health.php [L]
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{DOCUMENT_ROOT}/api/not-found.php -f
-  RewriteRule [.]php$ api/not-found.php [L]
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteRule [.]php$ contact.php [L]
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteRule ^manifest[.]webmanifest$ - [R=404,L]
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteRule ^manifest[.]json$ manifest.webmanifest [L]
-
   RewriteRule ^favicon[.]ico$ favicon.svg [L]
   RewriteRule ^apple-touch-icon(-precomposed)?[.]png$ favicon.svg [L]
 
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule ^assets/ - [R=404,L]
-  RewriteRule ^assets/ - [L]
-
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteRule ^uploads/ - [R=404,L]
-  RewriteRule ^uploads/ - [L]
-
-  RewriteRule ^api/?$ api/index.php [L]
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteRule ^api/ api/index.php [L]
 
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
