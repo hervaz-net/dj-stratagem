@@ -44,6 +44,7 @@ import Settings from "./pages/dashboard/Settings";
 import { AuthProvider } from "./auth/AuthContext";
 import RequireAuth from "./auth/RequireAuth";
 import { ToastProvider } from "./contexts/ToastContext";
+import { hideMarketingChrome } from "./chrome/formRoutes";
 
 function ScrollToTop() {
   const { pathname, hash } = useLocation();
@@ -76,12 +77,15 @@ const SkipLink = () => (
 
 /** Public marketing pages: site navbar, footer, back-to-top, cookie banner, floating CTA. */
 function MarketingLayout({ children }) {
+  const { pathname } = useLocation();
+  const hideChrome = hideMarketingChrome(pathname);
   const [paletteOpen, setPaletteOpen] = useState(false);
 
   const openPalette = useCallback(() => setPaletteOpen(true), []);
   const closePalette = useCallback(() => setPaletteOpen(false), []);
 
   useEffect(() => {
+    if (hideChrome) return undefined;
     const handler = (e) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
@@ -90,7 +94,18 @@ function MarketingLayout({ children }) {
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, []);
+  }, [hideChrome]);
+
+  if (hideChrome) {
+    return (
+      <div className="flex min-h-screen flex-col">
+        <SkipLink />
+        <main id="main" className="flex-1">
+          {children}
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen flex-col">
