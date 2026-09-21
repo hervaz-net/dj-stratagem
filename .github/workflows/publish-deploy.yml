@@ -86,7 +86,7 @@ jobs:
             exit 1
           fi
           missing=0
-          for rel in privacy.html terms.html health.php send-demo.php manifest.webmanifest api/login.php api/register.php api/bootstrap.php api/logout.php api/.htaccess; do
+          for rel in privacy.html terms.html health.php send-demo.php manifest.webmanifest manifest.json api/login.php api/register.php api/bootstrap.php api/logout.php api/credit.php api/.htaccess; do
             if ! git cat-file -e "origin/deploy:${rel}" 2>/dev/null; then
               echo "::error::GitHub deploy is missing ${rel} (stripped tree)."
               missing=1

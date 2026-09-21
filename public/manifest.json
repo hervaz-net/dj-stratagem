@@ -1,0 +1,18 @@
+{
+  "name": "D&J Stratagem, Inc.",
+  "short_name": "D&J Stratagem",
+  "description": "Find construction bid opportunities, manage your pipeline, and win more work.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f3f2f2",
+  "theme_color": "#ec3013",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

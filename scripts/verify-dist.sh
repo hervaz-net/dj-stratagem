@@ -19,6 +19,8 @@ need_files=(
   send-demo.php
   health.php
   manifest.webmanifest
+  manifest.json
+  api/credit.php
   robots.txt
   sitemap.xml
   favicon.svg
