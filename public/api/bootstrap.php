@@ -287,12 +287,18 @@ function current_user(): ?array
     return $user;
 }
 
-function require_admin(): array
+function require_signin(): array
 {
     $user = current_user();
     if (!$user) {
         fail(401, 'not_authenticated', 'Sign in to continue.');
     }
+    return $user;
+}
+
+function require_admin(): array
+{
+    $user = require_signin();
     if (($user['role'] ?? '') !== 'admin') {
         fail(403, 'forbidden', 'This area is restricted to administrators.');
     }
