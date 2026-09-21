@@ -5,6 +5,16 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.59",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "fix", text: "Live audit 21 Sep 2026 14:25 PDT: marketing pages render. Live bundle is still assets/index-BgN5Qcw5.js (public_html last-modified 21 Sep 05:09 UTC). GitHub main d5c925a and deploy 0a77c4f already advertise assets/index-DiJVv74X.js. /api/credit.php is still 500 server_error on the host. /manifest.json still SPA-falls back to index.html. /manifest.webmanifest, /api/health.php, /api/me.php, and www→apex are healthy." },
+      { type: "fix", text: "Ship public/manifest.json as a real file (same payload as manifest.webmanifest) so LiteSpeed existing-file pass-through serves the PWA manifest instead of the SPA shell even when the rewrite alias is stale." },
+      { type: "improved", text: "verify-dist and publish-deploy now require manifest.json and api/credit.php so a stripped deploy tree cannot ship. Live public_html still needs cPanel Update from Remote + Deploy HEAD (or ./deploy.sh) because CPANEL_TOKEN is empty in Actions." },
+    ],
+  },
+  {
     version: "1.58",
     date: "September 2026",
     tag: "Fix",
@@ -103,7 +113,7 @@ const entries = [
     date: "March 2026",
     tag: "Launch",
     items: [
-      { type: "new", text: "Initial platform launch \u2014 D&J Stratagem, Inc." },
+      { type: "new", text: "Initial platform launch — D&J Stratagem, Inc." },
     ],
   },
 ];
@@ -127,7 +137,7 @@ export default function Changelog() {
     <>
       <Seo
         title="Changelog"
-        description="Every update, feature, and improvement to D&J Stratagem \u2014 newest first."
+        description="Every update, feature, and improvement to D&J Stratagem — newest first."
       />
 
       <Section className="pt-16 pb-8 md:pt-24">
@@ -136,7 +146,7 @@ export default function Changelog() {
           What's new on the platform.
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-steel">
-          Every release, improvement, and fix \u2014 most recent first. There is no email digest yet.
+          Every release, improvement, and fix — most recent first. There is no email digest yet.
         </p>
       </Section>
 
