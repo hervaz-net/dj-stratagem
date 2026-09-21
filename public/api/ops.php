@@ -127,3 +127,7 @@ function ensure_column(string $table, string $column, string $definition): void
         error_log("ops: {$table}.{$column} migrate skipped — " . $e->getMessage());
     }
 }
+
+require __DIR__ . '/ops-schema.php';
+require __DIR__ . '/ops-seed.php';
+require __DIR__ . '/ops-view.php';
