@@ -46,6 +46,8 @@ AddType application/manifest+json .webmanifest
   RewriteRule ^sign-in$ /login [R=301,L]
   RewriteRule ^log-in$ /login [R=301,L]
   RewriteRule ^account$ /login [R=301,L]
+  RewriteRule ^credit$ /dashboard/settings [R=301,L]
+  RewriteRule ^credit-application$ /dashboard/settings [R=301,L]
   RewriteRule ^signup$ /register [R=301,L]
   RewriteRule ^sign-up$ /register [R=301,L]
   RewriteRule ^trial$ /register [R=301,L]
