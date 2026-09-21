@@ -287,15 +287,6 @@ function current_user(): ?array
     return $user;
 }
 
-function require_signin(): array
-{
-    $user = current_user();
-    if (!$user) {
-        fail(401, 'not_authenticated', 'Sign in to continue.');
-    }
-    return $user;
-}
-
 function require_admin(): array
 {
     $user = current_user();
