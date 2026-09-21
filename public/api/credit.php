@@ -6,7 +6,6 @@
 
 declare(strict_types=1);
 require __DIR__ . '/bootstrap.php';
-require __DIR__ . '/ops.php';
 
 $user = require_signin();
 $uid = (int) $user['id'];
