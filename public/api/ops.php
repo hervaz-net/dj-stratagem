@@ -20,3 +20,10 @@ if (!function_exists('require_signin')) {
         return $user;
     }
 }
+
+function require_get(): void
+{
+    if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'GET') {
+        fail(405, 'method_not_allowed');
+    }
+}
