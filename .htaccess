@@ -110,6 +110,7 @@ AddType application/manifest+json .webmanifest
   RewriteRule ^send-demo[.]php$ contact.php [L]
   RewriteRule ^favicon[.]ico$ favicon.svg [L]
   RewriteRule ^apple-touch-icon(-precomposed)?[.]png$ favicon.svg [L]
+  RewriteRule ^manifest[.]json$ manifest.webmanifest [L]
 
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule ^assets/ - [R=404,L]
