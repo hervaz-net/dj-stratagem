@@ -5,6 +5,16 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.58",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "fix", text: "Live audit 21 Sep 2026: public_html now serves assets/index-BgN5Qcw5.js (matches GitHub deploy ad06db1 / main 0b5a471). /api/health.php and /api/me.php return JSON. www 301s to apex. Contact chrome uses hello@djstratageminc.com." },
+      { type: "fix", text: "/api/credit.php returned 500 server_error for signed-out GET because require_signin() lived only in ops.php. Move the gate to bootstrap.php so credit and any other endpoint that skips ops.php return 401 not_authenticated." },
+      { type: "fix", text: "Alias /manifest.json to manifest.webmanifest so PWA and crawler probes do not receive the SPA shell." },
+    ],
+  },
+  {
     version: "1.57",
     date: "September 2026",
     tag: "Fix",
