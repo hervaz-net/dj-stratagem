@@ -91,7 +91,7 @@ if (!is_array($config) || empty($config['db']) || !is_array($config['db'])) {
     exit;
 }
 
-// ── transport security ──────────────────────────────────────────────────────
+// ── transport security ──────────────────────────────────────────────
 
 function is_https(): bool
 {
@@ -132,7 +132,7 @@ if (!empty($config['require_https']) && !is_https()) {
     exit;
 }
 
-// ── session ─────────────────────────────────────────────────────────────────
+// ── session ─────────────────────────────────────────────────────────────
 
 session_set_cookie_params([
     'lifetime' => 0,
@@ -149,7 +149,7 @@ if (session_status() !== PHP_SESSION_ACTIVE && !@session_start()) {
     exit;
 }
 
-// ── database ────────────────────────────────────────────────────────────────
+// ── database ────────────────────────────────────────────────────────────
 
 function db(): PDO
 {
@@ -181,7 +181,7 @@ function db(): PDO
     return $pdo;
 }
 
-// ── responses ───────────────────────────────────────────────────────────────
+// ── responses ───────────────────────────────────────────────────────────
 
 function respond(array $payload, int $status = 200): never
 {
@@ -222,7 +222,7 @@ function field(string $key): string
     return is_scalar($v) ? trim((string) $v) : '';
 }
 
-// ── CSRF ────────────────────────────────────────────────────────────────────
+// ── CSRF ────────────────────────────────────────────────────────────────
 
 function csrf_token(): string
 {
@@ -240,7 +240,7 @@ function require_csrf(): void
     }
 }
 
-// ── throttling ──────────────────────────────────────────────────────────────
+// ── throttling ──────────────────────────────────────────────────────
 
 function client_ip_binary(): string
 {
@@ -320,7 +320,7 @@ function claim_registration_slot(): void
     }
 }
 
-// ── current user ────────────────────────────────────────────────────────────
+// ── current user ────────────────────────────────────────────────────
 
 function current_user(): ?array
 {
@@ -342,12 +342,18 @@ function current_user(): ?array
     return $user;
 }
 
-function require_admin(): array
+function require_signin(): array
 {
     $user = current_user();
     if (!$user) {
         fail(401, 'not_authenticated', 'Sign in to continue.');
     }
+    return $user;
+}
+
+function require_admin(): array
+{
+    $user = require_signin();
     if (($user['role'] ?? '') !== 'admin') {
         fail(403, 'forbidden', 'This area is restricted to administrators.');
     }
