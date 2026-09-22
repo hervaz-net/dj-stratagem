@@ -5,6 +5,17 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.67",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "fix", text: "Live audit 22 Sep 2026 16:26 PDT: marketing pages render. Live bundle is still assets/index-BgN5Qcw5.js (public_html last-modified 21 Sep 05:09 UTC). /api/credit.php still returns 500 server_error for signed-out GET. /manifest.json still SPA-falls back to index.html. /credit and /credit-application still render the live 404 page. Contact still has no home logo. /manifest.webmanifest, /api/health.php, /api/me.php, /contact.php GET 405 JSON, www\u2192apex, /privacy.html, and /terms.html are healthy." },
+      { type: "fix", text: "Signed-in GET /api/credit.php no longer 500s when CREATE TABLE is denied. Return an empty list with live:false instead. Signed-out GET still 401s via require_signin once the host pulls deploy." },
+      { type: "fix", text: "Rewrite /manifest.json to manifest.webmanifest immediately after existing-file pass-through so a missing manifest.json file cannot fall through to the SPA shell." },
+      { type: "improved", text: "GitHub source and deploy already contain the Contact home logo, /credit aliases, and public/manifest.json. public_html is frozen until cPanel Update from Remote + Deploy HEAD (or ./deploy.sh) because CPANEL_TOKEN is empty in Actions." },
+    ],
+  },
+  {
     version: "1.66",
     date: "September 2026",
     tag: "Fix",
