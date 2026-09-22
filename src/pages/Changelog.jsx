@@ -5,6 +5,15 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.63",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "fix", text: "Live audit 22 Sep 2026 12:04 PDT: marketing pages render. Live bundle is still assets/index-BgN5Qcw5.js (public_html last-modified 21 Sep 05:09 UTC). GitHub main 84c3fdb and deploy 45a8454 advertise assets/index-B8p1R6ex.js. /api/credit.php is still 500 server_error. /manifest.json still SPA-falls back to index.html. /credit and /credit-application still render the old 404 page. Contact still has no home logo. /manifest.webmanifest, /api/health.php, /api/me.php, /contact.php, www→apex, /privacy.html, and /terms.html are healthy." },
+      { type: "improved", text: "No new React-tree defect. Source already 401s signed-out /api/credit.php, ships public/manifest.json, aliases /credit to /dashboard/settings, and puts the brand logo on Contact. GitHub deploy already contains those files. public_html is frozen until cPanel Update from Remote + Deploy HEAD (or ./deploy.sh) because CPANEL_TOKEN is empty in Actions." },
+    ],
+  },
+  {
     version: "1.62",
     date: "September 2026",
     tag: "Fix",
