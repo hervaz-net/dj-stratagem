@@ -24,6 +24,12 @@ AddType application/manifest+json .webmanifest
   RewriteCond %{REQUEST_FILENAME} -f
   RewriteRule ^ - [L]
 
+  # Live public_html has shipped without manifest.json. Alias before SPA fallback.
+  RewriteCond %{DOCUMENT_ROOT}/manifest.webmanifest -f
+  RewriteRule ^manifest[.]json$ /manifest.webmanifest [L]
+  RewriteRule ^credit$ /dashboard/settings [R=301,L]
+  RewriteRule ^credit-application$ /dashboard/settings [R=301,L]
+
   # Partial public_html trees have been missing /api/*.php and health.php.
   # Never let those URLs become the marketing SPA — JSON or a PHP 404 only.
   RewriteRule ^api/ api/index.php [L]
