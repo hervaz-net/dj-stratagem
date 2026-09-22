@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import Section, { Eyebrow } from "../components/Section";
 import Button from "../components/Button";
+import Logo from "../components/Logo";
 import Seo from "../components/Seo";
 import { IconMap, IconChat, IconClock, IconCheck } from "../components/icons";
 
@@ -118,6 +120,9 @@ export default function Contact() {
       />
 
       <Section className="pt-16 pb-8 md:pt-24">
+        <Link to="/" className="mb-8 inline-block" aria-label="D&J Stratagem — home">
+          <Logo />
+        </Link>
         <Eyebrow>Contact</Eyebrow>
         <h1 className="text-balance max-w-3xl text-4xl font-semibold leading-tight tracking-tight text-paper sm:text-5xl">
           Let&rsquo;s talk about your next project.
