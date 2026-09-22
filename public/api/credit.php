@@ -10,25 +10,30 @@ require __DIR__ . '/bootstrap.php';
 $user = require_signin();
 $uid = (int) $user['id'];
 
-db()->exec(
-    'CREATE TABLE IF NOT EXISTS credit_applications (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        user_id INT NOT NULL,
-        business_name VARCHAR(255),
-        requested_limit INT NOT NULL DEFAULT 25000,
-        terms VARCHAR(20) NOT NULL DEFAULT \'Net 30\',
-        years_in_business VARCHAR(20),
-        tax_id_last4 VARCHAR(10),
-        duns VARCHAR(30),
-        trade_refs TEXT,
-        bank_ref TEXT,
-        w9_filename VARCHAR(255),
-        license_filename VARCHAR(255),
-        status VARCHAR(20) NOT NULL DEFAULT \'pending\',
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        INDEX (user_id)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4'
-);
+try {
+    db()->exec(
+        'CREATE TABLE IF NOT EXISTS credit_applications (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            user_id INT NOT NULL,
+            business_name VARCHAR(255),
+            requested_limit INT NOT NULL DEFAULT 25000,
+            terms VARCHAR(20) NOT NULL DEFAULT \'Net 30\',
+            years_in_business VARCHAR(20),
+            tax_id_last4 VARCHAR(10),
+            duns VARCHAR(30),
+            trade_refs TEXT,
+            bank_ref TEXT,
+            w9_filename VARCHAR(255),
+            license_filename VARCHAR(255),
+            status VARCHAR(20) NOT NULL DEFAULT \'pending\',
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            INDEX (user_id)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4'
+    );
+} catch (PDOException $e) {
+    error_log('credit: schema ensure failed — ' . $e->getMessage());
+    fail(500, 'server_error', 'Credit applications are not available yet.');
+}
 
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
