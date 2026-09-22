@@ -176,15 +176,16 @@ domain (create one in cPanel, switch `contact.php` from `mail()` to SMTP).
 - **Apex DNS resolves.** `https://djstratageminc.com` answers on
   server247.web-hosting.com (LiteSpeed). Keep `A @ 199.188.200.92` and
   `CNAME www` → `djstratageminc.com.` published. Live www already 301s to apex.
-- **cPanel is behind GitHub.** As of 22 Sep 2026 09:37 PDT, live
+- **cPanel is behind GitHub.** As of 22 Sep 2026 12:04 PDT, live
   `public_html` last-modified 21 Sep 05:09 UTC still serves
-  `assets/index-BgN5Qcw5.js`. GitHub `main` `d07aae0` and `deploy` `67efeb7`
-  advertise `assets/index-BDW7ejsA.js` plus `manifest.json` and the fixed
-  `api/credit.php`. Live `/api/credit.php` is still 500 and `/manifest.json`
-  still SPA-falls back. Actions can refresh `deploy` but cannot pull the host
-  until repo secret `CPANEL_TOKEN` is set. Until then, finish with `./deploy.sh`
-  on a token machine, or cPanel → Git Version Control → Update from Remote →
-  Deploy HEAD Commit. Confirm `public_html` is `djstlime:nobody` mode `0750`.
+  `assets/index-BgN5Qcw5.js`. GitHub `main` `84c3fdb` and `deploy` `45a8454`
+  advertise `assets/index-B8p1R6ex.js` plus `manifest.json` and the fixed
+  `api/credit.php`. Live `/api/credit.php` is still 500, `/manifest.json`
+  still SPA-falls back, and `/credit` still 404s. Actions can refresh `deploy`
+  but cannot pull the host until repo secret `CPANEL_TOKEN` is set. Until then,
+  finish with `./deploy.sh` on a token machine, or cPanel → Git Version Control
+  → Update from Remote → Deploy HEAD Commit. Confirm `public_html` is
+  `djstlime:nobody` mode `0750`.
 - HTTPS is live (AutoSSL). Auth endpoints stay HTTPS-only via `require_https`.
   Do not disable that flag to "get it working" on plaintext.
 - Pricing figures are placeholders pending a real pricing decision. The annual
@@ -219,9 +220,9 @@ Set `VITE_API_BASE_URL` only if the PHP host is on another origin.
 | `/api/overview.php` | GET KPIs, activity, deadlines, alerts, health | Overview |
 | `/api/bids.php` | GET list; POST `{action:"create"}` or `{action:"status", id, status}` | Bids |
 | `/api/orders.php` | GET list; POST `{action:"cancel", ids}` | Orders |
-| `/api/analytics.php?range=7d\|30d\|90d` | GET live aggregates | Analytics |
-| `/api/alerts.php` | GET list; POST `{action: read\|read_all\|dismiss\|snooze, id?}` | Alerts |
-| `/api/settings.php` | GET; POST `{action: profile\|notifications\|twofa\|billing\|account_type\|,"` | Settings |
+| `/api/analytics.php?range=7d\\|30d\\|90d` | GET live aggregates | Analytics |
+| `/api/alerts.php` | GET list; POST `{action: read\\|read_all\\|dismiss\\|snooze, id?}` | Alerts |
+| `/api/settings.php` | GET; POST `{action: profile\\|notifications\\|twofa\\|billing\\|account_type\\|,"` | Settings |
 
 All of the above require a signed-in `active` session. A 401 is never
 swallowed as sample data.
