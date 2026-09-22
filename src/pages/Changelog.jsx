@@ -5,6 +5,16 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.61",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "fix", text: "Live audit 22 Sep 2026 09:37 PDT: marketing pages render. Live bundle is still assets/index-BgN5Qcw5.js (public_html last-modified 21 Sep 05:09 UTC). GitHub main d07aae0 and deploy 67efeb7 advertise assets/index-BDW7ejsA.js. /api/credit.php is still 500 server_error on the host. /manifest.json still SPA-falls back to index.html. /credit and /credit-application stay on the SPA shell instead of 301ing to /dashboard/settings. /manifest.webmanifest, /api/health.php, /api/me.php, /contact.php, www→apex, /privacy.html, and /terms.html are healthy." },
+      { type: "fix", text: "Stop credit.php CREATE TABLE from throwing an uncaught PDO error after sign-in. Signed-out GET already returns 401 once the host pulls deploy; signed-in GET now fails closed with a logged schema error instead of a bare 500." },
+      { type: "improved", text: "GitHub deploy already contains the 1.58–1.60 credit/manifest/contact-home fixes. public_html still needs cPanel Update from Remote + Deploy HEAD (or ./deploy.sh) because CPANEL_TOKEN is empty in Actions." },
+    ],
+  },
+  {
     version: "1.60",
     date: "September 2026",
     tag: "Fix",
