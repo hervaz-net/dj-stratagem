@@ -10,6 +10,7 @@ require __DIR__ . '/bootstrap.php';
 $user = require_signin();
 $uid = (int) $user['id'];
 
+$schemaReady = true;
 try {
     db()->exec(
         'CREATE TABLE IF NOT EXISTS credit_applications (
@@ -31,22 +32,44 @@ try {
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4'
     );
 } catch (PDOException $e) {
+    $schemaReady = false;
     error_log('credit: schema ensure failed — ' . $e->getMessage());
-    fail(500, 'server_error', 'Credit applications are not available yet.');
 }
 
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
 if ($method === 'GET') {
-    $stmt = db()->prepare(
-        'SELECT id, business_name, requested_limit, terms, years_in_business,
-                tax_id_last4, duns, trade_refs, bank_ref, status, created_at
-           FROM credit_applications
-          WHERE user_id = ?
-          ORDER BY created_at DESC'
-    );
-    $stmt->execute([$uid]);
-    $rows = $stmt->fetchAll();
+    if (!$schemaReady) {
+        respond([
+            'ok' => true,
+            'live' => false,
+            'data' => [],
+            'message' => 'Credit applications are not available yet.',
+            'csrf' => csrf_token(),
+        ]);
+    }
+
+    try {
+        $stmt = db()->prepare(
+            'SELECT id, business_name, requested_limit, terms, years_in_business,
+                    tax_id_last4, duns, trade_refs, bank_ref, status, created_at
+               FROM credit_applications
+              WHERE user_id = ?
+              ORDER BY created_at DESC'
+        );
+        $stmt->execute([$uid]);
+        $rows = $stmt->fetchAll();
+    } catch (PDOException $e) {
+        error_log('credit: list failed — ' . $e->getMessage());
+        respond([
+            'ok' => true,
+            'live' => false,
+            'data' => [],
+            'message' => 'Credit applications are not available yet.',
+            'csrf' => csrf_token(),
+        ]);
+    }
+
     respond([
         'ok' => true,
         'live' => true,
@@ -71,6 +94,10 @@ if ($method === 'GET') {
 
 if ($method !== 'POST') {
     fail(405, 'method_not_allowed');
+}
+
+if (!$schemaReady) {
+    fail(500, 'server_error', 'Credit applications are not available yet.');
 }
 
 require_csrf();
