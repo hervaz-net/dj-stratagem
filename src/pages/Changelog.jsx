@@ -5,11 +5,20 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.66",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "fix", text: "Live audit 22 Sep 2026 15:05 PDT: marketing pages still render. Live bundle is still assets/index-BgN5Qcw5.js (public_html last-modified 21 Sep 05:09 UTC). GitHub main fca121a and deploy 0a2a278 advertise assets/index-CCvkyaTW.js. /api/credit.php is still 500 server_error. /manifest.json still SPA-falls back to index.html. /credit and /credit-application still render the live 404 page. /manifest.webmanifest, /api/health.php, /api/me.php, /contact.php GET 405 JSON, www\u2192apex, /privacy.html, and /terms.html are healthy." },
+      { type: "improved", text: "No new React-tree defect. Source already 401s signed-out /api/credit.php, ships public/manifest.json, aliases /credit to /dashboard/settings, and puts the brand logo on Contact. GitHub deploy already contains those files. public_html is frozen until cPanel Update from Remote + Deploy HEAD (or ./deploy.sh) because CPANEL_TOKEN is empty in Actions." },
+    ],
+  },
+  {
     version: "1.63",
     date: "September 2026",
     tag: "Fix",
     items: [
-      { type: "fix", text: "Live audit 22 Sep 2026 12:04 PDT: marketing pages render. Live bundle is still assets/index-BgN5Qcw5.js (public_html last-modified 21 Sep 05:09 UTC). GitHub main 84c3fdb and deploy 45a8454 advertise assets/index-B8p1R6ex.js. /api/credit.php is still 500 server_error. /manifest.json still SPA-falls back to index.html. /credit and /credit-application still render the old 404 page. Contact still has no home logo. /manifest.webmanifest, /api/health.php, /api/me.php, /contact.php, www→apex, /privacy.html, and /terms.html are healthy." },
+      { type: "fix", text: "Live audit 22 Sep 2026 12:04 PDT: marketing pages render. Live bundle is still assets/index-BgN5Qcw5.js (public_html last-modified 21 Sep 05:09 UTC). GitHub main 84c3fdb and deploy 45a8454 advertise assets/index-B8p1R6ex.js. /api/credit.php is still 500 server_error. /manifest.json still SPA-falls back to index.html. /credit and /credit-application still render the old 404 page. Contact still has no home logo. /manifest.webmanifest, /api/health.php, /api/me.php, /contact.php, www\u2192apex, /privacy.html, and /terms.html are healthy." },
       { type: "improved", text: "No new React-tree defect. Source already 401s signed-out /api/credit.php, ships public/manifest.json, aliases /credit to /dashboard/settings, and puts the brand logo on Contact. GitHub deploy already contains those files. public_html is frozen until cPanel Update from Remote + Deploy HEAD (or ./deploy.sh) because CPANEL_TOKEN is empty in Actions." },
     ],
   },
@@ -18,7 +27,7 @@ const entries = [
     date: "September 2026",
     tag: "Fix",
     items: [
-      { type: "fix", text: "Live audit 22 Sep 2026 10:13 PDT: marketing pages render. Live bundle is still assets/index-BgN5Qcw5.js (public_html last-modified 21 Sep 05:09 UTC). GitHub main 654ea96 and deploy 686f3af advertise assets/index-BMbUvh7o.js. /api/credit.php is still 500 server_error on the host. /manifest.json still SPA-falls back to index.html. /credit and /credit-application render the old 404 page instead of redirecting to /dashboard/settings. Contact still has no home logo. /manifest.webmanifest, /api/health.php, /api/me.php, /contact.php, www→apex, /privacy.html, and /terms.html are healthy." },
+      { type: "fix", text: "Live audit 22 Sep 2026 10:13 PDT: marketing pages render. Live bundle is still assets/index-BgN5Qcw5.js (public_html last-modified 21 Sep 05:09 UTC). GitHub main 654ea96 and deploy 686f3af advertise assets/index-BMbUvh7o.js. /api/credit.php is still 500 server_error on the host. /manifest.json still SPA-falls back to index.html. /credit and /credit-application render the old 404 page instead of redirecting to /dashboard/settings. Contact still has no home logo. /manifest.webmanifest, /api/health.php, /api/me.php, /contact.php, www\u2192apex, /privacy.html, and /terms.html are healthy." },
       { type: "improved", text: "No new React-tree defect. Source already returns 401 from signed-out /api/credit.php, ships public/manifest.json, aliases /credit to settings, and puts the brand logo on Contact. GitHub deploy 686f3af already contains those files. public_html is frozen until cPanel Update from Remote + Deploy HEAD (or ./deploy.sh) because CPANEL_TOKEN is empty in Actions." },
     ],
   },
@@ -27,7 +36,7 @@ const entries = [
     date: "September 2026",
     tag: "Fix",
     items: [
-      { type: "fix", text: "Live audit 22 Sep 2026 09:37 PDT: marketing pages render. Live bundle is still assets/index-BgN5Qcw5.js (public_html last-modified 21 Sep 05:09 UTC). GitHub main d07aae0 and deploy 67efeb7 advertise assets/index-BDW7ejsA.js. /api/credit.php is still 500 server_error on the host. /manifest.json still SPA-falls back to index.html. /credit and /credit-application stay on the SPA shell instead of 301ing to /dashboard/settings. /manifest.webmanifest, /api/health.php, /api/me.php, /contact.php, www→apex, /privacy.html, and /terms.html are healthy." },
+      { type: "fix", text: "Live audit 22 Sep 2026 09:37 PDT: marketing pages render. Live bundle is still assets/index-BgN5Qcw5.js (public_html last-modified 21 Sep 05:09 UTC). GitHub main d07aae0 and deploy 67efeb7 advertise assets/index-BDW7ejsA.js. /api/credit.php is still 500 server_error on the host. /manifest.json still SPA-falls back to index.html. /credit and /credit-application stay on the SPA shell instead of 301ing to /dashboard/settings. /manifest.webmanifest, /api/health.php, /api/me.php, /contact.php, www\u2192apex, /privacy.html, and /terms.html are healthy." },
       { type: "fix", text: "Stop credit.php CREATE TABLE from throwing an uncaught PDO error after sign-in. Signed-out GET already returns 401 once the host pulls deploy; signed-in GET now fails closed with a logged schema error instead of a bare 500." },
       { type: "improved", text: "GitHub deploy already contains the 1.58–1.60 credit/manifest/contact-home fixes. public_html still needs cPanel Update from Remote + Deploy HEAD (or ./deploy.sh) because CPANEL_TOKEN is empty in Actions." },
     ],
@@ -37,7 +46,7 @@ const entries = [
     date: "September 2026",
     tag: "Fix",
     items: [
-      { type: "fix", text: "Live audit 21 Sep 2026 17:24 PDT: marketing pages render. Live bundle is still assets/index-BgN5Qcw5.js. GitHub main 2bb9ab9 and deploy b788a5e advertise assets/index-B5Aa2-bs.js. /api/credit.php is still 500 server_error. /manifest.json still SPA-falls back to index.html. /manifest.webmanifest, /api/health.php, /api/me.php, /contact.php, and www→apex are healthy." },
+      { type: "fix", text: "Live audit 21 Sep 2026 17:24 PDT: marketing pages render. Live bundle is still assets/index-BgN5Qcw5.js. GitHub main 2bb9ab9 and deploy b788a5e advertise assets/index-B5Aa2-bs.js. /api/credit.php is still 500 server_error. /manifest.json still SPA-falls back to index.html. /manifest.webmanifest, /api/health.php, /api/me.php, /contact.php, and www\u2192apex are healthy." },
       { type: "fix", text: "Contact hides site chrome so floating widgets cannot cover the form, but that left no way home. Add the brand logo linking to / like the sign-in card." },
       { type: "improved", text: "GitHub Actions publish-deploy builds and refreshes the deploy branch. public_html still needs cPanel Update from Remote + Deploy HEAD (or ./deploy.sh) because CPANEL_TOKEN is empty in Actions." },
     ],
@@ -47,7 +56,7 @@ const entries = [
     date: "September 2026",
     tag: "Fix",
     items: [
-      { type: "fix", text: "Live audit 21 Sep 2026 14:25 PDT: marketing pages render. Live bundle is still assets/index-BgN5Qcw5.js (public_html last-modified 21 Sep 05:09 UTC). GitHub main d5c925a and deploy 0a77c4f already advertise assets/index-DiJVv74X.js. /api/credit.php is still 500 server_error on the host. /manifest.json still SPA-falls back to index.html. /manifest.webmanifest, /api/health.php, /api/me.php, and www→apex are healthy." },
+      { type: "fix", text: "Live audit 21 Sep 2026 14:25 PDT: marketing pages render. Live bundle is still assets/index-BgN5Qcw5.js (public_html last-modified 21 Sep 05:09 UTC). GitHub main d5c925a and deploy 0a77c4f already advertise assets/index-DiJVv74X.js. /api/credit.php is still 500 server_error on the host. /manifest.json still SPA-falls back to index.html. /manifest.webmanifest, /api/health.php, /api/me.php, and www\u2192apex are healthy." },
       { type: "fix", text: "Ship public/manifest.json as a real file (same payload as manifest.webmanifest) so LiteSpeed existing-file pass-through serves the PWA manifest instead of the SPA shell even when the rewrite alias is stale." },
       { type: "improved", text: "verify-dist and publish-deploy now require manifest.json and api/credit.php so a stripped deploy tree cannot ship. Live public_html still needs cPanel Update from Remote + Deploy HEAD (or ./deploy.sh) because CPANEL_TOKEN is empty in Actions." },
     ],
