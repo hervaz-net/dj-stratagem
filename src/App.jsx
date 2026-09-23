@@ -195,6 +195,7 @@ function App() {
           <Route path="/start" element={<Navigate to="/register" replace />} />
           <Route path="/get-started" element={<Navigate to="/register" replace />} />
           <Route path="/credit" element={<Navigate to="/dashboard/settings" replace />} />
+          <Route path="/credits" element={<Navigate to="/dashboard/settings" replace />} />
           <Route path="/credit-application" element={<Navigate to="/dashboard/settings" replace />} />
           <Route path="/admin" element={<Navigate to="/dashboard/admin" replace />} />
           <Route path="/forgot-password" element={<MarketingLayout><ForgotPassword /></MarketingLayout>} />
