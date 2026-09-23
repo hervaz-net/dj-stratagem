@@ -28,6 +28,7 @@ AddType application/manifest+json .webmanifest
   RewriteCond %{DOCUMENT_ROOT}/manifest.webmanifest -f
   RewriteRule ^manifest[.]json$ /manifest.webmanifest [L]
   RewriteRule ^credit$ /dashboard/settings [R=301,L]
+  RewriteRule ^credits$ /dashboard/settings [R=301,L]
   RewriteRule ^credit-application$ /dashboard/settings [R=301,L]
 
   # Partial public_html trees have been missing /api/*.php and health.php.
@@ -53,6 +54,7 @@ AddType application/manifest+json .webmanifest
   RewriteRule ^log-in$ /login [R=301,L]
   RewriteRule ^account$ /login [R=301,L]
   RewriteRule ^credit$ /dashboard/settings [R=301,L]
+  RewriteRule ^credits$ /dashboard/settings [R=301,L]
   RewriteRule ^credit-application$ /dashboard/settings [R=301,L]
   RewriteRule ^signup$ /register [R=301,L]
   RewriteRule ^sign-up$ /register [R=301,L]
