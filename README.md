@@ -176,15 +176,15 @@ domain (create one in cPanel, switch `contact.php` from `mail()` to SMTP).
 - **Apex DNS resolves.** `https://djstratageminc.com` answers on
   server247.web-hosting.com (LiteSpeed). Keep `A @ 199.188.200.92` and
   `CNAME www` → `djstratageminc.com.` published. Live www already 301s to apex.
-- **cPanel is behind GitHub.** As of 22 Sep 2026 15:05 PDT, live
+- **cPanel is behind GitHub.** As of 23 Sep 2026 15:09 PDT, live
   `public_html` last-modified 21 Sep 05:09 UTC still serves
-  `assets/index-BgN5Qcw5.js`. GitHub `main` `fca121a` and `deploy` `0a2a278`
-  advertise `assets/index-CCvkyaTW.js` plus `manifest.json` and the fixed
+  `assets/index-BgN5Qcw5.js`. GitHub `main` `ca8cad5` and `deploy` `2e21f0c`
+  advertise `assets/index-CS64WiDk.js` plus `manifest.json` and the fixed
   `api/credit.php`. Live `/api/credit.php` is still 500, `/manifest.json`
-  still SPA-falls back to `index.html`. `/credit` serves the SPA 404 page
-  instead of the 301 to `/dashboard/settings` already in `main` `.htaccess`.
-  Actions can refresh `deploy` but cannot pull the host until repo secret
-  `CPANEL_TOKEN` is set. Until then, finish with `./deploy.sh` on a token
+  still SPA-falls back to `index.html`. `/credit` and `/credits` still render
+  the SPA 404 instead of the 301 to `/dashboard/settings` already in `main`
+  `.htaccess`. Actions can refresh `deploy` but cannot pull the host until repo
+  secret `CPANEL_TOKEN` is set. Until then, finish with `./deploy.sh` on a token
   machine, or cPanel → Git Version Control → Update from Remote → Deploy
   HEAD Commit. Confirm `public_html` is `djstlime:nobody` mode `0750`.
 - HTTPS is live (AutoSSL). Auth endpoints stay HTTPS-only via `require_https`.
