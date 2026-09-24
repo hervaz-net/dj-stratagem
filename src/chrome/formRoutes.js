@@ -1,5 +1,8 @@
-/** Marketing chrome that must not cover form fields, auth inputs, or legal docs. */
-export const FORM_CHROME_HIDDEN = new Set([
+/** Marketing chrome that must not cover form fields, auth inputs, or legal docs.
+ *  Keep this as a plain array. A Set of string literals gets minified to
+ *  `new Set("a.b.c".split("."))`, which breaks the first time a path contains a dot.
+ */
+export const FORM_CHROME_HIDDEN = [
   "/contact",
   "/login",
   "/signin",
@@ -31,10 +34,10 @@ export const FORM_CHROME_HIDDEN = new Set([
   "/marketing/fleet-cards",
   "/marketing/receipts",
   "/marketing/signage",
-]);
+];
 
 /** Treat /login/ the same as /login. LiteSpeed keeps the trailing slash. */
 export function hideMarketingChrome(pathname) {
   const path = (pathname || "/").replace(/\/+$/, "") || "/";
-  return FORM_CHROME_HIDDEN.has(path);
+  return FORM_CHROME_HIDDEN.includes(path);
 }
