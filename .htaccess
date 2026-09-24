@@ -21,6 +21,12 @@ AddType application/manifest+json .webmanifest
   RewriteCond %{HTTP_HOST} ^www[.]djstratageminc[.]com$ [NC]
   RewriteRule ^ https://djstratageminc.com%{REQUEST_URI} [R=301,L]
 
+  # /api/health.php must not depend on the file existing under public_html/api.
+  # Live trees have been missing that file; LiteSpeed then emits its HTML 404
+  # before later aliases run because /api/ is a real directory. Always send
+  # the probe to the working root /health.php first.
+  RewriteRule ^api/health(\.php)?/?$ /health.php [L]
+
   RewriteCond %{REQUEST_FILENAME} -f
   RewriteRule ^ - [L]
 
@@ -31,11 +37,6 @@ AddType application/manifest+json .webmanifest
   RewriteRule ^credit$ /dashboard/settings [R=301,L]
   RewriteRule ^credits$ /dashboard/settings [R=301,L]
   RewriteRule ^credit-application$ /dashboard/settings [R=301,L]
-
-  # Live public_html has been missing api/health.php while /health.php works.
-  # Alias the probe before the /api/ directory catch-all so a stripped tree
-  # still returns JSON instead of LiteSpeed HTML 404.
-  RewriteRule ^api/health(\.php)?$ /health.php [L]
 
   # Partial public_html trees have been missing /api/*.php and health.php.
   # Never let those URLs become the marketing SPA — JSON or a PHP 404 only.
