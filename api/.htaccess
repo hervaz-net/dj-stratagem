@@ -3,7 +3,7 @@
 # served as plaintext and the password leaks. Deny at the web-server level so
 # that failure mode can't happen.
 
-<FilesMatch "^(config\.php|config\.example\.php|bootstrap\.php|ops\.php|ops-schema\.php|ops-seed\.php|ops-view\.php|schema\.sql)$">
+<FilesMatch "^(config\.php|config\.example.php|bootstrap\.php|ops\.php|ops-schema\.php|ops-seed\.php|ops-view\.php|schema\.sql)$">
   <IfModule mod_authz_core.c>
     Require all denied
   </IfModule>
@@ -38,9 +38,13 @@ ErrorDocument 404 /api/index.php
   RewriteEngine On
   RewriteRule ^index\.php$ - [L]
   RewriteRule ^not-found\.php$ - [L]
-  # The health probe is a real file. Do not send /api/health.php through the
-  # directory catch-all, which returns {"ok":false,"error":"not_found"}.
+  # Only short-circuit health.php when the file is actually on disk.
+  # A bare `^health\.php$ - [L]` on a stripped public_html tree produces the
+  # LiteSpeed HTML 404 that live /api/health.php still returns.
+  RewriteCond %{REQUEST_FILENAME} -f
   RewriteRule ^health\.php$ - [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^health\.php$ /health.php [L]
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule ^ index.php [L]
 </IfModule>
