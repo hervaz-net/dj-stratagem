@@ -28,10 +28,20 @@ need_files=(
   api/health.php
   api/me.php
   api/index.php
+  api/not-found.php
   api/login.php
   api/register.php
   api/bootstrap.php
   api/logout.php
+  api/alerts.php
+  api/bids.php
+  api/analytics.php
+  api/orders.php
+  api/settings.php
+  api/metrics.php
+  api/overview.php
+  api/suppliers.php
+  api/config.example.php
   privacy.html
   terms.html
 )
