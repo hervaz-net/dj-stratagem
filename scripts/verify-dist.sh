@@ -66,8 +66,8 @@ grep -q 'REQUEST_URI' "$htaccess" \
   || die ".htaccess is missing the PHP exclusion on the SPA fallback"
 
 api_htaccess="$DIST/api/.htaccess"
-grep -q 'REQUEST_FILENAME' "$api_htaccess" \
-  || die "api/.htaccess must only pass through health.php when the file exists"
+grep -q 'RewriteRule \^health' "$api_htaccess" \
+  || die "api/.htaccess must alias health.php to /health.php"
 
 bundle="$(grep -oE 'assets/index-[A-Za-z0-9_-]+[.]js' "$DIST/index.html" | head -1 || true)"
 [[ -n "$bundle" ]] || die "index.html has no hashed JS bundle"

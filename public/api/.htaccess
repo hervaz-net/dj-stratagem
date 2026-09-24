@@ -38,13 +38,11 @@ ErrorDocument 404 /api/index.php
   RewriteEngine On
   RewriteRule ^index\.php$ - [L]
   RewriteRule ^not-found\.php$ - [L]
-  # Only short-circuit health.php when the file is actually on disk.
-  # A bare `^health\.php$ - [L]` on a stripped public_html tree produces the
-  # LiteSpeed HTML 404 that live /api/health.php still returns.
-  RewriteCond %{REQUEST_FILENAME} -f
-  RewriteRule ^health\.php$ - [L]
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteRule ^health\.php$ /health.php [L]
+  # Never serve a local health.php from this directory. Live public_html has
+  # shipped without the file, and a pass-through-if-exists rule still 404s
+  # when LiteSpeed evaluates the miss before REQUEST_FILENAME. The root
+  # /health.php probe is the one that actually runs on this host.
+  RewriteRule ^health(\.php)?/?$ /health.php [L]
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule ^ index.php [L]
 </IfModule>
