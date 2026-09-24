@@ -1,17 +1,14 @@
 <?php
 declare(strict_types=1);
 
-// Default DirectoryIndex for /api/. LiteSpeed on Namecheap often ignores a
-// custom DirectoryIndex / ErrorDocument in this directory and serves its HTML
-// 404 instead. index.php is the filename it already looks for.
-//
-// If public_html is missing api/health.php, the directory rewrite lands here
-// and used to return {"ok":false,"error":"not_found"}. Answer the probe from
-// this catch-all so a partial tree still reports PHP is executing.
-//
-// LiteSpeed ErrorDocument / internal rewrite changes REQUEST_URI and
-// SCRIPT_NAME to /api/index.php. Scan every rewrite-related server field
-// plus QUERY_STRING so the original /api/health.php path still matches.
+// DirectoryIndex for /api/. Keep this file side-effect free: no bootstrap,
+// no DB, no config. A 404 status here used to trip
+// ErrorDocument 404 /api/index.php and LiteSpeed looped to HTTP 500.
+header('Content-Type: application/json; charset=UTF-8');
+header('Cache-Control: no-store, no-cache, must-revalidate');
+header('X-Content-Type-Options: nosniff');
+header('Referrer-Policy: same-origin');
+
 function djs_server_haystack(): string
 {
     $keys = [
@@ -45,10 +42,6 @@ $isHealth = (bool) preg_match('#health\.php#i', $haystack)
 
 if ($isHealth) {
     http_response_code(200);
-    header('Content-Type: application/json; charset=UTF-8');
-    header('Cache-Control: no-store, no-cache, must-revalidate');
-    header('X-Content-Type-Options: nosniff');
-    header('Referrer-Policy: same-origin');
     echo json_encode([
         'ok' => true,
         'php' => PHP_VERSION,
@@ -57,8 +50,9 @@ if ($isHealth) {
     exit;
 }
 
-http_response_code(404);
-header('Content-Type: application/json; charset=UTF-8');
-header('Cache-Control: no-store, no-cache, must-revalidate');
-header('X-Content-Type-Options: nosniff');
-echo json_encode(['ok' => false, 'error' => 'not_found']);
+http_response_code(200);
+echo json_encode([
+    'ok' => true,
+    'service' => 'djs-api',
+    'php' => PHP_VERSION,
+]);

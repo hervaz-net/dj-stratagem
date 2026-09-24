@@ -24,8 +24,8 @@ AddType application/manifest+json .webmanifest
   # /api/health.php must not depend on the file existing under public_html/api.
   # Live trees have been missing that file; LiteSpeed then emits its HTML 404
   # before later aliases run because /api/ is a real directory. Always send
-  # the probe to the working root /health.php first.
-  RewriteRule ^api/health(\.php)?/?$ /health.php [L]
+  # the probe to the working root /health.php first. PT forces handler rerun.
+  RewriteRule ^api/health(\.php)?/?$ /health.php [L,PT]
 
   RewriteCond %{REQUEST_FILENAME} -f
   RewriteRule ^ - [L]
