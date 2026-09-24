@@ -32,6 +32,11 @@ AddType application/manifest+json .webmanifest
   RewriteRule ^credits$ /dashboard/settings [R=301,L]
   RewriteRule ^credit-application$ /dashboard/settings [R=301,L]
 
+  # Live public_html has been missing api/health.php while /health.php works.
+  # Alias the probe before the /api/ directory catch-all so a stripped tree
+  # still returns JSON instead of LiteSpeed HTML 404.
+  RewriteRule ^api/health(\.php)?$ /health.php [L]
+
   # Partial public_html trees have been missing /api/*.php and health.php.
   # Never let those URLs become the marketing SPA — JSON or a PHP 404 only.
   RewriteRule ^api/ api/index.php [L]
