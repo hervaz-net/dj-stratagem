@@ -24,25 +24,18 @@
 # Directory listing would expose which endpoints exist.
 Options -Indexes
 
-# /api/ is a real directory. LiteSpeed otherwise serves its HTML 404 for the
-# directory URL and for any missing file under it. Prefer index.php because
-# that is LiteSpeed's default DirectoryIndex; keep not-found.php as the
-# ErrorDocument target so fetch() never parses marketing markup.
-DirectoryIndex index.php not-found.php
-ErrorDocument 404 /api/index.php
+# index.php is LiteSpeed's default DirectoryIndex. Do not ErrorDocument 404 to
+# a PHP script that itself returns 404 — that loop is an HTTP 500 on this host.
+DirectoryIndex index.php
+ErrorDocument 404 default
 
-# LiteSpeed often ignores the document-root rewrite for missing /api/* paths
-# and serves its HTML 404 page. Handle the miss here so fetch() always gets
-# JSON instead of marketing HTML.
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteRule ^index\.php$ - [L]
   RewriteRule ^not-found\.php$ - [L]
-  # Never serve a local health.php from this directory. Live public_html has
-  # shipped without the file, and a pass-through-if-exists rule still 404s
-  # when LiteSpeed evaluates the miss before REQUEST_FILENAME. The root
-  # /health.php probe is the one that actually runs on this host.
-  RewriteRule ^health(\.php)?/?$ /health.php [L]
+  # Always send the probe to the working root /health.php. PT so LiteSpeed
+  # re-runs the PHP handler on the target instead of 404ing a missing local file.
+  RewriteRule ^health(\.php)?/?$ /health.php [L,PT]
   RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteRule ^ index.php [L]
+  RewriteRule ^ not-found.php [L]
 </IfModule>
