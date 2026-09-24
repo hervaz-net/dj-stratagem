@@ -5,7 +5,7 @@
 # Use the CloudLinux lsphp MIME type (three underscores). The short
 # application/x-httpd-alt-php81 name is not registered on this host.
 # Keep the handler in source: rsync --delete wipes the MultiPHP-injected block.
-<FilesMatch "\.php$">
+<FilesMatch "[.]php$">
   SetHandler application/x-httpd-alt-php81___lsphp
 </FilesMatch>
 <IfModule mime_module>
@@ -14,30 +14,39 @@
 </IfModule>
 AddType application/manifest+json .webmanifest
 
-# Serve real files/directories (assets, contact.php) as-is; everything
-# else falls through to index.html so React Router can handle the route.
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
 
-  # Root probes and the PWA manifest must never SPA-fallback, even when a
-  # later host merge prepends stale alias rules.
-  RewriteRule ^health\.php$ - [L]
-  RewriteRule ^contact\.php$ - [L]
-  RewriteRule ^manifest\.webmanifest$ - [L]
-
-  # One public origin. www must not keep its own cookie/cache universe.
-  RewriteCond %{HTTP_HOST} ^www\.djstratageminc\.com$ [NC]
+  RewriteCond %{HTTP_HOST} ^www[.]djstratageminc[.]com$ [NC]
   RewriteRule ^ https://djstratageminc.com%{REQUEST_URI} [R=301,L]
 
-  # Drop a trailing slash on non-directories so /login/ matches /login.
+  RewriteCond %{REQUEST_FILENAME} -f
+  RewriteRule ^ - [L]
+
+  # /manifest.json must never become index.html. Live public_html has shipped
+  # without the file, and LiteSpeed DOCUMENT_ROOT is unreliable on this account,
+  # so do not gate the alias on a filesystem probe.
+  RewriteRule ^manifest[.]json$ manifest.webmanifest [L]
+  RewriteRule ^credit$ /dashboard/settings [R=301,L]
+  RewriteRule ^credits$ /dashboard/settings [R=301,L]
+  RewriteRule ^credit-application$ /dashboard/settings [R=301,L]
+
+  # Partial public_html trees have been missing /api/*.php and health.php.
+  # Never let those URLs become the marketing SPA — JSON or a PHP 404 only.
+  RewriteRule ^api/ api/index.php [L]
+  RewriteRule [.]php$ contact.php [L]
+
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule ^(.+)/$ /$1 [R=301,L]
 
-  # /blog and /blog/* are real SPA routes. Never 301 them to /changelog.
-  # A stale public_html copy of this file still did that and hid the index.
-  # Serve the shell explicitly so an old RewriteRule ^blog$ /changelog cannot
-  # win if a host merge concatenates rules — first match is this one.
+  RewriteCond %{DOCUMENT_ROOT}/privacy.html -f
+  RewriteRule ^privacy$ /privacy.html [L]
+  RewriteCond %{DOCUMENT_ROOT}/terms.html -f
+  RewriteRule ^terms$ /terms.html [L]
+  RewriteCond %{DOCUMENT_ROOT}/brand-guidelines.html -f
+  RewriteRule ^brand$ /brand-guidelines.html [L]
+
   RewriteRule ^blog$ index.html [L]
   RewriteRule ^blog/ index.html [L]
 
@@ -45,6 +54,9 @@ AddType application/manifest+json .webmanifest
   RewriteRule ^sign-in$ /login [R=301,L]
   RewriteRule ^log-in$ /login [R=301,L]
   RewriteRule ^account$ /login [R=301,L]
+  RewriteRule ^credit$ /dashboard/settings [R=301,L]
+  RewriteRule ^credits$ /dashboard/settings [R=301,L]
+  RewriteRule ^credit-application$ /dashboard/settings [R=301,L]
   RewriteRule ^signup$ /register [R=301,L]
   RewriteRule ^sign-up$ /register [R=301,L]
   RewriteRule ^trial$ /register [R=301,L]
@@ -106,42 +118,17 @@ AddType application/manifest+json .webmanifest
   RewriteRule ^signage$ /marketing/signage [R=301,L]
   RewriteRule ^sitemap$ /sitemap.xml [R=301,L]
 
-  # Never SPA-fallback PHP handlers or the PWA manifest. A stale public_html
-  # tree has been missing send-demo.php, health.php, and manifest.webmanifest,
-  # so LiteSpeed returned index.html (200 HTML) for those probes.
-  RewriteRule ^send-demo\.php$ contact.php [L]
-  # Prefer the real API probe. Only bounce to the root probe when
-  # public_html is missing api/health.php.
-  RewriteCond %{REQUEST_FILENAME} -f
-  RewriteRule ^api/health\.php$ - [L]
-  RewriteRule ^api/health\.php$ health.php [L]
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteRule \.php$ api/not-found.php [L]
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteRule ^manifest\.webmanifest$ - [R=404,L]
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteRule ^manifest\.json$ manifest.webmanifest [L]
-
-  # Browsers still request /favicon.ico and /apple-touch-icon.png even when
-  # the document points at /favicon.svg. Always serve the SVG mark — do not
-  # wait for !-f, and do not hand them the SPA shell.
-  RewriteRule ^favicon\.ico$ favicon.svg [L]
-  RewriteRule ^apple-touch-icon(-precomposed)?\.png$ favicon.svg [L]
+  RewriteRule ^send-demo[.]php$ contact.php [L]
+  RewriteRule ^favicon[.]ico$ favicon.svg [L]
+  RewriteRule ^apple-touch-icon(-precomposed)?[.]png$ favicon.svg [L]
+  RewriteRule ^manifest[.]json$ manifest.webmanifest [L]
 
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule ^assets/ - [R=404,L]
-  RewriteRule ^assets/ - [L]
-
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteRule ^uploads/ - [R=404,L]
-  RewriteRule ^uploads/ - [L]
-
-  RewriteRule ^api/?$ api/index.php [L]
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteRule ^api/ api/index.php [L]
 
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_URI} ![.]php$ [NC]
   RewriteRule ^ index.html [L]
 </IfModule>
 
@@ -149,10 +136,10 @@ AddType application/manifest+json .webmanifest
   <FilesMatch "html$">
     Header set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
-  <FilesMatch "^(robots.txt|sitemap.xml|manifest.webmanifest)$">
+  <FilesMatch "^(robots.txt|sitemap.xml|manifest.webmanifest|manifest.json)$">
     Header set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
-  <FilesMatch "\.webmanifest$">
+  <FilesMatch "(manifest[.]webmanifest|manifest[.]json)$">
     Header set Content-Type "application/manifest+json"
   </FilesMatch>
 </IfModule>
