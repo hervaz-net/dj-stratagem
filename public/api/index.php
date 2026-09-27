@@ -37,7 +37,7 @@ function djs_server_haystack(): string
 }
 
 $haystack = djs_server_haystack();
-$isHealth = (bool) preg_match('#health\.php#i', $haystack)
+$isHealth = (bool) preg_match('#health(\.php)?#i', $haystack)
     || isset($_GET['health']);
 
 if ($isHealth) {
