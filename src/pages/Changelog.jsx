@@ -5,6 +5,15 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.73",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "fix", text: "Live audit 28 Sep 2026 10:13 PDT: every path on https://djstratageminc.com and www (/, /platform, /pricing, /contact, /fleet, /contact.php, /api/me.php, /health.php, /robots.txt, /sitemap.xml) HTTP 302s to /cgi-sys/suspendedpage.cgi. LiteSpeed serves Namecheap Account Suspended. No hashed bundle is reachable." },
+      { type: "improved", text: "No new React-tree defect. GitHub main 246753f and deploy 0324189 already contain the 1.72 tree (deploy index.html advertises assets/index-Beoln9om.js). A cPanel pull cannot go live while the Stellar account is locked. Unsuspend in Namecheap first, then ./deploy.sh or cPanel Update from Remote + Deploy HEAD." },
+    ],
+  },
+  {
     version: "1.72",
     date: "September 2026",
     tag: "Fix",
