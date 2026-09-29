@@ -5,6 +5,15 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.76",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      { type: "fix", text: "Live audit 29 Sep 2026 09:14 PDT: apex and www still HTTP 302 every path (/, /platform, /pricing, /contact, /contact.php, /api/me.php, /health.php, /robots.txt) to /cgi-sys/suspendedpage.cgi. LiteSpeed still serves Namecheap Account Suspended (HTTP 403 on the lock page). No hashed bundle is reachable. DNS A remains 199.188.200.93." },
+      { type: "improved", text: "No new React-tree defect. GitHub main 3a9feb2 and deploy 4f9a90d already contain the 1.75 tree (deploy index.html advertises assets/index-ymFJTIKv.js). Actions publish-deploy run 325 built and refreshed deploy, then failed the cPanel pull because CPANEL_TOKEN is empty and the Stellar account is locked. Unsuspend in Namecheap first, then ./deploy.sh or cPanel Update from Remote + Deploy HEAD." },
+    ],
+  },
+  {
     version: "1.75",
     date: "September 2026",
     tag: "Fix",
