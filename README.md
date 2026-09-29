@@ -173,7 +173,7 @@ domain (create one in cPanel, switch `contact.php` from `mail()` to SMTP).
 
 ## Outstanding
 
-- **Namecheap account is suspended.** Re-checked 29 Sep 2026 11:14 PDT:
+- **Namecheap account is suspended.** Re-checked 29 Sep 2026 14:20 PDT:
   every HTTPS request on apex and www (including `/`, `/platform`,
   `/pricing`, `/contact`, `/contact.php`, `/api/me.php`,
   `/robots.txt`, `/sitemap.xml`) still 302s to
@@ -181,8 +181,10 @@ domain (create one in cPanel, switch `contact.php` from `mail()` to SMTP).
   not a git or Vite failure. Unsuspend the account before any cPanel
   pull will go live. Live A record is `199.188.200.93`. Keep
   `CNAME www` → `djstratageminc.com.` published.
+- **`/changelog` was broken on `main`.** Audit 1.77 (`0f51e8c`) replaced
+  `src/pages/Changelog.jsx` with `PLACEHOLDER_REVERT`. Restored in 1.78.
 - **cPanel is behind GitHub (blocked by the lock).** GitHub `main`
-  `b4d62a0` and `deploy` `af686ee` advertise `assets/index-ig4retKL.js`
+  `0f51e8c` and `deploy` `af686ee` advertise `assets/index-ig4retKL.js`
   plus the `/api/health.php` → `/health.php` PT alias and the
   `/api/index.php` 500-loop fix. Actions can refresh `deploy` but cannot
   pull the host until the account is unsuspended and repo secret
