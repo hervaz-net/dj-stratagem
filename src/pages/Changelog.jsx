@@ -5,6 +5,21 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.79",
+    date: "September 2026",
+    tag: "Fix",
+    items: [
+      {
+        type: "fix",
+        text: "Live audit 29 Sep 2026 15:13 PDT: apex and www still HTTP 302 every path to /cgi-sys/suspendedpage.cgi. Namecheap Account Suspended. No hashed bundle is reachable. This is a host lock, not a React-tree defect.",
+      },
+      {
+        type: "improved",
+        text: "Correct README advertised SHAs. Current GitHub main da55f5d / deploy 3a7d6e1 ship assets/index-B3nHlFED.js. Unsuspend the Stellar account, then ./deploy.sh or cPanel Update from Remote + Deploy HEAD.",
+      },
+    ],
+  },
+  {
     version: "1.78",
     date: "September 2026",
     tag: "Fix",
@@ -19,7 +34,7 @@ const entries = [
       },
       {
         type: "improved",
-        text: "GitHub deploy af686ee advertises assets/index-ig4retKL.js and already contains the /api/health.php alias and require_signin guard. Unsuspend the Stellar account, then ./deploy.sh or cPanel Update from Remote + Deploy HEAD.",
+        text: "GitHub deploy 3a7d6e1 advertises assets/index-B3nHlFED.js and already contains the /api/health.php alias and require_signin guard. Unsuspend the Stellar account, then ./deploy.sh or cPanel Update from Remote + Deploy HEAD.",
       },
     ],
   },
