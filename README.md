@@ -173,15 +173,16 @@ domain (create one in cPanel, switch `contact.php` from `mail()` to SMTP).
 
 ## Outstanding
 
-- **Namecheap account is suspended.** As of 28 Sep 2026 10:13 PDT every
-  HTTPS request on apex and www (including `/`, `/platform`, `/pricing`,
-  `/contact`, `/fleet`, `/contact.php`, `/api/me.php`, `/health.php`,
-  `/robots.txt`, `/sitemap.xml`) 302s to `/cgi-sys/suspendedpage.cgi`.
-  That is a Stellar billing/host lock, not a git or Vite failure.
-  Unsuspend the account before any cPanel pull will go live. Keep
-  `A @ 199.188.200.92` and `CNAME www` → `djstratageminc.com.` published.
+- **Namecheap account is suspended.** Re-checked 28 Sep 2026 17:14 PDT:
+  every HTTPS request on apex and www (including `/`, `/platform`,
+  `/pricing`, `/contact`, `/fleet`, `/contact.php`, `/api/me.php`,
+  `/health.php`, `/robots.txt`, `/sitemap.xml`) still 302s to
+  `/cgi-sys/suspendedpage.cgi`. That is a Stellar billing/host lock,
+  not a git or Vite failure. Unsuspend the account before any cPanel
+  pull will go live. Live A record is `199.188.200.93`. Keep
+  `CNAME www` → `djstratageminc.com.` published.
 - **cPanel is behind GitHub (blocked by the lock).** GitHub `main`
-  `246753f` and `deploy` `0324189` advertise `assets/index-Beoln9om.js`
+  `7c67189` and `deploy` `9ea7982` advertise `assets/index-BZL70R56.js`
   plus the `/api/health.php` → `/health.php` PT alias and the
   `/api/index.php` 500-loop fix. Actions can refresh `deploy` but cannot
   pull the host until the account is unsuspended and repo secret
