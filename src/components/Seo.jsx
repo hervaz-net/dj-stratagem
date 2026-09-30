@@ -1,10 +1,11 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { PRODUCT, COMPANY, SITE_URL } from "../brand";
 
-const SITE = "https://djstratageminc.com";
-const SUFFIX = "D&J Stratagem, Inc.";
+const SITE = SITE_URL;
+const SUFFIX = `${PRODUCT} by ${COMPANY}`;
 const DEFAULT_DESCRIPTION =
-  "Find construction bid opportunities, manage your pipeline, and win more work. D&J Stratagem gives contractors, subcontractors, and suppliers the tools to discover projects that match their trade and territory.";
+  "The B2B supply network for construction. Manufacturers sell to distributors, distributors sell to contractors, and contractors post what the job needs, all on one marketplace.";
 
 function setMeta(selector, attr, value) {
   let el = document.head.querySelector(selector);

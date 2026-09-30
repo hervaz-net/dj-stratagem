@@ -15,7 +15,7 @@ export default function AddSupplierButton({ onCreated, floating = false }) {
   const { toast } = useToast();
 
   const base =
-    "lift glow-brand inline-flex items-center gap-2 rounded-full bg-cta hover:bg-cta-hover " +
+    "lift glow-brand inline-flex items-center gap-2 rounded-full bg-brand hover:bg-brand-hover " +
     "px-5 py-3 text-sm font-semibold text-white";
 
   const submit = async (e) => {
@@ -59,11 +59,11 @@ export default function AddSupplierButton({ onCreated, floating = false }) {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4" onClick={() => setOpen(false)}>
           <form
             onSubmit={submit}
-            className="w-full max-w-md rounded-2xl border border-line bg-ink-2 p-6 shadow-2xl"
+            className="w-full max-w-md rounded-2xl border border-line bg-surface p-6 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="text-base font-semibold text-paper">Add supplier</h2>
-            <p className="mt-1 text-sm text-steel">Creates a network record. Risk and delivery scores start at a healthy default.</p>
+            <h2 className="text-base font-semibold text-fg">Add supplier</h2>
+            <p className="mt-1 text-sm text-fg-muted">Creates a network record. Risk and delivery scores start at a healthy default.</p>
             <div className="mt-4 space-y-3">
               {[
                 ["name", "Name", "Metro Supply Co."],
@@ -71,21 +71,21 @@ export default function AddSupplierButton({ onCreated, floating = false }) {
                 ["region", "Region", "Southwest"],
               ].map(([key, label, ph]) => (
                 <label key={key} className="block">
-                  <span className="text-xs font-medium text-steel">{label}</span>
+                  <span className="text-xs font-medium text-fg-muted">{label}</span>
                   <input
                     value={form[key]}
                     onChange={(e) => setForm((p) => ({ ...p, [key]: e.target.value }))}
                     placeholder={ph}
-                    className="mt-1 w-full rounded-md border border-line bg-ink px-3 py-2 text-sm text-paper outline-none focus:border-amber"
+                    className="mt-1 w-full rounded-md border border-line bg-canvas px-3 py-2 text-sm text-fg outline-none focus:border-brand"
                   />
                 </label>
               ))}
             </div>
             <div className="mt-6 flex justify-end gap-3">
-              <button type="button" onClick={() => setOpen(false)} className="px-4 py-2 text-sm font-semibold text-steel hover:text-paper">
+              <button type="button" onClick={() => setOpen(false)} className="px-4 py-2 text-sm font-semibold text-fg-muted hover:text-fg">
                 Cancel
               </button>
-              <button type="submit" disabled={saving} className="rounded-lg bg-amber/15 px-4 py-2 text-sm font-semibold text-amber hover:bg-amber/25 disabled:opacity-60">
+              <button type="submit" disabled={saving} className="rounded-lg bg-brand/15 px-4 py-2 text-sm font-semibold text-brand hover:bg-brand/25 disabled:opacity-60">
                 {saving ? "Saving…" : "Add supplier"}
               </button>
             </div>

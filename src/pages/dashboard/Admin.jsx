@@ -54,8 +54,8 @@ function formatDate(value) {
 function StatCard({ label, value, highlight }) {
   return (
     <GlassCard className="px-5 py-4">
-      <p className="text-xs font-semibold uppercase tracking-wider text-steel">{label}</p>
-      <p className={`mt-1 text-2xl font-semibold tabular-nums ${highlight ? "text-amber" : "text-paper"}`}>
+      <p className="text-xs font-semibold uppercase tracking-wider text-fg-muted">{label}</p>
+      <p className={`mt-1 text-2xl font-semibold tabular-nums ${highlight ? "text-brand" : "text-fg"}`}>
         {value ?? "—"}
       </p>
     </GlassCard>
@@ -206,13 +206,13 @@ export default function AdminUsers() {
                 aria-pressed={active}
                 className={`lift inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-semibold ${
                   active
-                    ? "border-amber/60 bg-amber/12 text-amber"
-                    : "border-line bg-ink/50 text-steel hover:border-amber/35 hover:text-paper"
+                    ? "border-brand/60 bg-brand/12 text-brand"
+                    : "border-line bg-canvas/50 text-fg-muted hover:border-brand/35 hover:text-fg"
                 }`}
               >
                 {f.label}
                 {count !== undefined && (
-                  <span className="rounded-full bg-ink px-1.5 py-0.5 tabular-nums">{count}</span>
+                  <span className="rounded-full bg-canvas px-1.5 py-0.5 tabular-nums">{count}</span>
                 )}
               </button>
             );
@@ -223,14 +223,14 @@ export default function AdminUsers() {
           <IconSearch
             width={14}
             height={14}
-            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-steel"
+            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-fg-muted"
           />
           <input
             type="search"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Filter by name, email, or company"
-            className="w-full rounded-lg border border-line bg-ink py-2 pl-8 pr-3.5 text-sm text-paper outline-hidden placeholder:text-steel/70 focus:border-amber"
+            className="w-full rounded-lg border border-line bg-canvas py-2 pl-8 pr-3.5 text-sm text-fg outline-hidden placeholder:text-fg-muted/70 focus:border-brand"
           />
         </div>
 
@@ -249,15 +249,15 @@ export default function AdminUsers() {
 
         {approvable.length > 0 && (
           <GlassCard className="mt-4 flex flex-wrap items-center justify-between gap-3 px-5 py-3">
-            <p className="text-sm text-steel">
-              <span className="font-semibold text-paper">{approvable.length}</span>{" "}
+            <p className="text-sm text-fg-muted">
+              <span className="font-semibold text-fg">{approvable.length}</span>{" "}
               pending {approvable.length === 1 ? "account" : "accounts"} selected
             </p>
             <button
               type="button"
               disabled={bulkBusy}
               onClick={bulkApprove}
-              className="lift rounded-full bg-cta hover:bg-cta-hover px-4 py-1.5 text-xs font-semibold text-white disabled:opacity-60"
+              className="lift rounded-full bg-brand hover:bg-brand-hover px-4 py-1.5 text-xs font-semibold text-white disabled:opacity-60"
             >
               {bulkBusy ? "Approving…" : `Approve ${approvable.length}`}
             </button>
@@ -283,7 +283,7 @@ export default function AdminUsers() {
                     <th
                       key={h}
                       scope="col"
-                      className={`px-4 py-3.5 text-xs font-semibold uppercase tracking-wider text-steel ${
+                      className={`px-4 py-3.5 text-xs font-semibold uppercase tracking-wider text-fg-muted ${
                         h === "Actions" ? "text-right" : "text-left"
                       }`}
                     >
@@ -300,7 +300,7 @@ export default function AdminUsers() {
                   return (
                     <Fragment key={u.id}>
                       <tr
-                        className={`border-b border-line/60 transition-colors last:border-0 hover:bg-ink-3/60 ${expanded ? "bg-ink-3/40" : ""}`}
+                        className={`border-b border-line/60 transition-colors last:border-0 hover:bg-subtle/60 ${expanded ? "bg-subtle/40" : ""}`}
                       >
                         <td
                           className="w-10 px-4 py-3.5"
@@ -322,19 +322,19 @@ export default function AdminUsers() {
                           <div className="flex items-center gap-3">
                             <UserAvatar name={u.name} id={u.id} status={u.status} />
                             <div className="min-w-0">
-                              <p className="truncate font-semibold text-paper">
+                              <p className="truncate font-semibold text-fg">
                                 {u.name}
-                                {isSelf && <span className="ml-2 text-xs text-steel">(you)</span>}
+                                {isSelf && <span className="ml-2 text-xs text-fg-muted">(you)</span>}
                               </p>
-                              <p className="truncate text-xs text-steel">
+                              <p className="truncate text-xs text-fg-muted">
                                 {u.email} &middot; {u.company}
                               </p>
                             </div>
                           </div>
                         </th>
-                        <td className="px-4 py-3.5 capitalize text-paper">{u.status}</td>
-                        <td className="px-4 py-3.5 text-steel">{formatDate(u.createdAt)}</td>
-                        <td className="px-4 py-3.5 text-steel">{formatDate(u.lastLoginAt)}</td>
+                        <td className="px-4 py-3.5 capitalize text-fg">{u.status}</td>
+                        <td className="px-4 py-3.5 text-fg-muted">{formatDate(u.createdAt)}</td>
+                        <td className="px-4 py-3.5 text-fg-muted">{formatDate(u.lastLoginAt)}</td>
                         <td className="px-4 py-3.5">
                           <div className="flex justify-end gap-2">
                             {u.status !== "active" && (
@@ -342,7 +342,7 @@ export default function AdminUsers() {
                                 type="button"
                                 disabled={busy}
                                 onClick={() => change(u, "active")}
-                                className="lift rounded-full bg-cta hover:bg-cta-hover px-3.5 py-1.5 text-xs font-semibold text-white disabled:opacity-60"
+                                className="lift rounded-full bg-brand hover:bg-brand-hover px-3.5 py-1.5 text-xs font-semibold text-white disabled:opacity-60"
                               >
                                 {busy ? "Working…" : u.status === "pending" ? "Approve" : "Reinstate"}
                               </button>
@@ -352,7 +352,7 @@ export default function AdminUsers() {
                                 type="button"
                                 disabled={busy}
                                 onClick={() => change(u, "suspended")}
-                                className="lift rounded-full border border-line px-3.5 py-1.5 text-xs font-semibold text-steel hover:border-danger/50 hover:text-danger disabled:opacity-60"
+                                className="lift rounded-full border border-line px-3.5 py-1.5 text-xs font-semibold text-fg-muted hover:border-danger/50 hover:text-danger disabled:opacity-60"
                               >
                                 Suspend
                               </button>
@@ -362,7 +362,7 @@ export default function AdminUsers() {
                       </tr>
 
                       {expanded && (
-                        <tr className="border-b border-line/40 bg-ink/60">
+                        <tr className="border-b border-line/40 bg-canvas/60">
                           <td colSpan={6} className="px-8 py-4">
                             <dl className="grid grid-cols-2 gap-x-10 gap-y-2 text-xs sm:grid-cols-4">
                               {[
@@ -372,8 +372,8 @@ export default function AdminUsers() {
                                 { label: "User ID", value: `#${u.id}` },
                               ].map(({ label, value }) => (
                                 <div key={label}>
-                                  <dt className="font-semibold uppercase tracking-wider text-steel">{label}</dt>
-                                  <dd className="mt-0.5 text-paper">{value}</dd>
+                                  <dt className="font-semibold uppercase tracking-wider text-fg-muted">{label}</dt>
+                                  <dd className="mt-0.5 text-fg">{value}</dd>
                                 </div>
                               ))}
                             </dl>
@@ -389,7 +389,7 @@ export default function AdminUsers() {
 
           {!displayed.length && (
             <div className="px-6 py-14 text-center">
-              <p className="text-sm font-medium text-paper">
+              <p className="text-sm font-medium text-fg">
                 {loading
                   ? "Loading accounts…"
                   : search

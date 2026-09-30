@@ -27,10 +27,13 @@ const SITE = "https://djstratageminc.com";
  *  disallows them and they carry no search value. */
 const staticPaths = [
   ["/", "1.0"],
+  ["/marketplace", "0.9"],
   ["/projects", "0.9"],
   ["/platform", "0.8"],
   ["/solutions", "0.8"],
-  ["/supply", "0.8"],
+  ["/contractors", "0.8"],
+  ["/distributors", "0.8"],
+  ["/suppliers", "0.8"],
   ["/fleet", "0.7"],
   ["/pricing", "0.8"],
   ["/about", "0.6"],

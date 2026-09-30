@@ -68,7 +68,7 @@ function NavItem({ item }) {
       to={item.to}
       className={({ isActive }) =>
         `group relative flex shrink-0 items-center gap-3 rounded-xl px-3 py-2.5 text-base font-semibold transition-colors ${
-          isActive ? "bg-amber/12 text-amber" : "text-steel hover:bg-ink-3 hover:text-paper"
+          isActive ? "bg-brand/12 text-brand" : "text-fg-muted hover:bg-subtle hover:text-fg"
         }`
       }
     >
@@ -89,11 +89,11 @@ function NavItem({ item }) {
     <span
       aria-disabled="true"
       title={`${item.label} — not built yet`}
-      className="group relative flex shrink-0 cursor-not-allowed items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-steel/55"
+      className="group relative flex shrink-0 cursor-not-allowed items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-fg-muted/55"
     >
       <ItemIcon item={item} />
       <span className="whitespace-nowrap">{item.label}</span>
-      <span className="ml-auto hidden rounded-full border border-line px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-steel/70 lg:block">
+      <span className="ml-auto hidden rounded-full border border-line px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-fg-muted/70 lg:block">
         Soon
       </span>
     </span>
@@ -139,8 +139,8 @@ export default function Sidebar() {
 
           <div className="mt-auto hidden px-2 pt-6 lg:block">
             {/* Theme toggle */}
-            <div className="mb-3 flex items-center justify-between rounded-xl border border-line bg-ink/60 px-3 py-2.5">
-              <span className="text-xs font-semibold text-steel">
+            <div className="mb-3 flex items-center justify-between rounded-xl border border-line bg-canvas/60 px-3 py-2.5">
+              <span className="text-xs font-semibold text-fg-muted">
                 {theme === "dark" ? "Dark mode" : "Light mode"}
               </span>
               <ThemeToggle />
@@ -149,29 +149,29 @@ export default function Sidebar() {
             {/* Settings */}
             <NavItem item={settingsItem} />
 
-            <div className="mt-3 rounded-xl border border-line bg-ink/60 p-3">
+            <div className="mt-3 rounded-xl border border-line bg-canvas/60 p-3">
               <div className="flex items-center gap-2">
                 <StatusDot status="active" size={7} />
-                <span className="text-xs font-semibold text-paper">All systems normal</span>
+                <span className="text-xs font-semibold text-fg">All systems normal</span>
               </div>
-              <p className="mt-1 text-xs leading-relaxed text-steel">
+              <p className="mt-1 text-xs leading-relaxed text-fg-muted">
                 Supplier feeds syncing on schedule.
               </p>
             </div>
 
             {user && (
-              <div className="mt-3 rounded-xl border border-line bg-ink/60 p-3">
-                <p className="truncate text-xs font-semibold text-paper" title={user.name}>
+              <div className="mt-3 rounded-xl border border-line bg-canvas/60 p-3">
+                <p className="truncate text-xs font-semibold text-fg" title={user.name}>
                   {user.name}
                 </p>
-                <p className="truncate text-xs text-steel" title={user.company}>
+                <p className="truncate text-xs text-fg-muted" title={user.company}>
                   {user.company}
                 </p>
                 <button
                   type="button"
                   onClick={signOut}
                   disabled={signingOut}
-                  className="mt-2.5 inline-flex items-center gap-1.5 text-xs font-semibold text-amber transition-colors hover:text-amber-2 disabled:opacity-60"
+                  className="mt-2.5 inline-flex items-center gap-1.5 text-xs font-semibold text-brand transition-colors hover:text-brand-hover disabled:opacity-60"
                 >
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
@@ -188,7 +188,7 @@ export default function Sidebar() {
       {/* Mobile bottom navigation bar */}
       <nav
         aria-label="Mobile navigation"
-        className="no-print fixed bottom-0 left-0 right-0 z-40 flex items-center justify-around border-t border-line bg-ink/95 px-2 py-2 backdrop-blur-sm lg:hidden"
+        className="no-print fixed bottom-0 left-0 right-0 z-40 flex items-center justify-around border-t border-line bg-canvas/95 px-2 py-2 backdrop-blur-sm lg:hidden"
       >
         {[...visibleItems.slice(0, 5), settingsItem].map((item) => (
           <NavLink
@@ -196,7 +196,7 @@ export default function Sidebar() {
             to={item.to}
             className={({ isActive }) =>
               `flex flex-col items-center gap-0.5 rounded-lg px-2 py-1.5 text-[10px] font-medium transition-colors ${
-                isActive ? "text-amber" : "text-steel"
+                isActive ? "text-brand" : "text-fg-muted"
               }`
             }
           >

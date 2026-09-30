@@ -14,7 +14,7 @@ const TYPES = {
   delivery: { label: "Delivery", dot: "watch", bg: "bg-warning/8 border-warning/25" },
   price: { label: "Price", dot: "watch", bg: "bg-warning/8 border-warning/25" },
   bid: { label: "Bid", dot: "active", bg: "bg-[var(--viz-cyan)]/8 border-[var(--viz-cyan)]/25" },
-  system: { label: "System", dot: "active", bg: "bg-ink border-line" },
+  system: { label: "System", dot: "active", bg: "bg-canvas border-line" },
 };
 
 const FILTERS = ["all", "risk", "delivery", "price", "bid", "system"];
@@ -70,7 +70,7 @@ export default function Alerts() {
               }}
               aria-pressed={soundEnabled}
               title={soundEnabled ? "Mute alert sounds" : "Enable alert sounds"}
-              className={`transition-colors hover:text-paper ${soundEnabled ? "text-amber" : "text-steel"}`}
+              className={`transition-colors hover:text-fg ${soundEnabled ? "text-brand" : "text-fg-muted"}`}
             >
               {soundEnabled ? (
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" /><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" /></svg>
@@ -82,7 +82,7 @@ export default function Alerts() {
               <button
                 type="button"
                 onClick={() => run("read_all", undefined, "All alerts marked as read.")}
-                className="text-xs font-semibold text-amber transition-colors hover:text-amber-2"
+                className="text-xs font-semibold text-brand transition-colors hover:text-brand-hover"
               >
                 Mark all read
               </button>
@@ -91,8 +91,8 @@ export default function Alerts() {
         }
       >
         {!isConfigured && (
-          <GlassCard className="mb-6 px-5 py-3 text-sm text-steel">
-            <span className="font-semibold uppercase tracking-wider text-amber">Sample data</span>
+          <GlassCard className="mb-6 px-5 py-3 text-sm text-fg-muted">
+            <span className="font-semibold uppercase tracking-wider text-brand">Sample data</span>
             {" "}— live alerts load from `/api/alerts.php`. Read/dismiss persist per account.
           </GlassCard>
         )}
@@ -106,14 +106,14 @@ export default function Alerts() {
               aria-pressed={filter === f}
               className={`lift inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-semibold ${
                 filter === f
-                  ? "border-amber/60 bg-amber/12 text-amber"
-                  : "border-line bg-ink/50 text-steel hover:border-amber/35 hover:text-paper"
+                  ? "border-brand/60 bg-brand/12 text-brand"
+                  : "border-line bg-canvas/50 text-fg-muted hover:border-brand/35 hover:text-fg"
               }`}
             >
               {f === "all" ? "All" : TYPES[f]?.label}
               {f === "all" && unread > 0
                 ? <span className="rounded-full bg-danger px-1.5 py-0.5 text-white tabular-nums">{unread}</span>
-                : <span className="rounded-full bg-ink px-1.5 py-0.5 tabular-nums">{counts[f]}</span>
+                : <span className="rounded-full bg-canvas px-1.5 py-0.5 tabular-nums">{counts[f]}</span>
               }
             </button>
           ))}
@@ -121,15 +121,15 @@ export default function Alerts() {
 
         {visible.length === 0 && (
           <GlassCard className="px-6 py-14 text-center">
-            <p className="text-sm font-medium text-paper">All clear.</p>
-            <p className="mt-1 text-sm text-steel">No alerts in this category.</p>
+            <p className="text-sm font-medium text-fg">All clear.</p>
+            <p className="mt-1 text-sm text-fg-muted">No alerts in this category.</p>
           </GlassCard>
         )}
 
         <div className="space-y-6">
           {groups.map(({ key, label, items }) => (
             <div key={key}>
-              <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-steel/70">{label}</p>
+              <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-fg-muted/70">{label}</p>
               <div className="space-y-3">
                 {items.map((a) => {
                   const t = TYPES[a.type] ?? TYPES.system;
@@ -143,29 +143,29 @@ export default function Alerts() {
                           <div className="flex flex-wrap items-start justify-between gap-2">
                             <div className="min-w-0">
                               <div className="flex flex-wrap items-center gap-2">
-                                <span className="rounded-full border border-line bg-ink px-2 py-0.5 text-xs font-semibold text-steel">{t.label}</span>
+                                <span className="rounded-full border border-line bg-canvas px-2 py-0.5 text-xs font-semibold text-fg-muted">{t.label}</span>
                                 {!a.read && <span className="h-1.5 w-1.5 rounded-full bg-brand" aria-label="Unread" />}
                               </div>
-                              <p className="mt-1.5 text-sm font-semibold text-paper">{a.title}</p>
-                              <p className="mt-1 text-sm leading-relaxed text-steel">{a.detail}</p>
+                              <p className="mt-1.5 text-sm font-semibold text-fg">{a.title}</p>
+                              <p className="mt-1 text-sm leading-relaxed text-fg-muted">{a.detail}</p>
                               {a.supplier && (
-                                <p className="mt-2 text-xs text-steel">
-                                  Supplier: <span className="font-medium text-paper">{a.supplier}</span>
+                                <p className="mt-2 text-xs text-fg-muted">
+                                  Supplier: <span className="font-medium text-fg">{a.supplier}</span>
                                 </p>
                               )}
                             </div>
                             <div className="flex shrink-0 flex-col items-end gap-2">
-                              <span className="text-xs text-steel">{a.time}</span>
+                              <span className="text-xs text-fg-muted">{a.time}</span>
                               <div className="flex gap-3">
                                 {!a.read && (
-                                  <button type="button" onClick={() => run("read", a.id)} className="text-xs font-semibold text-amber transition-colors hover:text-amber-2">
+                                  <button type="button" onClick={() => run("read", a.id)} className="text-xs font-semibold text-brand transition-colors hover:text-brand-hover">
                                     Mark read
                                   </button>
                                 )}
-                                <button type="button" onClick={() => run("snooze", a.id, "Snoozed for an hour.")} className="text-xs text-steel transition-colors hover:text-paper" aria-label="Snooze alert">
+                                <button type="button" onClick={() => run("snooze", a.id, "Snoozed for an hour.")} className="text-xs text-fg-muted transition-colors hover:text-fg" aria-label="Snooze alert">
                                   Snooze
                                 </button>
-                                <button type="button" onClick={() => run("dismiss", a.id, "Alert dismissed.")} className="text-xs text-steel transition-colors hover:text-danger" aria-label="Dismiss alert">
+                                <button type="button" onClick={() => run("dismiss", a.id, "Alert dismissed.")} className="text-xs text-fg-muted transition-colors hover:text-danger" aria-label="Dismiss alert">
                                   Dismiss
                                 </button>
                               </div>

@@ -8,8 +8,8 @@ const roleOptions = ["General Contractor", "Subcontractor", "Supplier", "Enginee
 const MESSAGE_MAX = 1000;
 
 const inputClass =
-  "w-full rounded-md border bg-ink px-3.5 py-2.5 text-sm text-paper outline-hidden transition-colors " +
-  "placeholder:text-steel/70 focus:border-amber";
+  "w-full rounded-md border bg-canvas px-3.5 py-2.5 text-sm text-fg outline-hidden transition-colors " +
+  "placeholder:text-fg-muted/70 focus:border-brand";
 
 function validate(values) {
   const errors = {};
@@ -94,10 +94,10 @@ export default function Contact() {
 
       <Section className="pt-16 pb-8 md:pt-24">
         <Eyebrow>Contact</Eyebrow>
-        <h1 className="text-balance max-w-3xl text-2xl font-semibold leading-tight tracking-tight text-paper sm:text-3xl">
+        <h1 className="text-balance max-w-3xl text-2xl font-semibold leading-tight tracking-tight text-fg sm:text-3xl">
           Let&rsquo;s talk about your next project.
         </h1>
-        <p className="mt-6 max-w-2xl text-lg leading-relaxed text-steel">
+        <p className="mt-6 max-w-2xl text-lg leading-relaxed text-fg-muted">
           Tell us a bit about how your team bids, procures, and coordinates today, and we&rsquo;ll
           show you where D&amp;J Stratagem fits.
         </p>
@@ -125,34 +125,34 @@ export default function Contact() {
               },
             ].map((item) => (
               <div key={item.title} className="flex items-start gap-4">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-amber/10 text-amber">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-brand/10 text-brand">
                   {item.icon}
                 </div>
                 <div>
                   {item.href ? (
                     <a
                       href={item.href}
-                      className="text-sm font-semibold text-paper transition-colors hover:text-amber"
+                      className="text-sm font-semibold text-fg transition-colors hover:text-brand"
                     >
                       {item.title}
                     </a>
                   ) : (
-                    <p className="text-sm font-semibold text-paper">{item.title}</p>
+                    <p className="text-sm font-semibold text-fg">{item.title}</p>
                   )}
-                  <p className="mt-1 text-sm text-steel">{item.detail}</p>
+                  <p className="mt-1 text-sm text-fg-muted">{item.detail}</p>
                 </div>
               </div>
             ))}
           </div>
 
-          <div className="rounded-2xl border border-line bg-ink-2 p-6 sm:p-8">
+          <div className="rounded-2xl border border-line bg-surface p-6 sm:p-8">
             {submitted ? (
               <div className="animate-fade-in flex flex-col items-start gap-4 py-10">
                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-success/10 text-success">
                   <IconCheck width={22} height={22} />
                 </div>
-                <h2 className="text-xl font-semibold text-paper">Thanks &mdash; message received.</h2>
-                <p className="text-sm text-steel">
+                <h2 className="text-xl font-semibold text-fg">Thanks &mdash; message received.</h2>
+                <p className="text-sm text-fg-muted">
                   Someone from our team will follow up shortly to schedule time.
                 </p>
                 <Button variant="secondary" onClick={() => setSubmitted(false)}>
@@ -215,7 +215,7 @@ export default function Contact() {
                 </div>
 
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-paper" htmlFor="role">
+                  <label className="mb-2 block text-sm font-medium text-fg" htmlFor="role">
                     Role
                   </label>
                   <select
@@ -235,10 +235,10 @@ export default function Contact() {
 
                 <div>
                   <div className="mb-2 flex items-baseline justify-between gap-3">
-                    <label className="block text-sm font-medium text-paper" htmlFor="message">
+                    <label className="block text-sm font-medium text-fg" htmlFor="message">
                       What are you looking to solve?
                     </label>
-                    <span className="text-xs tabular-nums text-steel">
+                    <span className="text-xs tabular-nums text-fg-muted">
                       {values.message.length}/{MESSAGE_MAX}
                     </span>
                   </div>
@@ -267,7 +267,7 @@ export default function Contact() {
                   {submitting ? "Sending…" : "Request a demo"}
                 </Button>
 
-                <p className="text-center text-xs text-steel">
+                <p className="text-center text-xs text-fg-muted">
                   We&rsquo;ll only use your details to follow up about a demo.
                 </p>
               </form>
@@ -283,10 +283,10 @@ function Field({ label, name, type = "text", required, error, ...rest }) {
   const errorId = `${name}-error`;
   return (
     <div>
-      <label className="mb-2 block text-sm font-medium text-paper" htmlFor={name}>
+      <label className="mb-2 block text-sm font-medium text-fg" htmlFor={name}>
         {label}
         {required && (
-          <span className="ml-1 text-amber" aria-hidden="true">
+          <span className="ml-1 text-brand" aria-hidden="true">
             *
           </span>
         )}

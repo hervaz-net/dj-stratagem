@@ -11,7 +11,10 @@ import LiveChat from "./components/LiveChat";
 import Home from "./pages/Home";
 import Platform from "./pages/Platform";
 import Solutions from "./pages/Solutions";
-import Supply from "./pages/Supply";
+import Marketplace from "./pages/Marketplace";
+import ForContractors from "./pages/ForContractors";
+import ForDistributors from "./pages/ForDistributors";
+import ForSuppliers from "./pages/ForSuppliers";
 import Projects from "./pages/Projects";
 import ProjectDetail from "./pages/ProjectDetail";
 import TradeLocation from "./pages/TradeLocation";
@@ -31,11 +34,12 @@ import FleetCards from "./pages/FleetCards";
 import Receipts from "./pages/Receipts";
 import Signage from "./pages/Signage";
 import NotFound from "./pages/NotFound";
-import SuppliersDashboard from "./pages/dashboard/Suppliers";
+import Network from "./pages/dashboard/Network";
+import Requests from "./pages/dashboard/Requests";
+import Catalog from "./pages/dashboard/Catalog";
 import AdminUsers from "./pages/dashboard/Admin";
 import Overview from "./pages/dashboard/Overview";
-import Bids from "./pages/dashboard/Bids";
-import BidsCompact from "./pages/dashboard/BidsCompact";
+import Quotes from "./pages/dashboard/Quotes";
 import Orders from "./pages/dashboard/Orders";
 import Analytics from "./pages/dashboard/Analytics";
 import Alerts from "./pages/dashboard/Alerts";
@@ -43,6 +47,7 @@ import Settings from "./pages/dashboard/Settings";
 import { AuthProvider } from "./auth/AuthContext";
 import RequireAuth from "./auth/RequireAuth";
 import { ToastProvider } from "./contexts/ToastContext";
+import { RoleProvider } from "./contexts/RoleContext";
 
 function ScrollToTop() {
   const { pathname, hash } = useLocation();
@@ -67,7 +72,7 @@ function ScrollToTop() {
 const SkipLink = () => (
   <a
     href="#main"
-    className="sr-only rounded-lg bg-ink-2 px-4 py-2 text-sm font-semibold text-paper shadow-lg focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60]"
+    className="sr-only rounded-lg bg-surface px-4 py-2 text-sm font-semibold text-fg shadow-lg focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60]"
   >
     Skip to content
   </a>
@@ -122,6 +127,7 @@ function DashboardShell({ children }) {
 function App() {
   return (
     <AuthProvider>
+      <RoleProvider>
       <ToastProvider>
         <ScrollToTop />
         <Routes>
@@ -133,10 +139,15 @@ function App() {
                   <Routes>
                     <Route index element={<Navigate to="overview" replace />} />
                     <Route path="overview" element={<Overview />} />
-                    <Route path="suppliers" element={<SuppliersDashboard />} />
-                    <Route path="bids" element={<Bids />} />
-                    <Route path="bids-compact" element={<BidsCompact />} />
+                    <Route path="requests" element={<Requests />} />
+                    <Route path="quotes" element={<Quotes />} />
                     <Route path="orders" element={<Orders />} />
+                    <Route path="catalog" element={<Catalog />} />
+                    <Route path="network" element={<Network />} />
+                    {/* Pre-rebrand paths */}
+                    <Route path="bids" element={<Navigate to="/dashboard/quotes" replace />} />
+                    <Route path="bids-compact" element={<Navigate to="/dashboard/quotes" replace />} />
+                    <Route path="suppliers" element={<Navigate to="/dashboard/network" replace />} />
                     <Route path="analytics" element={<Analytics />} />
                     <Route path="alerts" element={<Alerts />} />
                     <Route path="settings" element={<Settings />} />
@@ -151,7 +162,11 @@ function App() {
           <Route path="/" element={<MarketingLayout><Home /></MarketingLayout>} />
           <Route path="/platform" element={<MarketingLayout><Platform /></MarketingLayout>} />
           <Route path="/solutions" element={<MarketingLayout><Solutions /></MarketingLayout>} />
-          <Route path="/supply" element={<MarketingLayout><Supply /></MarketingLayout>} />
+          <Route path="/marketplace" element={<MarketingLayout><Marketplace /></MarketingLayout>} />
+          <Route path="/contractors" element={<MarketingLayout><ForContractors /></MarketingLayout>} />
+          <Route path="/distributors" element={<MarketingLayout><ForDistributors /></MarketingLayout>} />
+          <Route path="/suppliers" element={<MarketingLayout><ForSuppliers /></MarketingLayout>} />
+          <Route path="/supply" element={<Navigate to="/marketplace" replace />} />
           <Route path="/projects" element={<MarketingLayout><Projects /></MarketingLayout>} />
           <Route path="/projects/:slug" element={<MarketingLayout><ProjectDetail /></MarketingLayout>} />
           <Route
@@ -178,6 +193,7 @@ function App() {
           <Route path="*" element={<MarketingLayout><NotFound /></MarketingLayout>} />
         </Routes>
       </ToastProvider>
+      </RoleProvider>
     </AuthProvider>
   );
 }

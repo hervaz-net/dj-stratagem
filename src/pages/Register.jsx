@@ -69,9 +69,9 @@ function validate(v) {
 function Field({ id, label, value, onChange, onBlur, error, required, ...rest }) {
   return (
     <div>
-      <label htmlFor={id} className="mb-2 block text-sm font-medium text-paper">
+      <label htmlFor={id} className="mb-2 block text-sm font-medium text-fg">
         {label}
-        {required && <span className="ml-1 text-amber" aria-hidden="true">*</span>}
+        {required && <span className="ml-1 text-brand" aria-hidden="true">*</span>}
       </label>
       <input
         id={id}
@@ -81,7 +81,7 @@ function Field({ id, label, value, onChange, onBlur, error, required, ...rest })
         onBlur={onBlur}
         aria-invalid={error ? true : undefined}
         aria-describedby={error ? `${id}-error` : undefined}
-        className={`w-full rounded-md border bg-ink px-4 py-2.5 text-sm text-paper outline-hidden transition-colors placeholder:text-steel/60 focus:border-amber ${
+        className={`w-full rounded-md border bg-canvas px-4 py-2.5 text-sm text-fg outline-hidden transition-colors placeholder:text-fg-muted/60 focus:border-brand ${
           error ? "border-danger" : "border-line"
         }`}
         {...rest}
@@ -156,7 +156,7 @@ export default function Register() {
       />
 
       <div className="mx-auto flex w-full max-w-lg flex-col justify-center px-6 py-16 md:py-24">
-        <div className="rounded-2xl border border-line bg-ink-2 p-8 shadow-xl shadow-brand/5">
+        <div className="rounded-2xl border border-line bg-surface p-8 shadow-xl shadow-brand/5">
           <Link to="/" className="inline-block" aria-label="D&J Stratagem — home">
             <Logo />
           </Link>
@@ -166,12 +166,12 @@ export default function Register() {
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-success/10 text-success">
                 <IconCheck width={22} height={22} />
               </div>
-              <h1 className="mt-5 text-2xl font-semibold tracking-tight text-paper">
+              <h1 className="mt-5 text-2xl font-semibold tracking-tight text-fg">
                 Request received.
               </h1>
-              <p className="mt-3 text-sm leading-relaxed text-steel">
+              <p className="mt-3 text-sm leading-relaxed text-fg-muted">
                 Accounts are reviewed by our team before first sign-in. We&rsquo;ll email you at{" "}
-                <span className="font-medium text-paper">{values.email}</span> once yours is
+                <span className="font-medium text-fg">{values.email}</span> once yours is
                 approved.
               </p>
               <Button to="/" variant="secondary" className="mt-6">
@@ -180,10 +180,10 @@ export default function Register() {
             </div>
           ) : (
             <>
-              <h1 className="mt-8 text-3xl font-semibold tracking-tight text-paper">
+              <h1 className="mt-8 text-3xl font-semibold tracking-tight text-fg">
                 Request access
               </h1>
-              <p className="mt-2 text-sm text-steel">
+              <p className="mt-2 text-sm text-fg-muted">
                 Tell us who you are. Our team approves accounts before first sign-in.
               </p>
 
@@ -281,9 +281,9 @@ export default function Register() {
                 </Button>
               </form>
 
-              <p className="mt-6 text-center text-sm text-steel">
+              <p className="mt-6 text-center text-sm text-fg-muted">
                 Already have an account?{" "}
-                <Link to="/login" className="font-medium text-amber hover:text-amber-2">
+                <Link to="/login" className="font-medium text-brand hover:text-brand-hover">
                   Sign in
                 </Link>
               </p>

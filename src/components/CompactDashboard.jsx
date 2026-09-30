@@ -78,12 +78,12 @@ export function CompactDashboard() {
       <div className="max-w-7xl mx-auto flex items-center gap-4">
         <div className="flex-1">
           <h1 className="text-xl font-bold text-bid-navy">Compact Bid Console</h1>
-          <p className="text-xs text-text-muted">Keyboard: '/' focus search • 'a' quick-add • 'e' edit selected • Esc cancel</p>
+          <p className="text-xs text-fg-muted">Keyboard: '/' focus search • 'a' quick-add • 'e' edit selected • Esc cancel</p>
         </div>
 
         <div className="flex items-center gap-2">
           <div className="relative">
-            <span className="absolute left-3 top-3 text-text-muted text-sm">🔍</span>
+            <span className="absolute left-3 top-3 text-fg-muted text-sm">🔍</span>
             <input
               ref={searchRef}
               value={query}
@@ -104,7 +104,7 @@ export function CompactDashboard() {
       {selected.size > 0 && (
         <div className="max-w-7xl mx-auto mt-3 p-3 bg-white border border-border rounded-md flex items-center justify-between compact-toolbar">
           <div className="flex items-center gap-3">
-            <span className="text-sm text-text-muted">{selected.size} selected</span>
+            <span className="text-sm text-fg-muted">{selected.size} selected</span>
             <button onClick={()=>bulkAction('export')} className="text-sm px-3 py-1 bg-surface rounded">Export</button>
             <button onClick={()=>bulkAction('assign')} className="text-sm px-3 py-1 bg-surface rounded">Assign</button>
             <button onClick={()=>bulkAction('delete')} className="text-sm px-3 py-1 bg-danger/10 text-danger rounded">Delete</button>
@@ -118,7 +118,7 @@ export function CompactDashboard() {
 
       {/* Table header (compact) */}
       <div className="max-w-7xl mx-auto mt-4 bg-white border border-border rounded-md overflow-hidden">
-        <div className="grid grid-cols-12 gap-2 items-center px-4 py-2 text-xs font-semibold text-text-muted border-b border-border">
+        <div className="grid grid-cols-12 gap-2 items-center px-4 py-2 text-xs font-semibold text-fg-muted border-b border-border">
           <div className="col-span-1">Sel</div>
           <div className="col-span-4">Project</div>
           <div className="col-span-2">Budget</div>
@@ -143,10 +143,10 @@ export function CompactDashboard() {
                 ) : (
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="text-sm font-semibold text-text">{bid.title}</div>
-                      <div className="text-xs text-text-muted">{bid.location} • {bid.specialty}</div>
+                      <div className="text-sm font-semibold text-fg">{bid.title}</div>
+                      <div className="text-xs text-fg-muted">{bid.location} • {bid.specialty}</div>
                     </div>
-                    <div className="hidden md:block text-xs text-text-muted">{bid.category ?? ''}</div>
+                    <div className="hidden md:block text-xs text-fg-muted">{bid.category ?? ''}</div>
                   </div>
                 )}
               </div>
@@ -161,7 +161,7 @@ export function CompactDashboard() {
               </div>
 
               {/* due */}
-              <div className={`col-span-2 text-sm ${bid.daysLeft<=2 ? 'text-danger' : 'text-text'}`}>
+              <div className={`col-span-2 text-sm ${bid.daysLeft<=2 ? 'text-danger' : 'text-fg'}`}>
                 {editingId === bid.id ? (
                   <InlineEditor initialValue={`${bid.daysLeft}`} onSave={val=>{ const days = Number(val)||0; updateBid(bid.id, { daysLeft: days }); setEditingId(null); }} onCancel={()=>setEditingId(null)} />
                 ) : (
@@ -170,7 +170,7 @@ export function CompactDashboard() {
               </div>
 
               {/* submissions */}
-              <div className="col-span-2 text-sm text-text">
+              <div className="col-span-2 text-sm text-fg">
                 {bid.submissions} bids
               </div>
 
@@ -186,7 +186,7 @@ export function CompactDashboard() {
             </div>
           ))}
 
-          {filtered.length===0 && (<div className="p-6 text-center text-text-muted">No matching bids</div>)}
+          {filtered.length===0 && (<div className="p-6 text-center text-fg-muted">No matching bids</div>)}
         </div>
       </div>
 

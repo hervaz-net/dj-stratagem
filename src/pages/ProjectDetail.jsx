@@ -30,21 +30,21 @@ export default function ProjectDetail() {
       />
 
       <Section className="pt-12 pb-8 md:pt-16">
-        <nav aria-label="Breadcrumb" className="mb-6 text-sm text-steel">
-          <Link to="/projects" className="transition-colors hover:text-amber">
+        <nav aria-label="Breadcrumb" className="mb-6 text-sm text-fg-muted">
+          <Link to="/projects" className="transition-colors hover:text-brand">
             Projects
           </Link>
           <span className="mx-2" aria-hidden="true">
             /
           </span>
-          <span className="text-paper/80">{project.title}</span>
+          <span className="text-fg/80">{project.title}</span>
         </nav>
 
         <Eyebrow>{project.type}</Eyebrow>
-        <h1 className="text-balance max-w-3xl text-4xl font-semibold leading-tight tracking-tight text-paper sm:text-5xl">
+        <h1 className="text-balance max-w-3xl text-4xl font-semibold leading-tight tracking-tight text-fg sm:text-5xl">
           {project.title}
         </h1>
-        <p className="mt-4 text-lg text-steel">
+        <p className="mt-4 text-lg text-fg-muted">
           {project.city}, {project.state}
         </p>
 
@@ -66,21 +66,21 @@ export default function ProjectDetail() {
               />
             </div>
 
-            <h2 className="mt-10 text-lg font-semibold text-paper">Scope of work</h2>
-            <p className="mt-3 text-base leading-relaxed text-steel">{project.summary}</p>
+            <h2 className="mt-10 text-lg font-semibold text-fg">Scope of work</h2>
+            <p className="mt-3 text-base leading-relaxed text-fg-muted">{project.summary}</p>
             <div className="mt-5 flex flex-wrap gap-2">
               {project.scope.map((s) => (
                 <span
                   key={s}
-                  className="rounded-full border border-line bg-ink-2 px-3 py-1 text-sm text-paper/85"
+                  className="rounded-full border border-line bg-surface px-3 py-1 text-sm text-fg/85"
                 >
                   {s}
                 </span>
               ))}
             </div>
 
-            <h2 className="mt-10 text-lg font-semibold text-paper">Project details</h2>
-            <dl className="mt-4 divide-y divide-line rounded-xl border border-line bg-ink-2">
+            <h2 className="mt-10 text-lg font-semibold text-fg">Project details</h2>
+            <dl className="mt-4 divide-y divide-line rounded-xl border border-line bg-surface">
               {[
                 ["Owner", project.owner],
                 ["General contractor", project.gc],
@@ -89,21 +89,21 @@ export default function ProjectDetail() {
                 ["Location", `${project.city}, ${project.state}`],
               ].map(([k, v]) => (
                 <div key={k} className="flex justify-between gap-4 px-5 py-3.5">
-                  <dt className="text-sm text-steel">{k}</dt>
-                  <dd className="text-right text-sm font-medium text-paper">{v}</dd>
+                  <dt className="text-sm text-fg-muted">{k}</dt>
+                  <dd className="text-right text-sm font-medium text-fg">{v}</dd>
                 </div>
               ))}
             </dl>
 
-            <h2 className="mt-10 text-lg font-semibold text-paper">Documents</h2>
+            <h2 className="mt-10 text-lg font-semibold text-fg">Documents</h2>
             <ul className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
               {project.documents.map((d) => (
                 <li
                   key={d}
-                  className="flex items-center justify-between rounded-lg border border-line bg-ink-2 px-4 py-3"
+                  className="flex items-center justify-between rounded-lg border border-line bg-surface px-4 py-3"
                 >
-                  <span className="text-sm text-paper/85">{d}</span>
-                  <span className="text-xs text-steel">Members only</span>
+                  <span className="text-sm text-fg/85">{d}</span>
+                  <span className="text-xs text-fg-muted">Members only</span>
                 </li>
               ))}
             </ul>
@@ -111,20 +111,20 @@ export default function ProjectDetail() {
 
           {/* sidebar: company fit */}
           <aside className="lg:sticky lg:top-24">
-            <div className="rounded-2xl border border-line bg-ink-2 p-6">
-              <p className="text-xs font-semibold uppercase tracking-wider text-steel">
+            <div className="rounded-2xl border border-line bg-surface p-6">
+              <p className="text-xs font-semibold uppercase tracking-wider text-fg-muted">
                 Company fit
               </p>
               <p className={`mt-2 text-4xl font-bold tabular-nums ${matchTone(project.match)}`}>
                 {project.match}%
               </p>
-              <p className="mt-1 text-sm text-steel">
+              <p className="mt-1 text-sm text-fg-muted">
                 Scored against a sample contractor profile.
               </p>
 
               <ul className="mt-5 space-y-2.5 border-t border-line pt-5">
                 {project.matchReasons.map((r) => (
-                  <li key={r} className="flex items-start gap-2.5 text-sm text-paper/85">
+                  <li key={r} className="flex items-start gap-2.5 text-sm text-fg/85">
                     <IconCheck width={14} height={14} className="mt-0.5 shrink-0 text-success" />
                     {r}
                   </li>
@@ -135,19 +135,19 @@ export default function ProjectDetail() {
                 <Button to="/register" variant="primary" className="w-full">
                   Add to bid pipeline
                 </Button>
-                <p className="mt-3 text-center text-xs text-steel">
+                <p className="mt-3 text-center text-xs text-fg-muted">
                   Requires an account. Free to create.
                 </p>
               </div>
             </div>
 
-            <div className="mt-4 rounded-2xl border border-line bg-ink-2 p-6">
-              <p className="text-sm font-semibold text-paper">
+            <div className="mt-4 rounded-2xl border border-line bg-surface p-6">
+              <p className="text-sm font-semibold text-fg">
                 More {project.trade} work in {project.city}
               </p>
               <Link
                 to={`/construction-projects/${slugify(project.city)}/${slugify(project.trade)}`}
-                className="mt-2 inline-flex items-center gap-1.5 text-sm font-medium text-amber hover:text-amber-2"
+                className="mt-2 inline-flex items-center gap-1.5 text-sm font-medium text-brand hover:text-brand-hover"
               >
                 Browse {project.trade.toLowerCase()} projects
                 <IconArrowRight width={13} height={13} />
@@ -167,9 +167,9 @@ export default function ProjectDetail() {
 
 function Fact({ label, value, tone }) {
   return (
-    <div className="rounded-xl border border-line bg-ink-2 p-4">
-      <p className="text-xs text-steel">{label}</p>
-      <p className={`mt-1 text-sm font-semibold ${tone ?? "text-paper"}`}>{value}</p>
+    <div className="rounded-xl border border-line bg-surface p-4">
+      <p className="text-xs text-fg-muted">{label}</p>
+      <p className={`mt-1 text-sm font-semibold ${tone ?? "text-fg"}`}>{value}</p>
     </div>
   );
 }

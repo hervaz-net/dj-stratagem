@@ -84,25 +84,25 @@ export default function Login() {
   };
 
   const inputClass =
-    "w-full rounded-md border border-line bg-ink px-4 py-2.5 text-sm text-paper outline-hidden " +
-    "transition-colors placeholder:text-steel/60 focus:border-amber";
+    "w-full rounded-md border border-line bg-canvas px-4 py-2.5 text-sm text-fg outline-hidden " +
+    "transition-colors placeholder:text-fg-muted/60 focus:border-brand";
 
   return (
     <>
       <Seo title="Sign in" description="Sign in to your D&J Stratagem account." noindex />
 
       <div className="mx-auto flex w-full max-w-md flex-col justify-center px-6 py-16 md:py-24">
-        <div className="rounded-2xl border border-line bg-ink-2 p-8 shadow-xl shadow-brand/5">
+        <div className="rounded-2xl border border-line bg-surface p-8 shadow-xl shadow-brand/5">
           <Link to="/" className="inline-block" aria-label="D&J Stratagem — home">
             <Logo />
           </Link>
 
-          <h1 className="mt-8 text-3xl font-semibold tracking-tight text-paper">Sign in</h1>
-          <p className="mt-2 text-sm text-steel">Access your D&amp;J Stratagem account.</p>
+          <h1 className="mt-8 text-3xl font-semibold tracking-tight text-fg">Sign in</h1>
+          <p className="mt-2 text-sm text-fg-muted">Access your D&amp;J Stratagem account.</p>
 
           <form onSubmit={handleSubmit} className="mt-8 space-y-4" noValidate>
             <div>
-              <label htmlFor="email" className="mb-2 block text-sm font-medium text-paper">
+              <label htmlFor="email" className="mb-2 block text-sm font-medium text-fg">
                 Email address
               </label>
               <input
@@ -132,7 +132,7 @@ export default function Login() {
             />
 
             <div className="flex items-center justify-between">
-              <label className="flex items-center gap-2 text-sm text-steel">
+              <label className="flex items-center gap-2 text-sm text-fg-muted">
                 <input
                   type="checkbox"
                   checked={rememberMe}
@@ -141,7 +141,7 @@ export default function Login() {
                 />
                 Remember me
               </label>
-              <Link to="/forgot-password" className="text-sm font-medium text-amber hover:text-amber-2">
+              <Link to="/forgot-password" className="text-sm font-medium text-brand hover:text-brand-hover">
                 Forgot password?
               </Link>
             </div>
@@ -165,19 +165,19 @@ export default function Login() {
                 <div className="w-full border-t border-line" />
               </div>
               <div className="relative flex justify-center">
-                <span className="bg-ink-2 px-3 text-xs uppercase tracking-wider text-steel">Or</span>
+                <span className="bg-surface px-3 text-xs uppercase tracking-wider text-fg-muted">Or</span>
               </div>
             </div>
-            <p className="text-center text-sm text-steel">
+            <p className="text-center text-sm text-fg-muted">
               Don&rsquo;t have an account?{" "}
-              <Link to="/register" className="font-medium text-amber hover:text-amber-2">
+              <Link to="/register" className="font-medium text-brand hover:text-brand-hover">
                 Request access
               </Link>
             </p>
           </div>
         </div>
 
-        <p className="mt-8 text-center text-xs text-steel">
+        <p className="mt-8 text-center text-xs text-fg-muted">
           Accounts are approved by our team before first sign-in.
         </p>
       </div>

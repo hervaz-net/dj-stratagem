@@ -14,7 +14,7 @@ const STATUS = {
   confirmed: { label: "Confirmed", dot: "active", color: "text-[var(--viz-cyan)] bg-[var(--viz-cyan)]/10", step: 1 },
   shipped: { label: "Shipped", dot: "watch", color: "text-warning bg-warning/10", step: 2 },
   delivered: { label: "Delivered", dot: "active", color: "text-[var(--viz-green)] bg-[var(--viz-green)]/10", step: 3 },
-  cancelled: { label: "Cancelled", dot: "at-risk", color: "text-steel bg-line", step: -1 },
+  cancelled: { label: "Cancelled", dot: "at-risk", color: "text-fg-muted bg-line", step: -1 },
 };
 
 const STEPS = ["Ordered", "Confirmed", "Shipped", "Delivered"];
@@ -37,10 +37,10 @@ function TimelineBar({ step }) {
         <div key={s} className="flex items-center gap-1">
           <div
             title={s}
-            className={`h-1.5 w-1.5 rounded-full transition-colors ${i <= step ? "bg-amber" : "bg-line"}`}
+            className={`h-1.5 w-1.5 rounded-full transition-colors ${i <= step ? "bg-brand" : "bg-line"}`}
           />
           {i < STEPS.length - 1 && (
-            <div className={`h-px w-3 ${i < step ? "bg-amber" : "bg-line"}`} aria-hidden="true" />
+            <div className={`h-px w-3 ${i < step ? "bg-brand" : "bg-line"}`} aria-hidden="true" />
           )}
         </div>
       ))}
@@ -105,8 +105,8 @@ export default function Orders() {
         subtitle="Purchase orders across your supply network."
       >
         {!isConfigured && (
-          <GlassCard className="mb-6 px-5 py-3 text-sm text-steel">
-            <span className="font-semibold uppercase tracking-wider text-amber">Sample data</span>
+          <GlassCard className="mb-6 px-5 py-3 text-sm text-fg-muted">
+            <span className="font-semibold uppercase tracking-wider text-brand">Sample data</span>
             {" "}— live orders load from `/api/orders.php` on the hosted server.
           </GlassCard>
         )}
@@ -119,8 +119,8 @@ export default function Orders() {
             { label: "Delivered (30d)", value: counts.delivered },
           ].map((s) => (
             <GlassCard key={s.label} className="px-5 py-4">
-              <p className="text-xs font-semibold uppercase tracking-wider text-steel">{s.label}</p>
-              <p className="mt-1 text-2xl font-semibold tabular-nums text-paper">{s.value}</p>
+              <p className="text-xs font-semibold uppercase tracking-wider text-fg-muted">{s.label}</p>
+              <p className="mt-1 text-2xl font-semibold tabular-nums text-fg">{s.value}</p>
             </GlassCard>
           ))}
         </div>
@@ -134,12 +134,12 @@ export default function Orders() {
               aria-pressed={filter === f}
               className={`lift inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-semibold ${
                 filter === f
-                  ? "border-amber/60 bg-amber/12 text-amber"
-                  : "border-line bg-ink/50 text-steel hover:border-amber/35 hover:text-paper"
+                  ? "border-brand/60 bg-brand/12 text-brand"
+                  : "border-line bg-canvas/50 text-fg-muted hover:border-brand/35 hover:text-fg"
               }`}
             >
               {f === "all" ? "All" : STATUS[f]?.label}
-              <span className="rounded-full bg-ink px-1.5 py-0.5 tabular-nums">{counts[f]}</span>
+              <span className="rounded-full bg-canvas px-1.5 py-0.5 tabular-nums">{counts[f]}</span>
             </button>
           ))}
           {selected.size > 0 && (
@@ -166,7 +166,7 @@ export default function Orders() {
                     <th
                       key={h}
                       scope="col"
-                      className={`px-4 py-3.5 text-xs font-semibold uppercase tracking-wider text-steel ${h === "Value" ? "text-right" : "text-left"}`}
+                      className={`px-4 py-3.5 text-xs font-semibold uppercase tracking-wider text-fg-muted ${h === "Value" ? "text-right" : "text-left"}`}
                     >
                       {h}
                     </th>
@@ -178,7 +178,7 @@ export default function Orders() {
                   const s = STATUS[o.status] ?? STATUS.pending;
                   const overdue = o.status === "shipped" ? daysOverdue(o.eta) : 0;
                   return (
-                    <tr key={o.id} className={`border-b border-line/60 transition-colors last:border-0 hover:bg-ink-3/60 ${selected.has(o.id) ? "bg-amber/5" : ""}`}>
+                    <tr key={o.id} className={`border-b border-line/60 transition-colors last:border-0 hover:bg-subtle/60 ${selected.has(o.id) ? "bg-brand/5" : ""}`}>
                       <td className="px-4 py-3.5">
                         <input
                           type="checkbox"
@@ -188,16 +188,16 @@ export default function Orders() {
                           className="h-3.5 w-3.5 accent-amber"
                         />
                       </td>
-                      <td className="px-4 py-3.5 font-mono text-xs text-steel">{o.id}</td>
-                      <th scope="row" className="px-4 py-3.5 text-left font-semibold text-paper">{o.supplier}</th>
-                      <td className="px-4 py-3.5 text-steel">{o.items}</td>
+                      <td className="px-4 py-3.5 font-mono text-xs text-fg-muted">{o.id}</td>
+                      <th scope="row" className="px-4 py-3.5 text-left font-semibold text-fg">{o.supplier}</th>
+                      <td className="px-4 py-3.5 text-fg-muted">{o.items}</td>
                       <td className="px-4 py-3.5">
-                        <span className="rounded-full border border-line px-2.5 py-0.5 text-xs text-steel">{o.category}</span>
+                        <span className="rounded-full border border-line px-2.5 py-0.5 text-xs text-fg-muted">{o.category}</span>
                       </td>
-                      <td className="px-4 py-3.5 text-right tabular-nums text-paper">{money(o.value)}</td>
+                      <td className="px-4 py-3.5 text-right tabular-nums text-fg">{money(o.value)}</td>
                       <td className="px-4 py-3.5">
                         <div className="flex items-center gap-1.5">
-                          <span className="text-steel">{fmt(o.eta)}</span>
+                          <span className="text-fg-muted">{fmt(o.eta)}</span>
                           {overdue > 0 && (
                             <span className="rounded-full bg-danger/10 px-1.5 py-0.5 text-[10px] font-semibold text-danger">
                               {overdue}d late
@@ -222,18 +222,18 @@ export default function Orders() {
           </div>
           {!rows.length && (
             <div className="px-6 py-14 text-center">
-              <p className="text-sm text-steel">No orders match this filter.</p>
+              <p className="text-sm text-fg-muted">No orders match this filter.</p>
             </div>
           )}
         </GlassCard>
 
         {showCancelModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4" onClick={() => setShowCancelModal(false)}>
-            <div className="w-full max-w-sm rounded-2xl border border-line bg-ink-2 p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
-              <h2 className="text-base font-semibold text-paper">Cancel {selected.size} order{selected.size !== 1 ? "s" : ""}?</h2>
-              <p className="mt-2 text-sm text-steel">This will mark the selected orders as cancelled. This action cannot be undone.</p>
+            <div className="w-full max-w-sm rounded-2xl border border-line bg-surface p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+              <h2 className="text-base font-semibold text-fg">Cancel {selected.size} order{selected.size !== 1 ? "s" : ""}?</h2>
+              <p className="mt-2 text-sm text-fg-muted">This will mark the selected orders as cancelled. This action cannot be undone.</p>
               <div className="mt-6 flex gap-3 justify-end">
-                <button type="button" onClick={() => setShowCancelModal(false)} className="px-4 py-2 text-sm font-semibold text-steel hover:text-paper">
+                <button type="button" onClick={() => setShowCancelModal(false)} className="px-4 py-2 text-sm font-semibold text-fg-muted hover:text-fg">
                   Keep orders
                 </button>
                 <button type="button" onClick={confirmCancel} disabled={cancelling} className="rounded-lg bg-danger/15 px-4 py-2 text-sm font-semibold text-danger hover:bg-danger/25 disabled:opacity-60">

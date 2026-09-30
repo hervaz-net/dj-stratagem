@@ -168,7 +168,7 @@ export default function SuppliersDashboard() {
               onClick={() => setShowShortcuts(true)}
               aria-label="Keyboard shortcuts"
               title="Keyboard shortcuts (?)"
-              className="flex h-9 w-9 items-center justify-center rounded-lg border border-line text-steel transition-colors hover:text-paper"
+              className="flex h-9 w-9 items-center justify-center rounded-lg border border-line text-fg-muted transition-colors hover:text-fg"
             >
               <IconKeyboard width={16} height={16} />
             </button>
@@ -178,10 +178,10 @@ export default function SuppliersDashboard() {
       >
         {!isConfigured && (
           <GlassCard className="mb-6 flex flex-wrap items-center gap-x-2 gap-y-1 px-5 py-3">
-            <span className="text-xs font-semibold uppercase tracking-wider text-amber">
+            <span className="text-xs font-semibold uppercase tracking-wider text-brand">
               Sample data
             </span>
-            <span className="text-sm text-steel">
+            <span className="text-sm text-fg-muted">
               Live APIs activate on the hosted PHP server after you sign in.
             </span>
           </GlassCard>
@@ -233,22 +233,22 @@ export default function SuppliersDashboard() {
 
         {selected.size > 0 && (
           <GlassCard className="mt-4 flex flex-wrap items-center justify-between gap-3 px-5 py-3">
-            <p className="text-sm text-steel">
-              <span className="font-semibold text-paper">{selected.size}</span>{" "}
+            <p className="text-sm text-fg-muted">
+              <span className="font-semibold text-fg">{selected.size}</span>{" "}
               {selected.size === 1 ? "supplier" : "suppliers"} selected
             </p>
             <div className="flex gap-3">
               <button
                 type="button"
                 onClick={handleExport}
-                className="text-xs font-semibold text-amber transition-colors hover:text-amber-2"
+                className="text-xs font-semibold text-brand transition-colors hover:text-brand-hover"
               >
                 Export selected
               </button>
               <button
                 type="button"
                 onClick={() => setSelected(new Set())}
-                className="text-xs font-semibold text-steel transition-colors hover:text-paper"
+                className="text-xs font-semibold text-fg-muted transition-colors hover:text-fg"
               >
                 Clear selection
               </button>

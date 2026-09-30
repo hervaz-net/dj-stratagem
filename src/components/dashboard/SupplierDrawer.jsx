@@ -37,7 +37,7 @@ export default function SupplierDrawer({ supplier, onClose }) {
   return (
     <>
       <div
-        className="fixed inset-0 z-40 bg-ink/50 backdrop-blur-sm"
+        className="fixed inset-0 z-40 bg-canvas/50 backdrop-blur-sm"
         onClick={onClose}
         aria-hidden="true"
       />
@@ -46,15 +46,15 @@ export default function SupplierDrawer({ supplier, onClose }) {
         role="dialog"
         aria-modal="true"
         aria-label={`${supplier.name} details`}
-        className="fixed right-0 top-0 z-50 flex h-full w-full max-w-md flex-col overflow-y-auto bg-ink-2 shadow-2xl"
+        className="fixed right-0 top-0 z-50 flex h-full w-full max-w-md flex-col overflow-y-auto bg-surface shadow-2xl"
       >
         {/* Header */}
         <div className="flex items-start justify-between border-b border-line px-6 py-5">
           <div className="flex items-center gap-3">
             <StatusDot status={supplier.status} size={10} pulse={supplier.status !== "active"} />
             <div>
-              <h2 className="text-lg font-semibold text-paper">{supplier.name}</h2>
-              <p className="text-sm text-steel">
+              <h2 className="text-lg font-semibold text-fg">{supplier.name}</h2>
+              <p className="text-sm text-fg-muted">
                 {supplier.category} &middot; {supplier.region}
               </p>
             </div>
@@ -63,7 +63,7 @@ export default function SupplierDrawer({ supplier, onClose }) {
             type="button"
             onClick={onClose}
             aria-label="Close supplier details"
-            className="rounded-md p-1 text-steel transition-colors hover:text-paper"
+            className="rounded-md p-1 text-fg-muted transition-colors hover:text-fg"
           >
             <IconX width={20} height={20} />
           </button>
@@ -82,14 +82,14 @@ export default function SupplierDrawer({ supplier, onClose }) {
         <div className="flex-1 space-y-6 px-6 py-6">
           {/* Metric tiles */}
           <div>
-            <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-steel">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-fg-muted">
               Performance
             </p>
             <div className="grid grid-cols-2 gap-3">
               {metrics(supplier).map((m) => (
-                <div key={m.label} className="rounded-lg border border-line bg-ink px-4 py-3">
-                  <p className="text-xs text-steel">{m.label}</p>
-                  <p className="mt-1 text-lg font-semibold tabular-nums text-paper">{m.value}</p>
+                <div key={m.label} className="rounded-lg border border-line bg-canvas px-4 py-3">
+                  <p className="text-xs text-fg-muted">{m.label}</p>
+                  <p className="mt-1 text-lg font-semibold tabular-nums text-fg">{m.value}</p>
                 </div>
               ))}
             </div>
@@ -97,20 +97,20 @@ export default function SupplierDrawer({ supplier, onClose }) {
 
           {/* Risk gauge */}
           <div>
-            <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-steel">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-fg-muted">
               Risk profile
             </p>
-            <div className="rounded-lg border border-line bg-ink px-4 py-4">
+            <div className="rounded-lg border border-line bg-canvas px-4 py-4">
               <RiskGauge score={supplier.riskScore} />
             </div>
           </div>
 
           {/* Trend sparkline */}
           <div>
-            <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-steel">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-fg-muted">
               30-day delivery trend
             </p>
-            <div className="rounded-lg border border-line bg-ink px-4 py-4">
+            <div className="rounded-lg border border-line bg-canvas px-4 py-4">
               <Sparkline
                 data={supplier.trend}
                 accent={accent}

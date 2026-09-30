@@ -1,28 +1,22 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../auth/useAuth";
+import { DASHBOARD_NAV, SOLUTION_LINKS } from "../navigation";
 
 const NAV_ITEMS = [
-  { label: "Overview", to: "/dashboard/overview", group: "Dashboard" },
-  { label: "Suppliers", to: "/dashboard/suppliers", group: "Dashboard" },
-  { label: "Bids", to: "/dashboard/bids", group: "Dashboard" },
-  { label: "Orders", to: "/dashboard/orders", group: "Dashboard" },
-  { label: "Analytics", to: "/dashboard/analytics", group: "Dashboard" },
-  { label: "Alerts", to: "/dashboard/alerts", group: "Dashboard" },
-  { label: "Settings", to: "/dashboard/settings", group: "Dashboard" },
-  { label: "Accounts", to: "/dashboard/admin", group: "Dashboard", adminOnly: true },
+  ...DASHBOARD_NAV.map((i) => ({ label: i.label, to: i.to, group: "Dashboard", adminOnly: i.adminOnly })),
   { label: "Home", to: "/", group: "Marketing" },
-  { label: "Platform", to: "/platform", group: "Marketing" },
-  { label: "Solutions", to: "/solutions", group: "Marketing" },
-  { label: "Projects", to: "/projects", group: "Marketing" },
-  { label: "Supply", to: "/supply", group: "Marketing" },
-  { label: "Fleet", to: "/fleet", group: "Marketing" },
+  { label: "Marketplace", to: "/marketplace", group: "Marketing" },
+  { label: "Project demand", to: "/projects", group: "Marketing" },
+  ...SOLUTION_LINKS.map((l) => ({ label: `For ${l.label.toLowerCase()}`, to: l.to, group: "Marketing" })),
+  { label: "How it works", to: "/platform", group: "Marketing" },
+  { label: "Equipment & fleet", to: "/fleet", group: "Marketing" },
   { label: "Pricing", to: "/pricing", group: "Marketing" },
   { label: "About", to: "/about", group: "Marketing" },
   { label: "Contact", to: "/contact", group: "Marketing" },
   { label: "Changelog", to: "/changelog", group: "Marketing" },
   { label: "Sign in", to: "/login", group: "Auth" },
-  { label: "Register", to: "/register", group: "Auth" },
+  { label: "Create account", to: "/register", group: "Auth" },
 ];
 
 function score(item, q) {
@@ -96,11 +90,11 @@ export default function CommandPalette({ open, onClose }) {
       aria-label="Command palette"
     >
       <div
-        className="w-full max-w-lg overflow-hidden rounded-2xl border border-line bg-ink-2 shadow-2xl shadow-brand/20"
+        className="w-full max-w-lg overflow-hidden rounded-2xl border border-line bg-surface shadow-2xl shadow-brand/20"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center gap-3 border-b border-line px-4 py-3.5">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 text-steel" aria-hidden="true"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" /></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 text-fg-muted" aria-hidden="true"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" /></svg>
           <input
             ref={inputRef}
             type="text"
@@ -108,17 +102,17 @@ export default function CommandPalette({ open, onClose }) {
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={onKey}
             placeholder="Go to…"
-            className="flex-1 bg-transparent text-sm text-paper outline-none placeholder:text-steel/60"
+            className="flex-1 bg-transparent text-sm text-fg outline-none placeholder:text-fg-muted/60"
             aria-label="Search pages"
             aria-autocomplete="list"
             role="combobox"
             aria-expanded="true"
           />
-          <kbd className="rounded border border-line px-1.5 py-0.5 text-[10px] text-steel">Esc</kbd>
+          <kbd className="rounded border border-line px-1.5 py-0.5 text-[10px] text-fg-muted">Esc</kbd>
         </div>
         <ul role="listbox" className="max-h-72 overflow-y-auto py-2">
           {results.length === 0 && (
-            <li className="px-4 py-8 text-center text-sm text-steel">No results</li>
+            <li className="px-4 py-8 text-center text-sm text-fg-muted">No results</li>
           )}
           {results.map((item, i) => (
             <li key={item.to} role="option" aria-selected={i === cursor}>
@@ -127,16 +121,16 @@ export default function CommandPalette({ open, onClose }) {
                 onClick={() => go(item)}
                 onMouseEnter={() => setCursor(i)}
                 className={`flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm transition-colors ${
-                  i === cursor ? "bg-amber/10 text-amber" : "text-paper hover:bg-ink-3"
+                  i === cursor ? "bg-brand/10 text-brand" : "text-fg hover:bg-subtle"
                 }`}
               >
                 <span className="flex-1">{item.label}</span>
-                <span className="text-xs text-steel">{item.group}</span>
+                <span className="text-xs text-fg-muted">{item.group}</span>
               </button>
             </li>
           ))}
         </ul>
-        <div className="border-t border-line px-4 py-2 text-[10px] text-steel/60 flex gap-4">
+        <div className="border-t border-line px-4 py-2 text-[10px] text-fg-muted/60 flex gap-4">
           <span><kbd className="font-mono">↑↓</kbd> navigate</span>
           <span><kbd className="font-mono">↵</kbd> go</span>
           <span><kbd className="font-mono">Esc</kbd> close</span>

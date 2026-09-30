@@ -148,17 +148,17 @@ export default function Home() {
           aria-hidden="true"
         />
         <div
-          className="hero-blob-2 pointer-events-none absolute -top-16 right-1/4 h-64 w-64 rounded-full bg-amber/15 blur-3xl"
+          className="hero-blob-2 pointer-events-none absolute -top-16 right-1/4 h-64 w-64 rounded-full bg-brand/15 blur-3xl"
           aria-hidden="true"
         />
 
         <div className="relative grid grid-cols-1 items-center gap-14 lg:grid-cols-[1.05fr_0.95fr]">
           <div>
             <Eyebrow>Bid intelligence for construction</Eyebrow>
-            <h1 className="text-balance text-2xl font-semibold leading-[1.08] tracking-tight text-paper sm:text-4xl md:text-5xl">
+            <h1 className="text-balance text-2xl font-semibold leading-[1.08] tracking-tight text-fg sm:text-4xl md:text-5xl">
               Find better construction projects. Bid smarter. Win more work.
             </h1>
-            <p className="mt-6 max-w-lg text-lg leading-relaxed text-steel">
+            <p className="mt-6 max-w-lg text-lg leading-relaxed text-fg-muted">
               D&amp;J Stratagem gives contractors, subcontractors, and suppliers the tools to
               discover bid opportunities, manage their pipeline, market their capabilities, and
               turn more opportunities into awarded projects.
@@ -171,12 +171,12 @@ export default function Home() {
                 See how it works
               </Button>
             </div>
-            <div className="mt-10 flex flex-wrap gap-x-6 gap-y-2 text-sm text-steel">
+            <div className="mt-10 flex flex-wrap gap-x-6 gap-y-2 text-sm text-fg-muted">
               <span className="flex items-center gap-2">
-                <IconBuilding width={16} height={16} className="text-amber" /> Built for GCs and subs
+                <IconBuilding width={16} height={16} className="text-brand" /> Built for GCs and subs
               </span>
               <span className="flex items-center gap-2">
-                <IconTrendingUp width={16} height={16} className="text-amber" /> Grow revenue, not
+                <IconTrendingUp width={16} height={16} className="text-brand" /> Grow revenue, not
                 just win bids
               </span>
             </div>
@@ -186,19 +186,19 @@ export default function Home() {
       </Section>
 
       <Section className="border-t border-line py-8">
-        <p className="text-center text-sm text-steel">
+        <p className="text-center text-sm text-fg-muted">
           Built for contractors.{" "}
-          <span className="font-semibold text-paper">Currently onboarding early users.</span>
+          <span className="font-semibold text-fg">Currently onboarding early users.</span>
         </p>
       </Section>
 
       <Section className="border-t border-line">
         <div className="mx-auto max-w-2xl text-center">
           <Eyebrow>What you get</Eyebrow>
-          <h2 className="text-balance text-2xl font-semibold tracking-tight text-paper md:text-3xl">
+          <h2 className="text-balance text-2xl font-semibold tracking-tight text-fg md:text-3xl">
             Matched opportunities, not a firehose of RFPs.
           </h2>
-          <p className="mt-5 text-base leading-relaxed text-steel">
+          <p className="mt-5 text-base leading-relaxed text-fg-muted">
             Every project is scored against your trade, service area, project size, and past
             work &mdash; so you spend your time on the bids you can actually win.
           </p>
@@ -212,11 +212,11 @@ export default function Home() {
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
           {stats.map((s, i) => (
             <Reveal key={s.label} delay={i * 90} className="text-center sm:text-left">
-              <p className="text-2xl font-semibold tracking-tight text-paper md:text-5xl">
+              <p className="text-2xl font-semibold tracking-tight text-fg md:text-5xl">
                 <StatCounter value={s.value} suffix={s.suffix} />
               </p>
-              <p className="mt-2 text-sm font-semibold text-amber">{s.label}</p>
-              <p className="mt-1 text-sm text-steel">{s.detail}</p>
+              <p className="mt-2 text-sm font-semibold text-brand">{s.label}</p>
+              <p className="mt-1 text-sm text-fg-muted">{s.detail}</p>
             </Reveal>
           ))}
         </div>
@@ -226,10 +226,10 @@ export default function Home() {
         <div className="grid grid-cols-1 gap-16 lg:grid-cols-2 lg:items-start">
           <Reveal>
             <Eyebrow>The problem</Eyebrow>
-            <h2 className="text-balance text-2xl font-semibold tracking-tight text-paper md:text-3xl">
+            <h2 className="text-balance text-2xl font-semibold tracking-tight text-fg md:text-3xl">
               Most platforms solve one piece of the puzzle.
             </h2>
-            <p className="mt-5 text-base leading-relaxed text-steel">
+            <p className="mt-5 text-base leading-relaxed text-fg-muted">
               PlanHub finds bids. Dodge surfaces leads. BuildingConnected sends invitations.
               ConstructConnect delivers project intelligence. Contractors end up stitching
               together five tools to do one job &mdash; and still handle marketing, CRM, and
@@ -239,10 +239,10 @@ export default function Home() {
           </Reveal>
           <Reveal delay={120}>
             <Eyebrow>The platform</Eyebrow>
-            <h2 className="text-balance text-2xl font-semibold tracking-tight text-paper md:text-3xl">
+            <h2 className="text-balance text-2xl font-semibold tracking-tight text-fg md:text-3xl">
               We sell growth, not just access to bids.
             </h2>
-            <p className="mt-5 text-base leading-relaxed text-steel">
+            <p className="mt-5 text-base leading-relaxed text-fg-muted">
               D&amp;J Stratagem is where a contractor wins work, markets the business, manages
               relationships, and grows revenue &mdash; bidding, marketing, CRM, estimating, and
               AI, all in one connected platform.
@@ -254,8 +254,8 @@ export default function Home() {
                 "Market your business and manage every relationship in one CRM",
                 "Source materials without a margin-destroying bid war",
               ].map((pt) => (
-                <li key={pt} className="flex items-start gap-3 text-sm text-paper/90">
-                  <IconCheck width={16} height={16} className="mt-0.5 shrink-0 text-amber" />
+                <li key={pt} className="flex items-start gap-3 text-sm text-fg/90">
+                  <IconCheck width={16} height={16} className="mt-0.5 shrink-0 text-brand" />
                   {pt}
                 </li>
               ))}
@@ -266,7 +266,7 @@ export default function Home() {
 
       <Section className="border-t border-line">
         <Eyebrow>The platform</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-2xl font-semibold tracking-tight text-paper md:text-3xl">
+        <h2 className="text-balance max-w-2xl text-2xl font-semibold tracking-tight text-fg md:text-3xl">
           Everything a growing contractor needs.
         </h2>
         <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -289,10 +289,10 @@ export default function Home() {
         <div className="grid grid-cols-1 items-center gap-14 lg:grid-cols-2">
           <Reveal>
             <Eyebrow>Why it&rsquo;s different</Eyebrow>
-            <h2 className="text-balance text-2xl font-semibold tracking-tight text-paper md:text-3xl">
+            <h2 className="text-balance text-2xl font-semibold tracking-tight text-fg md:text-3xl">
               Once you rely on us, switching gets painful &mdash; in a good way.
             </h2>
-            <p className="mt-5 text-base leading-relaxed text-steel">
+            <p className="mt-5 text-base leading-relaxed text-fg-muted">
               Marketing, bidding, document management, and customer relationships, all built on
               one platform. That&rsquo;s how durable businesses are built: not by chasing the next
               lead source, but by owning the entire pipeline from opportunity to award.
@@ -300,23 +300,23 @@ export default function Home() {
           </Reveal>
           <Reveal delay={120}>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <div className="rounded-xl border border-line bg-ink p-5">
-                <p className="text-xs font-semibold uppercase tracking-wider text-steel">Without a platform</p>
-                <ul className="mt-4 space-y-2.5 text-sm text-steel">
+              <div className="rounded-xl border border-line bg-canvas p-5">
+                <p className="text-xs font-semibold uppercase tracking-wider text-fg-muted">Without a platform</p>
+                <ul className="mt-4 space-y-2.5 text-sm text-fg-muted">
                   {["Five subscriptions, five logins", "Bid data retyped into the CRM", "Marketing handled by an outside agency", "Follow-ups lost in an inbox"].map((t) => (
                     <li key={t} className="flex items-start gap-2.5">
-                      <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-steel" />
+                      <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-fg-muted" />
                       {t}
                     </li>
                   ))}
                 </ul>
               </div>
-              <div className="rounded-xl border border-amber/40 bg-amber/8 p-5">
-                <p className="text-xs font-semibold uppercase tracking-wider text-amber">On D&amp;J Stratagem</p>
-                <ul className="mt-4 space-y-2.5 text-sm text-paper/90">
+              <div className="rounded-xl border border-brand/40 bg-brand/8 p-5">
+                <p className="text-xs font-semibold uppercase tracking-wider text-brand">On D&amp;J Stratagem</p>
+                <ul className="mt-4 space-y-2.5 text-sm text-fg/90">
                   {["One platform, one login", "Bids, awards, and CRM share a record", "Marketing runs from the same dashboard", "Every opportunity tracked to a decision"].map((t) => (
                     <li key={t} className="flex items-start gap-2.5">
-                      <IconCheck width={14} height={14} className="mt-0.5 shrink-0 text-amber" />
+                      <IconCheck width={14} height={14} className="mt-0.5 shrink-0 text-brand" />
                       {t}
                     </li>
                   ))}
@@ -329,16 +329,16 @@ export default function Home() {
 
       <Section className="border-t border-line">
         <Eyebrow>How it works</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-2xl font-semibold tracking-tight text-paper md:text-3xl">
+        <h2 className="text-balance max-w-2xl text-2xl font-semibold tracking-tight text-fg md:text-3xl">
           Designed for contractors who are serious about growth.
         </h2>
         <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {steps.map((s, i) => (
             <Reveal key={s.n} delay={i * 110}>
-              <div className="relative h-full rounded-xl border border-line bg-ink-2 p-6">
-                <span className="text-sm font-semibold tabular-nums text-amber">{s.n}</span>
-                <h3 className="mt-3 text-base font-semibold text-paper">{s.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-steel">{s.text}</p>
+              <div className="relative h-full rounded-xl border border-line bg-surface p-6">
+                <span className="text-sm font-semibold tabular-nums text-brand">{s.n}</span>
+                <h3 className="mt-3 text-base font-semibold text-fg">{s.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-fg-muted">{s.text}</p>
               </div>
             </Reveal>
           ))}
@@ -352,16 +352,16 @@ export default function Home() {
 
       <Section className="border-t border-line">
         <Eyebrow>Who it&rsquo;s for</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-2xl font-semibold tracking-tight text-paper md:text-3xl">
+        <h2 className="text-balance max-w-2xl text-2xl font-semibold tracking-tight text-fg md:text-3xl">
           Built for every side of the deal.
         </h2>
         <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2">
           {audiences.map((a, i) => (
             <Reveal key={a.title} delay={(i % 2) * 100} className="h-full">
-              <div className="lift h-full rounded-xl border border-line bg-ink-2 p-6 hover:border-amber/40">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber/10 text-amber">{a.icon}</div>
-                <h3 className="mt-5 text-base font-semibold text-paper">{a.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-steel">{a.text}</p>
+              <div className="lift h-full rounded-xl border border-line bg-surface p-6 hover:border-brand/40">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand/10 text-brand">{a.icon}</div>
+                <h3 className="mt-5 text-base font-semibold text-fg">{a.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-fg-muted">{a.text}</p>
               </div>
             </Reveal>
           ))}
@@ -370,7 +370,7 @@ export default function Home() {
 
       <Section className="border-t border-line">
         <Eyebrow>Questions</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-2xl font-semibold tracking-tight text-paper md:text-3xl">
+        <h2 className="text-balance max-w-2xl text-2xl font-semibold tracking-tight text-fg md:text-3xl">
           Answers before you book a demo.
         </h2>
         <div className="mt-10 max-w-3xl">

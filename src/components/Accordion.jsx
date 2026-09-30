@@ -8,7 +8,7 @@ export default function Accordion({ items }) {
   const [open, setOpen] = useState(null);
 
   return (
-    <div className="divide-y divide-line overflow-hidden rounded-2xl border border-line bg-ink-2">
+    <div className="divide-y divide-line overflow-hidden rounded-2xl border border-line bg-surface">
       {items.map((item, i) => {
         const isOpen = open === i;
         return (
@@ -20,11 +20,11 @@ export default function Accordion({ items }) {
                 aria-expanded={isOpen}
                 aria-controls={`faq-panel-${i}`}
                 onClick={() => setOpen(isOpen ? null : i)}
-                className="flex w-full items-center justify-between gap-6 px-6 py-5 text-left transition-colors hover:bg-ink-3"
+                className="flex w-full items-center justify-between gap-6 px-6 py-5 text-left transition-colors hover:bg-subtle"
               >
-                <span className="text-base font-semibold text-paper">{item.q}</span>
+                <span className="text-base font-semibold text-fg">{item.q}</span>
                 <span
-                  className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-line text-amber transition-transform duration-300 ${
+                  className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-line text-brand transition-transform duration-300 ${
                     isOpen ? "rotate-45" : ""
                   }`}
                   aria-hidden="true"
@@ -42,7 +42,7 @@ export default function Accordion({ items }) {
               hidden={!isOpen}
               className="px-6 pb-5"
             >
-              <p className="max-w-2xl text-sm leading-relaxed text-steel">{item.a}</p>
+              <p className="max-w-2xl text-sm leading-relaxed text-fg-muted">{item.a}</p>
             </div>
           </div>
         );

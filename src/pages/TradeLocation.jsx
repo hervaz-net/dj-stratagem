@@ -48,10 +48,10 @@ export default function TradeLocation() {
         <Eyebrow>
           {trade} &middot; {city}, CA
         </Eyebrow>
-        <h1 className="text-balance max-w-3xl text-4xl font-semibold leading-tight tracking-tight text-paper sm:text-5xl">
+        <h1 className="text-balance max-w-3xl text-4xl font-semibold leading-tight tracking-tight text-fg sm:text-5xl">
           {title}
         </h1>
-        <p className="mt-6 max-w-2xl text-lg leading-relaxed text-steel">
+        <p className="mt-6 max-w-2xl text-lg leading-relaxed text-fg-muted">
           {trade.toLowerCase() === "general"
             ? `General contracting opportunities in ${city} and the surrounding market`
             : `${trade} bid opportunities for subcontractors working in ${city} and the surrounding market`}
@@ -61,7 +61,7 @@ export default function TradeLocation() {
       </Section>
 
       <Section className="border-t border-line">
-        <h2 className="text-2xl font-semibold tracking-tight text-paper">
+        <h2 className="text-2xl font-semibold tracking-tight text-fg">
           {matches.length} {trade.toLowerCase()} {matches.length === 1 ? "project" : "projects"} in{" "}
           {city}
         </h2>
@@ -71,24 +71,24 @@ export default function TradeLocation() {
             <li key={p.slug}>
               <Link
                 to={`/projects/${p.slug}`}
-                className="lift block rounded-xl border border-line bg-ink-2 p-5 transition-colors hover:border-amber/40"
+                className="lift block rounded-xl border border-line bg-surface p-5 transition-colors hover:border-brand/40"
               >
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div className="min-w-0 flex-1">
-                    <h3 className="text-base font-semibold text-paper">{p.title}</h3>
-                    <p className="mt-1 text-sm text-steel">
+                    <h3 className="text-base font-semibold text-fg">{p.title}</h3>
+                    <p className="mt-1 text-sm text-fg-muted">
                       {p.type} &middot; {p.procurement}
                     </p>
-                    <p className="mt-2.5 text-sm leading-relaxed text-steel">{p.summary}</p>
+                    <p className="mt-2.5 text-sm leading-relaxed text-fg-muted">{p.summary}</p>
                   </div>
                   <div className="shrink-0 text-right">
                     <p className={`text-lg font-bold tabular-nums ${matchTone(p.match)}`}>
                       {p.match}%
                     </p>
-                    <p className="mt-2 text-sm font-semibold tabular-nums text-paper">
+                    <p className="mt-2 text-sm font-semibold tabular-nums text-fg">
                       {p.valueLabel}
                     </p>
-                    <p className="text-xs text-steel">Due {formatDue(p.bidDue)}</p>
+                    <p className="text-xs text-fg-muted">Due {formatDue(p.bidDue)}</p>
                   </div>
                 </div>
               </Link>
@@ -99,18 +99,18 @@ export default function TradeLocation() {
 
       {/* Context: gives the page substance beyond a listing dump. */}
       <Section className="border-t border-line">
-        <h2 className="text-balance max-w-2xl text-2xl font-semibold tracking-tight text-paper md:text-3xl">
+        <h2 className="text-balance max-w-2xl text-2xl font-semibold tracking-tight text-fg md:text-3xl">
           Bidding {trade.toLowerCase()} work in {city}
         </h2>
         <div className="mt-6 grid grid-cols-1 gap-8 md:grid-cols-2">
-          <p className="text-base leading-relaxed text-steel">
+          <p className="text-base leading-relaxed text-fg-muted">
             Most {trade.toLowerCase()} subcontractors in the {city} market find work through a
             mix of plan rooms, GC relationships, and public procurement portals &mdash; each with
             its own login, its own format, and its own deadline calendar. Opportunities get
             missed less because a contractor could not compete and more because nobody saw the
             invitation in time.
           </p>
-          <p className="text-base leading-relaxed text-steel">
+          <p className="text-base leading-relaxed text-fg-muted">
             D&amp;J Stratagem pulls those opportunities into one feed and scores each against
             your profile &mdash; trade, service radius, typical project size, certifications, and
             the kind of work you have completed before &mdash; so the projects worth your
@@ -125,7 +125,7 @@ export default function TradeLocation() {
           <div className="grid grid-cols-1 gap-10 md:grid-cols-2">
             {sameTrade.length > 0 && (
               <div>
-                <h2 className="text-sm font-semibold uppercase tracking-wider text-steel">
+                <h2 className="text-sm font-semibold uppercase tracking-wider text-fg-muted">
                   {trade} projects in other markets
                 </h2>
                 <ul className="mt-4 space-y-2.5">
@@ -133,7 +133,7 @@ export default function TradeLocation() {
                     <li key={`${p.citySlug}/${p.tradeSlug}`}>
                       <Link
                         to={`/construction-projects/${p.citySlug}/${p.tradeSlug}`}
-                        className="text-sm text-paper/85 transition-colors hover:text-amber"
+                        className="text-sm text-fg/85 transition-colors hover:text-brand"
                       >
                         {p.trade} projects in {p.city}
                       </Link>
@@ -144,7 +144,7 @@ export default function TradeLocation() {
             )}
             {sameCity.length > 0 && (
               <div>
-                <h2 className="text-sm font-semibold uppercase tracking-wider text-steel">
+                <h2 className="text-sm font-semibold uppercase tracking-wider text-fg-muted">
                   Other trades in {city}
                 </h2>
                 <ul className="mt-4 space-y-2.5">
@@ -152,7 +152,7 @@ export default function TradeLocation() {
                     <li key={`${p.citySlug}/${p.tradeSlug}`}>
                       <Link
                         to={`/construction-projects/${p.citySlug}/${p.tradeSlug}`}
-                        className="text-sm text-paper/85 transition-colors hover:text-amber"
+                        className="text-sm text-fg/85 transition-colors hover:text-brand"
                       >
                         {p.trade} projects in {p.city}
                       </Link>
@@ -162,8 +162,8 @@ export default function TradeLocation() {
               </div>
             )}
           </div>
-          <p className="mt-8 text-sm text-steel">
-            <Link to="/projects" className="font-medium text-amber hover:text-amber-2">
+          <p className="mt-8 text-sm text-fg-muted">
+            <Link to="/projects" className="font-medium text-brand hover:text-brand-hover">
               Browse all {projects.length} project opportunities &rarr;
             </Link>
           </p>

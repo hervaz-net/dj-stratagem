@@ -53,13 +53,13 @@ export default function CookieBanner() {
     <div
       role="region"
       aria-label="Cookie consent"
-      className="fixed bottom-4 right-4 z-[110] w-[min(22rem,calc(100vw-2rem))] rounded-2xl border border-line bg-ink-2/95 p-4 shadow-xl shadow-brand/10 backdrop-blur-md"
+      className="fixed bottom-4 right-4 z-[110] w-[min(22rem,calc(100vw-2rem))] rounded-2xl border border-line bg-surface/95 p-4 shadow-xl shadow-brand/10 backdrop-blur-md"
     >
-      <p className="text-sm leading-relaxed text-steel">
+      <p className="text-sm leading-relaxed text-fg-muted">
         This site stores theme preference and this consent choice on your device. There is no analytics or advertising pixel.{" "}
         <Link
           to="/privacy"
-          className="font-medium text-amber underline underline-offset-2 hover:text-amber-2"
+          className="font-medium text-brand underline underline-offset-2 hover:text-brand-hover"
         >
           Privacy Policy
         </Link>
@@ -69,14 +69,14 @@ export default function CookieBanner() {
         <button
           type="button"
           onClick={decline}
-          className="rounded-full border border-line px-4 py-1.5 text-xs font-semibold text-steel hover:border-line/70 hover:text-paper"
+          className="rounded-full border border-line px-4 py-1.5 text-xs font-semibold text-fg-muted hover:border-line/70 hover:text-fg"
         >
           Dismiss
         </button>
         <button
           type="button"
           onClick={accept}
-          className="rounded-full bg-cta px-4 py-1.5 text-xs font-semibold text-white hover:bg-cta-hover"
+          className="rounded-full bg-brand px-4 py-1.5 text-xs font-semibold text-white hover:bg-brand-hover"
         >
           OK
         </button>

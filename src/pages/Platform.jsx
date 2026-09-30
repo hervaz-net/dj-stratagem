@@ -159,16 +159,16 @@ const slug = (s) =>
 
 function Panel({ panel }) {
   return (
-    <div className="rounded-2xl border border-line bg-ink-2 p-6">
-      <p className="text-xs uppercase tracking-wider text-steel">{panel.title}</p>
+    <div className="rounded-2xl border border-line bg-surface p-6">
+      <p className="text-xs uppercase tracking-wider text-fg-muted">{panel.title}</p>
       <div className="mt-4 space-y-3">
         {panel.rows.map((row) => (
-          <div key={row.label} className="flex items-center justify-between rounded-lg bg-ink px-4 py-3">
+          <div key={row.label} className="flex items-center justify-between rounded-lg bg-canvas px-4 py-3">
             <div>
-              <p className="text-sm font-medium text-paper">{row.label}</p>
-              <p className="text-xs text-steel">{row.value}</p>
+              <p className="text-sm font-medium text-fg">{row.label}</p>
+              <p className="text-xs text-fg-muted">{row.value}</p>
             </div>
-            <span className="rounded-full border border-line px-3 py-1 text-xs text-steel">{row.tag}</span>
+            <span className="rounded-full border border-line px-3 py-1 text-xs text-fg-muted">{row.tag}</span>
           </div>
         ))}
       </div>
@@ -188,10 +188,10 @@ export default function Platform() {
 
       <Section className="pt-16 pb-8 md:pt-24">
         <Eyebrow>The platform</Eyebrow>
-        <h1 className="text-balance max-w-3xl text-2xl font-semibold leading-tight tracking-tight text-paper sm:text-3xl">
+        <h1 className="text-balance max-w-3xl text-2xl font-semibold leading-tight tracking-tight text-fg sm:text-3xl">
           One platform to win work, market your business, and grow revenue.
         </h1>
-        <p className="mt-6 max-w-2xl text-lg leading-relaxed text-steel">
+        <p className="mt-6 max-w-2xl text-lg leading-relaxed text-fg-muted">
           Six connected suites replace the patchwork of point tools contractors juggle today
           &mdash; from the first opportunity to the final invoice.
         </p>
@@ -201,7 +201,7 @@ export default function Platform() {
             <a
               key={m.eyebrow}
               href={`#${slug(m.eyebrow)}`}
-              className="lift rounded-full border border-line bg-ink-2 px-4 py-2 text-xs font-medium text-steel hover:border-amber/50 hover:text-amber"
+              className="lift rounded-full border border-line bg-surface px-4 py-2 text-xs font-medium text-fg-muted hover:border-brand/50 hover:text-brand"
             >
               {m.eyebrow}
             </a>
@@ -213,16 +213,16 @@ export default function Platform() {
         <Reveal>
           <div className="text-center">
             <Eyebrow>See it live</Eyebrow>
-            <h2 className="mt-3 text-balance text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+            <h2 className="mt-3 text-balance text-3xl font-semibold tracking-tight text-fg md:text-4xl">
               Watch it in action.
             </h2>
-            <p className="mx-auto mt-4 max-w-xl text-base text-steel">
+            <p className="mx-auto mt-4 max-w-xl text-base text-fg-muted">
               A five-minute walkthrough of the full bidding workflow — from posting a project to awarding the contract.
             </p>
           </div>
 
-          <div className="relative mx-auto mt-10 max-w-3xl overflow-hidden rounded-2xl border border-line bg-ink-2">
-            <div className="flex aspect-video items-center justify-center bg-gradient-to-br from-ink-2 to-ink">
+          <div className="relative mx-auto mt-10 max-w-3xl overflow-hidden rounded-2xl border border-line bg-surface">
+            <div className="flex aspect-video items-center justify-center bg-gradient-to-br from-surface to-canvas">
               <div className="absolute inset-0 bg-grid opacity-30" aria-hidden="true" />
               <button
                 type="button"
@@ -234,8 +234,8 @@ export default function Platform() {
               </button>
             </div>
             <div className="border-t border-line px-6 py-4">
-              <p className="text-sm font-medium text-paper">Platform walkthrough &mdash; 5 min</p>
-              <p className="text-xs text-steel">Bidding, sub matching, and AI features</p>
+              <p className="text-sm font-medium text-fg">Platform walkthrough &mdash; 5 min</p>
+              <p className="text-xs text-fg-muted">Bidding, sub matching, and AI features</p>
             </div>
           </div>
         </Reveal>
@@ -245,18 +245,18 @@ export default function Platform() {
         <Section key={m.eyebrow} id={slug(m.eyebrow)} className="border-t border-line">
           <div className={`grid grid-cols-1 items-center gap-14 lg:grid-cols-2 ${i % 2 ? "lg:[&>*:first-child]:order-2" : ""}`}>
             <Reveal>
-              <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-amber/10 text-amber">
+              <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-brand/10 text-brand">
                 {m.icon}
               </div>
-              <p className="mt-5 text-xs font-semibold uppercase tracking-widest text-amber">{m.eyebrow}</p>
-              <h2 className="text-balance mt-3 text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+              <p className="mt-5 text-xs font-semibold uppercase tracking-widest text-brand">{m.eyebrow}</p>
+              <h2 className="text-balance mt-3 text-3xl font-semibold tracking-tight text-fg md:text-4xl">
                 {m.title}
               </h2>
-              <p className="mt-4 text-base leading-relaxed text-steel">{m.text}</p>
+              <p className="mt-4 text-base leading-relaxed text-fg-muted">{m.text}</p>
               <ul className="mt-6 space-y-3">
                 {m.points.map((pt) => (
-                  <li key={pt} className="flex items-start gap-3 text-sm text-paper/90">
-                    <IconCheck width={16} height={16} className="mt-0.5 shrink-0 text-amber" />
+                  <li key={pt} className="flex items-start gap-3 text-sm text-fg/90">
+                    <IconCheck width={16} height={16} className="mt-0.5 shrink-0 text-brand" />
                     {pt}
                   </li>
                 ))}
@@ -273,10 +273,10 @@ export default function Platform() {
         <Reveal>
           <div className="text-center">
             <Eyebrow>Integrations</Eyebrow>
-            <h2 className="mt-3 text-balance text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+            <h2 className="mt-3 text-balance text-3xl font-semibold tracking-tight text-fg md:text-4xl">
               Works with the tools you already use.
             </h2>
-            <p className="mx-auto mt-4 max-w-xl text-base text-steel">
+            <p className="mx-auto mt-4 max-w-xl text-base text-fg-muted">
               D&amp;J Stratagem connects to the systems your office and field teams rely on every day &mdash; no rip-and-replace required.
             </p>
           </div>
@@ -298,19 +298,19 @@ export default function Platform() {
           ].map((int) => (
             <div
               key={int.name}
-              className="lift flex flex-col items-center rounded-xl border border-line bg-ink-2 px-4 py-5 text-center transition-colors hover:border-amber/40"
+              className="lift flex flex-col items-center rounded-xl border border-line bg-surface px-4 py-5 text-center transition-colors hover:border-brand/40"
             >
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber/10 text-xs font-bold text-amber">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand/10 text-xs font-bold text-brand">
                 {int.name.slice(0, 2).toUpperCase()}
               </div>
-              <p className="mt-3 text-xs font-semibold text-paper">{int.name}</p>
-              <p className="mt-0.5 text-[10px] text-steel">{int.category}</p>
+              <p className="mt-3 text-xs font-semibold text-fg">{int.name}</p>
+              <p className="mt-0.5 text-[10px] text-fg-muted">{int.category}</p>
             </div>
           ))}
         </div>
-        <p className="mt-8 text-center text-sm text-steel">
+        <p className="mt-8 text-center text-sm text-fg-muted">
           Don&rsquo;t see your tool?{" "}
-          <Link to="/contact" className="font-medium text-amber hover:text-amber-2">
+          <Link to="/contact" className="font-medium text-brand hover:text-brand-hover">
             Request an integration →
           </Link>
         </p>

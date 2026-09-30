@@ -27,7 +27,7 @@ export default function FloatingDemo() {
     >
       <Link
         to="/contact"
-        className="group relative flex items-center gap-2.5 rounded-full bg-cta hover:bg-cta-hover px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-cta/30 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-cta/40"
+        className="group relative flex items-center gap-2.5 rounded-full bg-brand hover:bg-brand-hover px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-brand/30 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand/40"
       >
         <span className="relative flex h-2 w-2 shrink-0">
           <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-60" />

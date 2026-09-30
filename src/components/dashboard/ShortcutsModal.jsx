@@ -19,7 +19,7 @@ export default function ShortcutsModal({ onClose }) {
   return (
     <>
       <div
-        className="fixed inset-0 z-40 bg-ink/60 backdrop-blur-sm"
+        className="fixed inset-0 z-40 bg-canvas/60 backdrop-blur-sm"
         onClick={onClose}
         aria-hidden="true"
       />
@@ -27,18 +27,18 @@ export default function ShortcutsModal({ onClose }) {
         role="dialog"
         aria-modal="true"
         aria-label="Keyboard shortcuts"
-        className="fixed left-1/2 top-1/2 z-50 w-full max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-line bg-ink-2 p-6 shadow-2xl"
+        className="fixed left-1/2 top-1/2 z-50 w-full max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-line bg-surface p-6 shadow-2xl"
       >
         <div className="mb-5 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <IconKeyboard width={18} height={18} className="text-amber" />
-            <h2 className="text-base font-semibold text-paper">Keyboard shortcuts</h2>
+            <IconKeyboard width={18} height={18} className="text-brand" />
+            <h2 className="text-base font-semibold text-fg">Keyboard shortcuts</h2>
           </div>
           <button
             type="button"
             onClick={onClose}
             aria-label="Close shortcuts panel"
-            className="rounded-md p-1 text-steel hover:text-paper"
+            className="rounded-md p-1 text-fg-muted hover:text-fg"
           >
             <IconX width={18} height={18} />
           </button>
@@ -47,12 +47,12 @@ export default function ShortcutsModal({ onClose }) {
         <dl className="space-y-3">
           {shortcuts.map((s) => (
             <div key={s.desc} className="flex items-center justify-between gap-4">
-              <dt className="text-sm text-steel">{s.desc}</dt>
+              <dt className="text-sm text-fg-muted">{s.desc}</dt>
               <dd className="flex gap-1">
                 {s.keys.map((k) => (
                   <kbd
                     key={k}
-                    className="inline-flex items-center rounded-md border border-line bg-ink px-2 py-0.5 text-xs font-mono font-semibold text-paper"
+                    className="inline-flex items-center rounded-md border border-line bg-canvas px-2 py-0.5 text-xs font-mono font-semibold text-fg"
                   >
                     {k}
                   </kbd>

@@ -5,7 +5,7 @@ function Item({ label, change }) {
   const color = up ? "var(--viz-green)" : "var(--viz-red)";
   return (
     <span className="inline-flex items-center gap-2 px-5 text-xs whitespace-nowrap">
-      <span className="font-medium text-steel">{label}</span>
+      <span className="font-medium text-fg-muted">{label}</span>
       <span className="font-semibold tabular-nums" style={{ color }}>
         {up ? "+" : "−"}
         {Math.abs(change).toFixed(1)}%
@@ -36,7 +36,7 @@ export default function MarketTicker({ items = [], live = false }) {
     <div className="panel relative flex items-center gap-3 overflow-hidden rounded-xl px-4 py-2">
       <span className="flex shrink-0 items-center gap-2 border-r border-line pr-3">
         <StatusDot status={live ? "active" : "idle"} size={7} pulse={live} />
-        <span className="text-[10px] font-semibold uppercase tracking-widest text-steel">
+        <span className="text-[10px] font-semibold uppercase tracking-widest text-fg-muted">
           {live ? "Live" : "Sample"}
         </span>
       </span>

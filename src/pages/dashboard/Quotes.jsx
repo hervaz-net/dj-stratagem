@@ -15,7 +15,7 @@ const STATUS = {
   draft: { label: "Draft", dot: "watch", color: "text-warning bg-warning/10" },
   submitted: { label: "Submitted", dot: "active", color: "text-[var(--viz-cyan)] bg-[var(--viz-cyan)]/10" },
   awarded: { label: "Awarded", dot: "active", color: "text-[var(--viz-green)] bg-[var(--viz-green)]/10" },
-  lost: { label: "Lost", dot: "at-risk", color: "text-steel bg-line" },
+  lost: { label: "Lost", dot: "at-risk", color: "text-fg-muted bg-line" },
   review: { label: "Under review", dot: "watch", color: "text-warning bg-warning/10" },
 };
 
@@ -91,7 +91,7 @@ export default function Bids() {
             className={`inline-flex items-center gap-2 rounded px-3 py-2 text-sm font-medium transition-colors ${
               viewMode === "traditional"
                 ? "bg-bid-blue text-white"
-                : "border border-line bg-transparent text-steel hover:bg-ink/5"
+                : "border border-line bg-transparent text-fg-muted hover:bg-canvas/5"
             }`}
           >
             <span className="text-lg">≡</span>
@@ -104,7 +104,7 @@ export default function Bids() {
             className={`inline-flex items-center gap-2 rounded px-3 py-2 text-sm font-medium transition-colors ${
               viewMode === "compact"
                 ? "bg-bid-blue text-white"
-                : "border border-line bg-transparent text-steel hover:bg-ink/5"
+                : "border border-line bg-transparent text-fg-muted hover:bg-canvas/5"
             }`}
           >
             <span className="text-lg">⊞</span>
@@ -121,8 +121,8 @@ export default function Bids() {
         {viewMode === "traditional" && (
           <>
             {!isConfigured && (
-              <GlassCard className="mb-6 px-5 py-3 text-sm text-steel">
-                <span className="font-semibold uppercase tracking-wider text-amber">Sample data</span>
+              <GlassCard className="mb-6 px-5 py-3 text-sm text-fg-muted">
+                <span className="font-semibold uppercase tracking-wider text-brand">Sample data</span>
                 {" "}— live bids load from `/api/bids.php` on the hosted server.
               </GlassCard>
             )}
@@ -144,15 +144,15 @@ export default function Bids() {
                 { label: "Win rate", value: `${winRate}%`, highlight: true },
               ].map((s) => (
                 <GlassCard key={s.label} className="px-5 py-4">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-steel">{s.label}</p>
-                  <p className={`mt-1 text-2xl font-semibold tabular-nums ${s.highlight ? "text-[var(--viz-green)]" : "text-paper"}`}>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-fg-muted">{s.label}</p>
+                  <p className={`mt-1 text-2xl font-semibold tabular-nums ${s.highlight ? "text-[var(--viz-green)]" : "text-fg"}`}>
                     {s.value}
                   </p>
                   {s.label === "Win rate" && (
-                    <p className="mt-0.5 text-xs text-steel">{awardedCount} of {decidedCount} decided</p>
+                    <p className="mt-0.5 text-xs text-fg-muted">{awardedCount} of {decidedCount} decided</p>
                   )}
                   {s.label === "Submitted" && (
-                    <p className="mt-0.5 text-xs text-steel">Pipeline value: {money(pipelineValue)}</p>
+                    <p className="mt-0.5 text-xs text-fg-muted">Pipeline value: {money(pipelineValue)}</p>
                   )}
                 </GlassCard>
               ))}
@@ -167,12 +167,12 @@ export default function Bids() {
                   aria-pressed={filter === f}
                   className={`lift inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-semibold ${
                     filter === f
-                      ? "border-amber/60 bg-amber/12 text-amber"
-                      : "border-line bg-ink/50 text-steel hover:border-amber/35 hover:text-paper"
+                      ? "border-brand/60 bg-brand/12 text-brand"
+                      : "border-line bg-canvas/50 text-fg-muted hover:border-brand/35 hover:text-fg"
                   }`}
                 >
                   {f === "all" ? "All" : STATUS[f]?.label}
-                  <span className="rounded-full bg-ink px-1.5 py-0.5 tabular-nums">{counts[f]}</span>
+                  <span className="rounded-full bg-canvas px-1.5 py-0.5 tabular-nums">{counts[f]}</span>
                 </button>
               ))}
             </div>
@@ -194,12 +194,12 @@ export default function Bids() {
                         <th
                           key={col.key}
                           scope="col"
-                          className={`px-4 py-3.5 text-xs font-semibold uppercase tracking-wider text-steel ${col.align === "right" ? "text-right" : "text-left"}`}
+                          className={`px-4 py-3.5 text-xs font-semibold uppercase tracking-wider text-fg-muted ${col.align === "right" ? "text-right" : "text-left"}`}
                         >
                           <button
                             type="button"
                             onClick={() => setSort2(col.key)}
-                            className={`inline-flex items-center gap-1 transition-colors hover:text-paper ${sort.key === col.key ? "text-amber" : ""}`}
+                            className={`inline-flex items-center gap-1 transition-colors hover:text-fg ${sort.key === col.key ? "text-brand" : ""}`}
                           >
                             {col.label}
                             <span className={sort.key === col.key ? "opacity-100" : "opacity-30"} aria-hidden="true">
@@ -214,15 +214,15 @@ export default function Bids() {
                   {rows.map((b) => {
                     const s = STATUS[b.status] ?? STATUS.draft;
                     return (
-                      <tr key={b.id} className="border-b border-line/60 transition-colors last:border-0 hover:bg-ink-3/60">
-                        <td className="px-4 py-3.5 font-mono text-xs text-steel">#{b.id}</td>
+                      <tr key={b.id} className="border-b border-line/60 transition-colors last:border-0 hover:bg-subtle/60">
+                        <td className="px-4 py-3.5 font-mono text-xs text-fg-muted">#{b.id}</td>
                         <th scope="row" className="px-4 py-3.5 text-left font-normal">
-                          <p className="font-semibold text-paper">{b.project}</p>
-                          <p className="text-xs text-steel">{b.gc}</p>
+                          <p className="font-semibold text-fg">{b.project}</p>
+                          <p className="text-xs text-fg-muted">{b.gc}</p>
                         </th>
-                        <td className="px-4 py-3.5 text-steel">{b.trade}</td>
-                        <td className="px-4 py-3.5 text-right tabular-nums text-paper">{money(b.value)}</td>
-                        <td className="px-4 py-3.5 text-right text-steel">{fmt(b.due)}</td>
+                        <td className="px-4 py-3.5 text-fg-muted">{b.trade}</td>
+                        <td className="px-4 py-3.5 text-right tabular-nums text-fg">{money(b.value)}</td>
+                        <td className="px-4 py-3.5 text-right text-fg-muted">{fmt(b.due)}</td>
                         <td className="px-4 py-3.5">
                           <label className="sr-only" htmlFor={`bid-status-${b.id}`}>Status for bid {b.id}</label>
                           <span className={`inline-flex items-center gap-1.5 rounded-full px-2 py-1 text-xs font-semibold ${s.color}`}>
@@ -245,11 +245,11 @@ export default function Bids() {
                 </tbody>
                 {rows.length > 0 && (
                   <tfoot>
-                    <tr className="border-t border-line bg-ink/40">
-                      <td colSpan={3} className="px-4 py-3 text-xs font-semibold text-steel">
+                    <tr className="border-t border-line bg-canvas/40">
+                      <td colSpan={3} className="px-4 py-3 text-xs font-semibold text-fg-muted">
                         {rows.length} bid{rows.length !== 1 ? "s" : ""}
                       </td>
-                      <td className="px-4 py-3 text-right text-xs font-semibold tabular-nums text-paper">
+                      <td className="px-4 py-3 text-right text-xs font-semibold tabular-nums text-fg">
                         {money(totalValue)}
                       </td>
                       <td colSpan={2} />
@@ -260,7 +260,7 @@ export default function Bids() {
             </div>
             {!rows.length && (
               <div className="px-6 py-14 text-center">
-                <p className="text-sm text-steel">No bids match this filter.</p>
+                <p className="text-sm text-fg-muted">No bids match this filter.</p>
               </div>
             )}
           </GlassCard>

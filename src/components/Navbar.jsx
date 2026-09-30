@@ -3,18 +3,75 @@ import { NavLink, useLocation } from "react-router-dom";
 import Logo from "./Logo";
 import Button from "./Button";
 import ThemeToggle from "./ThemeToggle";
-import ScrollProgress from "./ScrollProgress";
+import RoleBadge from "./RoleBadge";
+import { PRIMARY_NAV } from "../navigation";
+import { PRODUCT } from "../brand";
 
-const links = [
-  { to: "/projects", label: "Projects" },
-  { to: "/platform", label: "Platform" },
-  { to: "/solutions", label: "Solutions" },
-  { to: "/fleet", label: "Fleet" },
-  { to: "/supply", label: "Supply" },
-  { to: "/pricing", label: "Pricing" },
-  { to: "/about", label: "About" },
-  { to: "/contact", label: "Contact" },
-];
+const linkClass = ({ isActive }) =>
+  `rounded-full px-3 py-2 text-[0.92rem] font-medium transition-colors ${
+    isActive ? "bg-brand-soft text-brand-fg" : "text-fg-muted hover:bg-subtle hover:text-fg"
+  }`;
+
+/** Desktop disclosure menu for grouped links (Solutions). */
+function NavMenu({ item }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  const { pathname } = useLocation();
+  const active = item.children.some((c) => pathname.startsWith(c.to));
+
+  useEffect(() => setOpen(false), [pathname]);
+
+  useEffect(() => {
+    if (!open) return undefined;
+    const onDoc = (e) => {
+      if (!ref.current?.contains(e.target)) setOpen(false);
+    };
+    const onKey = (e) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+        ref.current?.querySelector("button")?.focus();
+      }
+    };
+    document.addEventListener("mousedown", onDoc);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDoc);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        type="button"
+        aria-expanded={open}
+        onClick={() => setOpen((v) => !v)}
+        className={`flex items-center gap-1 rounded-full px-3 py-2 text-[0.92rem] font-medium transition-colors ${
+          active || open ? "bg-brand-soft text-brand-fg" : "text-fg-muted hover:bg-subtle hover:text-fg"
+        }`}
+      >
+        {item.label}
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true" className={`transition-transform ${open ? "rotate-180" : ""}`}>
+          <path d="M3 4.5 6 7.5 9 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </button>
+      {open && (
+        <div className="animate-menu-in absolute left-1/2 top-full z-50 mt-2 w-[22rem] -translate-x-1/2 rounded-2xl border border-line bg-surface p-2 shadow-[var(--shadow-pop)]">
+          {item.children.map((c) => (
+            <NavLink
+              key={c.to}
+              to={c.to}
+              className="flex flex-col gap-1.5 rounded-xl px-3 py-3 transition-colors hover:bg-subtle"
+            >
+              <RoleBadge role={c.role} label={c.label} className="self-start" />
+              <span className="text-sm leading-snug text-fg-muted">{c.description}</span>
+            </NavLink>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function Navbar({ onOpenPalette }) {
   const [open, setOpen] = useState(false);
@@ -22,102 +79,78 @@ export default function Navbar({ onOpenPalette }) {
   const { pathname } = useLocation();
   const toggleRef = useRef(null);
 
-  // Condense the header once the page has moved.
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
+    const onScroll = () => setScrolled(window.scrollY > 8);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Close the mobile menu on navigation. Tapping a link for the route you're
-  // already on doesn't change `pathname`, so links close it directly too.
+  // Tapping the current route doesn't change `pathname`, so links close too.
   const close = () => setOpen(false);
   useEffect(() => setOpen(false), [pathname]);
 
-  // Escape closes the menu and returns focus to the button that opened it.
   useEffect(() => {
-    if (!open) return;
+    if (!open) return undefined;
     const onKey = (e) => {
       if (e.key === "Escape") {
         setOpen(false);
         toggleRef.current?.focus();
       }
     };
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [open]);
-
-  // Lock the page behind the open menu so the background doesn't scroll.
-  useEffect(() => {
-    if (!open) return;
     const previous = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    document.addEventListener("keydown", onKey);
     return () => {
       document.body.style.overflow = previous;
+      document.removeEventListener("keydown", onKey);
     };
   }, [open]);
 
   return (
     <header
-      className={`no-print sticky top-0 z-50 border-b transition-all duration-300 ${
-        scrolled
-          ? "border-line bg-ink/85 shadow-sm backdrop-blur-xl"
-          : "border-transparent bg-ink/60 backdrop-blur-md"
+      className={`no-print sticky top-0 z-50 border-b transition-colors duration-200 ${
+        scrolled || open ? "border-line bg-surface/90 backdrop-blur-xl" : "border-transparent bg-canvas"
       }`}
     >
-      <div
-        className={`mx-auto flex max-w-6xl items-center justify-between px-6 transition-all duration-300 ${
-          scrolled ? "py-2.5" : "py-4"
-        }`}
-      >
-        <NavLink to="/" className="shrink-0" aria-label="D&J Stratagem — home">
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-5 sm:px-6">
+        <NavLink to="/" className="shrink-0" aria-label={`${PRODUCT} home`}>
           <Logo />
         </NavLink>
 
-        {/* lg:, not md: — six nav items overlap the actions at the md
-            breakpoint (fixed on main in 3d0f2fd), and the theme toggle
-            added here makes that row tighter still. */}
-        <nav className="hidden items-center gap-6 lg:flex" aria-label="Main">
-          {links.map((l) => (
-            <NavLink
-              key={l.to}
-              to={l.to}
-              className={({ isActive }) =>
-                `relative py-1 text-sm font-semibold transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:origin-left after:rounded-full after:bg-cta after:transition-transform after:duration-300 ${
-                  isActive
-                    ? "text-cta after:scale-x-100"
-                    : "text-steel after:scale-x-0 hover:text-paper hover:after:scale-x-100"
-                }`
-              }
-            >
-              {l.label}
-            </NavLink>
-          ))}
+        <nav className="hidden items-center gap-1 lg:flex" aria-label="Main">
+          {PRIMARY_NAV.map((item) =>
+            item.children ? (
+              <NavMenu key={item.label} item={item} />
+            ) : (
+              <NavLink key={item.to} to={item.to} className={linkClass}>
+                {item.label}
+              </NavLink>
+            ),
+          )}
         </nav>
 
-        <div className="hidden items-center gap-3 lg:flex">
+        <div className="hidden items-center gap-2 lg:flex">
           {onOpenPalette && (
             <button
               type="button"
               onClick={onOpenPalette}
-              aria-label="Open command palette"
+              aria-label="Search pages"
               title="Search pages (Ctrl+K)"
-              className="flex h-9 items-center gap-2 rounded-md border border-line px-2.5 text-xs font-medium text-steel transition-colors hover:border-amber/60 hover:text-paper"
+              className="flex h-9 w-9 items-center justify-center rounded-full text-fg-muted transition-colors hover:bg-subtle hover:text-fg"
             >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <circle cx="11" cy="11" r="7" />
                 <path d="M20 20 16.65 16.65" />
               </svg>
-              <kbd className="rounded border border-line bg-ink px-1 py-0.5 font-sans text-[10px] text-steel">⌘K</kbd>
             </button>
           )}
           <ThemeToggle />
-          <Button to="/login" variant="secondary" size="sm">
-            Sign In
+          <Button to="/login" variant="ghost" size="sm">
+            Sign in
           </Button>
-          <Button to="/projects" variant="primary" size="sm">
-            Find projects
+          <Button to="/register" size="sm">
+            Join free
           </Button>
         </div>
 
@@ -126,7 +159,7 @@ export default function Navbar({ onOpenPalette }) {
           <button
             ref={toggleRef}
             type="button"
-            className="flex h-9 w-9 items-center justify-center rounded-md border border-line text-paper transition-colors hover:border-amber/60 hover:text-amber"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-line text-fg transition-colors hover:bg-subtle"
             onClick={() => setOpen((v) => !v)}
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
@@ -134,9 +167,9 @@ export default function Navbar({ onOpenPalette }) {
           >
             <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
               {open ? (
-                <path d="M2 2L16 16M16 2L2 16" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+                <path d="M3 3L15 15M15 3L3 15" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
               ) : (
-                <path d="M2 4H16M2 9H16M2 14H16" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+                <path d="M2 5H16M2 9H16M2 13H16" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
               )}
             </svg>
           </button>
@@ -146,36 +179,53 @@ export default function Navbar({ onOpenPalette }) {
       {open && (
         <div
           id="mobile-menu"
-          className="animate-menu-in border-t border-line bg-ink px-6 pb-6 lg:hidden"
+          className="animate-menu-in max-h-[calc(100dvh-4rem)] overflow-y-auto border-t border-line bg-surface px-5 pb-8 lg:hidden"
         >
           <nav className="flex flex-col gap-1 pt-3" aria-label="Mobile">
-            {links.map((l) => (
-              <NavLink
-                key={l.to}
-                to={l.to}
-                onClick={close}
-                className={({ isActive }) =>
-                  `rounded-lg px-3 py-2.5 text-base font-medium transition-colors ${
-                    isActive ? "bg-cta/10 text-cta" : "text-paper hover:bg-ink-3"
-                  }`
-                }
-              >
-                {l.label}
-              </NavLink>
-            ))}
-            <div className="mt-3 flex flex-col gap-2 border-t border-line pt-4">
-              <Button to="/login" variant="secondary" className="w-full" onClick={close}>
-                Sign In
+            {PRIMARY_NAV.map((item) =>
+              item.children ? (
+                <div key={item.label} className="mt-2 border-t border-line pt-3">
+                  <p className="px-3 pb-1 text-xs font-semibold uppercase tracking-wider text-fg-muted">
+                    {item.label}
+                  </p>
+                  {item.children.map((c) => (
+                    <NavLink
+                      key={c.to}
+                      to={c.to}
+                      onClick={close}
+                      className="flex items-center justify-between rounded-xl px-3 py-3 text-base font-medium text-fg hover:bg-subtle"
+                    >
+                      {c.label}
+                      <RoleBadge role={c.role} />
+                    </NavLink>
+                  ))}
+                </div>
+              ) : (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  onClick={close}
+                  className={({ isActive }) =>
+                    `rounded-xl px-3 py-3 text-base font-medium transition-colors ${
+                      isActive ? "bg-brand-soft text-brand-fg" : "text-fg hover:bg-subtle"
+                    }`
+                  }
+                >
+                  {item.label}
+                </NavLink>
+              ),
+            )}
+            <div className="mt-4 flex flex-col gap-2 border-t border-line pt-5">
+              <Button to="/register" className="w-full" onClick={close}>
+                Join free
               </Button>
-              <Button to="/projects" variant="primary" className="w-full" onClick={close}>
-                Find projects
+              <Button to="/login" variant="secondary" className="w-full" onClick={close}>
+                Sign in
               </Button>
             </div>
           </nav>
         </div>
       )}
-
-      <ScrollProgress />
     </header>
   );
 }

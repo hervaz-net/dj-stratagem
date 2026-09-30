@@ -116,10 +116,10 @@ export default function Supply() {
         <div className="pointer-events-none absolute inset-0 bg-grid [mask-image:radial-gradient(ellipse_60%_60%_at_50%_0%,black,transparent)]" />
         <div className="relative">
           <Eyebrow>Supply Exchange</Eyebrow>
-          <h1 className="text-balance max-w-3xl text-4xl font-semibold leading-tight tracking-tight text-paper sm:text-5xl">
+          <h1 className="text-balance max-w-3xl text-4xl font-semibold leading-tight tracking-tight text-fg sm:text-5xl">
             The materials you always need, priced without the race to the bottom.
           </h1>
-          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-steel">
+          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-fg-muted">
             Fasteners, lumber, conduit, PVC, plate, and power tools move on every job you run.
             Supply Exchange sources them through sealed, scored bidding &mdash; fast enough for a
             same-day order, structured so suppliers stay at the table.
@@ -137,22 +137,22 @@ export default function Supply() {
 
       <Section className="border-t border-line">
         <Eyebrow>What you can source</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+        <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-fg md:text-4xl">
           The essentials, not the long tail.
         </h2>
-        <p className="mt-5 max-w-2xl text-base leading-relaxed text-steel">
+        <p className="mt-5 max-w-2xl text-base leading-relaxed text-fg-muted">
           We focus on the categories that turn over constantly and never stop being needed &mdash;
           where a better price and a reliable fill rate compound across every job on your board.
         </p>
         <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {categories.map((c, i) => (
             <Reveal key={c.title} delay={(i % 4) * 80} className="h-full">
-              <div className="lift h-full rounded-xl border border-line bg-ink-2 p-6 hover:border-amber/40">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber/10 text-amber">
+              <div className="lift h-full rounded-xl border border-line bg-surface p-6 hover:border-brand/40">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand/10 text-brand">
                   {c.icon}
                 </div>
-                <h3 className="mt-5 text-base font-semibold text-paper">{c.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-steel">{c.text}</p>
+                <h3 className="mt-5 text-base font-semibold text-fg">{c.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-fg-muted">{c.text}</p>
               </div>
             </Reveal>
           ))}
@@ -163,20 +163,20 @@ export default function Supply() {
         <div className="grid grid-cols-1 gap-14 lg:grid-cols-2 lg:items-start">
           <div>
             <Eyebrow>Why not a normal reverse auction</Eyebrow>
-            <h2 className="text-balance text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+            <h2 className="text-balance text-3xl font-semibold tracking-tight text-fg md:text-4xl">
               Bid wars look like savings and cost you later.
             </h2>
-            <p className="mt-5 text-base leading-relaxed text-steel">
+            <p className="mt-5 text-base leading-relaxed text-fg-muted">
               Open, multi-round reverse auctions push suppliers to undercut each other until the
               margin is gone. What follows is predictable: substitutions, short-shipped orders,
               slipped delivery dates, and the good suppliers quietly stop quoting you.
             </p>
-            <p className="mt-4 text-base leading-relaxed text-steel">
+            <p className="mt-4 text-base leading-relaxed text-fg-muted">
               It's also slow. Iterative bidding takes days, and materials rarely have days.
             </p>
           </div>
-          <div className="rounded-2xl border border-line bg-ink-2 p-6">
-            <p className="text-xs uppercase tracking-wider text-steel">Award scoring</p>
+          <div className="rounded-2xl border border-line bg-surface p-6">
+            <p className="text-xs uppercase tracking-wider text-fg-muted">Award scoring</p>
             <div className="mt-4 space-y-3">
               {[
                 { label: "Unit price", value: "Weighted 40%", tag: "$" },
@@ -184,20 +184,20 @@ export default function Supply() {
                 { label: "Lead time", value: "Weighted 20%", tag: "2 days" },
                 { label: "Past performance", value: "Weighted 15%", tag: "4.8" },
               ].map((row) => (
-                <div key={row.label} className="flex items-center justify-between rounded-lg bg-ink px-4 py-3">
+                <div key={row.label} className="flex items-center justify-between rounded-lg bg-canvas px-4 py-3">
                   <div>
-                    <p className="text-sm font-medium text-paper">{row.label}</p>
-                    <p className="text-xs text-steel">{row.value}</p>
+                    <p className="text-sm font-medium text-fg">{row.label}</p>
+                    <p className="text-xs text-fg-muted">{row.value}</p>
                   </div>
-                  <span className="rounded-full border border-line px-3 py-1 text-xs text-steel">{row.tag}</span>
+                  <span className="rounded-full border border-line px-3 py-1 text-xs text-fg-muted">{row.tag}</span>
                 </div>
               ))}
-              <div className="flex items-center justify-between rounded-lg border border-amber/40 bg-amber/10 px-4 py-3">
-                <span className="text-sm font-medium text-amber">Auto-awarded</span>
-                <span className="text-xs text-amber">Best total score</span>
+              <div className="flex items-center justify-between rounded-lg border border-brand/40 bg-brand/10 px-4 py-3">
+                <span className="text-sm font-medium text-brand">Auto-awarded</span>
+                <span className="text-xs text-brand">Best total score</span>
               </div>
             </div>
-            <p className="mt-4 text-xs leading-relaxed text-steel">
+            <p className="mt-4 text-xs leading-relaxed text-fg-muted">
               Weights are illustrative &mdash; you set them per RFQ or save them as a default.
             </p>
           </div>
@@ -206,17 +206,17 @@ export default function Supply() {
 
       <Section className="border-t border-line">
         <Eyebrow>How the bidding works</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+        <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-fg md:text-4xl">
           Still competitive. Just not a knife fight.
         </h2>
         <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2">
           {mechanics.map((m) => (
-            <div key={m.title} className="rounded-xl border border-line bg-ink-2 p-6">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber/10 text-amber">
+            <div key={m.title} className="rounded-xl border border-line bg-surface p-6">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand/10 text-brand">
                 {m.icon}
               </div>
-              <h3 className="mt-5 text-base font-semibold text-paper">{m.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-steel">{m.text}</p>
+              <h3 className="mt-5 text-base font-semibold text-fg">{m.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-fg-muted">{m.text}</p>
             </div>
           ))}
         </div>
@@ -224,21 +224,21 @@ export default function Supply() {
 
       <Section className="border-t border-line">
         <Eyebrow>Skip the RFQ entirely</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+        <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-fg md:text-4xl">
           Most orders shouldn't need a bid at all.
         </h2>
-        <p className="mt-5 max-w-2xl text-base leading-relaxed text-steel">
+        <p className="mt-5 max-w-2xl text-base leading-relaxed text-fg-muted">
           Running an auction to buy the same box of deck screws you bought last Tuesday is pure
           friction. Two mechanisms take the repeat volume off the bidding table completely.
         </p>
         <div className="mt-12 grid grid-cols-1 gap-5 lg:grid-cols-2">
           {efficiencies.map((e) => (
-            <div key={e.title} className="rounded-xl border border-line bg-ink-2 p-6">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber/10 text-amber">
+            <div key={e.title} className="rounded-xl border border-line bg-surface p-6">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand/10 text-brand">
                 {e.icon}
               </div>
-              <h3 className="mt-5 text-base font-semibold text-paper">{e.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-steel">{e.text}</p>
+              <h3 className="mt-5 text-base font-semibold text-fg">{e.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-fg-muted">{e.text}</p>
             </div>
           ))}
         </div>
@@ -248,10 +248,10 @@ export default function Supply() {
         <div className="grid grid-cols-1 items-center gap-14 lg:grid-cols-2">
           <div>
             <Eyebrow>For suppliers</Eyebrow>
-            <h2 className="text-balance text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+            <h2 className="text-balance text-3xl font-semibold tracking-tight text-fg md:text-4xl">
               A channel worth quoting into.
             </h2>
-            <p className="mt-5 text-base leading-relaxed text-steel">
+            <p className="mt-5 text-base leading-relaxed text-fg-muted">
               A marketplace only works if the supply side stays healthy. Supply Exchange is built
               so distributors and manufacturers can compete on what they're actually good at
               instead of bleeding margin to win a box of anchors.
@@ -264,12 +264,12 @@ export default function Supply() {
           </div>
           {/* Was an empty blurred gradient box; this is the supplier-protection
               list the page describes. */}
-          <div className="rounded-2xl border border-line bg-ink-2 p-6">
-            <p className="text-xs uppercase tracking-wider text-steel">Supplier protections</p>
+          <div className="rounded-2xl border border-line bg-surface p-6">
+            <p className="text-xs uppercase tracking-wider text-fg-muted">Supplier protections</p>
             <ul className="mt-4 space-y-4">
               {supplierProtections.map((pt) => (
-                <li key={pt} className="flex items-start gap-3 text-sm text-paper/90">
-                  <IconCheck width={16} height={16} className="mt-0.5 shrink-0 text-amber" />
+                <li key={pt} className="flex items-start gap-3 text-sm text-fg/90">
+                  <IconCheck width={16} height={16} className="mt-0.5 shrink-0 text-brand" />
                   {pt}
                 </li>
               ))}

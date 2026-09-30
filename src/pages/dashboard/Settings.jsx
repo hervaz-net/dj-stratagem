@@ -11,8 +11,8 @@ function Section({ title, description, children }) {
   return (
     <GlassCard className="p-6 sm:p-7">
       <div className="mb-6 border-b border-line pb-4">
-        <h2 className="font-display text-lg font-semibold tracking-tight text-paper">{title}</h2>
-        {description && <p className="mt-1.5 text-sm font-medium text-steel">{description}</p>}
+        <h2 className="font-display text-lg font-semibold tracking-tight text-fg">{title}</h2>
+        {description && <p className="mt-1.5 text-sm font-medium text-fg-muted">{description}</p>}
       </div>
       {children}
     </GlassCard>
@@ -22,13 +22,13 @@ function Section({ title, description, children }) {
 function Field({ label, id, children }) {
   return (
     <div className="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-6">
-      <label htmlFor={id} className="w-44 shrink-0 text-sm font-semibold text-steel">{label}</label>
+      <label htmlFor={id} className="w-44 shrink-0 text-sm font-semibold text-fg-muted">{label}</label>
       <div className="flex-1">{children}</div>
     </div>
   );
 }
 
-const inputCls = "w-full rounded-lg border border-line bg-ink px-3.5 py-2.5 text-base font-medium text-paper outline-none transition-colors placeholder:text-steel/60 focus:border-amber";
+const inputCls = "w-full rounded-lg border border-line bg-canvas px-3.5 py-2.5 text-base font-medium text-fg outline-none transition-colors placeholder:text-fg-muted/60 focus:border-brand";
 
 const money = (n) =>
   Number(n || 0).toLocaleString(undefined, { style: "currency", currency: "USD", maximumFractionDigits: 0 });
@@ -250,8 +250,8 @@ export default function Settings() {
         subtitle="Manage your account, billing, notifications, and security."
       >
         {!isConfigured && (
-          <GlassCard className="mb-6 px-5 py-3 text-base font-medium text-steel">
-            <span className="font-bold uppercase tracking-wider text-amber">Sample data</span>
+          <GlassCard className="mb-6 px-5 py-3 text-base font-medium text-fg-muted">
+            <span className="font-bold uppercase tracking-wider text-brand">Sample data</span>
             {" "}— profile, billing, and notification saves hit `/api/settings.php` on the hosted server.
           </GlassCard>
         )}
@@ -278,7 +278,7 @@ export default function Settings() {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="rounded-lg bg-amber/15 px-5 py-2.5 text-base font-bold text-amber transition-colors hover:bg-amber/25 disabled:opacity-60"
+                  className="rounded-lg bg-brand/15 px-5 py-2.5 text-base font-bold text-brand transition-colors hover:bg-brand/25 disabled:opacity-60"
                 >
                   {saving ? "Saving…" : "Save profile"}
                 </button>
@@ -321,7 +321,7 @@ export default function Settings() {
                 <button
                   type="submit"
                   disabled={savingBilling}
-                  className="rounded-lg bg-amber/15 px-5 py-2.5 text-base font-bold text-amber transition-colors hover:bg-amber/25 disabled:opacity-60"
+                  className="rounded-lg bg-brand/15 px-5 py-2.5 text-base font-bold text-brand transition-colors hover:bg-brand/25 disabled:opacity-60"
                 >
                   {savingBilling ? "Saving…" : "Save billing contact"}
                 </button>
@@ -329,7 +329,7 @@ export default function Settings() {
             </form>
 
             <div className="mt-8 border-t border-line pt-6">
-              <p className="text-sm font-bold uppercase tracking-wider text-steel">Account type</p>
+              <p className="text-sm font-bold uppercase tracking-wider text-fg-muted">Account type</p>
               <div role="radiogroup" aria-label="Account type" className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
                 {ACCOUNT_TYPES.map((t) => {
                   const on = billing.accountType === t.key;
@@ -342,26 +342,26 @@ export default function Settings() {
                       onClick={() => setAccountType(t.key)}
                       className={`rounded-2xl border px-5 py-4 text-left transition-colors ${
                         on
-                          ? "border-amber/60 bg-amber/10"
-                          : "border-line bg-ink/40 hover:border-amber/35"
+                          ? "border-brand/60 bg-brand/10"
+                          : "border-line bg-canvas/40 hover:border-brand/35"
                       }`}
                     >
-                      <p className={`font-display text-lg font-semibold ${on ? "text-amber" : "text-paper"}`}>{t.label}</p>
-                      <p className="mt-1 text-sm font-medium text-steel">{t.detail}</p>
+                      <p className={`font-display text-lg font-semibold ${on ? "text-brand" : "text-fg"}`}>{t.label}</p>
+                      <p className="mt-1 text-sm font-medium text-fg-muted">{t.detail}</p>
                     </button>
                   );
                 })}
               </div>
             </div>
 
-            <div className="mt-6 rounded-2xl border border-line bg-ink/50 px-5 py-5">
+            <div className="mt-6 rounded-2xl border border-line bg-canvas/50 px-5 py-5">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
-                  <p className="text-sm font-bold uppercase tracking-wider text-steel">Account funded</p>
-                  <p className="mt-1 font-display text-2xl font-semibold tabular-nums text-paper">
+                  <p className="text-sm font-bold uppercase tracking-wider text-fg-muted">Account funded</p>
+                  <p className="mt-1 font-display text-2xl font-semibold tabular-nums text-fg">
                     {prepaid ? money(billing.walletBalance) : money(billing.creditLimit)}
                   </p>
-                  <p className="mt-1 text-sm font-medium text-steel">
+                  <p className="mt-1 text-sm font-medium text-fg-muted">
                     {prepaid
                       ? (funded ? "Prepaid wallet is funded and ready to spend." : "Wallet is empty — add funds to place orders.")
                       : (funded ? "Credit line is active." : "Credit line is not funded yet.")}
@@ -371,10 +371,10 @@ export default function Settings() {
                   className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm font-bold ${
                     funded
                       ? "border-[var(--viz-green)]/40 bg-[var(--viz-green)]/10 text-[var(--viz-green)]"
-                      : "border-line bg-ink text-steel"
+                      : "border-line bg-canvas text-fg-muted"
                   }`}
                 >
-                  <span className={`h-2 w-2 rounded-full ${funded ? "bg-[var(--viz-green)]" : "bg-steel"}`} />
+                  <span className={`h-2 w-2 rounded-full ${funded ? "bg-[var(--viz-green)]" : "bg-fg-muted"}`} />
                   {funded ? "Funded" : "Unfunded"}
                 </span>
               </div>
@@ -382,7 +382,7 @@ export default function Settings() {
               {prepaid ? (
                 <form onSubmit={addFunds} className="mt-5 flex flex-wrap items-end gap-3">
                   <label className="min-w-[10rem] flex-1">
-                    <span className="text-sm font-semibold text-steel">Add funds</span>
+                    <span className="text-sm font-semibold text-fg-muted">Add funds</span>
                     <input
                       type="number"
                       min="1"
@@ -394,7 +394,7 @@ export default function Settings() {
                   </label>
                   <button
                     type="submit"
-                    className="rounded-lg bg-amber/15 px-5 py-2.5 text-base font-bold text-amber transition-colors hover:bg-amber/25"
+                    className="rounded-lg bg-brand/15 px-5 py-2.5 text-base font-bold text-brand transition-colors hover:bg-brand/25"
                   >
                     Add funds
                   </button>
@@ -402,7 +402,7 @@ export default function Settings() {
               ) : (
                 <form onSubmit={saveCreditLimit} className="mt-5 flex flex-wrap items-end gap-3">
                   <label className="min-w-[10rem] flex-1">
-                    <span className="text-sm font-semibold text-steel">Credit limit</span>
+                    <span className="text-sm font-semibold text-fg-muted">Credit limit</span>
                     <input
                       type="number"
                       min="0"
@@ -414,7 +414,7 @@ export default function Settings() {
                   </label>
                   <button
                     type="submit"
-                    className="rounded-lg border border-line px-5 py-2.5 text-base font-bold text-paper transition-colors hover:border-amber/40"
+                    className="rounded-lg border border-line px-5 py-2.5 text-base font-bold text-fg transition-colors hover:border-brand/40"
                   >
                     Save limit
                   </button>
@@ -423,7 +423,7 @@ export default function Settings() {
                     role="switch"
                     aria-checked={funded}
                     onClick={toggleFunded}
-                    className="rounded-lg bg-amber/15 px-5 py-2.5 text-base font-bold text-amber transition-colors hover:bg-amber/25"
+                    className="rounded-lg bg-brand/15 px-5 py-2.5 text-base font-bold text-brand transition-colors hover:bg-brand/25"
                   >
                     {funded ? "Mark unfunded" : "Fund account"}
                   </button>
@@ -437,8 +437,8 @@ export default function Settings() {
               {NOTIFICATION_OPTIONS.map((opt) => (
                 <li key={opt.key} className="flex items-center justify-between gap-4">
                   <div>
-                    <p className="text-base font-semibold text-paper">{opt.label}</p>
-                    <p className="text-sm font-medium text-steel">{opt.detail}</p>
+                    <p className="text-base font-semibold text-fg">{opt.label}</p>
+                    <p className="text-sm font-medium text-fg-muted">{opt.detail}</p>
                   </div>
                   <button
                     type="button"
@@ -446,7 +446,7 @@ export default function Settings() {
                     aria-checked={notifications[opt.key]}
                     onClick={() => toggleNotif(opt.key)}
                     className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 transition-colors ${
-                      notifications[opt.key] ? "border-amber bg-amber" : "border-line bg-ink"
+                      notifications[opt.key] ? "border-brand bg-brand" : "border-line bg-canvas"
                     }`}
                   >
                     <span
@@ -464,15 +464,15 @@ export default function Settings() {
             <div className="space-y-5">
               <div className="flex items-center justify-between gap-4">
                 <div>
-                  <p className="text-base font-semibold text-paper">Password</p>
-                  <p className="text-sm font-medium text-steel">Reset is not enabled yet. Use forgot-password on the login page when it ships.</p>
+                  <p className="text-base font-semibold text-fg">Password</p>
+                  <p className="text-sm font-medium text-fg-muted">Reset is not enabled yet. Use forgot-password on the login page when it ships.</p>
                 </div>
               </div>
 
               <div className="flex items-center justify-between gap-4">
                 <div>
-                  <p className="text-base font-semibold text-paper">Two-factor authentication</p>
-                  <p className="text-sm font-medium text-steel">
+                  <p className="text-base font-semibold text-fg">Two-factor authentication</p>
+                  <p className="text-sm font-medium text-fg-muted">
                     {twofa ? "Flag enabled on this account. Authenticator enrollment ships next." : "Add an extra layer of security to your account."}
                   </p>
                 </div>
@@ -482,7 +482,7 @@ export default function Settings() {
                   aria-checked={twofa}
                   onClick={toggleTwofa}
                   className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 transition-colors ${
-                    twofa ? "border-amber bg-amber" : "border-line bg-ink"
+                    twofa ? "border-brand bg-brand" : "border-line bg-canvas"
                   }`}
                 >
                   <span className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${twofa ? "translate-x-5" : "translate-x-0"}`} />
@@ -494,8 +494,8 @@ export default function Settings() {
           <Section title="Account">
             <div className="flex items-center justify-between gap-4">
               <div>
-                <p className="text-base font-semibold text-paper">Delete account</p>
-                <p className="text-sm font-medium text-steel">Permanently remove your account and all associated data. This cannot be undone.</p>
+                <p className="text-base font-semibold text-fg">Delete account</p>
+                <p className="text-sm font-medium text-fg-muted">Permanently remove your account and all associated data. This cannot be undone.</p>
               </div>
               <button
                 type="button"

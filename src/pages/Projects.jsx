@@ -16,8 +16,8 @@ import {
 const ANY = "Any";
 
 const selectClass =
-  "w-full rounded-lg border border-line bg-ink px-3 py-2 text-sm text-paper " +
-  "outline-hidden transition-colors focus:border-amber";
+  "w-full rounded-lg border border-line bg-canvas px-3 py-2 text-sm text-fg " +
+  "outline-hidden transition-colors focus:border-brand";
 
 /** Value bands, kept coarse — contractors filter by rough size, not exact dollars. */
 const VALUE_BANDS = [
@@ -70,10 +70,10 @@ export default function Projects() {
 
       <Section className="pt-16 pb-8 md:pt-24">
         <Eyebrow>Project opportunities</Eyebrow>
-        <h1 className="text-balance max-w-3xl text-4xl font-semibold leading-tight tracking-tight text-paper sm:text-5xl">
+        <h1 className="text-balance max-w-3xl text-4xl font-semibold leading-tight tracking-tight text-fg sm:text-5xl">
           Find construction projects that fit your business.
         </h1>
-        <p className="mt-6 max-w-2xl text-lg leading-relaxed text-steel">
+        <p className="mt-6 max-w-2xl text-lg leading-relaxed text-fg-muted">
           Filter by trade, location, and project size. Every opportunity is scored against your
           company profile so you can see at a glance which ones are worth a bid.
         </p>
@@ -84,7 +84,7 @@ export default function Projects() {
         {/* filters */}
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <div>
-            <label htmlFor="q" className="mb-1.5 block text-xs font-medium text-steel">
+            <label htmlFor="q" className="mb-1.5 block text-xs font-medium text-fg-muted">
               Search
             </label>
             <input
@@ -93,7 +93,7 @@ export default function Projects() {
               value={q}
               onChange={(e) => setQ(e.target.value)}
               placeholder="Project, type, or scope"
-              className={`${selectClass} placeholder:text-steel/60`}
+              className={`${selectClass} placeholder:text-fg-muted/60`}
             />
           </div>
           <Filter id="trade" label="Trade" value={trade} onChange={setTrade} options={TRADES} />
@@ -108,7 +108,7 @@ export default function Projects() {
         </div>
 
         <div className="mt-5 flex items-center justify-between gap-4">
-          <p aria-live="polite" className="text-sm text-steel">
+          <p aria-live="polite" className="text-sm text-fg-muted">
             {results.length} {results.length === 1 ? "project" : "projects"}
             {filtered ? " match your filters" : ""}
           </p>
@@ -116,7 +116,7 @@ export default function Projects() {
             <button
               type="button"
               onClick={reset}
-              className="text-sm font-medium text-amber transition-colors hover:text-amber-2"
+              className="text-sm font-medium text-brand transition-colors hover:text-brand-hover"
             >
               Clear filters
             </button>
@@ -125,14 +125,14 @@ export default function Projects() {
 
         {/* results */}
         {results.length === 0 ? (
-          <div className="mt-8 rounded-xl border border-line bg-ink-2 p-10 text-center">
-            <p className="text-sm font-semibold text-paper">No projects match those filters.</p>
-            <p className="mt-2 text-sm text-steel">
+          <div className="mt-8 rounded-xl border border-line bg-surface p-10 text-center">
+            <p className="text-sm font-semibold text-fg">No projects match those filters.</p>
+            <p className="mt-2 text-sm text-fg-muted">
               Try widening the trade or location, or{" "}
               <button
                 type="button"
                 onClick={reset}
-                className="font-medium text-amber hover:text-amber-2"
+                className="font-medium text-brand hover:text-brand-hover"
               >
                 clear the filters
               </button>
@@ -145,22 +145,22 @@ export default function Projects() {
               <li key={p.slug}>
                 <Link
                   to={`/projects/${p.slug}`}
-                  className="lift block rounded-xl border border-line bg-ink-2 p-5 transition-colors hover:border-amber/40"
+                  className="lift block rounded-xl border border-line bg-surface p-5 transition-colors hover:border-brand/40"
                 >
                   <div className="flex flex-wrap items-start justify-between gap-4">
                     <div className="min-w-0 flex-1">
-                      <h2 className="text-base font-semibold text-paper">{p.title}</h2>
-                      <p className="mt-1 text-sm text-steel">
+                      <h2 className="text-base font-semibold text-fg">{p.title}</h2>
+                      <p className="mt-1 text-sm text-fg-muted">
                         {p.city}, {p.state} &middot; {p.type} &middot; {p.procurement}
                       </p>
-                      <p className="mt-2.5 line-clamp-2 text-sm leading-relaxed text-steel">
+                      <p className="mt-2.5 line-clamp-2 text-sm leading-relaxed text-fg-muted">
                         {p.summary}
                       </p>
                       <div className="mt-3 flex flex-wrap gap-1.5">
                         {p.scope.map((s) => (
                           <span
                             key={s}
-                            className="rounded-full border border-line px-2 py-0.5 text-xs text-steel"
+                            className="rounded-full border border-line px-2 py-0.5 text-xs text-fg-muted"
                           >
                             {s}
                           </span>
@@ -172,11 +172,11 @@ export default function Projects() {
                       <p className={`text-lg font-bold tabular-nums ${matchTone(p.match)}`}>
                         {p.match}%
                       </p>
-                      <p className="text-[11px] uppercase tracking-wider text-steel">match</p>
-                      <p className="mt-3 text-sm font-semibold tabular-nums text-paper">
+                      <p className="text-[11px] uppercase tracking-wider text-fg-muted">match</p>
+                      <p className="mt-3 text-sm font-semibold tabular-nums text-fg">
                         {p.valueLabel}
                       </p>
-                      <p className="text-xs text-steel">Due {formatDue(p.bidDue)}</p>
+                      <p className="text-xs text-fg-muted">Due {formatDue(p.bidDue)}</p>
                     </div>
                   </div>
                 </Link>
@@ -185,8 +185,8 @@ export default function Projects() {
           </ul>
         )}
 
-        <p className="mt-8 text-sm text-steel">
-          <Link to="/register" className="font-medium text-amber hover:text-amber-2">
+        <p className="mt-8 text-sm text-fg-muted">
+          <Link to="/register" className="font-medium text-brand hover:text-brand-hover">
             Create your company profile <IconArrowRight width={13} height={13} className="inline" />
           </Link>{" "}
           to get matched opportunities as they post.
@@ -204,7 +204,7 @@ export default function Projects() {
 function Filter({ id, label, value, onChange, options }) {
   return (
     <div>
-      <label htmlFor={id} className="mb-1.5 block text-xs font-medium text-steel">
+      <label htmlFor={id} className="mb-1.5 block text-xs font-medium text-fg-muted">
         {label}
       </label>
       <select

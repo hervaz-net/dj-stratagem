@@ -44,18 +44,18 @@ const matchReasons = [
 
 /** Above 90 reads as a strong fit and earns the accent; the rest stay neutral. */
 const toneFor = (score) =>
-  score >= 90 ? "text-success" : score >= 80 ? "text-warning" : "text-steel";
+  score >= 90 ? "text-success" : score >= 80 ? "text-warning" : "text-fg-muted";
 
 export default function OpportunityPreview() {
   return (
-    <div className="overflow-hidden rounded-2xl border border-line bg-ink-2 shadow-2xl">
+    <div className="overflow-hidden rounded-2xl border border-line bg-surface shadow-2xl">
       {/* window chrome */}
-      <div className="flex items-center gap-2 border-b border-line bg-ink px-4 py-3">
+      <div className="flex items-center gap-2 border-b border-line bg-canvas px-4 py-3">
         <span className="h-2.5 w-2.5 rounded-full bg-danger/70" />
         <span className="h-2.5 w-2.5 rounded-full bg-warning/70" />
         <span className="h-2.5 w-2.5 rounded-full bg-success/70" />
-        <span className="ml-2 text-xs text-steel">Project Opportunities</span>
-        <span className="ml-auto rounded-full border border-line px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-steel">
+        <span className="ml-2 text-xs text-fg-muted">Project Opportunities</span>
+        <span className="ml-auto rounded-full border border-line px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-fg-muted">
           Sample view
         </span>
       </div>
@@ -69,7 +69,7 @@ export default function OpportunityPreview() {
                 <th
                   key={h}
                   scope="col"
-                  className="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-steel"
+                  className="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-fg-muted"
                 >
                   {h}
                 </th>
@@ -79,15 +79,15 @@ export default function OpportunityPreview() {
           <tbody>
             {opportunities.map((o) => (
               <tr key={o.project} className="border-b border-line/60 last:border-0">
-                <td className="px-4 py-3.5 text-sm font-medium text-paper">{o.project}</td>
-                <td className="px-4 py-3.5 text-sm text-steel">{o.location}</td>
+                <td className="px-4 py-3.5 text-sm font-medium text-fg">{o.project}</td>
+                <td className="px-4 py-3.5 text-sm text-fg-muted">{o.location}</td>
                 <td className="px-4 py-3.5">
-                  <span className="rounded-full border border-line px-2 py-0.5 text-xs text-steel">
+                  <span className="rounded-full border border-line px-2 py-0.5 text-xs text-fg-muted">
                     {o.trade}
                   </span>
                 </td>
-                <td className="px-4 py-3.5 text-sm tabular-nums text-paper">{o.value}</td>
-                <td className="px-4 py-3.5 text-sm tabular-nums text-steel">{o.due}</td>
+                <td className="px-4 py-3.5 text-sm tabular-nums text-fg">{o.value}</td>
+                <td className="px-4 py-3.5 text-sm tabular-nums text-fg-muted">{o.due}</td>
                 <td className={`px-4 py-3.5 text-sm font-semibold tabular-nums ${toneFor(o.match)}`}>
                   {o.match}%
                 </td>
@@ -98,19 +98,19 @@ export default function OpportunityPreview() {
       </div>
 
       {/* match explanation */}
-      <div className="border-t border-line bg-ink p-4">
+      <div className="border-t border-line bg-canvas p-4">
         <div className="flex items-baseline gap-2">
           <span className="text-2xl font-bold tabular-nums text-success">94%</span>
-          <span className="text-xs font-semibold uppercase tracking-wider text-steel">
+          <span className="text-xs font-semibold uppercase tracking-wider text-fg-muted">
             match &mdash; Commercial HVAC Upgrade
           </span>
         </div>
-        <p className="mt-1.5 text-xs leading-relaxed text-steel">
+        <p className="mt-1.5 text-xs leading-relaxed text-fg-muted">
           Scored against your trade, service area, project size, and past work.
         </p>
         <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5">
           {matchReasons.map((r) => (
-            <li key={r} className="flex items-center gap-1.5 text-xs text-paper/85">
+            <li key={r} className="flex items-center gap-1.5 text-xs text-fg/85">
               <IconCheck width={12} height={12} className="shrink-0 text-success" />
               {r}
             </li>

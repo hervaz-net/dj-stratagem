@@ -93,27 +93,27 @@ const pad = (n) => String(n).padStart(2, "0");
 
 /* ---------------------------------------------------------------- panels */
 
-const card = "rounded-lg border border-line bg-ink p-2.5";
+const card = "rounded-lg border border-line bg-canvas p-2.5";
 const chip = "rounded-full px-2 py-0.5 text-[9px] font-bold tracking-wide";
 
-function Stat({ value, label, tone = "text-paper" }) {
+function Stat({ value, label, tone = "text-fg" }) {
   return (
     <div className={card}>
       <p className={`text-base font-semibold tabular-nums ${tone}`}>{value}</p>
-      <p className="mt-0.5 text-[9px] text-steel">{label}</p>
+      <p className="mt-0.5 text-[9px] text-fg-muted">{label}</p>
     </div>
   );
 }
 
 function BidRow({ title, meta, badge, tone }) {
   return (
-    <div className="mb-1.5 flex items-start gap-2.5 rounded-lg border border-line bg-ink p-2.5">
+    <div className="mb-1.5 flex items-start gap-2.5 rounded-lg border border-line bg-canvas p-2.5">
       <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded bg-brand/15 text-brand">
         <IconBriefcase width={12} height={12} />
       </div>
       <div className="min-w-0 flex-1">
-        <p className="truncate text-[11px] font-semibold text-paper">{title}</p>
-        <p className="mt-0.5 text-[9px] text-steel">{meta}</p>
+        <p className="truncate text-[11px] font-semibold text-fg">{title}</p>
+        <p className="mt-0.5 text-[9px] text-fg-muted">{meta}</p>
       </div>
       <span className={`${chip} shrink-0 ${tone}`}>{badge}</span>
     </div>
@@ -139,11 +139,11 @@ function Panel({ kind }) {
           title="Harbor Logistics — Framing"
           meta="Long Beach · Webcor · Due Oct 22"
           badge="REVIEW"
-          tone="bg-amber/15 text-amber"
+          tone="bg-brand/15 text-brand"
         />
-        <div className="mt-2.5 flex justify-between border-t border-line pt-2.5 text-[9px] text-steel">
+        <div className="mt-2.5 flex justify-between border-t border-line pt-2.5 text-[9px] text-fg-muted">
           <span>6 bids due this week</span>
-          <span className="font-semibold text-amber">View all →</span>
+          <span className="font-semibold text-brand">View all →</span>
         </div>
       </>
     );
@@ -153,13 +153,13 @@ function Panel({ kind }) {
     return (
       <>
         <div className="mb-3 flex gap-1.5">
-          <div className="flex-1 rounded border border-line bg-ink px-2 py-1.5 text-[9px] text-steel">
+          <div className="flex-1 rounded border border-line bg-canvas px-2 py-1.5 text-[9px] text-fg-muted">
             Trade: Electrical
           </div>
-          <div className="rounded border border-line bg-ink px-2 py-1.5 text-[9px] text-steel">
+          <div className="rounded border border-line bg-canvas px-2 py-1.5 text-[9px] text-fg-muted">
             LA Metro
           </div>
-          <div className="rounded border border-amber bg-amber/15 px-2 py-1.5 text-[9px] font-bold text-amber">
+          <div className="rounded border border-brand bg-brand/15 px-2 py-1.5 text-[9px] font-bold text-brand">
             Filter
           </div>
         </div>
@@ -179,7 +179,7 @@ function Panel({ kind }) {
           title="Harbor Logistics Hub"
           meta="$2.8M est · Webcor · Oct 22"
           badge="VIEWED"
-          tone="bg-amber/15 text-amber"
+          tone="bg-brand/15 text-brand"
         />
       </>
     );
@@ -188,14 +188,14 @@ function Panel({ kind }) {
   if (kind === "bidding") {
     return (
       <>
-        <p className="mb-2.5 text-[11px] font-semibold text-paper">
+        <p className="mb-2.5 text-[11px] font-semibold text-fg">
           Westside Medical Complex — Electrical
         </p>
         <div className="mb-2.5 rounded-lg border border-brand/30 bg-brand/10 p-2.5">
           <p className="text-[9px] font-semibold uppercase tracking-wider text-brand">
             AI draft ready
           </p>
-          <p className="mt-1 text-[10px] leading-relaxed text-steel">
+          <p className="mt-1 text-[10px] leading-relaxed text-fg-muted">
             Based on your Cedars-Sinai and St. Francis submissions, scope and unit pricing are
             pre-filled. Review before sending.
           </p>
@@ -219,7 +219,7 @@ function Panel({ kind }) {
     ];
     return (
       <>
-        <p className="mb-2.5 text-[11px] font-semibold text-paper">
+        <p className="mb-2.5 text-[11px] font-semibold text-fg">
           RFQ: 4,000 ft 12-AWG THHN
         </p>
         <div className="space-y-1.5">
@@ -227,16 +227,16 @@ function Panel({ kind }) {
             <div
               key={q.name}
               className={`flex items-center justify-between rounded-lg border p-2.5 ${
-                q.best ? "border-success/30 bg-success/10" : "border-line bg-ink"
+                q.best ? "border-success/30 bg-success/10" : "border-line bg-canvas"
               }`}
             >
               <div className="min-w-0">
-                <p className="truncate text-[10px] font-semibold text-paper">{q.name}</p>
-                <p className="mt-0.5 text-[9px] text-steel">{q.meta}</p>
+                <p className="truncate text-[10px] font-semibold text-fg">{q.name}</p>
+                <p className="mt-0.5 text-[9px] text-fg-muted">{q.meta}</p>
               </div>
               <p
                 className={`shrink-0 pl-2 text-xs font-bold tabular-nums ${
-                  q.best ? "text-success" : "text-steel"
+                  q.best ? "text-success" : "text-fg-muted"
                 }`}
               >
                 {q.price}
@@ -244,7 +244,7 @@ function Panel({ kind }) {
             </div>
           ))}
         </div>
-        <p className="mt-2 text-right text-[9px] text-steel">
+        <p className="mt-2 text-right text-[9px] text-fg-muted">
           Saved $200 vs. your last order on this item
         </p>
       </>
@@ -254,7 +254,7 @@ function Panel({ kind }) {
   if (kind === "pipeline") {
     const cols = [
       { head: "Identified", items: [["Westside Medical", "$4.2M"], ["Harbor Hub", "$2.8M"]], bar: "border-l-brand" },
-      { head: "Bid Sent", items: [["Century City", "$11M"], ["SFO Terminal", "$6.5M"]], bar: "border-l-amber" },
+      { head: "Bid Sent", items: [["Century City", "$11M"], ["SFO Terminal", "$6.5M"]], bar: "border-l-brand" },
       { head: "In Review", items: [["SD Convention", "$8.1M"]], bar: "border-l-brand" },
       { head: "Awarded", items: [["UCLA Research", "$3.4M"]], bar: "border-l-success" },
     ];
@@ -263,22 +263,22 @@ function Panel({ kind }) {
         <div className="grid grid-cols-4 gap-1">
           {cols.map((c) => (
             <div key={c.head}>
-              <p className="mb-1 text-[8px] uppercase tracking-wider text-steel">{c.head}</p>
+              <p className="mb-1 text-[8px] uppercase tracking-wider text-fg-muted">{c.head}</p>
               {c.items.map(([name, val]) => (
                 <div
                   key={name}
-                  className={`mb-1 rounded-r border-l-2 bg-ink px-1.5 py-1.5 ${c.bar}`}
+                  className={`mb-1 rounded-r border-l-2 bg-canvas px-1.5 py-1.5 ${c.bar}`}
                 >
-                  <p className="truncate text-[9px] text-paper/90">{name}</p>
-                  <p className="mt-0.5 text-[8px] text-steel">{val}</p>
+                  <p className="truncate text-[9px] text-fg/90">{name}</p>
+                  <p className="mt-0.5 text-[8px] text-fg-muted">{val}</p>
                 </div>
               ))}
             </div>
           ))}
         </div>
         <div className="mt-2.5 flex items-center justify-between border-t border-line pt-2.5">
-          <span className="text-[9px] text-steel">Total pipeline</span>
-          <span className="text-xs font-bold tabular-nums text-paper">$36.0M</span>
+          <span className="text-[9px] text-fg-muted">Total pipeline</span>
+          <span className="text-xs font-bold tabular-nums text-fg">$36.0M</span>
         </div>
       </>
     );
@@ -289,14 +289,14 @@ function Panel({ kind }) {
     <>
       <div className="mb-3 flex justify-between">
         <div>
-          <p className="text-[9px] text-steel">Win Rate — 6 months</p>
-          <p className="text-xl font-bold tracking-tight text-paper">
+          <p className="text-[9px] text-fg-muted">Win Rate — 6 months</p>
+          <p className="text-xl font-bold tracking-tight text-fg">
             38% <span className="text-[11px] font-semibold text-success">↑ 9 pts</span>
           </p>
         </div>
         <div className="text-right">
-          <p className="text-[9px] text-steel">Revenue YTD</p>
-          <p className="text-xl font-bold tracking-tight text-paper">$1.2M</p>
+          <p className="text-[9px] text-fg-muted">Revenue YTD</p>
+          <p className="text-xl font-bold tracking-tight text-fg">$1.2M</p>
         </div>
       </div>
       <svg
@@ -311,7 +311,7 @@ function Panel({ kind }) {
             <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
           </linearGradient>
         </defs>
-        <g className="text-amber">
+        <g className="text-brand">
           <line x1="0" y1="22" x2="400" y2="22" stroke="currentColor" strokeWidth=".5" opacity=".15" />
           <line x1="0" y1="56" x2="400" y2="56" stroke="currentColor" strokeWidth=".5" opacity=".15" />
           <path
@@ -328,11 +328,11 @@ function Panel({ kind }) {
           <circle cx="396" cy="13" r="3.5" fill="currentColor" />
         </g>
       </svg>
-      <div className="flex justify-between text-[9px] text-steel">
+      <div className="flex justify-between text-[9px] text-fg-muted">
         {["May", "Jun", "Jul", "Aug", "Sep"].map((m) => (
           <span key={m}>{m}</span>
         ))}
-        <span className="font-semibold text-amber">Oct</span>
+        <span className="font-semibold text-brand">Oct</span>
       </div>
     </>
   );
@@ -396,25 +396,25 @@ export default function WalkthroughModal({ open, onClose }) {
         aria-label="Platform walkthrough"
         tabIndex={-1}
         onClick={(e) => e.stopPropagation()}
-        className="flex max-h-[92vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-line bg-ink-2 shadow-2xl outline-hidden"
+        className="flex max-h-[92vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-line bg-surface shadow-2xl outline-hidden"
       >
         {/* header */}
         <div className="flex shrink-0 items-center justify-between border-b border-line px-5 py-3">
           <div className="flex items-center gap-2.5">
-            <span className="text-xs font-bold text-paper">Platform Walkthrough</span>
+            <span className="text-xs font-bold text-fg">Platform Walkthrough</span>
             <span className="rounded bg-brand px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-white">
               5 min
             </span>
           </div>
           <div className="flex items-center gap-3">
-            <span className="font-mono text-[11px] tabular-nums text-steel">
+            <span className="font-mono text-[11px] tabular-nums text-fg-muted">
               {pad(step + 1)} / {pad(total)}
             </span>
             <button
               type="button"
               onClick={onClose}
               aria-label="Close walkthrough"
-              className="rounded p-1 text-steel transition-colors hover:bg-ink hover:text-paper focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-amber"
+              className="rounded p-1 text-fg-muted transition-colors hover:bg-canvas hover:text-fg focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-brand"
             >
               <IconX width={16} height={16} />
             </button>
@@ -424,7 +424,7 @@ export default function WalkthroughModal({ open, onClose }) {
         {/* progress */}
         <div className="h-0.5 shrink-0 bg-line">
           <div
-            className="h-full bg-amber transition-[width] duration-500 ease-out"
+            className="h-full bg-brand transition-[width] duration-500 ease-out"
             style={{ width: `${((step + 1) / total) * 100}%` }}
           />
         </div>
@@ -433,13 +433,13 @@ export default function WalkthroughModal({ open, onClose }) {
         <div className="min-h-0 flex-1 overflow-y-auto">
           {isLast ? (
             <div className="flex flex-col items-center px-8 py-14 text-center">
-              <span className="mb-5 inline-flex items-center gap-1.5 rounded-full border border-amber px-3.5 py-1 text-[11px] font-semibold text-amber">
+              <span className="mb-5 inline-flex items-center gap-1.5 rounded-full border border-brand px-3.5 py-1 text-[11px] font-semibold text-brand">
                 <IconCheck width={12} height={12} /> Everything in one platform
               </span>
-              <h3 className="text-balance text-3xl font-bold tracking-tight text-paper md:text-4xl">
+              <h3 className="text-balance text-3xl font-bold tracking-tight text-fg md:text-4xl">
                 Ready to win more work?
               </h3>
-              <p className="mt-4 max-w-md text-sm leading-relaxed text-steel">
+              <p className="mt-4 max-w-md text-sm leading-relaxed text-fg-muted">
                 Request a demo and we&rsquo;ll show you where D&amp;J Stratagem fits into how your
                 team already works &mdash; no slide deck, just a hands-on walkthrough.
               </p>
@@ -449,21 +449,21 @@ export default function WalkthroughModal({ open, onClose }) {
                 <Link
                   to="/contact"
                   onClick={onClose}
-                  className="rounded-lg bg-cta px-6 py-2.5 text-sm font-bold text-white transition-colors hover:bg-cta-hover"
+                  className="rounded-lg bg-brand px-6 py-2.5 text-sm font-bold text-white transition-colors hover:bg-brand-hover"
                 >
                   Request a Demo
                 </Link>
                 <Link
                   to="/pricing"
                   onClick={onClose}
-                  className="rounded-lg border border-line px-6 py-2.5 text-sm font-semibold text-steel transition-colors hover:border-steel hover:text-paper"
+                  className="rounded-lg border border-line px-6 py-2.5 text-sm font-semibold text-fg-muted transition-colors hover:border-fg-muted hover:text-fg"
                 >
                   View Pricing
                 </Link>
               </div>
-              <p className="mt-7 text-[11px] text-steel">
+              <p className="mt-7 text-[11px] text-fg-muted">
                 Los Angeles, CA &nbsp;·&nbsp;{" "}
-                <a href="mailto:hello@djstratageminc.com" className="hover:text-amber">
+                <a href="mailto:hello@djstratageminc.com" className="hover:text-brand">
                   hello@djstratageminc.com
                 </a>
               </p>
@@ -471,17 +471,17 @@ export default function WalkthroughModal({ open, onClose }) {
           ) : (
             <div className="grid grid-cols-1 gap-0 md:grid-cols-2">
               <div className="flex flex-col justify-center p-6 md:p-8">
-                <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-amber">
+                <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-brand">
                   {pad(step + 1)} / {pad(total)} · {slide.tag} · {slide.time}
                 </p>
-                <h3 className="text-balance text-2xl font-bold leading-tight tracking-tight text-paper">
+                <h3 className="text-balance text-2xl font-bold leading-tight tracking-tight text-fg">
                   {slide.title}
                 </h3>
-                <p className="mt-3.5 text-sm leading-relaxed text-steel">{slide.text}</p>
+                <p className="mt-3.5 text-sm leading-relaxed text-fg-muted">{slide.text}</p>
                 <ul className="mt-5 space-y-2">
                   {slide.points.map((p) => (
-                    <li key={p} className="flex items-start gap-2.5 text-[13px] text-paper/85">
-                      <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-amber/15 text-amber">
+                    <li key={p} className="flex items-start gap-2.5 text-[13px] text-fg/85">
+                      <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-brand/15 text-brand">
                         <IconCheck width={10} height={10} />
                       </span>
                       {p}
@@ -490,12 +490,12 @@ export default function WalkthroughModal({ open, onClose }) {
                 </ul>
               </div>
 
-              <div className="relative flex items-center justify-center border-line bg-ink/40 p-6 md:border-l">
+              <div className="relative flex items-center justify-center border-line bg-canvas/40 p-6 md:border-l">
                 <div
                   className="bg-grid pointer-events-none absolute inset-0 opacity-20"
                   aria-hidden="true"
                 />
-                <div className="relative w-full max-w-sm rounded-xl border border-line bg-ink-2 p-3.5 shadow-xl">
+                <div className="relative w-full max-w-sm rounded-xl border border-line bg-surface p-3.5 shadow-xl">
                   <Panel kind={slide.panel} />
                 </div>
               </div>
@@ -509,7 +509,7 @@ export default function WalkthroughModal({ open, onClose }) {
             type="button"
             onClick={prev}
             disabled={step === 0}
-            className="rounded-lg border border-line px-4 py-2 text-xs font-semibold text-steel transition-colors hover:border-steel hover:text-paper disabled:opacity-30 disabled:hover:border-line disabled:hover:text-steel focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-amber"
+            className="rounded-lg border border-line px-4 py-2 text-xs font-semibold text-fg-muted transition-colors hover:border-fg-muted hover:text-fg disabled:opacity-30 disabled:hover:border-line disabled:hover:text-fg-muted focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-brand"
           >
             ← Prev
           </button>
@@ -522,8 +522,8 @@ export default function WalkthroughModal({ open, onClose }) {
                 onClick={() => setStep(i)}
                 aria-label={`Go to slide ${i + 1}`}
                 aria-current={i === step ? "true" : undefined}
-                className={`h-1.5 rounded-full transition-all focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-amber ${
-                  i === step ? "w-5 bg-amber" : "w-1.5 bg-line hover:bg-steel"
+                className={`h-1.5 rounded-full transition-all focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-brand ${
+                  i === step ? "w-5 bg-brand" : "w-1.5 bg-line hover:bg-fg-muted"
                 }`}
               />
             ))}
@@ -532,7 +532,7 @@ export default function WalkthroughModal({ open, onClose }) {
           <button
             type="button"
             onClick={isLast ? onClose : next}
-            className="flex items-center gap-1.5 rounded-lg bg-cta px-4 py-2 text-xs font-bold text-white transition-colors hover:bg-cta-hover focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-cta"
+            className="flex items-center gap-1.5 rounded-lg bg-brand px-4 py-2 text-xs font-bold text-white transition-colors hover:bg-brand-hover focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-brand"
           >
             {isLast ? "Close" : "Next"}
             {!isLast && <IconArrowRight width={12} height={12} />}

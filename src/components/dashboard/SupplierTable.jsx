@@ -8,10 +8,10 @@ import { IconColumns, IconRows } from "../icons";
 const ALL_COLUMNS = [
   { key: "name", label: "Supplier", align: "left", required: true, color: "" },
   { key: "riskScore", label: "Risk score", align: "left", color: "" },
-  { key: "deliveryRate", label: "Delivery", align: "right", color: "text-paper" },
-  { key: "leadTimeDays", label: "Lead time", align: "right", color: "text-steel" },
-  { key: "openOrders", label: "Open", align: "right", color: "text-steel" },
-  { key: "spendYtd", label: "Spend YTD", align: "right", color: "text-paper" },
+  { key: "deliveryRate", label: "Delivery", align: "right", color: "text-fg" },
+  { key: "leadTimeDays", label: "Lead time", align: "right", color: "text-fg-muted" },
+  { key: "openOrders", label: "Open", align: "right", color: "text-fg-muted" },
+  { key: "spendYtd", label: "Spend YTD", align: "right", color: "text-fg" },
   { key: "trend", label: "30-day trend", align: "right", sortable: false, color: "" },
 ];
 
@@ -107,7 +107,7 @@ export default function SupplierTable({
                 aria-pressed={density === d}
                 title={`${d.charAt(0).toUpperCase() + d.slice(1)} rows`}
                 className={`px-2.5 py-1 text-xs font-semibold transition-colors ${
-                  density === d ? "bg-amber/15 text-amber" : "text-steel hover:text-paper"
+                  density === d ? "bg-brand/15 text-brand" : "text-fg-muted hover:text-fg"
                 }`}
               >
                 {label}
@@ -122,7 +122,7 @@ export default function SupplierTable({
               onClick={() => setShowColMenu((p) => !p)}
               aria-expanded={showColMenu}
               aria-haspopup="listbox"
-              className="flex items-center gap-1.5 rounded-md border border-line px-2.5 py-1 text-xs font-semibold text-steel transition-colors hover:text-paper"
+              className="flex items-center gap-1.5 rounded-md border border-line px-2.5 py-1 text-xs font-semibold text-fg-muted transition-colors hover:text-fg"
             >
               <IconColumns width={13} height={13} />
               Columns
@@ -135,11 +135,11 @@ export default function SupplierTable({
                   onClick={() => setShowColMenu(false)}
                   aria-hidden="true"
                 />
-                <div className="absolute left-0 top-full z-20 mt-1 w-44 rounded-lg border border-line bg-ink-2 p-2 shadow-xl">
+                <div className="absolute left-0 top-full z-20 mt-1 w-44 rounded-lg border border-line bg-surface p-2 shadow-xl">
                   {ALL_COLUMNS.filter((c) => !c.required).map((col) => (
                     <label
                       key={col.key}
-                      className="flex cursor-pointer items-center gap-2.5 rounded px-2 py-1.5 text-xs hover:bg-ink"
+                      className="flex cursor-pointer items-center gap-2.5 rounded px-2 py-1.5 text-xs hover:bg-canvas"
                     >
                       <input
                         type="checkbox"
@@ -147,7 +147,7 @@ export default function SupplierTable({
                         onChange={() => toggleCol(col.key)}
                         className="accent-amber"
                       />
-                      <span className="text-paper">{col.label}</span>
+                      <span className="text-fg">{col.label}</span>
                     </label>
                   ))}
                 </div>
@@ -157,8 +157,8 @@ export default function SupplierTable({
         </div>
 
         {selectedCount > 0 && (
-          <p className="text-xs text-steel" aria-live="polite">
-            <span className="font-semibold text-paper">{selectedCount}</span>{" "}
+          <p className="text-xs text-fg-muted" aria-live="polite">
+            <span className="font-semibold text-fg">{selectedCount}</span>{" "}
             {selectedCount === 1 ? "supplier" : "suppliers"} selected
           </p>
         )}
@@ -197,7 +197,7 @@ export default function SupplierTable({
                     aria-sort={
                       active ? (sort.dir === "asc" ? "ascending" : "descending") : "none"
                     }
-                    className={`px-4 py-3.5 text-xs font-semibold uppercase tracking-wider text-steel ${
+                    className={`px-4 py-3.5 text-xs font-semibold uppercase tracking-wider text-fg-muted ${
                       col.align === "right" ? "text-right" : "text-left"
                     }`}
                   >
@@ -205,8 +205,8 @@ export default function SupplierTable({
                       <button
                         type="button"
                         onClick={() => setSort(col.key)}
-                        className={`inline-flex items-center gap-1.5 transition-colors hover:text-paper ${
-                          active ? "text-amber" : ""
+                        className={`inline-flex items-center gap-1.5 transition-colors hover:text-fg ${
+                          active ? "text-brand" : ""
                         }`}
                       >
                         {col.label}
@@ -233,9 +233,9 @@ export default function SupplierTable({
                 <tr
                   key={s.id}
                   onClick={() => onRowClick?.(s)}
-                  className={`group border-b border-line/60 transition-colors last:border-0 hover:bg-ink-3/60 ${
+                  className={`group border-b border-line/60 transition-colors last:border-0 hover:bg-subtle/60 ${
                     onRowClick ? "cursor-pointer" : ""
-                  } ${isSelected ? "bg-amber/5" : ""}`}
+                  } ${isSelected ? "bg-brand/5" : ""}`}
                 >
                   {/* Feature 7: per-row checkbox */}
                   <td
@@ -269,13 +269,13 @@ export default function SupplierTable({
                               pulse={s.status !== "active"}
                             />
                             <div className="min-w-0 flex-1">
-                              <p className="truncate font-semibold text-paper">{s.name}</p>
-                              <p className="truncate text-xs text-steel">
+                              <p className="truncate font-semibold text-fg">{s.name}</p>
+                              <p className="truncate text-xs text-fg-muted">
                                 {s.category} &middot; {s.region}
                               </p>
                             </div>
                             {onRowClick && (
-                              <span className="shrink-0 text-xs text-steel/40 opacity-0 transition-opacity group-hover:opacity-100">
+                              <span className="shrink-0 text-xs text-fg-muted/40 opacity-0 transition-opacity group-hover:opacity-100">
                                 View →
                               </span>
                             )}
@@ -307,18 +307,18 @@ export default function SupplierTable({
         <div className="px-6 py-16 text-center">
           {loading ? (
             <div className="flex flex-col items-center gap-3">
-              <div className="h-8 w-8 animate-spin rounded-full border-2 border-line border-t-amber" />
-              <p className="text-sm text-steel">Loading suppliers…</p>
+              <div className="h-8 w-8 animate-spin rounded-full border-2 border-line border-t-brand" />
+              <p className="text-sm text-fg-muted">Loading suppliers…</p>
             </div>
           ) : (
             <div className="flex flex-col items-center gap-3">
-              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-ink text-steel">
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-canvas text-fg-muted">
                 <IconRows width={24} height={24} />
               </div>
-              <p className="text-sm font-semibold text-paper">
+              <p className="text-sm font-semibold text-fg">
                 No suppliers match these filters
               </p>
-              <p className="text-sm text-steel">
+              <p className="text-sm text-fg-muted">
                 Try widening the risk or delivery range, or clear the search.
               </p>
             </div>

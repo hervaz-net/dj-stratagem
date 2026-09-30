@@ -96,10 +96,10 @@ export default function Solutions() {
 
       <Section className="pt-16 pb-8 md:pt-24">
         <Eyebrow>Solutions</Eyebrow>
-        <h1 className="text-balance max-w-3xl text-4xl font-semibold leading-tight tracking-tight text-paper sm:text-5xl">
+        <h1 className="text-balance max-w-3xl text-4xl font-semibold leading-tight tracking-tight text-fg sm:text-5xl">
           Built for every side of the bid.
         </h1>
-        <p className="mt-6 max-w-2xl text-lg leading-relaxed text-steel">
+        <p className="mt-6 max-w-2xl text-lg leading-relaxed text-fg-muted">
           General contractors, subcontractors, and suppliers work from the same platform, with
           workflows tailored to how each side actually wins.
         </p>
@@ -132,8 +132,8 @@ export default function Solutions() {
                 onClick={() => selectTab(r.key)}
                 className={`lift flex items-center gap-2 rounded-full border px-5 py-2.5 text-sm font-medium ${
                   selected
-                    ? "border-amber bg-amber/10 text-amber shadow-sm"
-                    : "border-line bg-ink-2 text-steel hover:border-amber/40 hover:text-paper"
+                    ? "border-brand bg-brand/10 text-brand shadow-sm"
+                    : "border-line bg-surface text-fg-muted hover:border-brand/40 hover:text-fg"
                 }`}
               >
                 {r.icon}
@@ -152,21 +152,21 @@ export default function Solutions() {
           className="animate-fade-in mt-12 grid grid-cols-1 gap-14 lg:grid-cols-2 lg:items-center"
         >
           <div>
-            <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-amber/10 text-amber">
+            <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-brand/10 text-brand">
               {role.icon}
             </div>
-            <h2 className="text-balance mt-5 text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+            <h2 className="text-balance mt-5 text-3xl font-semibold tracking-tight text-fg md:text-4xl">
               {role.title}
             </h2>
-            <p className="mt-4 text-base leading-relaxed text-steel">{role.text}</p>
+            <p className="mt-4 text-base leading-relaxed text-fg-muted">{role.text}</p>
           </div>
 
-          <div className="rounded-2xl border border-line bg-ink-2 p-6">
-            <p className="text-xs uppercase tracking-wider text-steel">What you get</p>
+          <div className="rounded-2xl border border-line bg-surface p-6">
+            <p className="text-xs uppercase tracking-wider text-fg-muted">What you get</p>
             <ul className="mt-4 space-y-4">
               {role.points.map((pt) => (
-                <li key={pt} className="flex items-start gap-3 text-sm text-paper/90">
-                  <IconCheck width={16} height={16} className="mt-0.5 shrink-0 text-amber" />
+                <li key={pt} className="flex items-start gap-3 text-sm text-fg/90">
+                  <IconCheck width={16} height={16} className="mt-0.5 shrink-0 text-brand" />
                   {pt}
                 </li>
               ))}

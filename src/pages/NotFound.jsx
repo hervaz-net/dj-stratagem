@@ -16,10 +16,10 @@ export default function NotFound() {
 
       <Section className="pt-24 pb-24">
         <Eyebrow>404</Eyebrow>
-        <h1 className="text-balance max-w-2xl text-2xl font-semibold leading-tight tracking-tight text-paper sm:text-3xl">
+        <h1 className="text-balance max-w-2xl text-2xl font-semibold leading-tight tracking-tight text-fg sm:text-3xl">
           We couldn&rsquo;t find that page.
         </h1>
-        <p className="mt-6 max-w-xl text-lg leading-relaxed text-steel">
+        <p className="mt-6 max-w-xl text-lg leading-relaxed text-fg-muted">
           The link may be out of date, or the page may have moved. Here&rsquo;s where to pick
           back up.
         </p>
@@ -41,8 +41,8 @@ export default function NotFound() {
               className="!items-start !justify-start !whitespace-normal !px-5 !py-4 text-left"
             >
               <span>
-                <span className="block text-sm font-semibold text-paper">{s.label}</span>
-                <span className="mt-1 block text-xs font-normal text-steel">{s.detail}</span>
+                <span className="block text-sm font-semibold text-fg">{s.label}</span>
+                <span className="mt-1 block text-xs font-normal text-fg-muted">{s.detail}</span>
               </span>
             </Button>
           ))}

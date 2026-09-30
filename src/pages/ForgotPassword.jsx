@@ -28,7 +28,7 @@ export default function ForgotPassword() {
       <Seo title="Forgot password" description="Reset your D&J Stratagem password." noindex />
 
       <div className="mx-auto flex w-full max-w-md flex-col justify-center px-6 py-16 md:py-24">
-        <div className="rounded-2xl border border-line bg-ink-2 p-8 shadow-xl shadow-brand/5">
+        <div className="rounded-2xl border border-line bg-surface p-8 shadow-xl shadow-brand/5">
           <Link to="/" className="inline-block" aria-label="D&J Stratagem — home">
             <Logo />
           </Link>
@@ -38,31 +38,31 @@ export default function ForgotPassword() {
               <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[var(--viz-green)]/10">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--viz-green)]" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
               </div>
-              <h1 className="mt-5 text-2xl font-semibold tracking-tight text-paper">How to reset</h1>
-              <p className="mt-3 text-sm leading-relaxed text-steel">
+              <h1 className="mt-5 text-2xl font-semibold tracking-tight text-fg">How to reset</h1>
+              <p className="mt-3 text-sm leading-relaxed text-fg-muted">
                 Self-serve password reset is not live yet. Email{" "}
-                <a href="mailto:hello@djstratageminc.com" className="font-medium text-amber hover:text-amber-2">
+                <a href="mailto:hello@djstratageminc.com" className="font-medium text-brand hover:text-brand-hover">
                   hello@djstratageminc.com
                 </a>{" "}
-                from <span className="font-medium text-paper">{email}</span> and we will reset the account by hand.
+                from <span className="font-medium text-fg">{email}</span> and we will reset the account by hand.
               </p>
               <Link
                 to="/login"
-                className="mt-6 inline-block text-sm font-medium text-amber hover:text-amber-2"
+                className="mt-6 inline-block text-sm font-medium text-brand hover:text-brand-hover"
               >
                 ← Back to sign in
               </Link>
             </div>
           ) : (
             <>
-              <h1 className="mt-8 text-3xl font-semibold tracking-tight text-paper">Forgot password?</h1>
-              <p className="mt-2 text-sm text-steel">
+              <h1 className="mt-8 text-3xl font-semibold tracking-tight text-fg">Forgot password?</h1>
+              <p className="mt-2 text-sm text-fg-muted">
                 Enter the email on the account. We will tell you how to reach us — automated reset mail is not live yet.
               </p>
 
               <form onSubmit={handleSubmit} className="mt-8 space-y-4" noValidate>
                 <div>
-                  <label htmlFor="email" className="mb-2 block text-sm font-medium text-paper">
+                  <label htmlFor="email" className="mb-2 block text-sm font-medium text-fg">
                     Email address
                   </label>
                   <input
@@ -73,7 +73,7 @@ export default function ForgotPassword() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="you@example.com"
-                    className="w-full rounded-md border border-line bg-ink px-4 py-2.5 text-sm text-paper outline-hidden transition-colors placeholder:text-steel/60 focus:border-amber"
+                    className="w-full rounded-md border border-line bg-canvas px-4 py-2.5 text-sm text-fg outline-hidden transition-colors placeholder:text-fg-muted/60 focus:border-brand"
                   />
                 </div>
 
@@ -88,9 +88,9 @@ export default function ForgotPassword() {
                 </Button>
               </form>
 
-              <p className="mt-6 text-center text-sm text-steel">
+              <p className="mt-6 text-center text-sm text-fg-muted">
                 Remembered it?{" "}
-                <Link to="/login" className="font-medium text-amber hover:text-amber-2">
+                <Link to="/login" className="font-medium text-brand hover:text-brand-hover">
                   Sign in
                 </Link>
               </p>
