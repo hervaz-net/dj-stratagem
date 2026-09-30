@@ -252,6 +252,41 @@ body {
 
 .compact-row .text-sm { font-size: 13px; }
 
+/* Color depth & accent sections */
+.accent-section {
+  background: linear-gradient(135deg, rgba(11,31,51,0.02), rgba(43,106,138,0.04));
+  border-left: 1px solid #2B6A8A;
+}
+
+.accent-success {
+  background: linear-gradient(135deg, rgba(21,128,61,0.04), rgba(21,128,61,0.02));
+  border-left: 1px solid #15803D;
+}
+
+.accent-warning {
+  background: linear-gradient(135deg, rgba(217,119,6,0.04), rgba(217,119,6,0.02));
+  border-left: 1px solid #D97706;
+}
+
+.accent-danger {
+  background: linear-gradient(135deg, rgba(185,28,28,0.04), rgba(185,28,28,0.02));
+  border-left: 1px solid #B91C1C;
+}
+
+/* Less boxes, more depth */
+.card-minimal {
+  background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(244,245,247,0.5));
+  border: 1px solid rgba(11,31,51,0.08);
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.card-minimal:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transform: translateY(-1px);
+  transition: all 200ms ease;
+}
+
 /* small screen tweaks */
 @media (max-width: 640px) {
   .compact-row { grid-template-columns: repeat(6, minmax(0,1fr)); }

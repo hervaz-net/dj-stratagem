@@ -155,7 +155,7 @@ export default function Home() {
         <div className="relative grid grid-cols-1 items-center gap-14 lg:grid-cols-[1.05fr_0.95fr]">
           <div>
             <Eyebrow>Bid intelligence for construction</Eyebrow>
-            <h1 className="text-balance text-4xl font-semibold leading-[1.08] tracking-tight text-paper sm:text-5xl md:text-6xl">
+            <h1 className="text-balance text-2xl font-semibold leading-[1.08] tracking-tight text-paper sm:text-4xl md:text-5xl">
               Find better construction projects. Bid smarter. Win more work.
             </h1>
             <p className="mt-6 max-w-lg text-lg leading-relaxed text-steel">
@@ -195,7 +195,7 @@ export default function Home() {
       <Section className="border-t border-line">
         <div className="mx-auto max-w-2xl text-center">
           <Eyebrow>What you get</Eyebrow>
-          <h2 className="text-balance text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+          <h2 className="text-balance text-2xl font-semibold tracking-tight text-paper md:text-3xl">
             Matched opportunities, not a firehose of RFPs.
           </h2>
           <p className="mt-5 text-base leading-relaxed text-steel">
@@ -212,7 +212,7 @@ export default function Home() {
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
           {stats.map((s, i) => (
             <Reveal key={s.label} delay={i * 90} className="text-center sm:text-left">
-              <p className="text-4xl font-semibold tracking-tight text-paper md:text-5xl">
+              <p className="text-2xl font-semibold tracking-tight text-paper md:text-5xl">
                 <StatCounter value={s.value} suffix={s.suffix} />
               </p>
               <p className="mt-2 text-sm font-semibold text-amber">{s.label}</p>
@@ -226,7 +226,7 @@ export default function Home() {
         <div className="grid grid-cols-1 gap-16 lg:grid-cols-2 lg:items-start">
           <Reveal>
             <Eyebrow>The problem</Eyebrow>
-            <h2 className="text-balance text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+            <h2 className="text-balance text-2xl font-semibold tracking-tight text-paper md:text-3xl">
               Most platforms solve one piece of the puzzle.
             </h2>
             <p className="mt-5 text-base leading-relaxed text-steel">
@@ -239,7 +239,7 @@ export default function Home() {
           </Reveal>
           <Reveal delay={120}>
             <Eyebrow>The platform</Eyebrow>
-            <h2 className="text-balance text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+            <h2 className="text-balance text-2xl font-semibold tracking-tight text-paper md:text-3xl">
               We sell growth, not just access to bids.
             </h2>
             <p className="mt-5 text-base leading-relaxed text-steel">
@@ -266,7 +266,7 @@ export default function Home() {
 
       <Section className="border-t border-line">
         <Eyebrow>The platform</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+        <h2 className="text-balance max-w-2xl text-2xl font-semibold tracking-tight text-paper md:text-3xl">
           Everything a growing contractor needs.
         </h2>
         <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -289,7 +289,7 @@ export default function Home() {
         <div className="grid grid-cols-1 items-center gap-14 lg:grid-cols-2">
           <Reveal>
             <Eyebrow>Why it&rsquo;s different</Eyebrow>
-            <h2 className="text-balance text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+            <h2 className="text-balance text-2xl font-semibold tracking-tight text-paper md:text-3xl">
               Once you rely on us, switching gets painful &mdash; in a good way.
             </h2>
             <p className="mt-5 text-base leading-relaxed text-steel">
@@ -329,7 +329,7 @@ export default function Home() {
 
       <Section className="border-t border-line">
         <Eyebrow>How it works</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+        <h2 className="text-balance max-w-2xl text-2xl font-semibold tracking-tight text-paper md:text-3xl">
           Designed for contractors who are serious about growth.
         </h2>
         <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
@@ -352,7 +352,7 @@ export default function Home() {
 
       <Section className="border-t border-line">
         <Eyebrow>Who it&rsquo;s for</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+        <h2 className="text-balance max-w-2xl text-2xl font-semibold tracking-tight text-paper md:text-3xl">
           Built for every side of the deal.
         </h2>
         <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2">
@@ -370,7 +370,7 @@ export default function Home() {
 
       <Section className="border-t border-line">
         <Eyebrow>Questions</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+        <h2 className="text-balance max-w-2xl text-2xl font-semibold tracking-tight text-paper md:text-3xl">
           Answers before you book a demo.
         </h2>
         <div className="mt-10 max-w-3xl">

@@ -188,7 +188,7 @@ export default function Platform() {
 
       <Section className="pt-16 pb-8 md:pt-24">
         <Eyebrow>The platform</Eyebrow>
-        <h1 className="text-balance max-w-3xl text-4xl font-semibold leading-tight tracking-tight text-paper sm:text-5xl">
+        <h1 className="text-balance max-w-3xl text-2xl font-semibold leading-tight tracking-tight text-paper sm:text-3xl">
           One platform to win work, market your business, and grow revenue.
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-steel">

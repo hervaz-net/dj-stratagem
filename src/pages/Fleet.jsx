@@ -194,7 +194,7 @@ export default function Fleet() {
         <div className="pointer-events-none absolute inset-0 bg-grid [mask-image:radial-gradient(ellipse_60%_60%_at_50%_0%,black,transparent)]" />
         <div className="relative mx-auto max-w-6xl px-6">
           <Eyebrow>Fleet Management</Eyebrow>
-          <h1 className="mt-6 text-5xl font-bold leading-tight text-paper md:text-6xl">
+          <h1 className="mt-6 text-3xl font-bold leading-tight text-paper md:text-4xl">
             See how equipment would look on the board.
           </h1>
           <p className="mt-6 max-w-2xl text-lg text-steel">
