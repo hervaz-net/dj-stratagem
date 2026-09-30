@@ -2,33 +2,33 @@ import { useState } from "react";
 import useAuth from "../../auth/useAuth";
 import { useToast } from "../../contexts/ToastContext";
 import { createSupplier } from "../../api/dashboard";
+import { Drawer, Field, inputCls } from "./ui";
+import Button from "../Button";
+
+const EMPTY = { name: "", category: "", region: "" };
 
 /**
- * Primary action. Rendered inline in the header on large screens and as a
- * floating pill on small ones, so it never covers table rows on desktop.
+ * Primary action. Inline in the header on large screens and a floating pill on
+ * small ones, so it never covers table rows on desktop.
  */
 export default function AddSupplierButton({ onCreated, floating = false }) {
   const [open, setOpen] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [form, setForm] = useState({ name: "", category: "", region: "" });
+  const [form, setForm] = useState(EMPTY);
   const { csrf } = useAuth();
   const { toast } = useToast();
-
-  const base =
-    "lift glow-brand inline-flex items-center gap-2 rounded-full bg-brand hover:bg-brand-hover " +
-    "px-5 py-3 text-sm font-semibold text-white";
 
   const submit = async (e) => {
     e.preventDefault();
     if (!form.name.trim() || !form.category.trim() || !form.region.trim()) {
-      toast("Name, category, and region are required.", { type: "warning" });
+      toast("Company name, category, and region are required.", { type: "warning" });
       return;
     }
     setSaving(true);
     try {
       await createSupplier({ ...form, csrf });
-      toast(`${form.name} added to the network.`, { type: "success" });
-      setForm({ name: "", category: "", region: "" });
+      toast(`${form.name} added to your network.`, { type: "success" });
+      setForm(EMPTY);
       setOpen(false);
       onCreated?.();
     } catch (err) {
@@ -38,60 +38,61 @@ export default function AddSupplierButton({ onCreated, floating = false }) {
     }
   };
 
+  const icon = (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true">
+      <path d="M12 5v14M5 12h14" />
+    </svg>
+  );
+
   return (
     <>
-      <button
+      <Button
         type="button"
+        size={floating ? "lg" : "md"}
         onClick={() => setOpen(true)}
-        className={
-          floating
-            ? `${base} no-print fixed bottom-6 right-6 z-40 shadow-xl lg:hidden`
-            : `${base} hidden lg:inline-flex`
+        className={floating ? "no-print fixed bottom-24 right-4 z-30 shadow-[var(--shadow-pop)] lg:hidden" : "hidden lg:inline-flex"}
+      >
+        {icon}
+        Add supplier
+      </Button>
+
+      <Drawer
+        open={open}
+        onClose={() => setOpen(false)}
+        as="form"
+        onSubmit={submit}
+        title="Add a supplier"
+        description="Adds a manufacturer or vendor you already buy from. Risk and on-time scores start at a neutral default and update as orders come in."
+        footer={
+          <>
+            <Button type="button" variant="ghost" onClick={() => setOpen(false)}>
+              Cancel
+            </Button>
+            <Button type="submit" disabled={saving}>
+              {saving ? "Saving…" : "Add supplier"}
+            </Button>
+          </>
         }
       >
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true">
-          <path d="M12 5v14M5 12h14" />
-        </svg>
-        Add Supplier
-      </button>
-
-      {open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4" onClick={() => setOpen(false)}>
-          <form
-            onSubmit={submit}
-            className="w-full max-w-md rounded-2xl border border-line bg-surface p-6 shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h2 className="text-base font-semibold text-fg">Add supplier</h2>
-            <p className="mt-1 text-sm text-fg-muted">Creates a network record. Risk and delivery scores start at a healthy default.</p>
-            <div className="mt-4 space-y-3">
-              {[
-                ["name", "Name", "Metro Supply Co."],
-                ["category", "Category", "Fasteners & hardware"],
-                ["region", "Region", "Southwest"],
-              ].map(([key, label, ph]) => (
-                <label key={key} className="block">
-                  <span className="text-xs font-medium text-fg-muted">{label}</span>
-                  <input
-                    value={form[key]}
-                    onChange={(e) => setForm((p) => ({ ...p, [key]: e.target.value }))}
-                    placeholder={ph}
-                    className="mt-1 w-full rounded-md border border-line bg-canvas px-3 py-2 text-sm text-fg outline-none focus:border-brand"
-                  />
-                </label>
-              ))}
-            </div>
-            <div className="mt-6 flex justify-end gap-3">
-              <button type="button" onClick={() => setOpen(false)} className="px-4 py-2 text-sm font-semibold text-fg-muted hover:text-fg">
-                Cancel
-              </button>
-              <button type="submit" disabled={saving} className="rounded-lg bg-brand/15 px-4 py-2 text-sm font-semibold text-brand hover:bg-brand/25 disabled:opacity-60">
-                {saving ? "Saving…" : "Add supplier"}
-              </button>
-            </div>
-          </form>
+        <div className="space-y-4">
+          {[
+            ["name", "Company name", "e.g. Rebar Ridge Steelworks"],
+            ["category", "What they supply", "e.g. Metal & structural"],
+            ["region", "Region", "e.g. Southwest"],
+          ].map(([key, label, ph]) => (
+            <Field key={key} label={label} htmlFor={`supplier-${key}`}>
+              <input
+                id={`supplier-${key}`}
+                value={form[key]}
+                onChange={(e) => setForm((p) => ({ ...p, [key]: e.target.value }))}
+                placeholder={ph}
+                required
+                className={inputCls}
+              />
+            </Field>
+          ))}
         </div>
-      )}
+      </Drawer>
     </>
   );
 }

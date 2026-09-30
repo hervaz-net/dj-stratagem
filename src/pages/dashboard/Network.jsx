@@ -6,213 +6,252 @@ import SupplierTable from "../../components/dashboard/SupplierTable";
 import SupplierDrawer from "../../components/dashboard/SupplierDrawer";
 import ShortcutsModal from "../../components/dashboard/ShortcutsModal";
 import AddSupplierButton from "../../components/dashboard/AddSupplierButton";
-import GlassCard from "../../components/dashboard/GlassCard";
+import { Card, DataNotice, ErrorNotice, FilterChips } from "../../components/dashboard/ui";
+import { ROLE_VIEWS, partnerRoleOf, relationship } from "../../components/dashboard/roles";
 import Seo from "../../components/Seo";
+import { useRole } from "../../contexts/RoleContext";
 import usePolledResource from "../../api/usePolledResource";
 import { fetchSuppliers, fetchMetrics, fetchTicker, isConfigured } from "../../api/suppliers";
 import { IconKeyboard } from "../../components/icons";
+import { PRODUCT, ROLE_ORDER } from "../../brand";
 
 const STATUSES = [
-  { key: "active", label: "Active", color: "var(--viz-green)" },
-  { key: "watch", label: "Watch", color: "var(--viz-gold)" },
-  { key: "at-risk", label: "At risk", color: "var(--viz-red)" },
+  { key: "active", label: "Active", dotClass: "bg-success" },
+  { key: "watch", label: "Watch", dotClass: "bg-warning" },
+  { key: "at-risk", label: "At risk", dotClass: "bg-danger" },
 ];
+
+const ROLE_DOT = { supplier: "bg-role-supplier", distributor: "bg-role-distributor", contractor: "bg-role-contractor" };
+const ROLE_FILTERS = ROLE_ORDER.map((key) => ({ key, label: ROLE_VIEWS[key].label, dotClass: ROLE_DOT[key] }));
+
+const toggleIn = (setter) => (key) =>
+  setter((prev) => (prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]));
 
 const DEFAULT_RISK = [0, 100];
 const DEFAULT_DELIVERY = [80, 100];
 const LS_PRESETS = "djs-filter-presets";
-
 const NO_ROWS = [];
 
+const SUBTITLE = {
+  contractor: "The distributors and manufacturers you buy from, with on-time and risk scores.",
+  distributor: "Manufacturers upstream, contractor accounts downstream, all in one place.",
+  supplier: "The distributors and contractors who buy from you, and how each relationship is performing.",
+};
+
 function exportCsv(rows) {
-  const headers = ["Name", "Category", "Region", "Status", "Risk Score", "Delivery %", "Lead Days", "Open Orders", "Spend YTD"];
+  const esc = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
+  const headers = ["Name", "Role", "Category", "Region", "Status", "Risk Score", "On-time %", "Lead Days", "Open Orders", "Volume YTD"];
   const lines = rows.map((s) =>
-    [s.name, s.category, s.region, s.status, s.riskScore, s.deliveryRate.toFixed(1), s.leadTimeDays, s.openOrders, s.spendYtd].join(","),
+    [s.name, partnerRoleOf(s), s.category, s.region, s.status, s.riskScore, Number(s.deliveryRate).toFixed(1), s.leadTimeDays, s.openOrders, s.spendYtd]
+      .map(esc)
+      .join(","),
   );
   const csv = [headers.join(","), ...lines].join("\n");
   const url = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
   const a = document.createElement("a");
   a.href = url;
-  a.download = `suppliers-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.download = `network-${new Date().toISOString().slice(0, 10)}.csv`;
   a.click();
   URL.revokeObjectURL(url);
 }
 
-export default function SuppliersDashboard() {
+function readPresets() {
+  try {
+    return JSON.parse(localStorage.getItem(LS_PRESETS) || "[]");
+  } catch {
+    return [];
+  }
+}
+
+export default function Network() {
+  const { role } = useRole();
   const suppliers = usePolledResource(fetchSuppliers, { intervalMs: 30000, initialData: [] });
   const metrics = usePolledResource(fetchMetrics, { intervalMs: 30000, initialData: [] });
   const ticker = usePolledResource(fetchTicker, { intervalMs: 15000, initialData: [] });
 
+  const [tab, setTab] = useState("all");
   const [query, setQuery] = useState("");
   const [activeStatuses, setActiveStatuses] = useState(STATUSES.map((s) => s.key));
+  const [activeRoles, setActiveRoles] = useState(ROLE_ORDER);
   const [risk, setRisk] = useState(DEFAULT_RISK);
   const [delivery, setDelivery] = useState(DEFAULT_DELIVERY);
   const [sort, setSort] = useState({ key: "riskScore", dir: "desc" });
   const [selected, setSelected] = useState(new Set());
   const [drawerSupplier, setDrawerSupplier] = useState(null);
   const [showShortcuts, setShowShortcuts] = useState(false);
-  const [presets, setPresets] = useState(() => {
-    try { return JSON.parse(localStorage.getItem(LS_PRESETS) || "[]"); } catch { return []; }
-  });
+  const [presets, setPresets] = useState(readPresets);
 
   const searchRef = useRef(null);
 
   const savePresets = (next) => {
     setPresets(next);
-    localStorage.setItem(LS_PRESETS, JSON.stringify(next));
+    try {
+      localStorage.setItem(LS_PRESETS, JSON.stringify(next));
+    } catch {
+      /* blocked storage: presets last for this visit */
+    }
   };
 
-  const toggleStatus = useCallback((key) => {
-    setActiveStatuses((prev) =>
-      prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key],
-    );
-  }, []);
+  const toggleStatus = useCallback((key) => toggleIn(setActiveStatuses)(key), []);
+  const toggleRole = useCallback((key) => toggleIn(setActiveRoles)(key), []);
 
   const reset = useCallback(() => {
     setQuery("");
     setActiveStatuses(STATUSES.map((s) => s.key));
+    setActiveRoles(ROLE_ORDER);
     setRisk(DEFAULT_RISK);
     setDelivery(DEFAULT_DELIVERY);
     setSelected(new Set());
+    setTab("all");
   }, []);
 
   const all = suppliers.data ?? NO_ROWS;
 
+  const tabCounts = useMemo(() => {
+    const c = { all: all.length, supplier: 0, customer: 0, peer: 0 };
+    all.forEach((s) => {
+      c[relationship(role, partnerRoleOf(s))] += 1;
+    });
+    return c;
+  }, [all, role]);
+
   const rows = useMemo(() => {
     const q = query.trim().toLowerCase();
     const filtered = all.filter((s) => {
+      const pr = partnerRoleOf(s);
+      if (tab !== "all" && relationship(role, pr) !== tab) return false;
+      if (!activeRoles.includes(pr)) return false;
       if (!activeStatuses.includes(s.status)) return false;
       if (s.riskScore < risk[0] || s.riskScore > risk[1]) return false;
       if (s.deliveryRate < delivery[0] || s.deliveryRate > delivery[1]) return false;
-      if (q && ![s.name, s.category, s.region].some((f) => f.toLowerCase().includes(q))) return false;
+      if (q && ![s.name, s.category, s.region].some((f) => String(f ?? "").toLowerCase().includes(q))) return false;
       return true;
     });
     const dir = sort.dir === "asc" ? 1 : -1;
     return [...filtered].sort((a, b) => {
-      const av = a[sort.key];
-      const bv = b[sort.key];
+      const av = sort.key === "partnerRole" ? partnerRoleOf(a) : a[sort.key];
+      const bv = sort.key === "partnerRole" ? partnerRoleOf(b) : b[sort.key];
       if (typeof av === "string") return av.localeCompare(bv) * dir;
       return (av - bv) * dir;
     });
-  }, [all, activeStatuses, risk, delivery, query, sort]);
+  }, [all, tab, role, activeRoles, activeStatuses, risk, delivery, query, sort]);
 
   const toggleSelect = useCallback((id) => {
     setSelected((prev) => {
       const next = new Set(prev);
-      if (next.has(id)) next.delete(id); else next.add(id);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
       return next;
     });
   }, []);
 
-  const handleSelectAll = useCallback((next) => setSelected(next), []);
-
   const handleExport = useCallback(() => {
-    const target = selected.size > 0
-      ? rows.filter((r) => selected.has(r.id))
-      : rows;
-    exportCsv(target);
+    exportCsv(selected.size > 0 ? rows.filter((r) => selected.has(r.id)) : rows);
   }, [rows, selected]);
 
-  const handleSavePreset = useCallback((name) => {
-    const preset = { name, query, activeStatuses, risk, delivery };
+  const handleSavePreset = (name) => {
+    const preset = { name, query, activeStatuses, activeRoles, risk, delivery };
     savePresets([...presets.filter((p) => p.name !== name), preset]);
-  }, [query, activeStatuses, risk, delivery, presets]);
+  };
 
   const handleLoadPreset = useCallback((p) => {
     setQuery(p.query ?? "");
     setActiveStatuses(p.activeStatuses ?? STATUSES.map((s) => s.key));
+    setActiveRoles(p.activeRoles ?? ROLE_ORDER);
     setRisk(p.risk ?? DEFAULT_RISK);
     setDelivery(p.delivery ?? DEFAULT_DELIVERY);
   }, []);
 
-  const handleDeletePreset = useCallback((name) => {
-    savePresets(presets.filter((p) => p.name !== name));
-  }, [presets]);
+  const handleDeletePreset = (name) => savePresets(presets.filter((p) => p.name !== name));
+
+  const refreshAll = useCallback(() => {
+    suppliers.refresh();
+    metrics.refresh();
+    ticker.refresh();
+  }, [suppliers, metrics, ticker]);
 
   useEffect(() => {
     const onKey = (e) => {
       const tag = document.activeElement?.tagName;
-      if (tag === "INPUT" || tag === "TEXTAREA") return;
-      if (e.key === "/" ) { e.preventDefault(); searchRef.current?.focus(); }
-      if (e.key === "r" || e.key === "R") { suppliers.refresh(); metrics.refresh(); ticker.refresh(); }
+      if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if (e.key === "/") {
+        e.preventDefault();
+        searchRef.current?.focus();
+      }
+      if (e.key === "r" || e.key === "R") refreshAll();
       if (e.key === "?") setShowShortcuts((p) => !p);
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [suppliers, metrics, ticker]);
+  }, [refreshAll]);
 
   const anyError = suppliers.error || metrics.error || ticker.error;
+  const onCreated = () => {
+    suppliers.refresh();
+    metrics.refresh();
+  };
+
+  const tabs = [
+    { key: "all", label: "Everyone", count: tabCounts.all },
+    ...(role !== "supplier" ? [{ key: "supplier", label: "My suppliers", count: tabCounts.supplier }] : []),
+    ...(role !== "contractor" ? [{ key: "customer", label: role === "supplier" ? "My distributors & buyers" : "My customers", count: tabCounts.customer }] : []),
+    ...(tabCounts.peer ? [{ key: "peer", label: "Same tier", count: tabCounts.peer }] : []),
+  ];
 
   return (
     <>
-      <Seo
-        title="Suppliers"
-        description="Supplier network dashboard — risk scores, delivery performance, and live market movement."
-        noindex
-      />
+      <Seo title="Network" description={`Your trading partners across the supply chain on ${PRODUCT}.`} noindex />
 
       <DashboardLayout
-        breadcrumbs={[
-          { label: "Home", to: "/" },
-          { label: "Network", to: "/dashboard" },
-          { label: "Suppliers" },
-        ]}
+        breadcrumbs={[{ label: "Dashboard", to: "/dashboard/overview" }, { label: "Network" }]}
         ticker={ticker.data ?? []}
         tickerLive={isConfigured && !ticker.error}
-        title="Suppliers"
-        subtitle="Risk, delivery performance, and spend across your supplier network."
+        title="Network"
+        subtitle={SUBTITLE[role] ?? SUBTITLE.contractor}
         actions={
-          <div className="flex items-center gap-2">
+          <>
             <button
               type="button"
               onClick={() => setShowShortcuts(true)}
               aria-label="Keyboard shortcuts"
               title="Keyboard shortcuts (?)"
-              className="flex h-9 w-9 items-center justify-center rounded-lg border border-line text-fg-muted transition-colors hover:text-fg"
+              className="hidden h-11 w-11 items-center justify-center rounded-full border border-line bg-surface text-fg-muted transition-colors hover:border-line-strong hover:text-fg lg:flex"
             >
-              <IconKeyboard width={16} height={16} />
+              <IconKeyboard width={18} height={18} aria-hidden="true" />
             </button>
-            <AddSupplierButton onCreated={() => { suppliers.refresh(); metrics.refresh(); }} />
-          </div>
+            <AddSupplierButton onCreated={onCreated} />
+          </>
         }
       >
-        {!isConfigured && (
-          <GlassCard className="mb-6 flex flex-wrap items-center gap-x-2 gap-y-1 px-5 py-3">
-            <span className="text-xs font-semibold uppercase tracking-wider text-brand">
-              Sample data
-            </span>
-            <span className="text-sm text-fg-muted">
-              Live APIs activate on the hosted PHP server after you sign in.
-            </span>
-          </GlassCard>
-        )}
-
-        {anyError && (
-          <GlassCard className="mb-6 px-5 py-3" role="status">
-            <p className="text-sm text-danger">
-              Couldn&rsquo;t reach the API &mdash; showing the last data received.{" "}
-              <button
-                type="button"
-                onClick={() => { suppliers.refresh(); metrics.refresh(); ticker.refresh(); }}
-                className="font-semibold underline underline-offset-2"
-              >
-                Retry
-              </button>
+        <div className="space-y-6">
+          {!isConfigured && (
+            <DataNotice>
+              Sample network with fictional companies. Your real partners load once you’re signed in on the hosted site.
+            </DataNotice>
+          )}
+          {isConfigured && (
+            <p className="text-sm text-fg-muted">
+              Partner roles aren’t stored on network records yet, so every live record is listed as a manufacturer.
             </p>
-          </GlassCard>
-        )}
+          )}
+          {anyError && <ErrorNotice onRetry={refreshAll} />}
 
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
-          {(metrics.data ?? []).map((m) => (
-            <MetricCard key={m.id} metric={m} live={isConfigured && !metrics.error} />
-          ))}
-        </div>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            {(metrics.data ?? []).map((m) => (
+              <MetricCard key={m.id} metric={m} live={isConfigured && !metrics.error} />
+            ))}
+          </div>
 
-        <div className="mt-6">
+          <FilterChips label="Relationship" options={tabs} value={tab} onChange={setTab} />
+
           <FilterBar
             statuses={STATUSES}
             activeStatuses={activeStatuses}
             onToggleStatus={toggleStatus}
+            roles={ROLE_FILTERS}
+            activeRoles={activeRoles}
+            onToggleRole={toggleRole}
             risk={risk}
             onRiskChange={setRisk}
             delivery={delivery}
@@ -229,34 +268,23 @@ export default function SuppliersDashboard() {
             onDeletePreset={handleDeletePreset}
             searchRef={searchRef}
           />
-        </div>
 
-        {selected.size > 0 && (
-          <GlassCard className="mt-4 flex flex-wrap items-center justify-between gap-3 px-5 py-3">
-            <p className="text-sm text-fg-muted">
-              <span className="font-semibold text-fg">{selected.size}</span>{" "}
-              {selected.size === 1 ? "supplier" : "suppliers"} selected
-            </p>
-            <div className="flex gap-3">
-              <button
-                type="button"
-                onClick={handleExport}
-                className="text-xs font-semibold text-brand transition-colors hover:text-brand-hover"
-              >
-                Export selected
-              </button>
-              <button
-                type="button"
-                onClick={() => setSelected(new Set())}
-                className="text-xs font-semibold text-fg-muted transition-colors hover:text-fg"
-              >
-                Clear selection
-              </button>
-            </div>
-          </GlassCard>
-        )}
+          {selected.size > 0 && (
+            <Card className="flex flex-wrap items-center justify-between gap-3 px-5 py-3">
+              <p className="text-sm text-fg-muted">
+                <span className="font-semibold text-fg">{selected.size}</span> {selected.size === 1 ? "partner" : "partners"} selected
+              </p>
+              <div className="flex gap-4">
+                <button type="button" onClick={handleExport} className="text-sm font-semibold text-brand hover:text-brand-hover">
+                  Export selected
+                </button>
+                <button type="button" onClick={() => setSelected(new Set())} className="text-sm font-semibold text-fg-muted hover:text-fg">
+                  Clear selection
+                </button>
+              </div>
+            </Card>
+          )}
 
-        <div className="mt-6">
           <SupplierTable
             rows={rows}
             sort={sort}
@@ -265,14 +293,15 @@ export default function SuppliersDashboard() {
             onRowClick={setDrawerSupplier}
             selected={selected}
             onToggleSelect={toggleSelect}
-            onSelectAll={handleSelectAll}
+            onSelectAll={setSelected}
+            myRole={role}
           />
         </div>
 
-        <AddSupplierButton floating onCreated={() => { suppliers.refresh(); metrics.refresh(); }} />
+        <AddSupplierButton floating onCreated={onCreated} />
       </DashboardLayout>
 
-      <SupplierDrawer supplier={drawerSupplier} onClose={() => setDrawerSupplier(null)} />
+      <SupplierDrawer supplier={drawerSupplier} onClose={() => setDrawerSupplier(null)} myRole={role} />
       {showShortcuts && <ShortcutsModal onClose={() => setShowShortcuts(false)} />}
     </>
   );

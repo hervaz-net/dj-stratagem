@@ -1,7 +1,8 @@
 import { Fragment, useCallback, useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import DashboardLayout from "../../components/dashboard/DashboardLayout";
-import GlassCard from "../../components/dashboard/GlassCard";
+import { Card, FilterChips, StatTile, StatusPill, inputCls } from "../../components/dashboard/ui";
+import { PRODUCT } from "../../brand";
 import StatusDot from "../../components/dashboard/StatusDot";
 import Seo from "../../components/Seo";
 import useAuth from "../../auth/useAuth";
@@ -18,12 +19,13 @@ const FILTERS = [
 const DOT = { pending: "watch", active: "active", suspended: "at-risk" };
 
 const AVATAR_COLORS = [
-  "bg-[var(--viz-blue)]/20 text-[var(--viz-blue)]",
-  "bg-[var(--viz-cyan)]/20 text-[var(--viz-cyan)]",
-  "bg-[var(--viz-green)]/20 text-[var(--viz-green)]",
-  "bg-[var(--color-brand)]/15 text-[var(--color-brand)]",
-  "bg-[var(--viz-gold)]/20 text-[var(--viz-gold)]",
+  "bg-brand-soft text-brand-fg",
+  "bg-role-distributor-soft text-role-distributor",
+  "bg-role-contractor-soft text-role-contractor",
+  "bg-accent-soft text-accent",
 ];
+
+const STATUS_TONE = { pending: "warning", active: "success", suspended: "danger" };
 
 function getInitials(name = "") {
   const parts = name.trim().split(/\s+/);
@@ -34,12 +36,12 @@ function getInitials(name = "") {
 function UserAvatar({ name, id, status }) {
   const color = AVATAR_COLORS[(id ?? 0) % AVATAR_COLORS.length];
   return (
-    <div className={`relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${color}`}>
+    <span className={`relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xs font-semibold ${color}`}>
       {getInitials(name)}
       <span className="absolute -bottom-0.5 -right-0.5">
-        <StatusDot status={DOT[status]} size={8} pulse={status === "pending"} />
+        <StatusDot status={DOT[status]} size={8} pulse={false} />
       </span>
-    </div>
+    </span>
   );
 }
 
@@ -52,14 +54,7 @@ function formatDate(value) {
 }
 
 function StatCard({ label, value, highlight }) {
-  return (
-    <GlassCard className="px-5 py-4">
-      <p className="text-xs font-semibold uppercase tracking-wider text-fg-muted">{label}</p>
-      <p className={`mt-1 text-2xl font-semibold tabular-nums ${highlight ? "text-brand" : "text-fg"}`}>
-        {value ?? "—"}
-      </p>
-    </GlassCard>
-  );
+  return <StatTile label={label} value={value ?? "—"} valueClassName={highlight ? "text-brand" : ""} />;
 }
 
 export default function AdminUsers() {
@@ -176,79 +171,62 @@ export default function AdminUsers() {
 
   return (
     <>
-      <Seo title="Accounts" description="Approve and manage platform accounts." noindex />
+      <Seo title="Accounts" description={`Approve and manage ${PRODUCT} accounts.`} noindex />
 
       <DashboardLayout
         breadcrumbs={[
-          { label: "Home", to: "/" },
-          { label: "Admin", to: "/dashboard/admin" },
+          { label: "Dashboard", to: "/dashboard/overview" },
           { label: "Accounts" },
         ]}
         title="Accounts"
-        subtitle="Approve new access requests and manage existing accounts."
+        subtitle="Approve new companies joining the marketplace and manage existing accounts."
       >
-        <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
+        <div className="mb-6 grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
           <StatCard label="Total" value={counts.all ?? (counts.pending ?? 0) + (counts.active ?? 0) + (counts.suspended ?? 0)} />
           <StatCard label="Pending" value={counts.pending} highlight={counts.pending > 0} />
           <StatCard label="Active" value={counts.active} />
           <StatCard label="Suspended" value={counts.suspended} />
         </div>
 
-        <div className="flex flex-wrap gap-2">
-          {FILTERS.map((f) => {
-            const active = filter === f.key;
-            const count = f.key === "all" ? undefined : counts[f.key];
-            return (
-              <button
-                key={f.key}
-                type="button"
-                onClick={() => { setFilter(f.key); setSearch(""); }}
-                aria-pressed={active}
-                className={`lift inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-semibold ${
-                  active
-                    ? "border-brand/60 bg-brand/12 text-brand"
-                    : "border-line bg-canvas/50 text-fg-muted hover:border-brand/35 hover:text-fg"
-                }`}
-              >
-                {f.label}
-                {count !== undefined && (
-                  <span className="rounded-full bg-canvas px-1.5 py-0.5 tabular-nums">{count}</span>
-                )}
-              </button>
-            );
-          })}
-        </div>
+        <FilterChips
+          label="Account status"
+          value={filter}
+          onChange={(key) => {
+            setFilter(key);
+            setSearch("");
+          }}
+          options={FILTERS.map((f) => ({ ...f, count: f.key === "all" ? undefined : counts[f.key] }))}
+        />
 
         <div className="relative mt-4 max-w-sm">
+          <label htmlFor="account-search" className="sr-only">Filter accounts</label>
           <IconSearch
-            width={14}
-            height={14}
-            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-fg-muted"
+            width={16}
+            height={16}
+            aria-hidden="true"
+            className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-fg-muted"
           />
           <input
+            id="account-search"
             type="search"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Filter by name, email, or company"
-            className="w-full rounded-lg border border-line bg-canvas py-2 pl-8 pr-3.5 text-sm text-fg outline-hidden placeholder:text-fg-muted/70 focus:border-brand"
+            className={`${inputCls} pl-10`}
           />
         </div>
 
         <div aria-live="polite" className="mt-4 empty:mt-0">
           {error && (
-            <GlassCard className="mb-4 px-5 py-3">
-              <p className="text-sm text-danger">{error}</p>
-            </GlassCard>
+            <p className="mb-4 rounded-2xl border border-danger/30 bg-danger-soft px-4 py-3 text-sm text-danger">{error}</p>
           )}
           {notice && (
-            <GlassCard className="mb-4 px-5 py-3">
-              <p className="text-sm text-success">{notice}</p>
-            </GlassCard>
+            <p className="mb-4 rounded-2xl border border-success/30 bg-success-soft px-4 py-3 text-sm text-success">{notice}</p>
           )}
         </div>
 
         {approvable.length > 0 && (
-          <GlassCard className="mt-4 flex flex-wrap items-center justify-between gap-3 px-5 py-3">
+          <Card className="mt-4 flex flex-wrap items-center justify-between gap-3 px-5 py-3">
             <p className="text-sm text-fg-muted">
               <span className="font-semibold text-fg">{approvable.length}</span>{" "}
               pending {approvable.length === 1 ? "account" : "accounts"} selected
@@ -257,33 +235,33 @@ export default function AdminUsers() {
               type="button"
               disabled={bulkBusy}
               onClick={bulkApprove}
-              className="lift rounded-full bg-brand hover:bg-brand-hover px-4 py-1.5 text-xs font-semibold text-white disabled:opacity-60"
+              className="inline-flex h-9 items-center rounded-full bg-brand px-4 text-sm font-semibold text-white hover:bg-brand-hover disabled:opacity-60"
             >
               {bulkBusy ? "Approving…" : `Approve ${approvable.length}`}
             </button>
-          </GlassCard>
+          </Card>
         )}
 
-        <GlassCard className="mt-6 overflow-hidden">
+        <Card className="mt-6 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full min-w-[54rem] border-collapse text-sm">
               <caption className="sr-only">Accounts with status and available actions</caption>
               <thead>
-                <tr className="border-b border-line">
+                <tr className="border-b border-line bg-subtle">
                   <th scope="col" className="w-10 px-4 py-3.5">
                     <input
                       type="checkbox"
                       checked={allPendingChecked}
                       onChange={toggleAllPending}
                       aria-label="Select all pending"
-                      className="accent-amber"
+                      className="h-4 w-4 accent-[var(--brand)]"
                     />
                   </th>
                   {["Person", "Status", "Requested", "Last sign-in", "Actions"].map((h) => (
                     <th
                       key={h}
                       scope="col"
-                      className={`px-4 py-3.5 text-xs font-semibold uppercase tracking-wider text-fg-muted ${
+                      className={`px-4 py-3 text-xs font-semibold text-fg ${
                         h === "Actions" ? "text-right" : "text-left"
                       }`}
                     >
@@ -300,7 +278,7 @@ export default function AdminUsers() {
                   return (
                     <Fragment key={u.id}>
                       <tr
-                        className={`border-b border-line/60 transition-colors last:border-0 hover:bg-subtle/60 ${expanded ? "bg-subtle/40" : ""}`}
+                        className={`border-b border-line transition-colors last:border-0 hover:bg-subtle ${expanded ? "bg-subtle" : ""}`}
                       >
                         <td
                           className="w-10 px-4 py-3.5"
@@ -311,28 +289,29 @@ export default function AdminUsers() {
                             checked={bulkSelected.has(u.id)}
                             onChange={() => toggleBulk(u.id)}
                             aria-label={`Select ${u.name}`}
-                            className="accent-amber"
+                            className="h-4 w-4 accent-[var(--brand)]"
                           />
                         </td>
-                        <th
-                          scope="row"
-                          className="cursor-pointer px-4 py-3.5 text-left font-normal"
-                          onClick={() => setExpandedId(expanded ? null : u.id)}
-                        >
-                          <div className="flex items-center gap-3">
+                        <th scope="row" className="px-4 py-3.5 text-left font-normal">
+                          <button
+                            type="button"
+                            onClick={() => setExpandedId(expanded ? null : u.id)}
+                            aria-expanded={expanded}
+                            className="flex w-full items-center gap-3 rounded-xl text-left"
+                          >
                             <UserAvatar name={u.name} id={u.id} status={u.status} />
-                            <div className="min-w-0">
-                              <p className="truncate font-semibold text-fg">
+                            <span className="min-w-0">
+                              <span className="block truncate font-semibold text-fg">
                                 {u.name}
-                                {isSelf && <span className="ml-2 text-xs text-fg-muted">(you)</span>}
-                              </p>
-                              <p className="truncate text-xs text-fg-muted">
+                                {isSelf && <span className="ml-2 text-xs font-normal text-fg-muted">(you)</span>}
+                              </span>
+                              <span className="block truncate text-xs text-fg-muted">
                                 {u.email} &middot; {u.company}
-                              </p>
-                            </div>
-                          </div>
+                              </span>
+                            </span>
+                          </button>
                         </th>
-                        <td className="px-4 py-3.5 capitalize text-fg">{u.status}</td>
+                        <td className="px-4 py-3.5"><StatusPill tone={STATUS_TONE[u.status] ?? "neutral"} className="capitalize">{u.status}</StatusPill></td>
                         <td className="px-4 py-3.5 text-fg-muted">{formatDate(u.createdAt)}</td>
                         <td className="px-4 py-3.5 text-fg-muted">{formatDate(u.lastLoginAt)}</td>
                         <td className="px-4 py-3.5">
@@ -342,7 +321,7 @@ export default function AdminUsers() {
                                 type="button"
                                 disabled={busy}
                                 onClick={() => change(u, "active")}
-                                className="lift rounded-full bg-brand hover:bg-brand-hover px-3.5 py-1.5 text-xs font-semibold text-white disabled:opacity-60"
+                                className="inline-flex h-8 items-center rounded-full bg-brand px-3.5 text-xs font-semibold text-white hover:bg-brand-hover disabled:opacity-60"
                               >
                                 {busy ? "Working…" : u.status === "pending" ? "Approve" : "Reinstate"}
                               </button>
@@ -352,7 +331,7 @@ export default function AdminUsers() {
                                 type="button"
                                 disabled={busy}
                                 onClick={() => change(u, "suspended")}
-                                className="lift rounded-full border border-line px-3.5 py-1.5 text-xs font-semibold text-fg-muted hover:border-danger/50 hover:text-danger disabled:opacity-60"
+                                className="inline-flex h-8 items-center rounded-full border border-line px-3.5 text-xs font-semibold text-fg-muted hover:border-danger hover:text-danger disabled:opacity-60"
                               >
                                 Suspend
                               </button>
@@ -362,17 +341,17 @@ export default function AdminUsers() {
                       </tr>
 
                       {expanded && (
-                        <tr className="border-b border-line/40 bg-canvas/60">
+                        <tr className="border-b border-line bg-canvas">
                           <td colSpan={6} className="px-8 py-4">
                             <dl className="grid grid-cols-2 gap-x-10 gap-y-2 text-xs sm:grid-cols-4">
                               {[
                                 { label: "Phone", value: u.phone || "—" },
-                                { label: "Role", value: u.role || "—" },
+                                { label: "Access", value: u.role || "—" },
                                 { label: "Approved", value: formatDate(u.approvedAt) },
                                 { label: "User ID", value: `#${u.id}` },
                               ].map(({ label, value }) => (
                                 <div key={label}>
-                                  <dt className="font-semibold uppercase tracking-wider text-fg-muted">{label}</dt>
+                                  <dt className="font-semibold text-fg-muted">{label}</dt>
                                   <dd className="mt-0.5 text-fg">{value}</dd>
                                 </div>
                               ))}
@@ -400,7 +379,7 @@ export default function AdminUsers() {
               </p>
             </div>
           )}
-        </GlassCard>
+        </Card>
       </DashboardLayout>
     </>
   );

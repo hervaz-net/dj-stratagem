@@ -53,10 +53,11 @@ export default function CookieBanner() {
     <div
       role="region"
       aria-label="Cookie consent"
-      className="fixed bottom-4 right-4 z-[110] w-[min(22rem,calc(100vw-2rem))] rounded-2xl border border-line bg-surface/95 p-4 shadow-xl shadow-brand/10 backdrop-blur-md"
+      className="no-print animate-menu-in fixed bottom-4 right-4 z-[110] w-[min(22rem,calc(100vw-2rem))] rounded-2xl border border-line bg-surface p-4 shadow-[var(--shadow-pop)]"
     >
-      <p className="text-sm leading-relaxed text-fg-muted">
-        This site stores theme preference and this consent choice on your device. There is no analytics or advertising pixel.{" "}
+      <p className="text-sm font-semibold text-fg">Cookies</p>
+      <p className="mt-1 text-sm leading-relaxed text-fg-muted">
+        This site stores preferences such as theme, and this consent choice, on your device. There is no analytics or advertising pixel.{" "}
         <Link
           to="/privacy"
           className="font-medium text-brand underline underline-offset-2 hover:text-brand-hover"
@@ -65,18 +66,18 @@ export default function CookieBanner() {
         </Link>
         .
       </p>
-      <div className="mt-3 flex shrink-0 justify-end gap-2">
+      <div className="mt-4 flex justify-end gap-2">
         <button
           type="button"
           onClick={decline}
-          className="rounded-full border border-line px-4 py-1.5 text-xs font-semibold text-fg-muted hover:border-line/70 hover:text-fg"
+          className="h-9 rounded-full border border-line px-4 text-sm font-semibold text-fg transition-colors hover:border-line-strong hover:bg-subtle"
         >
           Dismiss
         </button>
         <button
           type="button"
           onClick={accept}
-          className="rounded-full bg-brand px-4 py-1.5 text-xs font-semibold text-white hover:bg-brand-hover"
+          className="h-9 rounded-full bg-brand px-4 text-sm font-semibold text-white transition-colors hover:bg-brand-hover"
         >
           OK
         </button>

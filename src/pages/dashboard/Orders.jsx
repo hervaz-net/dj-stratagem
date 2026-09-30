@@ -1,27 +1,27 @@
 import { useMemo, useState } from "react";
 import DashboardLayout from "../../components/dashboard/DashboardLayout";
-import GlassCard from "../../components/dashboard/GlassCard";
-import StatusDot from "../../components/dashboard/StatusDot";
+import { Card, ConfirmDialog, DataNotice, EmptyState, ErrorNotice, FilterChips, StatTile, StatusPill } from "../../components/dashboard/ui";
+import { money, shortDate } from "../../components/dashboard/format";
 import Seo from "../../components/Seo";
 import { useToast } from "../../contexts/ToastContext";
+import { useRole } from "../../contexts/RoleContext";
 import useAuth from "../../auth/useAuth";
 import usePolledResource from "../../api/usePolledResource";
 import { fetchOrders, cancelOrders, isConfigured } from "../../api/dashboard";
 import { orderFixtures } from "../../api/fixtures";
+import { PRODUCT } from "../../brand";
 
 const STATUS = {
-  pending: { label: "Pending", dot: "watch", color: "text-warning bg-warning/10", step: 0 },
-  confirmed: { label: "Confirmed", dot: "active", color: "text-[var(--viz-cyan)] bg-[var(--viz-cyan)]/10", step: 1 },
-  shipped: { label: "Shipped", dot: "watch", color: "text-warning bg-warning/10", step: 2 },
-  delivered: { label: "Delivered", dot: "active", color: "text-[var(--viz-green)] bg-[var(--viz-green)]/10", step: 3 },
-  cancelled: { label: "Cancelled", dot: "at-risk", color: "text-fg-muted bg-line", step: -1 },
+  pending: { label: "Awaiting confirmation", short: "Pending", tone: "neutral", step: 0 },
+  confirmed: { label: "Confirmed", short: "Confirmed", tone: "brand", step: 1 },
+  shipped: { label: "In transit", short: "In transit", tone: "info", step: 2 },
+  delivered: { label: "Delivered", short: "Delivered", tone: "success", step: 3 },
+  cancelled: { label: "Cancelled", short: "Cancelled", tone: "danger", step: -1 },
 };
 
-const STEPS = ["Ordered", "Confirmed", "Shipped", "Delivered"];
+const STEPS = ["Ordered", "Confirmed", "In transit", "Delivered"];
 const FILTERS = ["all", "pending", "confirmed", "shipped", "delivered", "cancelled"];
-
-const money = (n) => `$${n.toLocaleString()}`;
-const fmt = (d) => (d && d !== "—" ? new Date(d).toLocaleDateString(undefined, { month: "short", day: "numeric" }) : "—");
+const OPEN = ["pending", "confirmed", "shipped"];
 
 function daysOverdue(eta) {
   if (!eta || eta === "—") return 0;
@@ -29,20 +29,12 @@ function daysOverdue(eta) {
   return diff > 0 ? diff : 0;
 }
 
-function TimelineBar({ step }) {
-  if (step < 0) return null;
+function Progress({ step }) {
+  if (step < 0) return <span className="text-xs text-fg-muted">—</span>;
   return (
-    <div className="flex items-center gap-1">
+    <div className="flex items-center gap-1" role="img" aria-label={`Step ${step + 1} of ${STEPS.length}: ${STEPS[step]}`}>
       {STEPS.map((s, i) => (
-        <div key={s} className="flex items-center gap-1">
-          <div
-            title={s}
-            className={`h-1.5 w-1.5 rounded-full transition-colors ${i <= step ? "bg-brand" : "bg-line"}`}
-          />
-          {i < STEPS.length - 1 && (
-            <div className={`h-px w-3 ${i < step ? "bg-brand" : "bg-line"}`} aria-hidden="true" />
-          )}
-        </div>
+        <span key={s} className={`h-1.5 w-6 rounded-full ${i <= step ? "bg-brand" : "bg-subtle"}`} title={s} />
       ))}
     </div>
   );
@@ -51,43 +43,37 @@ function TimelineBar({ step }) {
 export default function Orders() {
   const resource = usePolledResource(fetchOrders, { intervalMs: 30000, initialData: orderFixtures });
   const orders = resource.data ?? orderFixtures;
+  const { role } = useRole();
   const [filter, setFilter] = useState("all");
   const [selected, setSelected] = useState(new Set());
-  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [confirming, setConfirming] = useState(false);
   const [cancelling, setCancelling] = useState(false);
   const { toast } = useToast();
   const { csrf } = useAuth();
 
-  const rows = useMemo(
-    () => (filter === "all" ? orders : orders.filter((o) => o.status === filter)),
-    [filter, orders],
-  );
+  const rows = useMemo(() => (filter === "all" ? orders : orders.filter((o) => o.status === filter)), [filter, orders]);
+  const count = (f) => (f === "all" ? orders.length : orders.filter((o) => o.status === f).length);
 
-  const counts = FILTERS.reduce((acc, f) => {
-    acc[f] = f === "all" ? orders.length : orders.filter((o) => o.status === f).length;
-    return acc;
-  }, {});
+  const open = orders.filter((o) => OPEN.includes(o.status));
+  const openValue = open.reduce((s, o) => s + Number(o.value || 0), 0);
+  const late = orders.filter((o) => o.status === "shipped" && daysOverdue(o.eta) > 0).length;
 
-  const pending = orders.filter((o) => ["pending", "confirmed", "shipped"].includes(o.status));
-  const pendingValue = pending.reduce((s, o) => s + o.value, 0);
-
-  const toggleSelect = (id) => setSelected((prev) => {
-    const next = new Set(prev);
-    next.has(id) ? next.delete(id) : next.add(id);
-    return next;
-  });
+  const toggleSelect = (id) =>
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
 
   const confirmCancel = async () => {
     setCancelling(true);
     try {
-      const next = await cancelOrders({ ids: [...selected], csrf });
+      await cancelOrders({ ids: [...selected], csrf });
       resource.refresh();
-      if (Array.isArray(next) && next.length) {
-        /* refresh() reloads; keep selection clear */
-      }
       toast(`${selected.size} order${selected.size !== 1 ? "s" : ""} cancelled.`, { type: "warning" });
       setSelected(new Set());
-      setShowCancelModal(false);
+      setConfirming(false);
     } catch (err) {
       toast(err.message ?? "Couldn’t cancel those orders.", { type: "error" });
     } finally {
@@ -95,154 +81,127 @@ export default function Orders() {
     }
   };
 
+  const subtitle =
+    role === "contractor"
+      ? "Purchase orders from accepted quotes, tracked to the jobsite."
+      : role === "distributor"
+        ? "POs you’ve placed with manufacturers and orders you’re filling for contractors."
+        : "Orders from distributors and contractors, from confirmation to delivery.";
+
   return (
     <>
-      <Seo title="Orders" description="Purchase order tracking." noindex />
+      <Seo title="Orders" description={`Track purchase orders from confirmation to delivery on ${PRODUCT}.`} noindex />
 
       <DashboardLayout
-        breadcrumbs={[{ label: "Home", to: "/" }, { label: "Orders" }]}
+        breadcrumbs={[{ label: "Dashboard", to: "/dashboard/overview" }, { label: "Orders" }]}
         title="Orders"
-        subtitle="Purchase orders across your supply network."
+        subtitle={subtitle}
       >
-        {!isConfigured && (
-          <GlassCard className="mb-6 px-5 py-3 text-sm text-fg-muted">
-            <span className="font-semibold uppercase tracking-wider text-brand">Sample data</span>
-            {" "}— live orders load from `/api/orders.php` on the hosted server.
-          </GlassCard>
-        )}
-
-        <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
-          {[
-            { label: "Total orders", value: orders.length },
-            { label: "In transit", value: counts.shipped },
-            { label: "Pending value", value: money(pendingValue) },
-            { label: "Delivered (30d)", value: counts.delivered },
-          ].map((s) => (
-            <GlassCard key={s.label} className="px-5 py-4">
-              <p className="text-xs font-semibold uppercase tracking-wider text-fg-muted">{s.label}</p>
-              <p className="mt-1 text-2xl font-semibold tabular-nums text-fg">{s.value}</p>
-            </GlassCard>
-          ))}
-        </div>
-
-        <div className="mb-4 flex flex-wrap items-center gap-2">
-          {FILTERS.map((f) => (
-            <button
-              key={f}
-              type="button"
-              onClick={() => setFilter(f)}
-              aria-pressed={filter === f}
-              className={`lift inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-semibold ${
-                filter === f
-                  ? "border-brand/60 bg-brand/12 text-brand"
-                  : "border-line bg-canvas/50 text-fg-muted hover:border-brand/35 hover:text-fg"
-              }`}
-            >
-              {f === "all" ? "All" : STATUS[f]?.label}
-              <span className="rounded-full bg-canvas px-1.5 py-0.5 tabular-nums">{counts[f]}</span>
-            </button>
-          ))}
-          {selected.size > 0 && (
-            <button
-              type="button"
-              onClick={() => setShowCancelModal(true)}
-              className="ml-auto rounded-lg border border-danger/30 bg-danger/10 px-3 py-1.5 text-xs font-semibold text-danger hover:bg-danger/20"
-            >
-              Cancel {selected.size} selected
-            </button>
+        <div className="space-y-6">
+          {!isConfigured && (
+            <DataNotice>Sample orders with fictional companies. Your live purchase orders load once you’re signed in on the hosted site.</DataNotice>
           )}
-        </div>
+          {resource.error && <ErrorNotice onRetry={() => resource.refresh()} />}
 
-        <GlassCard className="overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[60rem] border-collapse text-sm">
-              <caption className="sr-only">Purchase orders with supplier, items, value, and status</caption>
-              <thead>
-                <tr className="border-b border-line">
-                  <th scope="col" className="w-8 px-4 py-3.5">
-                    <span className="sr-only">Select</span>
-                  </th>
-                  {["Order", "Supplier", "Items", "Category", "Value", "ETA", "Progress", "Status"].map((h) => (
-                    <th
-                      key={h}
-                      scope="col"
-                      className={`px-4 py-3.5 text-xs font-semibold uppercase tracking-wider text-fg-muted ${h === "Value" ? "text-right" : "text-left"}`}
-                    >
-                      {h}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {rows.map((o) => {
-                  const s = STATUS[o.status] ?? STATUS.pending;
-                  const overdue = o.status === "shipped" ? daysOverdue(o.eta) : 0;
-                  return (
-                    <tr key={o.id} className={`border-b border-line/60 transition-colors last:border-0 hover:bg-subtle/60 ${selected.has(o.id) ? "bg-brand/5" : ""}`}>
-                      <td className="px-4 py-3.5">
-                        <input
-                          type="checkbox"
-                          checked={selected.has(o.id)}
-                          onChange={() => toggleSelect(o.id)}
-                          aria-label={`Select ${o.id}`}
-                          className="h-3.5 w-3.5 accent-amber"
-                        />
-                      </td>
-                      <td className="px-4 py-3.5 font-mono text-xs text-fg-muted">{o.id}</td>
-                      <th scope="row" className="px-4 py-3.5 text-left font-semibold text-fg">{o.supplier}</th>
-                      <td className="px-4 py-3.5 text-fg-muted">{o.items}</td>
-                      <td className="px-4 py-3.5">
-                        <span className="rounded-full border border-line px-2.5 py-0.5 text-xs text-fg-muted">{o.category}</span>
-                      </td>
-                      <td className="px-4 py-3.5 text-right tabular-nums text-fg">{money(o.value)}</td>
-                      <td className="px-4 py-3.5">
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-fg-muted">{fmt(o.eta)}</span>
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
+            <StatTile label="Open orders" value={open.length} hint="Pending through in transit" />
+            <StatTile label="In transit" value={count("shipped")} hint={late ? `${late} past ETA` : "All on schedule"} valueClassName={late ? "text-warning" : ""} />
+            <StatTile label="Open value" value={money(openValue, { compact: true })} hint="Not yet delivered" />
+            <StatTile label="Delivered" value={count("delivered")} hint="Completed orders" />
+          </div>
+
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <FilterChips
+              label="Filter orders"
+              value={filter}
+              onChange={setFilter}
+              options={FILTERS.map((f) => ({ key: f, label: f === "all" ? "All" : STATUS[f].short, count: count(f) }))}
+            />
+            {selected.size > 0 && (
+              <button
+                type="button"
+                onClick={() => setConfirming(true)}
+                className="inline-flex h-9 items-center rounded-full border border-danger/30 bg-danger-soft px-4 text-sm font-semibold text-danger transition-colors hover:border-danger"
+              >
+                Cancel {selected.size} selected
+              </button>
+            )}
+          </div>
+
+          <Card className="overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[60rem] border-collapse text-sm">
+                <caption className="sr-only">Purchase orders with trading partner, items, value, ETA, and status</caption>
+                <thead className="bg-subtle">
+                  <tr className="border-b border-line text-left text-xs font-semibold text-fg">
+                    <th scope="col" className="w-10 px-4 py-3"><span className="sr-only">Select</span></th>
+                    <th scope="col" className="px-4 py-3">Order</th>
+                    <th scope="col" className="px-4 py-3">Items</th>
+                    <th scope="col" className="px-4 py-3 text-right">Qty</th>
+                    <th scope="col" className="px-4 py-3 text-right">Value</th>
+                    <th scope="col" className="px-4 py-3">ETA</th>
+                    <th scope="col" className="px-4 py-3">Progress</th>
+                    <th scope="col" className="px-4 py-3">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {rows.map((o) => {
+                    const s = STATUS[o.status] ?? STATUS.pending;
+                    const overdue = o.status === "shipped" ? daysOverdue(o.eta) : 0;
+                    const cancellable = OPEN.includes(o.status);
+                    return (
+                      <tr key={o.id} className={`border-b border-line transition-colors last:border-0 hover:bg-subtle ${selected.has(o.id) ? "bg-brand-soft" : ""}`}>
+                        <td className="px-4 py-3.5">
+                          <input
+                            type="checkbox"
+                            checked={selected.has(o.id)}
+                            onChange={() => toggleSelect(o.id)}
+                            disabled={!cancellable}
+                            aria-label={`Select ${o.id}`}
+                            className="h-4 w-4 accent-[var(--brand)] disabled:opacity-30"
+                          />
+                        </td>
+                        <th scope="row" className="px-4 py-3.5 text-left font-normal">
+                          <p className="font-mono text-xs text-fg-muted">{o.id}</p>
+                          <p className="font-semibold text-fg">{o.supplier}</p>
+                        </th>
+                        <td className="px-4 py-3.5">
+                          <p className="text-fg">{o.items}</p>
+                          <p className="text-xs text-fg-muted">{o.category}</p>
+                        </td>
+                        <td className="px-4 py-3.5 text-right tabular-nums text-fg">{Number(o.qty ?? 0).toLocaleString()}</td>
+                        <td className="px-4 py-3.5 text-right font-semibold tabular-nums text-fg">{money(o.value)}</td>
+                        <td className="px-4 py-3.5">
+                          <span className="text-fg">{shortDate(o.eta)}</span>
                           {overdue > 0 && (
-                            <span className="rounded-full bg-danger/10 px-1.5 py-0.5 text-[10px] font-semibold text-danger">
+                            <StatusPill tone="danger" dot={false} className="ml-2">
                               {overdue}d late
-                            </span>
+                            </StatusPill>
                           )}
-                        </div>
-                      </td>
-                      <td className="px-4 py-3.5">
-                        <TimelineBar step={s.step} />
-                      </td>
-                      <td className="px-4 py-3.5">
-                        <span className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ${s.color}`}>
-                          <StatusDot status={s.dot} size={5} />
-                          {s.label}
-                        </span>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-          {!rows.length && (
-            <div className="px-6 py-14 text-center">
-              <p className="text-sm text-fg-muted">No orders match this filter.</p>
+                        </td>
+                        <td className="px-4 py-3.5"><Progress step={s.step} /></td>
+                        <td className="px-4 py-3.5"><StatusPill tone={s.tone}>{s.label}</StatusPill></td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
             </div>
-          )}
-        </GlassCard>
+            {!rows.length && <EmptyState title="No orders in this view">Accepted quotes become orders and show up here.</EmptyState>}
+          </Card>
+        </div>
 
-        {showCancelModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4" onClick={() => setShowCancelModal(false)}>
-            <div className="w-full max-w-sm rounded-2xl border border-line bg-surface p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
-              <h2 className="text-base font-semibold text-fg">Cancel {selected.size} order{selected.size !== 1 ? "s" : ""}?</h2>
-              <p className="mt-2 text-sm text-fg-muted">This will mark the selected orders as cancelled. This action cannot be undone.</p>
-              <div className="mt-6 flex gap-3 justify-end">
-                <button type="button" onClick={() => setShowCancelModal(false)} className="px-4 py-2 text-sm font-semibold text-fg-muted hover:text-fg">
-                  Keep orders
-                </button>
-                <button type="button" onClick={confirmCancel} disabled={cancelling} className="rounded-lg bg-danger/15 px-4 py-2 text-sm font-semibold text-danger hover:bg-danger/25 disabled:opacity-60">
-                  {cancelling ? "Cancelling…" : "Yes, cancel"}
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+        <ConfirmDialog
+          open={confirming}
+          title={`Cancel ${selected.size} order${selected.size !== 1 ? "s" : ""}?`}
+          confirmLabel={cancelling ? "Cancelling…" : "Yes, cancel"}
+          cancelLabel="Keep orders"
+          busy={cancelling}
+          onConfirm={confirmCancel}
+          onCancel={() => setConfirming(false)}
+        >
+          Only orders that haven’t been delivered can be cancelled. The change is logged in your activity feed and can’t be undone.
+        </ConfirmDialog>
       </DashboardLayout>
     </>
   );

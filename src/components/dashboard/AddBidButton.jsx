@@ -2,30 +2,41 @@ import { useState } from "react";
 import useAuth from "../../auth/useAuth";
 import { useToast } from "../../contexts/ToastContext";
 import { createBid } from "../../api/dashboard";
+import { MATERIAL_CATEGORIES } from "../../api/fixtures";
+import { Drawer, Field, inputCls } from "./ui";
+import Button from "../Button";
 
-export default function AddBidButton({ onCreated }) {
+const EMPTY = { project: "", gc: "", trade: MATERIAL_CATEGORIES[0], value: "", due: "" };
+
+/**
+ * Logs a quote in the pipeline. Field names are the /api/bids.php contract:
+ * project = request or project, gc = counterparty, trade = category.
+ */
+export default function AddBidButton({ onCreated, buyer = false }) {
   const [open, setOpen] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [form, setForm] = useState({ project: "", gc: "", trade: "Electrical", value: "", due: "" });
+  const [form, setForm] = useState(EMPTY);
   const { csrf } = useAuth();
   const { toast } = useToast();
+
+  const counterparty = buyer ? "Seller" : "Buyer";
 
   const submit = async (e) => {
     e.preventDefault();
     const value = Number(form.value);
     if (!form.project.trim() || !form.gc.trim() || !form.trade.trim() || !(value > 0)) {
-      toast("Project, GC, trade, and a positive value are required.", { type: "warning" });
+      toast(`Request, ${counterparty.toLowerCase()}, category, and a positive quote value are required.`, { type: "warning" });
       return;
     }
     setSaving(true);
     try {
       await createBid({ ...form, value, csrf });
-      toast(`Bid created for ${form.project}.`, { type: "success" });
-      setForm({ project: "", gc: "", trade: "Electrical", value: "", due: "" });
+      toast(`Quote logged for ${form.project}.`, { type: "success" });
+      setForm(EMPTY);
       setOpen(false);
       onCreated?.();
     } catch (err) {
-      toast(err.message ?? "Couldn’t create that bid.", { type: "error" });
+      toast(err.message ?? "Couldn’t save that quote.", { type: "error" });
     } finally {
       setSaving(false);
     }
@@ -35,57 +46,55 @@ export default function AddBidButton({ onCreated }) {
 
   return (
     <>
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        className="lift glow-brand inline-flex items-center gap-2 rounded-full bg-brand hover:bg-brand-hover px-5 py-3 text-sm font-semibold text-white"
-      >
+      <Button type="button" onClick={() => setOpen(true)}>
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true">
           <path d="M12 5v14M5 12h14" />
         </svg>
-        New bid
-      </button>
+        {buyer ? "Log a quote" : "New quote"}
+      </Button>
 
-      {open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4" onClick={() => setOpen(false)}>
-          <form
-            onSubmit={submit}
-            className="w-full max-w-md rounded-2xl border border-line bg-surface p-6 shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h2 className="text-base font-semibold text-fg">New bid</h2>
-            <p className="mt-1 text-sm text-fg-muted">Starts as a draft. You can move it to submitted or review from the table.</p>
-            <div className="mt-4 space-y-3">
-              {[
-                ["project", "Project", "Harborview Office Tower", "text"],
-                ["gc", "General contractor", "Turner Construction", "text"],
-                ["trade", "Trade", "Electrical", "text"],
-                ["value", "Value (USD)", "250000", "number"],
-                ["due", "Due date", "", "date"],
-              ].map(([key, label, ph, type]) => (
-                <label key={key} className="block">
-                  <span className="text-xs font-medium text-fg-muted">{label}</span>
-                  <input
-                    type={type}
-                    value={form[key]}
-                    onChange={set(key)}
-                    placeholder={ph}
-                    className="mt-1 w-full rounded-md border border-line bg-canvas px-3 py-2 text-sm text-fg outline-none focus:border-brand"
-                  />
-                </label>
+      <Drawer
+        open={open}
+        onClose={() => setOpen(false)}
+        as="form"
+        onSubmit={submit}
+        title={buyer ? "Log a quote you received" : "New quote"}
+        description="Starts as a draft. Move it to sent, under review, accepted, or declined from the pipeline."
+        footer={
+          <>
+            <Button type="button" variant="ghost" onClick={() => setOpen(false)}>
+              Cancel
+            </Button>
+            <Button type="submit" disabled={saving}>
+              {saving ? "Saving…" : "Save draft"}
+            </Button>
+          </>
+        }
+      >
+        <div className="space-y-4">
+          <Field label="Request or project" htmlFor="quote-project">
+            <input id="quote-project" value={form.project} onChange={set("project")} placeholder="e.g. Harborview tower — #5 rebar" className={inputCls} />
+          </Field>
+          <Field label={counterparty} htmlFor="quote-gc">
+            <input id="quote-gc" value={form.gc} onChange={set("gc")} placeholder="Company name" className={inputCls} />
+          </Field>
+          <Field label="Category" htmlFor="quote-trade">
+            <select id="quote-trade" value={form.trade} onChange={set("trade")} className={inputCls}>
+              {MATERIAL_CATEGORIES.map((c) => (
+                <option key={c} value={c}>{c}</option>
               ))}
-            </div>
-            <div className="mt-6 flex justify-end gap-3">
-              <button type="button" onClick={() => setOpen(false)} className="px-4 py-2 text-sm font-semibold text-fg-muted hover:text-fg">
-                Cancel
-              </button>
-              <button type="submit" disabled={saving} className="rounded-lg bg-brand/15 px-4 py-2 text-sm font-semibold text-brand hover:bg-brand/25 disabled:opacity-60">
-                {saving ? "Saving…" : "Create bid"}
-              </button>
-            </div>
-          </form>
+            </select>
+          </Field>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <Field label="Quote value (USD)" htmlFor="quote-value">
+              <input id="quote-value" type="number" min="1" inputMode="decimal" value={form.value} onChange={set("value")} placeholder="25000" className={inputCls} />
+            </Field>
+            <Field label="Valid until" htmlFor="quote-due">
+              <input id="quote-due" type="date" value={form.due} onChange={set("due")} className={inputCls} />
+            </Field>
+          </div>
         </div>
-      )}
+      </Drawer>
     </>
   );
 }

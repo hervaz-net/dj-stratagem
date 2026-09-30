@@ -32,11 +32,11 @@ export default function BackToTop() {
       aria-label="Back to top"
       tabIndex={visible ? 0 : -1}
       aria-hidden={!visible}
-      className={`no-print lift fixed bottom-52 right-6 z-[90] flex h-11 w-11 items-center justify-center rounded-full border border-line bg-surface/90 text-fg shadow-lg backdrop-blur transition-all hover:border-brand/60 hover:text-brand [[data-cookie-banner="1"]_&]:invisible [[data-cookie-banner="1"]_&]:pointer-events-none ${
+      className={`no-print fixed bottom-48 right-4 z-[90] flex h-11 w-11 items-center justify-center rounded-full border border-line bg-surface text-fg-muted shadow-[var(--shadow-card)] transition-[opacity,transform,color,border-color] duration-200 hover:border-line-strong hover:text-fg sm:right-6 [[data-cookie-banner="1"]_&]:invisible [[data-cookie-banner="1"]_&]:pointer-events-none ${
         visible ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-3 opacity-0"
       }`}
     >
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <path d="M12 19V5M5 12l7-7 7 7" />
       </svg>
     </button>

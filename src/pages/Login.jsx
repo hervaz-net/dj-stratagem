@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import Button from "../components/Button";
-import Logo from "../components/Logo";
 import Seo from "../components/Seo";
 import PasswordField from "../components/PasswordField";
+import AuthShell, { AuthAlert, authInputClass } from "../components/auth/AuthShell";
 import useAuth from "../auth/useAuth";
+import { PRODUCT, CONTACT_EMAIL } from "../brand";
 
 export default function Login() {
   const { user, loading, login } = useAuth();
@@ -83,104 +84,84 @@ export default function Login() {
     }
   };
 
-  const inputClass =
-    "w-full rounded-md border border-line bg-canvas px-4 py-2.5 text-sm text-fg outline-hidden " +
-    "transition-colors placeholder:text-fg-muted/60 focus:border-brand";
-
   return (
     <>
-      <Seo title="Sign in" description="Sign in to your D&J Stratagem account." noindex />
+      <Seo title="Sign in" description={`Sign in to your ${PRODUCT} account.`} noindex />
 
-      <div className="mx-auto flex w-full max-w-md flex-col justify-center px-6 py-16 md:py-24">
-        <div className="rounded-2xl border border-line bg-surface p-8 shadow-xl shadow-brand/5">
-          <Link to="/" className="inline-block" aria-label="D&J Stratagem — home">
-            <Logo />
-          </Link>
+      <AuthShell
+        title="Pick up where the order left off."
+        text="Requests, quotes, and purchase orders for every side of the construction supply chain, in one account."
+        footnote="Accounts are approved by our team before first sign-in. If yours is still pending, we will email you when it is ready."
+      >
+        <h1 className="text-3xl font-bold tracking-tight text-fg">Sign in</h1>
+        <p className="mt-2 text-fg-muted">Welcome back to {PRODUCT}.</p>
 
-          <h1 className="mt-8 text-3xl font-semibold tracking-tight text-fg">Sign in</h1>
-          <p className="mt-2 text-sm text-fg-muted">Access your D&amp;J Stratagem account.</p>
-
-          <form onSubmit={handleSubmit} className="mt-8 space-y-4" noValidate>
-            <div>
-              <label htmlFor="email" className="mb-2 block text-sm font-medium text-fg">
-                Email address
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@example.com"
-                aria-invalid={invalid === "email" ? true : undefined}
-                // Field-specific: describing both inputs with the same message
-                // would announce the email error on the password field too.
-                aria-describedby={invalid === "email" ? errorId : undefined}
-                className={inputClass}
-              />
-            </div>
-
-            <PasswordField
-              id="password"
-              label="Password"
-              autoComplete="current-password"
-              value={password}
-              onChange={setPassword}
-              invalid={invalid === "password"}
-              describedBy={invalid === "password" ? errorId : undefined}
+        <form onSubmit={handleSubmit} className="mt-8 space-y-5" noValidate>
+          <div>
+            <label htmlFor="email" className="mb-1.5 block text-sm font-semibold text-fg">
+              Work email
+            </label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@company.com"
+              aria-invalid={invalid === "email" ? true : undefined}
+              // Field-specific: describing both inputs with the same message
+              // would announce the email error on the password field too.
+              aria-describedby={invalid === "email" ? errorId : undefined}
+              className={`${authInputClass} ${invalid === "email" ? "border-danger" : "border-line"}`}
             />
-
-            <div className="flex items-center justify-between">
-              <label className="flex items-center gap-2 text-sm text-fg-muted">
-                <input
-                  type="checkbox"
-                  checked={rememberMe}
-                  onChange={(e) => setRememberMe(e.target.checked)}
-                  className="h-3.5 w-3.5 accent-amber"
-                />
-                Remember me
-              </label>
-              <Link to="/forgot-password" className="text-sm font-medium text-brand hover:text-brand-hover">
-                Forgot password?
-              </Link>
-            </div>
-
-            <div aria-live="polite" role="status" id={errorId}>
-              {error && (
-                <div className="rounded-md border border-danger/30 bg-danger/10 px-4 py-2.5 text-sm text-danger">
-                  {error}
-                </div>
-              )}
-            </div>
-
-            <Button type="submit" variant="primary" className="mt-2 w-full" disabled={submitting}>
-              {submitting ? "Signing in…" : "Sign in"}
-            </Button>
-          </form>
-
-          <div className="mt-6 space-y-4">
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center" aria-hidden="true">
-                <div className="w-full border-t border-line" />
-              </div>
-              <div className="relative flex justify-center">
-                <span className="bg-surface px-3 text-xs uppercase tracking-wider text-fg-muted">Or</span>
-              </div>
-            </div>
-            <p className="text-center text-sm text-fg-muted">
-              Don&rsquo;t have an account?{" "}
-              <Link to="/register" className="font-medium text-brand hover:text-brand-hover">
-                Request access
-              </Link>
-            </p>
           </div>
-        </div>
 
-        <p className="mt-8 text-center text-xs text-fg-muted">
-          Accounts are approved by our team before first sign-in.
-        </p>
-      </div>
+          <PasswordField
+            id="password"
+            label="Password"
+            autoComplete="current-password"
+            value={password}
+            onChange={setPassword}
+            invalid={invalid === "password"}
+            describedBy={invalid === "password" ? errorId : undefined}
+          />
+
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <label className="flex items-center gap-2 text-sm text-fg-muted">
+              <input
+                type="checkbox"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+                className="h-4 w-4 rounded accent-brand"
+              />
+              Remember my email
+            </label>
+            <Link to="/forgot-password" className="text-sm font-semibold text-brand hover:text-brand-hover">
+              Forgot password?
+            </Link>
+          </div>
+
+          <div aria-live="polite" role="status" id={errorId}>
+            {error && <AuthAlert>{error}</AuthAlert>}
+          </div>
+
+          <Button type="submit" size="lg" className="w-full" disabled={submitting}>
+            {submitting ? "Signing in…" : "Sign in"}
+          </Button>
+        </form>
+
+        <div className="mt-8 rounded-2xl bg-subtle px-5 py-4 text-sm">
+          <p className="font-semibold text-fg">New to {PRODUCT}?</p>
+          <p className="mt-1 text-fg-muted">
+            Manufacturers, distributors, and contractors can{" "}
+            <Link to="/register" className="font-semibold text-brand hover:text-brand-hover">
+              request an account
+            </Link>
+            . Trouble signing in? Email {CONTACT_EMAIL}.
+          </p>
+        </div>
+      </AuthShell>
     </>
   );
 }

@@ -1,275 +1,358 @@
-import Section, { Eyebrow } from "../components/Section";
+import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import Section, { SectionHeading } from "../components/Section";
+import PageHero from "../components/PageHero";
 import Button from "../components/Button";
+import FeatureCard from "../components/FeatureCard";
 import CTASection from "../components/CTASection";
-import Reveal from "../components/Reveal";
+import SampleLabel from "../components/SampleLabel";
 import Seo from "../components/Seo";
+import ListingCard from "../components/market/ListingCard";
+import RequestCard from "../components/market/RequestCard";
+import CategoryTile from "../components/market/CategoryTile";
+import FilterChip from "../components/market/FilterChip";
+import SampleNotice from "../components/market/SampleNotice";
+import { CATEGORIES, SAMPLE_LISTINGS, SAMPLE_REQUESTS, categoryIcon } from "../components/market/catalog";
+import { PRODUCT } from "../brand";
 import {
-  IconTool,
-  IconBolt,
-  IconPackage,
+  IconSearch,
   IconLock,
   IconScale,
-  IconUsers,
-  IconLayers,
-  IconTruck,
-  IconShield,
   IconClock,
-  IconArrowRight,
+  IconLayers,
+  IconPackage,
+  IconUsers,
   IconCheck,
+  IconArrowRight,
+  IconTruck,
 } from "../components/icons";
 
-const categories = [
-  {
-    icon: <IconTool />,
-    title: "Power tools & accessories",
-    text: "Drills, saws, grinders, batteries, blades, and bits — the consumables that walk off every jobsite.",
-  },
-  {
-    icon: <IconBolt />,
-    title: "Fasteners & hardware",
-    text: "Screws, anchors, bolts, nails, brackets, and connectors, by the box or by the pallet.",
-  },
-  {
-    icon: <IconLayers />,
-    title: "Electrical tools & materials",
-    text: "Conduit, wire, boxes, breakers, fittings, and the hand tools that go with them.",
-  },
-  {
-    icon: <IconPackage />,
-    title: "Lumber & wood",
-    text: "Dimensional lumber, sheet goods, slabs, and engineered wood, priced as the market moves.",
-  },
-  {
-    icon: <IconShield />,
-    title: "Metal plates, rods & structural",
-    text: "Plate, bar, rod, rebar, angle, and structural shapes cut to your take-off.",
-  },
-  {
-    icon: <IconTruck />,
-    title: "Plumbing PVC & fittings",
-    text: "PVC, CPVC, ABS, copper, PEX, and the full fitting run for rough-in and finish.",
-  },
-  {
-    icon: <IconPackage />,
-    title: "Plumbing hardware & fixtures",
-    text: "Valves, hangers, traps, water heaters, and fixtures for residential and commercial scopes.",
-  },
-  {
-    icon: <IconShield />,
-    title: "Safety & jobsite consumables",
-    text: "PPE, fall protection, layout, abrasives, tape, and everything that gets burned through weekly.",
-  },
+const SELLER_FILTERS = [
+  { key: "all", label: "All sellers" },
+  { key: "supplier", label: "Manufacturers" },
+  { key: "distributor", label: "Distributors" },
 ];
+
+const SORTS = {
+  relevance: { label: "Featured", fn: null },
+  "price-asc": { label: "Price: low to high", fn: (a, b) => a.price - b.price },
+  "price-desc": { label: "Price: high to low", fn: (a, b) => b.price - a.price },
+  stock: { label: "In stock first", fn: (a, b) => Number(b.inStock) - Number(a.inStock) },
+};
 
 const mechanics = [
   {
     icon: <IconLock />,
     title: "Sealed quotes, one round",
-    text: "Suppliers can't see each other's numbers and can't re-bid. One honest price, submitted once — there's no undercutting spiral to get dragged into.",
+    text: "Sellers can't see each other's numbers and can't re-bid. One honest price, submitted once, with no undercutting spiral.",
   },
   {
     icon: <IconScale />,
-    title: "Scored, not just cheapest",
-    text: "You set the weights: price, lead time, fill rate, delivery, and past performance. The award goes to the best total offer, not the lowest line.",
-  },
-  {
-    icon: <IconClock />,
-    title: "Auto-award at the deadline",
-    text: "Set a window — two hours or two days. When it closes, the platform scores every quote and awards automatically. No haggling, no chasing callbacks.",
+    title: "Compared on more than price",
+    text: "Weigh unit price, lead time, fill rate, and delivery the way your job needs. The best total offer wins, not the lowest line.",
   },
   {
     icon: <IconLayers />,
     title: "Split awards by line item",
-    text: "Nobody stocks everything. Award the rod to one supplier and the PVC to another so you get a 100% fill instead of 80% from the cheapest bidder.",
+    text: "Nobody stocks everything. Award the rebar to one seller and the PVC to another and get a full fill instead of 80% from one.",
+  },
+  {
+    icon: <IconClock />,
+    title: "A deadline you set",
+    text: "Give a request two hours or two days. When the window closes, every quote is lined up side by side and ready to award.",
   },
 ];
 
-const efficiencies = [
+const repeatBuying = [
   {
     icon: <IconPackage />,
     title: "Standing price books",
-    text: "For the SKUs you reorder every week, suppliers publish tiered contract pricing that stays live. You reorder at a known price in seconds — bidding happens on the price book each quarter, not on every purchase order.",
+    text: "For the SKUs you reorder every week, sellers publish tiered contract pricing that stays live. Reorder at a known price; re-quote the book each quarter, not every PO.",
   },
   {
     icon: <IconUsers />,
     title: "Pooled demand",
-    text: "The platform aggregates the same SKU across every contractor buying it that week. A two-crew shop gets inside a volume tier it could never reach alone, and the supplier gets one large committed block instead of forty small ones.",
+    text: "The same SKU across many small buyers adds up. Pooling it lets a two-crew shop reach a volume tier, and gives the seller one larger committed order instead of forty small ones.",
   },
 ];
 
-const supplierProtections = [
-  "Set floor pricing per SKU so a quote can never be scored below your margin",
-  "Win on lead time, fill rate, and reliability — not just by being cheapest",
-  "Pooled orders mean fewer, larger, committed POs instead of constant small quotes",
-  "Performance ratings compound: deliver well and you rank higher on future matches",
+const sellerProtections = [
+  "Set floor pricing per SKU so a quote is never scored below your margin",
+  "Win on lead time, fill rate, and reliability, not only on price",
+  "Fewer, larger, committed orders instead of constant one-off quotes",
+  "See open demand by category and region before you stock up",
 ];
 
-export default function Supply() {
+export default function Marketplace() {
+  const [searchParams] = useSearchParams();
+  const urlQuery = searchParams.get("q") ?? "";
+  const [query, setQuery] = useState(urlQuery);
+  // The home page search links here with ?q=; follow later changes too.
+  useEffect(() => setQuery(urlQuery), [urlQuery]);
+  const [category, setCategory] = useState(null);
+  const [seller, setSeller] = useState("all");
+  const [inStockOnly, setInStockOnly] = useState(false);
+  const [fulfillment, setFulfillment] = useState(null);
+  const [sort, setSort] = useState("relevance");
+
+  const counts = useMemo(() => {
+    const c = {};
+    SAMPLE_LISTINGS.forEach((l) => {
+      c[l.category] = (c[l.category] ?? 0) + 1;
+    });
+    return c;
+  }, []);
+
+  const results = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    const list = SAMPLE_LISTINGS.filter((l) => {
+      if (category && l.category !== category) return false;
+      if (seller !== "all" && l.sellerRole !== seller) return false;
+      if (inStockOnly && !l.inStock) return false;
+      if (fulfillment && !l.fulfillment.includes(fulfillment)) return false;
+      if (q && !`${l.title} ${l.sku} ${l.seller}`.toLowerCase().includes(q)) return false;
+      return true;
+    });
+    const fn = SORTS[sort]?.fn;
+    return fn ? [...list].sort(fn) : list;
+  }, [query, category, seller, inStockOnly, fulfillment, sort]);
+
+  const filtersActive = query || category || seller !== "all" || inStockOnly || fulfillment;
+  const resetFilters = () => {
+    setQuery("");
+    setCategory(null);
+    setSeller("all");
+    setInStockOnly(false);
+    setFulfillment(null);
+  };
+
+  const categoryLabel = CATEGORIES.find((c) => c.key === category)?.title;
+
   return (
     <>
       <Seo
-        title="Supply Exchange"
-        description="Source fasteners, lumber, conduit, PVC, plate, and power tools through sealed, scored bidding — fast enough for a same-day order, structured so suppliers stay at the table."
+        title="Marketplace"
+        description="Browse construction supply from manufacturers and distributors: power tools, fasteners, electrical, lumber, rebar and structural, PVC and fittings. Compare price, minimums, lead time, and delivery or will-call."
       />
 
-      <Section className="relative overflow-hidden pt-16 pb-8 md:pt-24">
-        <div className="pointer-events-none absolute inset-0 bg-grid [mask-image:radial-gradient(ellipse_60%_60%_at_50%_0%,black,transparent)]" />
-        <div className="relative">
-          <Eyebrow>Supply Exchange</Eyebrow>
-          <h1 className="text-balance max-w-3xl text-4xl font-semibold leading-tight tracking-tight text-fg sm:text-5xl">
-            The materials you always need, priced without the race to the bottom.
-          </h1>
-          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-fg-muted">
-            Fasteners, lumber, conduit, PVC, plate, and power tools move on every job you run.
-            Supply Exchange sources them through sealed, scored bidding &mdash; fast enough for a
-            same-day order, structured so suppliers stay at the table.
-          </p>
-          <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-            <Button to="/contact" variant="primary">
-              Request a demo <IconArrowRight width={16} height={16} />
+      <PageHero
+        eyebrow="Marketplace"
+        title="Construction supply, from the people who make it and stock it."
+        actions={
+          <>
+            <Button to="/register">Post a request</Button>
+            <Button to="/suppliers" variant="secondary">
+              List products
             </Button>
-            <Button to="/platform" variant="secondary">
-              See the full platform
-            </Button>
-          </div>
-        </div>
-      </Section>
+          </>
+        }
+      >
+        Browse catalog listings from manufacturers and local distributors side by side. Compare unit
+        price, minimums, lead time, and whether it ships to the jobsite or waits at the counter.
+      </PageHero>
 
-      <Section className="border-t border-line">
-        <Eyebrow>What you can source</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-fg md:text-4xl">
-          The essentials, not the long tail.
-        </h2>
-        <p className="mt-5 max-w-2xl text-base leading-relaxed text-fg-muted">
-          We focus on the categories that turn over constantly and never stop being needed &mdash;
-          where a better price and a reliable fill rate compound across every job on your board.
-        </p>
-        <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {categories.map((c, i) => (
-            <Reveal key={c.title} delay={(i % 4) * 80} className="h-full">
-              <div className="lift h-full rounded-xl border border-line bg-surface p-6 hover:border-brand/40">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand/10 text-brand">
-                  {c.icon}
-                </div>
-                <h3 className="mt-5 text-base font-semibold text-fg">{c.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-fg-muted">{c.text}</p>
-              </div>
-            </Reveal>
+      <Section className="!pt-10 md:!pt-14">
+        <SampleNotice />
+
+        <form
+          role="search"
+          onSubmit={(e) => e.preventDefault()}
+          className="mt-8 flex items-center gap-3 rounded-full border border-line bg-surface py-1.5 pl-5 pr-1.5 shadow-[var(--shadow-card)] focus-within:border-brand"
+        >
+          <IconSearch width={18} height={18} className="shrink-0 text-fg-muted" aria-hidden="true" />
+          <label htmlFor="market-search" className="sr-only">
+            Search sample listings
+          </label>
+          <input
+            id="market-search"
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search SKUs, products, or sellers"
+            className="h-10 min-w-0 flex-1 bg-transparent text-base text-fg outline-hidden placeholder:text-fg-muted/70"
+          />
+          <Button type="submit" size="sm" className="hidden sm:inline-flex">
+            Search
+          </Button>
+        </form>
+
+        <h2 className="mt-12 text-lg font-semibold text-fg">Shop by category</h2>
+        <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+          <CategoryTile
+            icon={<IconLayers />}
+            title="All supply"
+            count={SAMPLE_LISTINGS.length}
+            active={category === null}
+            onClick={() => setCategory(null)}
+          />
+          {CATEGORIES.map((c) => (
+            <CategoryTile
+              key={c.key}
+              icon={c.icon}
+              title={c.title}
+              count={counts[c.key] ?? 0}
+              active={category === c.key}
+              onClick={() => setCategory(category === c.key ? null : c.key)}
+            />
           ))}
+          <CategoryTile icon={<IconTruck />} title="Equipment rental" text="Machines and trucks by the day" to="/fleet" />
         </div>
-      </Section>
 
-      <Section className="border-t border-line">
-        <div className="grid grid-cols-1 gap-14 lg:grid-cols-2 lg:items-start">
-          <div>
-            <Eyebrow>Why not a normal reverse auction</Eyebrow>
-            <h2 className="text-balance text-3xl font-semibold tracking-tight text-fg md:text-4xl">
-              Bid wars look like savings and cost you later.
-            </h2>
-            <p className="mt-5 text-base leading-relaxed text-fg-muted">
-              Open, multi-round reverse auctions push suppliers to undercut each other until the
-              margin is gone. What follows is predictable: substitutions, short-shipped orders,
-              slipped delivery dates, and the good suppliers quietly stop quoting you.
-            </p>
-            <p className="mt-4 text-base leading-relaxed text-fg-muted">
-              It's also slow. Iterative bidding takes days, and materials rarely have days.
-            </p>
+        <div className="mt-10 flex flex-col gap-4 border-b border-line pb-5 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex flex-wrap gap-2" role="group" aria-label="Filter listings">
+            {SELLER_FILTERS.map((f) => (
+              <FilterChip key={f.key} active={seller === f.key} onClick={() => setSeller(f.key)}>
+                {f.label}
+              </FilterChip>
+            ))}
+            <span className="mx-1 hidden w-px self-stretch bg-line sm:block" aria-hidden="true" />
+            <FilterChip active={inStockOnly} onClick={() => setInStockOnly((v) => !v)}>
+              In stock
+            </FilterChip>
+            <FilterChip
+              active={fulfillment === "delivery"}
+              onClick={() => setFulfillment(fulfillment === "delivery" ? null : "delivery")}
+            >
+              Delivery
+            </FilterChip>
+            <FilterChip
+              active={fulfillment === "will-call"}
+              onClick={() => setFulfillment(fulfillment === "will-call" ? null : "will-call")}
+            >
+              Will-call
+            </FilterChip>
           </div>
-          <div className="rounded-2xl border border-line bg-surface p-6">
-            <p className="text-xs uppercase tracking-wider text-fg-muted">Award scoring</p>
-            <div className="mt-4 space-y-3">
-              {[
-                { label: "Unit price", value: "Weighted 40%", tag: "$" },
-                { label: "Fill rate", value: "Weighted 25%", tag: "100%" },
-                { label: "Lead time", value: "Weighted 20%", tag: "2 days" },
-                { label: "Past performance", value: "Weighted 15%", tag: "4.8" },
-              ].map((row) => (
-                <div key={row.label} className="flex items-center justify-between rounded-lg bg-canvas px-4 py-3">
-                  <div>
-                    <p className="text-sm font-medium text-fg">{row.label}</p>
-                    <p className="text-xs text-fg-muted">{row.value}</p>
-                  </div>
-                  <span className="rounded-full border border-line px-3 py-1 text-xs text-fg-muted">{row.tag}</span>
-                </div>
+          <div className="flex items-center gap-2">
+            <label htmlFor="market-sort" className="text-sm text-fg-muted">
+              Sort
+            </label>
+            <select
+              id="market-sort"
+              value={sort}
+              onChange={(e) => setSort(e.target.value)}
+              className="h-9 rounded-full border border-line bg-surface px-3 text-sm text-fg hover:border-line-strong"
+            >
+              {Object.entries(SORTS).map(([key, s]) => (
+                <option key={key} value={key}>
+                  {s.label}
+                </option>
               ))}
-              <div className="flex items-center justify-between rounded-lg border border-brand/40 bg-brand/10 px-4 py-3">
-                <span className="text-sm font-medium text-brand">Auto-awarded</span>
-                <span className="text-xs text-brand">Best total score</span>
-              </div>
-            </div>
-            <p className="mt-4 text-xs leading-relaxed text-fg-muted">
-              Weights are illustrative &mdash; you set them per RFQ or save them as a default.
-            </p>
+            </select>
           </div>
         </div>
-      </Section>
 
-      <Section className="border-t border-line">
-        <Eyebrow>How the bidding works</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-fg md:text-4xl">
-          Still competitive. Just not a knife fight.
-        </h2>
-        <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2">
-          {mechanics.map((m) => (
-            <div key={m.title} className="rounded-xl border border-line bg-surface p-6">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand/10 text-brand">
-                {m.icon}
-              </div>
-              <h3 className="mt-5 text-base font-semibold text-fg">{m.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-fg-muted">{m.text}</p>
-            </div>
-          ))}
+        <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
+          <p className="text-sm text-fg-muted" aria-live="polite">
+            <span className="font-semibold text-fg tabular-nums">{results.length}</span> sample{" "}
+            {results.length === 1 ? "listing" : "listings"}
+            {categoryLabel && <> in {categoryLabel}</>}
+          </p>
+          {filtersActive && (
+            <button type="button" onClick={resetFilters} className="text-sm font-medium text-brand hover:text-brand-hover">
+              Clear filters
+            </button>
+          )}
         </div>
-      </Section>
 
-      <Section className="border-t border-line">
-        <Eyebrow>Skip the RFQ entirely</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-3xl font-semibold tracking-tight text-fg md:text-4xl">
-          Most orders shouldn't need a bid at all.
-        </h2>
-        <p className="mt-5 max-w-2xl text-base leading-relaxed text-fg-muted">
-          Running an auction to buy the same box of deck screws you bought last Tuesday is pure
-          friction. Two mechanisms take the repeat volume off the bidding table completely.
-        </p>
-        <div className="mt-12 grid grid-cols-1 gap-5 lg:grid-cols-2">
-          {efficiencies.map((e) => (
-            <div key={e.title} className="rounded-xl border border-line bg-surface p-6">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand/10 text-brand">
-                {e.icon}
-              </div>
-              <h3 className="mt-5 text-base font-semibold text-fg">{e.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-fg-muted">{e.text}</p>
-            </div>
-          ))}
-        </div>
-      </Section>
-
-      <Section className="border-t border-line">
-        <div className="grid grid-cols-1 items-center gap-14 lg:grid-cols-2">
-          <div>
-            <Eyebrow>For suppliers</Eyebrow>
-            <h2 className="text-balance text-3xl font-semibold tracking-tight text-fg md:text-4xl">
-              A channel worth quoting into.
-            </h2>
-            <p className="mt-5 text-base leading-relaxed text-fg-muted">
-              A marketplace only works if the supply side stays healthy. Supply Exchange is built
-              so distributors and manufacturers can compete on what they're actually good at
-              instead of bleeding margin to win a box of anchors.
+        {results.length > 0 ? (
+          <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {results.map((l) => (
+              <ListingCard key={l.id} listing={l} icon={categoryIcon(l.category)} />
+            ))}
+          </div>
+        ) : (
+          <div className="mt-5 rounded-2xl border border-dashed border-line-strong bg-surface px-6 py-14 text-center">
+            <p className="text-base font-semibold text-fg">No sample listings match those filters.</p>
+            <p className="mx-auto mt-2 max-w-md text-sm text-fg-muted">
+              On the live Exchange, a search that comes up empty is a good reason to post a request and let
+              sellers come to you.
             </p>
-            <div className="mt-8">
-              <Button to="/contact" variant="secondary">
-                Join as a supplier <IconArrowRight width={16} height={16} />
+            <div className="mt-6 flex flex-wrap justify-center gap-3">
+              <Button size="sm" variant="secondary" onClick={resetFilters}>
+                Clear filters
+              </Button>
+              <Button size="sm" to="/register">
+                Post a request
               </Button>
             </div>
           </div>
-          {/* Was an empty blurred gradient box; this is the supplier-protection
-              list the page describes. */}
-          <div className="rounded-2xl border border-line bg-surface p-6">
-            <p className="text-xs uppercase tracking-wider text-fg-muted">Supplier protections</p>
+        )}
+      </Section>
+
+      <Section tone="subtle">
+        <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+          <SectionHeading eyebrow="Open demand" title="What buyers are asking for.">
+            Contractors post requests tied to a job. Distributors post restock requests to manufacturers.
+            Sellers quote into both.
+          </SectionHeading>
+          <div className="flex shrink-0 items-center gap-3">
+            <SampleLabel />
+            <Button to="/projects" variant="secondary">
+              Project demand <IconArrowRight width={16} height={16} />
+            </Button>
+          </div>
+        </div>
+        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {SAMPLE_REQUESTS.map((r) => (
+            <RequestCard key={r.id} request={r} to="/projects" />
+          ))}
+        </div>
+      </Section>
+
+      <Section>
+        <SectionHeading eyebrow="How quoting works" title="Competitive, without the race to the bottom.">
+          Open reverse auctions push sellers to undercut until the margin is gone, and what follows is
+          substitutions, short-shipped orders, and slipped dates. Requests on {PRODUCT} are built to get
+          one honest price from every seller.
+        </SectionHeading>
+        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {mechanics.map((m) => (
+            <FeatureCard key={m.title} icon={m.icon} title={m.title}>
+              {m.text}
+            </FeatureCard>
+          ))}
+        </div>
+
+        <div className="mt-16 grid gap-10 lg:grid-cols-[1fr_1.4fr] lg:items-start">
+          <div>
+            <h3 className="text-2xl font-bold tracking-tight text-fg">Most reorders shouldn&rsquo;t need a quote at all.</h3>
+            <p className="mt-4 text-base leading-relaxed text-fg-muted">
+              Running a request to buy the same box of deck screws you bought last Tuesday is pure friction.
+              Two mechanisms take repeat volume off the quoting table.
+            </p>
+          </div>
+          <div className="grid gap-5 sm:grid-cols-2">
+            {repeatBuying.map((e) => (
+              <FeatureCard key={e.title} icon={e.icon} title={e.title} tone="distributor">
+                {e.text}
+              </FeatureCard>
+            ))}
+          </div>
+        </div>
+      </Section>
+
+      <Section tone="subtle">
+        <div className="grid items-center gap-12 lg:grid-cols-2">
+          <div>
+            <SectionHeading eyebrow="For sellers" title="A channel worth quoting into.">
+              A marketplace only works if the supply side stays healthy. Manufacturers and distributors
+              compete on what they&rsquo;re good at, not on bleeding margin to win a box of anchors.
+            </SectionHeading>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Button to="/suppliers">For manufacturers</Button>
+              <Button to="/distributors" variant="secondary">
+                For distributors
+              </Button>
+            </div>
+          </div>
+          <div className="rounded-2xl border border-line bg-surface p-6 shadow-[var(--shadow-card)]">
+            <p className="text-sm font-semibold text-fg">Built to protect seller margin</p>
             <ul className="mt-4 space-y-4">
-              {supplierProtections.map((pt) => (
-                <li key={pt} className="flex items-start gap-3 text-sm text-fg/90">
-                  <IconCheck width={16} height={16} className="mt-0.5 shrink-0 text-brand" />
+              {sellerProtections.map((pt) => (
+                <li key={pt} className="flex items-start gap-3 text-[0.95rem] text-fg">
+                  <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brand-soft text-brand-fg" aria-hidden="true">
+                    <IconCheck width={13} height={13} />
+                  </span>
                   {pt}
                 </li>
               ))}
@@ -279,8 +362,10 @@ export default function Supply() {
       </Section>
 
       <CTASection
-        title="Stop overpaying for the things you buy every week."
-        subtitle="See how Supply Exchange prices your standing materials list — bring a recent PO and we'll walk it through."
+        title="Bring your materials list."
+        subtitle="Post what the job needs, or list what you sell. We're onboarding early buyers and sellers now and will walk you through a recent PO."
+        primaryLabel="Join free"
+        secondaryLabel="Talk to us"
       />
     </>
   );

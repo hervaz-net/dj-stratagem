@@ -6,7 +6,6 @@ const shortcuts = [
   { keys: ["Esc"], desc: "Clear search / close panel" },
   { keys: ["R"], desc: "Refresh data" },
   { keys: ["?"], desc: "Open this shortcuts panel" },
-  { keys: ["↑", "↓"], desc: "Sort column (click header first)" },
 ];
 
 export default function ShortcutsModal({ onClose }) {
@@ -19,7 +18,7 @@ export default function ShortcutsModal({ onClose }) {
   return (
     <>
       <div
-        className="fixed inset-0 z-40 bg-canvas/60 backdrop-blur-sm"
+        className="fixed inset-0 z-40 bg-bid-navy/50"
         onClick={onClose}
         aria-hidden="true"
       />
@@ -27,7 +26,7 @@ export default function ShortcutsModal({ onClose }) {
         role="dialog"
         aria-modal="true"
         aria-label="Keyboard shortcuts"
-        className="fixed left-1/2 top-1/2 z-50 w-full max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-line bg-surface p-6 shadow-2xl"
+        className="animate-menu-in fixed left-1/2 top-1/2 z-50 w-[calc(100%-2rem)] max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-line bg-surface p-6 shadow-[var(--shadow-pop)]"
       >
         <div className="mb-5 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
@@ -38,7 +37,7 @@ export default function ShortcutsModal({ onClose }) {
             type="button"
             onClick={onClose}
             aria-label="Close shortcuts panel"
-            className="rounded-md p-1 text-fg-muted hover:text-fg"
+            className="flex h-9 w-9 items-center justify-center rounded-full text-fg-muted hover:bg-subtle hover:text-fg"
           >
             <IconX width={18} height={18} />
           </button>
@@ -52,7 +51,7 @@ export default function ShortcutsModal({ onClose }) {
                 {s.keys.map((k) => (
                   <kbd
                     key={k}
-                    className="inline-flex items-center rounded-md border border-line bg-canvas px-2 py-0.5 text-xs font-mono font-semibold text-fg"
+                    className="inline-flex items-center rounded-lg border border-line bg-subtle px-2 py-0.5 text-xs font-mono font-semibold text-fg"
                   >
                     {k}
                   </kbd>

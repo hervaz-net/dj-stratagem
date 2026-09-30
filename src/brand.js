@@ -39,7 +39,7 @@ export const ROLES = {
     short: "Contractor",
     path: "/contractors",
     color: "role-contractor",
-    summary: "Post what the job needs and compare quotes from verified sellers.",
+    summary: "Post what the job needs and compare quotes from distributors and manufacturers.",
   },
 };
 

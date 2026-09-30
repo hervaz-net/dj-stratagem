@@ -1,12 +1,30 @@
-import Section, { Eyebrow } from "../components/Section";
+import Section from "../components/Section";
+import PageHero from "../components/PageHero";
 import CTASection from "../components/CTASection";
 import Seo from "../components/Seo";
 import Reveal from "../components/Reveal";
+import { PRODUCT, COMPANY } from "../brand";
 
 const entries = [
   {
+    version: "2.0",
+    date: "September 30, 2026",
+    iso: "2026-09-30",
+    tag: "Rebrand",
+    items: [
+      { type: "new", text: `The platform is now ${PRODUCT} by ${COMPANY}: a B2B supply marketplace connecting manufacturers and vendors, distributors, and contractors.` },
+      { type: "new", text: "Marketplace positioning: requests for quote, quotes, orders, and seller catalogs replace the bidding-pipeline framing across the site." },
+      { type: "new", text: "New design: a bright marketplace look with a deep-green brand color, rounded cards, and full light and dark themes." },
+      { type: "new", text: "New audience pages for manufacturers and vendors, distributors, and contractors, plus a Solutions hub that compares the three." },
+      { type: "new", text: "Dashboard roles: switch between supplier, distributor, and contractor views, with Requests, Quotes, Orders, Catalog, and Network sections." },
+      { type: "improved", text: "Home, How it works, About, Contact, and the 404 page rewritten for the marketplace." },
+      { type: "improved", text: "Removed the integrations list from How it works until those integrations exist." },
+    ],
+  },
+  {
     version: "1.5",
     date: "August 2026",
+    iso: "2026-08",
     tag: "Fix",
     items: [
       { type: "improved", text: "Cookie banner no longer covers the support button, demo chip, or back-to-top control." },
@@ -22,6 +40,7 @@ const entries = [
   {
     version: "1.4",
     date: "July 2026",
+    iso: "2026-07",
     tag: "Major",
     items: [
       { type: "new", text: "Dashboard: Overview, Bids, Orders, Analytics, and Alerts pages launched. All sidebar routes are now live." },
@@ -35,6 +54,7 @@ const entries = [
   {
     version: "1.3",
     date: "June 2026",
+    iso: "2026-06",
     tag: "Feature",
     items: [
       { type: "new", text: "Command palette (Cmd+K / Ctrl+K) for instant navigation across all pages." },
@@ -48,6 +68,7 @@ const entries = [
   {
     version: "1.2",
     date: "May 2026",
+    iso: "2026-05",
     tag: "Feature",
     items: [
       { type: "new", text: "Supplier drawer with full profile, metrics, risk gauge, and 30-day sparkline." },
@@ -62,6 +83,7 @@ const entries = [
   {
     version: "1.1",
     date: "April 2026",
+    iso: "2026-04",
     tag: "Foundation",
     items: [
       { type: "new", text: "Dashboard shell with sidebar, breadcrumbs, and GlassCard layout system." },
@@ -75,6 +97,7 @@ const entries = [
   {
     version: "1.0",
     date: "March 2026",
+    iso: "2026-03",
     tag: "Launch",
     items: [
       { type: "new", text: "Initial platform launch — D&J Stratagem, Inc." },
@@ -84,18 +107,19 @@ const entries = [
   },
 ];
 
-const TYPE_COLOR = {
-  new: "text-[var(--viz-green)] bg-[var(--viz-green)]/10",
-  improved: "text-[var(--viz-cyan)] bg-[var(--viz-cyan)]/10",
-  fix: "text-warning bg-warning/10",
+const TYPE_STYLE = {
+  new: "bg-brand-soft text-brand-fg",
+  improved: "bg-role-distributor-soft text-role-distributor",
+  fix: "bg-warning-soft text-warning",
 };
 
-const TAG_COLOR = {
-  Major: "bg-brand/15 text-brand border-brand/30",
-  Feature: "bg-brand/10 text-brand border-brand/30",
-  Foundation: "bg-[var(--viz-cyan)]/10 text-[var(--viz-cyan)] border-[var(--viz-cyan)]/30",
-  Launch: "bg-[var(--viz-green)]/10 text-[var(--viz-green)] border-[var(--viz-green)]/30",
-  Fix: "bg-warning/10 text-warning border-warning/30",
+const TAG_STYLE = {
+  Rebrand: "bg-accent-soft text-accent",
+  Major: "bg-brand-soft text-brand-fg",
+  Feature: "bg-brand-soft text-brand-fg",
+  Foundation: "bg-role-distributor-soft text-role-distributor",
+  Launch: "bg-success-soft text-success",
+  Fix: "bg-warning-soft text-warning",
 };
 
 export default function Changelog() {
@@ -103,59 +127,67 @@ export default function Changelog() {
     <>
       <Seo
         title="Changelog"
-        description="Every update, feature, and improvement to D&J Stratagem — newest first."
+        description={`Every update, feature, and fix to ${PRODUCT}, newest first.`}
       />
 
-      <Section className="pt-16 pb-8 md:pt-24">
-        <Eyebrow>Changelog</Eyebrow>
-        <h1 className="text-balance max-w-3xl text-2xl font-semibold leading-tight tracking-tight text-fg sm:text-3xl">
-          What's new on the platform.
-        </h1>
-        <p className="mt-6 max-w-2xl text-lg leading-relaxed text-fg-muted">
-          Every release, improvement, and fix — most recent first. There is no email digest yet.
-        </p>
-      </Section>
+      <PageHero eyebrow="Changelog" title="What's new on the marketplace.">
+        Every release, improvement, and fix, most recent first. There is no email digest yet.
+      </PageHero>
 
-      <Section className="border-t border-line">
-        <div className="max-w-3xl space-y-14">
-          {entries.map((entry, i) => (
-            <Reveal key={entry.version} delay={i * 60}>
-              <div className="flex gap-6 sm:gap-10">
+      <Section>
+        <ol className="mx-auto max-w-3xl">
+          {entries.map((entry, i) => {
+            const latest = i === 0;
+            return (
+              <Reveal as="li" key={entry.version} delay={Math.min(i, 3) * 60} className="relative flex gap-5 sm:gap-8">
                 <div className="flex flex-col items-center">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-brand/40 bg-brand/10 text-xs font-semibold text-brand">
+                  <span
+                    className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-xs font-bold tabular-nums ${
+                      latest ? "bg-brand text-white" : "border border-line bg-surface text-fg"
+                    }`}
+                  >
                     {entry.version}
-                  </div>
-                  {i < entries.length - 1 && (
-                    <div className="mt-3 flex-1 w-px bg-line" aria-hidden="true" />
-                  )}
+                  </span>
+                  {i < entries.length - 1 && <span className="mt-2 w-px flex-1 bg-line" aria-hidden="true" />}
                 </div>
-                <div className="min-w-0 flex-1 pb-8">
-                  <div className="flex flex-wrap items-center gap-3">
-                    <time className="text-sm font-semibold text-fg">{entry.date}</time>
-                    <span className={`rounded-full border px-2.5 py-0.5 text-xs font-medium ${TAG_COLOR[entry.tag]}`}>
-                      {entry.tag}
-                    </span>
+                <div className="min-w-0 flex-1 pb-12">
+                  <div
+                    className={`rounded-2xl border bg-surface p-5 shadow-[var(--shadow-card)] sm:p-6 ${
+                      latest ? "border-brand/40" : "border-line"
+                    }`}
+                  >
+                    <div className="flex flex-wrap items-center gap-2.5">
+                      <h2 className="text-base font-semibold text-fg">
+                        <time dateTime={entry.iso}>{entry.date}</time>
+                      </h2>
+                      <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${TAG_STYLE[entry.tag] ?? TAG_STYLE.Feature}`}>
+                        {entry.tag}
+                      </span>
+                      {latest && <span className="text-xs font-medium text-fg-muted">Latest</span>}
+                    </div>
+                    <ul className="mt-5 space-y-3">
+                      {entry.items.map((item) => (
+                        <li key={item.text} className="flex items-start gap-3">
+                          <span className={`mt-0.5 w-[4.75rem] shrink-0 rounded-full px-2 py-0.5 text-center text-[0.7rem] font-semibold capitalize ${TYPE_STYLE[item.type]}`}>
+                            {item.type}
+                          </span>
+                          <p className="text-[0.95rem] leading-relaxed text-fg">{item.text}</p>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                  <ul className="mt-5 space-y-3">
-                    {entry.items.map((item) => (
-                      <li key={item.text} className="flex items-start gap-3">
-                        <span className={`mt-0.5 shrink-0 rounded px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${TYPE_COLOR[item.type]}`}>
-                          {item.type}
-                        </span>
-                        <p className="text-sm leading-relaxed text-fg-muted">{item.text}</p>
-                      </li>
-                    ))}
-                  </ul>
                 </div>
-              </div>
-            </Reveal>
-          ))}
-        </div>
+              </Reveal>
+            );
+          })}
+        </ol>
       </Section>
 
       <CTASection
-        title="Want early access to new features?"
-        subtitle="Create an account or request a demo. There is no email digest list yet."
+        title="Want early access to what ships next?"
+        subtitle="Create a free account or talk to us. There is no email digest list yet."
+        primaryLabel="Join free"
+        secondaryLabel="Talk to us"
       />
     </>
   );

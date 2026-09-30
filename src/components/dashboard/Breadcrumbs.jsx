@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 export default function Breadcrumbs({ items = [], className = "" }) {
   return (
     <nav aria-label="Breadcrumb" className={className}>
-      <ol className="flex flex-wrap items-center gap-1.5 text-xs">
+      <ol className="flex flex-wrap items-center gap-1.5 text-sm">
         {items.map((item, i) => {
           const last = i === items.length - 1;
           return (
@@ -21,7 +21,7 @@ export default function Breadcrumbs({ items = [], className = "" }) {
                 </span>
               )}
               {!last && (
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" className="text-fg-muted/50" aria-hidden="true">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" className="text-fg-muted" aria-hidden="true">
                   <path d="M9 6l6 6-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               )}

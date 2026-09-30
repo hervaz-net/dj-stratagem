@@ -1,262 +1,298 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from "react";
+import useAuth from "../auth/useAuth";
+import { useToast } from "../contexts/ToastContext";
+import { createBid } from "../api/dashboard";
+import { MATERIAL_CATEGORIES } from "../api/fixtures";
+import { Card, inputCls } from "./dashboard/ui";
+import { money, shortDate } from "./dashboard/format";
+import Button from "./Button";
 
-// Compact, keyboard-forward dashboard with inline editing and bulk actions.
-export function CompactDashboard() {
-  const [bids, setBids] = useState(() => sampleBids());
-  const [query, setQuery] = useState('');
-  const [selected, setSelected] = useState(new Set());
-  const [editingId, setEditingId] = useState(null);
-  const [quickAddOpen, setQuickAddOpen] = useState(false);
-  const searchRef = useRef(null);
+const isTyping = () => {
+  const tag = document.activeElement?.tagName;
+  return tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || document.activeElement?.isContentEditable;
+};
 
-  useEffect(() => {
-    function onKey(e) {
-      // '/' focus search
-      if (e.key === '/') {
-        e.preventDefault();
-        searchRef.current?.focus();
-      }
-      // 'a' open quick add
-      if (e.key === 'a' && !e.metaKey && !e.ctrlKey) {
-        e.preventDefault();
-        setQuickAddOpen(true);
-      }
-      // 'Escape' clears selection / exits editors
-      if (e.key === 'Escape') {
-        setSelected(new Set());
-        setEditingId(null);
-        setQuickAddOpen(false);
-      }
-      // 'e' edit first selected
-      if (e.key === 'e' && selected.size === 1) {
-        const [id] = selected;
-        setEditingId(id);
-      }
-    }
+function exportCsv(rows) {
+  const esc = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
+  const header = ["Quote", "Request / project", "Counterparty", "Category", "Value", "Valid until", "Status"];
+  const lines = rows.map((q) => [q.id, q.project, q.gc, q.trade, q.value, q.due ?? "", q.status].map(esc).join(","));
+  const url = URL.createObjectURL(new Blob([[header.join(","), ...lines].join("\n")], { type: "text/csv" }));
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `quotes-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
 
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [selected]);
+function QuickAdd({ onSaved, onCancel, buyer }) {
+  const { csrf } = useAuth();
+  const { toast } = useToast();
+  const [form, setForm] = useState({ project: "", gc: "", trade: MATERIAL_CATEGORIES[0], value: "", due: "" });
+  const [saving, setSaving] = useState(false);
+  const set = (k) => (e) => setForm((p) => ({ ...p, [k]: e.target.value }));
 
-  function toggleSelect(id) {
-    const s = new Set(selected);
-    if (s.has(id)) s.delete(id); else s.add(id);
-    setSelected(s);
-  }
-
-  function updateBid(id, patch) {
-    setBids((prev) => prev.map(b => b.id === id ? { ...b, ...patch } : b));
-    // Dev hook: call API endpoint when available
-    fetch(`/api/bids/${id}`, { method: 'PATCH', headers: { 'Content-Type':'application/json' }, body: JSON.stringify(patch) }).catch(()=>{});
-  }
-
-  function bulkAction(action) {
-    const ids = Array.from(selected);
-    if (!ids.length) return;
-    if (action === 'delete') {
-      setBids(prev => prev.filter(b => !selected.has(b.id)));
-      setSelected(new Set());
+  const submit = async (e) => {
+    e.preventDefault();
+    const value = Number(form.value);
+    if (!form.project.trim() || !form.gc.trim() || !(value > 0)) {
+      toast(`Request, ${buyer ? "seller" : "buyer"}, and a positive value are required.`, { type: "warning" });
       return;
     }
-    // stub for other bulk actions
-    fetch('/api/bids/bulk', { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ action, ids }) }).catch(()=>{});
-  }
-
-  function addQuick(item) {
-    const next = { ...item, id: Date.now(), submissions: 0 };
-    setBids(prev => [next, ...prev]);
-    setQuickAddOpen(false);
-    // stub create
-    fetch('/api/bids', { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(next) }).catch(()=>{});
-  }
-
-  const filtered = bids.filter(b => (b.title + b.location + b.specialty).toLowerCase().includes(query.toLowerCase()));
+    setSaving(true);
+    try {
+      await createBid({ ...form, value, csrf });
+      toast(`Draft quote saved for ${form.project}.`, { type: "success" });
+      onSaved();
+    } catch (err) {
+      toast(err.message ?? "Couldn’t save that quote.", { type: "error" });
+    } finally {
+      setSaving(false);
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-surface p-4">
-      {/* Compact header */}
-      <div className="max-w-7xl mx-auto flex items-center gap-4">
-        <div className="flex-1">
-          <h1 className="text-xl font-bold text-bid-navy">Compact Bid Console</h1>
-          <p className="text-xs text-fg-muted">Keyboard: '/' focus search • 'a' quick-add • 'e' edit selected • Esc cancel</p>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <div className="relative">
-            <span className="absolute left-3 top-3 text-fg-muted text-sm">🔍</span>
-            <input
-              ref={searchRef}
-              value={query}
-              onChange={e=>setQuery(e.target.value)}
-              placeholder="Search bids, location, specialty..."
-              className="pl-10 pr-4 py-2 rounded-lg border border-border bg-white text-sm w-72"
-            />
-          </div>
-
-          <button onClick={()=>setQuickAddOpen(true)} className="px-3 py-2 bg-bid-orange text-white rounded-md flex items-center gap-2">
-            <span>➕</span> Quick Add
-          </button>
-
-        </div>
-      </div>
-
-      {/* Bulk actions */}
-      {selected.size > 0 && (
-        <div className="max-w-7xl mx-auto mt-3 p-3 bg-white border border-border rounded-md flex items-center justify-between compact-toolbar">
-          <div className="flex items-center gap-3">
-            <span className="text-sm text-fg-muted">{selected.size} selected</span>
-            <button onClick={()=>bulkAction('export')} className="text-sm px-3 py-1 bg-surface rounded">Export</button>
-            <button onClick={()=>bulkAction('assign')} className="text-sm px-3 py-1 bg-surface rounded">Assign</button>
-            <button onClick={()=>bulkAction('delete')} className="text-sm px-3 py-1 bg-danger/10 text-danger rounded">Delete</button>
-          </div>
-
-          <div>
-            <button onClick={()=>setSelected(new Set())} className="text-sm px-3 py-1 bg-surface rounded">Clear</button>
-          </div>
-        </div>
-      )}
-
-      {/* Table header (compact) */}
-      <div className="max-w-7xl mx-auto mt-4 bg-white border border-border rounded-md overflow-hidden">
-        <div className="grid grid-cols-12 gap-2 items-center px-4 py-2 text-xs font-semibold text-fg-muted border-b border-border">
-          <div className="col-span-1">Sel</div>
-          <div className="col-span-4">Project</div>
-          <div className="col-span-2">Budget</div>
-          <div className="col-span-2">Due</div>
-          <div className="col-span-2">Submissions</div>
-          <div className="col-span-1">Action</div>
-        </div>
-
-        {/* Rows */}
-        <div>
-          {filtered.map(bid => (
-            <div key={bid.id} data-bid-id={bid.id} data-api-endpoint={`/api/bids/${bid.id}`} className="grid grid-cols-12 gap-2 items-center px-4 py-2 compact-row" tabIndex={0}>
-              {/* select */}
-              <div className="col-span-1">
-                <input type="checkbox" checked={selected.has(bid.id)} onChange={() => toggleSelect(bid.id)} />
-              </div>
-
-              {/* title */}
-              <div className="col-span-4">
-                {editingId === bid.id ? (
-                  <InlineEditor initialValue={bid.title} onSave={val => { updateBid(bid.id, { title: val }); setEditingId(null); }} onCancel={()=>setEditingId(null)} />
-                ) : (
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="text-sm font-semibold text-fg">{bid.title}</div>
-                      <div className="text-xs text-fg-muted">{bid.location} • {bid.specialty}</div>
-                    </div>
-                    <div className="hidden md:block text-xs text-fg-muted">{bid.category ?? ''}</div>
-                  </div>
-                )}
-              </div>
-
-              {/* budget */}
-              <div className="col-span-2 text-sm">
-                {editingId === bid.id ? (
-                  <InlineEditor initialValue={`$${bid.budget.min}-${bid.budget.max}`} onSave={val=>{ const [min,max] = parseBudget(val); updateBid(bid.id, { budget:{ min, max } }); setEditingId(null);}} onCancel={()=>setEditingId(null)} />
-                ) : (
-                  <div className="text-sm font-medium text-bid-navy">${(bid.budget.min/1000).toFixed(0)}k–${(bid.budget.max/1000).toFixed(0)}k</div>
-                )}
-              </div>
-
-              {/* due */}
-              <div className={`col-span-2 text-sm ${bid.daysLeft<=2 ? 'text-danger' : 'text-fg'}`}>
-                {editingId === bid.id ? (
-                  <InlineEditor initialValue={`${bid.daysLeft}`} onSave={val=>{ const days = Number(val)||0; updateBid(bid.id, { daysLeft: days }); setEditingId(null); }} onCancel={()=>setEditingId(null)} />
-                ) : (
-                  <div>{bid.daysLeft===0 ? 'Today' : `${bid.daysLeft}d`}</div>
-                )}
-              </div>
-
-              {/* submissions */}
-              <div className="col-span-2 text-sm text-fg">
-                {bid.submissions} bids
-              </div>
-
-              {/* actions */}
-              <div className="col-span-1 flex items-center gap-2 justify-end">
-                <button title="Edit" onClick={() => setEditingId(bid.id)} className="p-1 rounded hover:bg-surface">
-                  <span className="text-sm">✎</span>
-                </button>
-                <button title="Quick View" className="p-1 rounded hover:bg-surface">
-                  <span className="text-sm">›</span>
-                </button>
-              </div>
-            </div>
-          ))}
-
-          {filtered.length===0 && (<div className="p-6 text-center text-fg-muted">No matching bids</div>)}
-        </div>
-      </div>
-
-      {/* Quick add inline modal */}
-      {quickAddOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/30 z-50">
-          <div className="w-full max-w-xl bg-white rounded-md p-6">
-            <div className="flex items-center justify-between">
-              <h3 className="font-bold text-bid-navy">Quick Add Bid</h3>
-              <button onClick={()=>setQuickAddOpen(false)} className="p-2 text-lg">✕</button>
-            </div>
-            <QuickAddForm onCancel={()=>setQuickAddOpen(false)} onSave={addQuick} />
-          </div>
-        </div>
-      )}
-
-    </div>
-  );
-}
-
-function InlineEditor({ initialValue, onSave, onCancel }){
-  const [val, setVal] = useState(initialValue || '');
-  const ref = useRef(null);
-  useEffect(()=>ref.current?.focus(), []);
-  return (
-    <div className="flex items-center gap-2">
-      <input ref={ref} value={val} onChange={e=>setVal(e.target.value)} className="inline-input px-2 py-1 border rounded text-sm" />
-      <button onClick={()=>onSave(val)} className="px-2 py-1 bg-success-light text-success rounded text-xs">Save</button>
-      <button onClick={onCancel} className="px-2 py-1 bg-surface rounded text-xs">Cancel</button>
-    </div>
-  );
-}
-
-function QuickAddForm({ onSave, onCancel }){
-  const [title, setTitle] = useState('New Quick Bid');
-  const [location, setLocation] = useState('');
-  const [min, setMin] = useState(25000);
-  const [max, setMax] = useState(40000);
-  const [days, setDays] = useState(7);
-
-  return (
-    <form onSubmit={(e)=>{ e.preventDefault(); onSave({ title, location, budget:{min,max}, daysLeft: days, status:'active', specialty:'General' }); }} className="space-y-3 mt-4">
-      <div className="grid grid-cols-2 gap-2">
-        <input value={title} onChange={e=>setTitle(e.target.value)} className="px-3 py-2 border rounded" />
-        <input value={location} onChange={e=>setLocation(e.target.value)} className="px-3 py-2 border rounded" placeholder="Location" />
-      </div>
-      <div className="grid grid-cols-3 gap-2">
-        <input value={min} onChange={e=>setMin(Number(e.target.value))} className="px-3 py-2 border rounded" />
-        <input value={max} onChange={e=>setMax(Number(e.target.value))} className="px-3 py-2 border rounded" />
-        <input value={days} onChange={e=>setDays(Number(e.target.value))} className="px-3 py-2 border rounded" />
-      </div>
-      <div className="flex gap-2 justify-end">
-        <button type="button" onClick={onCancel} className="px-4 py-2 bg-surface rounded">Cancel</button>
-        <button type="submit" className="px-4 py-2 bg-bid-orange text-white rounded">Add</button>
+    <form
+      onSubmit={submit}
+      onKeyDown={(e) => {
+        if (e.key === "Escape") onCancel();
+      }}
+      className="grid grid-cols-1 gap-3 border-b border-line bg-canvas p-4 sm:grid-cols-2 xl:grid-cols-[2fr_1.4fr_1.2fr_1fr_1fr_auto]"
+      aria-label="Quick add quote"
+    >
+      <input autoFocus aria-label="Request or project" placeholder="Request or project" value={form.project} onChange={set("project")} className={inputCls} />
+      <input aria-label={buyer ? "Seller" : "Buyer"} placeholder={buyer ? "Seller" : "Buyer"} value={form.gc} onChange={set("gc")} className={inputCls} />
+      <select aria-label="Category" value={form.trade} onChange={set("trade")} className={inputCls}>
+        {MATERIAL_CATEGORIES.map((c) => (
+          <option key={c} value={c}>{c}</option>
+        ))}
+      </select>
+      <input aria-label="Quote value in dollars" type="number" min="1" placeholder="Value" value={form.value} onChange={set("value")} className={inputCls} />
+      <input aria-label="Valid until" type="date" value={form.due} onChange={set("due")} className={inputCls} />
+      <div className="flex gap-2">
+        <Button type="submit" size="sm" disabled={saving} className="h-11">
+          {saving ? "Saving…" : "Add"}
+        </Button>
+        <Button type="button" size="sm" variant="ghost" onClick={onCancel} className="h-11">
+          Cancel
+        </Button>
       </div>
     </form>
   );
 }
 
-function parseBudget(str){
-  const nums = (str||'').replace(/[^0-9\-]/g,'').split('-').map(n=>Number(n)||0);
-  return [nums[0]||0, nums[1]||nums[0]||0];
+/**
+ * Keyboard-first console over the same quote data as the pipeline table.
+ * Status changes and quick-add go through the live quote endpoint.
+ */
+export function CompactDashboard({ quotes = [], statusMeta, onStatusChange, onBulkStatus, onCreated, buyer = false }) {
+  const [query, setQuery] = useState("");
+  const [selected, setSelected] = useState(() => new Set());
+  const [quickAddOpen, setQuickAddOpen] = useState(false);
+  const [bulkStatus, setBulkStatus] = useState("submitted");
+  const searchRef = useRef(null);
+  const listRef = useRef(null);
+
+  const rows = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return quotes;
+    return quotes.filter((r) => [r.id, r.project, r.gc, r.trade, r.status].some((f) => String(f ?? "").toLowerCase().includes(q)));
+  }, [quotes, query]);
+
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if (e.key === "Escape") {
+        setSelected(new Set());
+        setQuickAddOpen(false);
+        return;
+      }
+      if (isTyping()) return;
+      if (e.key === "/") {
+        e.preventDefault();
+        searchRef.current?.focus();
+      } else if (e.key === "a") {
+        e.preventDefault();
+        setQuickAddOpen(true);
+      } else if (e.key === "ArrowDown" || e.key === "j" || e.key === "ArrowUp" || e.key === "k") {
+        const items = [...(listRef.current?.querySelectorAll("[data-row]") ?? [])];
+        if (!items.length) return;
+        e.preventDefault();
+        const idx = items.indexOf(document.activeElement);
+        const down = e.key === "ArrowDown" || e.key === "j";
+        const next = idx < 0 ? 0 : Math.max(0, Math.min(items.length - 1, idx + (down ? 1 : -1)));
+        items[next].focus();
+      } else if (e.key === "x") {
+        const id = document.activeElement?.dataset?.row;
+        if (!id) return;
+        setSelected((prev) => {
+          const next = new Set(prev);
+          if (next.has(id)) next.delete(id);
+          else next.add(id);
+          return next;
+        });
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  const toggle = (id) =>
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+
+  const selectedRows = rows.filter((r) => selected.has(String(r.id)));
+  const statusKeys = Object.keys(statusMeta);
+
+  return (
+    <Card className="overflow-hidden">
+      <div className="flex flex-col gap-3 border-b border-line p-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="min-w-0">
+          <h2 className="text-base font-semibold text-fg">Quote console</h2>
+          <p className="mt-0.5 text-xs text-fg-muted">
+            <kbd className="rounded border border-line bg-subtle px-1 font-mono text-fg">/</kbd> search ·{" "}
+            <kbd className="rounded border border-line bg-subtle px-1 font-mono text-fg">a</kbd> quick add ·{" "}
+            <kbd className="rounded border border-line bg-subtle px-1 font-mono text-fg">j</kbd>/<kbd className="rounded border border-line bg-subtle px-1 font-mono text-fg">k</kbd> move ·{" "}
+            <kbd className="rounded border border-line bg-subtle px-1 font-mono text-fg">x</kbd> select ·{" "}
+            <kbd className="rounded border border-line bg-subtle px-1 font-mono text-fg">Esc</kbd> clear
+          </p>
+        </div>
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+          <label htmlFor="console-search" className="sr-only">Search quotes</label>
+          <input
+            id="console-search"
+            ref={searchRef}
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Escape") {
+                setQuery("");
+                e.currentTarget.blur();
+              }
+            }}
+            placeholder="Search quotes, buyers, categories"
+            className={`${inputCls} sm:w-72`}
+          />
+          <Button type="button" size="sm" variant="secondary" onClick={() => setQuickAddOpen(true)} className="h-11">
+            Quick add
+          </Button>
+        </div>
+      </div>
+
+      {quickAddOpen && (
+        <QuickAdd
+          buyer={buyer}
+          onCancel={() => setQuickAddOpen(false)}
+          onSaved={() => {
+            setQuickAddOpen(false);
+            onCreated?.();
+          }}
+        />
+      )}
+
+      {selected.size > 0 && (
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line bg-subtle px-4 py-2.5" role="region" aria-label="Bulk actions">
+          <span className="text-sm font-semibold text-fg">{selected.size} selected</span>
+          <div className="flex flex-wrap items-center gap-2">
+            <label htmlFor="bulk-status" className="sr-only">Set status</label>
+            <select
+              id="bulk-status"
+              value={bulkStatus}
+              onChange={(e) => setBulkStatus(e.target.value)}
+              className="h-9 rounded-full border border-line bg-surface px-3 text-sm text-fg"
+            >
+              {statusKeys.map((k) => (
+                <option key={k} value={k}>{statusMeta[k].label}</option>
+              ))}
+            </select>
+            <Button
+              type="button"
+              size="sm"
+              onClick={async () => {
+                await onBulkStatus?.([...selected], bulkStatus);
+                setSelected(new Set());
+              }}
+            >
+              Set status
+            </Button>
+            <Button type="button" size="sm" variant="secondary" onClick={() => exportCsv(selectedRows)}>
+              Export CSV
+            </Button>
+            <Button type="button" size="sm" variant="ghost" onClick={() => setSelected(new Set())}>
+              Clear
+            </Button>
+          </div>
+        </div>
+      )}
+
+      <div className="overflow-x-auto">
+        <div ref={listRef} role="list" aria-label="Quotes" className="min-w-[46rem]">
+          <div className="grid grid-cols-[2rem_4.5rem_minmax(0,2.4fr)_minmax(0,1fr)_6.5rem_6rem_10rem] items-center gap-3 border-b border-line bg-subtle px-4 py-2 text-xs font-semibold text-fg" aria-hidden="true">
+            <span />
+            <span>Quote</span>
+            <span>Request / {buyer ? "seller" : "buyer"}</span>
+            <span>Category</span>
+            <span className="text-right">Value</span>
+            <span className="text-right">Valid until</span>
+            <span>Status</span>
+          </div>
+          {rows.map((q) => {
+            const id = String(q.id);
+            const s = statusMeta[q.status] ?? statusMeta.draft;
+            const isSel = selected.has(id);
+            return (
+              <div
+                key={id}
+                role="listitem"
+                tabIndex={0}
+                data-row={id}
+                className={`grid grid-cols-[2rem_4.5rem_minmax(0,2.4fr)_minmax(0,1fr)_6.5rem_6rem_10rem] items-center gap-3 border-b border-line px-4 py-2 text-sm outline-none transition-colors last:border-0 hover:bg-subtle focus-visible:bg-brand-soft ${
+                  isSel ? "bg-brand-soft" : ""
+                }`}
+              >
+                <input
+                  type="checkbox"
+                  checked={isSel}
+                  onChange={() => toggle(id)}
+                  aria-label={`Select quote ${id}`}
+                  className="h-4 w-4 accent-[var(--brand)]"
+                />
+                <span className="font-mono text-xs text-fg-muted">#{id}</span>
+                <span className="min-w-0">
+                  <span className="block truncate font-medium text-fg">{q.project}</span>
+                  <span className="block truncate text-xs text-fg-muted">{q.gc}</span>
+                </span>
+                <span className="truncate text-fg-muted">{q.trade}</span>
+                <span className="text-right tabular-nums text-fg">{money(q.value, { compact: true })}</span>
+                <span className="text-right text-fg-muted">{shortDate(q.due)}</span>
+                <span>
+                  <label htmlFor={`console-status-${id}`} className="sr-only">Status for quote {id}</label>
+                  <select
+                    id={`console-status-${id}`}
+                    value={q.status}
+                    onChange={(e) => onStatusChange?.(q.id, e.target.value)}
+                    className={`h-8 w-full rounded-full border-0 px-2.5 text-xs font-semibold ${s.pill}`}
+                  >
+                    {statusKeys.map((k) => (
+                      <option key={k} value={k}>{statusMeta[k].label}</option>
+                    ))}
+                  </select>
+                </span>
+              </div>
+            );
+          })}
+          {rows.length === 0 && <p className="p-8 text-center text-sm text-fg-muted">No quotes match “{query}”.</p>}
+        </div>
+      </div>
+      <p className="border-t border-line px-4 py-2.5 text-xs text-fg-muted">
+        Showing {rows.length} of {quotes.length} quotes
+      </p>
+    </Card>
+  );
 }
 
-function sampleBids(){
-  return [
-    { id: 101, title: 'Commercial HVAC Retrofit', location: 'Downtown Medical Center', budget:{min:85000,max:120000}, daysLeft:5, status:'active', submissions:12, specialty:'HVAC' },
-    { id: 102, title: 'Roofing Repair & Replacement', location: 'Industrial Complex', budget:{min:45000,max:65000}, daysLeft:2, status:'active', submissions:8, specialty:'Roofing' },
-    { id: 103, title: 'Plumbing System Overhaul', location: 'Office Tower', budget:{min:120000,max:180000}, daysLeft:12, status:'active', submissions:5, specialty:'Plumbing' },
-    { id: 104, title: 'Electrical Panel Upgrade', location: 'Retail Center', budget:{min:35000,max:55000}, daysLeft:0, status:'closed', submissions:18, specialty:'Electrical' },
-    { id: 105, title: 'Concrete Foundation Repair', location: 'Warehouse', budget:{min:25000,max:40000}, daysLeft:8, status:'active', submissions:3, specialty:'Concrete' },
-  ];
-}
+export default CompactDashboard;
