@@ -13,19 +13,11 @@ export default function CTASection({
 }) {
   return (
     <Section className="border-t border-line">
-      <div className="relative overflow-hidden rounded-2xl border border-line bg-ink-2 px-8 py-16 text-center md:px-16">
-        <div className="pointer-events-none absolute inset-0 bg-grid opacity-40" aria-hidden="true" />
-        <div
-          className="cta-glow-pulse pointer-events-none absolute -top-24 left-1/2 h-64 w-64 -translate-x-1/2 rounded-full bg-brand/25 blur-3xl"
-          aria-hidden="true"
-        />
-        <div
-          className="cta-glow-pulse pointer-events-none absolute -bottom-20 right-1/4 h-48 w-48 rounded-full bg-cta/20 blur-3xl"
-          style={{ animationDelay: "-3s" }}
-          aria-hidden="true"
-        />
+      <div className="on-dark relative overflow-hidden rounded-2xl px-8 py-16 text-center md:px-16">
+        <div className="bg-blueprint pointer-events-none absolute inset-0" aria-hidden="true" />
+        <div aria-hidden="true" className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-r from-brand to-cta" />
         <div className="relative">
-          <h2 className="text-balance text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+          <h2 className="text-balance text-3xl font-bold tracking-tight text-paper md:text-4xl">
             {title}
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-base text-steel">{subtitle}</p>

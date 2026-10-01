@@ -62,14 +62,14 @@ export default function Navbar({ onOpenPalette }) {
 
   return (
     <header
-      className={`no-print sticky top-0 z-50 border-b transition-all duration-300 ${
-        scrolled
-          ? "border-line bg-ink/85 shadow-sm backdrop-blur-xl"
-          : "border-transparent bg-ink/60 backdrop-blur-md"
+      className={`no-print sticky top-0 z-50 border-b border-line transition-all duration-300 ${
+        scrolled ? "bg-ink-2/90 shadow-sm backdrop-blur-xl" : "bg-ink-2/70 backdrop-blur-md"
       }`}
     >
+      {/* Brand stripe: navy → cobalt → signal orange. */}
+      <div aria-hidden="true" className="h-[3px] bg-gradient-to-r from-bid-navy via-brand to-cta" />
       <div
-        className={`mx-auto flex max-w-6xl items-center justify-between px-6 transition-all duration-300 ${
+        className={`mx-auto flex max-w-7xl items-center justify-between gap-6 px-6 transition-all duration-300 ${
           scrolled ? "py-2.5" : "py-4"
         }`}
       >
@@ -77,19 +77,18 @@ export default function Navbar({ onOpenPalette }) {
           <Logo />
         </NavLink>
 
-        {/* lg:, not md: — six nav items overlap the actions at the md
-            breakpoint (fixed on main in 3d0f2fd), and the theme toggle
-            added here makes that row tighter still. */}
-        <nav className="hidden items-center gap-6 lg:flex" aria-label="Main">
+        {/* xl:, not lg: — nine nav items plus the actions overflow below
+            1280px, so smaller screens get the menu button instead. */}
+        <nav className="hidden items-center gap-5 xl:flex" aria-label="Main">
           {links.map((l) => (
             <NavLink
               key={l.to}
               to={l.to}
               reloadDocument={l.reloadDocument}
               className={({ isActive }) =>
-                `relative py-1 text-sm font-semibold transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:origin-left after:rounded-full after:bg-cta after:transition-transform after:duration-300 ${
+                `relative py-1 text-sm font-semibold transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:origin-left after:rounded-full after:bg-brand after:transition-transform after:duration-300 ${
                   isActive
-                    ? "text-cta after:scale-x-100"
+                    ? "text-paper after:scale-x-100"
                     : "text-steel after:scale-x-0 hover:text-paper hover:after:scale-x-100"
                 }`
               }
@@ -99,14 +98,14 @@ export default function Navbar({ onOpenPalette }) {
           ))}
         </nav>
 
-        <div className="hidden items-center gap-3 lg:flex">
+        <div className="hidden items-center gap-3 xl:flex">
           {onOpenPalette && (
             <button
               type="button"
               onClick={onOpenPalette}
               aria-label="Open command palette"
               title="Search pages (Ctrl+K)"
-              className="flex h-9 items-center gap-2 rounded-md border border-line px-2.5 text-xs font-medium text-steel transition-colors hover:border-amber/60 hover:text-paper"
+              className="hidden h-9 items-center gap-2 rounded-md border 2xl:flex border-line px-2.5 text-xs font-medium text-steel transition-colors hover:border-amber/60 hover:text-paper"
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <circle cx="11" cy="11" r="7" />
@@ -119,12 +118,12 @@ export default function Navbar({ onOpenPalette }) {
           <Button to="/login" variant="secondary" size="sm">
             Sign In
           </Button>
-          <Button to="/projects" variant="primary" size="sm">
+          <Button to="/projects" variant="primary" size="sm" className="max-2xl:hidden">
             Find projects
           </Button>
         </div>
 
-        <div className="flex items-center gap-2 lg:hidden">
+        <div className="flex items-center gap-2 xl:hidden">
           <ThemeToggle />
           <button
             ref={toggleRef}
@@ -149,7 +148,7 @@ export default function Navbar({ onOpenPalette }) {
       {open && (
         <div
           id="mobile-menu"
-          className="animate-menu-in border-t border-line bg-ink px-6 pb-6 lg:hidden"
+          className="animate-menu-in border-t border-line bg-ink px-6 pb-6 xl:hidden"
         >
           <nav className="flex flex-col gap-1 pt-3" aria-label="Mobile">
             {links.map((l) => (
@@ -160,7 +159,7 @@ export default function Navbar({ onOpenPalette }) {
                 onClick={close}
                 className={({ isActive }) =>
                   `rounded-lg px-3 py-2.5 text-base font-medium transition-colors ${
-                    isActive ? "bg-cta/10 text-cta" : "text-paper hover:bg-ink-3"
+                    isActive ? "bg-brand/10 text-brand" : "text-paper hover:bg-ink-3"
                   }`
                 }
               >

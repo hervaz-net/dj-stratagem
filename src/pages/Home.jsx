@@ -139,24 +139,14 @@ export default function Home() {
       />
 
       <Section className="relative overflow-hidden pt-16 pb-20 md:pt-24">
-        <div
-          className="pointer-events-none absolute inset-0 bg-grid [mask-image:radial-gradient(ellipse_60%_60%_at_50%_0%,black,transparent)]"
-          aria-hidden="true"
-        />
-        <div
-          className="hero-blob pointer-events-none absolute -top-32 -left-32 h-80 w-80 rounded-full bg-brand/20 blur-3xl"
-          aria-hidden="true"
-        />
-        <div
-          className="hero-blob-2 pointer-events-none absolute -top-16 right-1/4 h-64 w-64 rounded-full bg-amber/15 blur-3xl"
-          aria-hidden="true"
-        />
+        <div className="bg-blueprint pointer-events-none absolute inset-0" aria-hidden="true" />
 
         <div className="relative grid grid-cols-1 items-center gap-14 lg:grid-cols-[1.05fr_0.95fr]">
           <div>
             <Eyebrow>Bid intelligence for construction</Eyebrow>
-            <h1 className="text-balance text-2xl font-semibold leading-[1.08] tracking-tight text-paper sm:text-4xl md:text-5xl">
-              Find better construction projects. Bid smarter. Win more work.
+            <h1 className="text-balance text-3xl font-bold leading-[1.05] tracking-tight text-paper sm:text-5xl lg:text-[3.4rem]">
+              Find better construction projects. Bid smarter.{" "}
+              <span className="text-brand">Win more work.</span>
             </h1>
             <p className="mt-6 max-w-lg text-lg leading-relaxed text-steel">
               D&amp;J Stratagem gives contractors, subcontractors, and suppliers the tools to

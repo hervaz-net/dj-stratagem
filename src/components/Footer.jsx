@@ -106,7 +106,7 @@ function Newsletter() {
 
 export default function Footer() {
   return (
-    <footer className="no-print border-t border-line bg-ink-2">
+    <footer className="on-dark no-print border-t border-line">
       <div className="mx-auto max-w-6xl px-6 py-14">
         <div className="grid grid-cols-2 gap-10 md:grid-cols-3 lg:grid-cols-6">
           {/* Brand + newsletter share the wide left block so the four link

@@ -8,8 +8,8 @@ export default function Section({ id, className = "", children, ...rest }) {
 
 export function Eyebrow({ children }) {
   return (
-    <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-amber/25 bg-amber/8 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-amber">
-      <span className="h-1.5 w-1.5 rounded-full bg-brand" />
+    <div className="mb-4 inline-flex items-center gap-2.5 text-xs font-bold uppercase tracking-[0.16em] text-brand">
+      <span className="h-0.5 w-6 rounded-full bg-cta" />
       {children}
     </div>
   );

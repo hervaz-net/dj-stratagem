@@ -1,156 +1,163 @@
 @import "tailwindcss";
 
 /* ---------------------------------------------------------------------------
-  Bid Platform Design System — Steel + High-Vis
-  Modern, corporate, construction bidding marketplace
+  D&J Stratagem, Inc. design system (2026 refresh)
 
-  Brand Core (locked):
-    bid-navy    #0B1F33  — primary identity, headers, sidebars
-    bid-orange  #E85D04  — call-to-action (place bid, submit, award)
-    bid-blue    #2B6A8A  — secondary actions, hover states
+  Direction: confident, engineered, calm. Deep ink navy carries the identity,
+  cobalt marks interaction, and one signal orange is reserved for the action
+  that moves work forward (bid, submit, award). Squarer radii, tighter type,
+  flat surfaces with a fine blueprint grid instead of glows.
 
-  Neutrals (no chroma — always gray for structure):
-    text        #1A2330  — primary body text, dark & bold
-    surface     #F4F5F7  — page background, light & clean
-    card        #FFFFFF  — card/panel background
-    border      #E0E2E6  — dividers, input borders
-    muted       #6B7280  — secondary text, hints, disabled
-
-  Semantic (status chips, badges):
-    success     #15803D  — awarded, won, active
-    warning     #D97706  — submitted, pending review
-    danger      #B91C1C  — rejected, overdue, at-risk
+  Every color is a CSS variable, so light/dark and on-dark sections (footer,
+  feature bands) switch in one place. Legacy token names (ink, paper, steel,
+  amber, cta, bid-*) stay as aliases so every screen re-skins automatically.
   --------------------------------------------------------------------------- */
 
 @theme inline {
-  --font-sans: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-display: "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-sans: "Inter var", "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Inter Display", "Inter var", "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
 
-  /* Brand core — locked */
-  --color-bid-navy: #0B1F33;
-  --color-bid-navy-hover: #051629;
-  --color-bid-blue: #2B6A8A;
-  --color-bid-blue-hover: #1F4F66;
-  --color-bid-orange: #E85D04;
-  --color-bid-orange-hover: #C44A02;
+  /* Brand core */
+  --color-bid-navy: var(--navy);
+  --color-bid-navy-hover: var(--navy-hover);
+  --color-bid-blue: var(--brand);
+  --color-bid-blue-hover: var(--brand-hover);
+  --color-bid-orange: var(--cta);
+  --color-bid-orange-hover: var(--cta-hover);
 
-  /* Neutrals — clean, corporate */
-  --color-text: #1A2330;
-  --color-text-muted: #6B7280;
-  --color-surface: #F4F5F7;
-  --color-card: #FFFFFF;
-  --color-border: #E0E2E6;
+  /* Neutrals */
+  --color-text: var(--text-strong);
+  --color-text-muted: var(--text-muted);
+  --color-surface: var(--surface);
+  --color-card: var(--surface-raised);
+  --color-border: var(--border);
 
-  /* Semantic — status at a glance */
-  --color-success: #15803D;
-  --color-success-light: #DCFCE7;
-  --color-warning: #D97706;
-  --color-warning-light: #FEF3C7;
-  --color-danger: #B91C1C;
-  --color-danger-light: #FEE2E2;
+  /* Semantic */
+  --color-success: var(--success);
+  --color-success-light: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-light: var(--warning-soft);
+  --color-danger: var(--danger);
+  --color-danger-light: var(--danger-soft);
 
-  /* Aliases for construction.com compat */
-  --color-ink: var(--color-surface);
-  --color-ink-2: var(--color-card);
-  --color-ink-3: #F0F1F3;
-  --color-line: var(--color-border);
-  --color-paper: var(--color-text);
-  --color-paper-2: #0F1419;
-  --color-steel: var(--color-text-muted);
-  --color-amber: var(--color-bid-orange);
-  --color-amber-2: var(--color-bid-orange-hover);
-  --color-brand: var(--color-bid-navy);
-  --color-cta: var(--color-bid-orange);
-  --color-cta-hover: var(--color-bid-orange-hover);
+  /* Aliases used across the site */
+  --color-ink: var(--surface);
+  --color-ink-2: var(--surface-raised);
+  --color-ink-3: var(--surface-hover);
+  --color-line: var(--border);
+  --color-paper: var(--text-strong);
+  --color-paper-2: var(--text-strong);
+  --color-steel: var(--text-muted);
+  --color-amber: var(--brand);
+  --color-amber-2: var(--brand-hover);
+  --color-brand: var(--brand);
+  --color-cta: var(--cta);
+  --color-cta-hover: var(--cta-hover);
 }
 
 :root {
   color-scheme: light;
 
-  /* Recessed vs raised so cards lift off the page. Neutrals stay gray. */
-  --surface: #eef2f8;
+  --navy: #0a1628;
+  --navy-hover: #050d1a;
+
+  --surface: #f4f6f9;
   --surface-raised: #ffffff;
-  --surface-hover: #e6ecf6;
-  --border: #d5deec;
+  --surface-hover: #eaeef4;
+  --border: #dde3eb;
 
-  --text: #15161f;
-  --text-strong: #15161f;
-  --text-muted: #5a6275;
+  --text: #1b2433;
+  --text-strong: #0a1628;
+  --text-muted: #5b6678;
 
-  --accent: #0015c4;
-  --accent-hover: #0011a3;
-  --brand: #001cf7;
-  --cta: #c81e32;
-  --cta-hover: #a8182a;
+  --accent: #2348d8;
+  --accent-hover: #1a37ad;
+  --brand: #2348d8;
+  --brand-hover: #1a37ad;
+  --cta: #f0611a;
+  --cta-hover: #d24f0d;
   --warning: #b45309;
-
+  --warning-soft: #fdf1dc;
   --danger: #b42318;
+  --danger-soft: #fde8e6;
   --success: #0f7a45;
+  --success-soft: #e3f4ea;
 
-  --page-bg: #f5f7fc;
-  --page-glow-1: rgba(0, 28, 247, 0.045);
-  --page-glow-2: rgba(200, 30, 50, 0.025);
-  --page-glow-3: rgba(245, 247, 252, 0.92);
+  --page-bg: #f4f6f9;
+  --page-glow-1: rgba(35, 72, 216, 0.05);
+  --page-glow-2: rgba(244, 246, 249, 0);
+  --page-glow-3: rgba(244, 246, 249, 0);
 
-  --grid-line: rgba(21, 22, 31, 0.06);
-  --glass-bg: rgba(255, 255, 255, 0.78);
-  --glass-border: rgba(213, 222, 236, 0.9);
-  --shadow-color: 21 22 31;
+  --grid-line: rgba(10, 22, 40, 0.05);
+  --glass-bg: rgba(255, 255, 255, 0.82);
+  --glass-border: rgba(221, 227, 235, 0.95);
+  --shadow-color: 10 22 40;
 
-  --viz-blue: #001cf7;
-  --viz-cyan: #1863dc;
+  --viz-blue: #2348d8;
+  --viz-cyan: #0e8fb8;
   --viz-red: #b42318;
-  --viz-gold: #b45309;
+  --viz-gold: #f0611a;
   --viz-green: #0f7a45;
 
-  --panel-bg: rgba(255, 255, 255, 0.86);
-  --panel-border: rgba(213, 222, 236, 0.95);
-  --panel-glow: rgba(0, 28, 247, 0.1);
-  --panel-shadow: 0 10px 30px -12px rgba(21, 22, 31, 0.16);
+  --panel-bg: #ffffff;
+  --panel-border: #dde3eb;
+  --panel-glow: rgba(35, 72, 216, 0.08);
+  --panel-shadow: 0 1px 2px rgba(10, 22, 40, 0.04), 0 8px 24px -12px rgba(10, 22, 40, 0.12);
 }
 
-[data-theme="dark"] {
+/* Dark theme, and on-dark bands inside the light theme (footer, CTA strips). */
+[data-theme="dark"],
+.on-dark {
   color-scheme: dark;
 
-  --surface: #12141c;
-  --surface-raised: #1a1d28;
-  --surface-hover: #222636;
-  --border: #2a3044;
+  --surface: #0a1220;
+  --surface-raised: #111b2e;
+  --surface-hover: #18243b;
+  --border: #22304a;
 
-  --text: #eef2f8;
+  --text: #dfe6f1;
   --text-strong: #ffffff;
-  --text-muted: #98a2b8;
+  --text-muted: #93a0b8;
 
-  --accent: #8fb4ff;
-  --accent-hover: #c5d6ff;
-  --brand: #6d8cff;
-  --cta: #d92d32;
-  --cta-hover: #c42128;
+  --accent: #7d9bff;
+  --accent-hover: #a9bcff;
+  --brand: #7d9bff;
+  --brand-hover: #a9bcff;
+  --cta: #ff7a33;
+  --cta-hover: #ff9358;
   --warning: #fbbf24;
-
+  --warning-soft: rgba(251, 191, 36, 0.12);
   --danger: #ff6b6e;
+  --danger-soft: rgba(255, 107, 110, 0.12);
   --success: #4ade80;
+  --success-soft: rgba(74, 222, 128, 0.12);
 
-  --page-bg: #0e1016;
-  --page-glow-1: rgba(0, 28, 247, 0.14);
-  --page-glow-2: rgba(217, 45, 50, 0.05);
-  --page-glow-3: rgba(14, 16, 22, 0.92);
+  --page-bg: #070d18;
+  --page-glow-1: rgba(125, 155, 255, 0.08);
+  --page-glow-2: rgba(7, 13, 24, 0);
+  --page-glow-3: rgba(7, 13, 24, 0);
 
-  --grid-line: rgba(152, 162, 184, 0.08);
-  --glass-bg: rgba(26, 29, 40, 0.72);
-  --glass-border: rgba(152, 162, 184, 0.14);
+  --grid-line: rgba(147, 160, 184, 0.07);
+  --glass-bg: rgba(17, 27, 46, 0.78);
+  --glass-border: rgba(147, 160, 184, 0.16);
   --shadow-color: 0 0 0;
 
-  --viz-blue: #6d8cff;
-  --viz-cyan: #7eb0ff;
+  --viz-blue: #7d9bff;
+  --viz-cyan: #5cc8e8;
   --viz-red: #ff6b6e;
-  --viz-gold: #fbbf24;
+  --viz-gold: #ff9358;
   --viz-green: #4ade80;
 
-  --panel-bg: rgba(26, 29, 40, 0.72);
-  --panel-border: rgba(152, 162, 184, 0.16);
-  --panel-glow: rgba(109, 140, 255, 0.2);
+  --panel-bg: #111b2e;
+  --panel-border: #22304a;
+  --panel-glow: rgba(125, 155, 255, 0.16);
   --panel-shadow: 0 14px 40px -14px rgba(0, 0, 0, 0.7);
+}
+
+.on-dark {
+  background-color: var(--navy);
+  color: var(--text);
 }
 
 html {
@@ -170,17 +177,16 @@ body {
   margin: 0;
   min-height: 100vh;
   background-color: var(--page-bg);
-  background-image: linear-gradient(
-    135deg,
+  background-image: radial-gradient(
+    120% 60% at 50% -10%,
     var(--page-glow-1) 0%,
-    var(--page-glow-2) 50%,
-    var(--page-glow-3) 100%
+    var(--page-glow-2) 60%
   );
   background-attachment: fixed;
   color: var(--text);
   font-family: var(--font-sans);
   font-optical-sizing: auto;
-  font-weight: 500;
+  font-weight: 450;
   letter-spacing: -0.011em;
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
@@ -576,4 +582,21 @@ body {
   .no-print {
     display: none !important;
   }
+}
+
+/* Refresh: display type is heavier and tighter across the parent site. */
+h1, h2, h3 {
+  font-family: var(--font-display);
+  letter-spacing: -0.025em;
+}
+h1 { font-weight: 700; }
+h2 { font-weight: 650; }
+
+/* Blueprint grid used behind heroes and bands. */
+.bg-blueprint {
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 30%, #000 40%, transparent 100%);
 }
