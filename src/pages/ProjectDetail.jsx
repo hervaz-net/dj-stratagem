@@ -1,10 +1,12 @@
-import { Link, useParams, Navigate } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Section, { Eyebrow } from "../components/Section";
 import Button from "../components/Button";
 import Seo from "../components/Seo";
 import CTASection from "../components/CTASection";
 import { IconCheck, IconArrowRight } from "../components/icons";
 import { findProject, formatDue, matchTone, slugify } from "../data/sampleProjects";
+import NotFound from "./NotFound";
+import SampleListingsNotice from "../components/SampleListingsNotice";
 
 /** Days between now and the bid deadline, floored at zero. */
 function daysUntil(iso) {
@@ -17,7 +19,7 @@ export default function ProjectDetail() {
   const project = findProject(slug);
 
   // An unknown slug is a genuine 404 rather than an empty detail page.
-  if (!project) return <Navigate to="/projects" replace />;
+  if (!project) return <NotFound />;
 
   const days = daysUntil(project.bidDue);
 
@@ -25,7 +27,7 @@ export default function ProjectDetail() {
     <>
       <Seo
         title={`${project.title} — ${project.city}, ${project.state}`}
-        description={`${project.summary} Estimated value ${project.valueLabel}. Bids due ${formatDue(project.bidDue)}. ${project.procurement}.`}
+        description={`${project.summary} Illustrative sample, not a live solicitation. Estimated value ${project.valueLabel}.`}
       />
 
       <Section className="pt-12 pb-8 md:pt-16">
@@ -46,6 +48,7 @@ export default function ProjectDetail() {
         <p className="mt-4 text-lg text-steel">
           {project.city}, {project.state}
         </p>
+        <SampleListingsNotice className="mt-4 max-w-2xl" />
 
       </Section>
 
@@ -55,10 +58,10 @@ export default function ProjectDetail() {
           <div>
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
               <Fact label="Project value" value={project.valueLabel} />
-              <Fact label="Bid deadline" value={formatDue(project.bidDue)} />
+              <Fact label="Sample date" value={formatDue(project.bidDue)} />
               <Fact label="Procurement" value={project.procurement} />
               <Fact
-                label="Time remaining"
+                label="Sample window"
                 value={days === 0 ? "Closed" : `${days} days`}
                 tone={days <= 14 && days > 0 ? "text-warning" : undefined}
               />
@@ -101,7 +104,7 @@ export default function ProjectDetail() {
                   className="flex items-center justify-between chamfer-sm bg-glass-2 px-4 py-3"
                 >
                   <span className="text-sm text-paper/85">{d}</span>
-                  <span className="text-xs text-steel">Members only</span>
+                  <span className="text-xs text-steel">Sample</span>
                 </li>
               ))}
             </ul>
@@ -131,10 +134,10 @@ export default function ProjectDetail() {
 
               <div className="mt-6 border-t border-line pt-5">
                 <Button to="/register" variant="primary" className="w-full">
-                  Add to bid pipeline
+                  Request access
                 </Button>
                 <p className="mt-3 text-center text-xs text-steel">
-                  Requires an account. Free to create.
+                  This card is a sample. It cannot be added to a bid pipeline.
                 </p>
               </div>
             </div>

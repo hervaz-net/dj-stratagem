@@ -12,6 +12,7 @@ import {
   formatDue,
   matchTone,
 } from "../data/sampleProjects";
+import SampleListingsNotice from "../components/SampleListingsNotice";
 
 const ANY = "Any";
 
@@ -65,14 +66,15 @@ export default function Projects() {
     <>
       <Seo
         title="Construction Project Opportunities"
-        description="Browse construction bid opportunities by trade, location, and project value — electrical, HVAC, plumbing, concrete, roofing, and general contracting work across Southern California."
+        description="Browse illustrative construction project cards by trade, location, and value. These are samples, not live solicitations, across Southern California trades."
       />
       <PageHero
         index="01"
         kicker="Project board"
         title={<>Work that fits you, <em>ranked.</em></>}
-        lede="Filter by trade, place, and size. Every project is scored against your company profile, so the bids worth chasing rise to the top."
+        lede="Filter by trade, place, and size. Scores are against a sample profile, so you can see how ranking will work once a live feed is connected."
       />
+      <SampleListingsNotice className="mx-auto max-w-7xl px-6 -mt-2" />
 
       <Section className="border-t border-line">
         {/* filters */}
