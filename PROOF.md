@@ -112,6 +112,12 @@ measured. An admin can delete the seed rows under Accounts → Remove sample dat
 
 ## Still outstanding
 
+- The blog (`/blog`, from main) is unpublished: routes redirect to
+  /changelog and it is out of the footer, palette, and sitemap. One post
+  claimed a SOC 2 Type II report that is not on file, and the others describe
+  the pre-rebrand bidding product. Republish only with posts that are true
+  for Stratagem Exchange; `src/pages/Blog.jsx` and `src/data/posts.js` remain.
+
 - Starter stays free. Paid tiers are request-access only until billing
   actually exists. Do not put “free trial / no credit card” back on Pricing
   or Home unless a real trial is wired.
