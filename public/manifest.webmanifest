@@ -1,12 +1,12 @@
 {
-  "name": "Stratagem Exchange by D&J Stratagem",
-  "short_name": "Stratagem Exchange",
-  "description": "The B2B supply network for construction. Manufacturers, distributors, and contractors buy and sell materials on one marketplace.",
+  "name": "D&J Stratagem, Inc.",
+  "short_name": "D&J Stratagem",
+  "description": "Find construction work, win it, market the business, and keep the customer.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "background_color": "#fafaf7",
-  "theme_color": "#0e6b4f",
+  "theme_color": "#0d1210",
   "icons": [
     {
       "src": "/favicon.svg",

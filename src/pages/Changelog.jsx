@@ -6,6 +6,16 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.6",
+    date: "October 2026",
+    tag: "Fix",
+    items: [
+      { type: "improved", text: "Homepage title and share tags now name D&J Stratagem, Inc., not the Exchange subsidiary, before JavaScript runs." },
+      { type: "improved", text: "Add-to-home-screen manifest matches the parent site instead of Stratagem Exchange." },
+      { type: "improved", text: "Demo requests use the selected role in the email subject instead of always saying General." },
+    ],
+  },
+  {
     version: "1.5",
     date: "August 2026",
     tag: "Fix",

@@ -173,27 +173,22 @@ domain (create one in cPanel, switch `contact.php` from `mail()` to SMTP).
 
 ## Outstanding
 
-- **Namecheap account is suspended.** Re-checked 29 Sep 2026 15:13 PDT:
-  every HTTPS request on apex and www (including `/`, `/platform`,
-  `/pricing`, `/contact`, `/contact.php`, `/api/me.php`,
-  `/robots.txt`, `/sitemap.xml`) still 302s to
-  `/cgi-sys/suspendedpage.cgi`. That is a Stellar billing/host lock,
-  not a git or Vite failure. Unsuspend the account before any cPanel
-  pull will go live. Live A record is `199.188.200.93`. Keep
-  `CNAME www` → `djstratageminc.com.` published.
+- **Namecheap account is live again.** Re-checked 1 Oct 2026 09:54 PDT:
+  apex `https://djstratageminc.com/` returns 200 (not the suspended CGI).
+  `/api/health.php` and `/api/me.php` return JSON. Do not treat a 302 to
+  `/cgi-sys/suspendedpage.cgi` as current.
+- **cPanel public_html lags GitHub `deploy`.** Actions builds and pushes
+  `deploy`, then the Pull and deploy step fails because repo secret
+  `CPANEL_TOKEN` is empty. Live bundle on 1 Oct 2026 was
+  `assets/index-D0PgacWE.js` while `deploy` already advertised a newer hash.
+  After `main` updates: `./deploy.sh` on a machine with `~/.cpanel_token`,
+  or cPanel → Git Version Control → `dj-stratagem` → Update from Remote →
+  Deploy HEAD Commit. Confirm `public_html` is `djstlime:nobody` mode `0750`.
+  Do not rsync with `-a`. Do not point cPanel at `main`.
 - **`/changelog` was broken on `main` and restored in 1.78.** Audit 1.77
   (`0f51e8c`) replaced `src/pages/Changelog.jsx` with `PLACEHOLDER_REVERT`.
   Restored in 1.78 (`da55f5d`). Do not overwrite that file with a host-audit
   placeholder again.
-- **cPanel is behind GitHub (blocked by the lock).** GitHub `main`
-  `da55f5d` and `deploy` `3a7d6e1` advertise `assets/index-B3nHlFED.js`
-  plus the `/api/health.php` → `/health.php` PT alias and the
-  `/api/index.php` 500-loop fix. Actions can refresh `deploy` but cannot
-  pull the host until the account is unsuspended and repo secret
-  `CPANEL_TOKEN` is set. After unsuspend: `./deploy.sh` on a token
-  machine, or cPanel → Git Version Control → Update from Remote →
-  Deploy HEAD Commit. Confirm `public_html` is `djstlime:nobody` mode
-  `0750`.
 - HTTPS is live (AutoSSL). Auth endpoints stay HTTPS-only via `require_https`.
   Do not disable that flag to "get it working" on plaintext.
 - Pricing figures are placeholders pending a real pricing decision. The annual
