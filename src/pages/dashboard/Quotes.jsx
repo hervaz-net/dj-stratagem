@@ -18,7 +18,7 @@ import { useToast } from "../../contexts/ToastContext";
 import { useRole } from "../../contexts/RoleContext";
 import useAuth from "../../auth/useAuth";
 import usePolledResource from "../../api/usePolledResource";
-import { fetchBids, updateBidStatus, isConfigured } from "../../api/dashboard";
+import { fetchBids, updateBidStatus, isConfigured, isSample } from "../../api/dashboard";
 import { bidFixtures } from "../../api/fixtures";
 import { PRODUCT } from "../../brand";
 
@@ -217,9 +217,11 @@ export default function Quotes() {
         actions={<AddBidButton buyer={buyer} onCreated={() => resource.refresh()} />}
       >
         <div className="space-y-6">
-          {!isConfigured && (
+          {isSample("bids.php") && (
             <DataNotice>
-              These are sample quotes with fictional companies. Your live pipeline loads once you’re signed in on the hosted site.
+              {isConfigured
+                ? "This includes sample rows with fictional companies. An admin can remove them under Accounts once real data is coming in."
+                : "These are sample quotes with fictional companies. Your live pipeline loads once you’re signed in on the hosted site."}
             </DataNotice>
           )}
           {resource.error && <ErrorNotice onRetry={() => resource.refresh()} />}

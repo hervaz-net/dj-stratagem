@@ -7,7 +7,7 @@ import SampleLabel from "../../components/SampleLabel";
 import Seo from "../../components/Seo";
 import { useRole } from "../../contexts/RoleContext";
 import usePolledResource from "../../api/usePolledResource";
-import { fetchAnalytics, isConfigured } from "../../api/dashboard";
+import { fetchAnalytics, isConfigured, isSample } from "../../api/dashboard";
 import { analyticsFixtures } from "../../api/fixtures";
 import { PRODUCT } from "../../brand";
 
@@ -56,7 +56,7 @@ export default function Analytics() {
   const mom = data.mom ?? fallback(range).mom;
   const byCategory = data.spendByCategory ?? [];
   const partners = data.topSuppliers ?? [];
-  const live = isConfigured && !resource.error;
+  const live = !isSample("analytics.php") && !resource.error;
   const seller = role !== "contractor";
 
   // Keys are the /api/analytics.php contract; labels are marketplace copy.
@@ -85,7 +85,11 @@ export default function Analytics() {
         }
       >
         <div className="space-y-6">
-          {!isConfigured && <DataNotice>Sample analytics with fictional partners. Live figures load once you’re signed in on the hosted site.</DataNotice>}
+          {!isConfigured ? (
+            <DataNotice>Sample analytics with fictional partners. Live figures load once you’re signed in on the hosted site.</DataNotice>
+          ) : isSample("analytics.php") ? (
+            <DataNotice>Totals come from your account. Change figures, trend lines, and month-over-month comparisons are illustrative until enough history is recorded.</DataNotice>
+          ) : null}
           {resource.error && <ErrorNotice onRetry={() => resource.refresh()} />}
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">

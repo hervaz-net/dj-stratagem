@@ -7,7 +7,7 @@ import { useToast } from "../../contexts/ToastContext";
 import { useRole } from "../../contexts/RoleContext";
 import useAuth from "../../auth/useAuth";
 import usePolledResource from "../../api/usePolledResource";
-import { fetchOrders, cancelOrders, isConfigured } from "../../api/dashboard";
+import { fetchOrders, cancelOrders, isConfigured, isSample } from "../../api/dashboard";
 import { orderFixtures } from "../../api/fixtures";
 import { PRODUCT } from "../../brand";
 
@@ -98,8 +98,12 @@ export default function Orders() {
         subtitle={subtitle}
       >
         <div className="space-y-6">
-          {!isConfigured && (
-            <DataNotice>Sample orders with fictional companies. Your live purchase orders load once you’re signed in on the hosted site.</DataNotice>
+          {isSample("orders.php") && (
+            <DataNotice>
+              {isConfigured
+                ? "This includes sample rows with fictional companies. An admin can remove them under Accounts once real data is coming in."
+                : "Sample orders with fictional companies. Your live purchase orders load once you’re signed in on the hosted site."}
+            </DataNotice>
           )}
           {resource.error && <ErrorNotice onRetry={() => resource.refresh()} />}
 

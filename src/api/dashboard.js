@@ -2,7 +2,7 @@
  * Dashboard data access. Hits same-origin `/api/*.php` (session cookie + CSRF).
  * Falls back to fixtures when PHP isn't running (local Vite).
  */
-import { apiGet, apiPost, liveOrFixture, isConfigured } from "./client";
+import { apiGet, apiPost, liveOrFixture, isConfigured, isSample } from "./client";
 import {
   supplierFixtures,
   metricFixtures,
@@ -15,7 +15,7 @@ import {
   settingsFixture,
 } from "./fixtures";
 
-export { isConfigured };
+export { isConfigured, isSample };
 
 export async function fetchSuppliers({ signal } = {}) {
   const data = await liveOrFixture(
@@ -41,8 +41,8 @@ export async function fetchTicker({ signal } = {}) {
   return data.items ?? tickerFixtures;
 }
 
-export async function createSupplier({ name, category, region, csrf }) {
-  const data = await apiPost("suppliers.php", { name, category, region }, { csrf });
+export async function createSupplier({ name, category, region, partnerRole, csrf }) {
+  const data = await apiPost("suppliers.php", { name, category, region, partnerRole }, { csrf });
   return data.supplier;
 }
 
@@ -122,4 +122,47 @@ export async function fetchSettings({ signal } = {}) {
 export async function saveSettings(payload, { csrf } = {}) {
   const data = await apiPost("settings.php", payload, { csrf });
   return data;
+}
+
+/* Marketplace. These throw when the API is unreachable; pages pair them with
+   useLiveResource, which falls back to labelled fixtures. */
+
+export async function fetchMyRequests({ signal } = {}) {
+  return (await apiGet("requests.php", { signal, params: { scope: "mine" } })).requests ?? [];
+}
+
+export async function fetchOpenDemand({ signal, category } = {}) {
+  return (await apiGet("requests.php", { signal, params: { scope: "open", category } })).requests ?? [];
+}
+
+export async function createRequest(form, { csrf } = {}) {
+  return (await apiPost("requests.php", { action: "create", ...form }, { csrf })).requests ?? [];
+}
+
+export async function cancelRequest({ id, csrf }) {
+  return (await apiPost("requests.php", { action: "cancel", id }, { csrf })).requests ?? [];
+}
+
+export async function acceptQuote({ id, quoteId, csrf }) {
+  return (await apiPost("requests.php", { action: "accept", id, quoteId }, { csrf })).requests ?? [];
+}
+
+export async function sendQuote({ requestId, total, leadTimeDays, validDays, note, csrf }) {
+  return (await apiPost("requests.php", { action: "quote", requestId, total, leadTimeDays, validDays, note }, { csrf })).requests ?? [];
+}
+
+export async function withdrawQuote({ requestId, csrf }) {
+  return (await apiPost("requests.php", { action: "withdraw", requestId }, { csrf })).requests ?? [];
+}
+
+export async function fetchCatalog({ signal } = {}) {
+  return (await apiGet("catalog.php", { signal })).listings ?? [];
+}
+
+export async function saveListing(listing, { csrf } = {}) {
+  return (await apiPost("catalog.php", { action: "save", ...listing }, { csrf })).listings ?? [];
+}
+
+export async function deleteListing({ id, csrf }) {
+  return (await apiPost("catalog.php", { action: "delete", id }, { csrf })).listings ?? [];
 }

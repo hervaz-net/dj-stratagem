@@ -11,7 +11,7 @@ import { ROLE_VIEWS, partnerRoleOf, relationship } from "../../components/dashbo
 import Seo from "../../components/Seo";
 import { useRole } from "../../contexts/RoleContext";
 import usePolledResource from "../../api/usePolledResource";
-import { fetchSuppliers, fetchMetrics, fetchTicker, isConfigured } from "../../api/suppliers";
+import { fetchSuppliers, fetchMetrics, fetchTicker, isConfigured, isSample } from "../../api/suppliers";
 import { IconKeyboard } from "../../components/icons";
 import { PRODUCT, ROLE_ORDER } from "../../brand";
 
@@ -206,7 +206,7 @@ export default function Network() {
       <DashboardLayout
         breadcrumbs={[{ label: "Dashboard", to: "/dashboard/overview" }, { label: "Network" }]}
         ticker={ticker.data ?? []}
-        tickerLive={isConfigured && !ticker.error}
+        tickerLive={!isSample("market-ticker.php") && !ticker.error}
         title="Network"
         subtitle={SUBTITLE[role] ?? SUBTITLE.contractor}
         actions={
@@ -225,21 +225,18 @@ export default function Network() {
         }
       >
         <div className="space-y-6">
-          {!isConfigured && (
+          {isSample("suppliers.php") && (
             <DataNotice>
-              Sample network with fictional companies. Your real partners load once you’re signed in on the hosted site.
+              {isConfigured
+                ? "This includes sample rows with fictional companies. An admin can remove them under Accounts once real data is coming in."
+                : "Sample network with fictional companies. Your real partners load once you’re signed in on the hosted site."}
             </DataNotice>
-          )}
-          {isConfigured && (
-            <p className="text-sm text-fg-muted">
-              Partner roles aren’t stored on network records yet, so every live record is listed as a manufacturer.
-            </p>
           )}
           {anyError && <ErrorNotice onRetry={refreshAll} />}
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
             {(metrics.data ?? []).map((m) => (
-              <MetricCard key={m.id} metric={m} live={isConfigured && !metrics.error} />
+              <MetricCard key={m.id} metric={m} live={!isSample("metrics.php") && !metrics.error} />
             ))}
           </div>
 

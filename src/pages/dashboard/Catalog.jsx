@@ -1,6 +1,9 @@
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import DashboardLayout from "../../components/dashboard/DashboardLayout";
 import useLocalState from "../../components/dashboard/useLocalState";
+import useLiveResource from "../../components/dashboard/useLiveResource";
+import useAuth from "../../auth/useAuth";
+import { fetchCatalog, saveListing, deleteListing } from "../../api/dashboard";
 import {
   Card,
   ConfirmDialog,
@@ -167,7 +170,11 @@ function ProductDrawer({ product, onClose, onSave, onDelete }) {
 }
 
 function SellerCatalog({ role }) {
-  const [products, setProducts] = useLocalState(`djs-catalog-local:${role}`, catalogFixtures);
+  const [localProducts, setProducts] = useLocalState(`djs-catalog-local:${role}`, catalogFixtures);
+  const remote = useLiveResource(useCallback((o) => fetchCatalog(o), []), null);
+  const live = remote.live;
+  const products = useMemo(() => (live ? remote.data ?? [] : localProducts), [live, remote.data, localProducts]);
+  const { csrf } = useAuth();
   const [editing, setEditing] = useState(null);
   const [removing, setRemoving] = useState(null);
   const [view, setView] = useState("table");
@@ -189,7 +196,23 @@ function SellerCatalog({ role }) {
   const low = products.filter((p) => stockState(p));
   const value = products.reduce((s, p) => s + p.price * p.stock, 0);
 
-  const save = (data) => {
+  const save = async (data) => {
+    if (live) {
+      try {
+        const { id, sku, name, category, unit, price, stock, minOrder, leadTimeDays, visibility, status } = data;
+        remote.setData(
+          await saveListing(
+            { id: editing === "new" ? undefined : id, sku, name, category, unit, price, stock, minOrder, leadTimeDays, visibility, status },
+            { csrf },
+          ),
+        );
+        toast(editing === "new" ? `${name} added to your catalog.` : "Listing updated.", { type: "success" });
+        setEditing(null);
+      } catch (err) {
+        toast(err?.message ?? "Couldn’t save the listing. Try again.", { type: "error" });
+      }
+      return;
+    }
     if (editing === "new") {
       setProducts((prev) => [{ ...data, id: `sku-${Date.now()}` }, ...prev]);
       toast(`${data.name} listed in this browser.`, { type: "success" });
@@ -200,7 +223,18 @@ function SellerCatalog({ role }) {
     setEditing(null);
   };
 
-  const confirmRemove = () => {
+  const confirmRemove = async () => {
+    if (live) {
+      try {
+        remote.setData(await deleteListing({ id: removing.id, csrf }));
+        toast(`${removing.name} removed.`, { type: "info" });
+      } catch (err) {
+        toast(err?.message ?? "Couldn’t remove the listing. Try again.", { type: "error" });
+      }
+      setRemoving(null);
+      setEditing(null);
+      return;
+    }
     setProducts((prev) => prev.filter((p) => p.id !== removing.id));
     toast(`${removing.name} removed.`, { type: "info" });
     setRemoving(null);
@@ -215,15 +249,22 @@ function SellerCatalog({ role }) {
 
   return (
     <div className="space-y-6">
-      <DataNotice>
-        Catalog sync isn’t live yet. These sample listings and any edits are saved in this browser only, and buyers can’t see them.
-      </DataNotice>
+      {remote.loading ? null : live ? (
+        <p role="note" className="rounded-2xl border border-line bg-surface px-4 py-3 text-sm text-fg-muted">
+          Listings save to your company account. Buyers can’t browse catalogs yet, so for now use them to keep your price
+          sheet in one place and quote requests faster.
+        </p>
+      ) : (
+        <DataNotice>
+          The catalog service isn’t reachable, so these sample listings and any edits are saved in this browser only.
+        </DataNotice>
+      )}
 
       <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
-        <StatTile label="Listed products" value={listed.length} hint={`${products.length - listed.length} in draft`} sample />
-        <StatTile label="Low or out of stock" value={low.length} valueClassName={low.length ? "text-warning" : ""} sample />
-        <StatTile label="Wholesale only" value={products.filter((p) => p.visibility === "distributors").length} hint="Hidden from contractors" sample />
-        <StatTile label="Stock value" value={money(value, { compact: true })} hint="At list price" sample />
+        <StatTile label="Listed products" value={listed.length} hint={`${products.length - listed.length} in draft`} sample={!live} />
+        <StatTile label="Low or out of stock" value={low.length} valueClassName={low.length ? "text-warning" : ""} sample={!live} />
+        <StatTile label="Wholesale only" value={products.filter((p) => p.visibility === "distributors").length} hint="Hidden from contractors" sample={!live} />
+        <StatTile label="Stock value" value={money(value, { compact: true })} hint="At list price" sample={!live} />
       </div>
 
       <Card className="flex flex-col gap-4 p-4 sm:p-5">
@@ -363,7 +404,7 @@ function SellerCatalog({ role }) {
 
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="text-xs text-fg-muted">{rows.length} of {products.length} listings</p>
-        <button
+        {!live && <button
           type="button"
           onClick={() => {
             setProducts(catalogFixtures);
@@ -372,7 +413,7 @@ function SellerCatalog({ role }) {
           className="text-xs font-semibold text-fg-muted hover:text-fg"
         >
           Reset to sample listings
-        </button>
+        </button>}
       </div>
 
       {editing && (
@@ -394,7 +435,9 @@ function SellerCatalog({ role }) {
         onConfirm={confirmRemove}
         onCancel={() => setRemoving(null)}
       >
-        It comes off your catalog in this browser. You can reset to the sample listings any time.
+        {live
+          ? "It comes off your catalog. This can’t be undone."
+          : "It comes off your catalog in this browser. You can reset to the sample listings any time."}
       </ConfirmDialog>
     </div>
   );

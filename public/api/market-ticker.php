@@ -20,4 +20,4 @@ $items = array_map(static function (array $r): array {
     ];
 }, $rows);
 
-respond(['ok' => true, 'live' => true, 'items' => $items]);
+respond(['ok' => true, 'live' => true, 'sample' => true, 'items' => $items]);

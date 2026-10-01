@@ -7,7 +7,7 @@ import { IconShield, IconTruck, IconTrendingUp, IconChat, IconCheck } from "../.
 import { useToast } from "../../contexts/ToastContext";
 import useAuth from "../../auth/useAuth";
 import usePolledResource from "../../api/usePolledResource";
-import { fetchAlerts, mutateAlert, isConfigured } from "../../api/dashboard";
+import { fetchAlerts, mutateAlert, isConfigured, isSample } from "../../api/dashboard";
 import { alertFixtures } from "../../api/fixtures";
 import { PRODUCT } from "../../brand";
 
@@ -70,8 +70,12 @@ export default function Alerts() {
         }
       >
         <div className="space-y-6">
-          {!isConfigured && (
-            <DataNotice>Sample alerts with fictional companies. Live alerts load once you’re signed in; read, snooze, and dismiss are saved to your account.</DataNotice>
+          {isSample("alerts.php") && (
+            <DataNotice>
+              {isConfigured
+                ? "This includes sample rows with fictional companies. An admin can remove them under Accounts once real data is coming in."
+                : "Sample alerts with fictional companies. Live alerts load once you’re signed in; read, snooze, and dismiss are saved to your account."}
+            </DataNotice>
           )}
           {resource.error && <ErrorNotice onRetry={() => resource.refresh()} />}
 

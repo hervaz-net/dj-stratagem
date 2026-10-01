@@ -50,19 +50,38 @@ const SECTIONS = [
 const DEFAULT_MARKET = { roles: [], categories: [], serviceArea: "", radius: "50", fulfillment: ["delivery", "will-call"] };
 
 /** Roles, categories, and service area. No endpoint yet, so it stays in this browser. */
-function MarketplaceProfile() {
+function MarketplaceProfile({ server, csrf, onSaved }) {
   const { role, setRole } = useRole();
   const { toast } = useToast();
+  const live = Boolean(server);
   const [stored, setStored] = useLocalState("djs-marketplace-profile", DEFAULT_MARKET);
-  const [draft, setDraft] = useState(() => ({ ...DEFAULT_MARKET, ...stored, roles: stored.roles?.length ? stored.roles : [role] }));
+  const [draft, setDraft] = useState(() => {
+    const base = live ? server : stored;
+    return { ...DEFAULT_MARKET, ...base, roles: base.roles?.length ? base.roles : [role] };
+  });
+  const [busy, setBusy] = useState(false);
 
   const toggle = (key, value) =>
     setDraft((d) => ({ ...d, [key]: d[key].includes(value) ? d[key].filter((v) => v !== value) : [...d[key], value] }));
 
-  const save = (e) => {
+  const save = async (e) => {
     e.preventDefault();
     if (!draft.roles.length) {
       toast("Pick at least one role.", { type: "warning" });
+      return;
+    }
+    if (live) {
+      setBusy(true);
+      try {
+        const data = await saveSettings({ action: "marketplace", ...draft }, { csrf });
+        if (data.settings?.marketplace) onSaved?.(data.settings.marketplace);
+        if (!draft.roles.includes(role)) setRole(draft.roles[0]);
+        toast("Marketplace profile saved to your account.", { type: "success" });
+      } catch (err) {
+        toast(err?.message ?? "Couldn’t save the marketplace profile.", { type: "error" });
+      } finally {
+        setBusy(false);
+      }
       return;
     }
     setStored(draft);
@@ -79,8 +98,12 @@ function MarketplaceProfile() {
     <Section
       id="marketplace"
       title="Marketplace profile"
-      badge={<SampleLabel>Saved in this browser</SampleLabel>}
-      description="How buyers and sellers find you. Profile sync to your account isn’t live yet, so these choices stay on this device."
+      badge={live ? null : <SampleLabel>Saved in this browser</SampleLabel>}
+      description={
+        live
+          ? "How buyers and sellers find you. Buyers see your company name and buying role on the requests you post."
+          : "How buyers and sellers find you. The settings service isn’t reachable, so these choices stay on this device."
+      }
     >
       <form onSubmit={save} className="space-y-6">
         <fieldset>
@@ -157,7 +180,7 @@ function MarketplaceProfile() {
         </fieldset>
 
         <div className="flex justify-end">
-          <Button type="submit">Save marketplace profile</Button>
+          <Button type="submit" disabled={busy}>{busy ? "Saving…" : "Save marketplace profile"}</Button>
         </div>
       </form>
     </Section>
@@ -196,6 +219,7 @@ export default function Settings() {
   const [billing, setBilling] = useState(blank.billing);
   const [notifications, setNotifications] = useState(blank.notifications);
   const [twofa, setTwofa] = useState(false);
+  const [market, setMarket] = useState(null);
   const [saving, setSaving] = useState(false);
   const [savingBilling, setSavingBilling] = useState(false);
   const [fundAmount, setFundAmount] = useState("2500");
@@ -212,6 +236,7 @@ export default function Settings() {
         setBilling(merged.billing ?? settingsFixture(user).billing);
         setNotifications(merged.notifications);
         setTwofa(!!merged.twofa);
+        if (isConfigured && s.marketplace) setMarket(s.marketplace);
         const limit = merged.billing?.creditLimit || 50000;
         setCreditLimitDraft(String(limit));
       } catch {
@@ -398,7 +423,7 @@ export default function Settings() {
               <DataNotice>Account settings save to your account on the hosted site. Here, changes last for this session only.</DataNotice>
             )}
 
-            <MarketplaceProfile />
+            <MarketplaceProfile key={market ? "account" : "browser"} server={market} csrf={csrf} onSaved={setMarket} />
 
             <Section id="profile" title="Profile" description="Your name and company as trading partners see them.">
               <form onSubmit={saveProfile} className="space-y-4">

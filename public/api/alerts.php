@@ -15,7 +15,7 @@ $uid = (int) $user['id'];
 function list_alerts(int $uid): array
 {
     $stmt = db()->prepare(
-        'SELECT a.id, a.type, a.title, a.detail, a.supplier_name, a.created_at,
+        'SELECT a.id, a.type, a.title, a.detail, a.supplier_name, a.created_at, a.is_seed,
                 s.read_at, s.dismissed_at, s.snoozed_until
            FROM alerts a
            LEFT JOIN user_alert_state s ON s.alert_id = a.id AND s.user_id = ?
@@ -34,6 +34,7 @@ function list_alerts(int $uid): array
             'time' => relative_time($r['created_at']),
             'group' => alert_group($r['created_at']),
             'read' => $r['read_at'] !== null,
+            'sample' => (bool) $r['is_seed'],
         ];
     }, $stmt->fetchAll());
 }
@@ -52,7 +53,7 @@ function upsert_alert_state(int $uid, int $alertId, string $column): void
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
 if ($method === 'GET') {
-    respond(['ok' => true, 'live' => true, 'alerts' => list_alerts($uid)]);
+    respond(['ok' => true, 'live' => true, 'sample' => has_seed_rows('alerts'), 'alerts' => list_alerts($uid)]);
 }
 
 if ($method !== 'POST') {
@@ -68,7 +69,7 @@ if ($action === 'read_all') {
     foreach ($ids as $row) {
         upsert_alert_state($uid, (int) $row['id'], 'read_at');
     }
-    respond(['ok' => true, 'live' => true, 'alerts' => list_alerts($uid)]);
+    respond(['ok' => true, 'live' => true, 'sample' => has_seed_rows('alerts'), 'alerts' => list_alerts($uid)]);
 }
 
 if (!in_array($action, ['read', 'dismiss', 'snooze'], true) || $id < 1) {
@@ -93,4 +94,4 @@ if ($action === 'read') {
     )->execute([$uid, $id]);
 }
 
-respond(['ok' => true, 'live' => true, 'alerts' => list_alerts($uid)]);
+respond(['ok' => true, 'live' => true, 'sample' => has_seed_rows('alerts'), 'alerts' => list_alerts($uid)]);

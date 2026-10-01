@@ -5,7 +5,13 @@ import { createSupplier } from "../../api/dashboard";
 import { Drawer, Field, inputCls } from "./ui";
 import Button from "../Button";
 
-const EMPTY = { name: "", category: "", region: "" };
+const EMPTY = { name: "", category: "", region: "", partnerRole: "supplier" };
+
+const PARTNER_ROLES = [
+  ["supplier", "Manufacturer or vendor"],
+  ["distributor", "Distributor"],
+  ["contractor", "Contractor"],
+];
 
 /**
  * Primary action. Inline in the header on large screens and a floating pill on
@@ -53,7 +59,7 @@ export default function AddSupplierButton({ onCreated, floating = false }) {
         className={floating ? "no-print fixed bottom-24 right-4 z-30 shadow-[var(--shadow-pop)] lg:hidden" : "hidden lg:inline-flex"}
       >
         {icon}
-        Add supplier
+        Add partner
       </Button>
 
       <Drawer
@@ -61,23 +67,35 @@ export default function AddSupplierButton({ onCreated, floating = false }) {
         onClose={() => setOpen(false)}
         as="form"
         onSubmit={submit}
-        title="Add a supplier"
-        description="Adds a manufacturer or vendor you already buy from. Risk and on-time scores start at a neutral default and update as orders come in."
+        title="Add a partner"
+        description="Adds a company you already trade with. Risk and on-time scores start at a neutral default."
         footer={
           <>
             <Button type="button" variant="ghost" onClick={() => setOpen(false)}>
               Cancel
             </Button>
             <Button type="submit" disabled={saving}>
-              {saving ? "Saving…" : "Add supplier"}
+              {saving ? "Saving…" : "Add partner"}
             </Button>
           </>
         }
       >
         <div className="space-y-4">
+          <Field label="Their role" htmlFor="supplier-partnerRole">
+            <select
+              id="supplier-partnerRole"
+              value={form.partnerRole}
+              onChange={(e) => setForm((p) => ({ ...p, partnerRole: e.target.value }))}
+              className={inputCls}
+            >
+              {PARTNER_ROLES.map(([key, label]) => (
+                <option key={key} value={key}>{label}</option>
+              ))}
+            </select>
+          </Field>
           {[
             ["name", "Company name", "e.g. Rebar Ridge Steelworks"],
-            ["category", "What they supply", "e.g. Metal & structural"],
+            ["category", "Main category", "e.g. Metal & structural"],
             ["region", "Region", "e.g. Southwest"],
           ].map(([key, label, ph]) => (
             <Field key={key} label={label} htmlFor={`supplier-${key}`}>

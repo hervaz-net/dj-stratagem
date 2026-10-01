@@ -1,7 +1,9 @@
 import { Fragment, useCallback, useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import DashboardLayout from "../../components/dashboard/DashboardLayout";
-import { Card, FilterChips, StatTile, StatusPill, inputCls } from "../../components/dashboard/ui";
+import { Card, ConfirmDialog, FilterChips, StatTile, StatusPill, inputCls } from "../../components/dashboard/ui";
+import { apiGet, apiPost } from "../../api/client";
+import { useToast } from "../../contexts/ToastContext";
 import { PRODUCT } from "../../brand";
 import StatusDot from "../../components/dashboard/StatusDot";
 import Seo from "../../components/Seo";
@@ -55,6 +57,70 @@ function formatDate(value) {
 
 function StatCard({ label, value, highlight }) {
   return <StatTile label={label} value={value ?? "—"} valueClassName={highlight ? "text-brand" : ""} />;
+}
+
+/**
+ * The dashboard ships with fictional demo rows so a new install isn't empty.
+ * Once real companies are trading, an admin removes them here.
+ */
+function SampleDataCard({ csrf }) {
+  const [status, setStatus] = useState(null);
+  const [confirming, setConfirming] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const controller = new AbortController();
+    apiGet("sample-data.php", { signal: controller.signal })
+      .then(setStatus)
+      .catch(() => setStatus(null));
+    return () => controller.abort();
+  }, []);
+
+  if (!status?.any) return null;
+
+  const clear = async () => {
+    setBusy(true);
+    try {
+      const data = await apiPost("sample-data.php", { action: "clear" }, { csrf });
+      setStatus(data);
+      toast(`Removed ${data.removed} sample rows. Everyone now sees only real data.`, { type: "success" });
+    } catch (err) {
+      toast(err?.message ?? "Couldn’t remove the sample data.", { type: "error" });
+    } finally {
+      setBusy(false);
+      setConfirming(false);
+    }
+  };
+
+  return (
+    <Card className="mb-6 flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <p className="font-semibold text-fg">Sample data is still in the dashboard</p>
+        <p className="mt-1 text-sm text-fg-muted">
+          Fictional partners, quotes, orders, and alerts are shown to every account, labelled as samples. Remove them
+          once your team is entering real data. Anything people created stays.
+        </p>
+      </div>
+      <button
+        type="button"
+        onClick={() => setConfirming(true)}
+        className="inline-flex h-10 shrink-0 items-center justify-center rounded-full border border-danger/40 px-4 text-sm font-semibold text-danger hover:bg-danger-soft"
+      >
+        Remove sample data
+      </button>
+      <ConfirmDialog
+        open={confirming}
+        title="Remove all sample data?"
+        confirmLabel="Remove sample data"
+        busy={busy}
+        onConfirm={clear}
+        onCancel={() => setConfirming(false)}
+      >
+        This deletes the fictional demo rows for every account. Rows your team created aren’t affected. It can’t be undone.
+      </ConfirmDialog>
+    </Card>
+  );
 }
 
 export default function AdminUsers() {
@@ -181,6 +247,8 @@ export default function AdminUsers() {
         title="Accounts"
         subtitle="Approve new companies joining the marketplace and manage existing accounts."
       >
+        <SampleDataCard csrf={csrf} />
+
         <div className="mb-6 grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
           <StatCard label="Total" value={counts.all ?? (counts.pending ?? 0) + (counts.active ?? 0) + (counts.suspended ?? 0)} />
           <StatCard label="Pending" value={counts.pending} highlight={counts.pending > 0} />

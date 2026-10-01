@@ -13,7 +13,7 @@ import { IconArrowRight, IconChat, IconPackage, IconTruck, IconMegaphone, IconBo
 import useAuth from "../../auth/useAuth";
 import { useRole } from "../../contexts/RoleContext";
 import usePolledResource from "../../api/usePolledResource";
-import { fetchOverview, fetchTicker, isConfigured } from "../../api/dashboard";
+import { fetchOverview, fetchTicker, isConfigured, isSample } from "../../api/dashboard";
 import { overviewFixtures, requestFixtures, demandFixtures, catalogFixtures } from "../../api/fixtures";
 import { DASHBOARD_NAV } from "../../navigation";
 import { PRODUCT, ROLE_ORDER } from "../../brand";
@@ -228,7 +228,7 @@ export default function Overview() {
   const deadlines = data.upcomingDeadlines ?? [];
   const topAlerts = data.topAlerts ?? [];
   const health = data.networkHealth ?? { value: 0, trend: [], up: false };
-  const live = isConfigured && !overview.error;
+  const live = !isSample("overview.php") && !overview.error;
 
   const jump = DASHBOARD_NAV.filter(
     (i) => i.to !== "/dashboard/overview" && !i.adminOnly && (!i.roles || i.roles.includes(role)),
@@ -240,7 +240,7 @@ export default function Overview() {
 
       <DashboardLayout
         ticker={ticker.data ?? []}
-        tickerLive={isConfigured && !ticker.error}
+        tickerLive={!isSample("market-ticker.php") && !ticker.error}
         title={`${greeting()}${user?.name ? `, ${user.name.split(" ")[0]}` : ""}.`}
         subtitle={
           role === "contractor"
@@ -256,11 +256,16 @@ export default function Overview() {
         ))}
       >
         <div className="space-y-6">
-          {!isConfigured && (
+          {!isConfigured ? (
             <DataNotice>
               You’re looking at sample data with fictional companies. Live numbers load once you’re signed in on the hosted site.
             </DataNotice>
-          )}
+          ) : isSample("overview.php") ? (
+            <DataNotice>
+              Counts come from your account, but change figures and the trend line are illustrative, and the dashboard may
+              still include fictional sample rows.
+            </DataNotice>
+          ) : null}
           {overview.error && <ErrorNotice onRetry={() => overview.refresh()} />}
 
           <div className="flex flex-wrap items-center gap-2 text-sm text-fg-muted">

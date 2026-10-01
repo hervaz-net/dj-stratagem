@@ -1,9 +1,10 @@
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import DashboardLayout from "../../components/dashboard/DashboardLayout";
 import RequestDrawer from "../../components/dashboard/RequestDrawer";
 import SendQuoteDrawer from "../../components/dashboard/SendQuoteDrawer";
 import useLocalState from "../../components/dashboard/useLocalState";
+import useLiveResource from "../../components/dashboard/useLiveResource";
 import { Card, DataNotice, EmptyState, FilterChips, Segmented, StatusPill, inputCls } from "../../components/dashboard/ui";
 import { money, shortDate, daysUntil } from "../../components/dashboard/format";
 import { ROLE_VIEWS, roleView } from "../../components/dashboard/roles";
@@ -15,6 +16,8 @@ import { IconSearch, IconTruck, IconBuilding, IconCalendar } from "../../compone
 import { useRole } from "../../contexts/RoleContext";
 import { useToast } from "../../contexts/ToastContext";
 import { requestFixtures, demandFixtures } from "../../api/fixtures";
+import { fetchMyRequests, fetchOpenDemand, createRequest, cancelRequest, acceptQuote, sendQuote } from "../../api/dashboard";
+import useAuth from "../../auth/useAuth";
 import { PRODUCT } from "../../brand";
 
 const REQUEST_STATUS = {
@@ -32,6 +35,7 @@ const BUY_TABS = [
 ];
 
 function NeededBy({ date }) {
+  if (!date) return null;
   const d = daysUntil(date);
   const soon = d !== null && d >= 0 && d <= 5;
   return (
@@ -48,7 +52,11 @@ function Fulfillment({ value, location }) {
   return (
     <span className="inline-flex items-center gap-1.5">
       <Icon width={15} height={15} aria-hidden="true" className="text-fg-muted" />
-      <span className="text-fg">{value === "delivery" ? "Deliver to" : "Will-call near"} {location}</span>
+      <span className="text-fg">
+        {location
+          ? `${value === "delivery" ? "Deliver to" : value === "either" ? "Delivery or will-call near" : "Will-call near"} ${location}`
+          : value === "delivery" ? "Delivery" : value === "either" ? "Delivery or will-call" : "Will-call"}
+      </span>
     </span>
   );
 }
@@ -72,7 +80,7 @@ function ItemList({ items, limit }) {
   );
 }
 
-function MyRequestCard({ request, onDelete }) {
+function MyRequestCard({ request, live, onDelete, onAccept }) {
   const [open, setOpen] = useState(false);
   const status = REQUEST_STATUS[request.status] ?? REQUEST_STATUS.open;
   return (
@@ -80,7 +88,7 @@ function MyRequestCard({ request, onDelete }) {
       <div className="flex flex-wrap items-center gap-2">
         <span className="font-mono text-xs text-fg-muted">{request.id}</span>
         <StatusPill tone={status.tone}>{status.label}</StatusPill>
-        {request.local ? <StatusPill tone="accent" dot={false}>Saved in this browser</StatusPill> : <SampleLabel>Sample</SampleLabel>}
+        {live ? null : request.local ? <StatusPill tone="accent" dot={false}>Saved in this browser</StatusPill> : <SampleLabel>Sample</SampleLabel>}
       </div>
       <h3 className="mt-3 text-lg font-semibold leading-snug text-fg">{request.title}</h3>
       <p className="mt-0.5 text-sm text-fg-muted">
@@ -118,13 +126,38 @@ function MyRequestCard({ request, onDelete }) {
         <Button type="button" size="sm" variant="secondary" onClick={() => setOpen((v) => !v)} aria-expanded={open}>
           {open ? "Hide details" : "Details"}
         </Button>
-        {request.local && (
+        {(request.local || (live && (request.status === "open" || request.status === "quoting"))) && (
           <Button type="button" size="sm" variant="ghost" onClick={() => onDelete(request.id)} className="text-danger hover:bg-danger-soft">
-            Delete
+            {live ? "Close request" : "Delete"}
           </Button>
         )}
       </div>
       {open && request.notes && <p className="mt-3 rounded-xl bg-subtle px-3 py-2 text-sm text-fg">{request.notes}</p>}
+      {open && live && request.quoteList?.length > 0 && (
+        <ul className="mt-3 divide-y divide-line rounded-xl border border-line">
+          {request.quoteList.map((q) => (
+            <li key={q.id} className="flex flex-wrap items-center justify-between gap-3 px-3 py-2.5 text-sm">
+              <div className="min-w-0">
+                <p className="font-semibold text-fg">{q.seller}</p>
+                <p className="text-xs text-fg-muted">
+                  {q.leadTimeDays === 0 ? "Same day" : `${q.leadTimeDays}-day lead time`} · valid {q.validDays} days · {q.sent}
+                </p>
+                {q.note && <p className="mt-1 text-xs text-fg">{q.note}</p>}
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="font-semibold tabular-nums text-fg">{money(q.total)}</span>
+                {q.status === "sent" && request.status === "quoting" ? (
+                  <Button type="button" size="sm" onClick={() => onAccept(request.id, q.id)}>Accept</Button>
+                ) : (
+                  <StatusPill tone={q.status === "accepted" ? "success" : "neutral"}>
+                    {q.status === "accepted" ? "Accepted" : q.status === "declined" ? "Declined" : "Sent"}
+                  </StatusPill>
+                )}
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
     </Card>
   );
 }
@@ -134,7 +167,7 @@ function DemandCard({ request, quote, onQuote }) {
     <Card as="article" className="flex flex-col p-5">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex flex-wrap items-center gap-2">
-          <RoleBadge role={request.buyerRole} label={ROLE_VIEWS[request.buyerRole]?.label} />
+          {request.buyerRole && <RoleBadge role={request.buyerRole} label={ROLE_VIEWS[request.buyerRole]?.label} />}
           <span className="text-sm font-semibold text-fg">{request.buyer}</span>
         </div>
         <span className="text-xs text-fg-muted">{request.posted}</span>
@@ -160,7 +193,16 @@ function DemandCard({ request, quote, onQuote }) {
           {request.competing === 0 ? "No quotes yet" : `${request.competing} other quote${request.competing === 1 ? "" : "s"}`}
         </p>
         {quote ? (
-          <StatusPill tone="success">Your quote {money(quote.total, { compact: true })} · saved locally</StatusPill>
+          <div className="flex flex-wrap items-center gap-2">
+            <StatusPill tone={quote.status === "declined" ? "neutral" : "success"}>
+              {quote.status === "accepted" ? "Accepted" : quote.status === "declined" ? "Not selected" : "Your quote"}{" "}
+              {money(quote.total, { compact: true })}
+              {quote.live ? "" : " · saved locally"}
+            </StatusPill>
+            {quote.live && quote.status === "sent" && (
+              <Button type="button" size="sm" variant="ghost" onClick={() => onQuote(request)}>Update</Button>
+            )}
+          </div>
         ) : (
           <Button type="button" size="sm" onClick={() => onQuote(request)}>
             Send quote
@@ -172,11 +214,14 @@ function DemandCard({ request, quote, onQuote }) {
   );
 }
 
-function BuyView({ role }) {
+function BuyView({ role, onLive }) {
   const [params, setParams] = useSearchParams();
   const [tab, setTab] = useState("active");
   const [local, setLocal] = useLocalState("djs-rfq-local", []);
   const { toast } = useToast();
+  const { csrf } = useAuth();
+  const remote = useLiveResource(useCallback((o) => fetchMyRequests(o), []), requestFixtures);
+  const live = remote.live;
   const drawerOpen = params.get("new") === "1";
 
   const setDrawer = (open) => {
@@ -186,11 +231,32 @@ function BuyView({ role }) {
     setParams(next, { replace: true });
   };
 
-  const all = useMemo(() => [...local, ...requestFixtures], [local]);
+  const all = useMemo(() => (live ? remote.data ?? [] : [...local, ...(remote.data ?? [])]), [live, local, remote.data]);
   const tabs = BUY_TABS.map((t) => ({ key: t.key, label: t.label, count: all.filter(t.match).length }));
   const rows = all.filter((BUY_TABS.find((t) => t.key === tab) ?? BUY_TABS[0]).match);
+  useEffect(() => {
+    if (!remote.loading) onLive?.(live);
+  }, [remote.loading, live, onLive]);
 
-  const save = (form) => {
+  const run = async (fn, success) => {
+    try {
+      remote.setData(await fn());
+      toast(success, { type: "success" });
+      return true;
+    } catch (err) {
+      toast(err?.message ?? "Something went wrong. Try again.", { type: "error" });
+      return false;
+    }
+  };
+
+  const save = async (form) => {
+    if (live) {
+      if (await run(() => createRequest(form, { csrf }), "Request posted. Sellers in that category can quote it now.")) {
+        setDrawer(false);
+        setTab("active");
+      }
+      return;
+    }
     const id = `RFQ-L${String(Date.now()).slice(-5)}`;
     setLocal((prev) => [
       { ...form, id, status: "open", quotes: 0, bestQuote: null, posted: new Date().toISOString().slice(0, 10), local: true },
@@ -202,9 +268,16 @@ function BuyView({ role }) {
   };
 
   const remove = (id) => {
+    if (live) {
+      run(() => cancelRequest({ id, csrf }), "Request closed. Sellers can no longer quote it.");
+      return;
+    }
     setLocal((prev) => prev.filter((r) => r.id !== id));
     toast("Request deleted.", { type: "info" });
   };
+
+  const accept = (id, quoteId) =>
+    run(() => acceptQuote({ id, quoteId, csrf }), "Quote accepted. The other sellers were told it went elsewhere.");
 
   const upstream = role === "distributor";
 
@@ -220,7 +293,7 @@ function BuyView({ role }) {
       {rows.length ? (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
           {rows.map((r) => (
-            <MyRequestCard key={r.id} request={r} onDelete={remove} />
+            <MyRequestCard key={r.id} request={r} live={live} onDelete={remove} onAccept={accept} />
           ))}
         </div>
       ) : (
@@ -241,28 +314,49 @@ function BuyView({ role }) {
   );
 }
 
-function SellView({ role }) {
+function SellView({ role, onLive }) {
   const [category, setCategory] = useState("all");
   const [buyerType, setBuyerType] = useState("all");
   const [query, setQuery] = useState("");
   const [quoting, setQuoting] = useState(null);
-  const [quotes, setQuotes] = useLocalState("djs-rfq-quotes-local", {});
+  const [localQuotes, setLocalQuotes] = useLocalState("djs-rfq-quotes-local", {});
   const { toast } = useToast();
+  const { csrf } = useAuth();
+  const remote = useLiveResource(useCallback((o) => fetchOpenDemand(o), []), demandFixtures);
+  const live = remote.live;
+  useEffect(() => {
+    if (!remote.loading) onLive?.(live);
+  }, [remote.loading, live, onLive]);
 
   // Distributors quote contractors; manufacturers see contractor and distributor demand.
-  const visible = demandFixtures.filter((r) => role === "supplier" || r.buyerRole === "contractor");
+  // Live requests also say which sellers the buyer wanted to hear from.
+  const visible = (remote.data ?? []).filter((r) => {
+    if (live && r.sendTo?.length && !r.sendTo.includes(role)) return false;
+    return role === "supplier" || !r.buyerRole || r.buyerRole === "contractor";
+  });
   const categories = [...new Set(visible.map((r) => r.category))];
+  const quoteFor = (r) => (live ? (r.myQuote ? { ...r.myQuote, live: true } : null) : localQuotes[r.id]);
 
   const rows = visible.filter((r) => {
     if (category !== "all" && r.category !== category) return false;
     if (buyerType !== "all" && r.buyerRole !== buyerType) return false;
     const q = query.trim().toLowerCase();
-    if (q && ![r.title, r.buyer, r.category, r.location, ...r.items.map((i) => i.description)].some((f) => f.toLowerCase().includes(q))) return false;
+    if (q && ![r.title, r.buyer, r.category, r.location, ...r.items.map((i) => i.description)].some((f) => (f ?? "").toLowerCase().includes(q))) return false;
     return true;
   });
 
-  const save = (quote) => {
-    setQuotes((prev) => ({ ...prev, [quote.requestId]: { ...quote, savedAt: Date.now() } }));
+  const save = async (quote) => {
+    if (live) {
+      try {
+        remote.setData(await sendQuote({ ...quote, csrf }));
+        setQuoting(null);
+        toast("Quote sent. The buyer sees it next to the others.", { type: "success" });
+      } catch (err) {
+        toast(err?.message ?? "Couldn’t send the quote. Try again.", { type: "error" });
+      }
+      return;
+    }
+    setLocalQuotes((prev) => ({ ...prev, [quote.requestId]: { ...quote, savedAt: Date.now() } }));
     setQuoting(null);
     toast("Quote saved in this browser. Sample requests can’t receive quotes.", { type: "info" });
   };
@@ -311,7 +405,7 @@ function SellView({ role }) {
       {rows.length ? (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
           {rows.map((r) => (
-            <DemandCard key={r.id} request={r} quote={quotes[r.id]} onQuote={setQuoting} />
+            <DemandCard key={r.id} request={r} quote={quoteFor(r)} onQuote={setQuoting} />
           ))}
         </div>
       ) : (
@@ -331,6 +425,7 @@ export default function Requests() {
   const [params] = useSearchParams();
   const [side, setSide] = useState(params.get("new") === "1" || !view.sells ? "buy" : "sell");
   const mode = view.buys && view.sells ? side : view.sells ? "sell" : "buy";
+  const [live, setLive] = useState(null);
 
   const subtitle =
     mode === "sell"
@@ -363,13 +458,19 @@ export default function Requests() {
           ) : null
         }
       >
-        <DataNotice className="mb-6">
-          {mode === "sell"
-            ? "These requests are illustrative, from fictional buyers. They aren’t live demand and quotes you save stay in this browser."
-            : "Example requests are illustrative. Requests you post are saved in this browser only until request posting goes live."}
-        </DataNotice>
+        {live === false && (
+          <DataNotice className="mb-6">
+            {mode === "sell"
+              ? "These requests are illustrative, from fictional buyers. They aren’t live demand and quotes you save stay in this browser."
+              : "Example requests are illustrative. Requests you post here are saved in this browser only, because the request service isn’t reachable."}
+          </DataNotice>
+        )}
 
-        {mode === "sell" ? <SellView key={role} role={role} /> : <BuyView key={role} role={role} />}
+        {mode === "sell" ? (
+          <SellView key={`${role}-sell`} role={role} onLive={setLive} />
+        ) : (
+          <BuyView key={`${role}-buy`} role={role} onLive={setLive} />
+        )}
       </DashboardLayout>
     </>
   );
