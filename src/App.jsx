@@ -8,6 +8,7 @@ import FloatingDemo from "./components/FloatingDemo";
 import ReadingProgress from "./components/ReadingProgress";
 import CommandPalette from "./components/CommandPalette";
 import LiveChat from "./components/LiveChat";
+import Atmosphere from "./components/nocturne/Atmosphere";
 import Home from "./pages/Home";
 import Platform from "./pages/Platform";
 import Solutions from "./pages/Solutions";
@@ -92,10 +93,11 @@ function MarketingLayout({ children }) {
   }, []);
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="relative isolate flex min-h-screen flex-col">
+      <Atmosphere />
       <SkipLink />
       <Navbar onOpenPalette={openPalette} />
-      <main id="main" className="flex-1">
+      <main id="main" className="flex-1 pt-20">
         {children}
       </main>
       <Footer />

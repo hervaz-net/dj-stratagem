@@ -1,15 +1,23 @@
+// Nocturne has no ruled section dividers: space and the background carry the
+// rhythm. Border utilities passed by older pages are dropped here.
+const RULES = /\b(border-[tb]|border-y|border-line|border-amber\/\d+)\b/g;
+
 export default function Section({ id, className = "", children, ...rest }) {
+  const cls = className.replace(RULES, "").replace(/\s+/g, " ").trim();
   return (
-    <section id={id} className={`px-6 py-20 md:py-28 ${className}`} {...rest}>
-      <div className="mx-auto max-w-6xl">{children}</div>
+    <section id={id} className={`relative px-6 py-20 md:py-28 ${cls}`} {...rest}>
+      <div className="mx-auto max-w-7xl">{children}</div>
     </section>
   );
 }
 
 export function Eyebrow({ children }) {
   return (
-    <div className="mb-4 inline-flex items-center gap-2.5 text-xs font-bold uppercase tracking-[0.16em] text-brand">
-      <span className="h-0.5 w-6 rounded-full bg-cta" />
+    <div className="mono-label mb-6 inline-flex items-center gap-3 text-steel">
+      <span className="relative flex h-2 w-2" aria-hidden="true">
+        <span className="absolute inset-0 animate-ping rounded-full bg-cta/60 motion-reduce:animate-none" />
+        <span className="relative h-2 w-2 rounded-full bg-cta" />
+      </span>
       {children}
     </div>
   );

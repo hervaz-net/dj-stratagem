@@ -53,7 +53,7 @@ export default function CookieBanner() {
     <div
       role="region"
       aria-label="Cookie consent"
-      className="fixed bottom-4 right-4 z-[110] w-[min(22rem,calc(100vw-2rem))] rounded-2xl border border-line bg-ink-2/95 p-4 shadow-xl shadow-brand/10 backdrop-blur-md"
+      className="fixed bottom-4 right-4 z-[110] w-[min(22rem,calc(100vw-2rem))] slab p-5"
     >
       <p className="text-sm leading-relaxed text-steel">
         This site stores theme preference and this consent choice on your device. There is no analytics or advertising pixel.{" "}
@@ -69,14 +69,14 @@ export default function CookieBanner() {
         <button
           type="button"
           onClick={decline}
-          className="rounded-full border border-line px-4 py-1.5 text-xs font-semibold text-steel hover:border-line/70 hover:text-paper"
+          className="draw-link px-2 py-1.5 text-xs font-semibold text-steel hover:text-paper"
         >
           Dismiss
         </button>
         <button
           type="button"
           onClick={accept}
-          className="rounded-full bg-cta px-4 py-1.5 text-xs font-semibold text-white hover:bg-cta-hover"
+          className="chamfer-sm bg-cta px-4 py-1.5 text-xs font-semibold text-white hover:bg-cta-hover"
         >
           OK
         </button>
