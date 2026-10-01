@@ -124,7 +124,7 @@ const phrases = [
 
 export default function Footer() {
   return (
-    <footer className="no-print relative mt-24 overflow-hidden">
+    <footer className="no-print relative mt-8 overflow-hidden">
       <div className="marquee py-6" aria-hidden="true">
         <div className="marquee-track gap-10">
           {[...phrases, ...phrases].map((p, i) => (
@@ -136,7 +136,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="mx-auto max-w-7xl px-6 pt-16">
+      <div className="mx-auto max-w-7xl px-6 pt-10">
         <div className="grid gap-14 lg:grid-cols-[0.9fr_1.5fr]">
           <div>
             <p className="mono-label text-steel">Stay in the loop</p>
@@ -183,7 +183,7 @@ export default function Footer() {
       {/* Oversized wordmark that bleeds off the bottom edge. */}
       <p
         aria-hidden="true"
-        className="pointer-events-none select-none whitespace-nowrap px-4 text-center font-display text-[22vw] italic leading-[0.75] text-paper/[0.06]"
+        className="pointer-events-none select-none whitespace-nowrap px-4 text-center -mb-[5vw] font-display text-[19vw] italic leading-[0.75] text-paper/[0.06]"
       >
         Stratagem
       </p>

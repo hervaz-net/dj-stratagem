@@ -43,7 +43,7 @@ export default function TradeLocation() {
         description={`Find ${trade.toLowerCase()} construction bid opportunities in ${city}, CA. Browse project values, bid deadlines, and scope — and get matched to the work that fits your business.`}
       />
 
-      <Section className="pt-16 pb-8 md:pt-24">
+      <Section className="pt-10 pb-6 md:pt-16">
         <Eyebrow>
           {trade} &middot; {city}, CA
         </Eyebrow>

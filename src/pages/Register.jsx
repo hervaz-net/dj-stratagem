@@ -155,7 +155,7 @@ export default function Register() {
         noindex
       />
 
-      <div className="mx-auto flex w-full max-w-lg flex-col justify-center px-6 py-16 md:py-24">
+      <div className="mx-auto flex w-full max-w-lg flex-col justify-center px-6 py-10 md:py-14">
         <div className="slab p-8">
           <Link to="/" className="inline-block" aria-label="D&J Stratagem — home">
             <Logo />

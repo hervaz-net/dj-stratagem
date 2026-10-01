@@ -91,7 +91,7 @@ export default function Login() {
     <>
       <Seo title="Sign in" description="Sign in to your D&J Stratagem account." noindex />
 
-      <div className="mx-auto flex w-full max-w-md flex-col justify-center px-6 py-16 md:py-24">
+      <div className="mx-auto flex w-full max-w-md flex-col justify-center px-6 py-10 md:py-14">
         <div className="slab p-8">
           <Link to="/" className="inline-block" aria-label="D&J Stratagem — home">
             <Logo />

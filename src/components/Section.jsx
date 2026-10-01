@@ -5,7 +5,7 @@ const RULES = /\b(border-[tb]|border-y|border-line|border-amber\/\d+)\b/g;
 export default function Section({ id, className = "", children, ...rest }) {
   const cls = className.replace(RULES, "").replace(/\s+/g, " ").trim();
   return (
-    <section id={id} className={`relative px-6 py-20 md:py-28 ${cls}`} {...rest}>
+    <section id={id} className={`relative px-6 py-10 md:py-16 ${cls}`} {...rest}>
       <div className="mx-auto max-w-7xl">{children}</div>
     </section>
   );
