@@ -5,6 +5,25 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.80",
+    date: "October 2026",
+    tag: "Fix",
+    items: [
+      {
+        type: "fix",
+        text: "Live audit 30 Sep 2026 17:22 PDT: Namecheap unsuspended. Apex serves assets/index-CkD4vCPa.js (Last-Modified 24 Sep). GitHub deploy tip advertises assets/index-BVUa50KV.js. public_html is stale.",
+      },
+      {
+        type: "fix",
+        text: "/api/health.php is a LiteSpeed HTML 404. /api/ and /api/health return HTTP 500. /health.php, /api/me.php, and /contact.php are healthy. Auth chrome still covers /login and /privacy because the live bundle predates hideMarketingChrome.",
+      },
+      {
+        type: "improved",
+        text: "Dashboard PHP now signs in before loading ops.php. A missing ops.php returns JSON 503 instead of a LiteSpeed HTML 500. verify-dist and the publish workflow now require api/ops.php.",
+      },
+    ],
+  },
+  {
     version: "1.79",
     date: "September 2026",
     tag: "Fix",
