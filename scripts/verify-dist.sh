@@ -89,6 +89,7 @@ for photo in sedan suv sprinter minibus coach; do
   [[ -f "$DIST/media/fleet/${photo}.webp" ]] || die "missing media/fleet/${photo}.webp"
 done
 grep -q 'RewriteRule \^fleet/?\$ /index.html' "$htaccess" \
+  || grep -q 'RewriteRule \^fleet\$ /index.html' "$htaccess" \
   || die ".htaccess is missing the /fleet SPA override"
 
 printf 'verify-dist: ok (%s)\n' "$bundle"
