@@ -8,7 +8,7 @@ export default function VerifyEmail() {
       <Seo title="Account review" description="New D&J Stratagem accounts are approved by the team. There is no automated verification email." noindex />
 
       <div className="mx-auto flex w-full max-w-md flex-col justify-center px-6 py-16 md:py-24">
-        <div className="rounded-2xl border border-line bg-ink-2 p-8 shadow-xl shadow-brand/5">
+        <div className="slab p-8">
           <Link to="/" className="inline-block" aria-label="D&J Stratagem — home">
             <Logo />
           </Link>
@@ -20,7 +20,7 @@ export default function VerifyEmail() {
                 <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
               </svg>
             </div>
-            <h1 className="mt-5 text-2xl font-semibold tracking-tight text-paper">Account review, not a magic link</h1>
+            <h1 className="mt-5 text-paper text-6xl leading-[0.95] md:text-8xl">Account review, not a magic link</h1>
             <p className="mt-3 text-sm leading-relaxed text-steel">
               New accounts stay pending until someone on the team approves them. There is no automated verification email and no 24-hour link.
             </p>

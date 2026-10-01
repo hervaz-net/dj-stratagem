@@ -93,7 +93,7 @@ const pad = (n) => String(n).padStart(2, "0");
 
 /* ---------------------------------------------------------------- panels */
 
-const card = "rounded-lg border border-line bg-ink p-2.5";
+const card = "chamfer-sm bg-glass p-2.5";
 const chip = "rounded-full px-2 py-0.5 text-[9px] font-bold tracking-wide";
 
 function Stat({ value, label, tone = "text-paper" }) {
@@ -107,7 +107,7 @@ function Stat({ value, label, tone = "text-paper" }) {
 
 function BidRow({ title, meta, badge, tone }) {
   return (
-    <div className="mb-1.5 flex items-start gap-2.5 rounded-lg border border-line bg-ink p-2.5">
+    <div className="mb-1.5 flex items-start gap-2.5 chamfer-sm bg-glass p-2.5">
       <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded bg-brand/15 text-brand">
         <IconBriefcase width={12} height={12} />
       </div>
@@ -396,7 +396,7 @@ export default function WalkthroughModal({ open, onClose }) {
         aria-label="Platform walkthrough"
         tabIndex={-1}
         onClick={(e) => e.stopPropagation()}
-        className="flex max-h-[92vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-line bg-ink-2 shadow-2xl outline-hidden"
+        className="flex max-h-[92vh] w-full max-w-4xl flex-col overflow-hidden slab outline-hidden"
       >
         {/* header */}
         <div className="flex shrink-0 items-center justify-between border-b border-line px-5 py-3">
@@ -495,7 +495,7 @@ export default function WalkthroughModal({ open, onClose }) {
                   className="bg-grid pointer-events-none absolute inset-0 opacity-20"
                   aria-hidden="true"
                 />
-                <div className="relative w-full max-w-sm rounded-xl border border-line bg-ink-2 p-3.5 shadow-xl">
+                <div className="relative w-full max-w-sm slab p-3.5">
                   <Panel kind={slide.panel} />
                 </div>
               </div>

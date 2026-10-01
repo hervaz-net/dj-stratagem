@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
-import Section, { Eyebrow } from "../components/Section";
+import PageHero from "../components/nocturne/PageHero";
+import Section from "../components/Section";
 import Seo from "../components/Seo";
 import CTASection from "../components/CTASection";
 import { IconArrowRight } from "../components/icons";
@@ -15,7 +16,7 @@ import {
 const ANY = "Any";
 
 const selectClass =
-  "w-full rounded-lg border border-line bg-ink px-3 py-2 text-sm text-paper " +
+  "w-full chamfer-sm bg-glass px-3 py-2 text-sm text-paper " +
   "outline-hidden transition-colors focus:border-amber";
 
 /** Value bands, kept coarse — contractors filter by rough size, not exact dollars. */
@@ -66,17 +67,12 @@ export default function Projects() {
         title="Construction Project Opportunities"
         description="Browse construction bid opportunities by trade, location, and project value — electrical, HVAC, plumbing, concrete, roofing, and general contracting work across Southern California."
       />
-
-      <Section className="pt-16 pb-8 md:pt-24">
-        <Eyebrow>Project opportunities</Eyebrow>
-        <h1 className="text-balance max-w-3xl text-4xl font-semibold leading-tight tracking-tight text-paper sm:text-5xl">
-          Find construction projects that fit your business.
-        </h1>
-        <p className="mt-6 max-w-2xl text-lg leading-relaxed text-steel">
-          Filter by trade, location, and project size. Every opportunity is scored against your
-          company profile so you can see at a glance which ones are worth a bid.
-        </p>
-      </Section>
+      <PageHero
+        index="01"
+        kicker="Project board"
+        title={<>Work that fits you, <em>ranked.</em></>}
+        lede="Filter by trade, place, and size. Every project is scored against your company profile, so the bids worth chasing rise to the top."
+      />
 
       <Section className="border-t border-line">
         {/* filters */}
@@ -123,7 +119,7 @@ export default function Projects() {
 
         {/* results */}
         {results.length === 0 ? (
-          <div className="mt-8 rounded-xl border border-line bg-ink-2 p-10 text-center">
+          <div className="mt-8 slab p-10 text-center">
             <p className="text-sm font-semibold text-paper">No projects match those filters.</p>
             <p className="mt-2 text-sm text-steel">
               Try widening the trade or location, or{" "}
@@ -143,7 +139,7 @@ export default function Projects() {
               <li key={p.slug}>
                 <Link
                   to={`/projects/${p.slug}`}
-                  className="lift block rounded-xl border border-line bg-ink-2 p-5 transition-colors hover:border-amber/40"
+                  className="lift block slab p-5 transition-colors"
                 >
                   <div className="flex flex-wrap items-start justify-between gap-4">
                     <div className="min-w-0 flex-1">

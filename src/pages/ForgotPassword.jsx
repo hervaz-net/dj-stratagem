@@ -28,7 +28,7 @@ export default function ForgotPassword() {
       <Seo title="Forgot password" description="Reset your D&J Stratagem password." noindex />
 
       <div className="mx-auto flex w-full max-w-md flex-col justify-center px-6 py-16 md:py-24">
-        <div className="rounded-2xl border border-line bg-ink-2 p-8 shadow-xl shadow-brand/5">
+        <div className="slab p-8">
           <Link to="/" className="inline-block" aria-label="D&J Stratagem — home">
             <Logo />
           </Link>
@@ -38,7 +38,7 @@ export default function ForgotPassword() {
               <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[var(--viz-green)]/10">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--viz-green)]" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
               </div>
-              <h1 className="mt-5 text-2xl font-semibold tracking-tight text-paper">How to reset</h1>
+              <h1 className="mt-5 text-paper text-6xl leading-[0.95] md:text-8xl">How to reset</h1>
               <p className="mt-3 text-sm leading-relaxed text-steel">
                 Self-serve password reset is not live yet. Email{" "}
                 <a href="mailto:hello@djstratageminc.com" className="font-medium text-amber hover:text-amber-2">
@@ -55,7 +55,7 @@ export default function ForgotPassword() {
             </div>
           ) : (
             <>
-              <h1 className="mt-8 text-3xl font-semibold tracking-tight text-paper">Forgot password?</h1>
+              <h1 className="mt-8 text-paper text-6xl leading-[0.95] md:text-8xl">Forgot password?</h1>
               <p className="mt-2 text-sm text-steel">
                 Enter the email on the account. We will tell you how to reach us — automated reset mail is not live yet.
               </p>

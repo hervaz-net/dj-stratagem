@@ -48,7 +48,7 @@ const toneFor = (score) =>
 
 export default function OpportunityPreview() {
   return (
-    <div className="overflow-hidden rounded-2xl border border-line bg-ink-2 shadow-2xl">
+    <div className="overflow-hidden slab">
       {/* window chrome */}
       <div className="flex items-center gap-2 border-b border-line bg-ink px-4 py-3">
         <span className="h-2.5 w-2.5 rounded-full bg-danger/70" />

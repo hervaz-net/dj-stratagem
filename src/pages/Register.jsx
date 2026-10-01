@@ -156,7 +156,7 @@ export default function Register() {
       />
 
       <div className="mx-auto flex w-full max-w-lg flex-col justify-center px-6 py-16 md:py-24">
-        <div className="rounded-2xl border border-line bg-ink-2 p-8 shadow-xl shadow-brand/5">
+        <div className="slab p-8">
           <Link to="/" className="inline-block" aria-label="D&J Stratagem — home">
             <Logo />
           </Link>
@@ -166,7 +166,7 @@ export default function Register() {
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-success/10 text-success">
                 <IconCheck width={22} height={22} />
               </div>
-              <h1 className="mt-5 text-2xl font-semibold tracking-tight text-paper">
+              <h1 className="mt-5 text-paper text-6xl leading-[0.95] md:text-8xl">
                 Request received.
               </h1>
               <p className="mt-3 text-sm leading-relaxed text-steel">
@@ -180,7 +180,7 @@ export default function Register() {
             </div>
           ) : (
             <>
-              <h1 className="mt-8 text-3xl font-semibold tracking-tight text-paper">
+              <h1 className="mt-8 text-paper text-6xl leading-[0.95] md:text-8xl">
                 Request access
               </h1>
               <p className="mt-2 text-sm text-steel">

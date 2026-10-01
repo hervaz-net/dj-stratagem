@@ -813,3 +813,20 @@ h4, h5, h6 { font-family: var(--font-sans); }
     animation: none !important;
   }
 }
+
+/* Form fields on marketing pages: frosted, borderless, chamfered. Scoped to
+   the marketing layout (main follows the atmosphere layer) so the dashboard
+   keeps its own field styling. Unlayered, so it wins over utilities. */
+.atmosphere ~ main :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), select, textarea) {
+  border-color: transparent;
+  background-color: var(--glass-bg);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-radius: 0;
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+.atmosphere ~ main :is(input, select, textarea):focus {
+  background-color: var(--surface-hover);
+  box-shadow: inset 0 -2px 0 var(--cta);
+}

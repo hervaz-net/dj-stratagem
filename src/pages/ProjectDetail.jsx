@@ -40,7 +40,7 @@ export default function ProjectDetail() {
         </nav>
 
         <Eyebrow>{project.type}</Eyebrow>
-        <h1 className="text-balance max-w-3xl text-4xl font-semibold leading-tight tracking-tight text-paper sm:text-5xl">
+        <h1 className="text-balance max-w-3xl text-paper text-6xl leading-[0.95] md:text-8xl">
           {project.title}
         </h1>
         <p className="mt-4 text-lg text-steel">
@@ -78,7 +78,7 @@ export default function ProjectDetail() {
             </div>
 
             <h2 className="mt-10 text-lg font-semibold text-paper">Project details</h2>
-            <dl className="mt-4 divide-y divide-line rounded-xl border border-line bg-ink-2">
+            <dl className="mt-4 divide-y divide-line slab">
               {[
                 ["Owner", project.owner],
                 ["General contractor", project.gc],
@@ -98,7 +98,7 @@ export default function ProjectDetail() {
               {project.documents.map((d) => (
                 <li
                   key={d}
-                  className="flex items-center justify-between rounded-lg border border-line bg-ink-2 px-4 py-3"
+                  className="flex items-center justify-between chamfer-sm bg-glass-2 px-4 py-3"
                 >
                   <span className="text-sm text-paper/85">{d}</span>
                   <span className="text-xs text-steel">Members only</span>
@@ -109,7 +109,7 @@ export default function ProjectDetail() {
 
           {/* sidebar: company fit */}
           <aside className="lg:sticky lg:top-24">
-            <div className="rounded-2xl border border-line bg-ink-2 p-6">
+            <div className="slab p-6">
               <p className="text-xs font-semibold uppercase tracking-wider text-steel">
                 Company fit
               </p>
@@ -139,7 +139,7 @@ export default function ProjectDetail() {
               </div>
             </div>
 
-            <div className="mt-4 rounded-2xl border border-line bg-ink-2 p-6">
+            <div className="mt-4 slab p-6">
               <p className="text-sm font-semibold text-paper">
                 More {project.trade} work in {project.city}
               </p>
@@ -165,7 +165,7 @@ export default function ProjectDetail() {
 
 function Fact({ label, value, tone }) {
   return (
-    <div className="rounded-xl border border-line bg-ink-2 p-4">
+    <div className="slab p-4">
       <p className="text-xs text-steel">{label}</p>
       <p className={`mt-1 text-sm font-semibold ${tone ?? "text-paper"}`}>{value}</p>
     </div>

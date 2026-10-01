@@ -47,7 +47,7 @@ export default function TradeLocation() {
         <Eyebrow>
           {trade} &middot; {city}, CA
         </Eyebrow>
-        <h1 className="text-balance max-w-3xl text-4xl font-semibold leading-tight tracking-tight text-paper sm:text-5xl">
+        <h1 className="text-balance max-w-3xl text-paper text-6xl leading-[0.95] md:text-8xl">
           {title}
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-steel">
@@ -69,7 +69,7 @@ export default function TradeLocation() {
             <li key={p.slug}>
               <Link
                 to={`/projects/${p.slug}`}
-                className="lift block rounded-xl border border-line bg-ink-2 p-5 transition-colors hover:border-amber/40"
+                className="lift block slab p-5 transition-colors"
               >
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div className="min-w-0 flex-1">
@@ -97,7 +97,7 @@ export default function TradeLocation() {
 
       {/* Context: gives the page substance beyond a listing dump. */}
       <Section className="border-t border-line">
-        <h2 className="text-balance max-w-2xl text-2xl font-semibold tracking-tight text-paper md:text-3xl">
+        <h2 className="text-balance max-w-2xl text-paper text-5xl leading-[1] md:text-6xl">
           Bidding {trade.toLowerCase()} work in {city}
         </h2>
         <div className="mt-6 grid grid-cols-1 gap-8 md:grid-cols-2">

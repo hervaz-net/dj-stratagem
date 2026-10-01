@@ -77,7 +77,7 @@ export function CompactDashboard() {
       {/* Compact header */}
       <div className="max-w-7xl mx-auto flex items-center gap-4">
         <div className="flex-1">
-          <h1 className="text-xl font-bold text-bid-navy">Compact Bid Console</h1>
+          <h1 className="text-bid-navy text-6xl leading-[0.95] md:text-8xl">Compact Bid Console</h1>
           <p className="text-xs text-text-muted">Keyboard: '/' focus search • 'a' quick-add • 'e' edit selected • Esc cancel</p>
         </div>
 
