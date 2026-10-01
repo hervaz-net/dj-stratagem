@@ -35,8 +35,10 @@ Options -Indexes
   # /fleet is the Stratagem Fleet page. Vehicle photos used to live in
   # public/fleet/, which made LiteSpeed list the directory instead of the SPA.
   # Photos now live in /media/fleet/. Keep this rule so a leftover directory
-  # cannot bring the listing back.
-  RewriteRule ^fleet/?$ /index.html [L]
+  # cannot bring the listing back. Canonicalize the slash first so /fleet/
+  # does not duplicate /fleet.
+  RewriteRule ^fleet/$ /fleet [R=301,L]
+  RewriteRule ^fleet$ /index.html [L]
 
   # /manifest.json must never become index.html. Live public_html has shipped
   # without the file, and LiteSpeed DOCUMENT_ROOT is unreliable on this account,
@@ -144,6 +146,9 @@ Options -Indexes
   RewriteRule ^receipts$ /marketing/receipts [R=301,L]
   RewriteRule ^signage$ /marketing/signage [R=301,L]
   RewriteRule ^sitemap$ /sitemap.xml [R=301,L]
+  RewriteRule ^(feed|rss|atom)$ /changelog [R=301,L]
+  RewriteRule ^app$ /login [R=301,L]
+  RewriteRule ^companies$ / [R=301,L]
 
   RewriteRule ^send-demo[.]php$ contact.php [L]
   RewriteRule ^favicon[.]ico$ favicon.svg [L]

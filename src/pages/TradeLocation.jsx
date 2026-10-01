@@ -9,6 +9,7 @@ import {
   formatDue,
   matchTone,
 } from "../data/sampleProjects";
+import SampleListingsNotice from "../components/SampleListingsNotice";
 
 /**
  * Trade + location landing pages — "Electrical Construction Projects in
@@ -40,7 +41,7 @@ export default function TradeLocation() {
     <>
       <Seo
         title={title}
-        description={`Find ${trade.toLowerCase()} construction bid opportunities in ${city}, CA. Browse project values, bid deadlines, and scope — and get matched to the work that fits your business.`}
+        description={`Illustrative ${trade.toLowerCase()} project cards in ${city}, CA. Samples only — not live solicitations.`}
       />
 
       <Section className="pt-10 pb-6 md:pt-16">
@@ -54,8 +55,9 @@ export default function TradeLocation() {
           {trade.toLowerCase() === "general"
             ? `General contracting opportunities in ${city} and the surrounding market`
             : `${trade} bid opportunities for subcontractors working in ${city} and the surrounding market`}
-          , scored against your trade, service area, and project size.
+          , scored against a sample profile so you can see how matching will look.
         </p>
+        <SampleListingsNotice className="mt-4 max-w-2xl" />
       </Section>
 
       <Section className="border-t border-line">
@@ -86,7 +88,7 @@ export default function TradeLocation() {
                     <p className="mt-2 text-sm font-semibold tabular-nums text-paper">
                       {p.valueLabel}
                     </p>
-                    <p className="text-xs text-steel">Due {formatDue(p.bidDue)}</p>
+                    <p className="text-xs text-steel">Sample date {formatDue(p.bidDue)}</p>
                   </div>
                 </div>
               </Link>

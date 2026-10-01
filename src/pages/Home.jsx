@@ -8,6 +8,7 @@ import Reveal from "../components/Reveal";
 import Accordion from "../components/Accordion";
 import Seo from "../components/Seo";
 import { projects, TRADES, formatDue } from "../data/sampleProjects";
+import SampleListingsNotice from "../components/SampleListingsNotice";
 import {
   IconGavel,
   IconHelmet,
@@ -131,7 +132,7 @@ function SignalTicker() {
     >
       <div className="flex items-center justify-between">
         <span className="mono-label flex items-center gap-2 text-tide">
-          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-tide" /> New match
+          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-tide" /> Sample
         </span>
         <span className="mono-label text-steel">
           {String(i + 1).padStart(2, "0")}/{String(projects.length).padStart(2, "0")}
@@ -143,7 +144,7 @@ function SignalTicker() {
           {p.city}, {p.state} · {p.trade} · {p.valueLabel}
         </p>
         <div className="mt-5 flex items-end justify-between">
-          <span className="mono-label text-steel">Bids due {formatDue(p.bidDue)}</span>
+          <span className="mono-label text-steel">Sample date {formatDue(p.bidDue)}</span>
           <span className="font-display text-5xl leading-none text-cta">
             {p.match}
             <span className="text-xl">%</span>
@@ -279,6 +280,7 @@ export default function Home() {
             Browse every project →
           </Button>
         </div>
+        <SampleListingsNotice className="mt-4 max-w-2xl" />
         <div className="mt-10">
           <div className="mono-label hidden grid-cols-[1fr_9rem_7rem_6rem_4rem] gap-6 pb-4 text-steel md:grid">
             <span>Project</span>

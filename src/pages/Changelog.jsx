@@ -6,6 +6,16 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.7",
+    date: "October 2026",
+    tag: "Fix",
+    items: [
+      { type: "fixed", text: "Project cards on the homepage, board, and detail pages are labeled as samples. They no longer read as live bids you can add to a pipeline." },
+      { type: "fixed", text: "Unknown project URLs show the 404 page instead of silently bouncing to the board." },
+      { type: "fixed", text: "/fleet/ canonicalizes to /fleet. /feed, /rss, and /app redirect instead of a client 404. /companies redirects home." },
+    ],
+  },
+  {
     version: "1.6",
     date: "October 2026",
     tag: "Fix",
