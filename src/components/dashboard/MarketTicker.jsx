@@ -37,7 +37,7 @@ export default function MarketTicker({ items = [], live = false }) {
       <span className="flex shrink-0 items-center gap-2 border-r border-line pr-3">
         <StatusDot status={live ? "active" : "idle"} size={7} pulse={live} />
         <span className="text-[10px] font-semibold uppercase tracking-widest text-steel">
-          {live ? "Live" : "Sample"}
+          {live ? "Live" : "Market"}
         </span>
       </span>
 

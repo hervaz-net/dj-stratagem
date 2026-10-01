@@ -1,9 +1,8 @@
 import { Card } from "./ui";
 import Sparkline from "./Sparkline";
 import ProgressRing from "./ProgressRing";
-import SampleLabel from "../SampleLabel";
 
-export default function MetricCard({ metric, live = false }) {
+export default function MetricCard({ metric }) {
   const { label, value, unit = "", prefix = "", delta, accent = "blue", ring, series = [] } = metric;
   const up = delta >= 0;
 
@@ -38,7 +37,6 @@ export default function MetricCard({ metric, live = false }) {
             {Math.abs(delta).toFixed(1)}%
             <span className="font-normal text-fg-muted">vs last month</span>
           </span>
-          {!live && <SampleLabel className="self-start">Sample</SampleLabel>}
         </div>
         <Sparkline data={series} accent={accent} width={96} height={32} />
       </div>

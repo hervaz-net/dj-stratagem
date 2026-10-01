@@ -4,7 +4,6 @@ import Section, { SectionHeading } from "../components/Section";
 import PageHero from "../components/PageHero";
 import Button from "../components/Button";
 import RoleBadge from "../components/RoleBadge";
-import SampleLabel from "../components/SampleLabel";
 import Seo from "../components/Seo";
 import Logo, { LogoMark } from "../components/Logo";
 import { IconCheck, IconX, IconPrinter, IconArrowRight } from "../components/icons";
@@ -313,7 +312,6 @@ export default function BrandGuidelines() {
               {ROLE_ORDER.map((k) => (
                 <RoleBadge key={k} role={k} />
               ))}
-              <SampleLabel />
             </div>
             <p className="mt-4 text-sm leading-relaxed text-fg-muted">
               A SampleLabel goes on every illustrative listing, price, metric, or mockup. It is not

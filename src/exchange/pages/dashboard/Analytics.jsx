@@ -3,7 +3,6 @@ import DashboardLayout from "../../components/dashboard/DashboardLayout";
 import { Card, DataNotice, ErrorNotice, Panel, Segmented } from "../../components/dashboard/ui";
 import Sparkline from "../../components/dashboard/Sparkline";
 import ProgressRing from "../../components/dashboard/ProgressRing";
-import SampleLabel from "../../components/SampleLabel";
 import Seo from "../../components/Seo";
 import { useRole } from "../../contexts/RoleContext";
 import usePolledResource from "../../api/usePolledResource";
@@ -110,7 +109,6 @@ export default function Analytics() {
                     <span className="font-semibold text-fg">{kd.delta} <span className="font-normal text-fg-muted">vs prior period</span></span>
                     {mom[i] && <span className="text-fg-muted">Month over month {mom[i]}</span>}
                   </div>
-                  {!live && <SampleLabel className="mt-3 self-start">Sample</SampleLabel>}
                 </Card>
               );
             })}

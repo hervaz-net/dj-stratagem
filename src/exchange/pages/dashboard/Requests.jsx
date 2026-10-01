@@ -10,7 +10,6 @@ import { money, shortDate, daysUntil } from "../../components/dashboard/format";
 import { ROLE_VIEWS, roleView } from "../../components/dashboard/roles";
 import Button from "../../components/Button";
 import RoleBadge from "../../components/RoleBadge";
-import SampleLabel from "../../components/SampleLabel";
 import Seo from "../../components/Seo";
 import { IconSearch, IconTruck, IconBuilding, IconCalendar } from "../../components/icons";
 import { useRole } from "../../contexts/RoleContext";
@@ -88,7 +87,7 @@ function MyRequestCard({ request, live, onDelete, onAccept }) {
       <div className="flex flex-wrap items-center gap-2">
         <span className="font-mono text-xs text-fg-muted">{request.id}</span>
         <StatusPill tone={status.tone}>{status.label}</StatusPill>
-        {live ? null : request.local ? <StatusPill tone="accent" dot={false}>Saved in this browser</StatusPill> : <SampleLabel>Sample</SampleLabel>}
+        {live ? null : request.local ? <StatusPill tone="accent" dot={false}>Saved in this browser</StatusPill> : null}
       </div>
       <h3 className="mt-3 text-lg font-semibold leading-snug text-fg">{request.title}</h3>
       <p className="mt-0.5 text-sm text-fg-muted">

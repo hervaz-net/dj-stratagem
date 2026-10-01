@@ -1,5 +1,4 @@
 import RoleBadge from "./RoleBadge";
-import SampleLabel from "./SampleLabel";
 import { IconCheck, IconClock } from "./icons";
 import { daysFromToday } from "../data/sampleDates";
 
@@ -27,7 +26,6 @@ export default function HeroPanel() {
               </span>
             </p>
           </div>
-          <SampleLabel>Sample</SampleLabel>
         </div>
 
         <div className="mt-5 flex items-center justify-between text-xs font-semibold text-fg-muted">

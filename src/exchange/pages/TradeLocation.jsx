@@ -5,7 +5,6 @@ import Button from "../components/Button";
 import FeatureCard from "../components/FeatureCard";
 import Seo from "../components/Seo";
 import CTASection from "../components/CTASection";
-import PreviewNotice from "../components/PreviewNotice";
 import RequestCard from "../components/projects/RequestCard";
 import { IconArrowRight, IconClipboard, IconTruck, IconUsers } from "../components/icons";
 import { PRODUCT } from "../brand";
@@ -81,7 +80,6 @@ export default function TradeLocation() {
 
       <section className="px-5 pb-16 pt-8 sm:px-6 md:pb-24 md:pt-10">
         <div className="mx-auto max-w-6xl">
-          <PreviewNotice />
 
           <h2 className="mt-10 text-2xl font-bold tracking-tight text-fg">
             {matches.length} sample {matches.length === 1 ? "request" : "requests"} &middot;{" "}

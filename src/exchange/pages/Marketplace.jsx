@@ -5,13 +5,11 @@ import PageHero from "../components/PageHero";
 import Button from "../components/Button";
 import FeatureCard from "../components/FeatureCard";
 import CTASection from "../components/CTASection";
-import SampleLabel from "../components/SampleLabel";
 import Seo from "../components/Seo";
 import ListingCard from "../components/market/ListingCard";
 import RequestCard from "../components/market/RequestCard";
 import CategoryTile from "../components/market/CategoryTile";
 import FilterChip from "../components/market/FilterChip";
-import SampleNotice from "../components/market/SampleNotice";
 import { CATEGORIES, SAMPLE_LISTINGS, SAMPLE_REQUESTS, categoryIcon } from "../components/market/catalog";
 import { PRODUCT } from "../brand";
 import {
@@ -152,7 +150,6 @@ export default function Marketplace() {
       </PageHero>
 
       <Section className="!pt-10 md:!pt-14">
-        <SampleNotice />
 
         <form
           role="search"
@@ -286,7 +283,6 @@ export default function Marketplace() {
             Sellers quote into both.
           </SectionHeading>
           <div className="flex shrink-0 items-center gap-3">
-            <SampleLabel />
             <Button to="/projects" variant="secondary">
               Project demand <IconArrowRight width={16} height={16} />
             </Button>

@@ -5,7 +5,6 @@ import Button from "../components/Button";
 import CTASection from "../components/CTASection";
 import Reveal from "../components/Reveal";
 import RoleBadge from "../components/RoleBadge";
-import SampleLabel from "../components/SampleLabel";
 import FeatureCard from "../components/FeatureCard";
 import Seo from "../components/Seo";
 import WalkthroughModal from "../components/WalkthroughModal";
@@ -34,7 +33,6 @@ function MockFrame({ title, children }) {
     <div className="rounded-2xl border border-line bg-surface p-5 shadow-[var(--shadow-card)] sm:p-6">
       <div className="flex items-center justify-between gap-3">
         <p className="text-sm font-semibold text-fg">{title}</p>
-        <SampleLabel />
       </div>
       <div className="mt-4">{children}</div>
     </div>

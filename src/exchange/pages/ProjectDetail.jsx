@@ -2,10 +2,8 @@ import { Link, useParams, Navigate } from "react-router-dom";
 import Section from "../components/Section";
 import Button from "../components/Button";
 import RoleBadge from "../components/RoleBadge";
-import SampleLabel from "../components/SampleLabel";
 import Seo from "../components/Seo";
 import CTASection from "../components/CTASection";
-import PreviewNotice from "../components/PreviewNotice";
 import CategoryIcon from "../components/projects/CategoryIcon";
 import {
   IconCheck,
@@ -76,7 +74,6 @@ export default function ProjectDetail() {
             <span className="rounded-full border border-line px-2.5 py-1 text-xs font-semibold text-fg-muted">
               {project.procurement}
             </span>
-            <SampleLabel>Sample request</SampleLabel>
           </div>
 
           <h1 className="mt-4 max-w-3xl text-balance text-3xl font-bold leading-tight tracking-tight text-fg sm:text-4xl md:text-5xl">
@@ -94,7 +91,6 @@ export default function ProjectDetail() {
             <Fact label="Project size" value={project.valueLabel} />
           </dl>
 
-          <PreviewNotice className="mt-8" />
         </div>
       </section>
 
@@ -166,7 +162,6 @@ export default function ProjectDetail() {
             <div className="rounded-2xl border border-line bg-surface p-6 shadow-[var(--shadow-card)]">
               <div className="flex items-center justify-between gap-2">
                 <p className="text-sm font-semibold text-fg">Seller fit</p>
-                <SampleLabel />
               </div>
               <p className={`mt-3 text-4xl font-bold tabular-nums ${matchTone(project.match)}`}>
                 {project.match}%

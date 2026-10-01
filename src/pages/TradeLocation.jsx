@@ -2,7 +2,6 @@ import { Link, useParams, Navigate } from "react-router-dom";
 import Section, { Eyebrow } from "../components/Section";
 import Seo from "../components/Seo";
 import CTASection from "../components/CTASection";
-import PreviewNotice from "../components/PreviewNotice";
 import {
   projects,
   projectsFor,
@@ -57,7 +56,6 @@ export default function TradeLocation() {
             : `${trade} bid opportunities for subcontractors working in ${city} and the surrounding market`}
           , scored against your trade, service area, and project size.
         </p>
-        <PreviewNotice className="mt-8 max-w-2xl" />
       </Section>
 
       <Section className="border-t border-line">

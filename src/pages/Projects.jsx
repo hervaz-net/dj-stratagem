@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import Section, { Eyebrow } from "../components/Section";
 import Seo from "../components/Seo";
 import CTASection from "../components/CTASection";
-import PreviewNotice from "../components/PreviewNotice";
 import { IconArrowRight } from "../components/icons";
 import {
   projects,
@@ -77,7 +76,6 @@ export default function Projects() {
           Filter by trade, location, and project size. Every opportunity is scored against your
           company profile so you can see at a glance which ones are worth a bid.
         </p>
-        <PreviewNotice className="mt-8 max-w-2xl" />
       </Section>
 
       <Section className="border-t border-line">
