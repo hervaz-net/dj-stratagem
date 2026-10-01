@@ -131,13 +131,13 @@ function Panel({ kind }) {
         </div>
         <BidRow
           title="Westside Medical — Electrical"
-          meta="LA · Turner · Due Oct 18"
+          meta="LA · Northline Builders · Due in 17 days"
           badge="OPEN"
           tone="bg-success/15 text-success"
         />
         <BidRow
           title="Harbor Logistics — Framing"
-          meta="Long Beach · Webcor · Due Oct 22"
+          meta="Long Beach · Harborline GC · Due in 21 days"
           badge="REVIEW"
           tone="bg-amber/15 text-amber"
         />
@@ -165,19 +165,19 @@ function Panel({ kind }) {
         </div>
         <BidRow
           title="Westside Medical Complex"
-          meta="$4.2M est · Turner Construction · Oct 18"
+          meta="$4.2M est · Northline Builders · Due in 17 days"
           badge="NEW"
           tone="bg-success/15 text-success"
         />
         <BidRow
           title="Century City Office Tower"
-          meta="$11M est · Skanska · Oct 25"
+          meta="$11M est · Ridgeline Commercial · Due in 24 days"
           badge="NEW"
           tone="bg-success/15 text-success"
         />
         <BidRow
           title="Harbor Logistics Hub"
-          meta="$2.8M est · Webcor · Oct 22"
+          meta="$2.8M est · Harborline GC · Due in 21 days"
           badge="VIEWED"
           tone="bg-amber/15 text-amber"
         />
@@ -196,7 +196,7 @@ function Panel({ kind }) {
             AI draft ready
           </p>
           <p className="mt-1 text-[10px] leading-relaxed text-steel">
-            Based on your Cedars-Sinai and St. Francis submissions, scope and unit pricing are
+            Based on your last two healthcare submissions, scope and unit pricing are
             pre-filled. Review before sending.
           </p>
         </div>
