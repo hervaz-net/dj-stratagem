@@ -9,6 +9,7 @@ import {
   operator,
   credentials,
   isLicensed,
+  isTestFixtures,
   vehicleClasses,
   vehicles,
   services,
@@ -165,6 +166,12 @@ export default function Fleet() {
         description={`Chauffeured sedans, SUVs, Sprinters, minibuses, and motorcoaches across ${operator.base} and Southern California. Itemized quotes, no surprise charges.`}
       />
 
+      {isTestFixtures && (
+        <p role="status" className="sticky top-0 z-40 bg-danger px-4 py-2 text-center text-xs font-semibold text-white">
+          LOCAL TEST DATA. Credentials and vehicles on this page are fake fixtures and are never deployed.
+        </p>
+      )}
+
       {/* Hero */}
       <section className="relative overflow-hidden px-6 pb-8 pt-10 md:pt-16">
         <span
@@ -252,6 +259,28 @@ export default function Fleet() {
           ))}
         </div>
       </Section>
+
+      {vehicles.length > 0 && (
+        <Section id="vehicles">
+          <Eyebrow>In service</Eyebrow>
+          <div className="grid gap-4 md:grid-cols-3">
+            {vehicles.map((v) => {
+              const cls = vehicleClasses.find((k) => k.key === v.classKey);
+              return (
+                <article key={`${v.classKey}-${v.make}-${v.model}`} className="slab p-6">
+                  {v.photo ? (
+                    <img src={v.photo} alt={`${v.year} ${v.make} ${v.model}`} className="aspect-[16/10] w-full rounded-xl object-cover" />
+                  ) : (
+                    <div className="flex h-24 items-end"><VehicleArt shape={cls?.shape ?? "sedan"} /></div>
+                  )}
+                  <h3 className="mt-5 text-2xl text-paper">{v.year} {v.make} {v.model}</h3>
+                  <p className="mt-1 text-sm text-steel">{cls?.name} · {v.seats} passengers</p>
+                </article>
+              );
+            })}
+          </div>
+        </Section>
+      )}
 
       {/* Pricing */}
       <Section>

@@ -17,7 +17,7 @@ export const operator = {
 };
 
 // Each value is the exact number or limit on the issued document, or null.
-export const credentials = [
+const issued = [
   {
     key: "tcp",
     label: "CPUC charter-party carrier permit",
@@ -50,7 +50,6 @@ export const credentials = [
   },
 ];
 
-export const isLicensed = credentials.every((c) => c.value);
 
 // Vehicle classes are definitions of service, not a claim about units owned.
 // Add specific vehicles to `vehicles` only once each is registered, inspected,
@@ -104,7 +103,7 @@ export const vehicleClasses = [
 ];
 
 // Specific vehicles: { classKey, year, make, model, seats, photo }. Empty until real.
-export const vehicles = [];
+const owned = [];
 
 export const services = [
   {
@@ -170,3 +169,30 @@ export const standards = [
     ],
   },
 ];
+
+// Local test mode: `VITE_FLEET_FIXTURES=1 npm run dev`. Fills every credential
+// and vehicle with obviously fake TEST values so the "fully licensed" state can
+// be previewed. `import.meta.env.DEV` is false in production builds, so this
+// branch and the fixtures are compiled out and can never reach the live site.
+const fixtures =
+  import.meta.env.DEV && import.meta.env.VITE_FLEET_FIXTURES === "1"
+    ? {
+        credentials: {
+          tcp: "TEST-TCP-000000",
+          usdot: "TEST-0000000",
+          mc: "TEST-MC-000000",
+          auto: "TEST $1,500,000 CSL",
+          insurer: "TEST Insurer, exp. 12/31/2099",
+        },
+        vehicles: [
+          { classKey: "sedan", year: 2099, make: "TEST", model: "Sedan", seats: 3 },
+          { classKey: "suv", year: 2099, make: "TEST", model: "SUV", seats: 6 },
+          { classKey: "sprinter", year: 2099, make: "TEST", model: "Sprinter", seats: 12 },
+        ],
+      }
+    : null;
+
+export const isTestFixtures = Boolean(fixtures);
+export const credentials = issued.map((c) => ({ ...c, value: fixtures?.credentials[c.key] ?? c.value }));
+export const isLicensed = credentials.every((c) => c.value);
+export const vehicles = fixtures ? fixtures.vehicles : owned;
