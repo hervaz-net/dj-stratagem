@@ -161,7 +161,7 @@ export default function Home() {
   return (
     <>
       <Seo
-        title="Find Construction Projects. Bid Smarter. Win More Work."
+        title="Build the pipeline, not the paperwork."
         description="D&J Stratagem is one place for contractors, subcontractors, and suppliers to find construction work, win it, market the business, and keep the customer."
       />
 
