@@ -82,4 +82,14 @@ bundle="$(grep -oE 'assets/index-[A-Za-z0-9_-]+[.]js' "$DIST/index.html" | head 
 [[ -n "$bundle" ]] || die "index.html has no hashed JS bundle"
 [[ -f "$DIST/$bundle" ]] || die "hashed bundle $bundle is not in dist/"
 
+if [[ -d "$DIST/fleet" ]]; then
+  die "dist/fleet is a directory; that path is the SPA route. Put photos in dist/media/fleet"
+fi
+for photo in sedan suv sprinter minibus coach; do
+  [[ -f "$DIST/media/fleet/${photo}.webp" ]] || die "missing media/fleet/${photo}.webp"
+done
+grep -q 'RewriteRule \^fleet/?\$ /index.html' "$htaccess" \
+  || die ".htaccess is missing the /fleet SPA override"
+
 printf 'verify-dist: ok (%s)\n' "$bundle"
+
