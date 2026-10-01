@@ -201,11 +201,19 @@ export default function Fleet() {
             </div>
             <p className="order-1 text-lg leading-relaxed text-steel md:order-2">{c.lede}</p>
           </div>
-          <div className="rise-in mt-14 flex items-end gap-6 overflow-x-auto pb-2" style={{ animationDelay: "280ms" }} aria-hidden="true">
-            {vehicleClasses.map((v) => (
-              <VehicleArt key={v.key} shape={v.shape} />
+          <div className="rise-in mt-14 flex items-end gap-4 overflow-x-auto pb-2 md:gap-8" style={{ animationDelay: "280ms" }} aria-hidden="true">
+            {vehicleClasses.map((v, i) => (
+              <img
+                key={v.key}
+                src={v.image}
+                alt=""
+                loading={i < 2 ? "eager" : "lazy"}
+                className="w-auto shrink-0 drop-shadow-[0_18px_30px_rgba(0,0,0,0.55)]"
+                style={{ height: `${4.5 + i * 1.6}rem` }}
+              />
             ))}
           </div>
+          <p className="mono-label mt-3 text-steel/70">Representative vehicles by class</p>
         </div>
       </section>
 
@@ -241,9 +249,19 @@ export default function Fleet() {
         <div className="mt-12 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {vehicleClasses.map((v, i) => (
             <Reveal key={v.key} delay={(i % 3) * 90} className="h-full">
-              <article className="slab flex h-full flex-col p-6">
-                <div className="flex h-24 items-end"><VehicleArt shape={v.shape} /></div>
-                <h3 className="mt-6 text-3xl text-paper">{v.name}</h3>
+              <article className="slab group flex h-full flex-col p-6">
+                <figure>
+                  <div className="relative flex aspect-[16/9] items-end justify-center overflow-hidden rounded-2xl" style={{ background: `radial-gradient(ellipse at 50% 85%, ${c.accent}33, transparent 70%)` }}>
+                    <img
+                      src={v.image}
+                      alt={`Representative ${v.name.toLowerCase()}`}
+                      loading="lazy"
+                      className="max-h-full w-[92%] object-contain object-bottom transition-transform duration-700 group-hover:scale-[1.04]"
+                    />
+                  </div>
+                  <figcaption className="mono-label mt-2 text-[0.6rem] text-steel/70">Representative image</figcaption>
+                </figure>
+                <h3 className="mt-4 text-3xl text-paper">{v.name}</h3>
                 <p className="mt-1 text-sm text-steel">{v.bestFor}</p>
                 <dl className="mt-5 grid grid-cols-2 gap-3 border-y border-line py-4">
                   <div><dt className="mono-label text-steel">Passengers</dt><dd className="mt-1 font-display text-3xl text-paper">Up to {v.passengers}</dd></div>
