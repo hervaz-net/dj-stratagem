@@ -43,6 +43,12 @@ need_files=(
   api/suppliers.php
   api/ops.php
   api/ops-schema.php
+  api/ops-seed.php
+  api/ops-view.php
+  api/market.php
+  api/requests.php
+  api/catalog.php
+  api/sample-data.php
   api/market-ticker.php
   api/config.example.php
   privacy.html

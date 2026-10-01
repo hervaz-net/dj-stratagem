@@ -94,7 +94,29 @@ a broken promise in the same family as invented proof, so it came down.
 Put it back when there are posts. It needs real articles at real URLs — not
 cards that link to `/changelog`, which is a changelog, not a blog.
 
+## Also removed: real companies in the dashboard seed (2026-09-30)
+
+`public/api/ops.php` seeded the hosted dashboard's bid tracker with Turner
+Construction, PCL, McCarthy, Hensel Phelps, Swinerton, and Granite
+Construction as the counterparties on bids, two of them marked "awarded". The
+same names were taken off the marketing site on 2026-08-07, but this copy came
+from the API, so the dashboard showed it as live data with no sample label.
+
+Schema v2 (`migrate_ops_v2`) deletes the v1 seed by its fixed ids and reseeds
+with the fictional names from `src/api/fixtures.js`. Every seed row now
+carries `is_seed = 1`, and endpoints answer `sample: true` while seed rows are
+present, so the dashboard keeps its sample notice on the hosted site too.
+Overview, metrics, analytics, and the price ticker always answer
+`sample: true`: their change figures and trend lines are synthetic, not
+measured. An admin can delete the seed rows under Accounts → Remove sample data.
+
 ## Still outstanding
+
+- The blog (`/blog`, from main) is unpublished: routes redirect to
+  /changelog and it is out of the footer, palette, and sitemap. One post
+  claimed a SOC 2 Type II report that is not on file, and the others describe
+  the pre-rebrand bidding product. Republish only with posts that are true
+  for Stratagem Exchange; `src/pages/Blog.jsx` and `src/data/posts.js` remain.
 
 - Starter stays free. Paid tiers are request-access only until billing
   actually exists. Do not put “free trial / no credit card” back on Pricing

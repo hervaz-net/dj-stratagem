@@ -1,18 +1,25 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import Section, { Eyebrow } from "../components/Section";
+import { Link, useSearchParams } from "react-router-dom";
+import Section from "../components/Section";
+import PageHero from "../components/PageHero";
 import Button from "../components/Button";
-import Logo from "../components/Logo";
 import Seo from "../components/Seo";
-import { IconMap, IconChat, IconClock, IconCheck } from "../components/icons";
+import { IconMap, IconMail, IconClock, IconCheck } from "../components/icons";
+import { PRODUCT, COMPANY, CONTACT_EMAIL, LOCATION, ROLES, ROLE_ORDER } from "../brand";
 
-const roleOptions = ["General Contractor", "Subcontractor", "Supplier", "Engineer", "Other"];
+const TOPICS = [
+  { key: "buying", label: "Buying", detail: "Post requests and source material" },
+  { key: "selling", label: "Selling", detail: "List products and quote requests" },
+  { key: "partnership", label: "Distributor partnership", detail: "Bring your branches or lines on board" },
+  { key: "support", label: "Support", detail: "Help with an account or the site" },
+];
+
+const roleOptions = [...ROLE_ORDER.map((k) => ROLES[k].label), "Other"];
 const MESSAGE_MAX = 1000;
-const MAILTO = "hello@djstratageminc.com";
 
 const inputClass =
-  "w-full rounded-md border bg-ink px-3.5 py-2.5 text-sm text-paper outline-hidden transition-colors " +
-  "placeholder:text-steel/70 focus:border-amber";
+  "w-full rounded-xl border bg-surface px-3.5 py-2.5 text-[0.95rem] text-fg outline-hidden transition-colors " +
+  "placeholder:text-fg-muted focus:border-brand";
 
 function validate(values) {
   const errors = {};
@@ -28,8 +35,9 @@ function validate(values) {
 
 const EMPTY = { name: "", company: "", email: "", phone: "", message: "" };
 
-function composeMailto(values, role) {
-  const subject = encodeURIComponent(`Demo request from ${values.name} (${values.company})`);
+/** Pre-filled email, offered when the form can't reach the server. */
+function composeMailto(values, role, topic) {
+  const subject = encodeURIComponent(`${topic} inquiry from ${values.name} (${values.company})`);
   const body = encodeURIComponent(
     [
       `Name: ${values.name}`,
@@ -37,24 +45,27 @@ function composeMailto(values, role) {
       `Email: ${values.email}`,
       `Phone: ${values.phone}`,
       `Role: ${role}`,
+      `Topic: ${topic}`,
       "",
       values.message || "(no message)",
     ].join("\n"),
   );
-  return `mailto:${MAILTO}?subject=${subject}&body=${body}`;
+  return `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
 }
 
-async function postDemo(url, form, signal) {
+/** A non-JSON answer means the host served something other than the handler. */
+async function postForm(url, form, signal) {
   const res = await fetch(url, { method: "POST", body: new FormData(form), signal });
   const type = res.headers.get("content-type") || "";
-  if (!type.includes("json")) {
-    return { res, data: null };
-  }
-  const data = await res.json().catch(() => null);
-  return { res, data };
+  if (!type.includes("json")) return { res, data: null };
+  return { res, data: await res.json().catch(() => null) };
 }
 
 export default function Contact() {
+  const [params] = useSearchParams();
+  const [topic, setTopic] = useState(() =>
+    TOPICS.some((t) => t.key === params.get("topic")) ? params.get("topic") : TOPICS[0].key,
+  );
   const [submitted, setSubmitted] = useState(false);
   const [role, setRole] = useState(roleOptions[0]);
   const [values, setValues] = useState(EMPTY);
@@ -81,6 +92,8 @@ export default function Contact() {
     setErrors(found);
     setTouched({ name: true, company: true, email: true, phone: true });
     if (Object.keys(found).length > 0) {
+      // Move focus to the first problem so keyboard and screen-reader users
+      // land on it rather than hunting for the message.
       document.getElementById(Object.keys(found)[0])?.focus();
       return;
     }
@@ -88,18 +101,15 @@ export default function Contact() {
     setSubmitting(true);
     setError(false);
 
+    // Without a deadline, a hung request leaves `submitting` true forever and
+    // the button permanently disabled with no error shown.
     const controller = new AbortController();
     const timer = window.setTimeout(() => controller.abort(), 15000);
-    const form = e.target;
 
     try {
-      // Live public_html has sometimes shipped without send-demo.php, so LiteSpeed
-      // SPA-fallback returned index.html. /contact.php is present and accepts POST.
-      // Try it first; keep /send-demo.php as the WAF-safe alias.
-      let { res, data } = await postDemo("/contact.php", form, controller.signal);
-      if (!data) {
-        ({ res, data } = await postDemo("/send-demo.php", form, controller.signal));
-      }
+      // /send-demo.php is the WAF-safe alias when the host answers /contact.php with HTML.
+      let { res, data } = await postForm("/contact.php", e.target, controller.signal);
+      if (!data) ({ res, data } = await postForm("/send-demo.php", e.target, controller.signal));
       if (!res.ok || !data?.ok) throw new Error("Submission failed");
       setValues(EMPTY);
       setTouched({});
@@ -116,87 +126,103 @@ export default function Contact() {
     <>
       <Seo
         title="Contact"
-        description="Request a demo of D&J Stratagem. Tell us how your team bids, procures, and coordinates today, and we'll show you where the platform fits."
+        description={`Talk to the ${PRODUCT} team about buying, selling, distributor partnerships, or support. Based in ${LOCATION}.`}
       />
 
-      <Section className="pt-16 pb-8 md:pt-24">
-        <Link to="/" className="mb-8 inline-block" aria-label="D&J Stratagem — home">
-          <Logo />
-        </Link>
-        <Eyebrow>Contact</Eyebrow>
-        <h1 className="text-balance max-w-3xl text-4xl font-semibold leading-tight tracking-tight text-paper sm:text-5xl">
-          Let&rsquo;s talk about your next project.
-        </h1>
-        <p className="mt-6 max-w-2xl text-lg leading-relaxed text-steel">
-          Tell us a bit about how your team bids, procures, and coordinates today, and we&rsquo;ll
-          show you where D&J Stratagem fits.
-        </p>
-      </Section>
+      <PageHero eyebrow="Contact" title="Talk to the team behind the marketplace.">
+        Whether you buy material, sell it, or run the branches in between, tell us how you trade
+        today and we&rsquo;ll show you where {PRODUCT} fits.
+      </PageHero>
 
-      <Section className="border-t border-line">
-        <div className="grid grid-cols-1 gap-14 lg:grid-cols-[1fr_1.2fr]">
-          <div className="space-y-6">
+      <Section>
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-14">
+          <div className="space-y-4">
             {[
               {
-                icon: <IconMap width={18} height={18} />,
-                title: "Los Angeles, California",
-                detail: "Serving general contractors and subcontractors nationwide.",
+                icon: <IconMail width={18} height={18} aria-hidden="true" />,
+                title: CONTACT_EMAIL,
+                detail: "Buying, selling, partnerships, and support.",
+                href: `mailto:${CONTACT_EMAIL}`,
               },
               {
-                icon: <IconChat width={18} height={18} />,
-                title: MAILTO,
-                detail: "General inquiries and demo requests.",
-                href: `mailto:${MAILTO}`,
-              },
-              {
-                icon: <IconClock width={18} height={18} />,
+                icon: <IconClock width={18} height={18} aria-hidden="true" />,
                 title: "We reply within one business day",
-                detail: "Demos are scheduled at a time that works for your team.",
+                detail: "Walkthroughs are scheduled at a time that works for your team.",
+              },
+              {
+                icon: <IconMap width={18} height={18} aria-hidden="true" />,
+                title: LOCATION,
+                detail: `Home of ${COMPANY}.`,
               },
             ].map((item) => (
-              <div key={item.title} className="flex items-start gap-4">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-amber/10 text-amber">
+              <div key={item.title} className="flex items-start gap-4 rounded-2xl border border-line bg-surface p-5">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-soft text-brand-fg">
                   {item.icon}
                 </div>
-                <div>
+                <div className="min-w-0">
                   {item.href ? (
                     <a
                       href={item.href}
-                      className="text-sm font-semibold text-paper transition-colors hover:text-amber"
+                      className="break-words font-semibold text-fg transition-colors hover:text-brand"
                     >
                       {item.title}
                     </a>
                   ) : (
-                    <p className="text-sm font-semibold text-paper">{item.title}</p>
+                    <p className="font-semibold text-fg">{item.title}</p>
                   )}
-                  <p className="mt-1 text-sm text-steel">{item.detail}</p>
+                  <p className="mt-1 text-sm text-fg-muted">{item.detail}</p>
                 </div>
               </div>
             ))}
           </div>
 
-          <div className="rounded-2xl border border-line bg-ink-2 p-6 sm:p-8">
+          <div className="rounded-3xl border border-line bg-surface p-5 shadow-[var(--shadow-card)] sm:p-8">
             {submitted ? (
               <div className="animate-fade-in flex flex-col items-start gap-4 py-10">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-success/10 text-success">
-                  <IconCheck width={22} height={22} />
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-success-soft text-success">
+                  <IconCheck width={22} height={22} aria-hidden="true" />
                 </div>
-                <h2 className="text-xl font-semibold text-paper">Thanks &mdash; message received.</h2>
-                <p className="text-sm text-steel">
-                  Someone from our team will follow up shortly to schedule time.
+                <h2 className="text-xl font-semibold text-fg">Thanks &mdash; message received.</h2>
+                <p className="text-[0.95rem] text-fg-muted">
+                  Someone from our team will follow up shortly.
                 </p>
                 <Button variant="secondary" onClick={() => setSubmitted(false)}>
                   Send another message
                 </Button>
               </div>
             ) : (
-              <form name="contact" className="space-y-5" onSubmit={handleSubmit} noValidate>
+              <form name="contact" className="space-y-6" onSubmit={handleSubmit} noValidate>
                 <p className="hidden">
                   <label>
                     Don&rsquo;t fill this out:{" "}
                     <input name="bot-field" tabIndex="-1" autoComplete="off" />
                   </label>
                 </p>
+
+                <fieldset>
+                  <legend className="mb-3 text-sm font-semibold text-fg">What can we help with?</legend>
+                  <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+                    {TOPICS.map((t) => (
+                      <label
+                        key={t.key}
+                        className="flex cursor-pointer items-start gap-3 rounded-xl border border-line p-3.5 transition-colors hover:bg-subtle has-[:checked]:border-brand has-[:checked]:bg-brand-soft has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-brand"
+                      >
+                        <input
+                          type="radio"
+                          name="topic"
+                          value={t.key}
+                          checked={topic === t.key}
+                          onChange={() => setTopic(t.key)}
+                          className="mt-1 h-4 w-4 shrink-0 accent-[var(--brand)]"
+                        />
+                        <span>
+                          <span className="block text-sm font-semibold text-fg">{t.label}</span>
+                          <span className="block text-xs text-fg-muted">{t.detail}</span>
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                </fieldset>
 
                 <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                   <Field
@@ -245,8 +271,8 @@ export default function Contact() {
                 </div>
 
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-paper" htmlFor="role">
-                    Role
+                  <label className="mb-2 block text-sm font-semibold text-fg" htmlFor="role">
+                    Your business
                   </label>
                   <select
                     id="role"
@@ -265,43 +291,46 @@ export default function Contact() {
 
                 <div>
                   <div className="mb-2 flex items-baseline justify-between gap-3">
-                    <label className="block text-sm font-medium text-paper" htmlFor="message">
-                      What are you looking to solve?
+                    <label className="block text-sm font-semibold text-fg" htmlFor="message">
+                      Tell us a bit more
                     </label>
-                    <span className="text-xs tabular-nums text-steel">
+                    <span className="text-xs tabular-nums text-fg-muted">
                       {values.message.length}/{MESSAGE_MAX}
                     </span>
                   </div>
                   <textarea
                     id="message"
                     name="message"
-                    rows={4}
+                    rows={5}
                     maxLength={MESSAGE_MAX}
                     value={values.message}
                     onChange={setField("message")}
                     className={`${inputClass} resize-none border-line`}
-                    placeholder="Tell us about your current bidding, procurement, or coordination process."
+                    placeholder="What you buy or sell, the categories you work in, and the area you serve."
                   />
                 </div>
 
                 <div aria-live="polite" role="status">
                   {error && (
-                    <p className="rounded-md border border-danger/30 bg-danger/10 px-4 py-2.5 text-sm text-danger">
+                    <p className="rounded-xl border border-danger/30 bg-danger-soft px-4 py-3 text-sm text-danger">
                       Something went wrong sending your message.{" "}
-                      <a className="font-medium underline underline-offset-2" href={composeMailto(values, role)}>
-                        Email {MAILTO}
+                      <a
+                        className="font-semibold underline underline-offset-2"
+                        href={composeMailto(values, role, TOPICS.find((t) => t.key === topic)?.label ?? topic)}
+                      >
+                        Email {CONTACT_EMAIL}
                       </a>{" "}
-                      instead and we will follow up.
+                      instead and we&rsquo;ll follow up.
                     </p>
                   )}
                 </div>
 
-                <Button type="submit" variant="primary" className="w-full" disabled={submitting}>
-                  {submitting ? "Sending…" : "Request a demo"}
+                <Button type="submit" size="lg" className="w-full" disabled={submitting}>
+                  {submitting ? "Sending…" : "Send message"}
                 </Button>
 
-                <p className="text-center text-xs text-steel">
-                  We&rsquo;ll only use your details to follow up about a demo.
+                <p className="text-center text-xs text-fg-muted">
+                  We&rsquo;ll only use your details to reply to this message.
                 </p>
               </form>
             )}
@@ -316,10 +345,10 @@ function Field({ label, name, type = "text", required, error, ...rest }) {
   const errorId = `${name}-error`;
   return (
     <div>
-      <label className="mb-2 block text-sm font-medium text-paper" htmlFor={name}>
+      <label className="mb-2 block text-sm font-semibold text-fg" htmlFor={name}>
         {label}
         {required && (
-          <span className="ml-1 text-amber" aria-hidden="true">
+          <span className="ml-1 text-danger" aria-hidden="true">
             *
           </span>
         )}

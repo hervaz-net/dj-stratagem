@@ -1,47 +1,58 @@
-import { useRef, useState } from "react";
-import GlassCard from "./GlassCard";
+import { useState } from "react";
+import { Card, StatusPill } from "./ui";
+import { money } from "./format";
 import RiskGauge from "./RiskGauge";
 import Sparkline from "./Sparkline";
-import StatusDot from "./StatusDot";
+import RoleBadge from "../RoleBadge";
 import { IconColumns, IconRows } from "../icons";
+import { PARTNER_STATUS, ROLE_VIEWS, RELATIONSHIP_LABEL, partnerRoleOf, relationship } from "./roles";
 
 const ALL_COLUMNS = [
-  { key: "name", label: "Supplier", align: "left", required: true, color: "" },
-  { key: "riskScore", label: "Risk score", align: "left", color: "" },
-  { key: "deliveryRate", label: "Delivery", align: "right", color: "text-paper" },
-  { key: "leadTimeDays", label: "Lead time", align: "right", color: "text-steel" },
-  { key: "openOrders", label: "Open", align: "right", color: "text-steel" },
-  { key: "spendYtd", label: "Spend YTD", align: "right", color: "text-paper" },
-  { key: "trend", label: "30-day trend", align: "right", sortable: false, color: "" },
+  { key: "name", label: "Company", align: "left", required: true },
+  { key: "partnerRole", label: "Role", align: "left" },
+  { key: "riskScore", label: "Risk score", align: "left" },
+  { key: "deliveryRate", label: "On-time", align: "right" },
+  { key: "leadTimeDays", label: "Lead time", align: "right" },
+  { key: "openOrders", label: "Open orders", align: "right" },
+  { key: "spendYtd", label: "Volume YTD", align: "right" },
+  { key: "trend", label: "30-day trend", align: "right", sortable: false },
 ];
 
 const DENSITY_OPTIONS = [
-  { key: "compact", label: "S" },
-  { key: "default", label: "M" },
-  { key: "comfortable", label: "L" },
+  { key: "compact", label: "S", title: "Compact rows" },
+  { key: "default", label: "M", title: "Default rows" },
+  { key: "comfortable", label: "L", title: "Comfortable rows" },
 ];
 
 const DENSITY_PY = { compact: "py-2", default: "py-3.5", comfortable: "py-5" };
-const money = (n) => (n >= 1000 ? `$${(n / 1000).toFixed(0)}k` : `$${n}`);
 
-function CellContent({ colKey, s }) {
+function CellContent({ colKey, s, myRole }) {
   switch (colKey) {
+    case "partnerRole": {
+      const role = partnerRoleOf(s);
+      return (
+        <div className="flex flex-col items-start gap-1">
+          <RoleBadge role={role} label={ROLE_VIEWS[role].label} />
+          <span className="text-xs text-fg-muted">{RELATIONSHIP_LABEL[relationship(myRole, role)]}</span>
+        </div>
+      );
+    }
     case "riskScore":
       return <RiskGauge score={s.riskScore} />;
     case "deliveryRate":
-      return `${s.deliveryRate.toFixed(1)}%`;
+      return `${Number(s.deliveryRate).toFixed(1)}%`;
     case "leadTimeDays":
       return `${s.leadTimeDays}d`;
     case "openOrders":
       return s.openOrders;
     case "spendYtd":
-      return money(s.spendYtd);
+      return money(s.spendYtd, { compact: true });
     case "trend":
       return (
         <div className="flex justify-end">
           <Sparkline
-            data={s.trend}
-            accent={s.riskScore >= 50 ? "red" : s.riskScore >= 25 ? "gold" : "cyan"}
+            data={s.trend ?? []}
+            accent={s.riskScore >= 50 ? "red" : s.riskScore >= 25 ? "gold" : "green"}
             width={92}
             height={26}
           />
@@ -61,11 +72,11 @@ export default function SupplierTable({
   selected,
   onToggleSelect,
   onSelectAll,
+  myRole = "contractor",
 }) {
   const [hiddenCols, setHiddenCols] = useState(new Set());
   const [density, setDensity] = useState("default");
   const [showColMenu, setShowColMenu] = useState(false);
-  const colMenuRef = useRef(null);
 
   const columns = ALL_COLUMNS.filter((c) => !hiddenCols.has(c.key));
   const py = DENSITY_PY[density];
@@ -81,7 +92,7 @@ export default function SupplierTable({
 
   const setSort = (key) => {
     if (sort.key === key) onSort({ key, dir: sort.dir === "asc" ? "desc" : "asc" });
-    else onSort({ key, dir: key === "name" ? "asc" : "desc" });
+    else onSort({ key, dir: key === "name" || key === "partnerRole" ? "asc" : "desc" });
   };
 
   const allChecked = rows.length > 0 && rows.every((r) => selected?.has(r.id));
@@ -89,25 +100,20 @@ export default function SupplierTable({
   const selectedCount = selected?.size ?? 0;
 
   return (
-    <GlassCard className="overflow-hidden">
-      {/* Feature 3+4: toolbar with density + column visibility */}
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line px-4 py-2.5">
+    <Card className="overflow-hidden">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line px-4 py-3">
         <div className="flex items-center gap-2">
-          {/* Feature 4: density toggle */}
-          <div
-            role="group"
-            aria-label="Row density"
-            className="flex overflow-hidden rounded-md border border-line"
-          >
-            {DENSITY_OPTIONS.map(({ key: d, label }) => (
+          <div role="group" aria-label="Row density" className="inline-flex rounded-full border border-line bg-subtle p-0.5">
+            {DENSITY_OPTIONS.map(({ key: d, label, title }) => (
               <button
                 key={d}
                 type="button"
                 onClick={() => setDensity(d)}
                 aria-pressed={density === d}
-                title={`${d.charAt(0).toUpperCase() + d.slice(1)} rows`}
-                className={`px-2.5 py-1 text-xs font-semibold transition-colors ${
-                  density === d ? "bg-amber/15 text-amber" : "text-steel hover:text-paper"
+                aria-label={title}
+                title={title}
+                className={`h-7 w-8 rounded-full text-xs font-semibold transition-colors ${
+                  density === d ? "bg-surface text-fg shadow-[var(--shadow-card)]" : "text-fg-muted hover:text-fg"
                 }`}
               >
                 {label}
@@ -115,39 +121,30 @@ export default function SupplierTable({
             ))}
           </div>
 
-          {/* Feature 3: column visibility */}
-          <div className="relative" ref={colMenuRef}>
+          <div className="relative">
             <button
               type="button"
               onClick={() => setShowColMenu((p) => !p)}
               aria-expanded={showColMenu}
-              aria-haspopup="listbox"
-              className="flex items-center gap-1.5 rounded-md border border-line px-2.5 py-1 text-xs font-semibold text-steel transition-colors hover:text-paper"
+              className="inline-flex h-8 items-center gap-1.5 rounded-full border border-line px-3 text-xs font-semibold text-fg-muted transition-colors hover:border-line-strong hover:text-fg"
             >
-              <IconColumns width={13} height={13} />
+              <IconColumns width={14} height={14} aria-hidden="true" />
               Columns
             </button>
 
             {showColMenu && (
               <>
-                <div
-                  className="fixed inset-0 z-10"
-                  onClick={() => setShowColMenu(false)}
-                  aria-hidden="true"
-                />
-                <div className="absolute left-0 top-full z-20 mt-1 w-44 rounded-lg border border-line bg-ink-2 p-2 shadow-xl">
+                <div className="fixed inset-0 z-10" onClick={() => setShowColMenu(false)} aria-hidden="true" />
+                <div className="animate-menu-in absolute left-0 top-full z-20 mt-2 w-48 rounded-2xl border border-line bg-surface p-2 shadow-[var(--shadow-pop)]">
                   {ALL_COLUMNS.filter((c) => !c.required).map((col) => (
-                    <label
-                      key={col.key}
-                      className="flex cursor-pointer items-center gap-2.5 rounded px-2 py-1.5 text-xs hover:bg-ink"
-                    >
+                    <label key={col.key} className="flex cursor-pointer items-center gap-2.5 rounded-xl px-2.5 py-2 text-sm hover:bg-subtle">
                       <input
                         type="checkbox"
                         checked={!hiddenCols.has(col.key)}
                         onChange={() => toggleCol(col.key)}
-                        className="accent-amber"
+                        className="h-4 w-4 accent-[var(--brand)]"
                       />
-                      <span className="text-paper">{col.label}</span>
+                      <span className="text-fg">{col.label}</span>
                     </label>
                   ))}
                 </div>
@@ -157,33 +154,27 @@ export default function SupplierTable({
         </div>
 
         {selectedCount > 0 && (
-          <p className="text-xs text-steel" aria-live="polite">
-            <span className="font-semibold text-paper">{selectedCount}</span>{" "}
-            {selectedCount === 1 ? "supplier" : "suppliers"} selected
+          <p className="text-xs text-fg-muted" aria-live="polite">
+            <span className="font-semibold text-fg">{selectedCount}</span> selected
           </p>
         )}
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[62rem] border-collapse text-sm">
-          <caption className="sr-only">
-            Suppliers with risk score, delivery rate, lead time, open orders, and spend
-          </caption>
-          <thead>
+        <table className="w-full min-w-[64rem] border-collapse text-sm">
+          <caption className="sr-only">Trading partners with role, risk score, on-time delivery, lead time, open orders, and volume</caption>
+          <thead className="bg-subtle">
             <tr className="border-b border-line">
-              {/* Feature 7: select-all checkbox */}
-              <th scope="col" className="w-10 px-4 py-3.5">
+              <th scope="col" className="w-10 px-4 py-3">
                 <input
                   type="checkbox"
                   checked={allChecked}
                   ref={(el) => {
                     if (el) el.indeterminate = someChecked;
                   }}
-                  onChange={() =>
-                    onSelectAll?.(allChecked ? new Set() : new Set(rows.map((r) => r.id)))
-                  }
-                  aria-label="Select all suppliers"
-                  className="accent-amber"
+                  onChange={() => onSelectAll?.(allChecked ? new Set() : new Set(rows.map((r) => r.id)))}
+                  aria-label="Select all partners"
+                  className="h-4 w-4 accent-[var(--brand)]"
                 />
               </th>
 
@@ -194,27 +185,18 @@ export default function SupplierTable({
                   <th
                     key={col.key}
                     scope="col"
-                    aria-sort={
-                      active ? (sort.dir === "asc" ? "ascending" : "descending") : "none"
-                    }
-                    className={`px-4 py-3.5 text-xs font-semibold uppercase tracking-wider text-steel ${
-                      col.align === "right" ? "text-right" : "text-left"
-                    }`}
+                    aria-sort={active ? (sort.dir === "asc" ? "ascending" : "descending") : undefined}
+                    className={`px-4 py-3 text-xs font-semibold text-fg ${col.align === "right" ? "text-right" : "text-left"}`}
                   >
                     {sortable ? (
                       <button
                         type="button"
                         onClick={() => setSort(col.key)}
-                        className={`inline-flex items-center gap-1.5 transition-colors hover:text-paper ${
-                          active ? "text-amber" : ""
-                        }`}
+                        className={`inline-flex items-center gap-1 transition-colors hover:text-brand ${active ? "text-brand" : ""}`}
                       >
                         {col.label}
-                        <span
-                          className={active ? "opacity-100" : "opacity-30"}
-                          aria-hidden="true"
-                        >
-                          {active && sort.dir === "asc" ? "▲" : "▼"}
+                        <span className={active ? "" : "opacity-30"} aria-hidden="true">
+                          {active && sort.dir === "asc" ? "↑" : "↓"}
                         </span>
                       </button>
                     ) : (
@@ -229,69 +211,60 @@ export default function SupplierTable({
           <tbody>
             {rows.map((s) => {
               const isSelected = selected?.has(s.id) ?? false;
+              const status = PARTNER_STATUS[s.status] ?? PARTNER_STATUS.active;
               return (
                 <tr
                   key={s.id}
-                  onClick={() => onRowClick?.(s)}
-                  className={`group border-b border-line/60 transition-colors last:border-0 hover:bg-ink-3/60 ${
-                    onRowClick ? "cursor-pointer" : ""
-                  } ${isSelected ? "bg-amber/5" : ""}`}
+                  className={`border-b border-line transition-colors last:border-0 hover:bg-subtle ${isSelected ? "bg-brand-soft" : ""}`}
                 >
-                  {/* Feature 7: per-row checkbox */}
-                  <td
-                    className={`w-10 px-4 ${py}`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onToggleSelect?.(s.id);
-                    }}
-                  >
+                  <td className={`w-10 px-4 ${py}`}>
                     <input
                       type="checkbox"
                       checked={isSelected}
                       onChange={() => onToggleSelect?.(s.id)}
                       aria-label={`Select ${s.name}`}
-                      className="accent-amber"
+                      className="h-4 w-4 accent-[var(--brand)]"
                     />
                   </td>
 
                   {columns.map((col) => {
                     if (col.key === "name") {
                       return (
-                        <th
-                          key={col.key}
-                          scope="row"
-                          className={`px-4 ${py} text-left font-normal`}
-                        >
+                        <th key={col.key} scope="row" className={`px-4 ${py} text-left font-normal`}>
                           <div className="flex items-center gap-3">
-                            <StatusDot
-                              status={s.status}
-                              size={8}
-                              pulse={s.status !== "active"}
-                            />
+                            <span
+                              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-subtle text-xs font-bold text-fg"
+                              aria-hidden="true"
+                            >
+                              {s.name.slice(0, 2).toUpperCase()}
+                            </span>
                             <div className="min-w-0 flex-1">
-                              <p className="truncate font-semibold text-paper">{s.name}</p>
-                              <p className="truncate text-xs text-steel">
+                              {onRowClick ? (
+                                <button
+                                  type="button"
+                                  onClick={() => onRowClick(s)}
+                                  className="max-w-full truncate text-left font-semibold text-fg hover:text-brand"
+                                >
+                                  {s.name}
+                                </button>
+                              ) : (
+                                <p className="truncate font-semibold text-fg">{s.name}</p>
+                              )}
+                              <p className="truncate text-xs text-fg-muted">
                                 {s.category} &middot; {s.region}
                               </p>
                             </div>
-                            {onRowClick && (
-                              <span className="shrink-0 text-xs text-steel/40 opacity-0 transition-opacity group-hover:opacity-100">
-                                View →
-                              </span>
-                            )}
+                            <StatusPill tone={status.tone} className="hidden xl:inline-flex">{status.label}</StatusPill>
                           </div>
                         </th>
                       );
                     }
-
                     return (
                       <td
                         key={col.key}
-                        className={`px-4 ${py} ${
-                          col.align === "right" ? "text-right tabular-nums" : ""
-                        } ${col.color}`}
+                        className={`px-4 ${py} ${col.align === "right" ? "text-right tabular-nums text-fg" : ""}`}
                       >
-                        <CellContent colKey={col.key} s={s} />
+                        <CellContent colKey={col.key} s={s} myRole={myRole} />
                       </td>
                     );
                   })}
@@ -302,29 +275,21 @@ export default function SupplierTable({
         </table>
       </div>
 
-      {/* Feature 6: rich empty state */}
       {!rows.length && (
         <div className="px-6 py-16 text-center">
           {loading ? (
-            <div className="flex flex-col items-center gap-3">
-              <div className="h-8 w-8 animate-spin rounded-full border-2 border-line border-t-amber" />
-              <p className="text-sm text-steel">Loading suppliers…</p>
-            </div>
+            <p className="text-sm text-fg-muted" role="status">Loading your network…</p>
           ) : (
             <div className="flex flex-col items-center gap-3">
-              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-ink text-steel">
-                <IconRows width={24} height={24} />
-              </div>
-              <p className="text-sm font-semibold text-paper">
-                No suppliers match these filters
-              </p>
-              <p className="text-sm text-steel">
-                Try widening the risk or delivery range, or clear the search.
-              </p>
+              <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-soft text-brand-fg">
+                <IconRows width={22} height={22} aria-hidden="true" />
+              </span>
+              <p className="text-base font-semibold text-fg">No partners match these filters</p>
+              <p className="text-sm text-fg-muted">Widen the risk or on-time range, pick more roles, or clear the search.</p>
             </div>
           )}
         </div>
       )}
-    </GlassCard>
+    </Card>
   );
 }

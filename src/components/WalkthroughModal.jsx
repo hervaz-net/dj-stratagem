@@ -1,129 +1,108 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { Link } from "react-router-dom";
-import { IconX, IconArrowRight, IconCheck, IconBriefcase } from "./icons";
-
-/** Sample calendar labels stay ahead of today so the mock UI never looks expired. */
-function shortDays(n) {
-  const d = new Date();
-  d.setHours(12, 0, 0, 0);
-  d.setDate(d.getDate() + n);
-  return d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
-}
+import RoleBadge from "./RoleBadge";
+import SampleLabel from "./SampleLabel";
+import { IconX, IconArrowRight, IconCheck, IconClock } from "./icons";
+import { ROLE_META } from "./home/roleMeta";
+import { PRODUCT, CONTACT_EMAIL, LOCATION, ROLES, ROLE_ORDER } from "../brand";
+import { daysFromToday } from "../data/sampleDates";
 
 /**
- * A guided slide walkthrough of the platform, shown in place of a hosted video.
- * Seven slides paced to roughly five minutes: a narrative panel on the left and
- * a mock interface on the right so each claim is paired with what it looks like.
+ * A guided slide tour of the marketplace, shown in place of a hosted video.
+ * A narrative panel on the left and a mock interface on the right, so each
+ * claim is paired with what it looks like. Every mock is labelled sample data.
  */
 
 const slides = [
   {
-    tag: "Introduction",
-    time: "~45 sec",
-    title: "One platform for every contractor's growth",
-    text: "D&J Stratagem replaces the disconnected patchwork of plan rooms, bid tools, CRMs, and marketing agencies with a single system built around winning work.",
+    tag: "Overview",
+    title: "One marketplace for the construction supply chain",
+    text: `${PRODUCT} connects manufacturers, distributors, and contractors. Supply is listed once, demand is posted once, and quotes and orders move between them.`,
     points: [
-      "Find and respond to projects that match your trade",
-      "Market your business to the right decision-makers",
-      "Track relationships, bids, and awards in one place",
-      "AI tools that write, estimate, and learn with you",
+      "Manufacturers and vendors sell to distributors and direct",
+      "Distributors buy upstream and sell downstream",
+      "Contractors post what the job needs",
+      "Every trade follows request, quote, order, delivery",
     ],
     panel: "overview",
   },
   {
-    tag: "Bid Discovery",
-    time: "~40 sec",
-    title: "Find the right work before your competitors do",
-    text: "Real-time alerts match new opportunities to your trade, geography, and project size — so you spend time on projects you can win, not every RFP that comes through.",
+    tag: "Request",
+    title: "Post what the job needs, once",
+    text: "A request is a list of line items with quantities, a need-by date, and where it ships. Tie it to a project so the jobsite and the dates stay together.",
     points: [
-      "50+ markets across 8 states, updated daily",
-      "Filter by trade, GC, owner, project type, and value",
-      "One-click access to plans, specs, and addenda",
-      "Saved searches with instant email and app alerts",
+      "Line items with quantity and unit",
+      "Need-by date and jobsite or branch address",
+      "Group requests under a project",
+      "Sellers in the category and area can respond",
     ],
-    panel: "discovery",
+    panel: "request",
   },
   {
-    tag: "Smart Bidding",
-    time: "~40 sec",
-    title: "Bid faster, win more of what you submit",
-    text: "AI-assisted bid responses pull from your past wins, rates, and boilerplate — so your team spends less time on paperwork and more on pricing strategy.",
+    tag: "Quotes",
+    title: "Compare quotes side by side",
+    text: "Sellers answer with price, lead time, and how they'll fulfill. Every quote on the request lines up in the same format.",
     points: [
-      "Templates built from your own winning submissions",
-      "AI draft generation from scope documents and drawings",
-      "E-signature and PDF delivery in one step",
-      "Track status: submitted, under review, awarded, lost",
+      "Price per line and total",
+      "Lead time, delivery or will-call",
+      "Quotes from distributors and manufacturers together",
+      "Seller notes kept with the quote",
     ],
-    panel: "bidding",
+    panel: "quotes",
   },
   {
-    tag: "Supply Exchange",
-    time: "~35 sec",
-    title: "Cut procurement costs without the phone tag",
-    text: "The Supply Exchange connects you to verified distributors who compete for your orders — better pricing on every project, with less effort than calling three reps.",
+    tag: "Order",
+    title: "Accept a quote, and it becomes the order",
+    text: "No retyping into a PO. Both sides work from the same order record, on the terms they agreed.",
     points: [
-      "Request quotes from multiple suppliers simultaneously",
-      "Compare pricing with verified ratings and lead times",
-      "Order tracking from PO through job-site delivery",
-      "Automatic cost capture feeds into job costing",
+      "Purchase order created from the accepted quote",
+      "Seller confirms the order",
+      "Terms and fulfillment carried over from the quote",
+      "Payment stays between buyer and seller",
     ],
-    panel: "supply",
+    panel: "order",
   },
   {
-    tag: "CRM & Pipeline",
-    time: "~35 sec",
-    title: "Never lose a relationship or miss a follow-up",
-    text: "Built for construction relationships — GCs, owners, architects, and subs — with a pipeline view showing where every opportunity stands and what comes next.",
+    tag: "Delivery",
+    title: "Know where the material is",
+    text: "Order status moves from confirmed to shipped to delivered, so nobody has to call the counter to ask.",
     points: [
-      "Contact history tied directly to projects and bids",
-      "Automated follow-up reminders after bid submission",
-      "Track relationships across your whole team",
-      "See which GCs and owners you win with most",
+      "Status updates from the seller",
+      "Alerts when an order changes",
+      "Order history kept with the project",
+      "One place to look for every open order",
     ],
-    panel: "pipeline",
+    panel: "delivery",
   },
   {
-    tag: "Analytics",
-    time: "~35 sec",
-    title: "Know your numbers, sharpen your strategy",
-    text: "Win rate by GC, bid volume by month, market activity by zip — intelligence to bid smarter and price with confidence, not gut feel alone.",
+    tag: "For sellers",
+    title: "See the demand that fits your lines",
+    text: "Manufacturers and distributors list a catalog and see open requests matched to their categories and service area, then choose which to quote.",
     points: [
-      "Win rate trends over time and by general contractor",
-      "Revenue recognition and pipeline forecasting",
-      "Market heat maps by geography and trade type",
-      "Award data and competitor activity in your markets",
+      "Catalog with SKUs, pack sizes, pricing, and stock",
+      "Open requests filtered to your categories",
+      "Matched to the area you serve",
+      "Quote from the same screen",
     ],
-    panel: "analytics",
+    panel: "demand",
   },
 ];
 
-const pad = (n) => String(n).padStart(2, "0");
 
 /* ---------------------------------------------------------------- panels */
 
-const card = "rounded-lg border border-line bg-ink p-2.5";
-const chip = "rounded-full px-2 py-0.5 text-[9px] font-bold tracking-wide";
-
-function Stat({ value, label, tone = "text-paper" }) {
+function Row({ title, meta, right, highlight = false }) {
   return (
-    <div className={card}>
-      <p className={`text-base font-semibold tabular-nums ${tone}`}>{value}</p>
-      <p className="mt-0.5 text-[9px] text-steel">{label}</p>
-    </div>
-  );
-}
-
-function BidRow({ title, meta, badge, tone }) {
-  return (
-    <div className="mb-1.5 flex items-start gap-2.5 rounded-lg border border-line bg-ink p-2.5">
-      <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded bg-brand/15 text-brand">
-        <IconBriefcase width={12} height={12} />
+    <div
+      className={`flex items-center justify-between gap-3 rounded-xl border px-3 py-2.5 ${
+        highlight ? "border-brand/40 bg-brand-soft" : "border-line bg-canvas"
+      }`}
+    >
+      <div className="min-w-0">
+        <p className="truncate text-xs font-semibold text-fg">{title}</p>
+        {meta && <div className="mt-1 text-[11px] text-fg-muted">{meta}</div>}
       </div>
-      <div className="min-w-0 flex-1">
-        <p className="truncate text-[11px] font-semibold text-paper">{title}</p>
-        <p className="mt-0.5 text-[9px] text-steel">{meta}</p>
-      </div>
-      <span className={`${chip} shrink-0 ${tone}`}>{badge}</span>
+      {right && <div className="shrink-0 text-right text-xs font-semibold tabular-nums text-fg">{right}</div>}
     </div>
   );
 }
@@ -131,233 +110,148 @@ function BidRow({ title, meta, badge, tone }) {
 function Panel({ kind }) {
   if (kind === "overview") {
     return (
-      <>
-        <div className="mb-3 grid grid-cols-3 gap-1.5">
-          <Stat value="24" label="Open Bids" />
-          <Stat value="$2.4M" label="Pipeline" />
-          <Stat value="38%" label="Win Rate" tone="text-success" />
-        </div>
-        <BidRow
-          title="Westside Medical — Electrical"
-          meta={`LA · Pacific Ridge GC (sample) · Due ${shortDays(13)}`}
-          badge="OPEN"
-          tone="bg-success/15 text-success"
-        />
-        <BidRow
-          title="Harbor Logistics — Framing"
-          meta={`Long Beach · Harborline GC (sample) · Due ${shortDays(17)}`}
-          badge="REVIEW"
-          tone="bg-amber/15 text-amber"
-        />
-        <div className="mt-2.5 flex justify-between border-t border-line pt-2.5 text-[9px] text-steel">
-          <span>6 bids due this week</span>
-          <span className="font-semibold text-amber">View all →</span>
-        </div>
-      </>
+      <div className="space-y-2">
+        {ROLE_ORDER.map((key, i) => (
+          <div key={key}>
+            <Row title={ROLES[key].label} meta={ROLE_META[key].headline} right={<RoleBadge role={key} />} />
+            {i < ROLE_ORDER.length - 1 && (
+              <p className="py-1 text-center text-[11px] font-semibold text-fg-muted" aria-hidden="true">
+                &darr; sells to
+              </p>
+            )}
+          </div>
+        ))}
+      </div>
     );
   }
 
-  if (kind === "discovery") {
+  if (kind === "request") {
     return (
       <>
-        <div className="mb-3 flex gap-1.5">
-          <div className="flex-1 rounded border border-line bg-ink px-2 py-1.5 text-[9px] text-steel">
-            Trade: Electrical
-          </div>
-          <div className="rounded border border-line bg-ink px-2 py-1.5 text-[9px] text-steel">
-            LA Metro
-          </div>
-          <div className="rounded border border-amber bg-amber/15 px-2 py-1.5 text-[9px] font-bold text-amber">
-            Filter
-          </div>
+        <div className="mb-3 flex items-center justify-between gap-2">
+          <p className="text-xs font-semibold text-fg">Medical office TI &middot; Pasadena</p>
+          <RoleBadge role="contractor" />
         </div>
-        <BidRow
-          title="Westside Medical Complex"
-          meta={`$4.2M est · Pacific Ridge GC (sample) · ${shortDays(13)}`}
-          badge="NEW"
-          tone="bg-success/15 text-success"
-        />
-        <BidRow
-          title="Century City Office Tower"
-          meta={`$11M est · Westfork Building (sample) · ${shortDays(20)}`}
-          badge="NEW"
-          tone="bg-success/15 text-success"
-        />
-        <BidRow
-          title="Harbor Logistics Hub"
-          meta={`$2.8M est · Harborline GC (sample) · ${shortDays(17)}`}
-          badge="VIEWED"
-          tone="bg-amber/15 text-amber"
-        />
-      </>
-    );
-  }
-
-  if (kind === "bidding") {
-    return (
-      <>
-        <p className="mb-2.5 text-[11px] font-semibold text-paper">
-          Westside Medical Complex — Electrical
+        <div className="space-y-1.5">
+          <Row title="12 AWG THHN, black" right="2,000 ft" />
+          <Row title="12 AWG THHN, white" right="1,500 ft" />
+          <Row title="12 AWG THHN, green" right="500 ft" />
+        </div>
+        <p className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-subtle px-3 py-1 text-[11px] font-medium text-fg">
+          <IconClock width={12} height={12} aria-hidden="true" /> Need by {daysFromToday(14)}
         </p>
-        <div className="mb-2.5 rounded-lg border border-brand/30 bg-brand/10 p-2.5">
-          <p className="text-[9px] font-semibold uppercase tracking-wider text-brand">
-            AI draft ready
-          </p>
-          <p className="mt-1 text-[10px] leading-relaxed text-steel">
-            Based on your prior hospital and clinic submissions, scope and unit pricing are
-            pre-filled. Review before sending.
-          </p>
-        </div>
-        <div className="mb-2.5 grid grid-cols-2 gap-1.5">
-          <Stat value="$387,400" label="Base Bid" />
-          <Stat value="+$42,000" label="Alternates" />
-        </div>
-        <div className="rounded bg-brand py-2 text-center text-[11px] font-bold text-white">
-          Submit & E-Sign →
+      </>
+    );
+  }
+
+  if (kind === "quotes") {
+    return (
+      <div className="space-y-1.5">
+        <Row
+          highlight
+          title="Sample Electric Supply"
+          meta={<span className="flex items-center gap-2"><RoleBadge role="distributor" /> Will-call, 1 day</span>}
+          right="$1,842"
+        />
+        <Row
+          title="Example Wire Mfg."
+          meta={<span className="flex items-center gap-2"><RoleBadge role="supplier" /> Delivery, 6 days</span>}
+          right="$1,790"
+        />
+        <Row
+          title="Sample Trade Distributors"
+          meta={<span className="flex items-center gap-2"><RoleBadge role="distributor" /> Delivery, 3 days</span>}
+          right="$1,965"
+        />
+      </div>
+    );
+  }
+
+  if (kind === "order") {
+    return (
+      <>
+        <div className="rounded-xl border border-line bg-canvas p-3">
+          <div className="flex items-center justify-between">
+            <p className="text-xs font-semibold text-fg">Purchase order</p>
+            <span className="rounded-full bg-success-soft px-2 py-0.5 text-[10px] font-semibold text-success">Confirmed</span>
+          </div>
+          <dl className="mt-3 grid grid-cols-2 gap-2 text-[11px]">
+            <div><dt className="text-fg-muted">Seller</dt><dd className="font-medium text-fg">Sample Electric Supply</dd></div>
+            <div><dt className="text-fg-muted">Total</dt><dd className="font-medium tabular-nums text-fg">$1,842.00</dd></div>
+            <div><dt className="text-fg-muted">Terms</dt><dd className="font-medium text-fg">Net-30</dd></div>
+            <div><dt className="text-fg-muted">Fulfillment</dt><dd className="font-medium text-fg">Will-call</dd></div>
+          </dl>
         </div>
       </>
     );
   }
 
-  if (kind === "supply") {
-    const quotes = [
-      { name: "Pacific Electrical Supply", meta: `4.9★ · Ships ${shortDays(9)}`, price: "$1,840", best: true },
-      { name: "Western Wire & Cable", meta: `4.7★ · Ships ${shortDays(11)}`, price: "$1,970" },
-      { name: "SoCal Industrial", meta: `4.5★ · Ships ${shortDays(14)}`, price: "$2,040" },
+  if (kind === "delivery") {
+    const steps = [
+      ["Quote accepted", true],
+      ["PO confirmed", true],
+      ["Ready for will-call", true],
+      ["Picked up", false],
     ];
     return (
-      <>
-        <p className="mb-2.5 text-[11px] font-semibold text-paper">
-          RFQ: 4,000 ft 12-AWG THHN
-        </p>
-        <div className="space-y-1.5">
-          {quotes.map((q) => (
-            <div
-              key={q.name}
-              className={`flex items-center justify-between rounded-lg border p-2.5 ${
-                q.best ? "border-success/30 bg-success/10" : "border-line bg-ink"
+      <ol className="space-y-3">
+        {steps.map(([label, done]) => (
+          <li key={label} className="flex items-center gap-3">
+            <span
+              className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full ${
+                done ? "bg-brand text-white" : "border border-line bg-canvas"
               }`}
             >
-              <div className="min-w-0">
-                <p className="truncate text-[10px] font-semibold text-paper">{q.name}</p>
-                <p className="mt-0.5 text-[9px] text-steel">{q.meta}</p>
-              </div>
-              <p
-                className={`shrink-0 pl-2 text-xs font-bold tabular-nums ${
-                  q.best ? "text-success" : "text-steel"
-                }`}
-              >
-                {q.price}
-              </p>
-            </div>
-          ))}
-        </div>
-        <p className="mt-2 text-right text-[9px] text-steel">
-          Saved $200 vs. your last order on this item
-        </p>
-      </>
-    );
-  }
-
-  if (kind === "pipeline") {
-    const cols = [
-      { head: "Identified", items: [["Westside Medical", "$4.2M"], ["Harbor Hub", "$2.8M"]], bar: "border-l-brand" },
-      { head: "Bid Sent", items: [["Century City", "$11M"], ["SFO Terminal", "$6.5M"]], bar: "border-l-amber" },
-      { head: "In Review", items: [["SD Convention", "$8.1M"]], bar: "border-l-brand" },
-      { head: "Awarded", items: [["UCLA Research", "$3.4M"]], bar: "border-l-success" },
-    ];
-    return (
-      <>
-        <div className="grid grid-cols-4 gap-1">
-          {cols.map((c) => (
-            <div key={c.head}>
-              <p className="mb-1 text-[8px] uppercase tracking-wider text-steel">{c.head}</p>
-              {c.items.map(([name, val]) => (
-                <div
-                  key={name}
-                  className={`mb-1 rounded-r border-l-2 bg-ink px-1.5 py-1.5 ${c.bar}`}
-                >
-                  <p className="truncate text-[9px] text-paper/90">{name}</p>
-                  <p className="mt-0.5 text-[8px] text-steel">{val}</p>
-                </div>
-              ))}
-            </div>
-          ))}
-        </div>
-        <div className="mt-2.5 flex items-center justify-between border-t border-line pt-2.5">
-          <span className="text-[9px] text-steel">Total pipeline</span>
-          <span className="text-xs font-bold tabular-nums text-paper">$36.0M</span>
-        </div>
-      </>
-    );
-  }
-
-  return (
-    <>
-      <div className="mb-3 flex justify-between">
-        <div>
-          <p className="text-[9px] text-steel">Win Rate — 6 months</p>
-          <p className="text-xl font-bold tracking-tight text-paper">
-            38% <span className="text-[11px] font-semibold text-success">↑ 9 pts</span>
-          </p>
-        </div>
-        <div className="text-right">
-          <p className="text-[9px] text-steel">Revenue YTD</p>
-          <p className="text-xl font-bold tracking-tight text-paper">$1.2M</p>
-        </div>
-      </div>
-      <svg
-        viewBox="0 0 400 90"
-        preserveAspectRatio="none"
-        className="h-[90px] w-full"
-        aria-hidden="true"
-      >
-        <defs>
-          <linearGradient id="wt-area" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="currentColor" stopOpacity=".35" />
-            <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
-          </linearGradient>
-        </defs>
-        <g className="text-amber">
-          <line x1="0" y1="22" x2="400" y2="22" stroke="currentColor" strokeWidth=".5" opacity=".15" />
-          <line x1="0" y1="56" x2="400" y2="56" stroke="currentColor" strokeWidth=".5" opacity=".15" />
-          <path
-            d="M0,72 C40,70 60,64 100,54 S160,42 200,38 S280,26 340,18 L400,12 L400,90 L0,90Z"
-            fill="url(#wt-area)"
-          />
-          <path
-            d="M0,72 C40,70 60,64 100,54 S160,42 200,38 S280,26 340,18 L400,12"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-          />
-          <circle cx="396" cy="13" r="3.5" fill="currentColor" />
-        </g>
-      </svg>
-      <div className="flex justify-between text-[9px] text-steel">
-        {["May", "Jun", "Jul", "Aug", "Sep"].map((m) => (
-          <span key={m}>{m}</span>
+              {done && <IconCheck width={12} height={12} aria-hidden="true" />}
+            </span>
+            <span className={`text-xs ${done ? "text-fg" : "text-fg-muted"}`}>{label}</span>
+          </li>
         ))}
-        <span className="font-semibold text-amber">Oct</span>
-      </div>
-    </>
+      </ol>
+    );
+  }
+
+  // demand
+  return (
+    <div className="space-y-1.5">
+      <Row
+        title="12 AWG THHN, 4,000 ft"
+        meta={<span className="flex items-center gap-2"><RoleBadge role="contractor" /> Pasadena &middot; {daysFromToday(14)}</span>}
+        right={<span className="text-success">94%</span>}
+      />
+      <Row
+        title={'3/4" EMT + fittings'}
+        meta={<span className="flex items-center gap-2"><RoleBadge role="distributor" /> Riverside &middot; {daysFromToday(20)}</span>}
+        right={<span className="text-warning">86%</span>}
+      />
+      <Row
+        title="Lighting fixtures, 60 units"
+        meta={<span className="flex items-center gap-2"><RoleBadge role="contractor" /> Irvine &middot; {daysFromToday(33)}</span>}
+        right={<span className="text-fg-muted">71%</span>}
+      />
+    </div>
   );
 }
 
+/* ---------------------------------------------------------------- modal */
+
 export default function WalkthroughModal({ open, onClose }) {
   const [step, setStep] = useState(0);
-  const total = slides.length + 1;
+  const total = slides.length + 1; // slides + closing CTA
   const isLast = step === total - 1;
   const dialogRef = useRef(null);
 
   const next = useCallback(() => setStep((s) => Math.min(s + 1, total - 1)), [total]);
   const prev = useCallback(() => setStep((s) => Math.max(s - 1, 0)), []);
 
+  // Reset to the first slide each time it reopens, so a returning visitor
+  // doesn't land mid-deck on whatever they last viewed.
   useEffect(() => {
     if (open) setStep(0);
   }, [open]);
 
+  // Escape closes; arrows page through. Bound only while open so the keys stay
+  // free for the rest of the page.
   useEffect(() => {
     if (!open) return;
     const onKey = (e) => {
@@ -369,6 +263,7 @@ export default function WalkthroughModal({ open, onClose }) {
     return () => window.removeEventListener("keydown", onKey);
   }, [open, onClose, next, prev]);
 
+  // The page behind a full-screen overlay must not scroll under it.
   useEffect(() => {
     if (!open) return;
     const prevOverflow = document.body.style.overflow;
@@ -385,7 +280,7 @@ export default function WalkthroughModal({ open, onClose }) {
 
   return (
     <div
-      className="animate-fade-in fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
+      className="animate-fade-in fixed inset-0 z-[120] flex items-center justify-center bg-black/60 p-3 sm:p-4"
       onClick={onClose}
       role="presentation"
     >
@@ -393,91 +288,88 @@ export default function WalkthroughModal({ open, onClose }) {
         ref={dialogRef}
         role="dialog"
         aria-modal="true"
-        aria-label="Platform walkthrough"
+        aria-label={`${PRODUCT} tour`}
         tabIndex={-1}
         onClick={(e) => e.stopPropagation()}
-        className="flex max-h-[92vh] w-full max-w-4xl flex-col overflow-hidden rounded-2xl border border-line bg-ink-2 shadow-2xl outline-hidden"
+        className="flex max-h-[92vh] w-full max-w-4xl flex-col overflow-hidden rounded-3xl border border-line bg-surface shadow-[var(--shadow-pop)] outline-hidden"
       >
-        <div className="flex shrink-0 items-center justify-between border-b border-line px-5 py-3">
-          <div className="flex items-center gap-2.5">
-            <span className="text-xs font-bold text-paper">Platform Walkthrough</span>
-            <span className="rounded bg-brand px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wider text-white">
-              5 min
-            </span>
-          </div>
+        <div className="flex shrink-0 items-center justify-between gap-3 border-b border-line px-5 py-3.5">
+          <p className="text-sm font-semibold text-fg">{PRODUCT} tour</p>
           <div className="flex items-center gap-3">
-            <span className="font-mono text-[11px] tabular-nums text-steel">
-              {pad(step + 1)} / {pad(total)}
+            <span className="text-xs tabular-nums text-fg-muted">
+              {step + 1} of {total}
             </span>
             <button
               type="button"
               onClick={onClose}
-              aria-label="Close walkthrough"
-              className="rounded p-1 text-steel transition-colors hover:bg-ink hover:text-paper focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-amber"
+              aria-label="Close tour"
+              className="flex h-8 w-8 items-center justify-center rounded-full text-fg-muted transition-colors hover:bg-subtle hover:text-fg"
             >
-              <IconX width={16} height={16} />
+              <IconX width={16} height={16} aria-hidden="true" />
             </button>
           </div>
         </div>
 
-        <div className="h-0.5 shrink-0 bg-line">
+        <div className="h-1 shrink-0 bg-subtle">
           <div
-            className="h-full bg-amber transition-[width] duration-500 ease-out"
+            className="h-full rounded-r-full bg-brand transition-[width] duration-200 ease-out"
             style={{ width: `${((step + 1) / total) * 100}%` }}
           />
         </div>
 
         <div className="min-h-0 flex-1 overflow-y-auto">
           {isLast ? (
-            <div className="flex flex-col items-center px-8 py-14 text-center">
-              <span className="mb-5 inline-flex items-center gap-1.5 rounded-full border border-amber px-3.5 py-1 text-[11px] font-semibold text-amber">
-                <IconCheck width={12} height={12} /> Everything in one platform
+            <div className="flex flex-col items-center px-6 py-14 text-center sm:px-8">
+              <span className="mb-5 inline-flex items-center gap-1.5 rounded-full bg-brand-soft px-3.5 py-1 text-xs font-semibold text-brand-fg">
+                <IconCheck width={12} height={12} aria-hidden="true" /> Now onboarding early members
               </span>
-              <h3 className="text-balance text-3xl font-bold tracking-tight text-paper md:text-4xl">
-                Ready to win more work?
+              <h3 className="text-balance text-3xl font-bold tracking-tight text-fg md:text-4xl">
+                Bring your supply, or your demand.
               </h3>
-              <p className="mt-4 max-w-md text-sm leading-relaxed text-steel">
-                Request a demo and we&rsquo;ll show you where D&J Stratagem fits into how your
-                team already works &mdash; no slide deck, just a hands-on walkthrough.
+              <p className="mt-4 max-w-md text-[0.95rem] leading-relaxed text-fg-muted">
+                Create a free company profile, or talk to us about how your team buys or sells
+                today and we&rsquo;ll show you where {PRODUCT} fits.
               </p>
-              <div className="mt-8 flex flex-wrap justify-center gap-2.5">
+              {/* Client-side links, and the modal closes on the way out —
+                  otherwise the overlay would survive the route change. */}
+              <div className="mt-8 flex flex-wrap justify-center gap-3">
+                <Link
+                  to="/register"
+                  onClick={onClose}
+                  className="inline-flex h-11 items-center rounded-full bg-brand px-6 text-sm font-semibold text-white transition-colors hover:bg-brand-hover"
+                >
+                  Join free
+                </Link>
                 <Link
                   to="/contact"
                   onClick={onClose}
-                  className="rounded-lg bg-cta px-6 py-2.5 text-sm font-bold text-white transition-colors hover:bg-cta-hover"
+                  className="inline-flex h-11 items-center rounded-full border border-line bg-surface px-6 text-sm font-semibold text-fg transition-colors hover:border-line-strong hover:bg-subtle"
                 >
-                  Request a Demo
-                </Link>
-                <Link
-                  to="/pricing"
-                  onClick={onClose}
-                  className="rounded-lg border border-line px-6 py-2.5 text-sm font-semibold text-steel transition-colors hover:border-steel hover:text-paper"
-                >
-                  View Pricing
+                  Talk to us
                 </Link>
               </div>
-              <p className="mt-7 text-[11px] text-steel">
-                Los Angeles, CA &nbsp;·&nbsp;{" "}
-                <a href="mailto:hello@djstratageminc.com" className="hover:text-amber">
-                  hello@djstratageminc.com
+              <p className="mt-7 text-xs text-fg-muted">
+                {LOCATION} &middot;{" "}
+                <a href={`mailto:${CONTACT_EMAIL}`} className="font-medium text-brand hover:text-brand-hover">
+                  {CONTACT_EMAIL}
                 </a>
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 gap-0 md:grid-cols-2">
+            <div className="grid grid-cols-1 md:grid-cols-2">
               <div className="flex flex-col justify-center p-6 md:p-8">
-                <p className="mb-3 font-mono text-[10px] uppercase tracking-widest text-amber">
-                  {pad(step + 1)} / {pad(total)} · {slide.tag} · {slide.time}
+                <p className="mb-3 text-sm font-semibold text-brand">
+                  Step {step + 1} &middot; {slide.tag}
                 </p>
-                <h3 className="text-balance text-2xl font-bold leading-tight tracking-tight text-paper">
+                <h3 className="text-balance text-2xl font-bold leading-tight tracking-tight text-fg">
                   {slide.title}
                 </h3>
-                <p className="mt-3.5 text-sm leading-relaxed text-steel">{slide.text}</p>
-                <ul className="mt-5 space-y-2">
+                <p className="mt-3.5 text-[0.95rem] leading-relaxed text-fg-muted">{slide.text}</p>
+                <ul className="mt-5 space-y-2.5">
                   {slide.points.map((p) => (
-                    <li key={p} className="flex items-start gap-2.5 text-[13px] text-paper/85">
-                      <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-amber/15 text-amber">
-                        <IconCheck width={10} height={10} />
+                    <li key={p} className="flex items-start gap-2.5 text-sm text-fg">
+                      <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-brand-soft text-brand-fg">
+                        <IconCheck width={10} height={10} aria-hidden="true" />
                       </span>
                       {p}
                     </li>
@@ -485,12 +377,11 @@ export default function WalkthroughModal({ open, onClose }) {
                 </ul>
               </div>
 
-              <div className="relative flex items-center justify-center border-line bg-ink/40 p-6 md:border-l">
-                <div
-                  className="bg-grid pointer-events-none absolute inset-0 opacity-20"
-                  aria-hidden="true"
-                />
-                <div className="relative w-full max-w-sm rounded-xl border border-line bg-ink-2 p-3.5 shadow-xl">
+              <div className="flex items-center justify-center border-t border-line bg-subtle p-5 sm:p-6 md:border-l md:border-t-0">
+                <div className="w-full max-w-sm rounded-2xl border border-line bg-surface p-4 shadow-[var(--shadow-card)]">
+                  <div className="mb-3 flex justify-end">
+                    <SampleLabel />
+                  </div>
                   <Panel kind={slide.panel} />
                 </div>
               </div>
@@ -498,38 +389,42 @@ export default function WalkthroughModal({ open, onClose }) {
           )}
         </div>
 
-        <div className="flex shrink-0 items-center justify-between gap-4 border-t border-line px-5 py-3">
+        <div className="flex shrink-0 items-center justify-between gap-3 border-t border-line px-4 py-3 sm:px-5">
           <button
             type="button"
             onClick={prev}
             disabled={step === 0}
-            className="rounded-lg border border-line px-4 py-2 text-xs font-semibold text-steel transition-colors hover:border-steel hover:text-paper disabled:opacity-30 disabled:hover:border-line disabled:hover:text-steel focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-amber"
+            className="h-9 rounded-full border border-line px-4 text-sm font-semibold text-fg transition-colors hover:bg-subtle disabled:opacity-40 disabled:hover:bg-transparent"
           >
-            ← Prev
+            Back
           </button>
 
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1">
             {Array.from({ length: total }, (_, i) => (
               <button
                 key={i}
                 type="button"
                 onClick={() => setStep(i)}
-                aria-label={`Go to slide ${i + 1}`}
-                aria-current={i === step ? "true" : undefined}
-                className={`h-1.5 rounded-full transition-all focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-amber ${
-                  i === step ? "w-5 bg-amber" : "w-1.5 bg-line hover:bg-steel"
-                }`}
-              />
+                aria-label={`Go to step ${i + 1}`}
+                aria-current={i === step ? "step" : undefined}
+                className="flex h-6 items-center justify-center px-0.5"
+              >
+                <span
+                  className={`block h-1.5 rounded-full transition-[width,background-color] duration-150 ${
+                    i === step ? "w-5 bg-brand" : "w-1.5 bg-line-strong hover:bg-fg-muted"
+                  }`}
+                />
+              </button>
             ))}
           </div>
 
           <button
             type="button"
             onClick={isLast ? onClose : next}
-            className="flex items-center gap-1.5 rounded-lg bg-cta px-4 py-2 text-xs font-bold text-white transition-colors hover:bg-cta-hover focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-cta"
+            className="flex h-9 items-center gap-1.5 rounded-full bg-brand px-4 text-sm font-semibold text-white transition-colors hover:bg-brand-hover"
           >
             {isLast ? "Close" : "Next"}
-            {!isLast && <IconArrowRight width={12} height={12} />}
+            {!isLast && <IconArrowRight width={13} height={13} aria-hidden="true" />}
           </button>
         </div>
       </div>

@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Button from "../components/Button";
-import Logo from "../components/Logo";
 import Seo from "../components/Seo";
+import AuthShell, { AuthAlert, authInputClass } from "../components/auth/AuthShell";
+import { IconArrowLeft, IconMail } from "../components/icons";
+import { PRODUCT, CONTACT_EMAIL } from "../brand";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -25,79 +27,79 @@ export default function ForgotPassword() {
 
   return (
     <>
-      <Seo title="Forgot password" description="Reset your D&J Stratagem password." noindex />
+      <Seo title="Forgot password" description={`Reset your ${PRODUCT} password.`} noindex />
 
-      <div className="mx-auto flex w-full max-w-md flex-col justify-center px-6 py-16 md:py-24">
-        <div className="rounded-2xl border border-line bg-ink-2 p-8 shadow-xl shadow-brand/5">
-          <Link to="/" className="inline-block" aria-label="D&J Stratagem — home">
-            <Logo />
-          </Link>
-
-          {submitted ? (
-            <div className="mt-8 text-center">
-              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[var(--viz-green)]/10">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--viz-green)]" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
-              </div>
-              <h1 className="mt-5 text-2xl font-semibold tracking-tight text-paper">How to reset</h1>
-              <p className="mt-3 text-sm leading-relaxed text-steel">
-                Self-serve password reset is not live yet. Email{" "}
-                <a href="mailto:hello@djstratageminc.com" className="font-medium text-amber hover:text-amber-2">
-                  hello@djstratageminc.com
-                </a>{" "}
-                from <span className="font-medium text-paper">{email}</span> and we will reset the account by hand.
-              </p>
-              <Link
-                to="/login"
-                className="mt-6 inline-block text-sm font-medium text-amber hover:text-amber-2"
-              >
-                ← Back to sign in
-              </Link>
+      <AuthShell
+        title="Locked out? We'll get you back in."
+        text="Password resets are handled by a person on our team for now, so you'll hear from someone who can actually help."
+        footnote={`Self-serve reset email is not live yet. Requests go to ${CONTACT_EMAIL}.`}
+      >
+        {submitted ? (
+          <div>
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-soft text-brand-fg">
+              <IconMail width={22} height={22} aria-hidden="true" />
             </div>
-          ) : (
-            <>
-              <h1 className="mt-8 text-3xl font-semibold tracking-tight text-paper">Forgot password?</h1>
-              <p className="mt-2 text-sm text-steel">
-                Enter the email on the account. We will tell you how to reach us — automated reset mail is not live yet.
-              </p>
+            <h1 className="mt-5 text-3xl font-bold tracking-tight text-fg">How to reset</h1>
+            <p className="mt-3 leading-relaxed text-fg-muted">
+              Self-serve password reset is not live yet, so nothing has been emailed. Write to{" "}
+              <a href={`mailto:${CONTACT_EMAIL}`} className="font-semibold text-brand hover:text-brand-hover">
+                {CONTACT_EMAIL}
+              </a>{" "}
+              from <span className="font-semibold text-fg">{email}</span> and we will reset the account by hand.
+            </p>
+            <Link
+              to="/login"
+              className="mt-8 inline-flex items-center gap-1.5 text-sm font-semibold text-brand hover:text-brand-hover"
+            >
+              <IconArrowLeft width={15} height={15} aria-hidden="true" />
+              Back to sign in
+            </Link>
+          </div>
+        ) : (
+          <>
+            <h1 className="text-3xl font-bold tracking-tight text-fg">Forgot your password?</h1>
+            <p className="mt-2 leading-relaxed text-fg-muted">
+              Enter the email on the account. We&rsquo;ll show you how to reach us. Automated reset
+              email is not live yet.
+            </p>
 
-              <form onSubmit={handleSubmit} className="mt-8 space-y-4" noValidate>
-                <div>
-                  <label htmlFor="email" className="mb-2 block text-sm font-medium text-paper">
-                    Email address
-                  </label>
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="you@example.com"
-                    className="w-full rounded-md border border-line bg-ink px-4 py-2.5 text-sm text-paper outline-hidden transition-colors placeholder:text-steel/60 focus:border-amber"
-                  />
-                </div>
+            <form onSubmit={handleSubmit} className="mt-8 space-y-5" noValidate>
+              <div>
+                <label htmlFor="email" className="mb-1.5 block text-sm font-semibold text-fg">
+                  Work email
+                </label>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="you@company.com"
+                  aria-invalid={error ? true : undefined}
+                  aria-describedby={error ? "forgot-error" : undefined}
+                  className={`${authInputClass} ${error ? "border-danger" : "border-line"}`}
+                />
+              </div>
 
-                {error && (
-                  <div className="rounded-md border border-danger/30 bg-danger/10 px-4 py-2.5 text-sm text-danger">
-                    {error}
-                  </div>
-                )}
+              <div aria-live="polite" role="status" id="forgot-error">
+                {error && <AuthAlert>{error}</AuthAlert>}
+              </div>
 
-                <Button type="submit" variant="primary" className="w-full" disabled={busy}>
-                  {busy ? "Checking…" : "Request a reset"}
-                </Button>
-              </form>
+              <Button type="submit" size="lg" className="w-full" disabled={busy}>
+                {busy ? "Checking…" : "Get reset steps"}
+              </Button>
+            </form>
 
-              <p className="mt-6 text-center text-sm text-steel">
-                Remembered it?{" "}
-                <Link to="/login" className="font-medium text-amber hover:text-amber-2">
-                  Sign in
-                </Link>
-              </p>
-            </>
-          )}
-        </div>
-      </div>
+            <p className="mt-8 border-t border-line pt-6 text-center text-sm text-fg-muted">
+              Remembered it?{" "}
+              <Link to="/login" className="font-semibold text-brand hover:text-brand-hover">
+                Sign in
+              </Link>
+            </p>
+          </>
+        )}
+      </AuthShell>
     </>
   );
 }

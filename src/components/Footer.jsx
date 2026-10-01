@@ -2,46 +2,10 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import Logo from "./Logo";
 import { IconMail, IconArrowRight } from "./icons";
+import { FOOTER_COLUMNS } from "../navigation";
+import { COMPANY_LEGAL, CONTACT_EMAIL, LOCATION, TAGLINE } from "../brand";
 
-const columns = [
-  {
-    heading: "Product",
-    links: [
-      { to: "/platform", label: "Platform" },
-      { to: "/projects", label: "Projects" },
-      { to: "/supply", label: "Supply Exchange" },
-      { to: "/fleet", label: "Fleet" },
-      { to: "/pricing", label: "Pricing" },
-      { to: "/blog", label: "Blog" },
-      { to: "/changelog", label: "Changelog" },
-    ],
-  },
-  {
-    heading: "Solutions",
-    links: [
-      { to: "/solutions#gc", label: "General contractors" },
-      { to: "/solutions#sub", label: "Subcontractors" },
-      { to: "/solutions#supplier", label: "Suppliers" },
-    ],
-  },
-  {
-    heading: "Company",
-    links: [
-      { to: "/about", label: "About" },
-      { to: "/contact", label: "Contact" },
-      { to: "/login", label: "Sign in" },
-      { to: "/register", label: "Create account" },
-    ],
-  },
-  {
-    heading: "Legal",
-    links: [
-      { to: "/privacy", label: "Privacy Policy" },
-      { to: "/terms", label: "Terms & Conditions" },
-    ],
-  },
-];
-
+/** Feature 15: newsletter signup */
 function Newsletter() {
   const [email, setEmail] = useState("");
   const [done, setDone] = useState(false);
@@ -59,10 +23,10 @@ function Newsletter() {
 
   if (done) {
     return (
-      <p className="mt-4 text-sm leading-relaxed text-steel">
+      <p className="mt-4 text-sm leading-relaxed text-fg-muted">
         Thanks. A mailing list is not live yet &mdash; email{" "}
-        <a href="mailto:hello@djstratageminc.com" className="font-medium text-amber hover:text-amber-2">
-          hello@djstratageminc.com
+        <a href={`mailto:${CONTACT_EMAIL}`} className="font-medium text-brand hover:text-brand-hover">
+          {CONTACT_EMAIL}
         </a>{" "}
         if you want updates.
       </p>
@@ -72,11 +36,11 @@ function Newsletter() {
   return (
     <form onSubmit={handleSubmit} className="mt-4" noValidate>
       <label htmlFor="footer-email" className="sr-only">
-        Email for market updates
+        Email for marketplace updates
       </label>
       <div className="flex gap-2">
         <div className="relative flex-1">
-          <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-steel/60">
+          <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-fg-muted/70">
             <IconMail width={14} height={14} />
           </span>
           <input
@@ -85,13 +49,13 @@ function Newsletter() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@example.com"
-            className="w-full rounded-lg border border-line bg-ink pl-9 pr-3 py-2 text-xs text-paper outline-hidden transition-colors placeholder:text-steel/60 focus:border-amber"
+            className="h-10 w-full rounded-full border border-line bg-canvas pl-9 pr-3 text-sm text-fg outline-hidden transition-colors placeholder:text-fg-muted/70 focus:border-brand"
           />
         </div>
         <button
           type="submit"
-          aria-label="Request market updates"
-          className="flex shrink-0 items-center gap-1 rounded-lg bg-cta hover:bg-cta-hover px-3 py-2 text-xs font-semibold text-white"
+          aria-label="Request marketplace updates"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand text-white hover:bg-brand-hover"
         >
           <IconArrowRight width={13} height={13} />
         </button>
@@ -103,34 +67,31 @@ function Newsletter() {
 
 export default function Footer() {
   return (
-    <footer className="no-print border-t border-line bg-ink-2">
-      <div className="mx-auto max-w-6xl px-6 py-14">
+    <footer className="no-print border-t border-line bg-surface">
+      <div className="mx-auto max-w-6xl px-5 py-14 sm:px-6">
         <div className="grid grid-cols-2 gap-10 md:grid-cols-3 lg:grid-cols-6">
           <div className="col-span-2 md:col-span-3 lg:col-span-2">
-            <Logo />
-            <p className="mt-4 max-w-xs text-sm leading-relaxed text-steel">
-              Bid intelligence for construction &mdash; discover opportunities, manage your
-              pipeline, and win more work.
+            <Logo byline />
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-fg-muted">
+              {TAGLINE} Manufacturers, distributors, and contractors trading on one network.
             </p>
             <Newsletter />
             <a
-              href="mailto:hello@djstratageminc.com"
-              className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-amber transition-colors hover:text-amber-2"
+              href={`mailto:${CONTACT_EMAIL}`}
+              className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-brand transition-colors hover:text-brand-hover"
             >
-              hello@djstratageminc.com
+              {CONTACT_EMAIL}
             </a>
-            <p className="mt-2 text-sm text-steel">Los Angeles, California</p>
+            <p className="mt-1 text-sm text-fg-muted">{LOCATION}</p>
           </div>
 
-          {columns.map((col) => (
+          {FOOTER_COLUMNS.map((col) => (
             <div key={col.heading}>
-              <h4 className="text-xs font-semibold uppercase tracking-wider text-steel">
-                {col.heading}
-              </h4>
+              <h4 className="text-sm font-semibold text-fg">{col.heading}</h4>
               <ul className="mt-4 space-y-3 text-sm">
                 {col.links.map((l) => (
                   <li key={l.label}>
-                    <Link to={l.to} className="text-paper/80 transition-colors hover:text-amber">
+                    <Link to={l.to} className="text-fg-muted transition-colors hover:text-fg">
                       {l.label}
                     </Link>
                   </li>
@@ -140,9 +101,9 @@ export default function Footer() {
           ))}
         </div>
 
-        <div className="mt-12 flex flex-col items-start justify-between gap-4 border-t border-line pt-6 text-xs text-steel md:flex-row md:items-center">
-          <p>&copy; {new Date().getFullYear()} D&amp;J Stratagem, Inc. All rights reserved.</p>
-          <p>Find better projects. Bid smarter. Win more work.</p>
+        <div className="mt-12 flex flex-col items-start justify-between gap-3 border-t border-line pt-6 text-sm text-fg-muted md:flex-row md:items-center">
+          <p>&copy; {new Date().getFullYear()} {COMPANY_LEGAL} All rights reserved.</p>
+          <p>Supply meets demand, from the plant to the jobsite.</p>
         </div>
       </div>
     </footer>

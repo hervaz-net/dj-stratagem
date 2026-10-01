@@ -21,10 +21,12 @@ if (!function_exists('require_signin')) {
     }
 }
 
-function require_get(): void
-{
-    if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'GET') {
-        fail(405, 'method_not_allowed');
+if (!function_exists('require_get')) {
+    function require_get(): void
+    {
+        if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'GET') {
+            fail(405, 'method_not_allowed');
+        }
     }
 }
 
@@ -113,7 +115,10 @@ function seed_day(DateTimeImmutable $today, int $offset): string
 
 function ensure_column(string $table, string $column, string $definition): void
 {
-    static $allowed = ['users' => true, 'user_settings' => true];
+    static $allowed = [
+        'users' => true, 'user_settings' => true, 'suppliers' => true, 'bids' => true,
+        'purchase_orders' => true, 'alerts' => true, 'activity' => true, 'market_ticker' => true,
+    ];
     if (!isset($allowed[$table]) || !preg_match('/^[a-z_]+$/', $column)) {
         return;
     }

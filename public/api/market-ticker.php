@@ -6,6 +6,7 @@
  * payload. Dashboard MarketTicker needs numeric `change`. Return both keys and
  * coerce the percent so a mixed public_html tree cannot NaN.toFixed().
  * Do not require sign-in: this is market color, not account data.
+ * Always `sample: true` — the percentages are illustrative, not a price feed.
  */
 
 declare(strict_types=1);
@@ -13,13 +14,14 @@ require __DIR__ . '/bootstrap.php';
 
 function ticker_fallback(): array
 {
+    // Illustrative movement only (see PROOF.md); there is no price feed yet.
     return [
-        ['id' => 'electrical', 'label' => 'ELECTRICAL BID $247K AUSTIN, TX', 'change' => 2.1],
-        ['id' => 'plumbing', 'label' => 'PLUMBING AWARDED $89K TEMPE', 'change' => -0.4],
-        ['id' => 'steel', 'label' => 'STEEL FUTURES', 'change' => -0.5],
-        ['id' => 'lumber', 'label' => 'LUMBER DEMAND', 'change' => 3.4],
-        ['id' => 'copper', 'label' => 'COPPER SPOT', 'change' => 0.8],
-        ['id' => 'diesel', 'label' => 'DIESEL AVG', 'change' => -1.1],
+        ['id' => 'rebar', 'label' => 'Rebar #5', 'change' => 1.2],
+        ['id' => 'copper', 'label' => 'Copper THHN wire', 'change' => -0.5],
+        ['id' => 'lumber', 'label' => 'Framing lumber', 'change' => 3.4],
+        ['id' => 'readymix', 'label' => 'Ready-mix concrete', 'change' => 0.8],
+        ['id' => 'pvc', 'label' => 'PVC Sch 40 pipe', 'change' => -1.1],
+        ['id' => 'diesel', 'label' => 'Diesel (delivery)', 'change' => 2.3],
     ];
 }
 
@@ -73,6 +75,7 @@ try {
 respond([
     'ok' => true,
     'live' => true,
+    'sample' => true,
     'items' => $items,
     'ticker' => $items,
 ]);

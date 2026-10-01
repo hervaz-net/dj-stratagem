@@ -6,6 +6,7 @@ function supplier_row(array $r): array
     return [
         'id' => $r['id'],
         'name' => $r['name'],
+        'partnerRole' => $r['partner_role'] ?? 'supplier',
         'category' => $r['category'],
         'region' => $r['region'],
         'riskScore' => (int) $r['risk_score'],
@@ -16,6 +17,7 @@ function supplier_row(array $r): array
         'openOrders' => (int) $r['open_orders'],
         'spendYtd' => (float) $r['spend_ytd'],
         'trend' => json_col($r['trend_json']),
+        'sample' => (bool) ($r['is_seed'] ?? false),
     ];
 }
 
@@ -30,6 +32,7 @@ function bid_row(array $r): array
         'status' => $r['status'],
         'due' => $r['due_date'],
         'submitted' => $r['submitted_at'],
+        'sample' => (bool) ($r['is_seed'] ?? false),
     ];
 }
 
@@ -45,6 +48,7 @@ function order_row(array $r): array
         'status' => $r['status'],
         'ordered' => $r['ordered_at'],
         'eta' => $r['eta'] ?: '—',
+        'sample' => (bool) ($r['is_seed'] ?? false),
     ];
 }
 
@@ -73,7 +77,7 @@ function compute_metrics(): array
     return [
         [
             'id' => 'active-suppliers',
-            'label' => 'Active suppliers',
+            'label' => 'Active partners',
             'value' => $active,
             'unit' => '',
             'delta' => 4.2,
@@ -82,7 +86,7 @@ function compute_metrics(): array
         ],
         [
             'id' => 'avg-delivery',
-            'label' => 'Avg delivery rate',
+            'label' => 'Avg on-time delivery',
             'value' => round($avg, 1),
             'unit' => '%',
             'delta' => 1.8,
@@ -92,7 +96,7 @@ function compute_metrics(): array
         ],
         [
             'id' => 'at-risk',
-            'label' => 'At-risk suppliers',
+            'label' => 'Partners at risk',
             'value' => $atRisk,
             'unit' => '',
             'delta' => -2.1,
@@ -101,7 +105,7 @@ function compute_metrics(): array
         ],
         [
             'id' => 'spend-ytd',
-            'label' => 'Spend YTD',
+            'label' => 'Order volume YTD',
             'value' => $spendM,
             'unit' => 'M',
             'prefix' => '$',
