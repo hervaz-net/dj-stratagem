@@ -13,6 +13,7 @@ const entries = [
       { type: "improved", text: "Homepage title and share tags now name D&J Stratagem, Inc., not the Exchange subsidiary, before JavaScript runs." },
       { type: "improved", text: "Add-to-home-screen manifest matches the parent site instead of Stratagem Exchange." },
       { type: "improved", text: "Demo requests use the selected role in the email subject instead of always saying General." },
+      { type: "fixed", text: "Stratagem Fleet at /fleet is the page again. Vehicle photos moved to /media/fleet so the image folder cannot replace the route with a directory listing." },
     ],
   },
   {

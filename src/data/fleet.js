@@ -58,7 +58,7 @@ const issued = [
 export const vehicleClasses = [
   {
     key: "sedan",
-    image: "/fleet/sedan.webp",
+    image: "/media/fleet/sedan.webp",
     name: "Executive sedan",
     passengers: 3,
     bags: 3,
@@ -68,7 +68,7 @@ export const vehicleClasses = [
   },
   {
     key: "suv",
-    image: "/fleet/suv.webp",
+    image: "/media/fleet/suv.webp",
     name: "Premium SUV",
     passengers: 6,
     bags: 6,
@@ -78,7 +78,7 @@ export const vehicleClasses = [
   },
   {
     key: "sprinter",
-    image: "/fleet/sprinter.webp",
+    image: "/media/fleet/sprinter.webp",
     name: "Executive Sprinter",
     passengers: 12,
     bags: 12,
@@ -88,7 +88,7 @@ export const vehicleClasses = [
   },
   {
     key: "minibus",
-    image: "/fleet/minibus.webp",
+    image: "/media/fleet/minibus.webp",
     name: "Minibus",
     passengers: 28,
     bags: 20,
@@ -98,7 +98,7 @@ export const vehicleClasses = [
   },
   {
     key: "coach",
-    image: "/fleet/coach.webp",
+    image: "/media/fleet/coach.webp",
     name: "Motorcoach",
     passengers: 56,
     bags: 56,
