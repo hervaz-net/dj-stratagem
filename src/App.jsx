@@ -168,6 +168,10 @@ function App() {
           <Route path="/register" element={<MarketingLayout><Register /></MarketingLayout>} />
           <Route path="/signup" element={<Navigate to="/register" replace />} />
           <Route path="/admin" element={<Navigate to="/dashboard/admin" replace />} />
+          <Route path="/bids" element={<Navigate to="/projects" replace />} />
+          <Route path="/resources" element={<Navigate to="/changelog" replace />} />
+          <Route path="/profile" element={<Navigate to="/dashboard/settings" replace />} />
+          <Route path="/settings" element={<Navigate to="/dashboard/settings" replace />} />
           <Route path="/forgot-password" element={<MarketingLayout><ForgotPassword /></MarketingLayout>} />
           <Route path="/verify-email" element={<MarketingLayout><VerifyEmail /></MarketingLayout>} />
           <Route path="/changelog" element={<MarketingLayout><Changelog /></MarketingLayout>} />
