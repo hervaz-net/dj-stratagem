@@ -40,7 +40,7 @@ export default function AuthShell({ title, text, footnote, children, wide = fals
           </Link>
 
           <div className="mt-14">
-            <h2 className="text-balance text-3xl font-bold leading-tight tracking-tight">{title}</h2>
+            <h2 className="text-balance text-3xl font-bold leading-tight tracking-tight text-white">{title}</h2>
             {text && <p className="mt-4 text-base leading-relaxed text-white/70">{text}</p>}
           </div>
 

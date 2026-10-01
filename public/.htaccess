@@ -53,8 +53,8 @@ AddType application/manifest+json .webmanifest
   RewriteCond %{DOCUMENT_ROOT}/brand-guidelines.html -f
   RewriteRule ^brand$ /brand-guidelines.html [L]
 
-  RewriteRule ^blog$ index.html [L]
-  RewriteRule ^blog/ index.html [L]
+  RewriteRule ^blog$ /changelog [R=301,L]
+  RewriteRule ^blog/ /changelog [R=301,L]
 
   RewriteRule ^signin$ /login [R=301,L]
   RewriteRule ^sign-in$ /login [R=301,L]
@@ -68,6 +68,7 @@ AddType application/manifest+json .webmanifest
   RewriteRule ^trial$ /register [R=301,L]
   RewriteRule ^start$ /register [R=301,L]
   RewriteRule ^get-started$ /register [R=301,L]
+  RewriteRule ^join$ /register [R=301,L]
   RewriteRule ^forgot$ /forgot-password [R=301,L]
   RewriteRule ^reset-password$ /forgot-password [R=301,L]
   RewriteRule ^reset$ /forgot-password [R=301,L]
@@ -79,7 +80,7 @@ AddType application/manifest+json .webmanifest
   RewriteRule ^status$ /about [R=301,L]
   RewriteRule ^security$ /about [R=301,L]
   RewriteRule ^investors$ /about [R=301,L]
-  RewriteRule ^partners$ /about [R=301,L]
+  RewriteRule ^partners$ /solutions [R=301,L]
   RewriteRule ^accessibility$ /about [R=301,L]
   RewriteRule ^a11y$ /about [R=301,L]
   RewriteRule ^contact-us$ /contact [R=301,L]
@@ -122,6 +123,9 @@ AddType application/manifest+json .webmanifest
   RewriteRule ^supply/catalog/ /marketplace [R=301,L]
   RewriteRule ^catalog$ /marketplace [R=301,L]
   RewriteRule ^catalog/ /marketplace [R=301,L]
+  RewriteRule ^exchange$ /marketplace [R=301,L]
+  RewriteRule ^shop$ /marketplace [R=301,L]
+  RewriteRule ^equipment$ /fleet [R=301,L]
   RewriteRule ^supplier$ /suppliers [R=301,L]
   RewriteRule ^receipts$ /marketing/receipts [R=301,L]
   RewriteRule ^signage$ /marketing/signage [R=301,L]
