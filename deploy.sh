@@ -51,6 +51,18 @@ TXT
   exit 0
 fi
 
+# Never ship a build that is missing commits already on origin/main: the live
+# site would silently roll back someone else's work. Set ALLOW_BEHIND=1 to skip.
+if [[ "${1:-}" != "--status" && "${ALLOW_BEHIND:-}" != "1" ]]; then
+  if git -C "$REPO_DIR" fetch -q origin main 2>/dev/null; then
+    behind="$(git -C "$REPO_DIR" rev-list --count HEAD..origin/main)"
+    [[ "$behind" == "0" ]] || die "HEAD is $behind commit(s) behind origin/main.
+Pull or rebase first (git pull --rebase origin main), then deploy."
+  else
+    printf "${YELLOW}warning:${NC} could not fetch origin/main; skipping the up-to-date check\n" >&2
+  fi
+fi
+
 [[ -f "$TOKEN_FILE" ]] || die "no token file at $TOKEN_FILE
 Create one in cPanel → Manage API Tokens, then save it without echoing:
   (umask 077; cat > $TOKEN_FILE)"
