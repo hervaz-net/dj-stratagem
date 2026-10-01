@@ -79,7 +79,10 @@ $phone   = clean_field($payload['phone'] ?? '');
 $role    = clean_field($payload['role'] ?? '');
 // Fixed list so the subject line can't be steered by the client.
 $topics  = ['buying' => 'Buying', 'selling' => 'Selling', 'partnership' => 'Distributor partnership', 'support' => 'Support'];
-$topic   = $topics[clean_field($payload['topic'] ?? '')] ?? 'General';
+$topicKey = clean_field($payload['topic'] ?? '');
+// Parent demo form sends role (General Contractor, Subcontractor, …) and no topic.
+// Without this fallback every marketing inquiry was labeled "General".
+$topic   = $topics[$topicKey] ?? ($role !== '' ? $role : 'General');
 $message = trim(str_replace("\r\n", "\n", (string) ($payload['message'] ?? '')));
 
 $errors = [];
