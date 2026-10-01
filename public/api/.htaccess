@@ -3,7 +3,7 @@
 # served as plaintext and the password leaks. Deny at the web-server level so
 # that failure mode can't happen.
 
-<FilesMatch "^(config\.php|config\.example\.php|bootstrap\.php|ops\.php|market\.php|schema\.sql)$">
+<FilesMatch "^(config\.php|config\.example\.php|bootstrap\.php|ops\.php|ops-schema\.php|ops-seed\.php|ops-view\.php|market\.php|schema\.sql)$">
   <IfModule mod_authz_core.c>
     Require all denied
   </IfModule>
@@ -23,3 +23,19 @@
 
 # Directory listing would expose which endpoints exist.
 Options -Indexes
+
+# index.php is LiteSpeed's default DirectoryIndex. Do not ErrorDocument 404 to
+# a PHP script that itself returns 404 — that loop is an HTTP 500 on this host.
+DirectoryIndex index.php
+ErrorDocument 404 default
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule ^index\.php$ - [L]
+  RewriteRule ^not-found\.php$ - [L]
+  # Always send the probe to the working root /health.php. PT so LiteSpeed
+  # re-runs the PHP handler on the target instead of 404ing a missing local file.
+  RewriteRule ^health(\.php)?/?$ /health.php [L,PT]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteRule ^ not-found.php [L]
+</IfModule>

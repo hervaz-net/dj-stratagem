@@ -100,6 +100,7 @@ else
   step "Skipping build (--no-build)"
 fi
 [[ -d "$REPO_DIR/dist" ]] || die "no dist/ — run a build first"
+bash "$REPO_DIR/scripts/verify-dist.sh" "$REPO_DIR/dist"
 
 # --------------------------------------------------- refresh deploy branch
 step "Refreshing '$BRANCH' branch from dist/"
@@ -121,7 +122,7 @@ cat > .cpanel.yml <<YML
 ---
 deployment:
   tasks:
-    - /usr/bin/rsync -rltD --delete --exclude='.git' --exclude='.cpanel.yml' ./ ${DOCROOT}/
+    - /usr/bin/rsync -rltD --delete --exclude='.git' --exclude='.cpanel.yml' --exclude='api/config.php' --exclude='djs/config.php' --exclude='djs-config.php' ./ ${DOCROOT}/
     - /usr/bin/find ${DOCROOT} -type d -exec /bin/chmod 0755 {} +
     - /usr/bin/find ${DOCROOT} -type f -exec /bin/chmod 0644 {} +
     - /bin/chgrp nobody ${DOCROOT}
@@ -150,6 +151,12 @@ uapi VersionControlDeployment create -X POST \
 
 # ------------------------------------------------------------------ verify
 step "Verifying live site"
+if ! python3 -c 'import socket,sys; socket.getaddrinfo("djstratageminc.com", 443)' >/dev/null 2>&1; then
+  printf "${RED}error:${NC} djstratageminc.com has no public A/AAAA record.\n"
+  printf "  Namecheap → Advanced DNS → A @ 199.188.200.92 (server247.web-hosting.com)\n"
+  printf "  CNAME www → djstratageminc.com.\n"
+  exit 1
+fi
 EXPECTED="$(grep -o 'assets/index-[A-Za-z0-9_-]*\.js' "$REPO_DIR/dist/index.html" | head -1)"
 for i in 1 2 3 4 5 6; do
   sleep 5

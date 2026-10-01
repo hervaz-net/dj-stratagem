@@ -40,6 +40,7 @@ export const FOOTER_COLUMNS = [
     links: [
       { to: "/about", label: "About" },
       { to: "/contact", label: "Contact" },
+      { to: "/blog", label: "Blog" },
       { to: "/changelog", label: "Changelog" },
       { to: "/brand", label: "Brand" },
     ],

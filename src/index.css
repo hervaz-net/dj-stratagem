@@ -201,9 +201,9 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Keep first-fold CTAs and form fields above the compact consent card. */
+/* Keep the page end clear of the consent bar while it shows. */
 html[data-cookie-banner="1"] body {
-  padding-bottom: 8.5rem;
+  padding-bottom: 4.5rem;
 }
 
 body {

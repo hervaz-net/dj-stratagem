@@ -5,6 +5,7 @@ import SampleLabel from "./SampleLabel";
 import { IconX, IconArrowRight, IconCheck, IconClock } from "./icons";
 import { ROLE_META } from "./home/roleMeta";
 import { PRODUCT, CONTACT_EMAIL, LOCATION, ROLES, ROLE_ORDER } from "../brand";
+import { daysFromToday } from "../data/sampleDates";
 
 /**
  * A guided slide tour of the marketplace, shown in place of a hosted video.
@@ -137,7 +138,7 @@ function Panel({ kind }) {
           <Row title="12 AWG THHN, green" right="500 ft" />
         </div>
         <p className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-subtle px-3 py-1 text-[11px] font-medium text-fg">
-          <IconClock width={12} height={12} aria-hidden="true" /> Need by Oct 14
+          <IconClock width={12} height={12} aria-hidden="true" /> Need by {daysFromToday(14)}
         </p>
       </>
     );
@@ -215,17 +216,17 @@ function Panel({ kind }) {
     <div className="space-y-1.5">
       <Row
         title="12 AWG THHN, 4,000 ft"
-        meta={<span className="flex items-center gap-2"><RoleBadge role="contractor" /> Pasadena &middot; Oct 14</span>}
+        meta={<span className="flex items-center gap-2"><RoleBadge role="contractor" /> Pasadena &middot; {daysFromToday(14)}</span>}
         right={<span className="text-success">94%</span>}
       />
       <Row
         title={'3/4" EMT + fittings'}
-        meta={<span className="flex items-center gap-2"><RoleBadge role="distributor" /> Riverside &middot; Oct 20</span>}
+        meta={<span className="flex items-center gap-2"><RoleBadge role="distributor" /> Riverside &middot; {daysFromToday(20)}</span>}
         right={<span className="text-warning">86%</span>}
       />
       <Row
         title="Lighting fixtures, 60 units"
-        meta={<span className="flex items-center gap-2"><RoleBadge role="contractor" /> Irvine &middot; Nov 2</span>}
+        meta={<span className="flex items-center gap-2"><RoleBadge role="contractor" /> Irvine &middot; {daysFromToday(33)}</span>}
         right={<span className="text-fg-muted">71%</span>}
       />
     </div>

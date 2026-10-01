@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import Section from "../components/Section";
 import PageHero from "../components/PageHero";
 import Button from "../components/Button";
@@ -34,6 +34,32 @@ function validate(values) {
 }
 
 const EMPTY = { name: "", company: "", email: "", phone: "", message: "" };
+
+/** Pre-filled email, offered when the form can't reach the server. */
+function composeMailto(values, role, topic) {
+  const subject = encodeURIComponent(`${topic} inquiry from ${values.name} (${values.company})`);
+  const body = encodeURIComponent(
+    [
+      `Name: ${values.name}`,
+      `Company: ${values.company}`,
+      `Email: ${values.email}`,
+      `Phone: ${values.phone}`,
+      `Role: ${role}`,
+      `Topic: ${topic}`,
+      "",
+      values.message || "(no message)",
+    ].join("\n"),
+  );
+  return `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
+}
+
+/** A non-JSON answer means the host served something other than the handler. */
+async function postForm(url, form, signal) {
+  const res = await fetch(url, { method: "POST", body: new FormData(form), signal });
+  const type = res.headers.get("content-type") || "";
+  if (!type.includes("json")) return { res, data: null };
+  return { res, data: await res.json().catch(() => null) };
+}
 
 export default function Contact() {
   const [params] = useSearchParams();
@@ -81,17 +107,10 @@ export default function Contact() {
     const timer = window.setTimeout(() => controller.abort(), 15000);
 
     try {
-      // contact.php relays a fixed set of fields, so the topic rides in the message.
-      const body = new FormData(e.target);
-      const topicLabel = TOPICS.find((t) => t.key === topic)?.label ?? topic;
-      body.set("message", `Topic: ${topicLabel}\n\n${values.message}`);
-      const res = await fetch("/contact.php", {
-        method: "POST",
-        body,
-        signal: controller.signal,
-      });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok || !data.ok) throw new Error("Submission failed");
+      // /send-demo.php is the WAF-safe alias when the host answers /contact.php with HTML.
+      let { res, data } = await postForm("/contact.php", e.target, controller.signal);
+      if (!data) ({ res, data } = await postForm("/send-demo.php", e.target, controller.signal));
+      if (!res.ok || !data?.ok) throw new Error("Submission failed");
       setValues(EMPTY);
       setTouched({});
       setSubmitted(true);
@@ -294,8 +313,14 @@ export default function Contact() {
                 <div aria-live="polite" role="status">
                   {error && (
                     <p className="rounded-xl border border-danger/30 bg-danger-soft px-4 py-3 text-sm text-danger">
-                      Something went wrong sending your message. Please try again, or email us
-                      directly at {CONTACT_EMAIL}.
+                      Something went wrong sending your message.{" "}
+                      <a
+                        className="font-semibold underline underline-offset-2"
+                        href={composeMailto(values, role, TOPICS.find((t) => t.key === topic)?.label ?? topic)}
+                      >
+                        Email {CONTACT_EMAIL}
+                      </a>{" "}
+                      instead and we&rsquo;ll follow up.
                     </p>
                   )}
                 </div>

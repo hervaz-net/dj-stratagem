@@ -25,6 +25,7 @@ import {
   IconClock,
 } from "../components/icons";
 import { PRODUCT } from "../brand";
+import { daysFromToday } from "../data/sampleDates";
 
 /* Small mock panels. Every one carries a SampleLabel. */
 
@@ -107,7 +108,7 @@ function RequestMock() {
       </div>
       <div className="mt-4 flex flex-wrap gap-2 text-xs font-medium text-fg">
         <span className="inline-flex items-center gap-1.5 rounded-full bg-subtle px-3 py-1.5">
-          <IconClock width={13} height={13} aria-hidden="true" /> Need by Oct 14
+          <IconClock width={13} height={13} aria-hidden="true" /> Need by {daysFromToday(14)}
         </span>
         <span className="inline-flex items-center gap-1.5 rounded-full bg-subtle px-3 py-1.5">
           <IconMap width={13} height={13} aria-hidden="true" /> Jobsite, Pasadena

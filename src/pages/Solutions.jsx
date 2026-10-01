@@ -12,7 +12,7 @@ import { IconArrowRight, IconCheck } from "../components/icons";
 import { PRODUCT, ROLES, ROLE_ORDER } from "../brand";
 
 /* Old tab hashes still land on the closest column. */
-const LEGACY_ANCHORS = { supplier: ["suppliers"], distributor: ["distributors"], contractor: ["contractors", "gc", "sub"] };
+const LEGACY_ANCHORS = { supplier: ["suppliers"], distributor: ["distributors"], contractor: ["contractors", "gc", "sub", "general", "general-contractor", "general-contractors", "subcontractor", "subcontractors"] };
 
 const CAPABILITIES = [
   { label: "List a catalog and price sheets", roles: ["supplier", "distributor"] },

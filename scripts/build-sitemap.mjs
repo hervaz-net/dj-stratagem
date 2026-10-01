@@ -16,15 +16,13 @@ import { fileURLToPath } from "node:url";
 const here = dirname(fileURLToPath(import.meta.url));
 const root = resolve(here, "..");
 
-// Imported rather than duplicated, so new projects appear without edits here.
 const { projects, landingPairs } = await import(
   resolve(root, "src/data/sampleProjects.js")
 );
+const { posts } = await import(resolve(root, "src/data/posts.js"));
 
 const SITE = "https://djstratageminc.com";
 
-/** Static marketing routes. Auth and dashboard paths stay out — robots.txt
- *  disallows them and they carry no search value. */
 const staticPaths = [
   ["/", "1.0"],
   ["/marketplace", "0.9"],
@@ -38,6 +36,7 @@ const staticPaths = [
   ["/pricing", "0.8"],
   ["/about", "0.6"],
   ["/contact", "0.6"],
+  ["/blog", "0.6"],
   ["/changelog", "0.4"],
   ["/privacy", "0.3"],
   ["/terms", "0.3"],
@@ -46,6 +45,7 @@ const staticPaths = [
 
 const urls = [
   ...staticPaths.map(([path, priority]) => ({ path, priority })),
+  ...posts.map((p) => ({ path: `/blog/${p.slug}`, priority: "0.5" })),
   ...projects.map((p) => ({ path: `/projects/${p.slug}`, priority: "0.7" })),
   ...landingPairs().map((p) => ({
     path: `/construction-projects/${p.citySlug}/${p.tradeSlug}`,

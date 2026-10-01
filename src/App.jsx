@@ -1,6 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
-import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { Routes, Route, Navigate, Link, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar";
+import Logo from "./components/Logo";
+import ThemeToggle from "./components/ThemeToggle";
+import { PRODUCT } from "./brand";
 import Footer from "./components/Footer";
 import BackToTop from "./components/BackToTop";
 import CookieBanner from "./components/CookieBanner";
@@ -26,6 +29,8 @@ import Register from "./pages/Register";
 import ForgotPassword from "./pages/ForgotPassword";
 import VerifyEmail from "./pages/VerifyEmail";
 import Changelog from "./pages/Changelog";
+import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsAndConditions from "./pages/TermsAndConditions";
 import BrandGuidelines from "./pages/BrandGuidelines";
@@ -48,6 +53,7 @@ import { AuthProvider } from "./auth/AuthContext";
 import RequireAuth from "./auth/RequireAuth";
 import { ToastProvider } from "./contexts/ToastContext";
 import { RoleProvider } from "./contexts/RoleContext";
+import { hideMarketingChrome } from "./chrome/formRoutes";
 
 function ScrollToTop() {
   const { pathname, hash } = useLocation();
@@ -78,14 +84,19 @@ const SkipLink = () => (
   </a>
 );
 
+const OWN_SHELL_ROUTES = ["/login", "/register", "/forgot-password", "/verify-email"];
+
 /** Public marketing pages: site navbar, footer, back-to-top, cookie banner, floating CTA. */
 function MarketingLayout({ children }) {
+  const { pathname } = useLocation();
+  const hideChrome = hideMarketingChrome(pathname);
   const [paletteOpen, setPaletteOpen] = useState(false);
 
   const openPalette = useCallback(() => setPaletteOpen(true), []);
   const closePalette = useCallback(() => setPaletteOpen(false), []);
 
   useEffect(() => {
+    if (hideChrome) return undefined;
     const handler = (e) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
@@ -94,7 +105,36 @@ function MarketingLayout({ children }) {
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, []);
+  }, [hideChrome]);
+
+  // Auth and legal forms render without site chrome. Auth pages bring their
+  // own shell with a home link; everything else gets a slim header.
+  if (hideChrome) {
+    const ownShell = OWN_SHELL_ROUTES.includes(pathname.replace(/\/+$/, ""));
+    return (
+      <div className="flex min-h-screen flex-col">
+        <SkipLink />
+        {!ownShell && (
+          <header className="no-print border-b border-line bg-surface">
+            <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-5 sm:px-6">
+              <Link to="/" aria-label={`${PRODUCT} home`}>
+                <Logo />
+              </Link>
+              <div className="flex items-center gap-2">
+                <ThemeToggle />
+                <Link to="/" className="rounded-full px-3 py-1.5 text-sm font-medium text-fg-muted hover:bg-subtle hover:text-fg">
+                  Back to site
+                </Link>
+              </div>
+            </div>
+          </header>
+        )}
+        <main id="main" className="flex-1">
+          {children}
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -167,6 +207,12 @@ function App() {
           <Route path="/distributors" element={<MarketingLayout><ForDistributors /></MarketingLayout>} />
           <Route path="/suppliers" element={<MarketingLayout><ForSuppliers /></MarketingLayout>} />
           <Route path="/supply" element={<Navigate to="/marketplace" replace />} />
+          <Route path="/supply/catalog" element={<Navigate to="/marketplace" replace />} />
+          <Route path="/catalog" element={<Navigate to="/marketplace" replace />} />
+          <Route path="/supplier" element={<Navigate to="/suppliers" replace />} />
+          <Route path="/contractor" element={<Navigate to="/contractors" replace />} />
+          <Route path="/distributor" element={<Navigate to="/distributors" replace />} />
+          <Route path="/project" element={<Navigate to="/projects" replace />} />
           <Route path="/projects" element={<MarketingLayout><Projects /></MarketingLayout>} />
           <Route path="/projects/:slug" element={<MarketingLayout><ProjectDetail /></MarketingLayout>} />
           <Route
@@ -175,18 +221,82 @@ function App() {
           />
           <Route path="/pricing" element={<MarketingLayout><Pricing /></MarketingLayout>} />
           <Route path="/about" element={<MarketingLayout><About /></MarketingLayout>} />
+          <Route path="/about-us" element={<Navigate to="/about" replace />} />
           <Route path="/contact" element={<MarketingLayout><Contact /></MarketingLayout>} />
+          <Route path="/contact-us" element={<Navigate to="/contact" replace />} />
           <Route path="/login" element={<MarketingLayout><Login /></MarketingLayout>} />
+          <Route path="/signin" element={<Navigate to="/login" replace />} />
+          <Route path="/sign-in" element={<Navigate to="/login" replace />} />
+          <Route path="/log-in" element={<Navigate to="/login" replace />} />
+          <Route path="/account" element={<Navigate to="/login" replace />} />
           <Route path="/register" element={<MarketingLayout><Register /></MarketingLayout>} />
           <Route path="/signup" element={<Navigate to="/register" replace />} />
+          <Route path="/sign-up" element={<Navigate to="/register" replace />} />
+          <Route path="/trial" element={<Navigate to="/register" replace />} />
+          <Route path="/start" element={<Navigate to="/register" replace />} />
+          <Route path="/get-started" element={<Navigate to="/register" replace />} />
+          <Route path="/join" element={<Navigate to="/register" replace />} />
+          <Route path="/credit" element={<Navigate to="/dashboard/settings" replace />} />
+          <Route path="/credits" element={<Navigate to="/dashboard/settings" replace />} />
+          <Route path="/credit-application" element={<Navigate to="/dashboard/settings" replace />} />
           <Route path="/admin" element={<Navigate to="/dashboard/admin" replace />} />
           <Route path="/forgot-password" element={<MarketingLayout><ForgotPassword /></MarketingLayout>} />
+          <Route path="/forgot" element={<Navigate to="/forgot-password" replace />} />
+          <Route path="/reset-password" element={<Navigate to="/forgot-password" replace />} />
+          <Route path="/reset" element={<Navigate to="/forgot-password" replace />} />
+          <Route path="/password" element={<Navigate to="/forgot-password" replace />} />
           <Route path="/verify-email" element={<MarketingLayout><VerifyEmail /></MarketingLayout>} />
           <Route path="/changelog" element={<MarketingLayout><Changelog /></MarketingLayout>} />
+          <Route path="/blog" element={<MarketingLayout><Blog /></MarketingLayout>} />
+          <Route path="/blog/:slug" element={<MarketingLayout><BlogPost /></MarketingLayout>} />
           <Route path="/privacy" element={<MarketingLayout><PrivacyPolicy /></MarketingLayout>} />
+          <Route path="/privacy-policy" element={<Navigate to="/privacy" replace />} />
           <Route path="/terms" element={<MarketingLayout><TermsAndConditions /></MarketingLayout>} />
+          <Route path="/terms-of-service" element={<Navigate to="/terms" replace />} />
+          <Route path="/tos" element={<Navigate to="/terms" replace />} />
+          <Route path="/legal" element={<Navigate to="/terms" replace />} />
+          <Route path="/eula" element={<Navigate to="/terms" replace />} />
+          <Route path="/unsubscribe" element={<Navigate to="/privacy" replace />} />
           <Route path="/brand" element={<MarketingLayout><BrandGuidelines /></MarketingLayout>} />
+          <Route path="/brand-guidelines" element={<Navigate to="/brand" replace />} />
           <Route path="/fleet" element={<MarketingLayout><Fleet /></MarketingLayout>} />
+          <Route path="/equipment" element={<Navigate to="/fleet" replace />} />
+          <Route path="/fleet-cards" element={<Navigate to="/marketing/fleet-cards" replace />} />
+          <Route path="/receipts" element={<Navigate to="/marketing/receipts" replace />} />
+          <Route path="/signage" element={<Navigate to="/marketing/signage" replace />} />
+          <Route path="/home" element={<Navigate to="/" replace />} />
+          <Route path="/exchange" element={<Navigate to="/marketplace" replace />} />
+          <Route path="/shop" element={<Navigate to="/marketplace" replace />} />
+          <Route path="/features" element={<Navigate to="/platform" replace />} />
+          <Route path="/product" element={<Navigate to="/platform" replace />} />
+          <Route path="/services" element={<Navigate to="/platform" replace />} />
+          <Route path="/how-it-works" element={<Navigate to="/platform" replace />} />
+          <Route path="/howitworks" element={<Navigate to="/platform" replace />} />
+          <Route path="/docs" element={<Navigate to="/changelog" replace />} />
+          <Route path="/help" element={<Navigate to="/contact" replace />} />
+          <Route path="/support" element={<Navigate to="/contact" replace />} />
+          <Route path="/demo" element={<Navigate to="/contact" replace />} />
+          <Route path="/faq" element={<Navigate to="/contact" replace />} />
+          <Route path="/faqs" element={<Navigate to="/contact" replace />} />
+          <Route path="/book" element={<Navigate to="/contact" replace />} />
+          <Route path="/book-demo" element={<Navigate to="/contact" replace />} />
+          <Route path="/request-demo" element={<Navigate to="/contact" replace />} />
+          <Route path="/company" element={<Navigate to="/about" replace />} />
+          <Route path="/team" element={<Navigate to="/about" replace />} />
+          <Route path="/news" element={<Navigate to="/blog" replace />} />
+          <Route path="/press" element={<Navigate to="/blog" replace />} />
+          <Route path="/careers" element={<Navigate to="/contact" replace />} />
+          <Route path="/jobs" element={<Navigate to="/contact" replace />} />
+          <Route path="/cookies" element={<Navigate to="/privacy" replace />} />
+          <Route path="/cookie" element={<Navigate to="/privacy" replace />} />
+          <Route path="/cookie-policy" element={<Navigate to="/privacy" replace />} />
+          <Route path="/gdpr" element={<Navigate to="/privacy" replace />} />
+          <Route path="/status" element={<Navigate to="/about" replace />} />
+          <Route path="/security" element={<Navigate to="/about" replace />} />
+          <Route path="/investors" element={<Navigate to="/about" replace />} />
+          <Route path="/partners" element={<Navigate to="/solutions" replace />} />
+          <Route path="/accessibility" element={<Navigate to="/about" replace />} />
+          <Route path="/a11y" element={<Navigate to="/about" replace />} />
           <Route path="/marketing/fleet-cards" element={<MarketingLayout><FleetCards /></MarketingLayout>} />
           <Route path="/marketing/receipts" element={<MarketingLayout><Receipts /></MarketingLayout>} />
           <Route path="/marketing/signage" element={<MarketingLayout><Signage /></MarketingLayout>} />

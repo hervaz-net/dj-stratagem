@@ -1,6 +1,7 @@
 import RoleBadge from "./RoleBadge";
 import SampleLabel from "./SampleLabel";
 import { IconCheck } from "./icons";
+import { daysFromToday } from "../data/sampleDates";
 
 /**
  * A seller's view of open requests matched to their catalog and service area.
@@ -14,7 +15,7 @@ const DEFAULT_ROWS = [
     buyer: "contractor",
     shipTo: "Pasadena, CA",
     category: "Electrical",
-    needBy: "Oct 14",
+    needBy: daysFromToday(14),
     quotes: 3,
     match: 94,
   },
@@ -23,7 +24,7 @@ const DEFAULT_ROWS = [
     buyer: "distributor",
     shipTo: "Riverside, CA",
     category: "Electrical",
-    needBy: "Oct 20",
+    needBy: daysFromToday(20),
     quotes: 2,
     match: 86,
   },
@@ -32,7 +33,7 @@ const DEFAULT_ROWS = [
     buyer: "contractor",
     shipTo: "Long Beach, CA",
     category: "Drywall",
-    needBy: "Oct 28",
+    needBy: daysFromToday(28),
     quotes: 0,
     match: 72,
   },

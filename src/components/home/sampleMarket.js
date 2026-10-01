@@ -1,3 +1,5 @@
+import { daysFromToday } from "../../data/sampleDates";
+
 /**
  * Illustrative marketplace data for the home page preview. Every company name
  * starts with "Sample" or "Example" so nobody mistakes it for a real seller,
@@ -60,7 +62,7 @@ export const SAMPLE_REQUESTS = [
     title: "4,000 ft 12 AWG THHN, black/white/green",
     buyer: "contractor",
     project: "Medical office TI, Pasadena",
-    needBy: "Needed Oct 14",
+    needBy: `Needed ${daysFromToday(14)}`,
     quotes: 3,
   },
   {
@@ -68,7 +70,7 @@ export const SAMPLE_REQUESTS = [
     title: "Restock: 3/4\" EMT conduit and set-screw fittings",
     buyer: "distributor",
     project: "Branch restock, Riverside",
-    needBy: "Needed Oct 20",
+    needBy: `Needed ${daysFromToday(20)}`,
     quotes: 2,
   },
   {
@@ -76,7 +78,7 @@ export const SAMPLE_REQUESTS = [
     title: "1,200 sheets 5/8\" Type X drywall",
     buyer: "contractor",
     project: "Mixed-use podium, Long Beach",
-    needBy: "Needed Oct 28",
+    needBy: `Needed ${daysFromToday(28)}`,
     quotes: 0,
   },
 ];

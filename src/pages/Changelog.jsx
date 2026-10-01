@@ -22,6 +22,86 @@ const entries = [
     ],
   },
   {
+    version: "1.80",
+    date: "October 2026",
+    iso: "2026-10",
+    tag: "Fix",
+    items: [
+      {
+        type: "fix",
+        text: "Live audit 30 Sep 2026 17:22 PDT: Namecheap unsuspended. Apex serves assets/index-CkD4vCPa.js (Last-Modified 24 Sep). GitHub deploy tip advertises assets/index-BVUa50KV.js. public_html is stale.",
+      },
+      {
+        type: "fix",
+        text: "/api/health.php is a LiteSpeed HTML 404. /api/ and /api/health return HTTP 500. /health.php, /api/me.php, and /contact.php are healthy. Auth chrome still covers /login and /privacy because the live bundle predates hideMarketingChrome.",
+      },
+      {
+        type: "improved",
+        text: "Dashboard PHP now signs in before loading ops.php. A missing ops.php returns JSON 503 instead of a LiteSpeed HTML 500. verify-dist and the publish workflow now require api/ops.php.",
+      },
+    ],
+  },
+  {
+    version: "1.79",
+    date: "September 2026",
+    iso: "2026-09",
+    tag: "Fix",
+    items: [
+      {
+        type: "fix",
+        text: "Live audit 29 Sep 2026 15:13 PDT: apex and www still HTTP 302 every path to /cgi-sys/suspendedpage.cgi. Namecheap Account Suspended. No hashed bundle is reachable. This is a host lock, not a React-tree defect.",
+      },
+      {
+        type: "improved",
+        text: "Correct README advertised SHAs. Current GitHub main da55f5d / deploy 3a7d6e1 ship assets/index-B3nHlFED.js. Unsuspend the Stellar account, then ./deploy.sh or cPanel Update from Remote + Deploy HEAD.",
+      },
+    ],
+  },
+  {
+    version: "1.78",
+    date: "September 2026",
+    iso: "2026-09",
+    tag: "Fix",
+    items: [
+      {
+        type: "fix",
+        text: "Restore /changelog after audit 1.77 replaced src/pages/Changelog.jsx with PLACEHOLDER_REVERT. Visiting /changelog or /docs crashed because the route imported a non-component.",
+      },
+      {
+        type: "fix",
+        text: "Live audit 29 Sep 2026 14:20 PDT: apex and www still HTTP 302 every path to /cgi-sys/suspendedpage.cgi. Namecheap Account Suspended. No hashed bundle is reachable. DNS A remains 199.188.200.93.",
+      },
+      {
+        type: "improved",
+        text: "GitHub deploy 3a7d6e1 advertises assets/index-B3nHlFED.js and already contains the /api/health.php alias and require_signin guard. Unsuspend the Stellar account, then ./deploy.sh or cPanel Update from Remote + Deploy HEAD.",
+      },
+    ],
+  },
+  {
+    version: "1.77",
+    date: "September 2026",
+    iso: "2026-09",
+    tag: "Fix",
+    items: [
+      {
+        type: "fix",
+        text: "Live audit 29 Sep 2026 11:14 PDT: apex and www still locked on Namecheap Account Suspended. The 1.77 audit commit on main (0f51e8c) accidentally overwrote Changelog.jsx.",
+      },
+    ],
+  },
+  {
+    version: "1.72",
+    date: "September 2026",
+    iso: "2026-09",
+    tag: "Fix",
+    items: [
+      {
+        type: "fix",
+        text: "Alias /api/health.php to /health.php, stop ErrorDocument from looping api/index.php into HTTP 500, and guard require_signin so ops.php does not fatal after bootstrap.php.",
+      },
+    ],
+  },
+  {
     version: "1.5",
     date: "August 2026",
     iso: "2026-08",

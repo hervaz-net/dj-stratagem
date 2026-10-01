@@ -17,6 +17,29 @@ import {
 
 export { isConfigured, isSample };
 
+function coerceTickerChange(raw) {
+  if (typeof raw === "number" && Number.isFinite(raw)) return raw;
+  if (typeof raw === "string") {
+    const n = Number.parseFloat(raw.replace(/[%+]/g, ""));
+    return Number.isFinite(n) ? n : 0;
+  }
+  return 0;
+}
+
+function normalizeTickerItems(data) {
+  const rows = Array.isArray(data?.items)
+    ? data.items
+    : Array.isArray(data?.ticker)
+      ? data.ticker
+      : null;
+  if (!rows) return tickerFixtures;
+  return rows.map((row, i) => ({
+    id: String(row?.id ?? row?.label ?? i),
+    label: String(row?.label ?? "Market"),
+    change: coerceTickerChange(row?.change ?? row?.change_pct),
+  }));
+}
+
 export async function fetchSuppliers({ signal } = {}) {
   const data = await liveOrFixture(
     () => apiGet("suppliers.php", { signal }),
@@ -38,7 +61,7 @@ export async function fetchTicker({ signal } = {}) {
     () => apiGet("market-ticker.php", { signal }),
     { items: tickerFixtures },
   );
-  return data.items ?? tickerFixtures;
+  return normalizeTickerItems(data);
 }
 
 export async function createSupplier({ name, category, region, partnerRole, csrf }) {

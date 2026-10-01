@@ -1,49 +1,155 @@
-# Serve real files/directories (assets, contact.php) as-is; everything
-# else falls through to index.html so React Router can handle the route.
+# Namecheap LiteSpeed on server247 uses CloudLinux alt-php, not EasyApache.
+# Live responses advertise PHP/8.1.34. The previous ea-php82___lsphp handler
+# is not installed on this account, so LiteSpeed started PHP then returned
+# an empty HTML 500 for every .php request (contact form, /api/me.php, login).
+# Use the CloudLinux lsphp MIME type (three underscores). The short
+# application/x-httpd-alt-php81 name is not registered on this host.
+# Keep the handler in source: rsync --delete wipes the MultiPHP-injected block.
+<FilesMatch "[.]php$">
+  SetHandler application/x-httpd-alt-php81___lsphp
+</FilesMatch>
+<IfModule mime_module>
+  AddHandler application/x-httpd-alt-php81___lsphp .php .php8 .phtml
+  AddType application/manifest+json .webmanifest
+</IfModule>
+AddType application/manifest+json .webmanifest
+
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
 
-  # One public origin. www must not keep its own cookie/cache universe.
-  RewriteCond %{HTTP_HOST} ^www\.djstratageminc\.com$ [NC]
+  RewriteCond %{HTTP_HOST} ^www[.]djstratageminc[.]com$ [NC]
   RewriteRule ^ https://djstratageminc.com%{REQUEST_URI} [R=301,L]
 
-  # Hashed Vite files must never fall through to the SPA. A stale index.html
-  # that points at a bundle that is not on disk used to 200 with HTML, which
-  # LiteSpeed then served as application/javascript and the app never booted.
+  # /api/health.php must not depend on the file existing under public_html/api.
+  # Live trees have been missing that file; LiteSpeed then emits its HTML 404
+  # before later aliases run because /api/ is a real directory. Always send
+  # the probe to the working root /health.php first. PT forces handler rerun.
+  RewriteRule ^api/health(\.php)?/?$ /health.php [L,PT]
+
+  RewriteCond %{REQUEST_FILENAME} -f
+  RewriteRule ^ - [L]
+
+  # /manifest.json must never become index.html. Live public_html has shipped
+  # without the file, and LiteSpeed DOCUMENT_ROOT is unreliable on this account,
+  # so do not gate the alias on a filesystem probe.
+  RewriteRule ^manifest[.]json$ manifest.webmanifest [L]
+  RewriteRule ^credit$ /dashboard/settings [R=301,L]
+  RewriteRule ^credits$ /dashboard/settings [R=301,L]
+  RewriteRule ^credit-application$ /dashboard/settings [R=301,L]
+
+  # Partial public_html trees have been missing /api/*.php and health.php.
+  # Never let those URLs become the marketing SPA — JSON or a PHP 404 only.
+  RewriteRule ^api/ api/index.php [L]
+  RewriteRule [.]php$ contact.php [L]
+
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^(.+)/$ /$1 [R=301,L]
+
+  RewriteCond %{DOCUMENT_ROOT}/privacy.html -f
+  RewriteRule ^privacy$ /privacy.html [L]
+  RewriteCond %{DOCUMENT_ROOT}/terms.html -f
+  RewriteRule ^terms$ /terms.html [L]
+  RewriteCond %{DOCUMENT_ROOT}/brand-guidelines.html -f
+  RewriteRule ^brand$ /brand-guidelines.html [L]
+
+  RewriteRule ^blog$ index.html [L]
+  RewriteRule ^blog/ index.html [L]
+
+  RewriteRule ^signin$ /login [R=301,L]
+  RewriteRule ^sign-in$ /login [R=301,L]
+  RewriteRule ^log-in$ /login [R=301,L]
+  RewriteRule ^account$ /login [R=301,L]
+  RewriteRule ^credit$ /dashboard/settings [R=301,L]
+  RewriteRule ^credits$ /dashboard/settings [R=301,L]
+  RewriteRule ^credit-application$ /dashboard/settings [R=301,L]
+  RewriteRule ^signup$ /register [R=301,L]
+  RewriteRule ^sign-up$ /register [R=301,L]
+  RewriteRule ^trial$ /register [R=301,L]
+  RewriteRule ^start$ /register [R=301,L]
+  RewriteRule ^get-started$ /register [R=301,L]
+  RewriteRule ^forgot$ /forgot-password [R=301,L]
+  RewriteRule ^reset-password$ /forgot-password [R=301,L]
+  RewriteRule ^reset$ /forgot-password [R=301,L]
+  RewriteRule ^password$ /forgot-password [R=301,L]
+  RewriteRule ^project$ /projects [R=301,L]
+  RewriteRule ^about-us$ /about [R=301,L]
+  RewriteRule ^company$ /about [R=301,L]
+  RewriteRule ^team$ /about [R=301,L]
+  RewriteRule ^status$ /about [R=301,L]
+  RewriteRule ^security$ /about [R=301,L]
+  RewriteRule ^investors$ /about [R=301,L]
+  RewriteRule ^partners$ /about [R=301,L]
+  RewriteRule ^accessibility$ /about [R=301,L]
+  RewriteRule ^a11y$ /about [R=301,L]
+  RewriteRule ^contact-us$ /contact [R=301,L]
+  RewriteRule ^help$ /contact [R=301,L]
+  RewriteRule ^support$ /contact [R=301,L]
+  RewriteRule ^demo$ /contact [R=301,L]
+  RewriteRule ^faq$ /contact [R=301,L]
+  RewriteRule ^faqs$ /contact [R=301,L]
+  RewriteRule ^book$ /contact [R=301,L]
+  RewriteRule ^book-demo$ /contact [R=301,L]
+  RewriteRule ^request-demo$ /contact [R=301,L]
+  RewriteRule ^careers$ /contact [R=301,L]
+  RewriteRule ^jobs$ /contact [R=301,L]
+  RewriteRule ^docs$ /changelog [R=301,L]
+  RewriteRule ^home$ / [R=301,L]
+  RewriteRule ^features$ /platform [R=301,L]
+  RewriteRule ^product$ /platform [R=301,L]
+  RewriteRule ^services$ /platform [R=301,L]
+  RewriteRule ^how-it-works$ /platform [R=301,L]
+  RewriteRule ^howitworks$ /platform [R=301,L]
+  RewriteRule ^news$ /blog [R=301,L]
+  RewriteRule ^press$ /blog [R=301,L]
+  RewriteRule ^privacy-policy$ /privacy [R=301,L]
+  RewriteRule ^cookies$ /privacy [R=301,L]
+  RewriteRule ^cookie$ /privacy [R=301,L]
+  RewriteRule ^cookie-policy$ /privacy [R=301,L]
+  RewriteRule ^gdpr$ /privacy [R=301,L]
+  RewriteRule ^unsubscribe$ /privacy [R=301,L]
+  RewriteRule ^terms-of-service$ /terms [R=301,L]
+  RewriteRule ^tos$ /terms [R=301,L]
+  RewriteRule ^legal$ /terms [R=301,L]
+  RewriteRule ^eula$ /terms [R=301,L]
+  RewriteRule ^brand-guidelines$ /brand [R=301,L]
+  RewriteRule ^fleet-cards$ /marketing/fleet-cards [R=301,L]
+  # /supply became /marketplace in the Stratagem Exchange rebrand, and
+  # /suppliers is now a real page (manufacturers & vendors), so it is not
+  # aliased here.
+  RewriteRule ^supply$ /marketplace [R=301,L]
+  RewriteRule ^supply/catalog$ /marketplace [R=301,L]
+  RewriteRule ^supply/catalog/ /marketplace [R=301,L]
+  RewriteRule ^catalog$ /marketplace [R=301,L]
+  RewriteRule ^catalog/ /marketplace [R=301,L]
+  RewriteRule ^supplier$ /suppliers [R=301,L]
+  RewriteRule ^receipts$ /marketing/receipts [R=301,L]
+  RewriteRule ^signage$ /marketing/signage [R=301,L]
+  RewriteRule ^sitemap$ /sitemap.xml [R=301,L]
+
+  RewriteRule ^send-demo[.]php$ contact.php [L]
+  RewriteRule ^favicon[.]ico$ favicon.svg [L]
+  RewriteRule ^apple-touch-icon(-precomposed)?[.]png$ favicon.svg [L]
+  RewriteRule ^manifest[.]json$ manifest.webmanifest [L]
+
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule ^assets/ - [R=404,L]
-  RewriteRule ^assets/ - [L]
-
-  # Brand marks and other static uploads must 404 when missing. On the Aug 21
-  # live tree, /uploads/*.svg was rewritten to index.html and served as the
-  # document mark, so privacy/terms rendered a broken HTML "image".
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteRule ^uploads/ - [R=404,L]
-  RewriteRule ^uploads/ - [L]
-
-  # PHP endpoints must not 200 the SPA. A missing or mistyped /api/*.php used
-  # to return index.html, so fetch() parsed marketing HTML as JSON and the
-  # dashboard looked like the API was up.
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteRule ^api/ - [R=404,L]
-  RewriteRule ^api/ - [L]
 
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_URI} ![.]php$ [NC]
   RewriteRule ^ index.html [L]
 </IfModule>
 
-# index.html is the only pointer to the current hashed bundle. Cache it and
-# a deploy that only updates public_html/assets looks like it never shipped.
-# robots.txt / sitemap.xml must also skip long-lived cache or a cPanel pull
-# can look like it never updated crawler files.
 <IfModule mod_headers.c>
-  <FilesMatch "\.(html)$">
+  <FilesMatch "html$">
     Header set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
-  <FilesMatch "^(robots\.txt|sitemap\.xml)$">
+  <FilesMatch "^(robots.txt|sitemap.xml|manifest.webmanifest|manifest.json)$">
     Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+  <FilesMatch "(manifest[.]webmanifest|manifest[.]json)$">
+    Header set Content-Type "application/manifest+json"
   </FilesMatch>
 </IfModule>
 
@@ -53,6 +159,7 @@
   ExpiresByType text/plain "access plus 0 seconds"
   ExpiresByType application/xml "access plus 0 seconds"
   ExpiresByType text/xml "access plus 0 seconds"
+  ExpiresByType application/manifest+json "access plus 0 seconds"
   ExpiresByType text/css "access plus 1 year"
   ExpiresByType application/javascript "access plus 1 year"
   ExpiresByType image/svg+xml "access plus 1 year"

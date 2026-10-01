@@ -154,8 +154,9 @@ cPanel → **Git™ Version Control** → `dj-stratagem` → **Update from Remot
 > can return a directory listing or 404s. Re-check ~10 seconds after deploying before
 > concluding something broke.
 
-> Namecheap account suspension (`/cgi-sys/suspendedpage.cgi`) is a billing/host lock,
-> not a git failure. Unsuspend the Stellar account before any cPanel pull will go live.
+> If the account is ever locked again (`/cgi-sys/suspendedpage.cgi`), that is a
+> Namecheap billing/host lock, not a git or Vite failure. Unsuspend the Stellar
+> account before any cPanel pull will go live.
 
 ### Contact form
 
@@ -172,13 +173,29 @@ domain (create one in cPanel, switch `contact.php` from `mail()` to SMTP).
 
 ## Outstanding
 
-- **Namecheap account is suspended.** `https://djstratageminc.com` currently 302s every
-  path to `/cgi-sys/suspendedpage.cgi`. That is a billing/host lock, not a git or Vite
-  failure. Unsuspend the Stellar account in Namecheap before `./deploy.sh` or a cPanel
-  pull can serve the site. AutoSSL is already terminating HTTPS; the lock is the account.
-- **Auth stays off until the host is unsuspended.** See Authentication below —
-  `require_https` refuses to serve the endpoints over plaintext HTTP, which is
-  correct and deliberate. Do not disable it to "get it working".
+- **Namecheap account is suspended.** Re-checked 29 Sep 2026 15:13 PDT:
+  every HTTPS request on apex and www (including `/`, `/platform`,
+  `/pricing`, `/contact`, `/contact.php`, `/api/me.php`,
+  `/robots.txt`, `/sitemap.xml`) still 302s to
+  `/cgi-sys/suspendedpage.cgi`. That is a Stellar billing/host lock,
+  not a git or Vite failure. Unsuspend the account before any cPanel
+  pull will go live. Live A record is `199.188.200.93`. Keep
+  `CNAME www` → `djstratageminc.com.` published.
+- **`/changelog` was broken on `main` and restored in 1.78.** Audit 1.77
+  (`0f51e8c`) replaced `src/pages/Changelog.jsx` with `PLACEHOLDER_REVERT`.
+  Restored in 1.78 (`da55f5d`). Do not overwrite that file with a host-audit
+  placeholder again.
+- **cPanel is behind GitHub (blocked by the lock).** GitHub `main`
+  `da55f5d` and `deploy` `3a7d6e1` advertise `assets/index-B3nHlFED.js`
+  plus the `/api/health.php` → `/health.php` PT alias and the
+  `/api/index.php` 500-loop fix. Actions can refresh `deploy` but cannot
+  pull the host until the account is unsuspended and repo secret
+  `CPANEL_TOKEN` is set. After unsuspend: `./deploy.sh` on a token
+  machine, or cPanel → Git Version Control → Update from Remote →
+  Deploy HEAD Commit. Confirm `public_html` is `djstlime:nobody` mode
+  `0750`.
+- HTTPS is live (AutoSSL). Auth endpoints stay HTTPS-only via `require_https`.
+  Do not disable that flag to "get it working" on plaintext.
 - Pricing figures are placeholders pending a real pricing decision. The annual
   toggle derives its numbers from a flat 20% discount constant in `Pricing.jsx`.
 - Screenshots/mock panels throughout the site are illustrative, not live product.
@@ -211,9 +228,9 @@ Set `VITE_API_BASE_URL` only if the PHP host is on another origin.
 | `/api/overview.php` | GET KPIs, activity, deadlines, alerts, health | Overview |
 | `/api/bids.php` | GET list; POST `{action:"create"}` or `{action:"status", id, status}` | Bids |
 | `/api/orders.php` | GET list; POST `{action:"cancel", ids}` | Orders |
-| `/api/analytics.php?range=7d\|30d\|90d` | GET live aggregates | Analytics |
-| `/api/alerts.php` | GET list; POST `{action: read\|read_all\|dismiss\|snooze, id?}` | Alerts |
-| `/api/settings.php` | GET; POST `{action: profile\|notifications\|twofa\|billing\|account_type\|fund}` | Settings |
+| `/api/analytics.php?range=7d\\|30d\\|90d` | GET live aggregates | Analytics |
+| `/api/alerts.php` | GET list; POST `{action: read\\|read_all\\|dismiss\\|snooze, id?}` | Alerts |
+| `/api/settings.php` | GET; POST `{action: profile\\|notifications\\|twofa\\|billing\\|account_type\\|,"` | Settings |
 
 All of the above require a signed-in `active` session. A 401 is never
 swallowed as sample data.
@@ -241,7 +258,7 @@ Exact shapes live in `src/api/dashboard.js` and `src/api/fixtures.js`.
 
 `/login` and `/register` are backed by PHP endpoints under `public/api/`,
 matching the existing `contact.php` pattern. Accounts are **approval-gated**:
-registering creates a `pending` row that cannot sign in until an admin activates
+registering creates a `pending` account that cannot sign in until an admin activates
 it.
 
 | Endpoint | Method | Purpose |
@@ -258,8 +275,9 @@ it.
 `require_https` is `true` by default and the endpoints return `403
 https_required` over plaintext. This is deliberate: passwords and session
 cookies sent over HTTP are readable by anyone on the network path, and the
-session cookie's `Secure` flag means it won't be sent at all. **Get AutoSSL
-issued first** (see Outstanding), then this starts working on its own.
+session cookie's `Secure` flag means it won't be sent at all. AutoSSL is
+already terminating HTTPS on the live host, so these endpoints work over
+`https://djstratageminc.com` without changing `require_https`.
 
 Set `require_https` to `false` only for local development against
 `http://localhost`.
@@ -308,7 +326,7 @@ UPDATE users SET role = 'admin', status = 'active', approved_at = UTC_TIMESTAMP(
 ```
 
 After that, approvals happen in the UI. The **Accounts** item only appears in
-the sidebar for admins, but that is presentation — `admin-users.php` and
+The sidebar for admins, but that is presentation — `admin-users.php` and
 `admin-user-status.php` reject non-admins with 403 regardless of what the
 client renders.
 

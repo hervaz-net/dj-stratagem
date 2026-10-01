@@ -1,11 +1,12 @@
 import RoleBadge from "./RoleBadge";
 import SampleLabel from "./SampleLabel";
 import { IconCheck, IconClock } from "./icons";
+import { daysFromToday } from "../data/sampleDates";
 
 const quotes = [
   { seller: "Sample Electric Supply", role: "distributor", total: "$1,842", lead: "Will-call tomorrow", best: true },
   { seller: "Example Wire Mfg.", role: "supplier", total: "$1,790", lead: "Ships in 6 days" },
-  { seller: "Sample Trade Distributors", role: "distributor", total: "$1,965", lead: "Delivers Oct 12" },
+  { seller: "Sample Trade Distributors", role: "distributor", total: "$1,965", lead: `Delivers ${daysFromToday(12)}` },
 ];
 
 /** Home hero mockup: one contractor request with quotes coming back. */
@@ -22,7 +23,7 @@ export default function HeroPanel() {
             <p className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-fg-muted">
               <span>Medical office TI &middot; Pasadena</span>
               <span className="inline-flex items-center gap-1">
-                <IconClock width={13} height={13} aria-hidden="true" /> Need by Oct 14
+                <IconClock width={13} height={13} aria-hidden="true" /> Need by {daysFromToday(14)}
               </span>
             </p>
           </div>

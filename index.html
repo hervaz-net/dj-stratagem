@@ -3,7 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="manifest" href="/manifest.webmanifest" />
     <meta name="theme-color" content="#fafaf7" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#0d1210" media="(prefers-color-scheme: dark)" />
     <script>
@@ -11,6 +13,11 @@
       // never sees a white flash on load.
       (function () {
         try {
+          // One public origin; www keeps its own storage and cache otherwise.
+          if (location.hostname === "www.djstratageminc.com") {
+            location.replace("https://djstratageminc.com" + location.pathname + location.search + location.hash);
+            return;
+          }
           var stored = localStorage.getItem("djs-theme");
           var theme =
             stored === "light" || stored === "dark"
