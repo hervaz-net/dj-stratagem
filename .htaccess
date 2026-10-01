@@ -14,6 +14,8 @@
 </IfModule>
 AddType application/manifest+json .webmanifest
 
+Options -Indexes
+
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
@@ -29,6 +31,12 @@ AddType application/manifest+json .webmanifest
 
   RewriteCond %{REQUEST_FILENAME} -f
   RewriteRule ^ - [L]
+
+  # /fleet is the Stratagem Fleet page. Vehicle photos used to live in
+  # public/fleet/, which made LiteSpeed list the directory instead of the SPA.
+  # Photos now live in /media/fleet/. Keep this rule so a leftover directory
+  # cannot bring the listing back.
+  RewriteRule ^fleet/?$ /index.html [L]
 
   # /manifest.json must never become index.html. Live public_html has shipped
   # without the file, and LiteSpeed DOCUMENT_ROOT is unreliable on this account,
