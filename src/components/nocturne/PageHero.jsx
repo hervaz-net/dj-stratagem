@@ -5,7 +5,7 @@
  */
 export default function PageHero({ index, kicker, title, lede, children }) {
   return (
-    <section className="relative overflow-hidden px-6 pb-10 pt-16 md:pb-16 md:pt-24">
+    <section className="relative overflow-hidden px-6 pb-6 pt-10 md:pb-10 md:pt-16">
       <div className="mx-auto max-w-7xl">
         <div className="rise-in flex items-center gap-4">
           <span className="mono-label text-cta">{index}</span>

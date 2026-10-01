@@ -165,8 +165,8 @@ export default function Home() {
       />
 
       {/* Hero */}
-      <section className="relative px-6 pb-16 pt-12 md:pt-20">
-        <div className="mx-auto grid min-h-[72vh] max-w-7xl items-end gap-12 lg:grid-cols-[1fr_auto]">
+      <section className="relative px-6 pb-8 pt-8 md:pt-14">
+        <div className="mx-auto grid min-h-[60vh] max-w-7xl items-end gap-10 lg:grid-cols-[1fr_auto]">
           <div>
             <p className="mono-label rise-in text-steel">D&amp;J Stratagem, Inc. — Los Angeles</p>
             <h1 className="rise-in mt-8 text-[3.4rem] leading-[0.92] text-paper sm:text-8xl xl:text-[8.25rem]" style={{ animationDelay: "80ms" }}>
@@ -211,7 +211,7 @@ export default function Home() {
           <SignalTicker />
         </div>
 
-        <div className="mx-auto mt-14 hidden max-w-7xl items-center gap-4 md:flex" aria-hidden="true">
+        <div className="mx-auto mt-8 hidden max-w-7xl items-center gap-4 md:flex" aria-hidden="true">
           <span className="mono-label text-steel">Scroll</span>
           <span className="relative h-px w-24 overflow-hidden bg-line">
             <span className="absolute inset-y-0 left-0 w-1/3 animate-[marquee_2.4s_linear_infinite] bg-cta" />
@@ -250,7 +250,7 @@ export default function Home() {
           <ol className="space-y-4">
             {moves.map((m, i) => (
               <Reveal as="li" key={m.n} delay={i * 80}>
-                <div className="group grid grid-cols-[auto_1fr] gap-6 py-8 md:gap-10">
+                <div className="group grid grid-cols-[auto_1fr] gap-6 py-6 md:gap-10">
                   <span className="font-display text-7xl leading-none text-paper/15 transition-colors duration-500 group-hover:text-cta md:text-8xl">
                     {m.n}
                   </span>
@@ -279,7 +279,7 @@ export default function Home() {
             Browse every project →
           </Button>
         </div>
-        <div className="mt-14">
+        <div className="mt-10">
           <div className="mono-label hidden grid-cols-[1fr_9rem_7rem_6rem_4rem] gap-6 pb-4 text-steel md:grid">
             <span>Project</span>
             <span>Where</span>
@@ -312,7 +312,7 @@ export default function Home() {
         <h2 className="max-w-3xl text-6xl text-paper md:text-7xl">
           Six instruments, <em>one</em> desk.
         </h2>
-        <div className="-mx-6 mt-14 flex snap-x snap-mandatory gap-5 overflow-x-auto px-6 pb-6 [scrollbar-width:none]">
+        <div className="-mx-6 mt-10 flex snap-x snap-mandatory gap-5 overflow-x-auto px-6 pb-6 [scrollbar-width:none]">
           {capabilities.map((c, i) => (
             <Reveal key={c.title} delay={i * 70} className="w-[19rem] shrink-0 snap-start md:w-[22rem]">
               <FeatureCard icon={c.icon} title={c.title} className="h-full">
@@ -356,7 +356,7 @@ export default function Home() {
         <h2 className="max-w-3xl text-6xl text-paper md:text-7xl">
           Every side <em>of the deal.</em>
         </h2>
-        <div className="mt-14 flex flex-col gap-3 lg:h-[26rem] lg:flex-row">
+        <div className="mt-10 flex flex-col gap-3 lg:h-[24rem] lg:flex-row">
           {roles.map((r, i) => {
             const active = role === r.key;
             return (

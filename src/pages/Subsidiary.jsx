@@ -23,7 +23,7 @@ export default function Subsidiary() {
       <Seo title={c.name} description={`${c.name}: ${c.tagline} ${c.summary}`} />
 
       {/* Hero */}
-      <section className="relative overflow-hidden px-6 pb-12 pt-16 md:pt-24">
+      <section className="relative overflow-hidden px-6 pb-8 pt-10 md:pt-16">
         <span
           aria-hidden="true"
           className="bob pointer-events-none absolute -right-32 top-0 h-[34rem] w-[34rem] rounded-full"
