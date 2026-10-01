@@ -256,7 +256,7 @@ export default function Fleet() {
                       src={v.image}
                       alt={`Representative ${v.name.toLowerCase()}`}
                       loading="lazy"
-                      className="max-h-full w-[92%] object-contain object-bottom transition-transform duration-700 group-hover:scale-[1.04]"
+                      className="absolute inset-x-[4%] bottom-[4%] h-[88%] w-[92%] object-contain object-bottom transition-transform duration-700 group-hover:scale-[1.04]"
                     />
                   </div>
                   <figcaption className="mono-label mt-2 text-[0.6rem] text-steel/70">Representative image</figcaption>
