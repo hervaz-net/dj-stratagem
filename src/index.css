@@ -830,3 +830,81 @@ h4, h5, h6 { font-family: var(--font-sans); }
   background-color: var(--surface-hover);
   box-shadow: inset 0 -2px 0 var(--cta);
 }
+
+/* ---- Liquid glass (the floating dock) -------------------------------------
+   Apple-style glass: heavy blur with boosted saturation, a bright specular
+   rim, an inner refraction gradient, and a sheen that follows the pointer.
+   Unlayered so it wins over Tailwind utilities on shared components. */
+:root {
+  --lg-tint: rgba(255, 255, 255, 0.42);
+  --lg-tint-2: rgba(255, 255, 255, 0.14);
+  --lg-rim: rgba(255, 255, 255, 0.9);
+  --lg-rim-low: rgba(255, 255, 255, 0.35);
+  --lg-drop: 0 10px 40px -12px rgba(28, 26, 22, 0.28), 0 2px 6px -2px rgba(28, 26, 22, 0.12);
+  --lg-sheen: rgba(255, 255, 255, 0.55);
+}
+[data-theme="dark"] {
+  --lg-tint: rgba(255, 255, 255, 0.10);
+  --lg-tint-2: rgba(255, 255, 255, 0.02);
+  --lg-rim: rgba(255, 255, 255, 0.38);
+  --lg-rim-low: rgba(255, 255, 255, 0.08);
+  --lg-drop: 0 16px 48px -14px rgba(0, 0, 0, 0.75), 0 2px 8px -2px rgba(0, 0, 0, 0.5);
+  --lg-sheen: rgba(255, 255, 255, 0.16);
+}
+
+.liquid-glass,
+.liquid-glass-btn {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 0 !important;
+  background: linear-gradient(160deg, var(--lg-tint), var(--lg-tint-2)) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(190%) contrast(1.05);
+  backdrop-filter: blur(28px) saturate(190%) contrast(1.05);
+  box-shadow:
+    inset 0 1px 0.5px var(--lg-rim),
+    inset 0 -1px 1px var(--lg-rim-low),
+    inset 1px 0 1px var(--lg-rim-low),
+    inset -1px 0 1px var(--lg-rim-low),
+    var(--lg-drop);
+}
+.liquid-glass { border-radius: 999px; }
+.liquid-glass-btn { border-radius: 999px; box-shadow: inset 0 1px 0.5px var(--lg-rim), inset 0 -1px 1px var(--lg-rim-low), 0 4px 14px -6px rgba(0, 0, 0, 0.35); }
+
+/* Specular highlight across the top, like light catching a lens edge. */
+.liquid-glass::before,
+.liquid-glass-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background:
+    radial-gradient(120% 90% at 20% -30%, var(--lg-sheen), transparent 55%),
+    radial-gradient(80% 60% at 110% 140%, var(--lg-rim-low), transparent 60%);
+  pointer-events: none;
+}
+/* Sheen that glides toward the pointer (--gx set from JS). */
+.liquid-glass::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  bottom: -50%;
+  width: 40%;
+  left: calc(var(--gx, 50%) - 20%);
+  z-index: -1;
+  background: radial-gradient(closest-side, var(--lg-sheen), transparent);
+  opacity: 0.7;
+  transition: left 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+  pointer-events: none;
+}
+.liquid-glass-btn { transition: transform 0.35s cubic-bezier(0.3, 1.6, 0.5, 1); }
+.liquid-glass-btn:hover { transform: scale(1.06); }
+.liquid-glass-btn:active { transform: scale(0.96); }
+
+/* Active link "droplet" inside the dock. */
+.glass-pill {
+  border-radius: 999px;
+  background: linear-gradient(160deg, var(--lg-tint), transparent);
+  box-shadow: inset 0 1px 0.5px var(--lg-rim), inset 0 -1px 1px var(--lg-rim-low);
+}

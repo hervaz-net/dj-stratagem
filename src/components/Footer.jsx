@@ -13,7 +13,6 @@ const columns = [
       { to: "/projects", label: "Projects" },
       { to: "/supply", label: "Supply Exchange" },
       { to: "/fleet", label: "Fleet" },
-      { to: "/exchange", label: "Stratagem Exchange", reloadDocument: true },
       { to: "/pricing", label: "Pricing" },
       { to: "/changelog", label: "Changelog" },
     ],
@@ -24,6 +23,16 @@ const columns = [
       { to: "/solutions#gc", label: "General contractors" },
       { to: "/solutions#sub", label: "Subcontractors" },
       { to: "/solutions#supplier", label: "Suppliers" },
+    ],
+  },
+  {
+    heading: "Companies",
+    links: [
+      { to: "/companies", label: "All companies" },
+      { to: "/exchange", label: "Stratagem Exchange", reloadDocument: true },
+      { to: "/companies/capital", label: "Stratagem Capital" },
+      { to: "/companies/studio", label: "Stratagem Studio" },
+      { to: "/companies/workforce", label: "Stratagem Workforce" },
     ],
   },
   {
@@ -128,7 +137,7 @@ export default function Footer() {
       </div>
 
       <div className="mx-auto max-w-7xl px-6 pt-16">
-        <div className="grid gap-14 lg:grid-cols-[1.3fr_1fr]">
+        <div className="grid gap-14 lg:grid-cols-[0.9fr_1.5fr]">
           <div>
             <p className="mono-label text-steel">Stay in the loop</p>
             <p className="mt-4 max-w-md font-display text-3xl leading-tight text-paper md:text-4xl">
@@ -138,7 +147,7 @@ export default function Footer() {
               <Newsletter />
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-10 sm:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
+          <div className="grid grid-cols-2 gap-10 sm:grid-cols-3 xl:grid-cols-5">
             {columns.map((col) => (
               <div key={col.heading}>
                 <h4 className="mono-label text-steel">{col.heading}</h4>

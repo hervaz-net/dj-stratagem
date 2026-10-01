@@ -9,6 +9,7 @@ const dock = [
   { to: "/projects", label: "Projects" },
   { to: "/platform", label: "Platform" },
   { to: "/pricing", label: "Pricing" },
+  { to: "/companies", label: "Companies" },
   // Subsidiary app with its own bundle; full page load into /exchange.
   { to: "/exchange", label: "Exchange", reloadDocument: true },
 ];
@@ -20,6 +21,7 @@ const index = [
   { to: "/supply", label: "Supply", note: "Sealed, scored sourcing" },
   { to: "/fleet", label: "Fleet", note: "Equipment on demand" },
   { to: "/pricing", label: "Pricing", note: "Start free, scale up" },
+  { to: "/companies", label: "Companies", note: "Exchange, Capital, Studio, Workforce" },
   { to: "/exchange", label: "Exchange", note: "Our B2B supply network", reloadDocument: true },
   { to: "/about", label: "About", note: "Who we are" },
   { to: "/contact", label: "Contact", note: "Talk to a person" },
@@ -61,8 +63,12 @@ export default function Navbar({ onOpenPalette }) {
   return (
     <header className="no-print fixed inset-x-0 top-0 z-50 px-4 pt-4 sm:px-6">
       <div
-        className={`relative z-[60] mx-auto flex max-w-7xl items-center justify-between gap-4 transition-all duration-500 ${
-          scrolled && !open ? "chamfer bg-glass px-4 py-2 backdrop-blur-xl" : "px-1 py-2"
+        onPointerMove={(e) => {
+          const r = e.currentTarget.getBoundingClientRect();
+          e.currentTarget.style.setProperty("--gx", `${((e.clientX - r.left) / r.width) * 100}%`);
+        }}
+        className={`liquid-glass relative z-[60] mx-auto flex max-w-6xl items-center justify-between gap-4 py-2 pl-5 pr-2 transition-[max-width,transform] duration-700 ease-[cubic-bezier(0.2,0.7,0.2,1)] ${
+          scrolled && !open ? "lg:max-w-5xl" : ""
         }`}
       >
         <NavLink to="/" className="shrink-0" aria-label="D&J Stratagem — home" onClick={close}>
@@ -76,22 +82,12 @@ export default function Navbar({ onOpenPalette }) {
               to={l.to}
               reloadDocument={l.reloadDocument}
               className={({ isActive }) =>
-                `relative px-3.5 py-2 text-sm transition-colors ${
-                  isActive ? "text-paper" : "text-steel hover:text-paper"
+                `relative px-3.5 py-1.5 text-sm transition-colors ${
+                  isActive ? "glass-pill text-paper" : "text-steel hover:text-paper"
                 }`
               }
             >
-              {({ isActive }) => (
-                <>
-                  {l.label}
-                  <span
-                    aria-hidden="true"
-                    className={`absolute bottom-0.5 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-cta transition-opacity ${
-                      isActive ? "opacity-100" : "opacity-0"
-                    }`}
-                  />
-                </>
-              )}
+              {l.label}
             </NavLink>
           ))}
         </nav>
@@ -108,7 +104,7 @@ export default function Navbar({ onOpenPalette }) {
               ⌘K
             </button>
           )}
-          <ThemeToggle />
+          <ThemeToggle className="liquid-glass-btn" />
           <Link to="/login" className="draw-link hidden px-2 py-1 text-sm text-paper sm:inline">
             Sign in
           </Link>
@@ -118,7 +114,7 @@ export default function Navbar({ onOpenPalette }) {
             onClick={() => setOpen((v) => !v)}
             aria-expanded={open}
             aria-controls="site-menu"
-            className="chamfer-sm flex h-9 items-center gap-2.5 bg-paper px-3.5 text-sm font-medium text-ink transition-transform hover:scale-[1.03]"
+            className="flex h-9 items-center gap-2.5 rounded-full bg-paper px-4 text-sm font-medium text-ink transition-transform duration-300 ease-[cubic-bezier(0.3,1.6,0.5,1)] hover:scale-[1.05]"
           >
             <span>{open ? "Close" : "Menu"}</span>
             <span aria-hidden="true" className="relative block h-2.5 w-3.5">

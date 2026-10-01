@@ -28,6 +28,8 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsAndConditions from "./pages/TermsAndConditions";
 import BrandGuidelines from "./pages/BrandGuidelines";
 import Fleet from "./pages/Fleet";
+import Companies from "./pages/Companies";
+import Subsidiary from "./pages/Subsidiary";
 import FleetCards from "./pages/FleetCards";
 import Receipts from "./pages/Receipts";
 import Signage from "./pages/Signage";
@@ -174,6 +176,8 @@ function App() {
           <Route path="/terms" element={<MarketingLayout><TermsAndConditions /></MarketingLayout>} />
           <Route path="/brand" element={<MarketingLayout><BrandGuidelines /></MarketingLayout>} />
           <Route path="/fleet" element={<MarketingLayout><Fleet /></MarketingLayout>} />
+          <Route path="/companies" element={<MarketingLayout><Companies /></MarketingLayout>} />
+          <Route path="/companies/:slug" element={<MarketingLayout><Subsidiary /></MarketingLayout>} />
           <Route path="/marketing/fleet-cards" element={<MarketingLayout><FleetCards /></MarketingLayout>} />
           <Route path="/marketing/receipts" element={<MarketingLayout><Receipts /></MarketingLayout>} />
           <Route path="/marketing/signage" element={<MarketingLayout><Signage /></MarketingLayout>} />
