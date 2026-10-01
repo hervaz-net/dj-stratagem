@@ -296,6 +296,16 @@ function require_signin(): array
     return $user;
 }
 
+/** Load dashboard helpers only after auth. A missing ops.php must be JSON, not LiteSpeed HTML 500. */
+function require_ops(): void
+{
+    $path = __DIR__ . '/ops.php';
+    if (!is_file($path)) {
+        fail(503, 'ops_unavailable', 'Dashboard data files are missing on this host.');
+    }
+    require_once $path;
+}
+
 function require_admin(): array
 {
     $user = require_signin();
