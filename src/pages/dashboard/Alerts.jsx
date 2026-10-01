@@ -1,38 +1,34 @@
 import { useState } from "react";
 import DashboardLayout from "../../components/dashboard/DashboardLayout";
-import { Card, DataNotice, EmptyState, ErrorNotice, FilterChips, StatusPill } from "../../components/dashboard/ui";
-import Button from "../../components/Button";
+import GlassCard from "../../components/dashboard/GlassCard";
+import StatusDot from "../../components/dashboard/StatusDot";
 import Seo from "../../components/Seo";
-import { IconShield, IconTruck, IconTrendingUp, IconChat, IconCheck } from "../../components/icons";
 import { useToast } from "../../contexts/ToastContext";
 import useAuth from "../../auth/useAuth";
 import usePolledResource from "../../api/usePolledResource";
-import { fetchAlerts, mutateAlert, isConfigured, isSample } from "../../api/dashboard";
+import { fetchAlerts, mutateAlert, isConfigured } from "../../api/dashboard";
 import { alertFixtures } from "../../api/fixtures";
-import { PRODUCT } from "../../brand";
 
-// Type keys are the /api/alerts.php contract ("bid" is a quote event).
 const TYPES = {
-  risk: { label: "Partner risk", tone: "danger", icon: IconShield, tile: "bg-danger-soft text-danger" },
-  delivery: { label: "Delivery", tone: "warning", icon: IconTruck, tile: "bg-warning-soft text-warning" },
-  price: { label: "Price change", tone: "accent", icon: IconTrendingUp, tile: "bg-accent-soft text-accent" },
-  bid: { label: "Quote", tone: "brand", icon: IconChat, tile: "bg-brand-soft text-brand-fg" },
-  system: { label: "System", tone: "neutral", icon: IconCheck, tile: "bg-subtle text-fg" },
+  risk: { label: "Risk", dot: "at-risk", bg: "bg-danger/8 border-danger/25" },
+  delivery: { label: "Delivery", dot: "watch", bg: "bg-warning/8 border-warning/25" },
+  price: { label: "Price", dot: "watch", bg: "bg-warning/8 border-warning/25" },
+  bid: { label: "Bid", dot: "active", bg: "bg-[var(--viz-cyan)]/8 border-[var(--viz-cyan)]/25" },
+  system: { label: "System", dot: "active", bg: "bg-ink border-line" },
 };
 
-const FILTERS = ["all", "unread", "risk", "delivery", "price", "bid", "system"];
-const GROUP_LABELS = { today: "Today", yesterday: "Yesterday", older: "Earlier" };
-
-const relabel = (t = "") => String(t).replace(/\bBid\b/g, "Quote").replace(/\bbid\b/g, "quote");
+const FILTERS = ["all", "risk", "delivery", "price", "bid", "system"];
+const GROUP_LABELS = { today: "Today", yesterday: "Yesterday", older: "Older" };
 
 export default function Alerts() {
   const resource = usePolledResource(fetchAlerts, { intervalMs: 30000, initialData: alertFixtures });
   const alerts = resource.data ?? alertFixtures;
   const [filter, setFilter] = useState("all");
+  const [soundEnabled, setSoundEnabled] = useState(false);
   const { toast } = useToast();
   const { csrf } = useAuth();
 
-  const visible = filter === "all" ? alerts : filter === "unread" ? alerts.filter((a) => !a.read) : alerts.filter((a) => a.type === filter);
+  const visible = filter === "all" ? alerts : alerts.filter((a) => a.type === filter);
   const unread = alerts.filter((a) => !a.read).length;
 
   const run = async (action, id, okMsg) => {
@@ -45,105 +41,143 @@ export default function Alerts() {
     }
   };
 
-  const count = (f) => (f === "all" ? alerts.length : f === "unread" ? unread : alerts.filter((a) => a.type === f).length);
+  const counts = FILTERS.reduce((acc, f) => {
+    acc[f] = f === "all" ? alerts.length : alerts.filter((a) => a.type === f).length;
+    return acc;
+  }, {});
 
   const groups = ["today", "yesterday", "older"].reduce((acc, g) => {
-    const items = visible.filter((a) => (a.group ?? "older") === g);
+    const items = visible.filter((a) => a.group === g);
     if (items.length) acc.push({ key: g, label: GROUP_LABELS[g], items });
     return acc;
   }, []);
 
   return (
     <>
-      <Seo title="Alerts" description={`Price moves, late deliveries, partner risk, and quote deadlines on ${PRODUCT}.`} noindex />
+      <Seo title="Alerts" description="Supply chain alerts and notifications." noindex />
 
       <DashboardLayout
-        breadcrumbs={[{ label: "Dashboard", to: "/dashboard/overview" }, { label: "Alerts" }]}
+        breadcrumbs={[{ label: "Home", to: "/" }, { label: "Alerts" }]}
         title="Alerts"
-        subtitle="Price moves, late deliveries, partner risk, and quote deadlines that need a look."
+        subtitle="Risk events, delivery issues, price movements, and bid deadlines."
         actions={
-          unread > 0 && (
-            <Button type="button" variant="secondary" onClick={() => run("read_all", undefined, "All alerts marked as read.")}>
-              Mark all read
-            </Button>
-          )
+          <div className="flex items-center gap-4">
+            <button
+              type="button"
+              onClick={() => {
+                setSoundEnabled((v) => !v);
+                toast(soundEnabled ? "Alert sounds off." : "Alert sounds on.", { type: "info" });
+              }}
+              aria-pressed={soundEnabled}
+              title={soundEnabled ? "Mute alert sounds" : "Enable alert sounds"}
+              className={`transition-colors hover:text-paper ${soundEnabled ? "text-amber" : "text-steel"}`}
+            >
+              {soundEnabled ? (
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" /><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07" /></svg>
+              ) : (
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" /><line x1="23" x2="17" y1="9" y2="15" /><line x1="17" x2="23" y1="9" y2="15" /></svg>
+              )}
+            </button>
+            {unread > 0 && (
+              <button
+                type="button"
+                onClick={() => run("read_all", undefined, "All alerts marked as read.")}
+                className="text-xs font-semibold text-amber transition-colors hover:text-amber-2"
+              >
+                Mark all read
+              </button>
+            )}
+          </div>
         }
       >
+        {!isConfigured && (
+          <GlassCard className="mb-6 px-5 py-3 text-sm text-steel">
+            <span className="font-semibold uppercase tracking-wider text-amber">Sample data</span>
+            {" "}— live alerts load from `/api/alerts.php`. Read/dismiss persist per account.
+          </GlassCard>
+        )}
+
+        <div className="mb-5 flex flex-wrap gap-2">
+          {FILTERS.map((f) => (
+            <button
+              key={f}
+              type="button"
+              onClick={() => setFilter(f)}
+              aria-pressed={filter === f}
+              className={`lift inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-semibold ${
+                filter === f
+                  ? "border-amber/60 bg-amber/12 text-amber"
+                  : "border-line bg-ink/50 text-steel hover:border-amber/35 hover:text-paper"
+              }`}
+            >
+              {f === "all" ? "All" : TYPES[f]?.label}
+              {f === "all" && unread > 0
+                ? <span className="rounded-full bg-danger px-1.5 py-0.5 text-white tabular-nums">{unread}</span>
+                : <span className="rounded-full bg-ink px-1.5 py-0.5 tabular-nums">{counts[f]}</span>
+              }
+            </button>
+          ))}
+        </div>
+
+        {visible.length === 0 && (
+          <GlassCard className="px-6 py-14 text-center">
+            <p className="text-sm font-medium text-paper">All clear.</p>
+            <p className="mt-1 text-sm text-steel">No alerts in this category.</p>
+          </GlassCard>
+        )}
+
         <div className="space-y-6">
-          {isSample("alerts.php") && (
-            <DataNotice>
-              {isConfigured
-                ? "This includes sample rows with fictional companies. An admin can remove them under Accounts once real data is coming in."
-                : "Sample alerts with fictional companies. Live alerts load once you’re signed in; read, snooze, and dismiss are saved to your account."}
-            </DataNotice>
-          )}
-          {resource.error && <ErrorNotice onRetry={() => resource.refresh()} />}
-
-          <FilterChips
-            label="Filter alerts"
-            value={filter}
-            onChange={setFilter}
-            options={FILTERS.map((f) => ({
-              key: f,
-              label: f === "all" ? "All" : f === "unread" ? "Unread" : TYPES[f].label,
-              count: count(f),
-            }))}
-          />
-
-          {visible.length === 0 && (
-            <Card>
-              <EmptyState icon={<IconCheck width={22} height={22} aria-hidden="true" />} title="All clear">
-                Nothing in this category right now.
-              </EmptyState>
-            </Card>
-          )}
-
           {groups.map(({ key, label, items }) => (
-            <section key={key} aria-labelledby={`alerts-${key}`}>
-              <h2 id={`alerts-${key}`} className="mb-3 text-sm font-semibold text-fg">{label}</h2>
-              <ul className="space-y-3">
+            <div key={key}>
+              <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-steel/70">{label}</p>
+              <div className="space-y-3">
                 {items.map((a) => {
                   const t = TYPES[a.type] ?? TYPES.system;
-                  const Icon = t.icon;
                   return (
-                    <li key={a.id}>
-                      <Card className={`flex gap-4 p-4 sm:p-5 ${a.read ? "" : "border-l-4 border-l-brand"}`}>
-                        <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${t.tile}`}>
-                          <Icon width={18} height={18} aria-hidden="true" />
+                    <GlassCard key={a.id} className={`border px-5 py-4 transition-opacity ${a.read ? "opacity-70" : ""} ${t.bg}`}>
+                      <div className="flex items-start gap-3">
+                        <span className="mt-0.5 shrink-0">
+                          <StatusDot status={t.dot} size={8} pulse={!a.read && (a.type === "risk" || a.type === "delivery")} />
                         </span>
                         <div className="min-w-0 flex-1">
-                          <div className="flex flex-wrap items-center gap-2">
-                            <StatusPill tone={t.tone} dot={false}>{t.label}</StatusPill>
-                            {!a.read && <span className="text-xs font-semibold text-brand">New</span>}
-                            <span className="ml-auto text-xs text-fg-muted">{a.time}</span>
-                          </div>
-                          <p className={`mt-2 text-[0.95rem] text-fg ${a.read ? "font-medium" : "font-semibold"}`}>{relabel(a.title)}</p>
-                          {a.detail && <p className="mt-1 text-sm leading-relaxed text-fg-muted">{relabel(a.detail)}</p>}
-                          {a.supplier && (
-                            <p className="mt-2 text-xs text-fg-muted">
-                              Partner: <span className="font-semibold text-fg">{a.supplier}</span>
-                            </p>
-                          )}
-                          <div className="mt-3 flex flex-wrap gap-1">
-                            {!a.read && (
-                              <button type="button" onClick={() => run("read", a.id)} className="rounded-full px-3 py-1.5 text-xs font-semibold text-brand hover:bg-brand-soft">
-                                Mark read
-                              </button>
-                            )}
-                            <button type="button" onClick={() => run("snooze", a.id, "Snoozed for an hour.")} className="rounded-full px-3 py-1.5 text-xs font-semibold text-fg-muted hover:bg-subtle hover:text-fg">
-                              Snooze 1 hr
-                            </button>
-                            <button type="button" onClick={() => run("dismiss", a.id, "Alert dismissed.")} className="rounded-full px-3 py-1.5 text-xs font-semibold text-fg-muted hover:bg-danger-soft hover:text-danger">
-                              Dismiss
-                            </button>
+                          <div className="flex flex-wrap items-start justify-between gap-2">
+                            <div className="min-w-0">
+                              <div className="flex flex-wrap items-center gap-2">
+                                <span className="rounded-full border border-line bg-ink px-2 py-0.5 text-xs font-semibold text-steel">{t.label}</span>
+                                {!a.read && <span className="h-1.5 w-1.5 rounded-full bg-brand" aria-label="Unread" />}
+                              </div>
+                              <p className="mt-1.5 text-sm font-semibold text-paper">{a.title}</p>
+                              <p className="mt-1 text-sm leading-relaxed text-steel">{a.detail}</p>
+                              {a.supplier && (
+                                <p className="mt-2 text-xs text-steel">
+                                  Supplier: <span className="font-medium text-paper">{a.supplier}</span>
+                                </p>
+                              )}
+                            </div>
+                            <div className="flex shrink-0 flex-col items-end gap-2">
+                              <span className="text-xs text-steel">{a.time}</span>
+                              <div className="flex gap-3">
+                                {!a.read && (
+                                  <button type="button" onClick={() => run("read", a.id)} className="text-xs font-semibold text-amber transition-colors hover:text-amber-2">
+                                    Mark read
+                                  </button>
+                                )}
+                                <button type="button" onClick={() => run("snooze", a.id, "Snoozed for an hour.")} className="text-xs text-steel transition-colors hover:text-paper" aria-label="Snooze alert">
+                                  Snooze
+                                </button>
+                                <button type="button" onClick={() => run("dismiss", a.id, "Alert dismissed.")} className="text-xs text-steel transition-colors hover:text-danger" aria-label="Dismiss alert">
+                                  Dismiss
+                                </button>
+                              </div>
+                            </div>
                           </div>
                         </div>
-                      </Card>
-                    </li>
+                      </div>
+                    </GlassCard>
                   );
                 })}
-              </ul>
-            </section>
+              </div>
+            </div>
           ))}
         </div>
       </DashboardLayout>

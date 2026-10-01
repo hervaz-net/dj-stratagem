@@ -18,6 +18,8 @@ export const PRIMARY_NAV = [
   { label: "Solutions", children: SOLUTION_LINKS },
   { to: "/platform", label: "How it works" },
   { to: "/pricing", label: "Pricing" },
+  // Parent company site; outside the /exchange router, so a plain link.
+  { href: "/", label: "D&J Stratagem" },
 ];
 
 export const FOOTER_COLUMNS = [

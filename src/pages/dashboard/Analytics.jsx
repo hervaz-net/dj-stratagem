@@ -1,15 +1,30 @@
 import { useEffect, useState } from "react";
 import DashboardLayout from "../../components/dashboard/DashboardLayout";
-import { Card, DataNotice, ErrorNotice, Panel, Segmented } from "../../components/dashboard/ui";
+import GlassCard from "../../components/dashboard/GlassCard";
 import Sparkline from "../../components/dashboard/Sparkline";
 import ProgressRing from "../../components/dashboard/ProgressRing";
-import SampleLabel from "../../components/SampleLabel";
 import Seo from "../../components/Seo";
-import { useRole } from "../../contexts/RoleContext";
 import usePolledResource from "../../api/usePolledResource";
-import { fetchAnalytics, isConfigured, isSample } from "../../api/dashboard";
+import { fetchAnalytics, isConfigured } from "../../api/dashboard";
 import { analyticsFixtures } from "../../api/fixtures";
-import { PRODUCT } from "../../brand";
+
+function BarRow({ label, pct, value }) {
+  return (
+    <div>
+      <div className="mb-1.5 flex items-center justify-between text-xs">
+        <span className="text-steel">{label}</span>
+        <span className="tabular-nums text-paper">{value} <span className="text-steel/60">({pct}%)</span></span>
+      </div>
+      <div className="h-2 overflow-hidden rounded-full bg-line">
+        <div
+          className="h-full rounded-full bg-gradient-to-r from-brand to-cta transition-all duration-700"
+          style={{ width: `${pct}%` }}
+          role="presentation"
+        />
+      </div>
+    </div>
+  );
+}
 
 const RANGE_OPTIONS = ["7d", "30d", "90d"];
 const RANGE_LABELS = { "7d": "7 days", "30d": "30 days", "90d": "90 days" };
@@ -22,29 +37,12 @@ const fallback = (range) => ({
   topSuppliers: analyticsFixtures.topSuppliers,
 });
 
-function BarRow({ label, pct, value }) {
-  return (
-    <div>
-      <div className="mb-1.5 flex items-center justify-between gap-3 text-sm">
-        <span className="text-fg">{label}</span>
-        <span className="tabular-nums text-fg">
-          {value} <span className="text-fg-muted">· {pct}%</span>
-        </span>
-      </div>
-      <div className="h-2.5 overflow-hidden rounded-full bg-subtle" aria-hidden="true">
-        <div className="h-full rounded-full bg-brand" style={{ width: `${pct}%` }} />
-      </div>
-    </div>
-  );
-}
-
 export default function Analytics() {
-  const { role } = useRole();
   const [range, setRange] = useState("30d");
-  const resource = usePolledResource((opts) => fetchAnalytics({ range, ...opts }), {
-    intervalMs: 60000,
-    initialData: fallback("30d"),
-  });
+  const resource = usePolledResource(
+    (opts) => fetchAnalytics({ range, ...opts }),
+    { intervalMs: 60000, initialData: fallback("30d") },
+  );
 
   useEffect(() => {
     resource.refresh();
@@ -54,121 +52,140 @@ export default function Analytics() {
   const data = resource.data ?? fallback(range);
   const d = data.kpis ?? fallback(range).kpis;
   const mom = data.mom ?? fallback(range).mom;
-  const byCategory = data.spendByCategory ?? [];
-  const partners = data.topSuppliers ?? [];
-  const live = !isSample("analytics.php") && !resource.error;
-  const seller = role !== "contractor";
+  const spendByCategory = data.spendByCategory ?? [];
+  const topSuppliers = data.topSuppliers ?? [];
 
-  // Keys are the /api/analytics.php contract; labels are marketplace copy.
   const kpis = [
-    { label: "Quote acceptance", key: "winRate", accent: "green", hint: "Quotes accepted of those decided" },
-    { label: "On-time delivery", key: "delivery", accent: "blue", hint: "Orders delivered by ETA" },
-    { label: "Avg. partner risk", key: "risk", accent: "red", hint: "Lower is better" },
-    { label: seller ? "Order volume" : "Material spend", key: "spend", accent: "gold", hint: `Trailing ${RANGE_LABELS[range]}` },
+    { label: "Bid win rate", key: "winRate", accent: "cyan" },
+    { label: "On-time delivery", key: "delivery", accent: "blue" },
+    { label: "Avg. risk score", key: "risk", accent: "red" },
+    { label: "Total spend", key: "spend", accent: "gold" },
   ];
 
   return (
     <>
-      <Seo title="Analytics" description={`Quote, order, and delivery performance on ${PRODUCT}.`} noindex />
+      <Seo title="Analytics" description="Supply chain analytics and performance." noindex />
 
       <DashboardLayout
-        breadcrumbs={[{ label: "Dashboard", to: "/dashboard/overview" }, { label: "Analytics" }]}
+        breadcrumbs={[{ label: "Home", to: "/" }, { label: "Analytics" }]}
         title="Analytics"
-        subtitle={`How your quotes, orders, and partners performed over the last ${RANGE_LABELS[range]}.`}
+        subtitle={`Performance over the last ${RANGE_LABELS[range]}.`}
         actions={
-          <Segmented
-            label="Date range"
-            value={range}
-            onChange={setRange}
-            options={RANGE_OPTIONS.map((r) => ({ key: r, label: RANGE_LABELS[r] }))}
-          />
+          <div role="group" aria-label="Date range" className="flex rounded-lg border border-line overflow-hidden">
+            {RANGE_OPTIONS.map((r) => (
+              <button
+                key={r}
+                type="button"
+                onClick={() => setRange(r)}
+                aria-pressed={range === r}
+                className={`px-3 py-1.5 text-xs font-semibold transition-colors ${
+                  range === r ? "bg-amber/15 text-amber" : "text-steel hover:text-paper"
+                }`}
+              >
+                {r}
+              </button>
+            ))}
+          </div>
         }
       >
-        <div className="space-y-6">
-          {!isConfigured ? (
-            <DataNotice>Sample analytics with fictional partners. Live figures load once you’re signed in on the hosted site.</DataNotice>
-          ) : isSample("analytics.php") ? (
-            <DataNotice>Totals come from your account. Change figures, trend lines, and month-over-month comparisons are illustrative until enough history is recorded.</DataNotice>
-          ) : null}
-          {resource.error && <ErrorNotice onRetry={() => resource.refresh()} />}
+        {!isConfigured && (
+          <GlassCard className="mb-6 px-5 py-3 text-sm text-steel">
+            <span className="font-semibold uppercase tracking-wider text-amber">Sample data</span>
+            {" "}— live analytics load from `/api/analytics.php`.
+          </GlassCard>
+        )}
 
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            {kpis.map((k, i) => {
-              const kd = d[k.key] ?? { value: "—", ring: 0, delta: "", series: [] };
-              return (
-                <Card key={k.key} className="flex flex-col p-5">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="min-w-0">
-                      <p className="text-sm font-medium text-fg-muted">{k.label}</p>
-                      <p className="mt-2 text-3xl font-bold tracking-tight tabular-nums text-fg">{kd.value}</p>
-                    </div>
-                    <ProgressRing value={kd.ring} accent={k.accent} size={52} label={`${k.label}: ${kd.ring}%`} />
+        <div className="grid grid-cols-2 gap-5 xl:grid-cols-4">
+          {kpis.map((k, i) => {
+            const kd = d[k.key] ?? { value: "—", ring: 0, delta: "", series: [] };
+            return (
+              <GlassCard key={k.label} className="p-5">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="text-xs font-semibold uppercase tracking-wider text-steel">{k.label}</p>
+                    <p className="mt-2 text-3xl font-semibold tracking-tight tabular-nums text-paper">{kd.value}</p>
+                    <p className="mt-1 text-xs font-medium text-[var(--viz-green)]">
+                      {kd.delta} vs last period
+                    </p>
+                    <p className="mt-0.5 text-xs text-steel/60">
+                      MoM: <span className="text-steel">{mom[i]}</span>
+                    </p>
                   </div>
-                  <p className="mt-2 text-xs text-fg-muted">{k.hint}</p>
-                  <Sparkline data={kd.series ?? []} accent={k.accent} width={240} height={36} className="mt-4 w-full" />
-                  <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
-                    <span className="font-semibold text-fg">{kd.delta} <span className="font-normal text-fg-muted">vs prior period</span></span>
-                    {mom[i] && <span className="text-fg-muted">Month over month {mom[i]}</span>}
-                  </div>
-                  {!live && <SampleLabel className="mt-3 self-start">Sample</SampleLabel>}
-                </Card>
-              );
-            })}
-          </div>
-
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-            <Panel title={seller ? "Volume by category" : "Spend by category"} sample={!live} description={`${d.spend?.value ?? "—"} over ${RANGE_LABELS[range]}`}>
-              <div className="space-y-4">
-                {byCategory.map((c) => (
-                  <BarRow key={c.label} label={c.label} pct={c.pct} value={c.value} />
-                ))}
-              </div>
-            </Panel>
-
-            <Panel title="Top trading partners" sample={!live} bodyClassName="p-0">
-              <div className="overflow-x-auto">
-                <table className="w-full min-w-[26rem] border-collapse text-sm">
-                  <thead className="bg-subtle">
-                    <tr className="border-b border-line text-xs font-semibold text-fg">
-                      <th scope="col" className="px-5 py-2.5 text-left">Partner</th>
-                      <th scope="col" className="px-4 py-2.5 text-right">Volume</th>
-                      <th scope="col" className="px-4 py-2.5 text-right">Orders</th>
-                      <th scope="col" className="px-5 py-2.5 text-right">On-time</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {partners.map((s, i) => {
-                      const pct = parseInt(s.delivery, 10);
-                      return (
-                        <tr key={s.name} className="border-b border-line last:border-0">
-                          <th scope="row" className="px-5 py-3 text-left font-normal">
-                            <span className="flex items-center gap-2.5">
-                              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand-soft text-xs font-bold text-brand-fg">{i + 1}</span>
-                              <span className="text-fg">{s.name}</span>
-                            </span>
-                          </th>
-                          <td className="px-4 py-3 text-right font-semibold tabular-nums text-fg">{s.spend}</td>
-                          <td className="px-4 py-3 text-right tabular-nums text-fg">{s.orders}</td>
-                          <td className={`px-5 py-3 text-right font-semibold tabular-nums ${pct >= 95 ? "text-success" : pct >= 90 ? "text-warning" : "text-danger"}`}>
-                            {s.delivery}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </Panel>
-          </div>
-
-          <Panel title="On-time delivery trend" sample={!live} description={`Network average, trailing ${RANGE_LABELS[range]}: ${d.delivery?.value ?? "—"}`}>
-            <Sparkline data={d.delivery?.series ?? []} accent="blue" width={900} height={80} className="w-full" label={`On-time delivery trend over ${RANGE_LABELS[range]}`} />
-            <div className="mt-2 flex justify-between text-xs text-fg-muted">
-              <span>{RANGE_LABELS[range]} ago</span>
-              <span>Today</span>
-            </div>
-          </Panel>
+                  <ProgressRing value={kd.ring} accent={k.accent} size={52} label={`${k.label}: ${kd.ring}%`} />
+                </div>
+                <div className="mt-4">
+                  <Sparkline data={kd.series ?? []} accent={k.accent} width={240} height={36} className="w-full" />
+                </div>
+              </GlassCard>
+            );
+          })}
         </div>
+
+        <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <GlassCard className="p-6">
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-steel">Spend by category</h2>
+            <p className="mt-0.5 text-2xl font-semibold text-paper">{d.spend?.value}</p>
+            <p className="text-xs text-steel">{RANGE_LABELS[range]} total</p>
+            <div className="mt-6 space-y-4">
+              {spendByCategory.map((c) => (
+                <BarRow key={c.label} label={c.label} pct={c.pct} value={c.value} />
+              ))}
+            </div>
+          </GlassCard>
+
+          <GlassCard className="overflow-hidden">
+            <div className="border-b border-line px-5 py-3.5">
+              <h2 className="text-xs font-semibold uppercase tracking-wider text-steel">Top suppliers by spend</h2>
+            </div>
+            <table className="w-full border-collapse text-sm">
+              <thead>
+                <tr className="border-b border-line">
+                  {["Supplier", "Spend", "Orders", "On-time"].map((h) => (
+                    <th key={h} scope="col" className={`px-4 py-2.5 text-xs font-semibold uppercase tracking-wider text-steel ${h === "Supplier" ? "text-left" : "text-right"}`}>
+                      {h}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {topSuppliers.map((s, i) => (
+                  <tr key={s.name} className="border-b border-line/60 last:border-0">
+                    <th scope="row" className="px-4 py-3 text-left font-normal">
+                      <div className="flex items-center gap-2">
+                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-amber/10 text-xs font-semibold text-amber">{i + 1}</span>
+                        <span className="text-sm text-paper">{s.name}</span>
+                      </div>
+                    </th>
+                    <td className="px-4 py-3 text-right tabular-nums text-paper">{s.spend}</td>
+                    <td className="px-4 py-3 text-right tabular-nums text-steel">{s.orders}</td>
+                    <td className="px-4 py-3 text-right tabular-nums">
+                      <span className={parseInt(s.delivery, 10) >= 95 ? "text-[var(--viz-green)]" : parseInt(s.delivery, 10) >= 90 ? "text-warning" : "text-[var(--viz-red)]"}>
+                        {s.delivery}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </GlassCard>
+        </div>
+
+        <GlassCard className="mt-6 p-6">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <h2 className="text-xs font-semibold uppercase tracking-wider text-steel">On-time delivery trend</h2>
+              <p className="mt-1 text-2xl font-semibold text-paper">{d.delivery?.value}</p>
+              <p className="text-xs text-[var(--viz-green)]">Network average, trailing {RANGE_LABELS[range]}</p>
+            </div>
+          </div>
+          <div className="mt-4">
+            <Sparkline data={d.delivery?.series ?? []} accent="cyan" width={900} height={72} className="w-full" />
+          </div>
+          <div className="mt-2 flex justify-between text-xs text-steel">
+            <span>{RANGE_LABELS[range]} ago</span>
+            <span>Today</span>
+          </div>
+        </GlassCard>
       </DashboardLayout>
     </>
   );

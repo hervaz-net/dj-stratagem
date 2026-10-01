@@ -1,31 +1,39 @@
 import Button from "./Button";
 import Section from "./Section";
-import { PRODUCT } from "../brand";
 
 export default function CTASection({
-  title = `Join ${PRODUCT}.`,
-  subtitle = "Create a free company profile, tell us what you buy or sell, and start trading with businesses across the supply chain.",
-  primaryLabel = "Create free account",
-  primaryTo = "/register",
-  secondaryLabel = "Talk to our team",
+  title = "Start finding better projects.",
+  subtitle = "Create your company profile and see the opportunities that match your trade, territory, and project size.",
+  // One primary action across the site — "Find projects" — with the demo as
+  // the secondary path, so the CTAs stop competing with each other.
+  primaryLabel = "Find construction projects",
+  primaryTo = "/projects",
+  secondaryLabel = "Request a demo",
   secondaryTo = "/contact",
 }) {
   return (
-    <Section>
-      <div className="relative overflow-hidden rounded-3xl bg-bid-navy px-8 py-14 text-center md:px-16 md:py-20">
-        <div>
-          <h2 className="text-balance text-3xl font-bold tracking-tight text-white md:text-4xl">{title}</h2>
-          <p className="mx-auto mt-4 max-w-xl text-lg text-white/70">{subtitle}</p>
+    <Section className="border-t border-line">
+      <div className="relative overflow-hidden rounded-2xl border border-line bg-ink-2 px-8 py-16 text-center md:px-16">
+        <div className="pointer-events-none absolute inset-0 bg-grid opacity-40" aria-hidden="true" />
+        <div
+          className="cta-glow-pulse pointer-events-none absolute -top-24 left-1/2 h-64 w-64 -translate-x-1/2 rounded-full bg-brand/25 blur-3xl"
+          aria-hidden="true"
+        />
+        <div
+          className="cta-glow-pulse pointer-events-none absolute -bottom-20 right-1/4 h-48 w-48 rounded-full bg-cta/20 blur-3xl"
+          style={{ animationDelay: "-3s" }}
+          aria-hidden="true"
+        />
+        <div className="relative">
+          <h2 className="text-balance text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+            {title}
+          </h2>
+          <p className="mx-auto mt-4 max-w-xl text-base text-steel">{subtitle}</p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Button to={primaryTo} size="lg">
+            <Button to={primaryTo} variant="primary">
               {primaryLabel}
             </Button>
-            <Button
-              to={secondaryTo}
-              size="lg"
-              variant="ghost"
-              className="border border-white/25 text-white hover:bg-white/10"
-            >
+            <Button to={secondaryTo} variant="secondary">
               {secondaryLabel}
             </Button>
           </div>

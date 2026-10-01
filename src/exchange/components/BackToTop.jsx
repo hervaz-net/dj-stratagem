@@ -1,0 +1,44 @@
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import { hideMarketingChrome } from "../chrome/formRoutes";
+
+export default function BackToTop() {
+  const [visible, setVisible] = useState(false);
+  const { pathname } = useLocation();
+  const hide = hideMarketingChrome(pathname);
+
+  useEffect(() => {
+    if (hide) {
+      setVisible(false);
+      return undefined;
+    }
+    const onScroll = () => setVisible(window.scrollY > 800);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [hide]);
+
+  const toTop = () => {
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" });
+  };
+
+  if (hide) return null;
+
+  return (
+    <button
+      type="button"
+      onClick={toTop}
+      aria-label="Back to top"
+      tabIndex={visible ? 0 : -1}
+      aria-hidden={!visible}
+      className={`no-print fixed bottom-48 right-4 z-[90] flex h-11 w-11 items-center justify-center rounded-full border border-line bg-surface text-fg-muted shadow-[var(--shadow-card)] transition-[opacity,transform,color,border-color] duration-200 hover:border-line-strong hover:text-fg sm:right-6 [[data-cookie-banner="1"]_&]:invisible [[data-cookie-banner="1"]_&]:pointer-events-none ${
+        visible ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-3 opacity-0"
+      }`}
+    >
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d="M12 19V5M5 12l7-7 7 7" />
+      </svg>
+    </button>
+  );
+}

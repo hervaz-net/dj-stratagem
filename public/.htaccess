@@ -34,9 +34,12 @@ AddType application/manifest+json .webmanifest
   # without the file, and LiteSpeed DOCUMENT_ROOT is unreliable on this account,
   # so do not gate the alias on a filesystem probe.
   RewriteRule ^manifest[.]json$ manifest.webmanifest [L]
-  RewriteRule ^credit$ /dashboard/settings [R=301,L]
-  RewriteRule ^credits$ /dashboard/settings [R=301,L]
-  RewriteRule ^credit-application$ /dashboard/settings [R=301,L]
+  RewriteRule ^credit$ /exchange/dashboard/settings [R=301,L]
+  RewriteRule ^credits$ /exchange/dashboard/settings [R=301,L]
+  RewriteRule ^credit-application$ /exchange/dashboard/settings [R=301,L]
+  # Stratagem Exchange moved under /exchange when D&J Stratagem, Inc. returned
+  # to the root. Keep its old top-level URLs working.
+  RewriteRule ^(marketplace|contractors|distributors|suppliers)$ /exchange/$1 [R=301,L]
 
   # Partial public_html trees have been missing /api/*.php and health.php.
   # Never let those URLs become the marketing SPA — JSON or a PHP 404 only.
@@ -60,9 +63,9 @@ AddType application/manifest+json .webmanifest
   RewriteRule ^sign-in$ /login [R=301,L]
   RewriteRule ^log-in$ /login [R=301,L]
   RewriteRule ^account$ /login [R=301,L]
-  RewriteRule ^credit$ /dashboard/settings [R=301,L]
-  RewriteRule ^credits$ /dashboard/settings [R=301,L]
-  RewriteRule ^credit-application$ /dashboard/settings [R=301,L]
+  RewriteRule ^credit$ /exchange/dashboard/settings [R=301,L]
+  RewriteRule ^credits$ /exchange/dashboard/settings [R=301,L]
+  RewriteRule ^credit-application$ /exchange/dashboard/settings [R=301,L]
   RewriteRule ^signup$ /register [R=301,L]
   RewriteRule ^sign-up$ /register [R=301,L]
   RewriteRule ^trial$ /register [R=301,L]
@@ -115,18 +118,15 @@ AddType application/manifest+json .webmanifest
   RewriteRule ^eula$ /terms [R=301,L]
   RewriteRule ^brand-guidelines$ /brand [R=301,L]
   RewriteRule ^fleet-cards$ /marketing/fleet-cards [R=301,L]
-  # /supply became /marketplace in the Stratagem Exchange rebrand, and
-  # /suppliers is now a real page (manufacturers & vendors), so it is not
-  # aliased here.
-  RewriteRule ^supply$ /marketplace [R=301,L]
-  RewriteRule ^supply/catalog$ /marketplace [R=301,L]
-  RewriteRule ^supply/catalog/ /marketplace [R=301,L]
-  RewriteRule ^catalog$ /marketplace [R=301,L]
-  RewriteRule ^catalog/ /marketplace [R=301,L]
-  RewriteRule ^exchange$ /marketplace [R=301,L]
-  RewriteRule ^shop$ /marketplace [R=301,L]
+  # /supply is the parent site's page again; the marketplace lives at
+  # /exchange/marketplace (Stratagem Exchange subsidiary).
+  RewriteRule ^supply/catalog/?$ /exchange/marketplace [R=301,L]
+  RewriteRule ^supply/catalog/ /exchange/marketplace [R=301,L]
+  RewriteRule ^catalog/?$ /exchange/marketplace [R=301,L]
+  RewriteRule ^catalog/ /exchange/marketplace [R=301,L]
+  RewriteRule ^shop$ /exchange/marketplace [R=301,L]
   RewriteRule ^equipment$ /fleet [R=301,L]
-  RewriteRule ^supplier$ /suppliers [R=301,L]
+  RewriteRule ^supplier$ /exchange/suppliers [R=301,L]
   RewriteRule ^receipts$ /marketing/receipts [R=301,L]
   RewriteRule ^signage$ /marketing/signage [R=301,L]
   RewriteRule ^sitemap$ /sitemap.xml [R=301,L]

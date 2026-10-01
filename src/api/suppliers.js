@@ -8,5 +8,4 @@ export {
   fetchTicker,
   createSupplier,
   isConfigured,
-  isSample,
 } from "./dashboard";
