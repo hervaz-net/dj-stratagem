@@ -41,6 +41,9 @@ need_files=(
   api/metrics.php
   api/overview.php
   api/suppliers.php
+  api/ops.php
+  api/ops-schema.php
+  api/market-ticker.php
   api/config.example.php
   privacy.html
   terms.html
