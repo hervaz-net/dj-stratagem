@@ -1,22 +1,17 @@
-import { statusQuo } from "../data/competitors";
-import { IconArrowRight } from "./icons";
+import { competitors } from "../data/competitors";
 
-/** The usual way of trading, each paired with how the marketplace handles it. */
-export default function CompetitorList({ className = "", showInstead = true }) {
+export default function CompetitorList({ className = "" }) {
   return (
-    <ul className={`space-y-3 ${className}`}>
-      {statusQuo.map((c) => (
-        <li key={c.name} className="rounded-2xl border border-line bg-surface p-4 sm:p-5">
-          <p className="font-semibold text-fg">{c.name}</p>
-          <p className="mt-1 text-sm leading-relaxed text-fg-muted">{c.does}</p>
-          {showInstead && (
-            <p className="mt-3 flex items-start gap-2 text-sm font-medium text-brand-fg">
-              <IconArrowRight width={14} height={14} className="mt-0.5 shrink-0" aria-hidden="true" />
-              {c.instead}
-            </p>
-          )}
-        </li>
+    <div className={`space-y-2.5 ${className}`}>
+      {competitors.map((c) => (
+        <div
+          key={c.name}
+          className="flex items-center justify-between rounded-lg border border-line bg-ink-2 px-4 py-3 text-sm"
+        >
+          <span className="font-medium text-paper">{c.name}</span>
+          <span className="text-xs text-steel">{c.does}</span>
+        </div>
       ))}
-    </ul>
+    </div>
   );
 }

@@ -12,17 +12,6 @@ export const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "/api";
 /** True after the last successful live response. Live-binding — pages re-read it. */
 export let isConfigured = false;
 
-/**
- * Endpoints whose last live response said `sample: true` (demo seed rows, or
- * figures with synthetic trends). Pages show their sample notice for these
- * even when the API is up.
- */
-const sampleEndpoints = new Set();
-
-export function isSample(path) {
-  return !isConfigured || sampleEndpoints.has(String(path).replace(/^\//, ""));
-}
-
 export function markConfigured(value) {
   isConfigured = value;
 }
@@ -82,9 +71,6 @@ export async function apiGet(path, { signal, timeout = 15000, params } = {}) {
       });
     }
     markConfigured(true);
-    const key = String(path).replace(/^\//, "");
-    if (data?.sample === true) sampleEndpoints.add(key);
-    else if (data?.sample === false) sampleEndpoints.delete(key);
     return data;
   } finally {
     clearTimeout(timer);

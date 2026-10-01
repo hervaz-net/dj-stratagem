@@ -24,13 +24,10 @@ const SITE = "https://djstratageminc.com";
 
 const staticPaths = [
   ["/", "1.0"],
-  ["/marketplace", "0.9"],
   ["/projects", "0.9"],
   ["/platform", "0.8"],
   ["/solutions", "0.8"],
-  ["/contractors", "0.8"],
-  ["/distributors", "0.8"],
-  ["/suppliers", "0.8"],
+  ["/supply", "0.8"],
   ["/fleet", "0.7"],
   ["/pricing", "0.8"],
   ["/about", "0.6"],
@@ -39,6 +36,13 @@ const staticPaths = [
   ["/privacy", "0.3"],
   ["/terms", "0.3"],
   ["/brand", "0.3"],
+  // Stratagem Exchange (subsidiary app under /exchange)
+  ["/exchange", "0.9"],
+  ["/exchange/marketplace", "0.8"],
+  ["/exchange/contractors", "0.7"],
+  ["/exchange/distributors", "0.7"],
+  ["/exchange/suppliers", "0.7"],
+  ["/exchange/pricing", "0.6"],
 ];
 
 const urls = [

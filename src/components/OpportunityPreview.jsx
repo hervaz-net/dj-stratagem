@@ -1,117 +1,122 @@
-import RoleBadge from "./RoleBadge";
-import SampleLabel from "./SampleLabel";
 import { IconCheck } from "./icons";
-import { daysFromToday } from "../data/sampleDates";
 
 /**
- * A seller's view of open requests matched to their catalog and service area.
- * The rows are representative sample data, not real buyers, so the frame
- * always carries a SampleLabel (see PROOF.md).
+ * A product view of matched bid opportunities, shown on the homepage so visitors
+ * can see what the platform actually does rather than read a paragraph about it.
+ *
+ * The rows are representative sample data, not customer records — the "Sample
+ * view" label keeps that unambiguous while the product is pre-launch.
  */
 
-const DEFAULT_ROWS = [
+const opportunities = [
   {
-    request: "12 AWG THHN copper, 4,000 ft",
-    buyer: "contractor",
-    shipTo: "Pasadena, CA",
-    category: "Electrical",
-    needBy: daysFromToday(14),
-    quotes: 3,
+    project: "Commercial HVAC Upgrade",
+    location: "Los Angeles, CA",
+    trade: "HVAC",
+    value: "$850K",
+    due: "Aug 28",
     match: 94,
   },
   {
-    request: '3/4" EMT conduit + fittings',
-    buyer: "distributor",
-    shipTo: "Riverside, CA",
-    category: "Electrical",
-    needBy: daysFromToday(20),
-    quotes: 2,
-    match: 86,
+    project: "Municipal Facility Renovation",
+    location: "Riverside, CA",
+    trade: "General",
+    value: "$2.4M",
+    due: "Sep 3",
+    match: 81,
   },
   {
-    request: '5/8" Type X drywall, 1,200 sheets',
-    buyer: "contractor",
-    shipTo: "Long Beach, CA",
-    category: "Drywall",
-    needBy: daysFromToday(28),
-    quotes: 0,
-    match: 72,
+    project: "School Modernization",
+    location: "Anaheim, CA",
+    trade: "Electrical",
+    value: "$640K",
+    due: "Sep 8",
+    match: 76,
   },
 ];
 
-const DEFAULT_REASONS = [
-  "Category: Electrical",
-  "Ships to your service area",
-  "Items in your catalog",
-  "Need-by fits your lead time",
+const matchReasons = [
+  "Trade: HVAC",
+  "Service area: Los Angeles",
+  "Project size: $500K–$2M",
+  "Healthcare experience",
 ];
 
 /** Above 90 reads as a strong fit and earns the accent; the rest stay neutral. */
 const toneFor = (score) =>
-  score >= 90 ? "text-success" : score >= 80 ? "text-warning" : "text-fg-muted";
+  score >= 90 ? "text-success" : score >= 80 ? "text-warning" : "text-steel";
 
-export default function OpportunityPreview({
-  title = "Open requests matched to your catalog",
-  rows = DEFAULT_ROWS,
-  reasons = DEFAULT_REASONS,
-  className = "",
-}) {
-  const top = rows[0];
+export default function OpportunityPreview() {
   return (
-    <div className={`overflow-hidden rounded-2xl border border-line bg-surface shadow-[var(--shadow-card)] ${className}`}>
-      <div className="flex flex-wrap items-center gap-2 border-b border-line px-5 py-4">
-        <p className="text-sm font-semibold text-fg">{title}</p>
-        <SampleLabel className="ml-auto">Sample view</SampleLabel>
+    <div className="overflow-hidden rounded-2xl border border-line bg-ink-2 shadow-2xl">
+      {/* window chrome */}
+      <div className="flex items-center gap-2 border-b border-line bg-ink px-4 py-3">
+        <span className="h-2.5 w-2.5 rounded-full bg-danger/70" />
+        <span className="h-2.5 w-2.5 rounded-full bg-warning/70" />
+        <span className="h-2.5 w-2.5 rounded-full bg-success/70" />
+        <span className="ml-2 text-xs text-steel">Project Opportunities</span>
+        <span className="ml-auto rounded-full border border-line px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-steel">
+          Sample view
+        </span>
       </div>
 
       {/* Wide table scrolls inside its own container so the page never scrolls sideways. */}
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[640px] border-collapse text-left">
-          <thead className="bg-subtle">
-            <tr>
-              {["Request", "Buyer", "Ships to", "Need by", "Quotes", "Match"].map((h) => (
-                <th key={h} scope="col" className="px-5 py-3 text-xs font-semibold text-fg">
+        <table className="w-full min-w-[560px] border-collapse text-left">
+          <thead>
+            <tr className="border-b border-line">
+              {["Project", "Location", "Trade", "Est. Value", "Bid Due", "Match"].map((h) => (
+                <th
+                  key={h}
+                  scope="col"
+                  className="px-4 py-3 text-[11px] font-semibold uppercase tracking-wider text-steel"
+                >
                   {h}
                 </th>
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-line">
-            {rows.map((o) => (
-              <tr key={o.request}>
-                <td className="px-5 py-4">
-                  <p className="text-sm font-semibold text-fg">{o.request}</p>
-                  {o.category && <p className="mt-0.5 text-xs text-fg-muted">{o.category}</p>}
+          <tbody>
+            {opportunities.map((o) => (
+              <tr key={o.project} className="border-b border-line/60 last:border-0">
+                <td className="px-4 py-3.5 text-sm font-medium text-paper">{o.project}</td>
+                <td className="px-4 py-3.5 text-sm text-steel">{o.location}</td>
+                <td className="px-4 py-3.5">
+                  <span className="rounded-full border border-line px-2 py-0.5 text-xs text-steel">
+                    {o.trade}
+                  </span>
                 </td>
-                <td className="px-5 py-4">
-                  <RoleBadge role={o.buyer} />
+                <td className="px-4 py-3.5 text-sm tabular-nums text-paper">{o.value}</td>
+                <td className="px-4 py-3.5 text-sm tabular-nums text-steel">{o.due}</td>
+                <td className={`px-4 py-3.5 text-sm font-semibold tabular-nums ${toneFor(o.match)}`}>
+                  {o.match}%
                 </td>
-                <td className="px-5 py-4 text-sm text-fg-muted">{o.shipTo}</td>
-                <td className="px-5 py-4 text-sm tabular-nums text-fg-muted">{o.needBy}</td>
-                <td className="px-5 py-4 text-sm tabular-nums text-fg">{o.quotes}</td>
-                <td className={`px-5 py-4 text-sm font-semibold tabular-nums ${toneFor(o.match)}`}>{o.match}%</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      {top && reasons?.length > 0 && (
-        <div className="border-t border-line p-5">
-          <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-            <span className={`text-2xl font-bold tabular-nums ${toneFor(top.match)}`}>{top.match}%</span>
-            <span className="text-sm font-medium text-fg">match &middot; {top.request}</span>
-          </div>
-          <ul className="mt-3 flex flex-wrap gap-2">
-            {reasons.map((r) => (
-              <li key={r} className="inline-flex items-center gap-1.5 rounded-full bg-subtle px-3 py-1 text-xs font-medium text-fg">
-                <IconCheck width={12} height={12} className="shrink-0 text-success" aria-hidden="true" />
-                {r}
-              </li>
-            ))}
-          </ul>
+      {/* match explanation */}
+      <div className="border-t border-line bg-ink p-4">
+        <div className="flex items-baseline gap-2">
+          <span className="text-2xl font-bold tabular-nums text-success">94%</span>
+          <span className="text-xs font-semibold uppercase tracking-wider text-steel">
+            match &mdash; Commercial HVAC Upgrade
+          </span>
         </div>
-      )}
+        <p className="mt-1.5 text-xs leading-relaxed text-steel">
+          Scored against your trade, service area, project size, and past work.
+        </p>
+        <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5">
+          {matchReasons.map((r) => (
+            <li key={r} className="flex items-center gap-1.5 text-xs text-paper/85">
+              <IconCheck width={12} height={12} className="shrink-0 text-success" />
+              {r}
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }

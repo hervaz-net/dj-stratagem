@@ -59,16 +59,16 @@ function ToastContainer({ toasts, dismiss }) {
         <div
           key={t.id}
           role="status"
-          className="flex items-start gap-3 rounded-xl border border-line bg-surface px-4 py-3 shadow-xl shadow-brand/10 backdrop-blur-sm"
+          className="flex items-start gap-3 rounded-xl border border-line bg-ink-2 px-4 py-3 shadow-xl shadow-brand/10 backdrop-blur-sm"
           style={{ minWidth: "240px", maxWidth: "360px" }}
         >
           <span className="mt-0.5 shrink-0">{ICONS[t.type] ?? ICONS.info}</span>
-          <p className="flex-1 text-sm text-fg">{t.message}</p>
+          <p className="flex-1 text-sm text-paper">{t.message}</p>
           <button
             type="button"
             onClick={() => dismiss(t.id)}
             aria-label="Dismiss"
-            className="shrink-0 text-fg-muted transition-colors hover:text-fg"
+            className="shrink-0 text-steel transition-colors hover:text-paper"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12" /></svg>
           </button>

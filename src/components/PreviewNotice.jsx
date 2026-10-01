@@ -1,37 +1,28 @@
 import { Link } from "react-router-dom";
-import { PRODUCT } from "../brand";
 
 /**
- * Persistent, unmissable notice that the projects and material requests on
- * screen are illustrative.
+ * Persistent, unmissable notice that the projects on screen are illustrative.
  *
- * A supplier who mistakes a sample request for real demand loses real hours
- * pricing a package nobody will buy, so this is deliberately a full-width
+ * A contractor who mistakes a sample listing for a real solicitation loses real
+ * hours chasing a bid that does not exist, so this is deliberately a full-width
  * banner rather than a subtle chip. Remove it only when the feed is live.
  */
-export default function PreviewNotice({ title, children, className = "" }) {
+export default function PreviewNotice({ className = "" }) {
   return (
     <div
       role="note"
-      className={`rounded-2xl border border-accent/30 bg-accent-soft px-5 py-4 ${className}`}
+      className={`rounded-xl border border-amber/40 bg-amber/8 px-5 py-4 ${className}`}
     >
-      <div>
-        {title && <p className="mb-1 text-sm font-semibold text-accent">{title}</p>}
-        <p className="text-sm leading-relaxed text-fg">
-          {children ?? (
-            <>
-              These projects and material packages are illustrative examples of how demand appears
-              on {PRODUCT}. They are <strong className="font-semibold">not live requests for quote</strong>,
-              cannot be quoted or ordered, and the buyers shown are placeholders, not real companies.
-              Live requests open to early users first.{" "}
-              <Link to="/register" className="font-semibold text-brand underline hover:text-brand-hover">
-                Request access
-              </Link>
-              .
-            </>
-          )}
-        </p>
-      </div>
+      <p className="text-sm font-semibold text-amber">Preview &mdash; sample listings</p>
+      <p className="mt-1 text-sm leading-relaxed text-steel">
+        These projects are illustrative examples showing how opportunities appear on the
+        platform. They are <strong className="font-semibold text-paper">not live solicitations</strong> and
+        cannot be bid on. The real project feed opens to early users first &mdash;{" "}
+        <Link to="/register" className="font-medium text-amber underline hover:text-amber-2">
+          request access
+        </Link>
+        .
+      </p>
     </div>
   );
 }

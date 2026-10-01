@@ -1,320 +1,180 @@
 import { useState } from "react";
-import Section, { SectionHeading } from "../components/Section";
-import PageHero from "../components/PageHero";
-import Button from "../components/Button";
+import { Link } from "react-router-dom";
+import Section, { Eyebrow } from "../components/Section";
 import CTASection from "../components/CTASection";
 import Reveal from "../components/Reveal";
-import RoleBadge from "../components/RoleBadge";
-import SampleLabel from "../components/SampleLabel";
-import FeatureCard from "../components/FeatureCard";
 import Seo from "../components/Seo";
 import WalkthroughModal from "../components/WalkthroughModal";
-import TradeFlow from "../components/home/TradeFlow";
 import {
-  IconBuilding,
+  IconGavel,
+  IconHelmet,
   IconMegaphone,
-  IconScale,
+  IconBriefcase,
   IconPackage,
-  IconLayers,
-  IconUsers,
-  IconBolt,
-  IconTrendingUp,
+  IconSparkle,
   IconCheck,
   IconPlay,
-  IconMap,
-  IconClock,
 } from "../components/icons";
-import { PRODUCT } from "../brand";
-import { daysFromToday } from "../data/sampleDates";
 
-/* Small mock panels. Every one carries a SampleLabel. */
+const modules = [
+  {
+    icon: <IconGavel />,
+    eyebrow: "For general contractors",
+    title: "Run every bid from posting to award.",
+    text: "Publish projects, build your sub list, and keep every RFI, addendum, and deadline in one place — then award with a clear paper trail.",
+    points: [
+      "Post projects and invite subcontractors",
+      "Compare bids side by side",
+      "Manage RFIs and addenda",
+      "Track deadlines across every open package",
+      "Award contracts with one click",
+      "Vendor performance ratings on every sub you've worked with",
+    ],
+    panel: {
+      title: "Bid comparison",
+      rows: [
+        { label: "Apex Electrical", value: "$412,000", tag: "Leveled" },
+        { label: "Circuit Partners", value: "$438,500", tag: "Leveled" },
+        { label: "Voltage Group", value: "$399,200", tag: "Under review" },
+      ],
+    },
+  },
+  {
+    icon: <IconHelmet />,
+    eyebrow: "For subcontractors",
+    title: "Find the right projects and win them.",
+    text: "Stop chasing plan rooms. Get matched to projects in your trade, submit clean digital bids, and build a track record that wins the next one.",
+    points: [
+      "Find projects matching your trades",
+      "Submit bids digitally with structured forms",
+      "Company profile and portfolio that sells your work",
+      "License and insurance verification built in",
+      "Bid history and analytics to sharpen your win rate",
+      "CRM for follow-ups so no opportunity goes cold",
+    ],
+    panel: {
+      title: "Matched projects",
+      rows: [
+        { label: "Riverside Medical Office", value: "Electrical", tag: "Bids due Fri" },
+        { label: "Summit Ridge Apartments", value: "Electrical", tag: "New match" },
+        { label: "Gateway Logistics Hub", value: "Low voltage", tag: "Invited" },
+      ],
+    },
+  },
+  {
+    icon: <IconMegaphone />,
+    eyebrow: "Marketing suite",
+    title: "Keep your pipeline full without hiring an agency.",
+    text: "Your next job shouldn't depend on word of mouth. Market your business with the same tools the big firms use — built for contractors.",
+    points: [
+      "SEO-optimized contractor profiles that rank",
+      "Lead generation that feeds your CRM directly",
+      "AI-generated project proposals",
+      "Email and SMS campaigns",
+      "Google Business Profile integration",
+      "Reviews, reputation management, and social content generation",
+    ],
+    panel: {
+      title: "This month",
+      rows: [
+        { label: "Profile views", value: "1,284", tag: "+38%" },
+        { label: "New leads", value: "23", tag: "+9" },
+        { label: "Review rating", value: "4.8 / 5", tag: "62 reviews" },
+      ],
+    },
+  },
+  {
+    icon: <IconPackage />,
+    eyebrow: "Supply Exchange",
+    title: "Buy materials without the race to the bottom.",
+    text: "Fasteners, lumber, conduit, PVC, plate, and power tools sourced through sealed, scored bidding — fast enough for a same-day order, structured so good suppliers keep quoting you.",
+    points: [
+      "Sealed single-round quotes — no undercutting spiral",
+      "Awards scored on price, lead time, fill rate, and past performance",
+      "Auto-award when the bid window closes",
+      "Split awards by line item for a 100% fill",
+      "Standing price books for the SKUs you reorder weekly",
+      "Pooled demand across contractors to reach volume tiers",
+    ],
+    panel: {
+      title: "RFQ · Fasteners & hardware",
+      rows: [
+        { label: "Metro Supply Co.", value: "Score 94 · 2-day", tag: "Awarded" },
+        { label: "Ironline Distribution", value: "Score 89 · same-day", tag: "Partial" },
+        { label: "Cardinal Hardware", value: "Score 81 · 4-day", tag: "Quoted" },
+      ],
+    },
+  },
+  {
+    icon: <IconBriefcase />,
+    eyebrow: "Business tools",
+    title: "Run the business, not just the bid.",
+    text: "Everything after the award lives here too — so your estimating, invoicing, and paperwork stay connected to the job they belong to.",
+    points: [
+      "CRM built for construction relationships",
+      "Estimating and invoicing",
+      "Change orders tied to the original scope",
+      "Document management with e-signatures",
+      "Team collaboration across office and field",
+      "Mobile app with field notifications",
+    ],
+    panel: {
+      title: "Open items",
+      rows: [
+        { label: "Invoice #1042", value: "$38,400", tag: "Sent" },
+        { label: "CO-07 · Added scope", value: "Pending signature", tag: "2d" },
+        { label: "Estimate · Lot 14 build-out", value: "Draft", tag: "Due today" },
+      ],
+    },
+  },
+  {
+    icon: <IconSparkle />,
+    eyebrow: "AI features",
+    title: "An unfair advantage on every bid.",
+    text: "AI works alongside your team — matching you to the right work, flagging what's missing, and drafting the documents that used to eat your evenings.",
+    points: [
+      "Match contractors to the right projects automatically",
+      "Predict bid competitiveness before you submit",
+      "Generate proposal drafts in minutes",
+      "Analyze plans and specifications",
+      "Identify missing bid documents before they cost you",
+      "Forecast your revenue pipeline",
+    ],
+    panel: {
+      title: "AI insights",
+      rows: [
+        { label: "Bid competitiveness", value: "High — within 4% of est.", tag: "92%" },
+        { label: "Missing documents", value: "Bond form, W-9", tag: "2 flagged" },
+        { label: "Pipeline forecast", value: "$2.4M next quarter", tag: "+18%" },
+      ],
+    },
+  },
+];
 
-function MockFrame({ title, children }) {
+const slug = (s) =>
+  s
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+
+function Panel({ panel }) {
   return (
-    <div className="rounded-2xl border border-line bg-surface p-5 shadow-[var(--shadow-card)] sm:p-6">
-      <div className="flex items-center justify-between gap-3">
-        <p className="text-sm font-semibold text-fg">{title}</p>
-        <SampleLabel />
+    <div className="rounded-2xl border border-line bg-ink-2 p-6">
+      <p className="text-xs uppercase tracking-wider text-steel">{panel.title}</p>
+      <div className="mt-4 space-y-3">
+        {panel.rows.map((row) => (
+          <div key={row.label} className="flex items-center justify-between rounded-lg bg-ink px-4 py-3">
+            <div>
+              <p className="text-sm font-medium text-paper">{row.label}</p>
+              <p className="text-xs text-steel">{row.value}</p>
+            </div>
+            <span className="rounded-full border border-line px-3 py-1 text-xs text-steel">{row.tag}</span>
+          </div>
+        ))}
       </div>
-      <div className="mt-4">{children}</div>
     </div>
   );
 }
-
-function ProfileMock() {
-  return (
-    <MockFrame title="Company profile">
-      <div className="flex items-center gap-3">
-        <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-role-distributor-soft text-sm font-bold text-role-distributor">
-          SE
-        </span>
-        <div className="min-w-0">
-          <p className="font-semibold text-fg">Sample Electric Supply</p>
-          <div className="mt-1 flex flex-wrap gap-1.5">
-            <RoleBadge role="distributor" />
-            <span className="rounded-full bg-success-soft px-2.5 py-1 text-xs font-semibold text-success">Account reviewed</span>
-          </div>
-        </div>
-      </div>
-      <dl className="mt-5 grid grid-cols-1 gap-3 text-sm sm:grid-cols-2">
-        <div className="rounded-xl bg-subtle p-3">
-          <dt className="text-xs font-semibold text-fg">Categories</dt>
-          <dd className="mt-1 text-fg">Electrical, Lighting, Low voltage</dd>
-        </div>
-        <div className="rounded-xl bg-subtle p-3">
-          <dt className="text-xs font-semibold text-fg">Service area</dt>
-          <dd className="mt-1 text-fg">LA &amp; Orange County, 2 branches</dd>
-        </div>
-        <div className="rounded-xl bg-subtle p-3">
-          <dt className="text-xs font-semibold text-fg">Fulfillment</dt>
-          <dd className="mt-1 text-fg">Delivery, will-call</dd>
-        </div>
-        <div className="rounded-xl bg-subtle p-3">
-          <dt className="text-xs font-semibold text-fg">Terms offered</dt>
-          <dd className="mt-1 text-fg">Net-30 on approval, card</dd>
-        </div>
-      </dl>
-    </MockFrame>
-  );
-}
-
-function RequestMock() {
-  const lines = [
-    ["12 AWG THHN, black", "2,000", "ft"],
-    ["12 AWG THHN, white", "1,500", "ft"],
-    ["12 AWG THHN, green", "500", "ft"],
-  ];
-  return (
-    <MockFrame title="New request">
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[300px] text-left text-sm">
-          <thead>
-            <tr className="text-xs text-fg">
-              <th scope="col" className="pb-2 font-semibold">Item</th>
-              <th scope="col" className="pb-2 text-right font-semibold">Qty</th>
-              <th scope="col" className="pb-2 pl-3 font-semibold">Unit</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-line">
-            {lines.map(([item, qty, unit]) => (
-              <tr key={item}>
-                <td className="py-2.5 text-fg">{item}</td>
-                <td className="py-2.5 text-right tabular-nums text-fg">{qty}</td>
-                <td className="py-2.5 pl-3 text-fg-muted">{unit}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <div className="mt-4 flex flex-wrap gap-2 text-xs font-medium text-fg">
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-subtle px-3 py-1.5">
-          <IconClock width={13} height={13} aria-hidden="true" /> Need by {daysFromToday(14)}
-        </span>
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-subtle px-3 py-1.5">
-          <IconMap width={13} height={13} aria-hidden="true" /> Jobsite, Pasadena
-        </span>
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-subtle px-3 py-1.5">
-          Project: Medical office TI
-        </span>
-      </div>
-    </MockFrame>
-  );
-}
-
-function QuotesMock() {
-  const rows = [
-    { seller: "Sample Electric Supply", role: "distributor", total: "$1,842", lead: "Will-call, 1 day", pick: true },
-    { seller: "Example Wire Mfg.", role: "supplier", total: "$1,790", lead: "Delivery, 6 days" },
-    { seller: "Sample Trade Distributors", role: "distributor", total: "$1,965", lead: "Delivery, 3 days" },
-  ];
-  return (
-    <MockFrame title="Compare quotes">
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[420px] text-left text-sm">
-          <thead>
-            <tr className="text-xs text-fg">
-              <th scope="col" className="pb-2 font-semibold">Seller</th>
-              <th scope="col" className="pb-2 font-semibold">Fulfillment</th>
-              <th scope="col" className="pb-2 text-right font-semibold">Total</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-line">
-            {rows.map((r) => (
-              <tr key={r.seller} className={r.pick ? "bg-brand-soft" : ""}>
-                <td className="py-3 pl-2">
-                  <p className="font-medium text-fg">{r.seller}</p>
-                  <RoleBadge role={r.role} className="mt-1" />
-                </td>
-                <td className="py-3 text-fg-muted">{r.lead}</td>
-                <td className="py-3 pr-2 text-right font-semibold tabular-nums text-fg">{r.total}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </MockFrame>
-  );
-}
-
-function OrderMock() {
-  const steps = [
-    { label: "Quote accepted", done: true },
-    { label: "PO confirmed by seller", done: true },
-    { label: "Ready for will-call", done: true, current: true },
-    { label: "Picked up", done: false },
-  ];
-  return (
-    <MockFrame title="Order status">
-      <p className="text-sm text-fg-muted">
-        12 AWG THHN, 4,000 ft &middot; <span className="font-medium text-fg">Sample Electric Supply</span>
-      </p>
-      <ol className="mt-5 space-y-4">
-        {steps.map((s) => (
-          <li key={s.label} className="flex items-center gap-3">
-            <span
-              className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${
-                s.done ? "bg-brand text-white" : "border border-line bg-surface text-fg-muted"
-              }`}
-            >
-              {s.done && <IconCheck width={14} height={14} aria-hidden="true" />}
-            </span>
-            <span className={`text-sm ${s.current ? "font-semibold text-fg" : s.done ? "text-fg" : "text-fg-muted"}`}>
-              {s.label}
-            </span>
-            {s.current && <span className="ml-auto rounded-full bg-accent-soft px-2.5 py-1 text-xs font-semibold text-accent">Now</span>}
-          </li>
-        ))}
-      </ol>
-    </MockFrame>
-  );
-}
-
-function CatalogMock() {
-  const items = [
-    ["EX-THHN12-500", "12 AWG THHN, 500 ft reel", "$96.40", "In stock"],
-    ["EX-EMT34-10", '3/4" EMT, 10 ft', "$8.95", "In stock"],
-    ["EX-SS34", '3/4" set-screw coupling', "$0.62", "Low stock"],
-  ];
-  return (
-    <MockFrame title="Catalog">
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[420px] text-left text-sm">
-          <thead>
-            <tr className="text-xs text-fg">
-              <th scope="col" className="pb-2 font-semibold">SKU</th>
-              <th scope="col" className="pb-2 font-semibold">Item</th>
-              <th scope="col" className="pb-2 text-right font-semibold">Price</th>
-              <th scope="col" className="pb-2 pl-3 font-semibold">Stock</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-line">
-            {items.map(([sku, name, price, stock]) => (
-              <tr key={sku}>
-                <td className="py-2.5 font-mono text-xs text-fg-muted">{sku}</td>
-                <td className="py-2.5 text-fg">{name}</td>
-                <td className="py-2.5 text-right tabular-nums text-fg">{price}</td>
-                <td className={`py-2.5 pl-3 text-xs font-semibold ${stock === "In stock" ? "text-success" : "text-warning"}`}>{stock}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </MockFrame>
-  );
-}
-
-const capabilities = [
-  {
-    id: "profiles",
-    icon: IconBuilding,
-    eyebrow: "Company profiles",
-    title: "Say who you are, what you trade, and where.",
-    text: "Every business starts with one profile: which side of the market you're on, the categories you buy or sell, the area you serve, and how you fulfill. Our team reviews each new account before it goes active.",
-    points: [
-      "Role: manufacturer or vendor, distributor, or contractor",
-      "Trades and product categories you work in",
-      "Service area, branches, and delivery or will-call",
-      "Account review by our team before activation",
-    ],
-    note: "We don't yet verify licenses, insurance, or credit. Profiles show what a business tells us about itself.",
-    Mock: ProfileMock,
-  },
-  {
-    id: "requests",
-    icon: IconMegaphone,
-    eyebrow: "Requests for quote",
-    title: "Post what the job needs, once.",
-    text: "Contractors and distributors describe the need in line items, not a vague email. Tie a request to a project so the material, the jobsite, and the dates stay together.",
-    points: [
-      "Line items with quantity and unit",
-      "Need-by date and ship-to or jobsite address",
-      "Group requests under a project",
-      "Distributors post restock and new-line requests upstream",
-    ],
-    Mock: RequestMock,
-  },
-  {
-    id: "quotes",
-    icon: IconScale,
-    eyebrow: "Quoting and comparison",
-    title: "Quotes you can actually compare.",
-    text: "Sellers answer with price, lead time, and how they'll fulfill. Buyers see every quote on the same request in the same format, so the cheapest line and the fastest line are easy to spot.",
-    points: [
-      "Sellers quote the requests that match their lines",
-      "Price, lead time, delivery or will-call on every quote",
-      "Side-by-side comparison on one screen",
-      "Seller notes stay attached to the quote",
-    ],
-    Mock: QuotesMock,
-  },
-  {
-    id: "orders",
-    icon: IconPackage,
-    eyebrow: "Orders and tracking",
-    title: "An accepted quote becomes the order.",
-    text: "No retyping into a PO. Accept a quote and both sides work from the same order, with a status that moves from confirmed to shipped to delivered.",
-    points: [
-      "Purchase order created from the accepted quote",
-      "Seller confirms and updates status",
-      "Buyer sees where the material is without calling",
-      "Order history kept with the request and the project",
-    ],
-    note: `Payment and delivery happen between buyer and seller on the terms you agree. ${PRODUCT} doesn't process payments or run trucks.`,
-    Mock: OrderMock,
-  },
-  {
-    id: "catalog",
-    icon: IconLayers,
-    eyebrow: "Catalog and price sheets",
-    title: "For sellers: a catalog buyers can search.",
-    text: "Manufacturers and distributors list what they sell with SKUs, pack sizes, pricing, and stock status, so buyers can find you by category and send you requests.",
-    points: [
-      "SKUs, descriptions, pack sizes, and units",
-      "Pricing kept in one place, not in emailed PDFs",
-      "Stock status and typical lead time",
-      "Listings grouped by category for browsing",
-    ],
-    Mock: CatalogMock,
-  },
-];
-
-const more = [
-  {
-    icon: <IconUsers />,
-    title: "Network",
-    text: "Keep the distributors, manufacturers, and buyers you work with in one list, with their categories and service areas.",
-  },
-  {
-    icon: <IconBolt />,
-    title: "Alerts",
-    text: "Get notified when a request matches your lines, a quote comes in, or an order changes status.",
-  },
-  {
-    icon: <IconTrendingUp />,
-    title: "Analytics",
-    text: "See request volume, quote activity, and order history for your own account over time.",
-  },
-];
 
 export default function Platform() {
   const [walkthroughOpen, setWalkthroughOpen] = useState(false);
@@ -322,109 +182,143 @@ export default function Platform() {
   return (
     <>
       <Seo
-        title="How it works"
-        description={`How ${PRODUCT} works: company profiles, requests for quote, side-by-side quotes, orders and tracking, and seller catalogs for manufacturers, distributors, and contractors.`}
+        title="Platform"
+        description="Six connected suites — bidding, subcontractor tools, marketing, Supply Exchange, business tools, and AI — replacing the patchwork of point tools contractors juggle today."
       />
 
-      <PageHero
-        eyebrow="How it works"
-        title="From request to delivery, on one record."
-        actions={
-          <>
-            <Button to="/register" size="lg">
-              Join free
-            </Button>
-            <Button variant="secondary" size="lg" onClick={() => setWalkthroughOpen(true)}>
-              <IconPlay width={16} height={16} aria-hidden="true" /> Take the tour
-            </Button>
-          </>
-        }
-        aside={<QuotesMock />}
-      >
-        {PRODUCT} gives each side of the supply chain the same simple flow: a request, the quotes
-        that answer it, the order that follows, and the delivery that closes it out.
-      </PageHero>
+      <Section className="pt-16 pb-8 md:pt-24">
+        <Eyebrow>The platform</Eyebrow>
+        <h1 className="text-balance max-w-3xl text-2xl font-semibold leading-tight tracking-tight text-paper sm:text-3xl">
+          One platform to win work, market your business, and grow revenue.
+        </h1>
+        <p className="mt-6 max-w-2xl text-lg leading-relaxed text-steel">
+          Six connected suites replace the patchwork of point tools contractors juggle today
+          &mdash; from the first opportunity to the final invoice.
+        </p>
 
-      <nav aria-label="On this page" className="sticky top-16 z-30 border-b border-line bg-canvas/95 px-5 backdrop-blur sm:px-6">
-        <div className="mx-auto flex max-w-6xl gap-1 overflow-x-auto py-2.5">
-          {[...capabilities.map((c) => ({ id: c.id, label: c.eyebrow })), { id: "more", label: "Network, alerts, analytics" }].map((c) => (
+        <nav aria-label="Platform suites" className="mt-10 flex flex-wrap gap-2">
+          {modules.map((m) => (
             <a
-              key={c.id}
-              href={`#${c.id}`}
-              className="shrink-0 rounded-full px-3 py-1.5 text-sm font-medium text-fg-muted transition-colors hover:bg-subtle hover:text-fg"
+              key={m.eyebrow}
+              href={`#${slug(m.eyebrow)}`}
+              className="lift rounded-full border border-line bg-ink-2 px-4 py-2 text-xs font-medium text-steel hover:border-amber/50 hover:text-amber"
             >
-              {c.label}
+              {m.eyebrow}
             </a>
           ))}
-        </div>
-      </nav>
-
-      <Section>
-        <SectionHeading eyebrow="The flow" title="Four steps every trade goes through.">
-          Whether a contractor is buying from a distributor or a distributor is restocking from a
-          manufacturer, the steps are the same.
-        </SectionHeading>
-        <TradeFlow className="mt-12" />
+        </nav>
       </Section>
 
-      {capabilities.map((c, i) => {
-        const Icon = c.icon;
-        const Mock = c.Mock;
-        return (
-          <Section key={c.id} id={c.id} tone={i % 2 === 0 ? "surface" : undefined} className="border-t border-line">
-            <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
-              <Reveal className={i % 2 ? "lg:order-2" : ""}>
-                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-soft text-brand-fg">
-                  <Icon width={20} height={20} aria-hidden="true" />
-                </span>
-                <p className="mt-5 text-sm font-semibold text-brand">{c.eyebrow}</p>
-                <h2 className="mt-2 text-balance text-3xl font-bold tracking-tight text-fg md:text-4xl">{c.title}</h2>
-                <p className="mt-4 text-lg leading-relaxed text-fg-muted">{c.text}</p>
-                <ul className="mt-6 space-y-3">
-                  {c.points.map((pt) => (
-                    <li key={pt} className="flex items-start gap-3 text-[0.95rem] text-fg">
-                      <IconCheck width={16} height={16} className="mt-1 shrink-0 text-brand" aria-hidden="true" />
-                      {pt}
-                    </li>
-                  ))}
-                </ul>
-                {c.note && (
-                  <p className="mt-6 rounded-xl border border-line bg-canvas px-4 py-3 text-sm leading-relaxed text-fg-muted">
-                    {c.note}
-                  </p>
-                )}
-              </Reveal>
-              <Reveal delay={100}>
-                <Mock />
-              </Reveal>
-            </div>
-          </Section>
-        );
-      })}
+      <Section className="border-t border-line">
+        <Reveal>
+          <div className="text-center">
+            <Eyebrow>See it live</Eyebrow>
+            <h2 className="mt-3 text-balance text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+              Watch it in action.
+            </h2>
+            <p className="mx-auto mt-4 max-w-xl text-base text-steel">
+              A five-minute walkthrough of the full bidding workflow — from posting a project to awarding the contract.
+            </p>
+          </div>
 
-      <Section id="more" tone="subtle">
-        <SectionHeading eyebrow="Around the trade" title="The tools that keep it moving." />
-        <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-3">
-          {more.map((m) => (
-            <FeatureCard key={m.title} icon={m.icon} title={m.title} className="h-full">
-              {m.text}
-            </FeatureCard>
+          <div className="relative mx-auto mt-10 max-w-3xl overflow-hidden rounded-2xl border border-line bg-ink-2">
+            <div className="flex aspect-video items-center justify-center bg-gradient-to-br from-ink-2 to-ink">
+              <div className="absolute inset-0 bg-grid opacity-30" aria-hidden="true" />
+              <button
+                type="button"
+                onClick={() => setWalkthroughOpen(true)}
+                aria-label="Play platform walkthrough"
+                className="relative flex h-20 w-20 items-center justify-center rounded-full bg-brand/90 text-white shadow-lg transition-transform hover:scale-105 hover:bg-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2"
+              >
+                <IconPlay width={28} height={28} className="ml-1" />
+              </button>
+            </div>
+            <div className="border-t border-line px-6 py-4">
+              <p className="text-sm font-medium text-paper">Platform walkthrough &mdash; 5 min</p>
+              <p className="text-xs text-steel">Bidding, sub matching, and AI features</p>
+            </div>
+          </div>
+        </Reveal>
+      </Section>
+
+      {modules.map((m, i) => (
+        <Section key={m.eyebrow} id={slug(m.eyebrow)} className="border-t border-line">
+          <div className={`grid grid-cols-1 items-center gap-14 lg:grid-cols-2 ${i % 2 ? "lg:[&>*:first-child]:order-2" : ""}`}>
+            <Reveal>
+              <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-amber/10 text-amber">
+                {m.icon}
+              </div>
+              <p className="mt-5 text-xs font-semibold uppercase tracking-widest text-amber">{m.eyebrow}</p>
+              <h2 className="text-balance mt-3 text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+                {m.title}
+              </h2>
+              <p className="mt-4 text-base leading-relaxed text-steel">{m.text}</p>
+              <ul className="mt-6 space-y-3">
+                {m.points.map((pt) => (
+                  <li key={pt} className="flex items-start gap-3 text-sm text-paper/90">
+                    <IconCheck width={16} height={16} className="mt-0.5 shrink-0 text-amber" />
+                    {pt}
+                  </li>
+                ))}
+              </ul>
+            </Reveal>
+            <Reveal delay={140}>
+              <Panel panel={m.panel} />
+            </Reveal>
+          </div>
+        </Section>
+      ))}
+
+      <Section className="border-t border-line">
+        <Reveal>
+          <div className="text-center">
+            <Eyebrow>Integrations</Eyebrow>
+            <h2 className="mt-3 text-balance text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+              Works with the tools you already use.
+            </h2>
+            <p className="mx-auto mt-4 max-w-xl text-base text-steel">
+              D&amp;J Stratagem connects to the systems your office and field teams rely on every day &mdash; no rip-and-replace required.
+            </p>
+          </div>
+        </Reveal>
+        <div className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+          {[
+            { name: "QuickBooks", category: "Accounting" },
+            { name: "Procore", category: "Project mgmt" },
+            { name: "Autodesk", category: "BIM & design" },
+            { name: "DocuSign", category: "E-signatures" },
+            { name: "Sage 300", category: "ERP" },
+            { name: "Microsoft 365", category: "Productivity" },
+            { name: "Bluebeam", category: "Takeoffs" },
+            { name: "Plangrid", category: "Field tools" },
+            { name: "Google Workspace", category: "Productivity" },
+            { name: "Xero", category: "Accounting" },
+            { name: "Slack", category: "Messaging" },
+            { name: "Zapier", category: "Automation" },
+          ].map((int) => (
+            <div
+              key={int.name}
+              className="lift flex flex-col items-center rounded-xl border border-line bg-ink-2 px-4 py-5 text-center transition-colors hover:border-amber/40"
+            >
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber/10 text-xs font-bold text-amber">
+                {int.name.slice(0, 2).toUpperCase()}
+              </div>
+              <p className="mt-3 text-xs font-semibold text-paper">{int.name}</p>
+              <p className="mt-0.5 text-[10px] text-steel">{int.category}</p>
+            </div>
           ))}
         </div>
-        <div className="mt-10 rounded-2xl border border-accent/30 bg-accent-soft px-5 py-4">
-          <p className="text-sm font-semibold text-accent">Early access</p>
-          <p className="mt-1 text-sm leading-relaxed text-fg">
-            {PRODUCT} is onboarding its first members. Some of these workflows are still being
-            built alongside them, and we&rsquo;ll tell you exactly what&rsquo;s ready when you join.
-          </p>
-        </div>
+        <p className="mt-8 text-center text-sm text-steel">
+          Don&rsquo;t see your tool?{" "}
+          <Link to="/contact" className="font-medium text-amber hover:text-amber-2">
+            Request an integration →
+          </Link>
+        </p>
       </Section>
 
       <CTASection
-        title="See where it fits in how you trade today."
-        subtitle="Create a free profile, or talk to us about how your team buys or sells now and we'll show you the flow."
-        primaryLabel="Join free"
-        secondaryLabel="Talk to us"
+        title="See it on your next bid."
+        subtitle="We'll walk through your current workflow and show you exactly where the platform fits."
       />
 
       <WalkthroughModal open={walkthroughOpen} onClose={() => setWalkthroughOpen(false)} />

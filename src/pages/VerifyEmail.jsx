@@ -1,71 +1,59 @@
 import { Link } from "react-router-dom";
+import Logo from "../components/Logo";
 import Seo from "../components/Seo";
-import Button from "../components/Button";
-import AuthShell from "../components/auth/AuthShell";
-import { IconArrowLeft, IconClock } from "../components/icons";
-import { PRODUCT, CONTACT_EMAIL } from "../brand";
-
-const STEPS = [
-  { title: "You request an account", text: "Company, contact details, and which side of the marketplace you're on." },
-  { title: "Our team reviews it", text: "A person checks the request. There is no automated verification email." },
-  { title: "We email you when it's approved", text: `The notice comes from ${CONTACT_EMAIL}. Then you can sign in.` },
-];
 
 export default function VerifyEmail() {
   return (
     <>
-      <Seo
-        title="Account review"
-        description={`New ${PRODUCT} accounts are approved by the team. There is no automated verification email.`}
-        noindex
-      />
+      <Seo title="Account review" description="New D&J Stratagem accounts are approved by the team. There is no automated verification email." noindex />
 
-      <AuthShell
-        title="A person reviews every new account."
-        text="Our team looks at each request before the account can sign in or trade."
-        footnote={`Approval notices come from ${CONTACT_EMAIL}. Check spam if nothing arrives after a business day.`}
-      >
-        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-soft text-brand-fg">
-          <IconClock width={22} height={22} aria-hidden="true" />
-        </div>
-        <h1 className="mt-5 text-3xl font-bold tracking-tight text-fg">Account review, not a magic link</h1>
-        <p className="mt-3 leading-relaxed text-fg-muted">
-          New accounts stay pending until someone on the team approves them. There is no automated
-          verification email and no 24-hour link.
-        </p>
-
-        <ol className="mt-8 space-y-4">
-          {STEPS.map((s, i) => (
-            <li key={s.title} className="flex gap-3">
-              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-subtle text-sm font-semibold text-fg tabular-nums">
-                {i + 1}
-              </span>
-              <div>
-                <p className="text-sm font-semibold text-fg">{s.title}</p>
-                <p className="mt-0.5 text-sm leading-relaxed text-fg-muted">{s.text}</p>
-              </div>
-            </li>
-          ))}
-        </ol>
-
-        <div className="mt-8 rounded-2xl bg-subtle px-5 py-4 text-sm leading-relaxed text-fg-muted">
-          Need it faster? Email{" "}
-          <a href={`mailto:${CONTACT_EMAIL}`} className="font-semibold text-brand hover:text-brand-hover">
-            {CONTACT_EMAIL}
-          </a>{" "}
-          from the address you used to sign up.
-        </div>
-
-        <div className="mt-8 flex flex-wrap items-center gap-3 border-t border-line pt-6">
-          <Button to="/register" variant="secondary" size="sm">
-            Request an account
-          </Button>
-          <Link to="/login" className="inline-flex items-center gap-1.5 text-sm font-semibold text-fg-muted hover:text-fg">
-            <IconArrowLeft width={15} height={15} aria-hidden="true" />
-            Back to sign in
+      <div className="mx-auto flex w-full max-w-md flex-col justify-center px-6 py-16 md:py-24">
+        <div className="rounded-2xl border border-line bg-ink-2 p-8 shadow-xl shadow-brand/5">
+          <Link to="/" className="inline-block" aria-label="D&J Stratagem — home">
+            <Logo />
           </Link>
+
+          <div className="mt-8 text-center">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-amber/10">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" className="text-amber" aria-hidden="true">
+                <rect width="20" height="16" x="2" y="4" rx="2" />
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+              </svg>
+            </div>
+            <h1 className="mt-5 text-2xl font-semibold tracking-tight text-paper">Account review, not a magic link</h1>
+            <p className="mt-3 text-sm leading-relaxed text-steel">
+              New accounts stay pending until someone on the team approves them. There is no automated verification email and no 24-hour link.
+            </p>
+            <p className="mt-3 text-sm text-steel">
+              If you just requested access, wait for an email from us. If you never submitted a request, start at{" "}
+              <Link to="/register" className="font-medium text-amber hover:text-amber-2">
+                /register
+              </Link>
+              .
+            </p>
+
+            <div className="mt-8 space-y-3">
+              <p className="text-sm leading-relaxed text-steel">
+                Need it faster? Email{" "}
+                <a href="mailto:hello@djstratageminc.com" className="font-medium text-amber hover:text-amber-2">
+                  hello@djstratageminc.com
+                </a>{" "}
+                from the address you used to sign up.
+              </p>
+            </div>
+
+            <div className="mt-8 border-t border-line pt-6">
+              <Link to="/login" className="text-sm font-medium text-steel hover:text-paper">
+                ← Back to sign in
+              </Link>
+            </div>
+          </div>
         </div>
-      </AuthShell>
+
+        <p className="mt-8 text-center text-xs text-steel">
+          Approval notices come from hello@djstratageminc.com. Check spam if nothing arrives after a business day.
+        </p>
+      </div>
     </>
   );
 }

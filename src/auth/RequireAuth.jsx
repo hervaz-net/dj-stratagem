@@ -15,8 +15,8 @@ export default function RequireAuth({ children }) {
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center px-6" role="status">
-        <div className="flex items-center gap-3 text-sm text-fg-muted">
-          <span className="h-4 w-4 animate-spin rounded-full border-2 border-fg-muted/30 border-t-brand" />
+        <div className="flex items-center gap-3 text-sm text-steel">
+          <span className="h-4 w-4 animate-spin rounded-full border-2 border-steel/30 border-t-amber" />
           Checking your session…
         </div>
       </div>
