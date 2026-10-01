@@ -110,7 +110,7 @@ $mom = [
 
 respond([
     'ok' => true,
-    'live' => true,
+    'live' => true, 'sample' => true,
     'range' => $range,
     'kpis' => $kpis,
     'mom' => $mom,

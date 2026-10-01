@@ -296,6 +296,14 @@ function require_signin(): array
     return $user;
 }
 
+/** Lives here, not in ops.php: endpoints call it before require_ops(). */
+function require_get(): void
+{
+    if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'GET') {
+        fail(405, 'method_not_allowed');
+    }
+}
+
 /** Load dashboard helpers only after auth. A missing ops.php must be JSON, not LiteSpeed HTML 500. */
 function require_ops(): void
 {
