@@ -8,13 +8,20 @@ import { IconCheck } from "./icons";
  * view" label keeps that unambiguous while the product is pre-launch.
  */
 
+function dueIn(days) {
+  return new Date(Date.now() + days * 86400000).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+  });
+}
+
 const opportunities = [
   {
     project: "Commercial HVAC Upgrade",
     location: "Los Angeles, CA",
     trade: "HVAC",
     value: "$850K",
-    due: "Aug 28",
+    due: dueIn(44),
     match: 94,
   },
   {
@@ -22,7 +29,7 @@ const opportunities = [
     location: "Riverside, CA",
     trade: "General",
     value: "$2.4M",
-    due: "Sep 3",
+    due: dueIn(50),
     match: 81,
   },
   {
@@ -30,7 +37,7 @@ const opportunities = [
     location: "Anaheim, CA",
     trade: "Electrical",
     value: "$640K",
-    due: "Sep 8",
+    due: dueIn(36),
     match: 76,
   },
 ];
