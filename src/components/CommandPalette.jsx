@@ -16,7 +16,7 @@ const NAV_ITEMS = [
   { label: "Solutions", to: "/solutions", group: "Marketing" },
   { label: "Projects", to: "/projects", group: "Marketing" },
   { label: "Supply", to: "/supply", group: "Marketing" },
-  { label: "Fleet", to: "/fleet", group: "Marketing" },
+  { label: "Stratagem Fleet", to: "/fleet", group: "Marketing" },
   { label: "Pricing", to: "/pricing", group: "Marketing" },
   { label: "About", to: "/about", group: "Marketing" },
   { label: "Contact", to: "/contact", group: "Marketing" },

@@ -74,6 +74,20 @@ export const companies = [
     audience: ["Subcontractors scaling for a big award", "General contractors covering gaps between phases", "Tradespeople looking for steady, well-run jobs"],
     glyph: "helmet",
   },
+  {
+    slug: "fleet",
+    name: "Stratagem Fleet",
+    short: "Fleet",
+    href: "/fleet",
+    accent: "#9d8cff",
+    status: "Taking quote requests",
+    tagline: "Arrive on time. Every time.",
+    summary:
+      "Chauffeured sedans, SUVs, Sprinters, minibuses, and motorcoaches across Southern California, with itemized quotes and no surprise charges.",
+    lede:
+      "Stratagem Fleet moves executives, crews, wedding parties, and conference groups across Southern California. Licensed drivers, inspected vehicles, and a price that is set before you ride.",
+    glyph: "wheel",
+  },
 ];
 
 export const findCompany = (slug) => companies.find((c) => c.slug === slug);

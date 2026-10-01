@@ -12,7 +12,6 @@ const columns = [
       { to: "/platform", label: "Platform" },
       { to: "/projects", label: "Projects" },
       { to: "/supply", label: "Supply Exchange" },
-      { to: "/fleet", label: "Fleet" },
       { to: "/pricing", label: "Pricing" },
       { to: "/changelog", label: "Changelog" },
     ],
@@ -32,6 +31,7 @@ const columns = [
       { to: "/companies/capital", label: "Stratagem Capital" },
       { to: "/companies/studio", label: "Stratagem Studio" },
       { to: "/companies/workforce", label: "Stratagem Workforce" },
+      { to: "/fleet", label: "Stratagem Fleet" },
     ],
   },
   {

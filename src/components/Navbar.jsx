@@ -15,7 +15,6 @@ const SECTIONS = [
       { to: "/projects", label: "Projects", note: "Work matched to your trade" },
       { to: "/platform", label: "Platform", note: "Bid, market, manage, grow" },
       { to: "/supply", label: "Supply", note: "Sealed, scored sourcing" },
-      { to: "/fleet", label: "Fleet", note: "Equipment on demand" },
     ],
     feature: { to: "/register", title: "Create an account", note: "Free profile, matched projects" },
   },
@@ -30,7 +29,7 @@ const SECTIONS = [
     ],
     feature: { to: "/solutions", title: "Compare solutions", note: "What each team gets" },
   },
-  { key: "companies", label: "Companies", lede: "One parent, four ways to build." },
+  { key: "companies", label: "Companies", lede: "One parent, five ways to build." },
 ];
 
 const LINKS = [
@@ -39,7 +38,7 @@ const LINKS = [
   { to: "/exchange", label: "Exchange", reloadDocument: true },
 ];
 
-const companyHref = (c) => (c.external ? c.href : `/companies/${c.slug}`);
+const companyHref = (c) => c.href ?? `/companies/${c.slug}`;
 
 function CompanyCard({ c, i, onNavigate }) {
   return (
@@ -285,7 +284,7 @@ export default function Navbar({ onOpenPalette }) {
   const section = SECTIONS.find((s) => s.key === active);
   const sectionActive = (s) =>
     s.key === "companies"
-      ? pathname.startsWith("/companies")
+      ? pathname.startsWith("/companies") || pathname.startsWith("/fleet")
       : s.links.some((l) => l.to.split("#")[0] === pathname);
 
   return (

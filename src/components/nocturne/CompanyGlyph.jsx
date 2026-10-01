@@ -28,6 +28,13 @@ export default function CompanyGlyph({ glyph, accent, size = 44, className = "" 
           <path d="M10 30h24" {...common} strokeOpacity="0.5" />
         </>
       )}
+      {glyph === "wheel" && (
+        <>
+          <circle cx="22" cy="22" r="10" {...common} />
+          <circle cx="22" cy="22" r="2.6" fill={accent} />
+          <path d="M12.4 20h7M24.6 20h7M22 24.6V32" {...common} />
+        </>
+      )}
     </svg>
   );
 }

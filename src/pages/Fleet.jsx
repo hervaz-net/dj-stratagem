@@ -1,510 +1,375 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import PageHero from "../components/nocturne/PageHero";
 import Section, { Eyebrow } from "../components/Section";
-import Button from "../components/Button";
-import CTASection from "../components/CTASection";
 import Seo from "../components/Seo";
+import Reveal from "../components/Reveal";
+import CompanyGlyph from "../components/nocturne/CompanyGlyph";
+import { findCompany } from "../data/companies";
 import {
-  IconTruck,
-  IconClock,
-  IconCheck,
-  IconArrowRight,
-  IconUsers,
-  IconPackage,
-} from "../components/icons";
+  operator,
+  credentials,
+  isLicensed,
+  vehicleClasses,
+  vehicles,
+  services,
+  extras,
+  standards,
+} from "../data/fleet";
 
-// Sample service dates stay relative to today so the preview board
-// never shows a next-scheduled date that already passed.
-function isoDaysFromToday(days) {
-  const d = new Date();
-  d.setHours(12, 0, 0, 0);
-  d.setDate(d.getDate() + days);
-  return d.toISOString().slice(0, 10);
+const c = findCompany("fleet");
+
+/** Side-profile line drawing, sized by class so the lineup reads small to large. */
+const SHAPES = {
+  sedan: { w: 150, h: 34, roof: "M30 22 L52 8 H104 L124 22", wheels: [36, 116] },
+  suv: { w: 158, h: 44, roof: "M22 22 L34 6 H130 L142 22", wheels: [38, 122] },
+  van: { w: 176, h: 54, roof: "M14 30 L30 6 H168 V30", wheels: [40, 144] },
+  minibus: { w: 196, h: 60, roof: "M10 20 L18 6 H190 V20", wheels: [42, 162] },
+  coach: { w: 230, h: 66, roof: "M8 14 L14 6 H224 V14", wheels: [44, 168, 196] },
+};
+
+function VehicleArt({ shape }) {
+  const s = SHAPES[shape];
+  const base = s.h + 6;
+  const line = { stroke: c.accent, strokeWidth: 1.6, fill: "none", strokeLinecap: "round", strokeLinejoin: "round" };
+  return (
+    <svg viewBox={`0 0 ${s.w + 8} ${base + 14}`} className="h-20 w-auto max-w-full" aria-hidden="true">
+      <path d={`${s.roof} L${s.w} ${base - 6} Q${s.w} ${base} ${s.w - 6} ${base} H10 Q4 ${base} 4 ${base - 6} V24 Q4 22 8 22`} {...line} />
+      {s.wheels.map((x) => (
+        <g key={x}>
+          <circle cx={x} cy={base} r="8" fill="var(--color-ink, #0b0b10)" stroke={c.accent} strokeWidth="1.6" />
+          <circle cx={x} cy={base} r="2.5" fill={c.accent} />
+        </g>
+      ))}
+      <path d={`M0 ${base + 10} H${s.w + 8}`} stroke={c.accent} strokeOpacity="0.25" strokeDasharray="3 5" />
+    </svg>
+  );
 }
 
-// Sample fleet data for the public preview board.
-const FLEET_DATA = [
-  {
-    id: "FL-001",
-    name: "Concrete Mixer",
-    type: "Equipment",
-    status: "in-use",
-    location: "Los Angeles, CA",
-    utilization: 89,
-    lastMaintenance: isoDaysFromToday(-63),
-    nextScheduled: isoDaysFromToday(13),
-    operator: "Assigned crew",
-    capacity: "3 cubic yards",
-    hourlyRate: "$125",
-  },
-  {
-    id: "FL-002",
-    name: "Excavator 320",
-    type: "Heavy Equipment",
-    status: "in-use",
-    location: "Orange County, CA",
-    utilization: 76,
-    lastMaintenance: isoDaysFromToday(-74),
-    nextScheduled: isoDaysFromToday(29),
-    operator: "Assigned crew",
-    capacity: "20 ton",
-    hourlyRate: "$450",
-  },
-  {
-    id: "FL-003",
-    name: "Dump Truck",
-    type: "Vehicle",
-    status: "available",
-    location: "San Diego, CA",
-    utilization: 42,
-    lastMaintenance: isoDaysFromToday(-59),
-    nextScheduled: isoDaysFromToday(40),
-    operator: "Available",
-    capacity: "15 ton",
-    hourlyRate: "$85",
-  },
-  {
-    id: "FL-004",
-    name: "Scaffolding Kit",
-    type: "Equipment",
-    status: "maintenance",
-    location: "Riverside, CA",
-    utilization: 0,
-    lastMaintenance: isoDaysFromToday(-25),
-    nextScheduled: isoDaysFromToday(20),
-    operator: "Shop tech",
-    capacity: "3000 sq ft",
-    hourlyRate: "$200",
-  },
-  {
-    id: "FL-005",
-    name: "Power Generator",
-    type: "Equipment",
-    status: "available",
-    location: "Ventura, CA",
-    utilization: 55,
-    lastMaintenance: isoDaysFromToday(-79),
-    nextScheduled: isoDaysFromToday(18),
-    operator: "Available",
-    capacity: "500 kW",
-    hourlyRate: "$350",
-  },
-  {
-    id: "FL-006",
-    name: "Bucket Truck",
-    type: "Vehicle",
-    status: "in-use",
-    location: "Long Beach, CA",
-    utilization: 92,
-    lastMaintenance: isoDaysFromToday(-62),
-    nextScheduled: isoDaysFromToday(21),
-    operator: "Assigned crew",
-    capacity: "65 ft reach",
-    hourlyRate: "$200",
-  },
-];
+const field =
+  "w-full rounded-xl border border-line bg-ink px-3.5 py-2.5 text-sm text-paper outline-hidden transition-colors placeholder:text-steel/70 focus:border-[var(--cta)]";
 
-const STATS = [
-  { label: "Sample assets on this page", value: "6", icon: IconTruck },
-  { label: "Avg. sample utilization", value: "59%", icon: IconPackage },
-  { label: "Available in the sample", value: "2", icon: IconCheck },
-  { label: "In maintenance (sample)", value: "1", icon: IconClock },
-];
+function QuoteForm() {
+  const [state, setState] = useState("idle"); // idle | sending | sent | error
+  const [invalid, setInvalid] = useState("");
+
+  async function onSubmit(e) {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const d = new FormData(form);
+    const email = String(d.get("email") || "").trim();
+    if (!String(d.get("name") || "").trim()) return setInvalid("Please enter your name.");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return setInvalid("Please enter a valid email address.");
+    setInvalid("");
+
+    // contact.php takes a flat message; fold the trip details into it.
+    const trip = [
+      ["Date", d.get("date")],
+      ["Pickup time", d.get("time")],
+      ["Pickup", d.get("pickup")],
+      ["Drop-off", d.get("dropoff")],
+      ["Passengers", d.get("passengers")],
+      ["Vehicle", d.get("vehicle")],
+      ["Accessibility needs", d.get("access")],
+    ]
+      .filter(([, v]) => String(v || "").trim())
+      .map(([k, v]) => `${k}: ${v}`)
+      .join("\n");
+    const body = new FormData();
+    body.set("name", d.get("name"));
+    body.set("company", String(d.get("company") || "").trim() || "Personal");
+    body.set("email", email);
+    body.set("phone", d.get("phone") || "");
+    body.set("topic", "fleet");
+    body.set("bot-field", d.get("bot-field") || "");
+    body.set("message", `${trip}\n\n${d.get("notes") || ""}`.trim());
+
+    setState("sending");
+    const controller = new AbortController();
+    const timer = window.setTimeout(() => controller.abort(), 15000);
+    try {
+      const res = await fetch("/contact.php", { method: "POST", body, signal: controller.signal });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.ok) throw new Error("failed");
+      form.reset();
+      setState("sent");
+    } catch {
+      setState("error");
+    } finally {
+      window.clearTimeout(timer);
+    }
+  }
+
+  if (state === "sent") {
+    return (
+      <div className="rounded-3xl border border-line p-8">
+        <p className="font-display text-3xl text-paper">Request received.</p>
+        <p className="mt-3 text-steel">
+          A person will reply by email with an itemized quote. Nothing is booked until you confirm that quote in writing.
+        </p>
+      </div>
+    );
+  }
+
+  const label = "mono-label mb-2 block text-steel";
+  return (
+    <form onSubmit={onSubmit} noValidate className="grid gap-4 rounded-3xl border border-line p-6 sm:grid-cols-2 md:p-8">
+      <input type="text" name="bot-field" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true" />
+      <label className="sm:col-span-1"><span className={label}>Name *</span><input name="name" required autoComplete="name" className={field} /></label>
+      <label><span className={label}>Company or event</span><input name="company" autoComplete="organization" className={field} /></label>
+      <label><span className={label}>Email *</span><input name="email" type="email" required autoComplete="email" className={field} /></label>
+      <label><span className={label}>Phone</span><input name="phone" type="tel" autoComplete="tel" className={field} /></label>
+      <label><span className={label}>Date</span><input name="date" type="date" className={field} /></label>
+      <label><span className={label}>Pickup time</span><input name="time" type="time" className={field} /></label>
+      <label><span className={label}>Pickup</span><input name="pickup" placeholder="Address, airport, or venue" className={field} /></label>
+      <label><span className={label}>Drop-off</span><input name="dropoff" placeholder="Or “hourly, as directed”" className={field} /></label>
+      <label><span className={label}>Passengers</span><input name="passengers" type="number" min="1" className={field} /></label>
+      <label>
+        <span className={label}>Vehicle</span>
+        <select name="vehicle" className={field} defaultValue="">
+          <option value="">Recommend one for me</option>
+          {vehicleClasses.map((v) => (
+            <option key={v.key} value={v.name}>{v.name} (up to {v.passengers})</option>
+          ))}
+        </select>
+      </label>
+      <label className="sm:col-span-2"><span className={label}>Accessibility needs</span><input name="access" placeholder="Wheelchair access, service animal, mobility aid, anything we should plan for" className={field} /></label>
+      <label className="sm:col-span-2"><span className={label}>Anything else</span><textarea name="notes" rows={3} maxLength={1000} className={field} /></label>
+      <div className="flex flex-wrap items-center gap-4 sm:col-span-2">
+        <button
+          type="submit"
+          disabled={state === "sending"}
+          className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-[#0b0b10] transition-transform duration-300 hover:scale-[1.04] disabled:opacity-60"
+          style={{ background: c.accent }}
+        >
+          {state === "sending" ? "Sending…" : "Request a quote"} <span aria-hidden="true">→</span>
+        </button>
+        {invalid && <p role="alert" className="text-sm text-danger">{invalid}</p>}
+        {state === "error" && (
+          <p role="alert" className="text-sm text-danger">
+            That didn't send. Email <a className="underline" href={`mailto:${operator.email}`}>{operator.email}</a> instead.
+          </p>
+        )}
+      </div>
+      <p className="text-xs leading-relaxed text-steel sm:col-span-2">
+        We use these details only to quote and run your trip. We never sell them or use them for unrelated marketing.
+      </p>
+    </form>
+  );
+}
 
 export default function Fleet() {
-  const [filterStatus, setFilterStatus] = useState("all");
-  const [sortBy, setSortBy] = useState("utilization");
-  const [selectedAsset, setSelectedAsset] = useState(null);
-
-  useEffect(() => {
-    if (!selectedAsset) return undefined;
-    const previous = document.activeElement;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    document.getElementById("fleet-asset-close")?.focus();
-    const onKey = (e) => {
-      if (e.key === "Escape") setSelectedAsset(null);
-    };
-    window.addEventListener("keydown", onKey);
-    return () => {
-      window.removeEventListener("keydown", onKey);
-      document.body.style.overflow = previousOverflow;
-      if (previous instanceof HTMLElement) previous.focus();
-    };
-  }, [selectedAsset]);
-
-  const filteredFleet = useMemo(() => {
-    // Copy first. Sorting the module-level FLEET_DATA array in place
-    // permanently reorders the source list after the first render.
-    let result = [...FLEET_DATA];
-
-    if (filterStatus !== "all") {
-      result = result.filter((item) => item.status === filterStatus);
-    }
-
-    result.sort((a, b) => {
-      if (sortBy === "utilization") {
-        return b.utilization - a.utilization;
-      } else if (sortBy === "name") {
-        return a.name.localeCompare(b.name);
-      } else if (sortBy === "status") {
-        return a.status.localeCompare(b.status);
-      }
-      return 0;
-    });
-
-    return result;
-  }, [filterStatus, sortBy]);
-
-  const getStatusColor = (status) => {
-    // Use design tokens, not Tailwind default greens/oranges. Those 700
-    // text colors disappear against the dark theme ink surfaces.
-    switch (status) {
-      case "in-use":
-        return "bg-success/10 text-success border-success/30";
-      case "available":
-        return "bg-amber/10 text-amber border-amber/30";
-      case "maintenance":
-        return "bg-warning/10 text-warning border-warning/30";
-      default:
-        return "bg-ink-3 text-steel border-line";
-    }
-  };
-
-  const getStatusLabel = (status) => {
-    switch (status) {
-      case "in-use":
-        return "In Use";
-      case "available":
-        return "Available";
-      case "maintenance":
-        return "Maintenance";
-      default:
-        return status;
-    }
-  };
-
   return (
-    <>
+    <div style={{ "--cta": c.accent, "--cta-hover": c.accent }}>
       <Seo
-        title="Fleet"
-        description="Preview of the D&J Stratagem fleet board — sample assets only. Request access to talk about live equipment tracking."
+        title="Stratagem Fleet"
+        description={`Chauffeured sedans, SUVs, Sprinters, minibuses, and motorcoaches across ${operator.base} and Southern California. Itemized quotes, no surprise charges.`}
       />
-      <PageHero
-        index="05"
-        kicker="Fleet"
-        title={<>Every machine, <em>in view.</em></>}
-        lede="Status, utilization, and asset cards on one board, so you know what is running, what is idle, and what is due before anyone has to call the yard."
-      >
-        <div className="flex flex-wrap items-center gap-5">
-            <Button to="/register">Request access →</Button>
-            <Button to="/contact" variant="ghost">Request a demo</Button>
-          </div>
-      </PageHero>
 
-      <Section className="py-16">
-        <div className="mx-auto max-w-6xl px-6">
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
-            {STATS.map((stat, index) => {
-              const Icon = stat.icon;
-              return (
-                <div
-                  key={index}
-                  className="rounded-lg border border-line/50 bg-gradient-to-br from-ink via-ink-2 to-ink-3 p-6 backdrop-blur-sm transition-all"
-                >
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <p className="text-sm text-steel">{stat.label}</p>
-                      <p className="mt-2 text-3xl font-bold text-paper">{stat.value}</p>
-                    </div>
-                    <Icon className="h-8 w-8 text-amber opacity-60" />
-                  </div>
-                </div>
-              );
-            })}
+      {/* Hero */}
+      <section className="relative overflow-hidden px-6 pb-8 pt-10 md:pt-16">
+        <span
+          aria-hidden="true"
+          className="bob pointer-events-none absolute -right-32 top-0 h-[34rem] w-[34rem] rounded-full"
+          style={{ background: `radial-gradient(closest-side, ${c.accent}55, transparent)` }}
+        />
+        <div className="relative mx-auto max-w-7xl">
+          <div className="rise-in flex flex-wrap items-center gap-4">
+            <Link to="/about" className="mono-label draw-link text-steel hover:text-paper">D&amp;J Stratagem, Inc.</Link>
+            <span className="mono-label text-steel">/</span>
+            <span className="mono-label" style={{ color: c.accent }}>{c.status}</span>
           </div>
-        </div>
-      </Section>
-
-      <Section className="py-8 border-b border-line/20">
-        <div className="mx-auto max-w-6xl px-6">
-          <div className="flex flex-wrap items-center gap-4">
-            <div className="flex items-center gap-2">
-              <label htmlFor="fleet-filter-status" className="text-sm font-medium text-steel">Filter by Status:</label>
-              <select
-                id="fleet-filter-status"
-                value={filterStatus}
-                onChange={(e) => setFilterStatus(e.target.value)}
-                className="rounded-md border border-line/50 bg-ink-2 px-3 py-2 text-sm text-paper transition-colors focus:outline-none focus:ring-2 focus:ring-amber/20"
-              >
-                <option value="all">All Assets</option>
-                <option value="in-use">In Use</option>
-                <option value="available">Available</option>
-                <option value="maintenance">Maintenance</option>
-              </select>
-            </div>
-            <div className="flex items-center gap-2">
-              <label htmlFor="fleet-sort-by" className="text-sm font-medium text-steel">Sort by:</label>
-              <select
-                id="fleet-sort-by"
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="rounded-md border border-line/50 bg-ink-2 px-3 py-2 text-sm text-paper transition-colors focus:outline-none focus:ring-2 focus:ring-amber/20"
-              >
-                <option value="utilization">Highest Utilization</option>
-                <option value="name">Name (A-Z)</option>
-                <option value="status">Status</option>
-              </select>
-            </div>
-            <div className="ml-auto text-xs text-steel">
-              Showing {filteredFleet.length} of {FLEET_DATA.length} assets
-            </div>
+          <div className="rise-in mt-10 flex items-center gap-5" style={{ animationDelay: "60ms" }}>
+            <CompanyGlyph glyph={c.glyph} accent={c.accent} size={64} />
+            <p className="font-display text-3xl text-paper md:text-4xl">{c.name}</p>
           </div>
-        </div>
-      </Section>
-
-      <Section className="py-12">
-        <div className="mx-auto max-w-6xl px-6">
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {filteredFleet.map((asset) => (
-              <article
-                key={asset.id}
-                className="group rounded-lg border border-line/30 bg-gradient-to-br from-ink via-ink-2 to-ink-3 p-6 backdrop-blur-sm transition-all"
-              >
-                <div className="mb-4 flex items-start justify-between">
-                  <div>
-                    <p className="text-xs font-semibold uppercase tracking-wider text-steel">
-                      {asset.type}
-                    </p>
-                    <h3 className="mt-1 text-lg font-bold text-paper">{asset.name}</h3>
-                    <p className="text-xs text-steel">{asset.id}</p>
-                  </div>
-                  <span className={`rounded-full border px-3 py-1 text-xs font-semibold ${getStatusColor(asset.status)}`}>
-                    {getStatusLabel(asset.status)}
-                  </span>
-                </div>
-                <div className="mb-4">
-                  <div className="mb-2 flex items-center justify-between">
-                    <span className="text-xs font-medium text-steel">Utilization</span>
-                    <span className="text-sm font-bold text-paper">{asset.utilization}%</span>
-                  </div>
-                  <div className="h-2 rounded-full bg-line/30">
-                    <div
-                      className="h-full rounded-full bg-gradient-to-r from-amber to-amber-2 transition-all"
-                      style={{ width: `${asset.utilization}%` }}
-                    />
-                  </div>
-                </div>
-                <div className="mb-4 space-y-2 border-t border-line/20 pt-4">
-                  <div className="flex justify-between text-xs">
-                    <span className="text-steel">Location:</span>
-                    <span className="font-medium text-paper">{asset.location}</span>
-                  </div>
-                  <div className="flex justify-between text-xs">
-                    <span className="text-steel">Operator:</span>
-                    <span className="font-medium text-paper">{asset.operator}</span>
-                  </div>
-                  <div className="flex justify-between text-xs">
-                    <span className="text-steel">Rate:</span>
-                    <span className="font-medium text-paper">{asset.hourlyRate}/hr</span>
-                  </div>
-                  <div className="flex justify-between text-xs">
-                    <span className="text-steel">Capacity:</span>
-                    <span className="font-medium text-paper">{asset.capacity}</span>
-                  </div>
-                </div>
-                <div className="border-t border-line/20 pt-4">
-                  <p className="text-xs text-steel">
-                    Last maintenance: <span className="font-medium text-paper">{asset.lastMaintenance}</span>
-                  </p>
-                  <p className="mt-1 text-xs text-steel">
-                    Next scheduled: <span className="font-medium text-paper">{asset.nextScheduled}</span>
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  aria-haspopup="dialog"
-                  onClick={() => setSelectedAsset(asset)}
-                  className="mt-4 w-full flex items-center justify-center gap-2 rounded-md bg-amber/10 py-2 text-xs font-semibold text-amber transition-all hover:bg-amber/20 group-hover:bg-brand group-hover:text-white"
-                >
-                  View Details <IconArrowRight className="h-3 w-3" />
-                </button>
-              </article>
+          <h1 className="rise-in mt-8 max-w-5xl text-balance text-[3.2rem] leading-[0.92] text-paper sm:text-7xl lg:text-[7.5rem]" style={{ animationDelay: "120ms" }}>
+            Arrive on time. <em>Every time.</em>
+          </h1>
+          <div className="rise-in mt-10 grid gap-8 md:grid-cols-[1fr_minmax(0,34rem)]" style={{ animationDelay: "200ms" }}>
+            <div className="order-2 flex flex-wrap items-center gap-5 md:order-1">
+              <a href="#quote" className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-[#0b0b10] transition-transform duration-300 hover:scale-[1.04]" style={{ background: c.accent }}>
+                Request a quote <span aria-hidden="true">→</span>
+              </a>
+              <a href="#fleet" className="draw-link text-sm text-paper">See the vehicles</a>
+            </div>
+            <p className="order-1 text-lg leading-relaxed text-steel md:order-2">{c.lede}</p>
+          </div>
+          <div className="rise-in mt-14 flex items-end gap-6 overflow-x-auto pb-2" style={{ animationDelay: "280ms" }} aria-hidden="true">
+            {vehicleClasses.map((v) => (
+              <VehicleArt key={v.key} shape={v.shape} />
             ))}
           </div>
         </div>
-      </Section>
+      </section>
 
-      <Section className="py-16 border-t border-line/20">
-        <div className="mx-auto max-w-6xl px-6">
-          <div className="mb-12 text-center">
-            <Eyebrow>Powerful Features</Eyebrow>
-            <h2 className="mt-4 text-paper text-5xl leading-[1] md:text-6xl">
-              Built for modern construction operations
-            </h2>
-          </div>
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {[
-              { icon: IconTruck, title: "Asset status board", desc: "See what is in use, available, or in the shop without inventing GPS pings." },
-              { icon: IconClock, title: "Maintenance dates", desc: "Keep last service and next due on the card so the shop list is visible." },
-              { icon: IconPackage, title: "Utilization snapshot", desc: "A simple rate per asset so idle machines are obvious in the sample set." },
-              { icon: IconUsers, title: "Crew assignment", desc: "Show who is on the machine, or that it is waiting for a crew." },
-              { icon: IconCheck, title: "Inspection notes", desc: "A place for checklists and cert dates when the live module ships." },
-              { icon: IconArrowRight, title: "Works with the rest of the product", desc: "Fleet sits next to bids, orders, and suppliers — not a standalone toy site." },
-            ].map((feature, idx) => {
-              const Icon = feature.icon;
-              return (
-                <div
-                  key={idx}
-                  className="rounded-lg border border-line/20 bg-gradient-to-br from-ink/50 via-ink-2/50 to-ink-3/50 p-6 backdrop-blur-sm transition-all hover:from-ink hover:via-ink-2 hover:to-ink-3"
-                >
-                  <Icon className="h-8 w-8 text-amber" />
-                  <h3 className="mt-4 text-lg font-bold text-paper">{feature.title}</h3>
-                  <p className="mt-2 text-sm text-steel leading-relaxed">{feature.desc}</p>
-                </div>
-              );
-            })}
-          </div>
+      {/* Services */}
+      <Section>
+        <Eyebrow>What we run</Eyebrow>
+        <div className="grid gap-5 md:grid-cols-3">
+          {services.map((s, i) => (
+            <Reveal key={s.title} delay={(i % 3) * 90} className="h-full">
+              <div className="slab h-full p-7 transition-transform duration-500 hover:-translate-y-1">
+                <span className="font-display text-5xl leading-none" style={{ color: c.accent }}>{String(i + 1).padStart(2, "0")}</span>
+                <h2 className="mt-6 text-3xl text-paper">{s.title}</h2>
+                <p className="mt-3 text-sm leading-relaxed text-steel">{s.text}</p>
+              </div>
+            </Reveal>
+          ))}
         </div>
+        <p className="mt-8 text-sm text-steel">Service area: {operator.serviceArea}. {operator.hours}</p>
       </Section>
 
-      <Section className="py-16 border-t border-line/20">
-        <div className="mx-auto max-w-6xl px-6">
-          <div className="mb-12 text-center">
-            <Eyebrow>Simple Pricing</Eyebrow>
-            <h2 className="mt-4 text-paper text-5xl leading-[1] md:text-6xl">
-              Fleet add-on pricing is not live yet
-            </h2>
+      {/* Fleet */}
+      <Section id="fleet">
+        <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
+          <div>
+            <Eyebrow>The fleet</Eyebrow>
+            <h2 className="text-6xl text-paper md:text-7xl">The right vehicle, <em>sized to the trip.</em></h2>
           </div>
-          <div className="grid gap-6 md:grid-cols-3">
-            {[
-              { name: "Starter", price: "$199", period: "/month", features: ["Up to 25 assets", "Basic tracking", "Email support", "Monthly reports"] },
-              { name: "Professional", price: "$599", period: "/month", highlight: true, features: ["Up to 250 assets", "Advanced analytics", "Priority support", "Real-time alerts", "API access", "Team collaboration"] },
-              { name: "Enterprise", price: "Custom", period: "pricing", features: ["Unlimited assets", "White label", "Dedicated support", "Custom integration", "On-premise option"] },
-            ].map((plan, idx) => (
-              <div
-                key={idx}
-                className={`relative rounded-lg border p-8 backdrop-blur-sm transition-all ${
-                  plan.highlight
-                    ? "border-amber/50 bg-gradient-to-br from-amber/10 via-amber/5 to-transparent ring-2 ring-amber/20 md:scale-105"
-                    : "border-line/30 bg-gradient-to-br from-ink via-ink-2 to-ink-3"
-                }`}
-              >
-                {plan.highlight && (
-                  <div className="absolute -top-3 left-6 bg-brand px-3 py-1 text-xs font-bold text-white">
-                    MOST POPULAR
-                  </div>
-                )}
-                <h3 className="text-lg font-bold text-paper">{plan.name}</h3>
-                <div className="mt-4">
-                  <span className="text-3xl font-bold text-paper">{plan.price}</span>
-                  <span className="text-sm text-steel ml-2">{plan.period}</span>
-                </div>
-                <ul className="mt-6 space-y-3">
-                  {plan.features.map((feature, fidx) => (
-                    <li key={fidx} className="flex items-center gap-3 text-sm text-steel">
-                      <IconCheck className="h-4 w-4 text-amber flex-shrink-0" />
-                      {feature}
-                    </li>
+          <p className="text-steel lg:pb-3">
+            You book a class, and you get that class or better. Never smaller, never older, never different without your say-so.
+            {vehicles.length === 0 && " Individual vehicles, with photos and details, are listed here as each one is registered, inspected, and insured."}
+          </p>
+        </div>
+        <div className="mt-12 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {vehicleClasses.map((v, i) => (
+            <Reveal key={v.key} delay={(i % 3) * 90} className="h-full">
+              <article className="slab flex h-full flex-col p-6">
+                <div className="flex h-24 items-end"><VehicleArt shape={v.shape} /></div>
+                <h3 className="mt-6 text-3xl text-paper">{v.name}</h3>
+                <p className="mt-1 text-sm text-steel">{v.bestFor}</p>
+                <dl className="mt-5 grid grid-cols-2 gap-3 border-y border-line py-4">
+                  <div><dt className="mono-label text-steel">Passengers</dt><dd className="mt-1 font-display text-3xl text-paper">Up to {v.passengers}</dd></div>
+                  <div><dt className="mono-label text-steel">Luggage</dt><dd className="mt-1 font-display text-3xl text-paper">{v.bags} bags</dd></div>
+                </dl>
+                <ul className="mt-4 space-y-1.5 text-sm text-paper/85">
+                  {v.features.map((f) => (
+                    <li key={f} className="flex items-center gap-2.5"><span className="h-1.5 w-1.5 rounded-full" style={{ background: c.accent }} />{f}</li>
                   ))}
                 </ul>
-                <Button
-                  to={plan.name === "Enterprise" ? "/contact" : "/register"}
-                  variant={plan.highlight ? "primary" : "secondary"}
-                  className="mt-8 w-full"
-                >
-                  {plan.name === "Enterprise" ? "Talk to us" : "Request access"}
-                </Button>
-              </div>
-            ))}
+              </article>
+            </Reveal>
+          ))}
+        </div>
+      </Section>
+
+      {/* Pricing */}
+      <Section>
+        <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr]">
+          <div>
+            <Eyebrow>How pricing works</Eyebrow>
+            <h2 className="text-6xl text-paper md:text-7xl">One quote. <em>No surprises.</em></h2>
+            <p className="mt-6 text-steel">
+              Every quote is itemized and names the vehicle class, the pickup and drop-off, the time, and the price. That
+              confirmed price is what you pay. Cancellation terms are written on the quote, before you confirm.
+            </p>
+          </div>
+          <div>
+            <p className="mono-label text-steel">The only possible extras, and only if agreed in writing first</p>
+            <ul className="mt-4">
+              {extras.map((x) => (
+                <li key={x.name}>
+                  <div className="dotline" />
+                  <div className="grid gap-1 py-5 sm:grid-cols-[12rem_1fr]">
+                    <p className="font-display text-2xl text-paper">{x.name}</p>
+                    <p className="text-sm leading-relaxed text-steel">{x.text}</p>
+                  </div>
+                </li>
+              ))}
+              <div className="dotline" />
+            </ul>
           </div>
         </div>
       </Section>
 
-      <CTASection
-        title="Want this board on your own equipment?"
-        subtitle="Request access and tell us what you run. There is no live fleet feed on this public page."
-        primaryLabel="Request access"
-        primaryTo="/register"
-        secondaryLabel="Request a demo"
-        secondaryTo="/contact"
-      />
+      {/* Safety */}
+      <Section>
+        <Eyebrow>Safety standards</Eyebrow>
+        <h2 className="max-w-4xl text-6xl text-paper md:text-7xl">Professional drivers. <em>Roadworthy vehicles.</em></h2>
+        <div className="mt-12 grid gap-5 md:grid-cols-3">
+          {standards.map((s, i) => (
+            <Reveal key={s.title} delay={i * 90} className="h-full">
+              <div className="slab h-full p-7">
+                <h3 className="text-3xl text-paper">{s.title}</h3>
+                <ul className="mt-5 space-y-3 text-sm leading-relaxed text-steel">
+                  {s.points.map((p) => (
+                    <li key={p} className="flex gap-3"><span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: c.accent }} />{p}</li>
+                  ))}
+                </ul>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </Section>
 
-      {selectedAsset && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4" onClick={() => setSelectedAsset(null)}>
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="fleet-asset-title"
-            className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-ink-2 p-8"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="mb-6 flex items-start justify-between">
-              <div>
-                <h2 id="fleet-asset-title" className="text-2xl font-bold text-paper">{selectedAsset.name}</h2>
-                <p className="mt-1 text-sm text-steel">{selectedAsset.id}</p>
-              </div>
-              <button
-                id="fleet-asset-close"
-                type="button"
-                onClick={() => setSelectedAsset(null)}
-                aria-label="Close asset details"
-                className="text-2xl text-steel hover:text-paper"
-              >
-                ✕
-              </button>
-            </div>
-            <div className="space-y-6">
-              <div className="border-b border-line pb-4">
-                <div className="flex items-center justify-between">
+      {/* Credentials */}
+      <Section id="credentials">
+        <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr]">
+          <div>
+            <Eyebrow>Licensing and insurance</Eyebrow>
+            <h2 className="text-6xl text-paper md:text-7xl">Check <em>our paperwork.</em></h2>
+            <p className="mt-6 text-steel">
+              {operator.dba} is operated by {operator.legalName}, {operator.base}. Every number below can be checked against the
+              issuing authority, and certificates of insurance are available on request.
+            </p>
+          </div>
+          <dl>
+            {credentials.map((cr) => (
+              <div key={cr.key}>
+                <div className="dotline" />
+                <div className="grid gap-2 py-5 sm:grid-cols-[1fr_auto] sm:items-baseline">
                   <div>
-                    <p className="text-sm text-steel">Current Status</p>
-                    <p className="mt-1 text-lg font-bold text-paper">{getStatusLabel(selectedAsset.status)}</p>
+                    <dt className="text-paper">{cr.label}</dt>
+                    <p className="mt-1 text-xs leading-relaxed text-steel">{cr.note}</p>
                   </div>
-                  <span className={`rounded-full border px-4 py-2 text-sm font-semibold ${getStatusColor(selectedAsset.status)}`}>
-                    {getStatusLabel(selectedAsset.status)}
-                  </span>
+                  <dd className={`mono-label ${cr.value ? "text-paper" : "text-steel"}`}>
+                    {cr.value || "Pending"}
+                  </dd>
                 </div>
               </div>
-              <div className="grid gap-6 md:grid-cols-2">
-                {[
-                  { label: "Type", value: selectedAsset.type },
-                  { label: "Location", value: selectedAsset.location },
-                  { label: "Operator", value: selectedAsset.operator },
-                  { label: "Hourly Rate", value: selectedAsset.hourlyRate },
-                  { label: "Capacity", value: selectedAsset.capacity },
-                  { label: "Last Maintenance", value: selectedAsset.lastMaintenance },
-                ].map((item, idx) => (
-                  <div key={idx}>
-                    <p className="text-xs font-semibold uppercase text-steel">{item.label}</p>
-                    <p className="mt-2 text-lg font-bold text-paper">{item.value}</p>
-                  </div>
-                ))}
-              </div>
-              <div className="border-t border-line pt-6">
-                <p className="text-xs font-semibold uppercase text-steel">Utilization</p>
-                <div className="mt-4 flex items-baseline gap-4">
-                  <div className="flex-1">
-                    <div className="h-4 rounded-full bg-line/30">
-                      <div
-                        className="h-full rounded-full bg-gradient-to-r from-amber to-amber-2"
-                        style={{ width: `${selectedAsset.utilization}%` }}
-                      />
-                    </div>
-                  </div>
-                  <span className="text-2xl font-bold text-paper">{selectedAsset.utilization}%</span>
-                </div>
-              </div>
-              <p className="border-t border-line pt-6 text-sm text-steel">
-                Schedule and history actions are not wired on this preview. Use{" "}
-                <Link to="/contact" className="font-medium text-amber hover:text-amber-2">the contact form</Link>{" "}
-                if you want this on a real fleet.
-              </p>
-            </div>
+            ))}
+            <div className="dotline" />
+          </dl>
+        </div>
+        {!isLicensed && (
+          <p className="mt-8 max-w-3xl rounded-2xl border border-line p-5 text-sm leading-relaxed text-steel">
+            {operator.dba} is completing its permits and insurance. We are taking quote requests now, and we will confirm a
+            booking only once every credential above is issued and listed.
+          </p>
+        )}
+      </Section>
+
+      {/* Accessibility */}
+      <Section>
+        <div className="grid gap-12 lg:grid-cols-2">
+          <div>
+            <Eyebrow>Everyone rides</Eyebrow>
+            <h2 className="text-6xl text-paper md:text-7xl">Accessible <em>by default.</em></h2>
+          </div>
+          <div className="space-y-5 text-steel">
+            <p>We serve every passenger equally, without discrimination of any kind. No one gets a lesser vehicle, a longer wait, or a higher price because of who they are.</p>
+            <p>Service animals ride with their handlers, always. Tell us about a wheelchair, mobility aid, or other need when you request a quote and we will plan the vehicle and the pickup around it.</p>
+            <p>Your trip details are used only to run your trip. They are kept confidential and are never sold.</p>
           </div>
         </div>
-      )}
-    </>
+      </Section>
+
+      {/* Quote */}
+      <Section id="quote">
+        <div className="grid gap-12 lg:grid-cols-[0.8fr_1.2fr]">
+          <div>
+            <Eyebrow>Request a quote</Eyebrow>
+            <h2 className="text-6xl text-paper md:text-7xl">Where are <em>we headed?</em></h2>
+            <p className="mt-6 text-steel">A person replies with an itemized quote, usually within one business day.</p>
+            <div className="mt-8 space-y-2 text-sm">
+              <a href={`mailto:${operator.email}`} className="draw-link block w-fit text-paper">{operator.email}</a>
+              {operator.phone && <a href={`tel:${operator.phone.replace(/[^\d+]/g, "")}`} className="draw-link block w-fit text-paper">{operator.phone}</a>}
+              <p className="text-steel">{operator.base}</p>
+            </div>
+          </div>
+          <QuoteForm />
+        </div>
+      </Section>
+    </div>
   );
 }

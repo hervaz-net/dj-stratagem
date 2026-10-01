@@ -14,6 +14,7 @@ export default function Subsidiary() {
   const { slug } = useParams();
   const c = findCompany(slug);
   if (!c || c.external) return <Navigate to="/" replace />;
+  if (c.href) return <Navigate to={c.href} replace />;
 
   const siblings = companies.filter((o) => o.slug !== c.slug);
   const accentBtn = "inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-[#0b0b10] transition-transform duration-300 ease-[cubic-bezier(0.3,1.6,0.5,1)] hover:scale-[1.04]";
@@ -114,7 +115,7 @@ export default function Subsidiary() {
             return o.external ? (
               <a key={o.slug} href={o.href} className={cls}>{inner}</a>
             ) : (
-              <Link key={o.slug} to={`/companies/${o.slug}`} className={cls}>{inner}</Link>
+              <Link key={o.slug} to={o.href ?? `/companies/${o.slug}`} className={cls}>{inner}</Link>
             );
           })}
         </div>
