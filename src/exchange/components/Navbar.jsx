@@ -122,6 +122,10 @@ export default function Navbar({ onOpenPalette }) {
           {PRIMARY_NAV.map((item) =>
             item.children ? (
               <NavMenu key={item.label} item={item} />
+            ) : item.href ? (
+              <a key={item.href} href={item.href} className={linkClass({ isActive: false })}>
+                {item.label}
+              </a>
             ) : (
               <NavLink key={item.to} to={item.to} className={linkClass}>
                 {item.label}
@@ -200,6 +204,14 @@ export default function Navbar({ onOpenPalette }) {
                     </NavLink>
                   ))}
                 </div>
+              ) : item.href ? (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  className="rounded-xl px-3 py-3 text-base font-medium text-fg transition-colors hover:bg-subtle"
+                >
+                  {item.label}
+                </a>
               ) : (
                 <NavLink
                   key={item.to}
