@@ -908,3 +908,18 @@ h4, h5, h6 { font-family: var(--font-sans); }
   background: linear-gradient(160deg, var(--lg-tint), transparent);
   box-shadow: inset 0 1px 0.5px var(--lg-rim), inset 0 -1px 1px var(--lg-rim-low);
 }
+
+/* Mega nav: content slides in from the side you moved toward. */
+@keyframes mega-in-right { from { opacity: 0; transform: translate3d(28px, 0, 0); } to { opacity: 1; transform: none; } }
+@keyframes mega-in-left { from { opacity: 0; transform: translate3d(-28px, 0, 0); } to { opacity: 1; transform: none; } }
+@keyframes mega-drop { from { opacity: 0; transform: translate3d(0, -10px, 0) scale(0.98); } to { opacity: 1; transform: none; } }
+.mega-in-right { animation: mega-in-right 0.42s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.mega-in-left { animation: mega-in-left 0.42s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.mega-drop { animation: mega-drop 0.36s cubic-bezier(0.2, 0.7, 0.2, 1) both; transform-origin: top center; }
+/* Soft light that follows the pointer across the open panel (--mx/--my from JS). */
+.mega-spot {
+  background: radial-gradient(28rem circle at var(--mx, 50%) var(--my, 0%), var(--spot, rgba(255, 255, 255, 0.07)), transparent 60%);
+}
+@media (prefers-reduced-motion: reduce) {
+  .mega-in-right, .mega-in-left, .mega-drop { animation: none; }
+}

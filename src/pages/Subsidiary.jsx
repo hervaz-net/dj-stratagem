@@ -13,7 +13,7 @@ import { companies, findCompany } from "../data/companies";
 export default function Subsidiary() {
   const { slug } = useParams();
   const c = findCompany(slug);
-  if (!c || c.external) return <Navigate to="/companies" replace />;
+  if (!c || c.external) return <Navigate to="/" replace />;
 
   const siblings = companies.filter((o) => o.slug !== c.slug);
   const accentBtn = "inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-[#0b0b10] transition-transform duration-300 ease-[cubic-bezier(0.3,1.6,0.5,1)] hover:scale-[1.04]";
@@ -31,7 +31,7 @@ export default function Subsidiary() {
         />
         <div className="relative mx-auto max-w-7xl">
           <div className="rise-in flex flex-wrap items-center gap-4">
-            <Link to="/companies" className="mono-label draw-link text-steel hover:text-paper">D&amp;J Stratagem, Inc.</Link>
+            <Link to="/about" className="mono-label draw-link text-steel hover:text-paper">D&amp;J Stratagem, Inc.</Link>
             <span className="mono-label text-steel">/</span>
             <span className="mono-label" style={{ color: c.accent }}>{c.status}</span>
           </div>
@@ -49,7 +49,6 @@ export default function Subsidiary() {
               <Link to="/contact" className={accentBtn} style={{ background: c.accent }}>
                 Join the early list <span aria-hidden="true">→</span>
               </Link>
-              <Link to="/companies" className="draw-link text-paper">All companies</Link>
             </div>
             <p className="order-1 text-lg leading-relaxed text-steel md:order-2">{c.lede}</p>
           </div>

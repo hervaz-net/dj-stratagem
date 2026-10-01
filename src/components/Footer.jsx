@@ -28,7 +28,6 @@ const columns = [
   {
     heading: "Companies",
     links: [
-      { to: "/companies", label: "All companies" },
       { to: "/exchange", label: "Stratagem Exchange", reloadDocument: true },
       { to: "/companies/capital", label: "Stratagem Capital" },
       { to: "/companies/studio", label: "Stratagem Studio" },

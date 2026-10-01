@@ -36,7 +36,6 @@ const staticPaths = [
   ["/privacy", "0.3"],
   ["/terms", "0.3"],
   ["/brand", "0.3"],
-  ["/companies", "0.8"],
   ["/companies/capital", "0.6"],
   ["/companies/studio", "0.6"],
   ["/companies/workforce", "0.6"],
