@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
+import PageHero from "../components/nocturne/PageHero";
 import Section, { Eyebrow } from "../components/Section";
 import Button from "../components/Button";
 import CTASection from "../components/CTASection";
@@ -190,33 +191,17 @@ export default function Fleet() {
         title="Fleet"
         description="Preview of the D&J Stratagem fleet board — sample assets only. Request access to talk about live equipment tracking."
       />
-      <Section className="relative overflow-hidden pt-16 pb-8 md:pt-24">
-        <div className="pointer-events-none absolute inset-0 bg-grid [mask-image:radial-gradient(ellipse_60%_60%_at_50%_0%,black,transparent)]" />
-        <div className="relative mx-auto max-w-6xl px-6">
-          <Eyebrow>Fleet Management</Eyebrow>
-          <h1 className="mt-6 text-3xl font-bold leading-tight text-paper md:text-4xl">
-            See how equipment would look on the board.
-          </h1>
-          <p className="mt-6 max-w-2xl text-lg text-steel">
-            This page is a product preview: status filters, utilization, and asset cards
-            using sample machines. It is not a live tracker for a real fleet.
-          </p>
-          <div
-            role="note"
-            className="mt-6 max-w-2xl rounded-xl border border-amber/40 bg-amber/8 px-5 py-4"
-          >
-            <p className="text-sm font-semibold text-amber">Preview &mdash; sample assets</p>
-            <p className="mt-1 text-sm leading-relaxed text-steel">
-              Names, rates, and operators below are illustrative. They are not a customer
-              fleet and cannot be dispatched from this page.
-            </p>
+      <PageHero
+        index="05"
+        kicker="Fleet"
+        title={<>Every machine, <em>in view.</em></>}
+        lede="Status, utilization, and asset cards on one board, so you know what is running, what is idle, and what is due before anyone has to call the yard."
+      >
+        <div className="flex flex-wrap items-center gap-5">
+            <Button to="/register">Request access →</Button>
+            <Button to="/contact" variant="ghost">Request a demo</Button>
           </div>
-          <div className="mt-10 flex flex-wrap gap-4">
-            <Button to="/register" variant="primary">Request access</Button>
-            <Button to="/contact" variant="secondary">Request a demo</Button>
-          </div>
-        </div>
-      </Section>
+      </PageHero>
 
       <Section className="py-16">
         <div className="mx-auto max-w-6xl px-6">
@@ -226,7 +211,7 @@ export default function Fleet() {
               return (
                 <div
                   key={index}
-                  className="rounded-lg border border-line/50 bg-gradient-to-br from-ink via-ink-2 to-ink-3 p-6 backdrop-blur-sm transition-all hover:border-line hover:shadow-lg"
+                  className="rounded-lg border border-line/50 bg-gradient-to-br from-ink via-ink-2 to-ink-3 p-6 backdrop-blur-sm transition-all"
                 >
                   <div className="flex items-start justify-between">
                     <div>
@@ -251,7 +236,7 @@ export default function Fleet() {
                 id="fleet-filter-status"
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value)}
-                className="rounded-md border border-line/50 bg-ink-2 px-3 py-2 text-sm text-paper transition-colors hover:border-line focus:outline-none focus:ring-2 focus:ring-amber/20"
+                className="rounded-md border border-line/50 bg-ink-2 px-3 py-2 text-sm text-paper transition-colors focus:outline-none focus:ring-2 focus:ring-amber/20"
               >
                 <option value="all">All Assets</option>
                 <option value="in-use">In Use</option>
@@ -265,7 +250,7 @@ export default function Fleet() {
                 id="fleet-sort-by"
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="rounded-md border border-line/50 bg-ink-2 px-3 py-2 text-sm text-paper transition-colors hover:border-line focus:outline-none focus:ring-2 focus:ring-amber/20"
+                className="rounded-md border border-line/50 bg-ink-2 px-3 py-2 text-sm text-paper transition-colors focus:outline-none focus:ring-2 focus:ring-amber/20"
               >
                 <option value="utilization">Highest Utilization</option>
                 <option value="name">Name (A-Z)</option>
@@ -285,7 +270,7 @@ export default function Fleet() {
             {filteredFleet.map((asset) => (
               <article
                 key={asset.id}
-                className="group rounded-lg border border-line/30 bg-gradient-to-br from-ink via-ink-2 to-ink-3 p-6 backdrop-blur-sm transition-all hover:border-amber/30 hover:shadow-lg"
+                className="group rounded-lg border border-line/30 bg-gradient-to-br from-ink via-ink-2 to-ink-3 p-6 backdrop-blur-sm transition-all"
               >
                 <div className="mb-4 flex items-start justify-between">
                   <div>
@@ -355,7 +340,7 @@ export default function Fleet() {
         <div className="mx-auto max-w-6xl px-6">
           <div className="mb-12 text-center">
             <Eyebrow>Powerful Features</Eyebrow>
-            <h2 className="mt-4 text-3xl font-bold text-paper">
+            <h2 className="mt-4 text-paper text-5xl leading-[1] md:text-6xl">
               Built for modern construction operations
             </h2>
           </div>
@@ -372,7 +357,7 @@ export default function Fleet() {
               return (
                 <div
                   key={idx}
-                  className="rounded-lg border border-line/20 bg-gradient-to-br from-ink/50 via-ink-2/50 to-ink-3/50 p-6 backdrop-blur-sm transition-all hover:border-line hover:from-ink hover:via-ink-2 hover:to-ink-3"
+                  className="rounded-lg border border-line/20 bg-gradient-to-br from-ink/50 via-ink-2/50 to-ink-3/50 p-6 backdrop-blur-sm transition-all hover:from-ink hover:via-ink-2 hover:to-ink-3"
                 >
                   <Icon className="h-8 w-8 text-amber" />
                   <h3 className="mt-4 text-lg font-bold text-paper">{feature.title}</h3>
@@ -388,7 +373,7 @@ export default function Fleet() {
         <div className="mx-auto max-w-6xl px-6">
           <div className="mb-12 text-center">
             <Eyebrow>Simple Pricing</Eyebrow>
-            <h2 className="mt-4 text-3xl font-bold text-paper">
+            <h2 className="mt-4 text-paper text-5xl leading-[1] md:text-6xl">
               Fleet add-on pricing is not live yet
             </h2>
           </div>

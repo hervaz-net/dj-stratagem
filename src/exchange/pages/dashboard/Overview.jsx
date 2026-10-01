@@ -7,7 +7,6 @@ import { shortDate, daysUntil } from "../../components/dashboard/format";
 import { ROLE_VIEWS, SWITCHER_ORDER, roleView } from "../../components/dashboard/roles";
 import Button from "../../components/Button";
 import RoleBadge from "../../components/RoleBadge";
-import SampleLabel from "../../components/SampleLabel";
 import Seo from "../../components/Seo";
 import { IconArrowRight, IconChat, IconPackage, IconTruck, IconMegaphone, IconBolt } from "../../components/icons";
 import useAuth from "../../auth/useAuth";
@@ -364,7 +363,6 @@ export default function Overview() {
                     <p className="text-sm font-medium text-fg-muted">Network on-time score</p>
                     <p className="mt-1 text-3xl font-bold tabular-nums text-fg">{health.value}%</p>
                   </div>
-                  {!live && <SampleLabel>Sample</SampleLabel>}
                 </div>
                 <Sparkline data={health.trend ?? []} accent="green" width={260} height={40} className="mt-3 w-full" />
                 <p className="mt-2 text-xs text-fg-muted">Average on-time delivery rate across your network partners.</p>

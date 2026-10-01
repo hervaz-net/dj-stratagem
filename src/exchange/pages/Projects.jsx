@@ -4,10 +4,8 @@ import Section, { SectionHeading } from "../components/Section";
 import PageHero from "../components/PageHero";
 import Button from "../components/Button";
 import RoleBadge from "../components/RoleBadge";
-import SampleLabel from "../components/SampleLabel";
 import Seo from "../components/Seo";
 import CTASection from "../components/CTASection";
-import PreviewNotice from "../components/PreviewNotice";
 import RequestCard from "../components/projects/RequestCard";
 import { IconArrowRight, IconSearch, IconSliders } from "../components/icons";
 import { ROLES, PRODUCT } from "../brand";
@@ -140,7 +138,6 @@ export default function Projects() {
 
       <section className="px-5 pb-16 pt-8 sm:px-6 md:pb-24 md:pt-10">
         <div className="mx-auto max-w-6xl">
-          <PreviewNotice />
 
           {/* filters */}
           <div className="mt-8 rounded-2xl border border-line bg-surface p-4 shadow-[var(--shadow-card)] sm:p-5">
@@ -247,7 +244,6 @@ export default function Projects() {
               <span className="tabular-nums">{packageCount}</span> material{" "}
               {packageCount === 1 ? "package" : "packages"}
               {filtered ? " match your filters" : ""}
-              <SampleLabel className="ml-2 align-middle">Sample</SampleLabel>
             </p>
             {filtered && (
               <button

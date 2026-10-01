@@ -79,7 +79,7 @@ export function BiddingDashboard() {
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-bid-navy">Bid Marketplace</h1>
+              <h1 className="text-bid-navy text-6xl leading-[0.95] md:text-8xl">Bid Marketplace</h1>
               <p className="text-sm text-text-muted mt-1">Discover opportunities matched to your trade and location</p>
             </div>
           </div>
@@ -134,7 +134,7 @@ export function BiddingDashboard() {
             return (
               <div
                 key={bid.id}
-                className="group bg-white border border-border rounded-xl p-6 hover:shadow-lg transition-all hover:border-bid-blue/30 cursor-pointer"
+                className="group bg-white border border-border rounded-xl p-6 transition-all hover:border-bid-blue/30 cursor-pointer"
               >
                 <div className="flex items-start justify-between gap-4 mb-4">
                   <div className="flex-1">

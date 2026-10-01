@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import Section, { Eyebrow } from "../components/Section";
+import PageHero from "../components/nocturne/PageHero";
+import Section from "../components/Section";
 import CTASection from "../components/CTASection";
 import Seo from "../components/Seo";
 import { IconBuilding, IconHelmet, IconTruck, IconCheck } from "../components/icons";
@@ -93,17 +94,12 @@ export default function Solutions() {
         title="Solutions"
         description="Workflows built for each side of the bid — general contractors, subcontractors, and suppliers, all working from one platform."
       />
-
-      <Section className="pt-16 pb-8 md:pt-24">
-        <Eyebrow>Solutions</Eyebrow>
-        <h1 className="text-balance max-w-3xl text-4xl font-semibold leading-tight tracking-tight text-paper sm:text-5xl">
-          Built for every side of the bid.
-        </h1>
-        <p className="mt-6 max-w-2xl text-lg leading-relaxed text-steel">
-          General contractors, subcontractors, and suppliers work from the same platform, with
-          workflows tailored to how each side actually wins.
-        </p>
-      </Section>
+      <PageHero
+        index="03"
+        kicker="Solutions"
+        title={<>Every side of the deal, <em>in one room.</em></>}
+        lede="General contractors, subcontractors, and suppliers work from the same platform, each with a workflow shaped to how their side actually wins."
+      />
 
       <Section className="border-t border-line">
         <div
@@ -132,8 +128,8 @@ export default function Solutions() {
                 onClick={() => selectTab(r.key)}
                 className={`lift flex items-center gap-2 rounded-full border px-5 py-2.5 text-sm font-medium ${
                   selected
-                    ? "border-amber bg-amber/10 text-amber shadow-sm"
-                    : "border-line bg-ink-2 text-steel hover:border-amber/40 hover:text-paper"
+                    ? "border-amber bg-amber/10 text-amber"
+                    : "border-line bg-ink-2 text-steel hover:text-paper"
                 }`}
               >
                 {r.icon}
@@ -155,13 +151,13 @@ export default function Solutions() {
             <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-amber/10 text-amber">
               {role.icon}
             </div>
-            <h2 className="text-balance mt-5 text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+            <h2 className="text-balance mt-5 text-paper text-5xl leading-[1] md:text-6xl">
               {role.title}
             </h2>
             <p className="mt-4 text-base leading-relaxed text-steel">{role.text}</p>
           </div>
 
-          <div className="rounded-2xl border border-line bg-ink-2 p-6">
+          <div className="slab p-6">
             <p className="text-xs uppercase tracking-wider text-steel">What you get</p>
             <ul className="mt-4 space-y-4">
               {role.points.map((pt) => (

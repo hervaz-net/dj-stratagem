@@ -16,7 +16,7 @@ export default function NotFound() {
 
       <Section className="pt-24 pb-24">
         <Eyebrow>404</Eyebrow>
-        <h1 className="text-balance max-w-2xl text-2xl font-semibold leading-tight tracking-tight text-paper sm:text-3xl">
+        <h1 className="text-balance max-w-2xl text-paper text-6xl leading-[0.95] md:text-8xl">
           We couldn&rsquo;t find that page.
         </h1>
         <p className="mt-6 max-w-xl text-lg leading-relaxed text-steel">

@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import RoleBadge from "../RoleBadge";
-import SampleLabel from "../SampleLabel";
 import { formatShortDate } from "./format";
 
 const FULFILLMENT_LABEL = { delivery: "Jobsite delivery", "will-call": "Will-call pickup" };
@@ -9,7 +8,7 @@ const FULFILLMENT_LABEL = { delivery: "Jobsite delivery", "will-call": "Will-cal
  * Open request for quote. `request` shape:
  * { id, title, buyer, buyerRole, project, location, lines, neededBy (Date), fulfillment, quotes }
  */
-export default function RequestCard({ request, to, sample = true, className = "" }) {
+export default function RequestCard({ request, to, className = "" }) {
   const { title, buyer, buyerRole, project, location, lines, neededBy, fulfillment, quotes } = request;
 
   return (
@@ -18,7 +17,6 @@ export default function RequestCard({ request, to, sample = true, className = ""
     >
       <div className="flex flex-wrap items-center justify-between gap-2">
         <RoleBadge role={buyerRole} label={`${buyerRole === "distributor" ? "Distributor" : "Contractor"} request`} />
-        {sample && <SampleLabel>Sample</SampleLabel>}
       </div>
 
       <h3 className="mt-4 text-base font-semibold leading-snug text-fg">

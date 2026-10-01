@@ -1,5 +1,4 @@
 import RoleBadge from "./RoleBadge";
-import SampleLabel from "./SampleLabel";
 import { IconCheck } from "./icons";
 import { daysFromToday } from "../data/sampleDates";
 
@@ -61,7 +60,6 @@ export default function OpportunityPreview({
     <div className={`overflow-hidden rounded-2xl border border-line bg-surface shadow-[var(--shadow-card)] ${className}`}>
       <div className="flex flex-wrap items-center gap-2 border-b border-line px-5 py-4">
         <p className="text-sm font-semibold text-fg">{title}</p>
-        <SampleLabel className="ml-auto">Sample view</SampleLabel>
       </div>
 
       {/* Wide table scrolls inside its own container so the page never scrolls sideways. */}

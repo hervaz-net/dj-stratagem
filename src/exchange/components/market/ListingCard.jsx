@@ -1,5 +1,4 @@
 import RoleBadge from "../RoleBadge";
-import SampleLabel from "../SampleLabel";
 import { formatPrice } from "./format";
 
 const FULFILLMENT_LABEL = { delivery: "Delivery", "will-call": "Will-call" };
@@ -9,7 +8,7 @@ const FULFILLMENT_LABEL = { delivery: "Delivery", "will-call": "Will-call" };
  * { sku, title, seller, sellerRole, price, unit, minOrder, leadTime, inStock, fulfillment[] }
  * `sample` shows the SampleLabel; leave it on for anything illustrative.
  */
-export default function ListingCard({ listing, icon, sample = true, className = "" }) {
+export default function ListingCard({ listing, icon, className = "" }) {
   const { sku, title, seller, sellerRole, price, unit, minOrder, leadTime, inStock, fulfillment = [] } = listing;
 
   return (
@@ -20,7 +19,6 @@ export default function ListingCard({ listing, icon, sample = true, className = 
         <span className="[&>svg]:h-9 [&>svg]:w-9" aria-hidden="true">
           {icon}
         </span>
-        {sample && <SampleLabel className="absolute left-3 top-3">Sample</SampleLabel>}
         <span
           className={`absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-semibold ${
             inStock ? "bg-success-soft text-success" : "bg-warning-soft text-warning"

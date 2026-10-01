@@ -1,5 +1,6 @@
-import Section, { Eyebrow } from "../components/Section";
+import Section from "../components/Section";
 import CTASection from "../components/CTASection";
+import PageHero from "../components/nocturne/PageHero";
 import Seo from "../components/Seo";
 import Reveal from "../components/Reveal";
 
@@ -105,16 +106,12 @@ export default function Changelog() {
         title="Changelog"
         description="Every update, feature, and improvement to D&J Stratagem — newest first."
       />
-
-      <Section className="pt-16 pb-8 md:pt-24">
-        <Eyebrow>Changelog</Eyebrow>
-        <h1 className="text-balance max-w-3xl text-2xl font-semibold leading-tight tracking-tight text-paper sm:text-3xl">
-          What's new on the platform.
-        </h1>
-        <p className="mt-6 max-w-2xl text-lg leading-relaxed text-steel">
-          Every release, improvement, and fix — most recent first. There is no email digest yet.
-        </p>
-      </Section>
+      <PageHero
+        index="10"
+        kicker="Changelog"
+        title={<>What changed, <em>and when.</em></>}
+        lede="Every release, improvement, and fix on the platform, newest first."
+      />
 
       <Section className="border-t border-line">
         <div className="max-w-3xl space-y-14">

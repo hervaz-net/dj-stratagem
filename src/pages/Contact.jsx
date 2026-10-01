@@ -1,5 +1,6 @@
 import { useState } from "react";
-import Section, { Eyebrow } from "../components/Section";
+import Section from "../components/Section";
+import PageHero from "../components/nocturne/PageHero";
 import Button from "../components/Button";
 import Seo from "../components/Seo";
 import { IconMap, IconChat, IconClock, IconCheck } from "../components/icons";
@@ -91,17 +92,12 @@ export default function Contact() {
         title="Contact"
         description="Request a demo of D&J Stratagem. Tell us how your team bids, procures, and coordinates today, and we'll show you where the platform fits."
       />
-
-      <Section className="pt-16 pb-8 md:pt-24">
-        <Eyebrow>Contact</Eyebrow>
-        <h1 className="text-balance max-w-3xl text-2xl font-semibold leading-tight tracking-tight text-paper sm:text-3xl">
-          Let&rsquo;s talk about your next project.
-        </h1>
-        <p className="mt-6 max-w-2xl text-lg leading-relaxed text-steel">
-          Tell us a bit about how your team bids, procures, and coordinates today, and we&rsquo;ll
-          show you where D&amp;J Stratagem fits.
-        </p>
-      </Section>
+      <PageHero
+        index="09"
+        kicker="Contact"
+        title={<>Say hello. <em>We answer.</em></>}
+        lede="Tell us how your team bids, sources, and coordinates today. A person reads every note and replies within one business day."
+      />
 
       <Section className="border-t border-line">
         <div className="grid grid-cols-1 gap-14 lg:grid-cols-[1fr_1.2fr]">
@@ -145,7 +141,7 @@ export default function Contact() {
             ))}
           </div>
 
-          <div className="rounded-2xl border border-line bg-ink-2 p-6 sm:p-8">
+          <div className="slab p-6 sm:p-8">
             {submitted ? (
               <div className="animate-fade-in flex flex-col items-start gap-4 py-10">
                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-success/10 text-success">

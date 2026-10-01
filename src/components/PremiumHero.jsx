@@ -24,7 +24,7 @@ export function PremiumHero() {
 
             {/* Headline — dark, bold, corporate */}
             <div className="space-y-4">
-              <h1 className="text-5xl lg:text-6xl font-bold text-text leading-tight">
+              <h1 className="text-text text-6xl leading-[0.95] md:text-8xl">
                 Win More <span className="text-bid-blue">Bids</span>. 
                 <br />
                 Less Work.
@@ -36,7 +36,7 @@ export function PremiumHero() {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <button className="px-8 py-4 bg-bid-orange hover:bg-bid-orange-hover text-white font-semibold rounded-lg transition-colors flex items-center justify-center gap-2 shadow-lg hover:shadow-xl">
+              <button className="px-8 py-4 bg-bid-orange hover:bg-bid-orange-hover text-white font-semibold rounded-lg transition-colors flex items-center justify-center gap-2">
                 Browse Active Bids
                 <ArrowRight className="w-5 h-5" />
               </button>
@@ -69,7 +69,7 @@ export function PremiumHero() {
             {/* Premium card stack — modern, clean */}
             <div className="relative w-full max-w-md">
               {/* Card 1 — back */}
-              <div className="absolute -bottom-4 -right-4 w-full bg-white border border-border rounded-xl p-6 shadow-sm transform rotate-3">
+              <div className="absolute -bottom-4 -right-4 w-full bg-white border border-border rounded-xl p-6 transform rotate-3">
                 <div className="space-y-3">
                   <div className="h-4 bg-border rounded w-3/4" />
                   <div className="h-3 bg-border rounded w-1/2" />
@@ -77,7 +77,7 @@ export function PremiumHero() {
               </div>
 
               {/* Card 2 — middle */}
-              <div className="absolute -bottom-2 -right-2 w-full bg-white border border-border rounded-xl p-6 shadow-md transform -rotate-2">
+              <div className="absolute -bottom-2 -right-2 w-full bg-white border border-border rounded-xl p-6 transform -rotate-2">
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div className="h-5 bg-border rounded w-1/3" />
@@ -89,7 +89,7 @@ export function PremiumHero() {
               </div>
 
               {/* Card 3 — front (featured) */}
-              <div className="relative bg-white border border-border rounded-xl p-6 shadow-lg">
+              <div className="relative bg-white border border-border rounded-xl p-6">
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <h3 className="font-bold text-bid-navy">Commercial HVAC Retrofit</h3>

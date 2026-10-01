@@ -1,5 +1,4 @@
 import { useEffect, useId, useRef } from "react";
-import SampleLabel from "../SampleLabel";
 
 /**
  * Small building blocks shared by every dashboard screen so cards, pills,
@@ -18,7 +17,7 @@ export function Card({ as: Tag = "div", className = "", children, ...rest }) {
 }
 
 /** Card with a title row. `sample` adds the SampleLabel next to the title. */
-export function Panel({ title, description, actions, sample, className = "", bodyClassName = "p-5", children, ...rest }) {
+export function Panel({ title, description, actions, sample: _sample, className = "", bodyClassName = "p-5", children, ...rest }) {
   const headingId = useId();
   return (
     <Card as="section" aria-labelledby={title ? headingId : undefined} className={className} {...rest}>
@@ -27,7 +26,6 @@ export function Panel({ title, description, actions, sample, className = "", bod
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
               <h2 id={headingId} className="text-base font-semibold text-fg">{title}</h2>
-              {sample && <SampleLabel />}
             </div>
             {description && <p className="mt-0.5 text-sm text-fg-muted">{description}</p>}
           </div>
@@ -84,7 +82,6 @@ export function StatTile({ label, value, hint, icon, tone = "brand", sample = fa
       {(hint || sample) && (
         <div className="flex flex-wrap items-center gap-2 text-xs text-fg-muted">
           {hint && <span>{hint}</span>}
-          {sample && <SampleLabel>Sample</SampleLabel>}
         </div>
       )}
     </Card>
@@ -159,7 +156,6 @@ export function DataNotice({ children, className = "" }) {
       role="note"
       className={`flex flex-col gap-2 rounded-2xl border border-accent/30 bg-accent-soft px-4 py-3 sm:flex-row sm:items-center sm:gap-3 ${className}`}
     >
-      <SampleLabel className="self-start sm:self-auto" />
       <p className="text-sm leading-relaxed text-fg">{children}</p>
     </div>
   );

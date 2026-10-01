@@ -1,5 +1,6 @@
 import Section, { Eyebrow } from "../components/Section";
 import CTASection from "../components/CTASection";
+import PageHero from "../components/nocturne/PageHero";
 import Reveal from "../components/Reveal";
 import Seo from "../components/Seo";
 import CompetitorList from "../components/CompetitorList";
@@ -35,23 +36,17 @@ export default function About() {
         title="About"
         description="D&J Stratagem, Inc. builds the platform where contractors win work, market their business, manage relationships, and grow revenue."
       />
-
-      <Section className="pt-16 pb-8 md:pt-24">
-        <Eyebrow>About D&amp;J Stratagem</Eyebrow>
-        <h1 className="text-balance max-w-3xl text-2xl font-semibold leading-tight tracking-tight text-paper sm:text-3xl">
-          The operating system for construction growth.
-        </h1>
-        <p className="mt-6 max-w-2xl text-lg leading-relaxed text-steel">
-          D&amp;J Stratagem, Inc. builds the platform where contractors win work, market their
-          business, manage relationships, and grow revenue &mdash; from the first opportunity to
-          the final invoice.
-        </p>
-      </Section>
+      <PageHero
+        index="08"
+        kicker="About the company"
+        title={<>A company for the people <em>who build.</em></>}
+        lede="D&J Stratagem, Inc. is a Los Angeles team making one place where construction businesses find work, win it, market themselves, and keep their customers."
+      />
 
       {/* Where we are. Usage metrics go here only once they are real and
           measured — see PROOF.md. */}
       <Section className="border-t border-line py-12">
-        <div className="mx-auto max-w-2xl rounded-xl border border-line bg-ink-2 p-6 text-center">
+        <div className="mx-auto max-w-2xl slab p-6 text-center">
           <p className="text-xs font-semibold uppercase tracking-wider text-amber">
             Where we are today
           </p>
@@ -66,7 +61,7 @@ export default function About() {
         <div className="grid grid-cols-1 gap-14 lg:grid-cols-2">
           <div>
             <Eyebrow>Why we exist</Eyebrow>
-            <h2 className="text-balance text-2xl font-semibold tracking-tight text-paper md:text-3xl">
+            <h2 className="text-balance text-paper text-5xl leading-[1] md:text-6xl">
               Every competitor solves one problem.
             </h2>
             <p className="mt-5 text-base leading-relaxed text-steel">
@@ -78,7 +73,7 @@ export default function About() {
           </div>
           <div>
             <Eyebrow>What we build</Eyebrow>
-            <h2 className="text-balance text-2xl font-semibold tracking-tight text-paper md:text-3xl">
+            <h2 className="text-balance text-paper text-5xl leading-[1] md:text-6xl">
               The whole pipeline, opportunity to award.
             </h2>
             <p className="mt-5 text-base leading-relaxed text-steel">
@@ -96,13 +91,13 @@ export default function About() {
 
       <Section className="border-t border-line">
         <Eyebrow>What we believe</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-2xl font-semibold tracking-tight text-paper md:text-3xl">
+        <h2 className="text-balance max-w-2xl text-paper text-5xl leading-[1] md:text-6xl">
           The principles behind the platform.
         </h2>
         <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2">
           {values.map((v, i) => (
             <Reveal key={v.title} delay={(i % 2) * 100} className="h-full">
-              <div className="lift h-full rounded-xl border border-line bg-ink-2 p-6 hover:border-amber/40">
+              <div className="lift h-full slab p-6">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber/10 text-amber">
                   {v.icon}
                 </div>
@@ -118,7 +113,7 @@ export default function About() {
           they are real people and real openings — see PROOF.md. */}
       <Section className="border-t border-line">
         <Eyebrow>Careers</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-2xl font-semibold tracking-tight text-paper md:text-3xl">
+        <h2 className="text-balance max-w-2xl text-paper text-5xl leading-[1] md:text-6xl">
           Help build the platform for construction growth.
         </h2>
         <p className="mt-5 max-w-xl text-base leading-relaxed text-steel">

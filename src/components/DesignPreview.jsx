@@ -67,7 +67,7 @@ export function DesignPreview() {
           <div className="max-w-4xl mx-auto px-6 py-12 space-y-12">
             {/* Color palette */}
             <section>
-              <h2 className="text-3xl font-bold text-bid-navy mb-6">Color Palette</h2>
+              <h2 className="text-bid-navy mb-6 text-5xl leading-[1] md:text-6xl">Color Palette</h2>
               <div className="grid md:grid-cols-2 gap-6">
                 {/* Brand */}
                 <div className="space-y-3">
@@ -79,7 +79,7 @@ export function DesignPreview() {
                       { name: 'Bid Orange', hex: '#E85D04', class: 'bg-bid-orange' },
                     ].map((color) => (
                       <div key={color.hex} className="flex items-center gap-3">
-                        <div className={`w-12 h-12 rounded-lg ${color.class} shadow-sm`} />
+                        <div className={`w-12 h-12 rounded-lg ${color.class}`} />
                         <div>
                           <p className="font-semibold text-text">{color.name}</p>
                           <p className="text-xs text-text-muted">{color.hex}</p>
@@ -99,7 +99,7 @@ export function DesignPreview() {
                       { name: 'Card', hex: '#FFFFFF', class: 'bg-card border border-border' },
                     ].map((color) => (
                       <div key={color.hex} className="flex items-center gap-3">
-                        <div className={`w-12 h-12 rounded-lg ${color.class} shadow-sm`} />
+                        <div className={`w-12 h-12 rounded-lg ${color.class}`} />
                         <div>
                           <p className="font-semibold text-text">{color.name}</p>
                           <p className="text-xs text-text-muted">{color.hex}</p>
@@ -119,7 +119,7 @@ export function DesignPreview() {
                       { name: 'Danger', hex: '#B91C1C', class: 'bg-danger' },
                     ].map((color) => (
                       <div key={color.hex} className="flex items-center gap-3">
-                        <div className={`w-12 h-12 rounded-lg ${color.class} shadow-sm`} />
+                        <div className={`w-12 h-12 rounded-lg ${color.class}`} />
                         <div>
                           <p className="font-semibold text-white">{color.name}</p>
                           <p className="text-xs text-white/70">{color.hex}</p>
@@ -133,7 +133,7 @@ export function DesignPreview() {
 
             {/* Buttons */}
             <section>
-              <h2 className="text-3xl font-bold text-bid-navy mb-6">Button Styles</h2>
+              <h2 className="text-bid-navy mb-6 text-5xl leading-[1] md:text-6xl">Button Styles</h2>
               <div className="space-y-4">
                 <div className="flex gap-3 flex-wrap">
                   <button className="px-6 py-3 bg-bid-orange hover:bg-bid-orange-hover text-white font-semibold rounded-lg transition-colors">
@@ -154,7 +154,7 @@ export function DesignPreview() {
 
             {/* Badges */}
             <section>
-              <h2 className="text-3xl font-bold text-bid-navy mb-6">Status Badges</h2>
+              <h2 className="text-bid-navy mb-6 text-5xl leading-[1] md:text-6xl">Status Badges</h2>
               <div className="flex gap-3 flex-wrap">
                 {[
                   { label: 'ACTIVE', bg: 'bg-bid-orange/10', text: 'text-bid-orange' },
@@ -174,14 +174,14 @@ export function DesignPreview() {
 
             {/* Typography */}
             <section>
-              <h2 className="text-3xl font-bold text-bid-navy mb-6">Typography</h2>
+              <h2 className="text-bid-navy mb-6 text-5xl leading-[1] md:text-6xl">Typography</h2>
               <div className="space-y-6">
                 <div>
-                  <h1 className="text-5xl font-bold text-text mb-2">Display Heading</h1>
+                  <h1 className="text-text mb-2 text-6xl leading-[0.95] md:text-8xl">Display Heading</h1>
                   <p className="text-xs text-text-muted">48px / Bold</p>
                 </div>
                 <div>
-                  <h2 className="text-3xl font-bold text-text mb-2">Section Heading</h2>
+                  <h2 className="text-text mb-2 text-5xl leading-[1] md:text-6xl">Section Heading</h2>
                   <p className="text-xs text-text-muted">32px / Bold</p>
                 </div>
                 <div>

@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { Link } from "react-router-dom";
 import RoleBadge from "./RoleBadge";
-import SampleLabel from "./SampleLabel";
 import { IconX, IconArrowRight, IconCheck, IconClock } from "./icons";
 import { ROLE_META } from "./home/roleMeta";
 import { PRODUCT, CONTACT_EMAIL, LOCATION, ROLES, ROLE_ORDER } from "../brand";
@@ -380,7 +379,6 @@ export default function WalkthroughModal({ open, onClose }) {
               <div className="flex items-center justify-center border-t border-line bg-subtle p-5 sm:p-6 md:border-l md:border-t-0">
                 <div className="w-full max-w-sm rounded-2xl border border-line bg-surface p-4 shadow-[var(--shadow-card)]">
                   <div className="mb-3 flex justify-end">
-                    <SampleLabel />
                   </div>
                   <Panel kind={slide.panel} />
                 </div>

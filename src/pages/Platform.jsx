@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import PageHero from "../components/nocturne/PageHero";
 import Section, { Eyebrow } from "../components/Section";
 import CTASection from "../components/CTASection";
 import Reveal from "../components/Reveal";
@@ -159,7 +160,7 @@ const slug = (s) =>
 
 function Panel({ panel }) {
   return (
-    <div className="rounded-2xl border border-line bg-ink-2 p-6">
+    <div className="slab p-6">
       <p className="text-xs uppercase tracking-wider text-steel">{panel.title}</p>
       <div className="mt-4 space-y-3">
         {panel.rows.map((row) => (
@@ -185,35 +186,30 @@ export default function Platform() {
         title="Platform"
         description="Six connected suites — bidding, subcontractor tools, marketing, Supply Exchange, business tools, and AI — replacing the patchwork of point tools contractors juggle today."
       />
-
-      <Section className="pt-16 pb-8 md:pt-24">
-        <Eyebrow>The platform</Eyebrow>
-        <h1 className="text-balance max-w-3xl text-2xl font-semibold leading-tight tracking-tight text-paper sm:text-3xl">
-          One platform to win work, market your business, and grow revenue.
-        </h1>
-        <p className="mt-6 max-w-2xl text-lg leading-relaxed text-steel">
-          Six connected suites replace the patchwork of point tools contractors juggle today
-          &mdash; from the first opportunity to the final invoice.
-        </p>
-
-        <nav aria-label="Platform suites" className="mt-10 flex flex-wrap gap-2">
+      <PageHero
+        index="02"
+        kicker="The platform"
+        title={<>Six instruments. <em>One desk.</em></>}
+        lede="Bidding, trade tools, marketing, sourcing, back office, and AI, connected so a pursuit never has to leave the room it started in."
+      >
+        <nav aria-label="Platform suites" className="flex flex-wrap gap-2">
           {modules.map((m) => (
             <a
               key={m.eyebrow}
               href={`#${slug(m.eyebrow)}`}
-              className="lift rounded-full border border-line bg-ink-2 px-4 py-2 text-xs font-medium text-steel hover:border-amber/50 hover:text-amber"
+              className="chamfer-sm bg-glass px-4 py-2 font-mono text-xs uppercase tracking-wider text-steel transition-colors hover:text-cta"
             >
               {m.eyebrow}
             </a>
           ))}
         </nav>
-      </Section>
+      </PageHero>
 
       <Section className="border-t border-line">
         <Reveal>
           <div className="text-center">
             <Eyebrow>See it live</Eyebrow>
-            <h2 className="mt-3 text-balance text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+            <h2 className="mt-3 text-balance text-paper text-5xl leading-[1] md:text-6xl">
               Watch it in action.
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-base text-steel">
@@ -221,14 +217,14 @@ export default function Platform() {
             </p>
           </div>
 
-          <div className="relative mx-auto mt-10 max-w-3xl overflow-hidden rounded-2xl border border-line bg-ink-2">
+          <div className="relative mx-auto mt-10 max-w-3xl overflow-hidden slab">
             <div className="flex aspect-video items-center justify-center bg-gradient-to-br from-ink-2 to-ink">
               <div className="absolute inset-0 bg-grid opacity-30" aria-hidden="true" />
               <button
                 type="button"
                 onClick={() => setWalkthroughOpen(true)}
                 aria-label="Play platform walkthrough"
-                className="relative flex h-20 w-20 items-center justify-center rounded-full bg-brand/90 text-white shadow-lg transition-transform hover:scale-105 hover:bg-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2"
+                className="relative flex h-20 w-20 items-center justify-center rounded-full bg-brand/90 text-white transition-transform hover:scale-105 hover:bg-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2"
               >
                 <IconPlay width={28} height={28} className="ml-1" />
               </button>
@@ -249,7 +245,7 @@ export default function Platform() {
                 {m.icon}
               </div>
               <p className="mt-5 text-xs font-semibold uppercase tracking-widest text-amber">{m.eyebrow}</p>
-              <h2 className="text-balance mt-3 text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+              <h2 className="text-balance mt-3 text-paper text-5xl leading-[1] md:text-6xl">
                 {m.title}
               </h2>
               <p className="mt-4 text-base leading-relaxed text-steel">{m.text}</p>
@@ -273,7 +269,7 @@ export default function Platform() {
         <Reveal>
           <div className="text-center">
             <Eyebrow>Integrations</Eyebrow>
-            <h2 className="mt-3 text-balance text-3xl font-semibold tracking-tight text-paper md:text-4xl">
+            <h2 className="mt-3 text-balance text-paper text-5xl leading-[1] md:text-6xl">
               Works with the tools you already use.
             </h2>
             <p className="mx-auto mt-4 max-w-xl text-base text-steel">
@@ -298,7 +294,7 @@ export default function Platform() {
           ].map((int) => (
             <div
               key={int.name}
-              className="lift flex flex-col items-center rounded-xl border border-line bg-ink-2 px-4 py-5 text-center transition-colors hover:border-amber/40"
+              className="lift flex flex-col items-center slab px-4 py-5 text-center transition-colors"
             >
               <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber/10 text-xs font-bold text-amber">
                 {int.name.slice(0, 2).toUpperCase()}

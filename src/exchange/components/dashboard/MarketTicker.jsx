@@ -1,4 +1,3 @@
-import SampleLabel from "../SampleLabel";
 
 function Item({ label, change }) {
   const up = change >= 0;
@@ -33,16 +32,9 @@ export default function MarketTicker({ items = [], live = false }) {
             <span className="h-1.5 w-1.5 rounded-full bg-current" aria-hidden="true" />
             Live
           </span>
-        ) : (
-          <SampleLabel>Sample</SampleLabel>
-        )}
+        ) : null}
       </div>
       <ul className="flex min-w-0 flex-1 gap-2 overflow-x-auto pb-1 [scrollbar-width:thin]">
-        {!live && (
-          <li className="shrink-0 sm:hidden">
-            <SampleLabel>Sample</SampleLabel>
-          </li>
-        )}
         {items.map((item) => (
           <Item key={item.id} {...item} />
         ))}

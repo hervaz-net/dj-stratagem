@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import RoleBadge from "../RoleBadge";
-import SampleLabel from "../SampleLabel";
 import CategoryIcon from "./CategoryIcon";
 import { IconArrowRight, IconCalendar, IconMapPin } from "../icons";
 import { formatDue, matchTone } from "../../data/sampleProjects";
@@ -19,7 +18,6 @@ export default function RequestCard({ project: p, headingLevel = "h2" }) {
     >
       <div className="flex flex-wrap items-center justify-between gap-2">
         <RoleBadge role={p.buyerRole} label={p.buyerRole === "distributor" ? "Distributor buying" : "Contractor buying"} />
-        <SampleLabel>Sample</SampleLabel>
       </div>
 
       <Heading className="mt-4 text-lg font-semibold leading-snug text-fg transition-colors group-hover:text-brand">

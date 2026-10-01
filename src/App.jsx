@@ -8,6 +8,7 @@ import FloatingDemo from "./components/FloatingDemo";
 import ReadingProgress from "./components/ReadingProgress";
 import CommandPalette from "./components/CommandPalette";
 import LiveChat from "./components/LiveChat";
+import Atmosphere from "./components/nocturne/Atmosphere";
 import Home from "./pages/Home";
 import Platform from "./pages/Platform";
 import Solutions from "./pages/Solutions";
@@ -27,6 +28,8 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsAndConditions from "./pages/TermsAndConditions";
 import BrandGuidelines from "./pages/BrandGuidelines";
 import Fleet from "./pages/Fleet";
+import Companies from "./pages/Companies";
+import Subsidiary from "./pages/Subsidiary";
 import FleetCards from "./pages/FleetCards";
 import Receipts from "./pages/Receipts";
 import Signage from "./pages/Signage";
@@ -92,10 +95,11 @@ function MarketingLayout({ children }) {
   }, []);
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="relative isolate flex min-h-screen flex-col">
+      <Atmosphere />
       <SkipLink />
       <Navbar onOpenPalette={openPalette} />
-      <main id="main" className="flex-1">
+      <main id="main" className="flex-1 pt-20">
         {children}
       </main>
       <Footer />
@@ -172,6 +176,8 @@ function App() {
           <Route path="/terms" element={<MarketingLayout><TermsAndConditions /></MarketingLayout>} />
           <Route path="/brand" element={<MarketingLayout><BrandGuidelines /></MarketingLayout>} />
           <Route path="/fleet" element={<MarketingLayout><Fleet /></MarketingLayout>} />
+          <Route path="/companies" element={<MarketingLayout><Companies /></MarketingLayout>} />
+          <Route path="/companies/:slug" element={<MarketingLayout><Subsidiary /></MarketingLayout>} />
           <Route path="/marketing/fleet-cards" element={<MarketingLayout><FleetCards /></MarketingLayout>} />
           <Route path="/marketing/receipts" element={<MarketingLayout><Receipts /></MarketingLayout>} />
           <Route path="/marketing/signage" element={<MarketingLayout><Signage /></MarketingLayout>} />

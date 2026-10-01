@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import RoleBadge from "../RoleBadge";
-import SampleLabel from "../SampleLabel";
 import {
   IconBolt,
   IconTool,
@@ -57,7 +56,6 @@ function ListingCard({ item }) {
     <article className="flex flex-col rounded-2xl border border-line bg-surface p-5 shadow-[var(--shadow-card)]">
       <div className="flex items-center justify-between gap-2">
         <span className="text-xs font-semibold text-fg-muted">{item.category}</span>
-        <SampleLabel>Sample</SampleLabel>
       </div>
       <h4 className="mt-3 text-[0.95rem] font-semibold leading-snug text-fg">{item.name}</h4>
       <p className="mt-1 font-mono text-xs text-fg-muted">{item.sku}</p>
@@ -117,7 +115,6 @@ export default function MarketplacePreview() {
         <section aria-labelledby="preview-supply">
           <div className="flex flex-wrap items-center gap-2">
             <h3 id="preview-supply" className="text-lg font-semibold text-fg">Listed supply</h3>
-            <SampleLabel>Sample listings</SampleLabel>
           </div>
           <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {SAMPLE_LISTINGS.map((item) => (
@@ -129,7 +126,6 @@ export default function MarketplacePreview() {
         <section aria-labelledby="preview-demand">
           <div className="flex flex-wrap items-center gap-2">
             <h3 id="preview-demand" className="text-lg font-semibold text-fg">Open requests</h3>
-            <SampleLabel>Sample requests</SampleLabel>
           </div>
           <ul className="mt-4 grid grid-cols-1 gap-3 lg:grid-cols-3">
             {SAMPLE_REQUESTS.map((item) => (

@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import Seo from "../Seo";
 import Button from "../Button";
-import SampleLabel from "../SampleLabel";
 import { Eyebrow } from "../Section";
 import { IconArrowLeft, IconExternal } from "../icons";
 
@@ -29,7 +28,6 @@ export default function CollateralFrame({ src, title, description, children }) {
               <Eyebrow>Brand collateral</Eyebrow>
               <div className="flex flex-wrap items-center gap-3">
                 <h1 className="text-balance text-3xl font-bold tracking-tight text-fg md:text-4xl">{title}</h1>
-                <SampleLabel>Template · sample data</SampleLabel>
               </div>
               <p className="mt-3 text-lg leading-relaxed text-fg-muted">{children}</p>
             </div>

@@ -5,12 +5,10 @@ import PageHero from "../components/PageHero";
 import Button from "../components/Button";
 import FeatureCard from "../components/FeatureCard";
 import RoleBadge from "../components/RoleBadge";
-import SampleLabel from "../components/SampleLabel";
 import Accordion from "../components/Accordion";
 import CTASection from "../components/CTASection";
 import Seo from "../components/Seo";
 import FilterChip from "../components/market/FilterChip";
-import SampleNotice from "../components/market/SampleNotice";
 import { daysFromToday, formatPrice, formatShortDate } from "../components/market/format";
 import { PRODUCT } from "../brand";
 import {
@@ -155,7 +153,6 @@ function AssetDialog({ asset, onClose }) {
           <div>
             <div className="flex flex-wrap items-center gap-2">
               <StatusPill status={asset.status} />
-              <SampleLabel>Sample</SampleLabel>
             </div>
             <h2 id="fleet-asset-title" className="mt-3 text-2xl font-bold tracking-tight text-fg">
               {asset.name}
@@ -256,10 +253,6 @@ export default function Fleet() {
       </PageHero>
 
       <Section className="!pt-10 md:!pt-14">
-        <SampleNotice title="Preview — sample equipment">
-          Every machine, owner, rate, and service date below is illustrative. These are not real listings
-          and can&rsquo;t be rented or dispatched from this page. Equipment listings open to early users first.
-        </SampleNotice>
 
         <div className="mt-8 grid grid-cols-2 gap-3 lg:grid-cols-4">
           {stats.map((s) => (
@@ -310,7 +303,6 @@ export default function Fleet() {
             >
               <div className="flex items-center justify-between gap-2">
                 <StatusPill status={asset.status} />
-                <SampleLabel>Sample</SampleLabel>
               </div>
               <p className="mt-4 text-xs font-semibold text-fg-muted">{asset.type}</p>
               <h3 className="mt-0.5 text-lg font-semibold text-fg">{asset.name}</h3>

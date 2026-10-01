@@ -5,7 +5,6 @@ import useLocalState from "../../components/dashboard/useLocalState";
 import { ROLE_VIEWS, SWITCHER_ORDER } from "../../components/dashboard/roles";
 import Button from "../../components/Button";
 import RoleBadge from "../../components/RoleBadge";
-import SampleLabel from "../../components/SampleLabel";
 import Seo from "../../components/Seo";
 import { useRole } from "../../contexts/RoleContext";
 import useAuth from "../../auth/useAuth";
@@ -98,7 +97,7 @@ function MarketplaceProfile({ server, csrf, onSaved }) {
     <Section
       id="marketplace"
       title="Marketplace profile"
-      badge={live ? null : <SampleLabel>Saved in this browser</SampleLabel>}
+      badge={live ? null : <span className="inline-flex items-center rounded-full bg-accent-soft px-2 py-0.5 text-[0.7rem] font-semibold uppercase tracking-wide text-accent">Saved in this browser</span>}
       description={
         live
           ? "How buyers and sellers find you. Buyers see your company name and buying role on the requests you post."
