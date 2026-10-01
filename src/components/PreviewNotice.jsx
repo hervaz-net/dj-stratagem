@@ -9,21 +9,15 @@ import { PRODUCT } from "../brand";
  * pricing a package nobody will buy, so this is deliberately a full-width
  * banner rather than a subtle chip. Remove it only when the feed is live.
  */
-export default function PreviewNotice({ title = "Preview: sample material requests", children, className = "" }) {
+export default function PreviewNotice({ title, children, className = "" }) {
   return (
     <div
       role="note"
-      className={`flex gap-3 rounded-2xl border border-accent/30 bg-accent-soft px-5 py-4 ${className}`}
+      className={`rounded-2xl border border-accent/30 bg-accent-soft px-5 py-4 ${className}`}
     >
-      <span
-        className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-accent/50 text-xs font-bold text-accent"
-        aria-hidden="true"
-      >
-        !
-      </span>
       <div>
-        <p className="text-sm font-semibold text-accent">{title}</p>
-        <p className="mt-1 text-sm leading-relaxed text-fg">
+        {title && <p className="mb-1 text-sm font-semibold text-accent">{title}</p>}
+        <p className="text-sm leading-relaxed text-fg">
           {children ?? (
             <>
               These projects and material packages are illustrative examples of how demand appears
