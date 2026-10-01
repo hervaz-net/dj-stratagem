@@ -10,7 +10,7 @@ const entries = [
     date: "October 2026",
     tag: "Fix",
     items: [
-      { type: "fixed", text: "Project cards on the homepage, board, and detail pages are labeled as samples. They no longer read as live bids you can add to a pipeline." },
+      { type: "fixed", text: "Homepage share title matches the page: Build the pipeline, not the paperwork. Crawlers no longer see the old Exchange pitch before JavaScript runs." },
       { type: "fixed", text: "Unknown project URLs show the 404 page instead of silently bouncing to the board." },
       { type: "fixed", text: "/fleet/ canonicalizes to /fleet. /feed, /rss, and /app redirect instead of a client 404. /companies redirects home." },
     ],
