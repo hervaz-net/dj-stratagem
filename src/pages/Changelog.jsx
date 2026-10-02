@@ -6,6 +6,14 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.12",
+    date: "October 2026",
+    tag: "Fix",
+    items: [
+      { type: "fixed", text: "Fleet class photos are labeled as illustrations until a unit is actually in service. Company copy no longer says drivers and vehicles are already licensed." },
+    ],
+  },
+  {
     version: "1.11",
     date: "October 2026",
     tag: "Fix",

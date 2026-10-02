@@ -152,7 +152,7 @@ export const standards = [
   {
     title: "Drivers",
     points: [
-      "Licensed for the vehicle class they drive before their first trip, with background checks and driving-record reviews already done",
+      "Licensed for the vehicle class they drive before their first trip, with background checks and driving-record reviews finished before they carry a passenger",
       "Enrolled in drug and alcohol testing where the law requires it",
       "Zero tolerance for driving impaired by alcohol, drugs, or fatigue",
       "Trained in passenger safety, accessibility, and professional conduct",
