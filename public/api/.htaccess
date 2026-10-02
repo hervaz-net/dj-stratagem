@@ -36,6 +36,11 @@ ErrorDocument 404 default
   # Always send the probe to the working root /health.php. PT so LiteSpeed
   # re-runs the PHP handler on the target instead of 404ing a missing local file.
   RewriteRule ^health(\.php)?/?$ /health.php [L,PT]
+  # /api/ is the directory itself, not a file. Without this, the catch-all
+  # below answers the directory request with not-found.php (JSON 404) even
+  # though DirectoryIndex is index.php. /api already 301s to /api/.
+  RewriteRule ^$ index.php [L]
   RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule ^ not-found.php [L]
 </IfModule>
