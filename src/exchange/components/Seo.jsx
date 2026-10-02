@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { PRODUCT, COMPANY, SITE_URL } from "../brand";
+import { PRODUCT, SITE_URL } from "../brand";
 
 const SITE = SITE_URL;
-const SUFFIX = `${PRODUCT} by ${COMPANY}`;
+const SUFFIX = PRODUCT;
 const DEFAULT_DESCRIPTION =
   "The B2B supply network for construction. Manufacturers sell to distributors, distributors sell to contractors, and contractors post what the job needs, all on one marketplace.";
 

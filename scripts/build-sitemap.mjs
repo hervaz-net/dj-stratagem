@@ -36,10 +36,10 @@ const staticPaths = [
   ["/privacy", "0.3"],
   ["/terms", "0.3"],
   ["/brand", "0.3"],
-  ["/companies/capital", "0.6"],
-  ["/companies/studio", "0.6"],
-  ["/companies/workforce", "0.6"],
-  // Stratagem Exchange (subsidiary app under /exchange)
+  ["/capital", "0.6"],
+  ["/studio", "0.6"],
+  ["/workforce", "0.6"],
+  // Stratagem Exchange (its own app under /exchange)
   ["/exchange", "0.9"],
   ["/exchange/marketplace", "0.8"],
   ["/exchange/contractors", "0.7"],

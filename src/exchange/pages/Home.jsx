@@ -14,7 +14,7 @@ import MarketplacePreview from "../components/home/MarketplacePreview";
 import { ROLE_META } from "../components/home/roleMeta";
 import { statusQuo } from "../data/competitors";
 import { IconArrowRight, IconCheck, IconMegaphone, IconPackage } from "../components/icons";
-import { PRODUCT, COMPANY, CONTACT_EMAIL, ROLES, ROLE_ORDER } from "../brand";
+import { PRODUCT, CONTACT_EMAIL, ROLES, ROLE_ORDER } from "../brand";
 
 const faqs = [
   {
@@ -266,7 +266,7 @@ export default function Home() {
               <a href={`mailto:${CONTACT_EMAIL}`} className="font-medium text-brand hover:text-brand-hover">
                 {CONTACT_EMAIL}
               </a>{" "}
-              and someone at {COMPANY} will answer.
+              and someone on our team will answer.
             </SectionHeading>
           </div>
           <Accordion items={faqs} />

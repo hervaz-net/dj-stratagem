@@ -1,8 +1,8 @@
-import { PRODUCT, COMPANY } from "../brand";
+import { PRODUCT } from "../brand";
 
 /**
  * Mark: three linked nodes (supplier → distributor → contractor) inside a
- * rounded tile. `compact` drops the wordmark; `byline` adds "by D&J Stratagem".
+ * rounded tile. `compact` drops the wordmark.
  */
 export function LogoMark({ size = 28, className = "" }) {
   return (
@@ -25,7 +25,7 @@ export function LogoMark({ size = 28, className = "" }) {
   );
 }
 
-export default function Logo({ className = "", compact = false, byline = false }) {
+export default function Logo({ className = "", compact = false }) {
   const [first, ...rest] = PRODUCT.split(" ");
   return (
     <span className={`inline-flex items-center gap-2.5 ${className}`}>
@@ -35,11 +35,6 @@ export default function Logo({ className = "", compact = false, byline = false }
           <span className="font-display text-[1.05rem] font-bold tracking-tight text-fg">
             {first} <span className="font-semibold text-brand">{rest.join(" ")}</span>
           </span>
-          {byline && (
-            <span className="mt-1 text-[0.68rem] font-medium tracking-wide text-fg-muted">
-              by {COMPANY}
-            </span>
-          )}
         </span>
       )}
     </span>

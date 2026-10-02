@@ -1,6 +1,7 @@
-// The D&J Stratagem family of companies. Exchange is a live app at
-// /exchange; the others are in development. Keep copy honest: no clients,
-// volumes, or partners until they are real.
+// Stratagem companies, each a separate site with its own app: Exchange at
+// /exchange; Fleet, Capital, Studio, and Workforce at their own top-level
+// paths (src/ventures). Links to them need a full page load. Keep copy
+// honest: no clients, volumes, or partners until they are real.
 
 export const companies = [
   {
@@ -20,6 +21,8 @@ export const companies = [
     slug: "capital",
     name: "Stratagem Capital",
     short: "Capital",
+    href: "/capital",
+    external: true,
     accent: "#e9b44c",
     status: "In development",
     tagline: "Get paid sooner. Bid bigger.",
@@ -40,6 +43,8 @@ export const companies = [
     slug: "studio",
     name: "Stratagem Studio",
     short: "Studio",
+    href: "/studio",
+    external: true,
     accent: "#ff5fa8",
     status: "In development",
     tagline: "Look like the firm that wins.",
@@ -59,6 +64,8 @@ export const companies = [
     slug: "workforce",
     name: "Stratagem Workforce",
     short: "Workforce",
+    href: "/workforce",
+    external: true,
     accent: "#4cc9f0",
     status: "In development",
     tagline: "The right crew, on the right day.",
@@ -79,6 +86,7 @@ export const companies = [
     name: "Stratagem Fleet",
     short: "Fleet",
     href: "/fleet",
+    external: true,
     accent: "#9d8cff",
     status: "Taking quote requests",
     tagline: "Arrive on time. Every time.",

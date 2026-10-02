@@ -9,7 +9,7 @@ import Seo from "../components/Seo";
 import CompetitorList from "../components/CompetitorList";
 import { LogoMark } from "../components/Logo";
 import { IconScale, IconShield, IconTarget, IconUsers, IconMap, IconMail } from "../components/icons";
-import { PRODUCT, COMPANY, COMPANY_LEGAL, CONTACT_EMAIL, LOCATION, ROLE_ORDER } from "../brand";
+import { PRODUCT, CONTACT_EMAIL, LOCATION, ROLE_ORDER } from "../brand";
 
 const CAREERS_EMAIL = "careers@djstratageminc.com";
 
@@ -41,17 +41,16 @@ export default function About() {
     <>
       <Seo
         title="About"
-        description={`${COMPANY_LEGAL} is building ${PRODUCT}, a B2B supply marketplace that connects manufacturers, distributors, and contractors. Based in ${LOCATION}.`}
+        description={`${PRODUCT} is a B2B supply marketplace that connects manufacturers, distributors, and contractors. Based in ${LOCATION}.`}
       />
 
       <PageHero
-        eyebrow={`About ${COMPANY}`}
+        eyebrow={`About ${PRODUCT}`}
         title="We're building the supply network construction runs on."
         aside={
           <div className="rounded-3xl border border-line bg-canvas p-6 sm:p-8">
             <LogoMark size={48} />
             <p className="mt-5 text-lg font-semibold text-fg">{PRODUCT}</p>
-            <p className="mt-1 text-sm text-fg-muted">A product of {COMPANY_LEGAL}</p>
             <div className="mt-5 flex flex-wrap gap-2">
               {ROLE_ORDER.map((key) => (
                 <RoleBadge key={key} role={key} />
@@ -63,7 +62,7 @@ export default function About() {
           </div>
         }
       >
-        {COMPANY} builds {PRODUCT}: one marketplace where manufacturers, distributors, and
+        {PRODUCT} is one marketplace where manufacturers, distributors, and
         contractors list supply, post demand, and trade with each other.
       </PageHero>
 
@@ -97,7 +96,7 @@ export default function About() {
           <SectionHeading eyebrow="What we're building" title="One record from request to delivery." />
           <div className="space-y-5 text-lg leading-relaxed text-fg-muted">
             <p>
-              {COMPANY} started with a bidding tool for contractors. But finding a project is only
+              We started with a bidding tool for contractors. But finding a project is only
               the start. Every job then depends on getting the right material to the site on time
               at a fair price, and that part of the trade had almost no shared tooling at all.
             </p>

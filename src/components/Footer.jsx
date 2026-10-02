@@ -28,10 +28,10 @@ const columns = [
     heading: "Companies",
     links: [
       { to: "/exchange", label: "Stratagem Exchange", reloadDocument: true },
-      { to: "/companies/capital", label: "Stratagem Capital" },
-      { to: "/companies/studio", label: "Stratagem Studio" },
-      { to: "/companies/workforce", label: "Stratagem Workforce" },
-      { to: "/fleet", label: "Stratagem Fleet" },
+      { to: "/capital", label: "Stratagem Capital", reloadDocument: true },
+      { to: "/studio", label: "Stratagem Studio", reloadDocument: true },
+      { to: "/workforce", label: "Stratagem Workforce", reloadDocument: true },
+      { to: "/fleet", label: "Stratagem Fleet", reloadDocument: true },
     ],
   },
   {

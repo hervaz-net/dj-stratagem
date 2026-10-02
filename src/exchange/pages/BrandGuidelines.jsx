@@ -142,7 +142,7 @@ export default function BrandGuidelines() {
         aside={
           <div className="grid grid-cols-2 gap-3">
             <div className="col-span-2 flex items-center justify-center rounded-2xl border border-line bg-canvas px-6 py-10">
-              <Logo byline className="scale-125" />
+              <Logo className="scale-125" />
             </div>
             <div className="flex items-center justify-center rounded-2xl bg-bid-navy py-8">
               <LogoMark size={56} />
@@ -179,7 +179,6 @@ export default function BrandGuidelines() {
             <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
               {[
                 { label: "Wordmark", node: <Logo /> },
-                { label: "With byline", node: <Logo byline /> },
                 { label: "Mark only", node: <Logo compact /> },
               ].map((l) => (
                 <div key={l.label} className="rounded-xl bg-subtle p-4">

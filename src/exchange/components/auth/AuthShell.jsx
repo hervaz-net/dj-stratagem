@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import Logo, { LogoMark } from "../Logo";
-import { PRODUCT, COMPANY, ROLES, ROLE_ORDER } from "../../brand";
+import { PRODUCT, ROLES, ROLE_ORDER } from "../../brand";
 
 const DOT = {
   supplier: "bg-role-supplier",
@@ -35,7 +35,6 @@ export default function AuthShell({ title, text, footnote, children, wide = fals
               <span className="text-[1.05rem] font-bold tracking-tight">
                 {first} <span className="font-semibold text-white/75">{rest.join(" ")}</span>
               </span>
-              <span className="mt-1 text-[0.68rem] font-medium tracking-wide text-white/60">by {COMPANY}</span>
             </span>
           </Link>
 
@@ -68,7 +67,7 @@ export default function AuthShell({ title, text, footnote, children, wide = fals
 
         <div className="px-5 py-8 sm:px-10 sm:py-12 xl:px-14">
           <Link to="/" className="inline-block lg:hidden" aria-label={`${PRODUCT} home`}>
-            <Logo byline />
+            <Logo />
           </Link>
           <div className="mt-8 lg:mt-0">{children}</div>
         </div>

@@ -27,8 +27,6 @@ import Changelog from "./pages/Changelog";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsAndConditions from "./pages/TermsAndConditions";
 import BrandGuidelines from "./pages/BrandGuidelines";
-import Fleet from "./pages/Fleet";
-import Subsidiary from "./pages/Subsidiary";
 import FleetCards from "./pages/FleetCards";
 import Receipts from "./pages/Receipts";
 import Signage from "./pages/Signage";
@@ -122,6 +120,15 @@ function DashboardShell({ children }) {
   );
 }
 
+/** Full page load into a company site, which runs its own app and styles. */
+function ToCompanySite() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.location.replace(pathname);
+  }, [pathname]);
+  return null;
+}
+
 function App() {
   return (
     <AuthProvider>
@@ -178,9 +185,11 @@ function App() {
           <Route path="/privacy" element={<MarketingLayout><PrivacyPolicy /></MarketingLayout>} />
           <Route path="/terms" element={<MarketingLayout><TermsAndConditions /></MarketingLayout>} />
           <Route path="/brand" element={<MarketingLayout><BrandGuidelines /></MarketingLayout>} />
-          <Route path="/fleet" element={<MarketingLayout><Fleet /></MarketingLayout>} />
           <Route path="/companies" element={<Navigate to="/" replace />} />
-          <Route path="/companies/:slug" element={<MarketingLayout><Subsidiary /></MarketingLayout>} />
+          {/* Company sites are a separate bundle; a client-side link lands here, so load the real page. */}
+          {["/fleet", "/capital", "/studio", "/workforce", "/companies/:slug"].map((p) => (
+            <Route key={p} path={p} element={<ToCompanySite />} />
+          ))}
           <Route path="/marketing/fleet-cards" element={<MarketingLayout><FleetCards /></MarketingLayout>} />
           <Route path="/marketing/receipts" element={<MarketingLayout><Receipts /></MarketingLayout>} />
           <Route path="/marketing/signage" element={<MarketingLayout><Signage /></MarketingLayout>} />

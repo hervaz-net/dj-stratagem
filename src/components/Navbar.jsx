@@ -29,12 +29,12 @@ const SECTIONS = [
     ],
     feature: { to: "/solutions", title: "Compare solutions", note: "What each team gets" },
   },
-  { key: "companies", label: "Companies", lede: "One parent, five ways to build." },
+  { key: "companies", label: "Companies", lede: "Five companies, each with its own site." },
 ];
 
 const LINKS = [
   { to: "/pricing", label: "Pricing" },
-  // Subsidiary app with its own bundle; full page load into /exchange.
+  // Separate app with its own bundle; full page load into /exchange.
   { to: "/exchange", label: "Exchange", reloadDocument: true },
 ];
 
