@@ -41,7 +41,7 @@ function Badge({ children, tone = "brand" }) {
 
 /** Hero panel: pick a class, see the vehicle and its capacity. */
 function ClassPicker() {
-  const [active, setActive] = useState(vehicleClasses.length - 1);
+  const [active, setActive] = useState(0);
   const v = vehicleClasses[active];
   return (
     <div className="rounded-3xl border border-line bg-surface p-5 shadow-[var(--panel-shadow)] md:p-6">
@@ -189,8 +189,10 @@ export default function Fleet({ brand }) {
               Arrive on time. Every time.
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-fg-muted">
-              Executives, crews, wedding parties, and conference groups across Southern California. Licensed drivers,
-              inspected vehicles, and a price that is set before you ride.
+              Executives, crews, wedding parties, and conference groups across Southern California.
+              {vehicles.length === 0
+                ? " You book a vehicle class. Each unit is listed here once it is registered, inspected, and insured. The price is set before you ride."
+                : " Licensed drivers, inspected vehicles, and a price that is set before you ride."}
             </p>
             <div className="mt-8 grid max-w-xl grid-cols-1 gap-3 sm:grid-cols-2">
               <a href="#quote" className="flex items-center gap-3 rounded-2xl bg-brand p-4 text-white shadow-sm transition-colors hover:bg-brand-hover">

@@ -6,6 +6,16 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.9",
+    date: "October 2026",
+    tag: "Fix",
+    items: [
+      { type: "fixed", text: "Footer market-notes form now sends the address to the contact desk. It no longer pretends a list signup succeeded." },
+      { type: "fixed", text: "Fleet hero no longer says inspected vehicles are on the board while the unit list is empty. Class picker opens on the sedan. Insurer row no longer claims a policy expiry that is not printed." },
+      { type: "fixed", text: "Privacy, terms, and brand sheets scroll inside the page on narrow screens instead of widening the site." },
+    ],
+  },
+  {
     version: "1.8",
     date: "October 2026",
     tag: "Fix",
