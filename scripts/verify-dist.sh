@@ -53,6 +53,9 @@ need_files=(
   api/config.example.php
   privacy.html
   terms.html
+  fleet-cards.html
+  signage.html
+  receipts.html
 )
 
 missing=0
