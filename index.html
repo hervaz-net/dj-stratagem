@@ -18,6 +18,11 @@
             location.replace("https://djstratageminc.com" + location.pathname + location.search + location.hash);
             return;
           }
+          // The company sites (Fleet, Capital, Studio, Workforce) are light only.
+          if (/^\/(fleet|capital|studio|workforce|companies\/[^/]+)\/?$/.test(location.pathname)) {
+            document.documentElement.dataset.theme = "light";
+            return;
+          }
           var stored = localStorage.getItem("djs-theme");
           var theme =
             stored === "light" || stored === "dark"
@@ -46,7 +51,7 @@
          These defaults match the parent homepage. Stratagem Exchange is a
          subsidiary at /exchange and sets its own title after hydration. -->
     <title>Build the pipeline, not the paperwork. | D&amp;J Stratagem, Inc.</title>
-    <script type="module" crossorigin src="/assets/index-BYkEwc2Q.js"></script>
+    <script type="module" crossorigin src="/assets/index-BSpyH4AM.js"></script>
   </head>
   <body>
     <div id="root"></div>
