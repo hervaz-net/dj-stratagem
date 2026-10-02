@@ -137,7 +137,14 @@ Options -Indexes
   RewriteRule ^legal$ /terms [R=301,L]
   RewriteRule ^eula$ /terms [R=301,L]
   RewriteRule ^brand-guidelines$ /brand [R=301,L]
-  RewriteRule ^fleet-cards$ /marketing/fleet-cards [R=301,L]
+  # Printable sheets are real files. Do not send them through the SPA:
+  # a stale bundle renders an empty marketing shell and never sets a title.
+  RewriteRule ^fleet-cards$ /fleet-cards.html [L]
+  RewriteRule ^marketing/fleet-cards$ /fleet-cards.html [L]
+  RewriteRule ^signage$ /signage.html [L]
+  RewriteRule ^marketing/signage$ /signage.html [L]
+  RewriteRule ^receipts$ /receipts.html [L]
+  RewriteRule ^marketing/receipts$ /receipts.html [L]
   # /supply is the parent site's page again; the marketplace lives at
   # /exchange/marketplace (Stratagem Exchange subsidiary).
   RewriteRule ^supply/catalog/?$ /exchange/marketplace [R=301,L]
@@ -147,8 +154,6 @@ Options -Indexes
   RewriteRule ^shop$ /exchange/marketplace [R=301,L]
   RewriteRule ^equipment$ /fleet [R=301,L]
   RewriteRule ^supplier$ /exchange/suppliers [R=301,L]
-  RewriteRule ^receipts$ /marketing/receipts [R=301,L]
-  RewriteRule ^signage$ /marketing/signage [R=301,L]
   RewriteRule ^sitemap$ /sitemap.xml [R=301,L]
   RewriteRule ^(feed|rss|atom)$ /changelog [R=301,L]
   RewriteRule ^app$ /login [R=301,L]

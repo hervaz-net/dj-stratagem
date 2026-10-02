@@ -6,6 +6,15 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.8",
+    date: "October 2026",
+    tag: "Fix",
+    items: [
+      { type: "fixed", text: "Fleet cards, signage, and receipts serve their own documents again. Those URLs were an empty marketing shell with the homepage title." },
+      { type: "fixed", text: "/api/ answers with the API descriptor instead of a JSON not-found when the directory itself is requested." },
+    ],
+  },
+  {
     version: "1.7",
     date: "October 2026",
     tag: "Fix",
