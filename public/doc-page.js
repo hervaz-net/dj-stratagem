@@ -200,6 +200,8 @@
        component so privacy/terms/brand do not widen the page. */
     @media screen and (max-width: 920px) {
       :host {
+        width: 100%;
+        max-width: 100%;
         min-width: 0;
         overflow-x: auto;
         padding: 24px 12px;
