@@ -210,7 +210,8 @@ export default function Footer() {
           <Logo />
           <p className="text-sm text-steel">
             <a href="mailto:hello@djstratageminc.com" className="draw-link text-paper">hello@djstratageminc.com</a>
-            <span className="mx-3 text-steel/50">/</span>Los Angeles, California
+            <span className="mx-2 text-steel/50" aria-hidden="true">·</span>
+            <span>Los Angeles, California</span>
           </p>
         </div>
         <div className="dotline mt-6" />

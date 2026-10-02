@@ -21,14 +21,14 @@ const issued = [
   {
     key: "tcp",
     label: "CPUC charter-party carrier permit",
-    value: "TCP 344532-B",
-    note: "Required by the California Public Utilities Commission to carry passengers for hire.",
+    value: null,
+    note: "Required by the California Public Utilities Commission to carry passengers for hire. Shown here only after the issued permit is on file.",
   },
   {
     key: "usdot",
     label: "USDOT number",
     value: "4211264",
-    note: "Federal registration with the FMCSA.",
+    note: "Federal registration with the FMCSA. Registration is not operating authority.",
   },
   {
     key: "mc",
@@ -42,14 +42,14 @@ const issued = [
   {
     key: "auto",
     label: "Commercial auto liability",
-    value: "$5,000,000 combined single limit",
-    note: "At least $1,500,000 per vehicle; at least $5,000,000 on vehicles seating 16 or more where required.",
+    value: null,
+    note: "Limit is printed only from the certificate of insurance on file. At least $1,500,000 per vehicle is required; at least $5,000,000 on vehicles seating 16 or more where required.",
   },
   {
     key: "insurer",
     label: "Insurer",
-    value: "biBerk",
-    note: "Certificate of insurance, including the policy expiry, is available on request. Expiry is not printed here until it is on the certificate we hold.",
+    value: null,
+    note: "Certificate of insurance, including the policy expiry, is available on request once issued. Expiry is not printed here until it is on the certificate we hold.",
   },
 ];
 
@@ -161,10 +161,10 @@ export const standards = [
   {
     title: "Vehicles",
     points: [
-      "Maintained on a written schedule, inspected before every shift, and inspected where the law requires",
+      "Maintained on a written schedule and inspected where the law requires, once a vehicle is in service",
       "Clean, roadworthy, and exactly the class you booked",
       "A replacement is only ever equal or better in class, capacity, and condition",
-      "We use our own vehicles and drivers. No trip is passed to another operator without your approval",
+      "No trip is passed to another operator without your approval",
     ],
   },
   {
