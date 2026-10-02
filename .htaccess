@@ -53,6 +53,10 @@ Options -Indexes
 
   # Partial public_html trees have been missing /api/*.php and health.php.
   # Never let those URLs become the marketing SPA — JSON or a PHP 404 only.
+  # /api (no slash) 301s to /api/ because it is a directory. Serve the
+  # index from the parent too, so a host that skips the subdirectory rule
+  # still returns the API descriptor instead of the marketing SPA.
+  RewriteRule ^api/?$ api/index.php [L]
   RewriteRule ^api/ api/index.php [L]
   RewriteRule [.]php$ contact.php [L]
 
