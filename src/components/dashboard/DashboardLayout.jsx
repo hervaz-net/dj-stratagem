@@ -1,7 +1,6 @@
 import Sidebar from "./Sidebar";
 import Breadcrumbs from "./Breadcrumbs";
 import MarketTicker from "./MarketTicker";
-import ThemeToggle from "../ThemeToggle";
 
 export default function DashboardLayout({
   breadcrumbs = [],
@@ -22,7 +21,6 @@ export default function DashboardLayout({
             <div className="min-w-0 flex-1">
               <MarketTicker items={ticker} live={tickerLive} />
             </div>
-            <ThemeToggle />
           </div>
 
           <div className="mt-3 flex flex-wrap items-end justify-between gap-3">

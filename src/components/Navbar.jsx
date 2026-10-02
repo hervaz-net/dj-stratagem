@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { NavLink, Link, useLocation } from "react-router-dom";
 import Logo from "./Logo";
-import ThemeToggle from "./ThemeToggle";
 import CompanyGlyph from "./nocturne/CompanyGlyph";
 import { companies } from "../data/companies";
 
@@ -385,7 +384,6 @@ export default function Navbar({ onOpenPalette }) {
                 ⌘K
               </button>
             )}
-            <ThemeToggle className="liquid-glass-btn" />
             <Link to="/login" className="draw-link hidden px-2 py-1 text-sm text-paper sm:inline">
               Sign in
             </Link>

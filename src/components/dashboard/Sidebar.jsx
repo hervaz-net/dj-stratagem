@@ -2,7 +2,6 @@ import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import StatusDot from "./StatusDot";
 import Logo from "../Logo";
-import ThemeToggle, { useThemeMode } from "../ThemeToggle";
 import useAuth from "../../auth/useAuth";
 
 const items = [
@@ -104,7 +103,6 @@ export default function Sidebar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [signingOut, setSigningOut] = useState(false);
-  const { theme } = useThemeMode();
 
   const signOut = async () => {
     setSigningOut(true);
@@ -138,14 +136,6 @@ export default function Sidebar() {
           </nav>
 
           <div className="mt-auto hidden px-2 pt-6 lg:block">
-            {/* Theme toggle */}
-            <div className="mb-3 flex items-center justify-between rounded-xl border border-line bg-ink/60 px-3 py-2.5">
-              <span className="text-xs font-semibold text-steel">
-                {theme === "dark" ? "Dark mode" : "Light mode"}
-              </span>
-              <ThemeToggle />
-            </div>
-
             {/* Settings */}
             <NavItem item={settingsItem} />
 

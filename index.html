@@ -18,8 +18,8 @@
             location.replace("https://djstratageminc.com" + location.pathname + location.search + location.hash);
             return;
           }
-          // The company sites (Fleet, Capital, Studio, Workforce) are light only.
-          if (/^\/(fleet|capital|studio|workforce|companies\/[^/]+)\/?$/.test(location.pathname)) {
+          // Only Stratagem Exchange offers dark mode; every other site is light.
+          if (!/^\/exchange(\/|$)/.test(location.pathname)) {
             document.documentElement.dataset.theme = "light";
             return;
           }

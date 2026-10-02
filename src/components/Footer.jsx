@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Logo from "./Logo";
+import CompanyGlyph from "./nocturne/CompanyGlyph";
+import { companies } from "../data/companies";
 import { IconMail, IconArrowRight } from "./icons";
 
 // Only routes that actually exist are linked. Resources and per-trade landing
@@ -163,6 +165,31 @@ export default function Footer() {
               </div>
             ))}
           </div>
+        </div>
+
+        {/* Every company, one click away. Each runs its own site. */}
+        <div className="mt-16">
+          <p className="mono-label text-steel">Companies</p>
+          <ul className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
+            {companies.map((c) => (
+              <li key={c.slug}>
+                <a
+                  href={c.href}
+                  className="slab group flex h-full flex-col gap-4 p-5 hover:-translate-y-1"
+                  style={{ "--panel-glow": `${c.accent}1f` }}
+                >
+                  <span className="flex items-center justify-between">
+                    <CompanyGlyph glyph={c.glyph} accent={c.accent} size={40} />
+                    <IconArrowRight width={16} height={16} className="text-steel transition-transform duration-300 group-hover:translate-x-1 group-hover:text-paper" />
+                  </span>
+                  <span>
+                    <span className="block text-base font-bold tracking-tight text-paper">{c.name}</span>
+                    <span className="mt-1 block text-sm leading-snug text-steel">{c.tagline}</span>
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
 
         <div className="mt-16 flex flex-wrap items-end justify-between gap-6">
