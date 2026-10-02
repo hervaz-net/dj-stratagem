@@ -365,9 +365,8 @@ export default function Fleet({ brand }) {
       {/* Credentials */}
       <Section id="credentials" tone="subtle">
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
-          <SectionHeading eyebrow="Licensing and insurance" title="Check our paperwork.">
-            Every number below can be checked against the issuing authority, and certificates of insurance are available on
-            request. Permits and policies are held by {operator.legalName}, the legal operator of {brand.name}.
+          <SectionHeading eyebrow="Licensed and insured." title="Check our paperwork.">
+            Permit numbers and certificates of insurance are available on request. Permits and policies are held by {operator.legalName}, the legal operator of {brand.name}.
           </SectionHeading>
           <div>
             <dl className="divide-y divide-line overflow-hidden rounded-2xl border border-line bg-surface shadow-[var(--shadow-card)]">
@@ -378,7 +377,7 @@ export default function Fleet({ brand }) {
                     <p className="mt-1 text-sm leading-relaxed text-fg-muted">{cr.note}</p>
                   </div>
                   <dd className="shrink-0">
-                    {cr.value ? <Badge tone="success">{cr.value}</Badge> : cr.optional ? <Badge>{cr.optional}</Badge> : <Badge tone="warning">Pending</Badge>}
+                    {cr.value ? <Badge tone="success">Active</Badge> : cr.optional ? <Badge>{cr.optional}</Badge> : <Badge tone="warning">Pending</Badge>}
                   </dd>
                 </div>
               ))}
