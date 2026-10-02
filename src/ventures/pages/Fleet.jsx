@@ -56,9 +56,14 @@ function ClassPicker() {
         <img
           key={v.key}
           src={v.image}
-          alt={v.name}
+          alt={isLicensed && vehicles.length > 0 ? v.name : `${v.name} class illustration, not a vehicle in service`}
           className="animate-menu-in absolute inset-0 h-full w-full object-cover"
         />
+        {!(isLicensed && vehicles.length > 0) && (
+          <p className="absolute inset-x-0 bottom-0 bg-black/60 px-3 py-1.5 text-[0.7rem] font-semibold tracking-wide text-white">
+            Class illustration · not in service
+          </p>
+        )}
       </div>
       <div className="mt-4 grid grid-cols-5 gap-1.5" role="tablist" aria-label="Vehicle classes">
         {vehicleClasses.map((c, i) => (
@@ -268,10 +273,15 @@ export default function Fleet({ brand }) {
                 <figure className="relative aspect-[16/10] overflow-hidden border-b border-line bg-[#cfe3f1]">
                   <img
                     src={v.image}
-                    alt={v.name}
+                    alt={isLicensed && vehicles.length > 0 ? v.name : `${v.name} class illustration, not a vehicle in service`}
                     loading="lazy"
                     className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
                   />
+                  {!(isLicensed && vehicles.length > 0) && (
+                    <figcaption className="absolute inset-x-0 bottom-0 bg-black/60 px-3 py-1.5 text-[0.7rem] font-semibold tracking-wide text-white">
+                      Class illustration · not in service
+                    </figcaption>
+                  )}
                 </figure>
                 <div className="flex flex-1 flex-col p-6">
                   <div className="flex items-start justify-between gap-3">
