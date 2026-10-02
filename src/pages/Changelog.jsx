@@ -6,6 +6,14 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.11",
+    date: "October 2026",
+    tag: "Fix",
+    items: [
+      { type: "fixed", text: "Fleet no longer says you get a licensed, inspected vehicle just because a class photo is on the page. That claim waits until permits, insurance, and an in-service unit are all on file." },
+    ],
+  },
+  {
     version: "1.10",
     date: "October 2026",
     tag: "Fix",

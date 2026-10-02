@@ -80,7 +80,11 @@ function ClassPicker() {
         <span className="text-fg-muted">{v.bestFor}</span>
         <span className="shrink-0 font-semibold text-fg">{v.bags} bags</span>
       </div>
-      <p className="mt-3 text-xs text-fg-muted">You book a class; you get that class or better.</p>
+      <p className="mt-3 text-xs text-fg-muted">
+        {isLicensed && vehicles.length > 0
+          ? "You book a class; you get that class or better."
+          : "You request a class. A unit is assigned once it is registered, inspected, and insured."}
+      </p>
     </div>
   );
 }
@@ -190,9 +194,9 @@ export default function Fleet({ brand }) {
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-fg-muted">
               Executives, crews, wedding parties, and conference groups across Southern California.
-              {vehicles.length === 0
-                ? " You book a vehicle class. Each unit is listed here once it is registered, inspected, and insured. The price is set before you ride."
-                : " Licensed drivers, inspected vehicles, and a price that is set before you ride."}
+              {isLicensed && vehicles.length > 0
+                ? " Licensed drivers, inspected vehicles, and a price that is set before you ride."
+                : " You book a vehicle class. Each unit is listed here once it is registered, inspected, and insured. The price is set before you ride."}
             </p>
             <div className="mt-8 grid max-w-xl grid-cols-1 gap-3 sm:grid-cols-2">
               <a href="#quote" className="flex items-center gap-3 rounded-2xl bg-brand p-4 text-white shadow-sm transition-colors hover:bg-brand-hover">
@@ -253,8 +257,9 @@ export default function Fleet({ brand }) {
       {/* Vehicles */}
       <Section id="vehicles">
         <SectionHeading eyebrow="The fleet" title="The right vehicle, sized to the trip.">
-          You book a class, and you get that class or better. Never smaller, never older, never different without your say-so.
-          {vehicles.length === 0 && " Individual vehicles, with photos and details, are listed here as each one is registered, inspected, and insured."}
+          {isLicensed && vehicles.length > 0
+            ? "You book a class, and you get that class or better. Never smaller, never older, never different without your say-so."
+            : "You request a class. Individual vehicles are listed here only after each one is registered, inspected, and insured."}
         </SectionHeading>
         <div className="mt-12 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
           {vehicleClasses.map((v, i) => (
