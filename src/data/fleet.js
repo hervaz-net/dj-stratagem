@@ -47,9 +47,9 @@ const issued = [
   },
   {
     key: "insurer",
-    label: "Insurer and policy expiry",
+    label: "Insurer",
     value: "biBerk",
-    note: "Certificate of insurance available on request.",
+    note: "Certificate of insurance, including the policy expiry, is available on request. Expiry is not printed here until it is on the certificate we hold.",
   },
 ];
 

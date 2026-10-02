@@ -59,25 +59,38 @@ function Newsletter() {
   const [email, setEmail] = useState("");
   const [done, setDone] = useState(false);
   const [error, setError] = useState("");
+  const [sending, setSending] = useState(false);
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       setError("Enter a valid email address.");
       return;
     }
     setError("");
-    setDone(true);
+    setSending(true);
+    const body = new FormData();
+    body.set("name", "Website visitor");
+    body.set("company", "Market notes");
+    body.set("email", email.trim());
+    body.set("role", "Market notes");
+    body.set("message", "Footer request for market updates.");
+    try {
+      const res = await fetch("/contact.php", { method: "POST", body });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.ok) throw new Error("failed");
+      setDone(true);
+    } catch {
+      setError("That didn’t send. Email hello@djstratageminc.com instead.");
+    } finally {
+      setSending(false);
+    }
   }
 
   if (done) {
     return (
       <p className="mt-4 text-sm leading-relaxed text-steel">
-        Thanks. A mailing list is not live yet &mdash; email{" "}
-        <a href="mailto:hello@djstratageminc.com" className="font-medium text-amber hover:text-amber-2">
-          hello@djstratageminc.com
-        </a>{" "}
-        if you want updates.
+        Thanks. We received the address and will write when notes go out. A public list is not live yet.
       </p>
     );
   }
@@ -103,8 +116,9 @@ function Newsletter() {
         </div>
         <button
           type="submit"
+          disabled={sending}
           aria-label="Request market updates"
-          className="chamfer-sm flex shrink-0 items-center gap-1 bg-cta px-3.5 py-2.5 text-xs font-semibold text-white hover:bg-cta-hover"
+          className="chamfer-sm flex shrink-0 items-center gap-1 bg-cta px-3.5 py-2.5 text-xs font-semibold text-white hover:bg-cta-hover disabled:opacity-60"
         >
           <IconArrowRight width={13} height={13} />
         </button>
