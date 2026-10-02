@@ -11,7 +11,7 @@ const entries = [
     tag: "Fix",
     items: [
       { type: "fixed", text: "Fleet no longer states that drivers are already licensed or that insurance certificates are on request while those credentials are still pending." },
-      { type: "fixed", text: "Privacy, terms, and brand sheets stay inside the phone viewport. The footer email and city stack instead of running together." },
+      { type: "fixed", text: "Privacy, terms, and brand sheets fit the window on phones. They no longer stay letter-width and push the page sideways." },
     ],
   },
   {

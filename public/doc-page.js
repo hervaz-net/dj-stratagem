@@ -196,15 +196,21 @@
       --doc-hdr-pad: 0px;
       --doc-ftr-pad: 0px;
     }
-    /* Narrow viewports: keep the letter sheet, but scroll it inside the
-       component so privacy/terms/brand do not widen the page. */
+    /* Narrow viewports: fit the sheet to the window. A fixed 8.5in sheet
+       plus host padding was 864px on an 800px window, so privacy, terms,
+       and brand widened the page. Print rules below restore paper size. */
     @media screen and (max-width: 920px) {
       :host {
         width: 100%;
         max-width: 100%;
         min-width: 0;
-        overflow-x: auto;
-        padding: 24px 12px;
+        overflow-x: hidden;
+        padding: 16px 12px;
+      }
+      .sheet {
+        width: 100%;
+        max-width: 100%;
+        padding: 1.25rem;
       }
     }
     .sheet {
