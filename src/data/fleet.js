@@ -57,7 +57,7 @@ const issued = [
 export const vehicleClasses = [
   {
     key: "sedan",
-    image: "/media/fleet/sedan.9b3f1d75.webp",
+    image: "/media/fleet/sedan.78490617.webp",
     name: "Executive sedan",
     passengers: 3,
     bags: 3,
@@ -67,7 +67,7 @@ export const vehicleClasses = [
   },
   {
     key: "suv",
-    image: "/media/fleet/suv.2ac52a82.webp",
+    image: "/media/fleet/suv.f423055c.webp",
     name: "Premium SUV",
     passengers: 6,
     bags: 6,
@@ -76,8 +76,18 @@ export const vehicleClasses = [
     features: ["Three-row seating", "Phone charging", "Bottled water", "All-weather capable"],
   },
   {
+    key: "van",
+    image: "/media/fleet/van.6f84dae0.webp",
+    name: "Executive van",
+    passengers: 7,
+    bags: 7,
+    shape: "van",
+    bestFor: "Families, small groups, and airport runs with luggage",
+    features: ["Captain's chairs", "Sliding doors both sides", "Phone charging", "Rear climate control"],
+  },
+  {
     key: "sprinter",
-    image: "/media/fleet/sprinter.324d7148.webp",
+    image: "/media/fleet/sprinter.0784767d.webp",
     name: "Executive Sprinter",
     passengers: 12,
     bags: 12,
@@ -87,23 +97,13 @@ export const vehicleClasses = [
   },
   {
     key: "minibus",
-    image: "/media/fleet/minibus.a8abbe8d.webp",
+    image: "/media/fleet/minibus.a0b18c40.webp",
     name: "Minibus",
     passengers: 28,
     bags: 20,
     shape: "minibus",
     bestFor: "Crew shuttles, weddings, and event loops",
     features: ["Wheelchair lift available", "PA system", "Overhead racks", "Climate control"],
-  },
-  {
-    key: "coach",
-    image: "/media/fleet/coach.43eea6db.webp",
-    name: "Motorcoach",
-    passengers: 56,
-    bags: 56,
-    shape: "coach",
-    bestFor: "Large groups, conferences, and charters",
-    features: ["Under-floor luggage bays", "Restroom", "Wi-Fi and outlets", "Reclining seats"],
   },
 ];
 

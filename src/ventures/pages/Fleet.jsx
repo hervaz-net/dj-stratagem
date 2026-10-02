@@ -28,7 +28,7 @@ import { Field, FormStatus, Honeypot, fieldClass, useInquiry, useSeo } from "../
 
 const SERVICE_ICONS = [IconMapPin, IconBriefcase, IconHelmet, IconCalendar, IconClock, IconUsers];
 const STANDARD_ICONS = [IconUsers, IconTruck, IconShield];
-const SHORT = { sedan: "Sedan", suv: "SUV", sprinter: "Sprinter", minibus: "Minibus", coach: "Coach" };
+const SHORT = { sedan: "Sedan", suv: "SUV", van: "Van", sprinter: "Sprinter", minibus: "Minibus" };
 
 function Badge({ children, tone = "brand" }) {
   const tones = {
@@ -57,7 +57,7 @@ function ClassPicker() {
           key={v.key}
           src={v.image}
           alt={v.name}
-          className="animate-menu-in absolute inset-x-[5%] bottom-[6%] h-[86%] w-[90%] object-contain object-bottom"
+          className="animate-menu-in absolute inset-0 h-full w-full object-cover"
         />
       </div>
       <div className="mt-4 grid grid-cols-5 gap-1.5" role="tablist" aria-label="Vehicle classes">
@@ -165,8 +165,8 @@ function QuoteForm() {
 
 export default function Fleet({ brand }) {
   useSeo(brand, {
-    title: "Chauffeured sedans, SUVs, Sprinters, and coaches",
-    description: `Chauffeured sedans, SUVs, Sprinters, minibuses, and motorcoaches across ${operator.base} and Southern California. Itemized quotes, no surprise charges.`,
+    title: "Chauffeured sedans, SUVs, vans, and Sprinters",
+    description: `Chauffeured sedans, SUVs, vans, Sprinters, and minibuses across ${operator.base} and Southern California. Itemized quotes, no surprise charges.`,
   });
 
   return (
@@ -208,7 +208,7 @@ export default function Fleet({ brand }) {
                 </span>
                 <span>
                   <span className="block font-semibold text-fg">See the vehicles</span>
-                  <span className="block text-sm text-fg-muted">Sedan to 56-seat coach</span>
+                  <span className="block text-sm text-fg-muted">Sedan to 28-seat minibus</span>
                 </span>
               </a>
             </div>
@@ -258,12 +258,12 @@ export default function Fleet({ brand }) {
           {vehicleClasses.map((v, i) => (
             <Reveal key={v.key} delay={(i % 3) * 80} className="h-full">
               <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-surface shadow-[var(--shadow-card)] transition-[border-color,box-shadow] hover:border-line-strong hover:shadow-[var(--shadow-pop)]">
-                <figure className="relative aspect-[16/10] border-b border-line bg-subtle">
+                <figure className="relative aspect-[16/10] overflow-hidden border-b border-line bg-[#cfe3f1]">
                   <img
                     src={v.image}
                     alt={v.name}
                     loading="lazy"
-                    className="absolute inset-x-[5%] bottom-[7%] h-[84%] w-[90%] object-contain object-bottom transition-transform duration-500 group-hover:scale-[1.04]"
+                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
                   />
                 </figure>
                 <div className="flex flex-1 flex-col p-6">

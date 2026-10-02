@@ -90,7 +90,7 @@ if [[ -d "$DIST/fleet" ]]; then
 fi
 # Photos carry a content hash (sedan.<hash>.webp) so a new version is a new URL
 # and the week-long image cache can never show a stale one.
-for photo in sedan suv sprinter minibus coach; do
+for photo in sedan suv van sprinter minibus; do
   compgen -G "$DIST/media/fleet/${photo}.*.webp" >/dev/null || die "missing media/fleet/${photo}.<hash>.webp"
 done
 grep -q 'RewriteRule \^fleet/?\$ /index.html' "$htaccess" \

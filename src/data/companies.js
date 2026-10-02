@@ -91,7 +91,7 @@ export const companies = [
     status: "Taking quote requests",
     tagline: "Arrive on time. Every time.",
     summary:
-      "Chauffeured sedans, SUVs, Sprinters, minibuses, and motorcoaches across Southern California, with itemized quotes and no surprise charges.",
+      "Chauffeured sedans, SUVs, vans, Sprinters, and minibuses across Southern California, with itemized quotes and no surprise charges.",
     lede:
       "Stratagem Fleet moves executives, crews, wedding parties, and conference groups across Southern California. Licensed drivers, inspected vehicles, and a price that is set before you ride.",
     glyph: "wheel",
