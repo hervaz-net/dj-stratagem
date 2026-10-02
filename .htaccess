@@ -40,6 +40,9 @@ Options -Indexes
   RewriteRule ^fleet/$ /fleet [R=301,L]
   RewriteRule ^fleet$ /index.html [L]
 
+  # Each company has its own top-level site; old /companies/<slug> links move.
+  RewriteRule ^companies/(capital|studio|workforce|fleet)/?$ /$1 [R=301,L]
+
   # /manifest.json must never become index.html. Live public_html has shipped
   # without the file, and LiteSpeed DOCUMENT_ROOT is unreliable on this account,
   # so do not gate the alias on a filesystem probe.
