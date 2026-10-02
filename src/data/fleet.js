@@ -21,31 +21,34 @@ const issued = [
   {
     key: "tcp",
     label: "CPUC charter-party carrier permit",
-    value: null, // e.g. "TCP 000000-B"
+    value: "TCP 344532-B",
     note: "Required by the California Public Utilities Commission to carry passengers for hire.",
   },
   {
     key: "usdot",
     label: "USDOT number",
-    value: null,
+    value: "4211264",
     note: "Federal registration with the FMCSA.",
   },
   {
     key: "mc",
     label: "FMCSA operating authority (MC)",
     value: null,
+    // Only needed for interstate trips. FMCSA lists the carrier as intrastate
+    // only, so a missing MC number does not hold up the licensed state.
+    optional: "Intrastate only",
     note: "Needed for interstate for-hire trips. Until issued, trips stay inside California.",
   },
   {
     key: "auto",
     label: "Commercial auto liability",
-    value: null, // e.g. "$1,500,000 combined single limit"
+    value: "$5,000,000 combined single limit",
     note: "At least $1,500,000 per vehicle; at least $5,000,000 on vehicles seating 16 or more where required.",
   },
   {
     key: "insurer",
     label: "Insurer and policy expiry",
-    value: null,
+    value: "biBerk",
     note: "Certificate of insurance available on request.",
   },
 ];
@@ -199,5 +202,5 @@ const fixtures =
 
 export const isTestFixtures = Boolean(fixtures);
 export const credentials = issued.map((c) => ({ ...c, value: fixtures?.credentials[c.key] ?? c.value }));
-export const isLicensed = credentials.every((c) => c.value);
+export const isLicensed = credentials.every((c) => c.value || c.optional);
 export const vehicles = fixtures ? fixtures.vehicles : owned;

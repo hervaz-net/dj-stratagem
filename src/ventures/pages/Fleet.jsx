@@ -378,7 +378,7 @@ export default function Fleet({ brand }) {
                     <p className="mt-1 text-sm leading-relaxed text-fg-muted">{cr.note}</p>
                   </div>
                   <dd className="shrink-0">
-                    {cr.value ? <Badge tone="success">{cr.value}</Badge> : <Badge tone="warning">Pending</Badge>}
+                    {cr.value ? <Badge tone="success">{cr.value}</Badge> : cr.optional ? <Badge>{cr.optional}</Badge> : <Badge tone="warning">Pending</Badge>}
                   </dd>
                 </div>
               ))}
