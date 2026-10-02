@@ -190,7 +190,7 @@ export default function Fleet({ brand }) {
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-fg-muted">
               Executives, crews, wedding parties, and conference groups across Southern California.
-              {vehicles.length === 0
+              {vehicles.length === 0 || !isLicensed
                 ? " You book a vehicle class. Each unit is listed here once it is registered, inspected, and insured. The price is set before you ride."
                 : " Licensed drivers, inspected vehicles, and a price that is set before you ride."}
             </p>

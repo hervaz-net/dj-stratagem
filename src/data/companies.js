@@ -93,7 +93,7 @@ export const companies = [
     summary:
       "Chauffeured sedans, SUVs, vans, Sprinters, and minibuses across Southern California, with itemized quotes and no surprise charges.",
     lede:
-      "Stratagem Fleet moves executives, crews, wedding parties, and conference groups across Southern California. Licensed drivers, inspected vehicles, and a price that is set before you ride.",
+      "Stratagem Fleet moves executives, crews, wedding parties, and conference groups across Southern California. You book a vehicle class; each unit is listed once it is registered, inspected, and insured. The price is set before you ride.",
     glyph: "wheel",
   },
 ];

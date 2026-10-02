@@ -196,15 +196,20 @@
       --doc-hdr-pad: 0px;
       --doc-ftr-pad: 0px;
     }
-    /* Narrow viewports: keep the letter sheet, but scroll it inside the
-       component so privacy/terms/brand do not widen the page. */
+    /* Narrow viewports: shrink the letter sheet to the window. An 8.5in
+       sheet plus host padding is ~864px and was widening /privacy, /terms,
+       and /brand on phones. Scroll inside the sheet, not the page. */
     @media screen and (max-width: 920px) {
       :host {
         width: 100%;
         max-width: 100%;
         min-width: 0;
-        overflow-x: auto;
-        padding: 24px 12px;
+        overflow-x: hidden;
+        padding: 16px 12px;
+      }
+      .sheet {
+        width: 100%;
+        max-width: 8.5in;
       }
     }
     .sheet {
