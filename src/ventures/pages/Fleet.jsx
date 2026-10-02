@@ -190,9 +190,9 @@ export default function Fleet({ brand }) {
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-fg-muted">
               Executives, crews, wedding parties, and conference groups across Southern California.
-              {vehicles.length === 0
-                ? " You book a vehicle class. Each unit is listed here once it is registered, inspected, and insured. The price is set before you ride."
-                : " Licensed drivers, inspected vehicles, and a price that is set before you ride."}
+              {vehicles.length > 0 && isLicensed
+                ? " Licensed drivers, inspected vehicles, and a price that is set before you ride."
+                : " You book a vehicle class. Each unit is listed here once it is registered, inspected, and insured. The price is set before you ride."}
             </p>
             <div className="mt-8 grid max-w-xl grid-cols-1 gap-3 sm:grid-cols-2">
               <a href="#quote" className="flex items-center gap-3 rounded-2xl bg-brand p-4 text-white shadow-sm transition-colors hover:bg-brand-hover">
@@ -350,12 +350,17 @@ export default function Fleet({ brand }) {
                   </span>
                   <h3 className="mt-5 text-lg font-semibold text-fg">{s.title}</h3>
                   <ul className="mt-4 space-y-2.5">
-                    {s.points.map((p) => (
-                      <li key={p} className="flex items-start gap-2.5 text-sm leading-relaxed text-fg-muted">
+                    {s.points.map((p) => {
+                      const point = !isLicensed && p.startsWith("Licensed for the vehicle class")
+                        ? "Licensed for the vehicle class they drive before their first trip. Background checks and driving-record reviews happen before a driver is assigned, and are not claimed until permits are issued."
+                        : p;
+                      return (
+                      <li key={point} className="flex items-start gap-2.5 text-sm leading-relaxed text-fg-muted">
                         <IconCheck width={15} height={15} className="mt-0.5 shrink-0 text-brand" aria-hidden="true" />
-                        {p}
+                        {point}
                       </li>
-                    ))}
+                      );
+                    })}
                   </ul>
                 </div>
               </Reveal>
