@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import Button from "../exchange/components/Button";
-import ThemeToggle from "../exchange/components/ThemeToggle";
 import { CONTACT_EMAIL, brandCss } from "./brands";
 
 /** Company mark: one glyph on a rounded brand tile, like the Exchange mark. */
@@ -106,14 +105,12 @@ function Header({ brand }) {
         )}
 
         <div className="hidden items-center gap-2 lg:flex">
-          <ThemeToggle />
           <Button href={brand.cta.href} size="sm">
             {brand.cta.label}
           </Button>
         </div>
 
         <div className="flex items-center gap-2 lg:hidden">
-          <ThemeToggle />
           <button
             ref={toggleRef}
             type="button"
@@ -205,6 +202,11 @@ function Footer({ brand }) {
 
 /** Full page frame for one company: its colors, header, content, footer. */
 export default function Shell({ brand, children }) {
+  // Light only: ignore any dark preference saved on other Stratagem sites.
+  useEffect(() => {
+    document.documentElement.dataset.theme = "light";
+  }, []);
+
   useEffect(() => {
     let link = document.querySelector('link[rel="icon"]');
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="9" fill="${brand.colors.light.brand}"/></svg>`;

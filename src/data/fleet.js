@@ -52,13 +52,12 @@ const issued = [
 
 
 // Vehicle classes are definitions of service, not a claim about units owned.
-// Class images are representative and captioned as such on the page.
 // Add specific vehicles to `vehicles` only once each is registered, inspected,
 // and insured, with real photos you own.
 export const vehicleClasses = [
   {
     key: "sedan",
-    image: "/media/fleet/sedan.e47d2fc7.webp",
+    image: "/media/fleet/sedan.9b3f1d75.webp",
     name: "Executive sedan",
     passengers: 3,
     bags: 3,
@@ -68,7 +67,7 @@ export const vehicleClasses = [
   },
   {
     key: "suv",
-    image: "/media/fleet/suv.3d18d37b.webp",
+    image: "/media/fleet/suv.2ac52a82.webp",
     name: "Premium SUV",
     passengers: 6,
     bags: 6,
@@ -78,7 +77,7 @@ export const vehicleClasses = [
   },
   {
     key: "sprinter",
-    image: "/media/fleet/sprinter.29da06ca.webp",
+    image: "/media/fleet/sprinter.324d7148.webp",
     name: "Executive Sprinter",
     passengers: 12,
     bags: 12,
@@ -88,7 +87,7 @@ export const vehicleClasses = [
   },
   {
     key: "minibus",
-    image: "/media/fleet/minibus.84cb2b08.webp",
+    image: "/media/fleet/minibus.a8abbe8d.webp",
     name: "Minibus",
     passengers: 28,
     bags: 20,
@@ -98,7 +97,7 @@ export const vehicleClasses = [
   },
   {
     key: "coach",
-    image: "/media/fleet/coach.f0479a9f.webp",
+    image: "/media/fleet/coach.43eea6db.webp",
     name: "Motorcoach",
     passengers: 56,
     bags: 56,

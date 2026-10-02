@@ -140,9 +140,9 @@ export const BRANDS = {
 
 export const VENTURE_PATHS = Object.values(BRANDS).map((b) => b.path);
 
-/** Override the Exchange brand tokens for one company, light and dark. */
-export function brandCss({ colors: { light: l, dark: d } }) {
+/** Override the Exchange brand tokens for one company. The sites are light only. */
+export function brandCss({ colors: { light: l } }) {
   const vars = (c) =>
     `--brand:${c.brand};--brand-hover:${c.hover};--brand-soft:${c.soft};--brand-fg:${c.fg};--accent-on-brand:${c.dot};--panel-glow:${c.soft};`;
-  return `:root{${vars(l)}}[data-theme="dark"]{${vars(d)}}`;
+  return `:root,[data-theme="dark"]{${vars(l)}}`;
 }

@@ -56,7 +56,7 @@ function ClassPicker() {
         <img
           key={v.key}
           src={v.image}
-          alt={`Representative ${v.name.toLowerCase()}`}
+          alt={v.name}
           className="animate-menu-in absolute inset-x-[5%] bottom-[6%] h-[86%] w-[90%] object-contain object-bottom"
         />
       </div>
@@ -80,7 +80,7 @@ function ClassPicker() {
         <span className="text-fg-muted">{v.bestFor}</span>
         <span className="shrink-0 font-semibold text-fg">{v.bags} bags</span>
       </div>
-      <p className="mt-3 text-xs text-fg-muted">Representative images. You book a class; you get that class or better.</p>
+      <p className="mt-3 text-xs text-fg-muted">You book a class; you get that class or better.</p>
     </div>
   );
 }
@@ -261,13 +261,10 @@ export default function Fleet({ brand }) {
                 <figure className="relative aspect-[16/10] border-b border-line bg-subtle">
                   <img
                     src={v.image}
-                    alt={`Representative ${v.name.toLowerCase()}`}
+                    alt={v.name}
                     loading="lazy"
                     className="absolute inset-x-[5%] bottom-[7%] h-[84%] w-[90%] object-contain object-bottom transition-transform duration-500 group-hover:scale-[1.04]"
                   />
-                  <figcaption className="absolute left-3 top-3 rounded-full bg-surface/90 px-2 py-0.5 text-[0.65rem] font-medium text-fg-muted">
-                    Representative image
-                  </figcaption>
                 </figure>
                 <div className="flex flex-1 flex-col p-6">
                   <div className="flex items-start justify-between gap-3">
