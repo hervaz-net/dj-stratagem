@@ -208,9 +208,9 @@ export default function Footer() {
 
         <div className="mt-16 flex flex-wrap items-end justify-between gap-6">
           <Logo />
-          <p className="text-sm text-steel">
+          <p className="flex flex-col gap-1 text-sm text-steel sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-2 sm:gap-y-1">
             <a href="mailto:hello@djstratageminc.com" className="draw-link text-paper">hello@djstratageminc.com</a>
-            <span className="mx-2 text-steel/50" aria-hidden="true">·</span>
+            <span className="hidden text-steel/50 sm:inline" aria-hidden="true">·</span>
             <span>Los Angeles, California</span>
           </p>
         </div>
