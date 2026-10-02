@@ -382,11 +382,11 @@ export default function Fleet({ brand }) {
                   </dd>
                 </div>
               ))}
-            </dl>
+            </dl>       
             {!isLicensed && (
               <p className="mt-5 rounded-2xl border border-line bg-surface p-5 text-sm leading-relaxed text-fg-muted">
-                {brand.name} is completing its permits and insurance. We are taking quote requests now, and we will confirm a
-                booking only once every credential above is issued and listed.
+                Permits and insurance for all {brand.name} drivers and vehicles are pending. Submit a quote request to confirm
+                availability with our booking team; trips are booked once every credential above is issued.
               </p>
             )}
           </div>
