@@ -6,6 +6,15 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.10",
+    date: "October 2026",
+    tag: "Fix",
+    items: [
+      { type: "fixed", text: "Fleet no longer states that drivers are already licensed or that insurance certificates are on request while those credentials are still pending." },
+      { type: "fixed", text: "Privacy, terms, and brand sheets stay inside the phone viewport. The footer email and city stack instead of running together." },
+    ],
+  },
+  {
     version: "1.9",
     date: "October 2026",
     tag: "Fix",
