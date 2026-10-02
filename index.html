@@ -18,8 +18,8 @@
             location.replace("https://djstratageminc.com" + location.pathname + location.search + location.hash);
             return;
           }
-          // The company sites (Fleet, Capital, Studio, Workforce) are light only.
-          if (/^\/(fleet|capital|studio|workforce|companies\/[^/]+)\/?$/.test(location.pathname)) {
+          // Only Stratagem Exchange offers dark mode; every other site is light.
+          if (!/^\/exchange(\/|$)/.test(location.pathname)) {
             document.documentElement.dataset.theme = "light";
             return;
           }
@@ -51,7 +51,7 @@
          These defaults match the parent homepage. Stratagem Exchange is a
          subsidiary at /exchange and sets its own title after hydration. -->
     <title>Build the pipeline, not the paperwork. | D&amp;J Stratagem, Inc.</title>
-    <script type="module" crossorigin src="/assets/index-BSpyH4AM.js"></script>
+    <script type="module" crossorigin src="/assets/index-D77RlC49.js"></script>
   </head>
   <body>
     <div id="root"></div>
