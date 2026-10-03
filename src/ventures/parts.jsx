@@ -56,19 +56,27 @@ export function useInquiry({ role, topic, buildMessage }) {
     const d = new FormData(form);
     const name = String(d.get("name") || "").trim();
     const email = String(d.get("email") || "").trim();
+    const company = String(d.get("company") || "").trim() || "Personal";
+    const phone = String(d.get("phone") || "").trim();
+    const message = buildMessage(d);
     if (!name) return setInvalid("Please enter your name.");
+    if (name.length > 120) return setInvalid("Name must be 120 characters or fewer.");
+    if (company.length > 160) return setInvalid("Company must be 160 characters or fewer.");
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return setInvalid("Please enter a valid email address.");
+    if (email.length > 254) return setInvalid("Email must be 254 characters or fewer.");
+    if (phone.length > 40) return setInvalid("Phone must be 40 characters or fewer.");
+    if (message.length > 4000) return setInvalid("That quote is too long. Shorten the notes and try again.");
     setInvalid("");
 
     const body = new FormData();
     body.set("name", name);
-    body.set("company", String(d.get("company") || "").trim() || "Personal");
+    body.set("company", company);
     body.set("email", email);
-    body.set("phone", d.get("phone") || "");
+    body.set("phone", phone);
     body.set("role", role);
     if (topic) body.set("topic", topic);
     body.set("bot-field", d.get("bot-field") || "");
-    body.set("message", buildMessage(d));
+    body.set("message", message);
 
     setState("sending");
     const controller = new AbortController();
@@ -76,7 +84,11 @@ export function useInquiry({ role, topic, buildMessage }) {
     try {
       const res = await fetch("/contact.php", { method: "POST", body, signal: controller.signal });
       const data = await res.json().catch(() => ({}));
-      if (!res.ok || !data.ok) throw new Error("failed");
+      if (!res.ok || !data.ok) {
+        const fields = Array.isArray(data.fields) ? data.fields.join(", ") : "";
+        setInvalid(fields ? `Check ${fields} and try again.` : "");
+        throw new Error("failed");
+      }
       form.reset();
       setState("sent");
     } catch {
