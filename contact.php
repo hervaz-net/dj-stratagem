@@ -85,6 +85,26 @@ $topicKey = clean_field($payload['topic'] ?? '');
 $topic   = $topics[$topicKey] ?? ($role !== '' ? $role : 'General');
 $message = trim(str_replace("\r\n", "\n", (string) ($payload['message'] ?? '')));
 
+// Caps match the marketing forms (message 1000) with room for Fleet quote
+// bodies, which fold several fields into one message. A raw POST used to
+// pass any size straight into mail().
+$limits = [
+    'name' => 120,
+    'company' => 160,
+    'email' => 254,
+    'phone' => 40,
+    'role' => 80,
+    'message' => 4000,
+];
+$lengths = [
+    'name' => $name,
+    'company' => $company,
+    'email' => $email,
+    'phone' => $phone,
+    'role' => $role,
+    'message' => $message,
+];
+
 $errors = [];
 if ($name === '') {
     $errors[] = 'name';
@@ -94,6 +114,11 @@ if ($company === '') {
 }
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     $errors[] = 'email';
+}
+foreach ($limits as $field => $max) {
+    if (mb_strlen($lengths[$field]) > $max) {
+        $errors[] = $field;
+    }
 }
 
 if ($errors !== []) {
