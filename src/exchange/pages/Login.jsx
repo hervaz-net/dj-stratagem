@@ -7,6 +7,25 @@ import AuthShell, { AuthAlert, authInputClass } from "../components/auth/AuthShe
 import useAuth from "../auth/useAuth";
 import { PRODUCT, CONTACT_EMAIL } from "../brand";
 
+const REMEMBER_KEY = "exchange-login-email";
+
+function readRememberedEmail() {
+  try {
+    return localStorage.getItem(REMEMBER_KEY) ?? "";
+  } catch {
+    return "";
+  }
+}
+
+function writeRememberedEmail(email) {
+  try {
+    if (email) localStorage.setItem(REMEMBER_KEY, email);
+    else localStorage.removeItem(REMEMBER_KEY);
+  } catch {
+    /* private mode / blocked storage */
+  }
+}
+
 export default function Login() {
   const { user, loading, login } = useAuth();
   const navigate = useNavigate();
@@ -14,7 +33,7 @@ export default function Login() {
 
   const [email, setEmail] = useState(() => {
     try {
-      return localStorage.getItem("login_email") ?? "";
+      return readRememberedEmail();
     } catch {
       return "";
     }
@@ -22,7 +41,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(() => {
     try {
-      return !!localStorage.getItem("login_email");
+      return !!readRememberedEmail();
     } catch {
       return false;
     }
@@ -64,12 +83,7 @@ export default function Login() {
     setSubmitting(true);
     try {
       await login(email, password);
-      try {
-        if (rememberMe) localStorage.setItem("login_email", email);
-        else localStorage.removeItem("login_email");
-      } catch {
-        /* private mode / blocked storage */
-      }
+      writeRememberedEmail(rememberMe ? email : "");
       navigate(destination, { replace: true });
     } catch (err) {
       setError(err.message);
@@ -135,12 +149,7 @@ export default function Login() {
                 onChange={(e) => {
                   const on = e.target.checked;
                   setRememberMe(on);
-                  try {
-                    if (on) localStorage.setItem("login_email", email);
-                    else localStorage.removeItem("login_email");
-                  } catch {
-                    /* private mode / blocked storage */
-                  }
+                  writeRememberedEmail(on ? email : "");
                 }}
                 className="h-4 w-4 rounded accent-brand"
               />

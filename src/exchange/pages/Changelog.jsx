@@ -7,6 +7,16 @@ import { PRODUCT, COMPANY } from "../brand";
 
 const entries = [
   {
+    version: "2.2",
+    date: "October 3, 2026",
+    iso: "2026-10-03",
+    tag: "Fix",
+    items: [
+      { type: "fixed", text: "Remembered sign-in email is stored separately from D&J Stratagem. Unchecking it on one site no longer clears the other." },
+      { type: "fixed", text: "Network filter presets no longer overwrite supplier presets on the parent dashboard." },
+    ],
+  },
+  {
     version: "2.1",
     date: "October 3, 2026",
     iso: "2026-10-03",
