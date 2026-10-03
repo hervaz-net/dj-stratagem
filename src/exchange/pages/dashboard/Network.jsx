@@ -29,7 +29,7 @@ const toggleIn = (setter) => (key) =>
 
 const DEFAULT_RISK = [0, 100];
 const DEFAULT_DELIVERY = [80, 100];
-const LS_PRESETS = "djs-filter-presets";
+const LS_PRESETS = "exchange-filter-presets";
 const NO_ROWS = [];
 
 const SUBTITLE = {

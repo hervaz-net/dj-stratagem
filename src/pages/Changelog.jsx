@@ -6,6 +6,14 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.14",
+    date: "October 2026",
+    tag: "Fix",
+    items: [
+      { type: "fixed", text: "Remembered sign-in email no longer collides with Stratagem Exchange. Both sites live on one origin, so each now keeps its own address." },
+    ],
+  },
+  {
     version: "1.13",
     date: "October 2026",
     tag: "Fix",

@@ -6,6 +6,27 @@ import Seo from "../components/Seo";
 import PasswordField from "../components/PasswordField";
 import useAuth from "../auth/useAuth";
 
+const REMEMBER_KEY = "djs-login-email";
+
+function readRememberedEmail() {
+  try {
+    return localStorage.getItem(REMEMBER_KEY) ?? localStorage.getItem("login_email") ?? "";
+  } catch {
+    return "";
+  }
+}
+
+function writeRememberedEmail(email) {
+  try {
+    if (email) localStorage.setItem(REMEMBER_KEY, email);
+    else localStorage.removeItem(REMEMBER_KEY);
+    // Shared key collided with Stratagem Exchange on this origin.
+    localStorage.removeItem("login_email");
+  } catch {
+    /* private mode / blocked storage */
+  }
+}
+
 export default function Login() {
   const { user, loading, login } = useAuth();
   const navigate = useNavigate();
@@ -13,7 +34,7 @@ export default function Login() {
 
   const [email, setEmail] = useState(() => {
     try {
-      return localStorage.getItem("login_email") ?? "";
+      return readRememberedEmail();
     } catch {
       return "";
     }
@@ -21,7 +42,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(() => {
     try {
-      return !!localStorage.getItem("login_email");
+      return !!readRememberedEmail();
     } catch {
       return false;
     }
@@ -63,12 +84,7 @@ export default function Login() {
     setSubmitting(true);
     try {
       await login(email, password);
-      try {
-        if (rememberMe) localStorage.setItem("login_email", email);
-        else localStorage.removeItem("login_email");
-      } catch {
-        /* private mode / blocked storage */
-      }
+      writeRememberedEmail(rememberMe ? email : "");
       navigate(destination, { replace: true });
     } catch (err) {
       setError(err.message);
@@ -141,12 +157,7 @@ export default function Login() {
                     setRememberMe(on);
                     // Apply immediately. Waiting for a successful sign-in left
                     // the stored address in place after an unchecked failed attempt.
-                    try {
-                      if (on) localStorage.setItem("login_email", email);
-                      else localStorage.removeItem("login_email");
-                    } catch {
-                      /* private mode / blocked storage */
-                    }
+                    writeRememberedEmail(on ? email : "");
                   }}
                   className="h-3.5 w-3.5 accent-amber"
                 />
