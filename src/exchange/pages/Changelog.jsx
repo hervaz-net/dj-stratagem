@@ -7,6 +7,15 @@ import { PRODUCT, COMPANY } from "../brand";
 
 const entries = [
   {
+    version: "2.1",
+    date: "October 3, 2026",
+    iso: "2026-10-03",
+    tag: "Fix",
+    items: [
+      { type: "fixed", text: "Footer marketplace notes now post to the contact desk. The form no longer thanks you for an address it never sent." },
+    ],
+  },
+  {
     version: "2.0",
     date: "September 30, 2026",
     iso: "2026-09-30",

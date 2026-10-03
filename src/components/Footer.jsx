@@ -63,8 +63,13 @@ function Newsletter() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    const trimmed = email.trim();
+    if (!trimmed || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
       setError("Enter a valid email address.");
+      return;
+    }
+    if (trimmed.length > 254) {
+      setError("Email must be 254 characters or fewer.");
       return;
     }
     setError("");
@@ -72,13 +77,17 @@ function Newsletter() {
     const body = new FormData();
     body.set("name", "Website visitor");
     body.set("company", "Market notes");
-    body.set("email", email.trim());
+    body.set("email", trimmed);
     body.set("role", "Market notes");
     body.set("message", "Footer request for market updates.");
     try {
       const res = await fetch("/contact.php", { method: "POST", body });
       const data = await res.json().catch(() => ({}));
-      if (!res.ok || !data.ok) throw new Error("failed");
+      if (!res.ok || !data.ok) {
+        const fields = Array.isArray(data.fields) ? data.fields.join(", ") : "";
+        setError(fields ? `Check ${fields} and try again.` : "That didn’t send. Email hello@djstratageminc.com instead.");
+        return;
+      }
       setDone(true);
     } catch {
       setError("That didn’t send. Email hello@djstratageminc.com instead.");
@@ -108,6 +117,9 @@ function Newsletter() {
           <input
             id="footer-email"
             type="email"
+            inputMode="email"
+            autoComplete="email"
+            maxLength={254}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@example.com"

@@ -6,6 +6,14 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.13",
+    date: "October 2026",
+    tag: "Fix",
+    items: [
+      { type: "fixed", text: "Exchange footer notes now reach the contact desk. A long address is rejected in the form instead of failing as a generic send error." },
+    ],
+  },
+  {
     version: "1.12",
     date: "October 2026",
     tag: "Fix",
