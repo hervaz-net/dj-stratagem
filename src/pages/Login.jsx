@@ -136,10 +136,21 @@ export default function Login() {
                 <input
                   type="checkbox"
                   checked={rememberMe}
-                  onChange={(e) => setRememberMe(e.target.checked)}
+                  onChange={(e) => {
+                    const on = e.target.checked;
+                    setRememberMe(on);
+                    // Apply immediately. Waiting for a successful sign-in left
+                    // the stored address in place after an unchecked failed attempt.
+                    try {
+                      if (on) localStorage.setItem("login_email", email);
+                      else localStorage.removeItem("login_email");
+                    } catch {
+                      /* private mode / blocked storage */
+                    }
+                  }}
                   className="h-3.5 w-3.5 accent-amber"
                 />
-                Remember me
+                Remember my email
               </label>
               <Link to="/forgot-password" className="text-sm font-medium text-amber hover:text-amber-2">
                 Forgot password?
