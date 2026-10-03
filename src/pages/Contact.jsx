@@ -7,6 +7,9 @@ import { IconMap, IconChat, IconClock, IconCheck } from "../components/icons";
 
 const roleOptions = ["General Contractor", "Subcontractor", "Supplier", "Engineer", "Other"];
 const MESSAGE_MAX = 1000;
+// Must match public/contact.php $limits. A longer paste used to 422 with a
+// generic "something went wrong" and no field to fix.
+const LIMITS = { name: 120, company: 160, email: 254, phone: 40, message: MESSAGE_MAX };
 
 const inputClass =
   "w-full rounded-md border bg-ink px-3.5 py-2.5 text-sm text-paper outline-hidden transition-colors " +
@@ -15,12 +18,22 @@ const inputClass =
 function validate(values) {
   const errors = {};
   if (!values.name.trim()) errors.name = "Please enter your name.";
+  else if (values.name.trim().length > LIMITS.name)
+    errors.name = `Name must be ${LIMITS.name} characters or fewer.`;
   if (!values.company.trim()) errors.company = "Please enter your company.";
+  else if (values.company.trim().length > LIMITS.company)
+    errors.company = `Company must be ${LIMITS.company} characters or fewer.`;
   if (!values.email.trim()) errors.email = "Please enter your email address.";
   else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email))
     errors.email = "That doesn't look like a valid email address.";
+  else if (values.email.trim().length > LIMITS.email)
+    errors.email = `Email must be ${LIMITS.email} characters or fewer.`;
   if (values.phone && !/^[\d\s()+.-]{7,}$/.test(values.phone))
     errors.phone = "Please enter a valid phone number.";
+  else if (values.phone.trim().length > LIMITS.phone)
+    errors.phone = `Phone must be ${LIMITS.phone} characters or fewer.`;
+  if (values.message.length > LIMITS.message)
+    errors.message = `Message must be ${LIMITS.message} characters or fewer.`;
   return errors;
 }
 
@@ -74,10 +87,18 @@ export default function Contact() {
         signal: controller.signal,
       });
       const data = await res.json().catch(() => ({}));
-      if (!res.ok || !data.ok) throw new Error("Submission failed");
-      setValues(EMPTY);
-      setTouched({});
-      setSubmitted(true);
+      if (!res.ok || !data.ok) {
+        const fields = Array.isArray(data.fields) ? data.fields : [];
+        if (fields.length > 0) {
+          setError(`Check ${fields.join(", ")} and try again. A field is missing or too long.`);
+        } else {
+          throw new Error("Submission failed");
+        }
+      } else {
+        setValues(EMPTY);
+        setTouched({});
+        setSubmitted(true);
+      }
     } catch {
       setError(true);
     } finally {
@@ -170,6 +191,7 @@ export default function Contact() {
                     name="name"
                     autoComplete="name"
                     required
+                    maxLength={LIMITS.name}
                     value={values.name}
                     onChange={setField("name")}
                     onBlur={onBlur("name")}
@@ -180,6 +202,7 @@ export default function Contact() {
                     name="company"
                     autoComplete="organization"
                     required
+                    maxLength={LIMITS.company}
                     value={values.company}
                     onChange={setField("company")}
                     onBlur={onBlur("company")}
@@ -193,6 +216,7 @@ export default function Contact() {
                     type="email"
                     autoComplete="email"
                     required
+                    maxLength={LIMITS.email}
                     value={values.email}
                     onChange={setField("email")}
                     onBlur={onBlur("email")}
@@ -203,6 +227,7 @@ export default function Contact() {
                     name="phone"
                     type="tel"
                     autoComplete="tel"
+                    maxLength={LIMITS.phone}
                     value={values.phone}
                     onChange={setField("phone")}
                     onBlur={onBlur("phone")}
@@ -247,14 +272,20 @@ export default function Contact() {
                     onChange={setField("message")}
                     className={`${inputClass} resize-none border-line`}
                     placeholder="Tell us about your current bidding, procurement, or coordination process."
+                    aria-invalid={errors.message ? true : undefined}
+                    aria-describedby={errors.message ? "message-error" : undefined}
                   />
+                  {errors.message && (
+                    <p id="message-error" className="mt-1.5 text-sm text-danger">{errors.message}</p>
+                  )}
                 </div>
 
                 <div aria-live="polite" role="status">
                   {error && (
                     <p className="rounded-md border border-danger/30 bg-danger/10 px-4 py-2.5 text-sm text-danger">
-                      Something went wrong sending your message. Please try again, or email us
-                      directly at hello@djstratageminc.com.
+                      {typeof error === "string"
+                        ? error
+                        : "Something went wrong sending your message. Please try again, or email us directly at hello@djstratageminc.com."}
                     </p>
                   )}
                 </div>

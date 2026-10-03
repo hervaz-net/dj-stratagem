@@ -16,6 +16,7 @@ const TOPICS = [
 
 const roleOptions = [...ROLE_ORDER.map((k) => ROLES[k].label), "Other"];
 const MESSAGE_MAX = 1000;
+const LIMITS = { name: 120, company: 160, email: 254, phone: 40, message: MESSAGE_MAX };
 
 const inputClass =
   "w-full rounded-xl border bg-surface px-3.5 py-2.5 text-[0.95rem] text-fg outline-hidden transition-colors " +
@@ -24,12 +25,22 @@ const inputClass =
 function validate(values) {
   const errors = {};
   if (!values.name.trim()) errors.name = "Please enter your name.";
+  else if (values.name.trim().length > LIMITS.name)
+    errors.name = `Name must be ${LIMITS.name} characters or fewer.`;
   if (!values.company.trim()) errors.company = "Please enter your company.";
+  else if (values.company.trim().length > LIMITS.company)
+    errors.company = `Company must be ${LIMITS.company} characters or fewer.`;
   if (!values.email.trim()) errors.email = "Please enter your email address.";
   else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email))
     errors.email = "That doesn't look like a valid email address.";
+  else if (values.email.trim().length > LIMITS.email)
+    errors.email = `Email must be ${LIMITS.email} characters or fewer.`;
   if (values.phone && !/^[\d\s()+.-]{7,}$/.test(values.phone))
     errors.phone = "Please enter a valid phone number.";
+  else if (values.phone.trim().length > LIMITS.phone)
+    errors.phone = `Phone must be ${LIMITS.phone} characters or fewer.`;
+  if (values.message.length > LIMITS.message)
+    errors.message = `Message must be ${LIMITS.message} characters or fewer.`;
   return errors;
 }
 
@@ -110,10 +121,18 @@ export default function Contact() {
       // /send-demo.php is the WAF-safe alias when the host answers /contact.php with HTML.
       let { res, data } = await postForm("/contact.php", e.target, controller.signal);
       if (!data) ({ res, data } = await postForm("/send-demo.php", e.target, controller.signal));
-      if (!res.ok || !data?.ok) throw new Error("Submission failed");
-      setValues(EMPTY);
-      setTouched({});
-      setSubmitted(true);
+      if (!res.ok || !data?.ok) {
+        const fields = Array.isArray(data?.fields) ? data.fields : [];
+        if (fields.length > 0) {
+          setError(`Check ${fields.join(", ")} and try again. A field is missing or too long.`);
+        } else {
+          throw new Error("Submission failed");
+        }
+      } else {
+        setValues(EMPTY);
+        setTouched({});
+        setSubmitted(true);
+      }
     } catch {
       setError(true);
     } finally {
@@ -230,6 +249,7 @@ export default function Contact() {
                     name="name"
                     autoComplete="name"
                     required
+                    maxLength={LIMITS.name}
                     value={values.name}
                     onChange={setField("name")}
                     onBlur={onBlur("name")}
@@ -240,6 +260,7 @@ export default function Contact() {
                     name="company"
                     autoComplete="organization"
                     required
+                    maxLength={LIMITS.company}
                     value={values.company}
                     onChange={setField("company")}
                     onBlur={onBlur("company")}
@@ -253,6 +274,7 @@ export default function Contact() {
                     type="email"
                     autoComplete="email"
                     required
+                    maxLength={LIMITS.email}
                     value={values.email}
                     onChange={setField("email")}
                     onBlur={onBlur("email")}
@@ -263,6 +285,7 @@ export default function Contact() {
                     name="phone"
                     type="tel"
                     autoComplete="tel"
+                    maxLength={LIMITS.phone}
                     value={values.phone}
                     onChange={setField("phone")}
                     onBlur={onBlur("phone")}
@@ -313,7 +336,9 @@ export default function Contact() {
                 <div aria-live="polite" role="status">
                   {error && (
                     <p className="rounded-xl border border-danger/30 bg-danger-soft px-4 py-3 text-sm text-danger">
-                      Something went wrong sending your message.{" "}
+                      {typeof error === "string"
+                        ? error
+                        : "Something went wrong sending your message."}{" "}
                       <a
                         className="font-semibold underline underline-offset-2"
                         href={composeMailto(values, role, TOPICS.find((t) => t.key === topic)?.label ?? topic)}
