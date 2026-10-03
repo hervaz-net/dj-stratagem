@@ -6,6 +6,17 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.13",
+    date: "October 2026",
+    tag: "Fix",
+    items: [
+      { type: "fixed", text: "Add-to-home-screen and browser tab icons are real PNGs. iOS was requesting apple-touch-icon.png and receiving the SVG, which it ignores." },
+      { type: "fixed", text: "Install theme color matches the light parent site instead of the dark ink bar." },
+      { type: "fixed", text: "Privacy, terms, and brand documents are titled D&J Stratagem, Inc. The parent footer was opening pages titled Stratagem Exchange." },
+      { type: "fixed", text: "Fleet quote date cannot be set in the past." },
+    ],
+  },
+  {
     version: "1.12",
     date: "October 2026",
     tag: "Fix",
