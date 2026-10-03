@@ -132,7 +132,16 @@ export default function Login() {
               <input
                 type="checkbox"
                 checked={rememberMe}
-                onChange={(e) => setRememberMe(e.target.checked)}
+                onChange={(e) => {
+                  const on = e.target.checked;
+                  setRememberMe(on);
+                  try {
+                    if (on) localStorage.setItem("login_email", email);
+                    else localStorage.removeItem("login_email");
+                  } catch {
+                    /* private mode / blocked storage */
+                  }
+                }}
                 className="h-4 w-4 rounded accent-brand"
               />
               Remember my email
