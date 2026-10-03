@@ -6,13 +6,23 @@
     <link rel="apple-touch-icon" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="manifest" href="/manifest.webmanifest" />
-    <meta name="theme-color" content="#f3f2f2" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#141210" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#fafaf7" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0d1210" media="(prefers-color-scheme: dark)" />
     <script>
       // Apply the stored theme before first paint so a dark-theme visitor
       // never sees a white flash on load.
       (function () {
         try {
+          // One public origin; www keeps its own storage and cache otherwise.
+          if (location.hostname === "www.djstratageminc.com") {
+            location.replace("https://djstratageminc.com" + location.pathname + location.search + location.hash);
+            return;
+          }
+          // Only Stratagem Exchange offers dark mode; every other site is light.
+          if (!/^\/exchange(\/|$)/.test(location.pathname)) {
+            document.documentElement.dataset.theme = "light";
+            return;
+          }
           var stored = localStorage.getItem("djs-theme");
           var theme =
             stored === "light" || stored === "dark"
@@ -26,19 +36,22 @@
         }
       })();
     </script>
-    <meta name="description" content="Find construction bid opportunities, manage your pipeline, and win more work. D&J Stratagem gives contractors, subcontractors, and suppliers tools matched to their trade and territory." />
+    <meta name="description" content="D&amp;J Stratagem is one place for contractors, subcontractors, and suppliers to find construction work, win it, market the business, and keep the customer." />
     <link rel="canonical" href="https://djstratageminc.com/" />
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="D&J Stratagem, Inc." />
-    <meta property="og:title" content="D&J Stratagem, Inc. | Find Construction Projects. Bid Smarter. Win More Work." />
-    <meta property="og:description" content="Find construction bid opportunities, manage your pipeline, and win more work. Built for contractors, subcontractors, and suppliers." />
+    <meta property="og:site_name" content="D&amp;J Stratagem, Inc." />
+    <meta property="og:title" content="Build the pipeline, not the paperwork. | D&amp;J Stratagem, Inc." />
+    <meta property="og:description" content="D&amp;J Stratagem is one place for contractors, subcontractors, and suppliers to find construction work, win it, market the business, and keep the customer." />
     <meta property="og:url" content="https://djstratageminc.com/" />
     <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Build the pipeline, not the paperwork. | D&amp;J Stratagem, Inc." />
+    <meta name="twitter:description" content="D&amp;J Stratagem is one place for contractors, subcontractors, and suppliers to find construction work, win it, market the business, and keep the customer." />
     <!-- Fonts: system stack in src/index.css. Do not load fonts.googleapis.com
-         here — that discloses visitor IPs before the cookie banner answers. -->
-    <title>D&J Stratagem, Inc. | Find Construction Projects. Bid Smarter. Win More Work.</title>
-    <script type="module" crossorigin src="/assets/index-CkD4vCPa.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-Bq1iR03t.css">
+         here — that discloses visitor IPs before the cookie banner answers.
+         These defaults match the parent homepage. Stratagem Exchange is a
+         subsidiary at /exchange and sets its own title after hydration. -->
+    <title>Build the pipeline, not the paperwork. | D&amp;J Stratagem, Inc.</title>
+    <script type="module" crossorigin src="/assets/index-QwK5E1Or.js"></script>
   </head>
   <body>
     <div id="root"></div>
