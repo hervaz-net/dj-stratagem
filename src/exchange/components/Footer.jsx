@@ -10,25 +10,51 @@ function Newsletter() {
   const [email, setEmail] = useState("");
   const [done, setDone] = useState(false);
   const [error, setError] = useState("");
+  const [sending, setSending] = useState(false);
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    const trimmed = email.trim();
+    if (!trimmed || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
       setError("Enter a valid email address.");
       return;
     }
+    if (trimmed.length > 254) {
+      setError("Email must be 254 characters or fewer.");
+      return;
+    }
     setError("");
-    setDone(true);
+    setSending(true);
+    const body = new FormData();
+    body.set("name", "Website visitor");
+    body.set("company", "Exchange notes");
+    body.set("email", trimmed);
+    body.set("role", "Exchange market notes");
+    body.set("message", "Exchange footer request for marketplace updates.");
+    try {
+      const res = await fetch("/contact.php", { method: "POST", body });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.ok) {
+        const fields = Array.isArray(data.fields) ? data.fields.join(", ") : "";
+        setError(fields ? `Check ${fields} and try again.` : `That didn’t send. Email ${CONTACT_EMAIL} instead.`);
+        return;
+      }
+      setDone(true);
+    } catch {
+      setError(`That didn’t send. Email ${CONTACT_EMAIL} instead.`);
+    } finally {
+      setSending(false);
+    }
   }
 
   if (done) {
     return (
       <p className="mt-4 text-sm leading-relaxed text-fg-muted">
-        Thanks. A mailing list is not live yet &mdash; email{" "}
+        Thanks. We received the address and will write when notes go out. A public list is not live yet — email{" "}
         <a href={`mailto:${CONTACT_EMAIL}`} className="font-medium text-brand hover:text-brand-hover">
           {CONTACT_EMAIL}
         </a>{" "}
-        if you want updates.
+        if you need a reply sooner.
       </p>
     );
   }
@@ -46,6 +72,9 @@ function Newsletter() {
           <input
             id="footer-email"
             type="email"
+            inputMode="email"
+            autoComplete="email"
+            maxLength={254}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@example.com"
@@ -54,8 +83,9 @@ function Newsletter() {
         </div>
         <button
           type="submit"
+          disabled={sending}
           aria-label="Request marketplace updates"
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand text-white hover:bg-brand-hover"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand text-white hover:bg-brand-hover disabled:opacity-60"
         >
           <IconArrowRight width={13} height={13} />
         </button>
