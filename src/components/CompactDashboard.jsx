@@ -1,7 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { apiPost } from '../api/client';
 
 // Compact, keyboard-forward dashboard with inline editing and bulk actions.
-export function CompactDashboard() {
+export function CompactDashboard({ csrf } = {}) {
   const [bids, setBids] = useState(() => sampleBids());
   const [query, setQuery] = useState('');
   const [selected, setSelected] = useState(new Set());
@@ -11,13 +12,15 @@ export function CompactDashboard() {
 
   useEffect(() => {
     function onKey(e) {
+      const tag = e.target?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || e.target?.isContentEditable) return;
       // '/' focus search
       if (e.key === '/') {
         e.preventDefault();
         searchRef.current?.focus();
       }
       // 'a' open quick add
-      if (e.key === 'a' && !e.metaKey && !e.ctrlKey) {
+      if (e.key === 'a' && !e.metaKey && !e.ctrlKey && !e.altKey) {
         e.preventDefault();
         setQuickAddOpen(true);
       }
@@ -46,8 +49,8 @@ export function CompactDashboard() {
 
   function updateBid(id, patch) {
     setBids((prev) => prev.map(b => b.id === id ? { ...b, ...patch } : b));
-    // Dev hook: call API endpoint when available
-    fetch(`/api/bids/${id}`, { method: 'PATCH', headers: { 'Content-Type':'application/json' }, body: JSON.stringify(patch) }).catch(()=>{});
+    if (!patch.status) return;
+    apiPost('bids.php', { action: 'status', id, status: patch.status }, { csrf }).catch(() => {});
   }
 
   function bulkAction(action) {
@@ -58,16 +61,24 @@ export function CompactDashboard() {
       setSelected(new Set());
       return;
     }
-    // stub for other bulk actions
-    fetch('/api/bids/bulk', { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ action, ids }) }).catch(()=>{});
+    if (action !== 'assign') return;
+    Promise.all(ids.map((id) => apiPost('bids.php', { action: 'status', id, status: 'review' }, { csrf }))).catch(() => {});
   }
 
   function addQuick(item) {
     const next = { ...item, id: Date.now(), submissions: 0 };
     setBids(prev => [next, ...prev]);
     setQuickAddOpen(false);
-    // stub create
-    fetch('/api/bids', { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(next) }).catch(()=>{});
+    const due = new Date(Date.now() + (Number(item.daysLeft) || 7) * 86400000).toISOString().slice(0, 10);
+    apiPost('bids.php', {
+      action: 'create',
+      project: item.title,
+      gc: item.location || 'Unspecified',
+      trade: item.specialty || 'General',
+      value: item.budget?.max || item.budget?.min || 0,
+      due,
+      status: 'draft',
+    }, { csrf }).catch(() => {});
   }
 
   const filtered = bids.filter(b => (b.title + b.location + b.specialty).toLowerCase().includes(query.toLowerCase()));
@@ -130,7 +141,7 @@ export function CompactDashboard() {
         {/* Rows */}
         <div>
           {filtered.map(bid => (
-            <div key={bid.id} data-bid-id={bid.id} data-api-endpoint={`/api/bids/${bid.id}`} className="grid grid-cols-12 gap-2 items-center px-4 py-2 compact-row" tabIndex={0}>
+            <div key={bid.id} data-bid-id={bid.id} className="grid grid-cols-12 gap-2 items-center px-4 py-2 compact-row" tabIndex={0}>
               {/* select */}
               <div className="col-span-1">
                 <input type="checkbox" checked={selected.has(bid.id)} onChange={() => toggleSelect(bid.id)} />
@@ -247,7 +258,7 @@ function QuickAddForm({ onSave, onCancel }){
 }
 
 function parseBudget(str){
-  const nums = (str||'').replace(/[^0-9\-]/g,'').split('-').map(n=>Number(n)||0);
+  const nums = (str||'').replace(/[^0-9-]/g,'').split('-').map(n=>Number(n)||0);
   return [nums[0]||0, nums[1]||nums[0]||0];
 }
 
