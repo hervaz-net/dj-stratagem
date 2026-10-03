@@ -224,7 +224,10 @@ export default function Fleet({ brand }) {
               </a>
             </div>
             <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-fg-muted">
-              {["Flight-tracked airport pickups", "No surprise charges", "Service animals welcome"].map((t) => (
+              {(isLicensed && vehicles.length > 0
+                ? ["Flight-tracked airport pickups", "No surprise charges", "Service animals welcome"]
+                : ["Quotes only until permits are issued", "No surprise charges", "Service animals welcome"]
+              ).map((t) => (
                 <li key={t} className="flex items-center gap-2">
                   <IconCheck width={15} height={15} className="text-brand" aria-hidden="true" />
                   {t}
@@ -353,7 +356,10 @@ export default function Fleet({ brand }) {
 
       {/* Safety */}
       <Section id="safety">
-        <SectionHeading eyebrow="Safety standards" title="Professional drivers. Roadworthy vehicles." />
+        <SectionHeading
+          eyebrow="Safety standards"
+          title={isLicensed && vehicles.length > 0 ? "Professional drivers. Roadworthy vehicles." : "The standard before a unit goes in service."}
+        />
         <div className="mt-12 grid grid-cols-1 gap-5 md:grid-cols-3">
           {standards.map((s, i) => {
             const Icon = STANDARD_ICONS[i % STANDARD_ICONS.length];

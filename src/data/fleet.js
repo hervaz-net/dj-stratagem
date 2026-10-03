@@ -13,7 +13,7 @@ export const operator = {
   email: "hello@djstratageminc.com",
   // Day-of line, answered while any trip is running. Set before taking bookings.
   phone: null,
-  hours: "Reservations 7 days, 6am to 10pm. Live trips are monitored start to finish.",
+  hours: "Reservations 7 days, 6am to 10pm. A day-of line is published here before the first trip runs.",
 };
 
 // Each value is the exact number or limit on the issued document, or null.

@@ -6,6 +6,14 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.13",
+    date: "October 2026",
+    tag: "Fix",
+    items: [
+      { type: "fixed", text: "Fleet no longer says live trips are monitored, or that airport pickups are already flight-tracked, while permits are pending and no day-of line is published." },
+    ],
+  },
+  {
     version: "1.12",
     date: "October 2026",
     tag: "Fix",
