@@ -77,12 +77,6 @@ $company = clean_field($payload['company'] ?? '');
 $email   = clean_field($payload['email'] ?? '');
 $phone   = clean_field($payload['phone'] ?? '');
 $role    = clean_field($payload['role'] ?? '');
-// Fixed list so the subject line can't be steered by the client.
-$topics  = ['buying' => 'Buying', 'selling' => 'Selling', 'partnership' => 'Distributor partnership', 'support' => 'Support', 'fleet' => 'Fleet trip quote'];
-$topicKey = clean_field($payload['topic'] ?? '');
-// Parent demo form sends role (General Contractor, Subcontractor, …) and no topic.
-// Without this fallback every marketing inquiry was labeled "General".
-$topic   = $topics[$topicKey] ?? ($role !== '' ? $role : 'General');
 $message = trim(str_replace("\r\n", "\n", (string) ($payload['message'] ?? '')));
 
 $errors = [];
@@ -104,13 +98,12 @@ if ($errors !== []) {
 
 $host = preg_replace('/^www\./', '', (string) ($_SERVER['HTTP_HOST'] ?? 'localhost')) ?: 'localhost';
 
-$subject = "New inquiry ({$topic}) from {$name} ({$company})";
+$subject = "New demo request from {$name} ({$company})";
 $body = "New contact form submission from {$host}\n\n"
     . "Name: {$name}\n"
     . "Company: {$company}\n"
     . "Email: {$email}\n"
     . "Phone: {$phone}\n"
-    . "Topic: {$topic}\n"
     . "Role: {$role}\n"
     . "Message:\n{$message}\n";
 
