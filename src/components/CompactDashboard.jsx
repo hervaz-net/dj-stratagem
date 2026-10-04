@@ -11,24 +11,28 @@ export function CompactDashboard() {
 
   useEffect(() => {
     function onKey(e) {
-      // '/' focus search
-      if (e.key === '/') {
-        e.preventDefault();
-        searchRef.current?.focus();
-      }
-      // 'a' open quick add
-      if (e.key === 'a' && !e.metaKey && !e.ctrlKey) {
-        e.preventDefault();
-        setQuickAddOpen(true);
-      }
-      // 'Escape' clears selection / exits editors
-      if (e.key === 'Escape') {
+      const tag = document.activeElement?.tagName;
+      const typing = tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || document.activeElement?.isContentEditable;
+      // Escape still dismisses, even from a field.
+      if (e.key === "Escape") {
         setSelected(new Set());
         setEditingId(null);
         setQuickAddOpen(false);
+        return;
+      }
+      if (typing) return;
+      // '/' focus search
+      if (e.key === "/") {
+        e.preventDefault();
+        searchRef.current?.focus();
+      }
+      // 'a' open quick add — must not steal the letter while someone is typing
+      if (e.key === "a" && !e.metaKey && !e.ctrlKey && !e.altKey) {
+        e.preventDefault();
+        setQuickAddOpen(true);
       }
       // 'e' edit first selected
-      if (e.key === 'e' && selected.size === 1) {
+      if (e.key === "e" && !e.metaKey && !e.ctrlKey && !e.altKey && selected.size === 1) {
         const [id] = selected;
         setEditingId(id);
       }
@@ -70,7 +74,9 @@ export function CompactDashboard() {
     fetch('/api/bids', { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(next) }).catch(()=>{});
   }
 
-  const filtered = bids.filter(b => (b.title + b.location + b.specialty).toLowerCase().includes(query.toLowerCase()));
+  const filtered = bids.filter((b) =>
+    [b?.title, b?.location, b?.specialty].some((f) => String(f ?? "").toLowerCase().includes(query.toLowerCase())),
+  );
 
   return (
     <div className="min-h-screen bg-surface p-4">
@@ -154,9 +160,9 @@ export function CompactDashboard() {
               {/* budget */}
               <div className="col-span-2 text-sm">
                 {editingId === bid.id ? (
-                  <InlineEditor initialValue={`$${bid.budget.min}-${bid.budget.max}`} onSave={val=>{ const [min,max] = parseBudget(val); updateBid(bid.id, { budget:{ min, max } }); setEditingId(null);}} onCancel={()=>setEditingId(null)} />
+                  <InlineEditor initialValue={bid.budget ? `$${bid.budget.min}-${bid.budget.max}` : ""} onSave={val=>{ const [min,max] = parseBudget(val); updateBid(bid.id, { budget:{ min, max } }); setEditingId(null);}} onCancel={()=>setEditingId(null)} />
                 ) : (
-                  <div className="text-sm font-medium text-bid-navy">${(bid.budget.min/1000).toFixed(0)}k–${(bid.budget.max/1000).toFixed(0)}k</div>
+                  <div className="text-sm font-medium text-bid-navy">{bid.budget ? `$${(bid.budget.min/1000).toFixed(0)}k–$${(bid.budget.max/1000).toFixed(0)}k` : "—"}</div>
                 )}
               </div>
 

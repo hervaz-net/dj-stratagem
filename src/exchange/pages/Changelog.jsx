@@ -7,6 +7,15 @@ import { PRODUCT, COMPANY } from "../brand";
 
 const entries = [
   {
+    version: "2.4",
+    date: "October 2026",
+    tag: "Fix",
+    items: [
+      { type: "fixed", text: "Request access now rejects a password that is the company name, or longer than 200 characters, before the server does. The strength meter no longer treats 8 characters as progress toward the 12-character minimum." },
+      { type: "fixed", text: "Marketplace filters and project search no longer throw when a listing is missing a field." },
+    ],
+  },
+  {
     version: "2.3",
     date: "October 2026",
     tag: "Fix",

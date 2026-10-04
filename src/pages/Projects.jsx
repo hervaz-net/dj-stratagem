@@ -43,12 +43,8 @@ export default function Projects() {
         if (city !== ANY && p.city !== city) return false;
         if (!bandTest(p.value)) return false;
         if (!needle) return true;
-        return (
-          p.title.toLowerCase().includes(needle) ||
-          p.summary.toLowerCase().includes(needle) ||
-          p.type.toLowerCase().includes(needle) ||
-          p.scope.some((s) => s.toLowerCase().includes(needle))
-        );
+        const hay = [p.title, p.summary, p.type, ...(Array.isArray(p.scope) ? p.scope : [])];
+        return hay.some((s) => String(s ?? "").toLowerCase().includes(needle));
       })
       .sort((a, b) => b.match - a.match);
   }, [q, trade, city, band]);

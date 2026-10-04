@@ -107,8 +107,8 @@ export default function Marketplace() {
       if (category && l.category !== category) return false;
       if (seller !== "all" && l.sellerRole !== seller) return false;
       if (inStockOnly && !l.inStock) return false;
-      if (fulfillment && !l.fulfillment.includes(fulfillment)) return false;
-      if (q && !`${l.title} ${l.sku} ${l.seller}`.toLowerCase().includes(q)) return false;
+      if (fulfillment && !(Array.isArray(l.fulfillment) ? l.fulfillment : []).includes(fulfillment)) return false;
+      if (q && !`${l.title ?? ""} ${l.sku ?? ""} ${l.seller ?? ""}`.toLowerCase().includes(q)) return false;
       return true;
     });
     const fn = SORTS[sort]?.fn;
