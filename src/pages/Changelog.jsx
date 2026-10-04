@@ -6,6 +6,14 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.17",
+    date: "October 2026",
+    tag: "Fix",
+    items: [
+      { type: "fixed", text: "Pricing calculator shows a $2.5M average bid as $2.5M, not $2500k. Extra revenue stays in millions, and the Growth comparison uses the annual price ($2,388/yr), not twelve times the monthly rate." },
+    ],
+  },
+  {
     version: "1.16",
     date: "October 2026",
     tag: "Fix",

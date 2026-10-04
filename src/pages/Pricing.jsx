@@ -153,7 +153,7 @@ function RoiCalculator() {
   };
 
   const sliders = [
-    { id: "roi-avg-bid", label: "Average bid value", value: avgBid, min: 25, max: 2500, step: 25, set: setAvgBid, display: `$${avgBid}k` },
+    { id: "roi-avg-bid", label: "Average bid value", value: avgBid, min: 25, max: 2500, step: 25, set: setAvgBid, display: fmt(avgBid * 1000) },
     { id: "roi-bids-month", label: "Bids submitted per month", value: bidsPerMonth, min: 1, max: 40, step: 1, set: setBidsPerMonth, display: bidsPerMonth },
     { id: "roi-current-rate", label: "Current win rate", value: currentWinRate, min: 5, max: 70, step: 1, set: setCurrentWinRate, display: `${currentWinRate}%` },
     { id: "roi-target-rate", label: "Target win rate", value: improvedWinRate, min: 5, max: 80, step: 1, set: setImprovedWinRate, display: `${improvedWinRate}%` },
