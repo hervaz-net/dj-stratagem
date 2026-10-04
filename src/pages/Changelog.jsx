@@ -6,6 +6,14 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.18",
+    date: "October 2026",
+    tag: "Fix",
+    items: [
+      { type: "fixed", text: "Bid-console budgets use the same compact money labels as pricing. A $120,000 range renders as $120k, and a million-dollar range renders as $1.2M, not 1200K." },
+    ],
+  },
+  {
     version: "1.17",
     date: "October 2026",
     tag: "Fix",
