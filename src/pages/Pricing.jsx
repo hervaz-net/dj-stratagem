@@ -125,7 +125,10 @@ function RoiCalculator() {
   const [currentWinRate, setCurrentWinRate] = useState(25);
   const [improvedWinRate, setImprovedWinRate] = useState(35);
 
-  const extraWinsPerYear = Math.round(bidsPerMonth * 12 * (improvedWinRate - currentWinRate) / 100);
+  const extraWinsPerYear = Math.max(
+    0,
+    Math.round(bidsPerMonth * 12 * (improvedWinRate - currentWinRate) / 100),
+  );
   const extraRevenue = extraWinsPerYear * avgBid * 1000;
   // Same 20% annual rate as the billing toggle. Growth list is $249/mo;
   // annual is that rate less the discount, times 12. Do not use 249*12 here
@@ -133,15 +136,27 @@ function RoiCalculator() {
   const growthMonthly = 249;
   const growthAnnualMonthly = Math.round(growthMonthly * (1 - ANNUAL_DISCOUNT));
   const planCostAnnual = growthAnnualMonthly * 12;
-  const roi = planCostAnnual > 0 ? Math.round((extraRevenue / planCostAnnual) * 10) / 10 : 0;
+  const roi = planCostAnnual > 0 && extraRevenue > 0
+    ? Math.round((extraRevenue / planCostAnnual) * 10) / 10
+    : 0;
 
-  const fmt = (n) => n >= 1000 ? `$${(n / 1000).toFixed(0)}k` : `$${n.toLocaleString()}`;
+  const fmt = (n) => {
+    const abs = Math.abs(n);
+    const sign = n < 0 ? "-" : "";
+    if (abs >= 1_000_000) {
+      const millions = abs / 1_000_000;
+      const text = millions >= 10 ? millions.toFixed(0) : millions.toFixed(1).replace(/\.0$/, "");
+      return `${sign}$${text}M`;
+    }
+    if (abs >= 1000) return `${sign}$${(abs / 1000).toFixed(0)}k`;
+    return `${sign}$${abs.toLocaleString()}`;
+  };
 
   const sliders = [
-    { label: "Average bid value", value: avgBid, min: 25, max: 2500, step: 25, set: setAvgBid, display: `$${avgBid}k` },
-    { label: "Bids submitted per month", value: bidsPerMonth, min: 1, max: 40, step: 1, set: setBidsPerMonth, display: bidsPerMonth },
-    { label: "Current win rate", value: currentWinRate, min: 5, max: 70, step: 1, set: setCurrentWinRate, display: `${currentWinRate}%` },
-    { label: "Target win rate", value: improvedWinRate, min: 5, max: 80, step: 1, set: setImprovedWinRate, display: `${improvedWinRate}%` },
+    { id: "roi-avg-bid", label: "Average bid value", value: avgBid, min: 25, max: 2500, step: 25, set: setAvgBid, display: `$${avgBid}k` },
+    { id: "roi-bids-month", label: "Bids submitted per month", value: bidsPerMonth, min: 1, max: 40, step: 1, set: setBidsPerMonth, display: bidsPerMonth },
+    { id: "roi-current-rate", label: "Current win rate", value: currentWinRate, min: 5, max: 70, step: 1, set: setCurrentWinRate, display: `${currentWinRate}%` },
+    { id: "roi-target-rate", label: "Target win rate", value: improvedWinRate, min: 5, max: 80, step: 1, set: setImprovedWinRate, display: `${improvedWinRate}%` },
   ];
 
   return (
@@ -150,15 +165,17 @@ function RoiCalculator() {
         {sliders.map((s) => (
           <div key={s.label}>
             <div className="mb-2 flex items-center justify-between text-sm">
-              <label className="font-medium text-paper">{s.label}</label>
+              <label htmlFor={s.id} className="font-medium text-paper">{s.label}</label>
               <span className="tabular-nums font-semibold text-amber">{s.display}</span>
             </div>
             <input
+              id={s.id}
               type="range"
               min={s.min}
               max={s.max}
               step={s.step}
               value={s.value}
+              aria-valuetext={String(s.display)}
               onChange={(e) => s.set(Number(e.target.value))}
               className="w-full accent-amber"
             />
@@ -168,7 +185,11 @@ function RoiCalculator() {
       <div className="flex flex-col justify-center slab bg-cta/10 p-8 text-center">
         <p className="text-xs font-semibold uppercase tracking-wider text-steel">Extra revenue per year</p>
         <p className="mt-2 text-5xl font-semibold tracking-tight text-paper tabular-nums">{fmt(extraRevenue)}</p>
-        <p className="mt-2 text-sm text-steel">{extraWinsPerYear} additional won bid{extraWinsPerYear !== 1 ? "s" : ""} per year</p>
+        <p className="mt-2 text-sm text-steel">
+          {extraWinsPerYear === 0
+            ? "Set the target win rate above the current rate to estimate extra wins."
+            : `${extraWinsPerYear} additional won bid${extraWinsPerYear !== 1 ? "s" : ""} per year`}
+        </p>
         <div className="mt-6 grid grid-cols-2 gap-4 text-center">
           <div className="slab p-4">
             <p className="text-2xl font-semibold text-amber tabular-nums">{roi}×</p>
