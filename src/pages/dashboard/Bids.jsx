@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import DashboardLayout from "../../components/dashboard/DashboardLayout";
 import { CompactDashboard } from "../../components/CompactDashboard";
 import GlassCard from "../../components/dashboard/GlassCard";
@@ -21,7 +21,18 @@ const STATUS = {
 
 const FILTERS = ["all", "draft", "submitted", "review", "awarded", "lost"];
 
-const money = (n) => `$${(n / 1000).toFixed(0)}k`;
+const money = (n) => {
+  const v = Number(n) || 0;
+  const abs = Math.abs(v);
+  const sign = v < 0 ? "-" : "";
+  if (abs >= 1_000_000) {
+    const millions = abs / 1_000_000;
+    const text = millions >= 10 ? millions.toFixed(0) : millions.toFixed(1).replace(/\.0$/, "");
+    return `${sign}$${text}M`;
+  }
+  if (abs >= 1000) return `${sign}$${(abs / 1000).toFixed(0)}k`;
+  return `${sign}$${abs.toLocaleString()}`;
+};
 const fmt = (d) => (d ? new Date(d).toLocaleDateString(undefined, { month: "short", day: "numeric" }) : "—");
 
 export default function Bids() {
