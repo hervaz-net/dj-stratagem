@@ -20,6 +20,9 @@ $company  = field('company');
 $email    = strtolower(field('email'));
 $phone    = field('phone');
 $password = (string) (input()['password'] ?? '');
+// Which site the signup came from. Fixed list, so the email can't be steered.
+$sources  = ['fleet' => 'Stratagem Fleet', 'capital' => 'Stratagem Capital', 'studio' => 'Stratagem Studio', 'workforce' => 'Stratagem Workforce'];
+$source   = $sources[field('source')] ?? 'D&J Stratagem';
 
 $errors = [];
 if ($fullName === '' || mb_strlen($fullName) > 120)      $errors['fullName'] = 'Enter your full name.';
@@ -91,6 +94,7 @@ if ($isNew) {
      * admin screen instead.
      */
     $body = "A new account is pending approval.\n\n"
+          . "Signed up via: {$source}\n"
           . "Name:    {$fullName}\n"
           . "Company: {$company}\n"
           . "Email:   {$email}\n"
@@ -105,7 +109,7 @@ if ($isNew) {
     if (!admin_recipients()) {
         error_log("auth: no admin to notify about pending user id {$newId} (set admin_email)");
     }
-    mail_admins('New D&J Stratagem account awaiting approval', $body);
+    mail_admins("New {$source} account awaiting approval", $body);
 }
 
 // Identical response either way.

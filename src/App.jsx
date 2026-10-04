@@ -194,7 +194,7 @@ function App() {
           <Route path="/brand" element={<MarketingLayout><BrandGuidelines /></MarketingLayout>} />
           <Route path="/companies" element={<Navigate to="/" replace />} />
           {/* Subagent sites are a separate bundle; a client-side link lands here, so load the real page. */}
-          {["/fleet", "/capital", "/studio", "/workforce", "/companies/:slug", "/platform", "/solutions", "/supply", "/projects", "/projects/:slug", "/construction-projects/:city/:trade"].map((p) => (
+          {["/fleet", "/capital", "/studio", "/workforce", "/fleet/*", "/capital/*", "/studio/*", "/workforce/*", "/companies/:slug", "/platform", "/solutions", "/supply", "/projects", "/projects/:slug", "/construction-projects/:city/:trade"].map((p) => (
             <Route key={p} path={p} element={<ToCompanySite />} />
           ))}
           <Route path="/marketing/fleet-cards" element={<MarketingLayout><FleetCards /></MarketingLayout>} />

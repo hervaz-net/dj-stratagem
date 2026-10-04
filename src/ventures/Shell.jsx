@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { CONTACT_EMAIL, brandCss } from "./brands";
+import { BRANDS, CONTACT_EMAIL, brandCss } from "./brands";
 import SiteNav from "../shared/SiteNav.jsx";
 import SubagentMark from "../shared/SubagentMark";
 
@@ -67,6 +67,14 @@ function Footer({ brand }) {
   );
 }
 
+/** Fleet, Capital, Studio, and Workforce have their own sign-in and sign-up
+ *  pages; the other subagent sites use the main site's. One account either way. */
+function accountLinks(brand) {
+  return BRANDS[brand.slug] === brand
+    ? { signInHref: `${brand.path}/signin`, joinHref: `${brand.path}/signup` }
+    : { signInHref: "/login", joinHref: "/register" };
+}
+
 /** Full page frame for one company: its colors, header, content, footer. */
 export default function Shell({ brand, children }) {
   // Light only: ignore any dark preference saved on other Stratagem sites.
@@ -85,7 +93,7 @@ export default function Shell({ brand, children }) {
       {/* One header: the global nav reads "Stratagem AI / Fleet" here, its
           sections live under Fleet in the Subagents menu, and the company's
           main action takes the header button. */}
-      <SiteNav app="venture" account={{ signInHref: "/login", joinHref: "/register" }} action={brand.cta} />
+      <SiteNav app="venture" account={accountLinks(brand)} action={brand.cta} />
       <main id="main">{children}</main>
       <Footer brand={brand} />
     </>

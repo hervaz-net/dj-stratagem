@@ -3,6 +3,8 @@ import { Routes, Route, Navigate, useLocation, useParams } from "react-router-do
 import Shell from "./Shell";
 import Fleet from "./pages/Fleet";
 import Venture from "./pages/Venture";
+import { SignUp, SignIn, Account } from "./pages/Auth";
+import { AuthProvider } from "../auth/AuthContext";
 import { BRANDS } from "./brands";
 import { SUBAGENT_SITES as S } from "../subagents/sites";
 import { appForPath } from "../shared/siteNav.js";
@@ -52,8 +54,13 @@ function Elsewhere() {
 }
 
 export default function App() {
+  const page = (slug, Page) => (
+    <Shell brand={BRANDS[slug]}>
+      <Page brand={BRANDS[slug]} />
+    </Shell>
+  );
   return (
-    <>
+    <AuthProvider>
       <ScrollToHash />
       <Routes>
         <Route path="/fleet" element={<Shell brand={BRANDS.fleet}><Fleet brand={BRANDS.fleet} /></Shell>} />
@@ -66,9 +73,14 @@ export default function App() {
         <Route path="/platform" element={<Shell brand={S.platform}><Platform brand={S.platform} /></Shell>} />
         <Route path="/solutions" element={<Shell brand={S.solutions}><Solutions brand={S.solutions} /></Shell>} />
         <Route path="/supply" element={<Shell brand={S.supply}><Supply brand={S.supply} /></Shell>} />
+        {Object.keys(BRANDS).map((slug) => [
+          <Route key={`${slug}-signup`} path={`${BRANDS[slug].path}/signup`} element={page(slug, SignUp)} />,
+          <Route key={`${slug}-signin`} path={`${BRANDS[slug].path}/signin`} element={page(slug, SignIn)} />,
+          <Route key={`${slug}-account`} path={`${BRANDS[slug].path}/account`} element={page(slug, Account)} />,
+        ])}
         <Route path="/companies/:slug" element={<LegacyCompany />} />
         <Route path="*" element={<Elsewhere />} />
       </Routes>
-    </>
+    </AuthProvider>
   );
 }

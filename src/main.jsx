@@ -13,7 +13,7 @@ const isExchange =
 // Every subagent outside Exchange (Projects, Platform, Solutions, Supply,
 // Fleet, Capital, Studio, Workforce) is its own site on the Exchange design
 // system, each at its own top-level address and in its own color.
-const isVenture = /^\/(fleet|capital|studio|workforce|platform|solutions|supply|projects(\/[^/]+)?|construction-projects\/[^/]+\/[^/]+|companies\/[^/]+)\/?$/.test(window.location.pathname)
+const isVenture = /^\/((fleet|capital|studio|workforce)(\/(signup|signin|account))?|platform|solutions|supply|projects(\/[^/]+)?|construction-projects\/[^/]+\/[^/]+|companies\/[^/]+)\/?$/.test(window.location.pathname)
 
 const load = isExchange
   ? Promise.all([import('./exchange/index.css'), import('./exchange/App.jsx')])

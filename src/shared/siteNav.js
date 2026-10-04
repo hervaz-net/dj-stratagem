@@ -115,7 +115,7 @@ export const NAV_LINKS = [{ href: "/pricing", label: "Pricing" }];
 export function appForPath(path) {
   const p = path.split(/[?#]/)[0] || "/";
   if (p === "/exchange" || p.startsWith("/exchange/")) return "exchange";
-  if (/^\/(fleet|capital|studio|workforce|platform|solutions|supply)\/?$/.test(p)) return "venture";
+  if (/^\/((fleet|capital|studio|workforce)(\/(signup|signin|account))?|platform|solutions|supply)\/?$/.test(p)) return "venture";
   if (/^\/(projects(\/[^/]+)?|construction-projects\/[^/]+\/[^/]+|companies\/[^/]+)\/?$/.test(p)) return "venture";
   return "parent";
 }
