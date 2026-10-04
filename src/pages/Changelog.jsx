@@ -6,6 +6,16 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.16",
+    date: "October 2026",
+    tag: "Fix",
+    items: [
+      { type: "fixed", text: "Request access now rejects a password that is the company name, or longer than 200 characters, before the server does. The strength meter no longer treats 8 characters as progress toward the 12-character minimum." },
+      { type: "fixed", text: "The compact bid console no longer opens Quick Add when you type the letter a, and search no longer blanks the list if a bid is missing a title." },
+      { type: "fixed", text: "Project search and Exchange marketplace filters no longer throw when a listing is missing a field." },
+    ],
+  },
+  {
     version: "1.15",
     date: "October 2026",
     tag: "Fix",

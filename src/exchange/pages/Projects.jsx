@@ -58,18 +58,17 @@ export default function Projects() {
         if (trade !== ANY && p.trade !== trade) return false;
         if (city !== ANY && p.city !== city) return false;
         if (buyer !== ANY && p.buyerRole !== buyer) return false;
-        if (category !== ANY && !p.materialPackages.some((m) => m.category === category)) return false;
-        if (fulfillment !== ANY && !p.materialPackages.some((m) => m.fulfillment === fulfillment)) return false;
+        if (category !== ANY && !(p.materialPackages ?? []).some((m) => m.category === category)) return false;
+        if (fulfillment !== ANY && !(p.materialPackages ?? []).some((m) => m.fulfillment === fulfillment)) return false;
         if (!needle) return true;
-        return (
-          p.title.toLowerCase().includes(needle) ||
-          p.summary.toLowerCase().includes(needle) ||
-          p.type.toLowerCase().includes(needle) ||
-          p.scope.some((s) => s.toLowerCase().includes(needle)) ||
-          p.materialPackages.some(
-            (m) => m.title.toLowerCase().includes(needle) || m.items.toLowerCase().includes(needle),
-          )
-        );
+        const hay = [
+          p.title,
+          p.summary,
+          p.type,
+          ...(Array.isArray(p.scope) ? p.scope : []),
+          ...(Array.isArray(p.materialPackages) ? p.materialPackages.flatMap((m) => [m?.title, m?.items]) : []),
+        ];
+        return hay.some((s) => String(s ?? "").toLowerCase().includes(needle));
       })
       .sort(SORTS[sort].fn);
   }, [q, trade, city, category, fulfillment, buyer, sort]);
@@ -85,7 +84,7 @@ export default function Projects() {
 
   const filtered =
     q !== "" || trade !== ANY || city !== ANY || category !== ANY || fulfillment !== ANY || buyer !== ANY;
-  const packageCount = results.reduce((n, p) => n + p.materialPackages.length, 0);
+  const packageCount = results.reduce((n, p) => n + (p.materialPackages?.length ?? 0), 0);
 
   return (
     <>

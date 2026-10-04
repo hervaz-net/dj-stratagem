@@ -36,8 +36,8 @@ const DOT_TONE = {
 function passwordStrength(pw) {
   if (!pw) return 0;
   let score = 0;
-  if (pw.length >= 8) score++;
   if (pw.length >= 12) score++;
+  if (pw.length >= 16) score++;
   if (/[A-Z]/.test(pw)) score++;
   if (/[0-9]/.test(pw)) score++;
   if (/[^A-Za-z0-9]/.test(pw)) score++;
@@ -81,8 +81,12 @@ function validate(v) {
 
   if (v.password.length < MIN_PASSWORD) {
     e.password = `Use at least ${MIN_PASSWORD} characters.`;
+  } else if (v.password.length > 200) {
+    e.password = "Password must be 200 characters or fewer.";
   } else if (v.email && v.password.toLowerCase().includes(v.email.toLowerCase())) {
     e.password = "Don't use your email address as your password.";
+  } else if (v.company.trim() && v.password.toLowerCase() === v.company.trim().toLowerCase()) {
+    e.password = "Don't use your company name as your password.";
   }
   if (v.confirm !== v.password) e.confirm = "Passwords don't match.";
 
