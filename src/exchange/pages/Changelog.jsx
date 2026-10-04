@@ -7,6 +7,15 @@ import { PRODUCT, COMPANY } from "../brand";
 
 const entries = [
   {
+    version: "2.3",
+    date: "October 2026",
+    tag: "Fix",
+    items: [
+      { type: "fixed", text: "Catalog search no longer blanks the page when a product name, SKU, or category is missing." },
+      { type: "fixed", text: "A malformed page hash no longer throws while scrolling to an anchor." },
+    ],
+  },
+  {
     version: "2.2",
     date: "October 3, 2026",
     iso: "2026-10-03",

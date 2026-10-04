@@ -59,7 +59,11 @@ export default function SuppliersDashboard() {
 
   const savePresets = (next) => {
     setPresets(next);
-    localStorage.setItem(LS_PRESETS, JSON.stringify(next));
+    try {
+      localStorage.setItem(LS_PRESETS, JSON.stringify(next));
+    } catch {
+      /* blocked storage: presets last for this visit */
+    }
   };
 
   const toggleStatus = useCallback((key) => {
@@ -84,7 +88,7 @@ export default function SuppliersDashboard() {
       if (!activeStatuses.includes(s.status)) return false;
       if (s.riskScore < risk[0] || s.riskScore > risk[1]) return false;
       if (s.deliveryRate < delivery[0] || s.deliveryRate > delivery[1]) return false;
-      if (q && ![s.name, s.category, s.region].some((f) => f.toLowerCase().includes(q))) return false;
+      if (q && ![s.name, s.category, s.region].some((f) => String(f ?? "").toLowerCase().includes(q))) return false;
       return true;
     });
     const dir = sort.dir === "asc" ? 1 : -1;

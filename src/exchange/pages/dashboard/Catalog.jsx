@@ -188,7 +188,7 @@ function SellerCatalog({ role }) {
       if (filter === "low" && !stockState(p)) return false;
       if (filter === "draft" && p.status !== "draft") return false;
       if (filter === "distributors" && p.visibility !== "distributors") return false;
-      return !q || [p.name, p.sku, p.category].some((f) => f.toLowerCase().includes(q));
+      return !q || [p.name, p.sku, p.category].some((f) => String(f ?? "").toLowerCase().includes(q));
     });
   }, [products, query, filter]);
 
