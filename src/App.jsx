@@ -49,7 +49,7 @@ function ScrollToTop() {
 
   useEffect(() => {
     const id = window.requestAnimationFrame(() => {
-      if (hash) {
+      if (hash && /^#[A-Za-z][\w:-]*$/.test(hash)) {
         const el = document.querySelector(hash);
         if (el) {
           el.scrollIntoView();

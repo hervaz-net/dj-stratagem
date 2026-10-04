@@ -6,6 +6,15 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.15",
+    date: "October 2026",
+    tag: "Fix",
+    items: [
+      { type: "fixed", text: "Supplier search no longer blanks the dashboard when a name, category, or region is missing. Saving a filter preset no longer throws if the browser blocks storage." },
+      { type: "fixed", text: "A malformed page hash no longer throws while scrolling to an anchor." },
+    ],
+  },
+  {
     version: "1.14",
     date: "October 2026",
     tag: "Fix",
