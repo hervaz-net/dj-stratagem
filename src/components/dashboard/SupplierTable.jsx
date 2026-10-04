@@ -4,6 +4,7 @@ import RiskGauge from "./RiskGauge";
 import Sparkline from "./Sparkline";
 import StatusDot from "./StatusDot";
 import { IconColumns, IconRows } from "../icons";
+import { formatCompactMoney } from "../../lib/money";
 
 const ALL_COLUMNS = [
   { key: "name", label: "Supplier", align: "left", required: true, color: "" },
@@ -22,7 +23,7 @@ const DENSITY_OPTIONS = [
 ];
 
 const DENSITY_PY = { compact: "py-2", default: "py-3.5", comfortable: "py-5" };
-const money = (n) => (n >= 1000 ? `$${(n / 1000).toFixed(0)}k` : `$${n}`);
+const money = formatCompactMoney;
 
 function CellContent({ colKey, s }) {
   switch (colKey) {

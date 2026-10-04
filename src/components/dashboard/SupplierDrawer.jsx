@@ -3,8 +3,9 @@ import StatusDot from "./StatusDot";
 import RiskGauge from "./RiskGauge";
 import Sparkline from "./Sparkline";
 import { IconX } from "../icons";
+import { formatCompactMoney } from "../../lib/money";
 
-const money = (n) => (n >= 1000 ? `$${(n / 1000).toFixed(0)}k` : `$${n}`);
+const money = formatCompactMoney;
 
 const STATUS_LABEL = { active: "Active", watch: "Watch", "at-risk": "At risk" };
 const STATUS_COLOR = {

@@ -10,6 +10,7 @@ import useAuth from "../../auth/useAuth";
 import usePolledResource from "../../api/usePolledResource";
 import { fetchBids, updateBidStatus, isConfigured } from "../../api/dashboard";
 import { bidFixtures } from "../../api/fixtures";
+import { formatCompactMoney } from "../../lib/money";
 
 const STATUS = {
   draft: { label: "Draft", dot: "watch", color: "text-warning bg-warning/10" },
@@ -21,7 +22,7 @@ const STATUS = {
 
 const FILTERS = ["all", "draft", "submitted", "review", "awarded", "lost"];
 
-const money = (n) => `$${(n / 1000).toFixed(0)}k`;
+const money = formatCompactMoney;
 const fmt = (d) => (d ? new Date(d).toLocaleDateString(undefined, { month: "short", day: "numeric" }) : "—");
 
 export default function Bids() {

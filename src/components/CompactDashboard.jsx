@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { formatCompactMoney } from "../lib/money";
 
 // Compact, keyboard-forward dashboard with inline editing and bulk actions.
 export function CompactDashboard() {
@@ -162,7 +163,7 @@ export function CompactDashboard() {
                 {editingId === bid.id ? (
                   <InlineEditor initialValue={bid.budget ? `$${bid.budget.min}-${bid.budget.max}` : ""} onSave={val=>{ const [min,max] = parseBudget(val); updateBid(bid.id, { budget:{ min, max } }); setEditingId(null);}} onCancel={()=>setEditingId(null)} />
                 ) : (
-                  <div className="text-sm font-medium text-bid-navy">{bid.budget ? `$${(bid.budget.min/1000).toFixed(0)}k–$${(bid.budget.max/1000).toFixed(0)}k` : "—"}</div>
+                  <div className="text-sm font-medium text-bid-navy">{bid.budget ? `${formatCompactMoney(bid.budget.min)}–${formatCompactMoney(bid.budget.max)}` : "—"}</div>
                 )}
               </div>
 

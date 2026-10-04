@@ -7,6 +7,7 @@ import Reveal from "../components/Reveal";
 import Accordion from "../components/Accordion";
 import Seo from "../components/Seo";
 import { IconCheck } from "../components/icons";
+import { formatCompactMoney } from "../lib/money";
 
 const ANNUAL_DISCOUNT = 0.2;
 
@@ -140,17 +141,7 @@ function RoiCalculator() {
     ? Math.round((extraRevenue / planCostAnnual) * 10) / 10
     : 0;
 
-  const fmt = (n) => {
-    const abs = Math.abs(n);
-    const sign = n < 0 ? "-" : "";
-    if (abs >= 1_000_000) {
-      const millions = abs / 1_000_000;
-      const text = millions >= 10 ? millions.toFixed(0) : millions.toFixed(1).replace(/\.0$/, "");
-      return `${sign}$${text}M`;
-    }
-    if (abs >= 1000) return `${sign}$${(abs / 1000).toFixed(0)}k`;
-    return `${sign}$${abs.toLocaleString()}`;
-  };
+  const fmt = formatCompactMoney;
 
   const sliders = [
     { id: "roi-avg-bid", label: "Average bid value", value: avgBid, min: 25, max: 2500, step: 25, set: setAvgBid, display: fmt(avgBid * 1000) },
