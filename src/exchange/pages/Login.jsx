@@ -4,6 +4,7 @@ import Button from "../components/Button";
 import Seo from "../components/Seo";
 import PasswordField from "../components/PasswordField";
 import AuthShell, { AuthAlert, authInputClass } from "../components/auth/AuthShell";
+import HumanCheck from "../../auth/HumanCheck";
 import useAuth from "../auth/useAuth";
 import { PRODUCT, CONTACT_EMAIL } from "../brand";
 
@@ -27,7 +28,7 @@ function writeRememberedEmail(email) {
 }
 
 export default function Login() {
-  const { user, loading, login } = useAuth();
+  const { user, loading, login, turnstileSiteKey, setChallengeToken, challengeReset } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -164,6 +165,7 @@ export default function Login() {
             {error && <AuthAlert>{error}</AuthAlert>}
           </div>
 
+          <HumanCheck siteKey={turnstileSiteKey} onToken={setChallengeToken} resetKey={challengeReset} className="mt-2" />
           <Button type="submit" size="lg" className="w-full" disabled={submitting}>
             {submitting ? "Signing in…" : "Sign in"}
           </Button>

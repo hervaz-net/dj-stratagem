@@ -1,4 +1,4 @@
-import { createContext, useCallback, useEffect, useMemo, useState } from "react";
+import { createContext, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import AuthError from "./AuthError";
 
 const AuthContext = createContext(null);
@@ -45,6 +45,28 @@ export function AuthProvider({ children }) {
   // `loading` gates route guards — without it every refresh would bounce a
   // signed-in user to /login before the session check comes back.
   const [loading, setLoading] = useState(true);
+  // Cloudflare Turnstile: the site key comes from me.php (null = check off);
+  // the current single-use token rides along on login and register.
+  const [turnstileSiteKey, setTurnstileSiteKey] = useState(null);
+  const [challengeReset, setChallengeReset] = useState(0);
+  const challengeToken = useRef("");
+  const setChallengeToken = useCallback((t) => {
+    challengeToken.current = t || "";
+  }, []);
+  const withChallenge = useCallback(
+    async (send) => {
+      if (turnstileSiteKey && !challengeToken.current) {
+        throw new AuthError("Please complete the security check.", { code: "challenge_required" });
+      }
+      try {
+        return await send(challengeToken.current || undefined);
+      } finally {
+        challengeToken.current = "";
+        setChallengeReset((n) => n + 1);
+      }
+    },
+    [turnstileSiteKey],
+  );
 
   useEffect(() => {
     const controller = new AbortController();
@@ -54,6 +76,7 @@ export function AuthProvider({ children }) {
         const data = await call("me.php", { method: "GET", signal: controller.signal });
         setUser(data.user);
         setCsrf(data.csrf);
+        setTurnstileSiteKey(data.turnstileSiteKey ?? null);
       } catch (err) {
         if (err?.name !== "AbortError") setUser(null);
       } finally {
@@ -66,17 +89,17 @@ export function AuthProvider({ children }) {
 
   const login = useCallback(
     async (email, password) => {
-      const data = await call("login.php", { body: { email, password }, csrf });
+      const data = await withChallenge((turnstile) => call("login.php", { body: { email, password, turnstile }, csrf }));
       setUser(data.user);
       if (data.csrf) setCsrf(data.csrf);
       return data.user;
     },
-    [csrf],
+    [csrf, withChallenge],
   );
 
   const register = useCallback(
-    async (payload) => call("register.php", { body: payload, csrf }),
-    [csrf],
+    async (payload) => withChallenge((turnstile) => call("register.php", { body: { ...payload, turnstile }, csrf })),
+    [csrf, withChallenge],
   );
 
   const logout = useCallback(async () => {
@@ -105,8 +128,8 @@ export function AuthProvider({ children }) {
   const value = useMemo(
     // `csrf` is exposed so admin endpoints can post with the same token this
     // provider already owns, rather than minting a second one.
-    () => ({ user, loading, csrf, login, register, logout, applyUser, authBase: AUTH_BASE }),
-    [user, loading, csrf, login, register, logout, applyUser],
+    () => ({ user, loading, csrf, login, register, logout, applyUser, authBase: AUTH_BASE, turnstileSiteKey, setChallengeToken, challengeReset }),
+    [user, loading, csrf, login, register, logout, applyUser, turnstileSiteKey, setChallengeToken, challengeReset],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

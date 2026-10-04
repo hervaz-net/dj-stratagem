@@ -373,3 +373,65 @@ function public_user(array $u): array
         'role'    => $u['role'],
     ];
 }
+
+/**
+ * Public Turnstile site key, or null while the check is switched off.
+ * Set 'turnstile_site_key' and 'turnstile_secret' in ~/djs-config.php.
+ */
+function turnstile_site_key(): ?string
+{
+    global $config;
+    $key = (string) ($config['turnstile_site_key'] ?? '');
+    $secret = (string) ($config['turnstile_secret'] ?? '');
+    return $key !== '' && $secret !== '' ? $key : null;
+}
+
+/**
+ * Cloudflare Turnstile "verify you are human" check for sign-in and sign-up.
+ * A no-op until both keys are configured, so the forms keep working before
+ * the Cloudflare widget exists. Tokens are single use; the client fetches a
+ * fresh one per attempt.
+ */
+function require_human(): void
+{
+    global $config;
+    if (turnstile_site_key() === null) {
+        return;
+    }
+    $token = (string) (input()['turnstile'] ?? '');
+    if ($token === '' || strlen($token) > 2048) {
+        fail(403, 'challenge_required', 'Please complete the security check.');
+    }
+
+    $post = http_build_query([
+        'secret'   => (string) $config['turnstile_secret'],
+        'response' => $token,
+        'remoteip' => $_SERVER['REMOTE_ADDR'] ?? '',
+    ]);
+    $raw = false;
+    if (function_exists('curl_init')) {
+        $ch = curl_init('https://challenges.cloudflare.com/turnstile/v0/siteverify');
+        curl_setopt_array($ch, [
+            CURLOPT_POST           => true,
+            CURLOPT_POSTFIELDS     => $post,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT        => 8,
+        ]);
+        $raw = curl_exec($ch);
+        curl_close($ch);
+    } else {
+        $raw = @file_get_contents('https://challenges.cloudflare.com/turnstile/v0/siteverify', false, stream_context_create([
+            'http' => ['method' => 'POST', 'header' => 'Content-Type: application/x-www-form-urlencoded', 'content' => $post, 'timeout' => 8],
+        ]));
+    }
+
+    $result = is_string($raw) ? json_decode($raw, true) : null;
+    if (!is_array($result)) {
+        // Fail closed: if Cloudflare can't be reached, don't wave bots through.
+        error_log('auth: turnstile verification unreachable');
+        fail(503, 'challenge_unavailable', 'The security check is unavailable right now. Please try again in a minute.');
+    }
+    if (empty($result['success'])) {
+        fail(403, 'challenge_failed', 'The security check didn\'t pass. Please try again.');
+    }
+}

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import Logo from "./Logo";
 import CompanyGlyph from "./nocturne/CompanyGlyph";
+import { openCookieSettings } from "./CookieConsent";
 import { companies } from "../data/companies";
 import { IconMail, IconArrowRight } from "./icons";
 
@@ -228,7 +229,13 @@ export default function Footer() {
         </div>
         <div className="dotline mt-6" />
         <div className="flex flex-col justify-between gap-2 py-6 text-xs text-steel md:flex-row">
-          <p>&copy; {new Date().getFullYear()} D&amp;J Stratagem, Inc.</p>
+          <p>
+            &copy; {new Date().getFullYear()} D&amp;J Stratagem, Inc.
+            <span className="mx-2 text-steel/50">·</span>
+            <button type="button" onClick={openCookieSettings} className="draw-link hover:text-paper">
+              Cookie settings
+            </button>
+          </p>
           <p className="mono-label">Built for the people who build</p>
         </div>
       </div>

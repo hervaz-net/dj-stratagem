@@ -14,6 +14,7 @@ require_once __DIR__ . '/mail-lib.php';
 
 require_post();
 require_csrf();
+require_human();
 
 $fullName = field('fullName');
 $company  = field('company');

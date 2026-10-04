@@ -5,6 +5,7 @@ import AuthShell from "../components/AuthShell";
 import Seo from "../components/Seo";
 import PasswordField from "../components/PasswordField";
 import { IconCheck } from "../components/icons";
+import HumanCheck from "../auth/HumanCheck";
 import useAuth from "../auth/useAuth";
 
 const MIN_PASSWORD = 12;
@@ -101,7 +102,7 @@ function Field({ id, label, value, onChange, onBlur, error, required, ...rest })
 }
 
 export default function Register() {
-  const { user, loading, register } = useAuth();
+  const { user, loading, register, turnstileSiteKey, setChallengeToken, challengeReset } = useAuth();
   const [values, setValues] = useState(EMPTY);
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
@@ -283,6 +284,7 @@ export default function Register() {
                   )}
                 </div>
 
+                <HumanCheck siteKey={turnstileSiteKey} onToken={setChallengeToken} resetKey={challengeReset} className="mt-2" />
                 <Button type="submit" variant="primary" className="mt-2 w-full" disabled={submitting}>
                   {submitting ? "Creating account…" : "Create account"}
                 </Button>

@@ -6,6 +6,7 @@ import RoleBadge from "../components/RoleBadge";
 import PasswordField from "../components/PasswordField";
 import AuthShell, { AuthAlert, authInputClass } from "../components/auth/AuthShell";
 import { IconCheck } from "../components/icons";
+import HumanCheck from "../../auth/HumanCheck";
 import useAuth from "../auth/useAuth";
 import { useRole } from "../contexts/RoleContext";
 import { PRODUCT, CONTACT_EMAIL, ROLES, ROLE_ORDER } from "../brand";
@@ -182,7 +183,7 @@ function RolePicker({ value, onChange, error }) {
 }
 
 export default function Register() {
-  const { user, loading, register } = useAuth();
+  const { user, loading, register, turnstileSiteKey, setChallengeToken, challengeReset } = useAuth();
   const { setRole } = useRole();
   const [params] = useSearchParams();
   const [values, setValues] = useState(() => {
@@ -391,6 +392,7 @@ export default function Register() {
                 {serverError && <AuthAlert>{serverError}</AuthAlert>}
               </div>
 
+              <HumanCheck siteKey={turnstileSiteKey} onToken={setChallengeToken} resetKey={challengeReset} className="mt-2" />
               <Button type="submit" size="lg" className="w-full" disabled={submitting}>
                 {submitting ? "Sending request…" : "Request account"}
               </Button>

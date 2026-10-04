@@ -9,6 +9,7 @@ require __DIR__ . '/bootstrap.php';
 
 require_post();
 require_csrf();
+require_human();
 
 $email    = strtolower(field('email'));
 $password = (string) (input()['password'] ?? '');

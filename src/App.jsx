@@ -3,7 +3,7 @@ import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import SiteNav from "./shared/SiteNav.jsx";
 import Footer from "./components/Footer";
 import BackToTop from "./components/BackToTop";
-import CookieBanner from "./components/CookieBanner";
+import CookieConsent from "./components/CookieConsent";
 import ReadingProgress from "./components/ReadingProgress";
 import CommandPalette from "./components/CommandPalette";
 import Atmosphere from "./components/nocturne/Atmosphere";
@@ -110,7 +110,7 @@ function MarketingLayout({ children }) {
       </main>
       <Footer />
       <BackToTop />
-      <CookieBanner />
+      <CookieConsent />
       <ReadingProgress />
       <CommandPalette open={paletteOpen} onClose={closePalette} />
     </div>

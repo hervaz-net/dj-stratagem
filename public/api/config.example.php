@@ -74,4 +74,12 @@ return [
     'max_registrations_per_ip' => 5,
 
     'attempt_window_minutes' => 15,
+
+    /**
+     * Cloudflare Turnstile (the "verify you are human" check on sign-in and
+     * sign-up). Create a free widget at dash.cloudflare.com → Turnstile for
+     * djstratageminc.com and paste both keys. Leave empty to switch it off.
+     */
+    'turnstile_site_key' => '',
+    'turnstile_secret'   => '',
 ];

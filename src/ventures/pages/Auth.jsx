@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import useAuth from "../../auth/useAuth";
+import HumanCheck from "../../auth/HumanCheck";
 import PasswordField from "../../exchange/components/PasswordField";
 import { IconArrowRight, IconCheck } from "../../exchange/components/icons";
 import { Mark } from "../Shell";
@@ -40,7 +41,7 @@ const FieldError = ({ children }) => (children ? <p className="mt-1.5 text-xs te
 
 export function SignUp({ brand }) {
   useSeo(brand, { title: "Create an account", description: `Create a ${brand.name} account.` });
-  const { register, user } = useAuth();
+  const { register, user, turnstileSiteKey, setChallengeToken, challengeReset } = useAuth();
   const [values, setValues] = useState({ fullName: "", company: "", email: "", phone: "" });
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
@@ -134,6 +135,7 @@ export function SignUp({ brand }) {
           />
           <FieldError>{errors.password}</FieldError>
         </div>
+        <HumanCheck siteKey={turnstileSiteKey} onToken={setChallengeToken} resetKey={challengeReset} />
         {message && <p role="alert" className="text-sm text-danger">{message}</p>}
         <SubmitButton busy={busy}>Create account</SubmitButton>
         <p className="text-xs leading-relaxed text-fg-muted">
@@ -147,7 +149,7 @@ export function SignUp({ brand }) {
 
 export function SignIn({ brand }) {
   useSeo(brand, { title: "Sign in", description: `Sign in to your ${brand.name} account.` });
-  const { login, user } = useAuth();
+  const { login, user, turnstileSiteKey, setChallengeToken, challengeReset } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -188,6 +190,7 @@ export function SignIn({ brand }) {
           <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" autoComplete="email" className={fieldClass} />
         </Field>
         <PasswordField id="password" label="Password" value={password} onChange={setPassword} autoComplete="current-password" />
+        <HumanCheck siteKey={turnstileSiteKey} onToken={setChallengeToken} resetKey={challengeReset} />
         {message && <p role="alert" className="text-sm text-danger">{message}</p>}
         <SubmitButton busy={busy}>Sign in</SubmitButton>
         <p className="text-xs text-fg-muted">

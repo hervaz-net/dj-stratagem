@@ -4,6 +4,8 @@ import Button from "../components/Button";
 import AuthShell from "../components/AuthShell";
 import Seo from "../components/Seo";
 import PasswordField from "../components/PasswordField";
+import HumanCheck from "../auth/HumanCheck";
+import { allowsPreferences } from "../components/CookieConsent";
 import useAuth from "../auth/useAuth";
 
 const REMEMBER_KEY = "djs-login-email";
@@ -18,7 +20,7 @@ function readRememberedEmail() {
 
 function writeRememberedEmail(email) {
   try {
-    if (email) localStorage.setItem(REMEMBER_KEY, email);
+    if (email && allowsPreferences()) localStorage.setItem(REMEMBER_KEY, email);
     else localStorage.removeItem(REMEMBER_KEY);
     // Shared key collided with Stratagem Exchange on this origin.
     localStorage.removeItem("login_email");
@@ -28,7 +30,7 @@ function writeRememberedEmail(email) {
 }
 
 export default function Login() {
-  const { user, loading, login } = useAuth();
+  const { user, loading, login, turnstileSiteKey, setChallengeToken, challengeReset } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -186,6 +188,7 @@ export default function Login() {
               )}
             </div>
 
+            <HumanCheck siteKey={turnstileSiteKey} onToken={setChallengeToken} resetKey={challengeReset} className="mt-2" />
             <Button type="submit" variant="primary" className="mt-2 w-full" disabled={submitting}>
               {submitting ? "Signing in…" : "Sign in"}
             </Button>

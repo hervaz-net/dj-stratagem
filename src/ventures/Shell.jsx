@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { BRANDS, CONTACT_EMAIL, brandCss } from "./brands";
 import SiteNav from "../shared/SiteNav.jsx";
 import SubagentMark from "../shared/SubagentMark";
+import CookieConsent, { openCookieSettings } from "../components/CookieConsent";
 
 /** Company mark: the subagent's own logo, shared with the rest of the site. */
 export function Mark({ slug, size = 30 }) {
@@ -55,6 +56,16 @@ function Footer({ brand }) {
             <ul className="mt-4 space-y-3 text-sm">
               <li><a href="/privacy" className="text-fg-muted transition-colors hover:text-fg">Privacy Policy</a></li>
               <li><a href="/terms" className="text-fg-muted transition-colors hover:text-fg">Terms &amp; Conditions</a></li>
+              <li>
+                <button type="button" onClick={openCookieSettings} className="text-fg-muted transition-colors hover:text-fg">
+                  Cookie settings
+                </button>
+              </li>
+              <li>
+                <button type="button" onClick={openCookieSettings} className="text-fg-muted transition-colors hover:text-fg">
+                  Cookie settings
+                </button>
+              </li>
             </ul>
           </div>
         </div>
@@ -96,6 +107,8 @@ export default function Shell({ brand, children }) {
       <SiteNav app="venture" account={accountLinks(brand)} action={brand.cta} />
       <main id="main">{children}</main>
       <Footer brand={brand} />
+      <CookieConsent />
+      <CookieConsent />
     </>
   );
 }
