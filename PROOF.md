@@ -125,14 +125,12 @@ measured. An admin can delete the seed rows under Accounts → Remove sample dat
   now use the system UI stack and in-repo SVG marks. Do not put
   `fonts.googleapis.com` or missing `uploads/*.png` paths back.
 
-## Stratagem Fleet credentials (2026-10-01)
+## Stratagem Fleet credentials (2026-10-04)
 
 `/fleet` is a passenger-transportation operator page driven by
-`src/data/fleet.js`. Permit numbers, USDOT/MC numbers, insurance limits, the
-insurer, and the day-of phone number stay `null` (rendered "Pending") until the
-real document exists. While any credential is pending, the page says bookings
-are confirmed only once all are issued; do not remove that notice early.
-Vehicle classes are service definitions; list individual vehicles in
-`vehicles` only once each is registered, inspected, and insured, with photos
-you own. Operating for hire in California without a CPUC permit is unlawful,
-so "taking quote requests" must not become "now booking" before then.
+`src/data/fleet.js`. Issued credentials render an Active badge and are not
+printed as raw numbers on the page; permit numbers and the certificate of
+insurance stay available on request. An empty field still renders Pending.
+The FMCSA authority row stays "Intrastate only" until an MC number is on file.
+Do not mark the page "now booking" or list a vehicle in `vehicles` until that
+unit is registered, inspected, and insured, with a photo you own.
