@@ -1,10 +1,10 @@
+import { formatCompactMoney } from "../../../lib/money";
+
 /** Display formatters shared by the dashboard pages. */
 
 export const money = (n, { compact = false } = {}) => {
   const v = Number(n) || 0;
-  if (compact && Math.abs(v) >= 1000) {
-    return `$${(v / 1000).toFixed(v >= 100000 ? 0 : 1).replace(/\.0$/, "")}k`;
-  }
+  if (compact && Math.abs(v) >= 1000) return formatCompactMoney(v);
   return v.toLocaleString(undefined, { style: "currency", currency: "USD", maximumFractionDigits: v % 1 ? 2 : 0 });
 };
 
