@@ -21,7 +21,7 @@ const issued = [
   {
     key: "tcp",
     label: "CPUC charter-party carrier permit",
-    value: null,
+    value: "TCP 344532-B",
     note: "Required by the California Public Utilities Commission to carry passengers for hire. Shown here only after the issued permit is on file.",
   },
   {
@@ -42,13 +42,13 @@ const issued = [
   {
     key: "auto",
     label: "Commercial auto liability",
-    value: null,
+    value: "$5,000,000 combined single limit",
     note: "Limit is printed only from the certificate of insurance on file. At least $1,500,000 per vehicle is required; at least $5,000,000 on vehicles seating 16 or more where required.",
   },
   {
     key: "insurer",
     label: "Insurer",
-    value: null,
+    value: "biBerk",
     note: "Certificate of insurance, including the policy expiry, is available on request once issued. Expiry is not printed here until it is on the certificate we hold.",
   },
 ];
