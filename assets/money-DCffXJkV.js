@@ -1,1 +1,0 @@
-function e(e){let t=Number(e);if(!Number.isFinite(t))return`$0`;let n=Math.abs(t),r=t<0?`-`:``;if(n>=1e6){let e=n/1e6;return`${r}$${e>=10?e.toFixed(0):e.toFixed(1).replace(/\.0$/,``)}M`}return n>=1e3?`${r}$${(n/1e3).toFixed(n>=1e5?0:1).replace(/\.0$/,``)}k`:`${r}$${Math.round(n).toLocaleString()}`}export{e as t};
