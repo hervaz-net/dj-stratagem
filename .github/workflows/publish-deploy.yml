@@ -129,6 +129,17 @@ jobs:
           LIVE="$(curl -sS --max-time 30 https://djstratageminc.com/ | grep -oE 'assets/index-[A-Za-z0-9_-]+[.]js' | head -1 || true)"
           echo "expected ${EXPECTED:-<none>}"
           echo "live     ${LIVE:-<none>}"
+          if [ -z "$EXPECTED" ] || [ "$EXPECTED" != "$LIVE" ]; then
+            echo "live hash differs; waiting for cPanel rsync window"
+            sleep 20
+            LIVE="$(curl -sS --max-time 30 https://djstratageminc.com/ | grep -oE 'assets/index-[A-Za-z0-9_-]+[.]js' | head -1 || true)"
+            echo "live     ${LIVE:-<none>}"
+          fi
+          if [ -z "$EXPECTED" ] || [ "$EXPECTED" != "$LIVE" ]; then
+            echo "::error::Live bundle does not match this build. cPanel did not pull deploy, or Deploy HEAD was skipped."
+            echo "cPanel → Git Version Control → dj-stratagem → Update from Remote → Deploy HEAD Commit."
+            exit 1
+          fi
 
       - name: Verify live PHP probes and assets
         if: always()
