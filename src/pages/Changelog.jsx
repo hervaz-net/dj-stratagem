@@ -6,6 +6,14 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.18",
+    date: "October 2026",
+    tag: "Fix",
+    items: [
+      { type: "fixed", text: "Dollar labels just under $1M no longer round up to $1000k. A $999,500 bid now shows as $1M, and the bid-board budget range uses the same formatter." },
+    ],
+  },
+  {
     version: "1.17",
     date: "October 2026",
     tag: "Fix",

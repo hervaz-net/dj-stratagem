@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Search, Filter, Clock, DollarSign, MapPin, ChevronRight, Star, AlertCircle } from 'lucide-react';
+import { formatCompactMoney } from '../lib/money';
 
 export function BiddingDashboard() {
   const [activeFilter, setActiveFilter] = useState('all');
@@ -167,7 +168,7 @@ export function BiddingDashboard() {
                   <div>
                     <p className="text-xs text-text-muted font-semibold mb-1">Budget</p>
                     <p className="text-sm font-bold text-bid-navy">
-                      ${(bid.budget.min / 1000).toFixed(0)}K – ${(bid.budget.max / 1000).toFixed(0)}K
+                      {formatCompactMoney(bid.budget.min)} – {formatCompactMoney(bid.budget.max)}
                     </p>
                   </div>
 

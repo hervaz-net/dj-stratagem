@@ -177,12 +177,13 @@ domain (create one in cPanel, switch `contact.php` from `mail()` to SMTP).
   apex `https://djstratageminc.com/` returns 200 (not the suspended CGI).
   `/api/health.php` and `/api/me.php` return JSON. Do not treat a 302 to
   `/cgi-sys/suspendedpage.cgi` as current.
-- **cPanel public_html lags GitHub `deploy`.** Actions builds and pushes
-  `deploy`, then the Pull and deploy step fails because repo secret
-  `CPANEL_TOKEN` is empty. Live bundle on 1 Oct 2026 was
-  `assets/index-D0PgacWE.js` while `deploy` already advertised a newer hash.
-  After `main` updates: `./deploy.sh` on a machine with `~/.cpanel_token`,
-  or cPanel → Git Version Control → `dj-stratagem` → Update from Remote →
+- **cPanel public_html lags GitHub `deploy`.** Rechecked 4 Oct 2026 17:22 PDT:
+  live homepage is `assets/index-b_QNY9vN.js` (Last-Modified 4 Oct 2026 07:05 GMT).
+  That build still shows the pricing calculator as `$2500k` and Growth annual as `$2,988`.
+  GitHub `deploy` already has the calculator fixes (`assets/index-DMAP4_3s.js` at `0971b07`, main `0b8b9ba`).
+  Actions builds and pushes `deploy`, then Pull and deploy fails because repo secret
+  `CPANEL_TOKEN` is empty. After `main` updates: `./deploy.sh` on a machine with
+  `~/.cpanel_token`, or cPanel → Git Version Control → `dj-stratagem` → Update from Remote →
   Deploy HEAD Commit. Confirm `public_html` is `djstlime:nobody` mode `0750`.
   Do not rsync with `-a`. Do not point cPanel at `main`.
 - **`/changelog` was broken on `main` and restored in 1.78.** Audit 1.77
