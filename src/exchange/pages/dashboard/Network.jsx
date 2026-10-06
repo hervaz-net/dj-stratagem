@@ -13,6 +13,7 @@ import { useRole } from "../../contexts/RoleContext";
 import usePolledResource from "../../api/usePolledResource";
 import { fetchSuppliers, fetchMetrics, fetchTicker, isConfigured, isSample } from "../../api/suppliers";
 import { IconKeyboard } from "../../components/icons";
+import { localDateISO } from "../../../lib/dates";
 import { PRODUCT, ROLE_ORDER } from "../../brand";
 
 const STATUSES = [
@@ -50,7 +51,7 @@ function exportCsv(rows) {
   const url = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
   const a = document.createElement("a");
   a.href = url;
-  a.download = `network-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.download = `network-${localDateISO()}.csv`;
   a.click();
   URL.revokeObjectURL(url);
 }

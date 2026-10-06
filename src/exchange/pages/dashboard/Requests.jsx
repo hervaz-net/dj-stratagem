@@ -18,6 +18,7 @@ import { requestFixtures, demandFixtures } from "../../api/fixtures";
 import { fetchMyRequests, fetchOpenDemand, createRequest, cancelRequest, acceptQuote, sendQuote } from "../../api/dashboard";
 import useAuth from "../../auth/useAuth";
 import { PRODUCT } from "../../brand";
+import { localDateISO } from "../../../lib/dates";
 
 const REQUEST_STATUS = {
   open: { label: "Open", tone: "brand" },
@@ -258,7 +259,7 @@ function BuyView({ role, onLive }) {
     }
     const id = `RFQ-L${String(Date.now()).slice(-5)}`;
     setLocal((prev) => [
-      { ...form, id, status: "open", quotes: 0, bestQuote: null, posted: new Date().toISOString().slice(0, 10), local: true },
+      { ...form, id, status: "open", quotes: 0, bestQuote: null, posted: localDateISO(), local: true },
       ...prev,
     ]);
     setDrawer(false);

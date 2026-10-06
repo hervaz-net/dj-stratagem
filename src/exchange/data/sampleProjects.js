@@ -12,6 +12,7 @@
  * imports `projects` and `landingPairs`, so keep this file plain JS.
  */
 
+import { localDateFromToday } from "../../lib/dates";
 export const TRADES = [
   "Electrical",
   "HVAC",
@@ -67,10 +68,7 @@ export const slugify = (s) =>
 
 /** Sample dates stay ahead of "today" so the preview never looks expired. */
 function isoDaysFromToday(days) {
-  const d = new Date();
-  d.setHours(12, 0, 0, 0);
-  d.setDate(d.getDate() + days);
-  return d.toISOString().slice(0, 10);
+  return localDateFromToday(days);
 }
 
 export const projects = [

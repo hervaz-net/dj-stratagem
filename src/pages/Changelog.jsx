@@ -6,6 +6,14 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.20",
+    date: "October 2026",
+    tag: "Fix",
+    items: [
+      { type: "fixed", text: "Sample due dates, posted requests, and CSV export names use the visitor's calendar day. After 5pm Pacific they no longer jump to tomorrow." },
+    ],
+  },
+  {
     version: "1.19",
     date: "October 2026",
     tag: "Fix",

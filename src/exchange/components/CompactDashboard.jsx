@@ -20,7 +20,7 @@ function exportCsv(rows) {
   const url = URL.createObjectURL(new Blob([[header.join(","), ...lines].join("\n")], { type: "text/csv" }));
   const a = document.createElement("a");
   a.href = url;
-  a.download = `quotes-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.download = `quotes-${localDateISO()}.csv`;
   a.click();
   URL.revokeObjectURL(url);
 }
