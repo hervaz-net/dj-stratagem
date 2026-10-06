@@ -11,6 +11,7 @@ import Seo from "../../components/Seo";
 import usePolledResource from "../../api/usePolledResource";
 import { fetchSuppliers, fetchMetrics, fetchTicker, isConfigured } from "../../api/suppliers";
 import { IconKeyboard } from "../../components/icons";
+import { localDateISO } from "../../lib/dates";
 
 const STATUSES = [
   { key: "active", label: "Active", color: "var(--viz-green)" },
@@ -33,7 +34,7 @@ function exportCsv(rows) {
   const url = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
   const a = document.createElement("a");
   a.href = url;
-  a.download = `suppliers-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.download = `suppliers-${localDateISO()}.csv`;
   a.click();
   URL.revokeObjectURL(url);
 }

@@ -3,6 +3,7 @@
  * (`npm run dev` has no PHP). Shapes here ARE the API contract.
  */
 
+import { localDateISO } from "../../lib/dates";
 // Deterministic PRNG so sparklines look organic but never change between
 // renders (a random series would redraw on every poll and read as noise).
 function seeded(seed) {
@@ -32,7 +33,7 @@ function daysFromNow(n) {
 }
 
 function isoDays(n) {
-  return daysFromNow(n).toISOString().slice(0, 10);
+  return localDateISO(daysFromNow(n));
 }
 
 function shortDays(n) {
