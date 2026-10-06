@@ -6,6 +6,14 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.19",
+    date: "October 2026",
+    tag: "Fix",
+    items: [
+      { type: "fixed", text: "Annual pricing no longer reads as the old monthly rate. The struck-through list price is hidden from assistive tech, and the caption states the discounted monthly amount that is billed annually." },
+    ],
+  },
+  {
     version: "1.18",
     date: "October 2026",
     tag: "Fix",
