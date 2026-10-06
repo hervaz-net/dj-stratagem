@@ -30,6 +30,14 @@ const entries = [
     ],
   },
   {
+    version: "1.17",
+    date: "October 2026",
+    tag: "Fix",
+    items: [
+      { type: "fixed", text: "Fleet quote requests no longer accept a pickup date that has already passed. The date field starts at today, and the server-bound form rejects a backdated trip before it sends." },
+    ],
+  },
+  {
     version: "1.16",
     date: "October 2026",
     tag: "Fix",

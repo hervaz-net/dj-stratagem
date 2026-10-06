@@ -66,6 +66,10 @@ export function useInquiry({ role, topic, buildMessage }) {
     if (email.length > 254) return setInvalid("Email must be 254 characters or fewer.");
     if (phone.length > 40) return setInvalid("Phone must be 40 characters or fewer.");
     if (message.length > 4000) return setInvalid("That quote is too long. Shorten the notes and try again.");
+    const tripDate = String(d.get("date") || "").trim();
+    if (tripDate && tripDate < new Date().toISOString().slice(0, 10)) {
+      return setInvalid("Pickup date is in the past. Choose today or a later date.");
+    }
     setInvalid("");
 
     const body = new FormData();

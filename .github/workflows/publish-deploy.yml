@@ -65,12 +65,23 @@ jobs:
             echo "pushed=false" >> "$GITHUB_OUTPUT"
           else
             git commit -m "Deploy ${SHORT}"
-            if ! git push origin deploy; then
-              echo "::error::Push to deploy was rejected. The ~ALL branch ruleset blocks github-actions[bot]."
-              echo "Add repo secret DEPLOY_PAT, or exclude refs/heads/deploy from ruleset 23688330."
-              echo "cPanel will still pull the current deploy tip."
-              echo "pushed=false" >> "$GITHUB_OUTPUT"
-              exit 1
+            push_deploy() {
+              git push origin deploy
+            }
+            if ! push_deploy; then
+              echo "deploy push rejected; fetching and retrying once"
+              git fetch origin deploy
+              # A concurrent publish can win the race. If that tip already
+              # matches this build, the retry is unnecessary.
+              if git merge-base --is-ancestor HEAD origin/deploy; then
+                echo "origin/deploy already contains this deploy commit"
+              elif ! git pull --rebase origin deploy || ! push_deploy; then
+                echo "::error::Push to deploy was rejected. The ~ALL branch ruleset blocks github-actions[bot], or another publish won the race."
+                echo "Add repo secret DEPLOY_PAT, or exclude refs/heads/deploy from ruleset 23688330."
+                echo "cPanel will still pull the current deploy tip."
+                echo "pushed=false" >> "$GITHUB_OUTPUT"
+                exit 1
+              fi
             fi
             echo "pushed deploy $(git rev-parse --short HEAD) from main ${SHORT}"
             echo "pushed=true" >> "$GITHUB_OUTPUT"
