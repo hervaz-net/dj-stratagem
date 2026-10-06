@@ -167,18 +167,26 @@ const pricingFaqs = [
 
 const paidTiers = tiers.filter((t) => t.monthly > 0);
 
+function monthlyCostFor(tier, annual) {
+  if (!annual) return tier.monthly;
+  return Math.round(tier.monthly * (1 - ANNUAL_DISCOUNT));
+}
+
 /**
  * Break-even math on the visitor's own numbers. It deliberately doesn't
  * estimate time saved: we have no measurement to back a number like that.
  */
-function SourcingCostCalculator() {
+function SourcingCostCalculator({ annual = false }) {
   const [hours, setHours] = useState(6);
   const [rate, setRate] = useState(45);
   const [planName, setPlanName] = useState(paidTiers[0].name);
 
   const plan = paidTiers.find((t) => t.name === planName) ?? paidTiers[0];
   const yearlyCost = hours * 52 * rate;
-  const breakEvenHours = rate > 0 ? plan.monthly / rate : 0;
+  // Match the billing toggle. Break-even on the list rate while annual is
+  // selected overstates the hours a discounted plan needs to cover itself.
+  const monthlyCost = annual ? Math.round(plan.monthly * (1 - ANNUAL_DISCOUNT)) : plan.monthly;
+  const breakEvenHours = rate > 0 ? monthlyCost / rate : 0;
 
   const inputs = [
     { id: "calc-hours", label: "Hours a week spent getting quotes and chasing orders", value: hours, min: 1, max: 40, step: 1, set: setHours, display: `${hours} hr` },
@@ -223,7 +231,7 @@ function SourcingCostCalculator() {
                     : "border-line text-fg-muted hover:border-line-strong hover:text-fg"
                 }`}
               >
-                {t.name} &middot; ${t.monthly}/mo
+                {t.name} &middot; ${monthlyCostFor(t, annual)}/mo
               </button>
             ))}
           </div>
@@ -242,7 +250,7 @@ function SourcingCostCalculator() {
             <strong className="font-semibold tabular-nums">
               {breakEvenHours < 1 ? "less than 1 hour" : `${breakEvenHours.toFixed(1)} hours`}
             </strong>{" "}
-            a month.
+            a month{annual ? " on annual billing" : ""}.
           </p>
         </div>
         <p className="mt-4 text-sm leading-relaxed text-fg">
@@ -438,7 +446,7 @@ export default function Pricing() {
           Put in your own numbers. The calculator shows what that time costs a year, and how few hours a plan
           has to save to cover itself.
         </SectionHeading>
-        <SourcingCostCalculator />
+        <SourcingCostCalculator annual={annual} />
       </Section>
 
       <Section width="max-w-3xl">
