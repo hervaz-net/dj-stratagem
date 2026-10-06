@@ -20,6 +20,9 @@ export function useSeo(brand, { title, description }) {
     set('meta[property="og:description"]', "property", "og:description", description);
     const url = `https://djstratageminc.com${brand.path}`;
     set('meta[property="og:url"]', "property", "og:url", url);
+    set('meta[name="twitter:title"]', "name", "twitter:title", document.title);
+    set('meta[name="twitter:description"]', "name", "twitter:description", description);
+    set('meta[name="twitter:url"]', "name", "twitter:url", url);
     let canonical = document.head.querySelector('link[rel="canonical"]');
     if (!canonical) {
       canonical = document.createElement("link");

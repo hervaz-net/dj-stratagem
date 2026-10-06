@@ -6,6 +6,14 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.23",
+    date: "October 2026",
+    tag: "Fix",
+    items: [
+      { type: "fixed", text: "X and Twitter share cards follow the page you are on. twitter:title, twitter:description, and twitter:url now update with the route on the parent site, Stratagem Exchange, and Fleet, Capital, Studio, and Workforce. They no longer stay stuck on the homepage pitch." },
+    ],
+  },
+  {
     version: "1.22",
     date: "October 2026",
     tag: "Fix",
