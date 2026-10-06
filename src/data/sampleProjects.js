@@ -10,7 +10,6 @@
  * the shapes below are the contract to build against.
  */
 
-import { localDateFromToday } from "../lib/dates";
 export const TRADES = [
   "Electrical",
   "HVAC",
@@ -47,6 +46,16 @@ export const slugify = (s) =>
     .replace(/^-|-$/g, "");
 
 /** Sample due dates stay ahead of "today" so the preview never looks expired. */
+
+function localDateFromToday(days) {
+  const d = new Date();
+  d.setDate(d.getDate() + days);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
 function isoDaysFromToday(days) {
   return localDateFromToday(days);
 }
