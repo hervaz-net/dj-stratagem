@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { serviceDate } from "../lib/serviceDate";
 import { CONTACT_EMAIL } from "./brands";
 
 /** Per-page title and description, suffixed with the company name only. */
@@ -67,8 +68,12 @@ export function useInquiry({ role, topic, buildMessage }) {
     if (phone.length > 40) return setInvalid("Phone must be 40 characters or fewer.");
     if (message.length > 4000) return setInvalid("That quote is too long. Shorten the notes and try again.");
     const tripDate = String(d.get("date") || "").trim();
-    if (tripDate && tripDate < new Date().toISOString().slice(0, 10)) {
+    if (tripDate && tripDate < serviceDate()) {
       return setInvalid("Pickup date is in the past. Choose today or a later date.");
+    }
+    const passengers = String(d.get("passengers") || "").trim();
+    if (passengers && (!/^\d+$/.test(passengers) || Number(passengers) < 1 || Number(passengers) > 100)) {
+      return setInvalid("Passengers must be a whole number from 1 to 100.");
     }
     setInvalid("");
 
@@ -79,6 +84,8 @@ export function useInquiry({ role, topic, buildMessage }) {
     body.set("phone", phone);
     body.set("role", role);
     if (topic) body.set("topic", topic);
+    if (tripDate) body.set("trip_date", tripDate);
+    if (passengers) body.set("passengers", passengers);
     body.set("bot-field", d.get("bot-field") || "");
     body.set("message", message);
 
