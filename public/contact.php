@@ -127,6 +127,32 @@ if ($errors !== []) {
     exit;
 }
 
+if ($topicKey === 'fleet') {
+    $tripDate = clean_field($payload['trip_date'] ?? '');
+    if ($tripDate === '' && preg_match('/^Date:\s*(\d{4}-\d{2}-\d{2})\s*$/m', $message, $dateMatch)) {
+        $tripDate = $dateMatch[1];
+    }
+    if ($tripDate !== '') {
+        $parsed = DateTimeImmutable::createFromFormat('!Y-m-d', $tripDate, new DateTimeZone('America/Los_Angeles'));
+        $today = new DateTimeImmutable('now', new DateTimeZone('America/Los_Angeles'));
+        $dateErrors = $parsed === false || $parsed->format('Y-m-d') !== $tripDate;
+        if (!$dateErrors && $parsed < $today->setTime(0, 0)) {
+            $dateErrors = true;
+        }
+        if ($dateErrors) {
+            http_response_code(422);
+            echo json_encode(['ok' => false, 'error' => 'invalid_submission', 'fields' => ['trip_date']]);
+            exit;
+        }
+    }
+    $passengers = clean_field($payload['passengers'] ?? '');
+    if ($passengers !== '' && !preg_match('/^(?:[1-9]\d?|100)$/', $passengers)) {
+        http_response_code(422);
+        echo json_encode(['ok' => false, 'error' => 'invalid_submission', 'fields' => ['passengers']]);
+        exit;
+    }
+}
+
 $host = preg_replace('/^www\./', '', (string) ($_SERVER['HTTP_HOST'] ?? 'localhost')) ?: 'localhost';
 
 $subject = "New inquiry ({$topic}) from {$name} ({$company})";
