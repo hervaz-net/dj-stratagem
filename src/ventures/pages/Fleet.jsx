@@ -25,6 +25,7 @@ import {
   standards,
 } from "../../data/fleet";
 import { Field, FormStatus, Honeypot, fieldClass, useInquiry, useSeo } from "../parts";
+import { localDateISO } from "../../lib/dates";
 
 const SERVICE_ICONS = [IconMapPin, IconBriefcase, IconHelmet, IconCalendar, IconClock, IconUsers];
 const STANDARD_ICONS = [IconUsers, IconTruck, IconShield];
@@ -131,7 +132,7 @@ function QuoteForm() {
       <Field label="Company or event"><input name="company" autoComplete="organization" className={fieldClass} /></Field>
       <Field label="Email" required><input name="email" type="email" autoComplete="email" className={fieldClass} /></Field>
       <Field label="Phone"><input name="phone" type="tel" autoComplete="tel" className={fieldClass} /></Field>
-      <Field label="Date"><input name="date" type="date" min={new Date().toISOString().slice(0, 10)} className={fieldClass} /></Field>
+      <Field label="Date"><input name="date" type="date" min={localDateISO()} className={fieldClass} /></Field>
       <Field label="Pickup time"><input name="time" type="time" className={fieldClass} /></Field>
       <Field label="Pickup"><input name="pickup" placeholder="Address, airport, or venue" className={fieldClass} /></Field>
       <Field label="Drop-off"><input name="dropoff" placeholder="Or “hourly, as directed”" className={fieldClass} /></Field>

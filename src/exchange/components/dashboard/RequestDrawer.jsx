@@ -3,10 +3,11 @@ import { Drawer, Field, inputCls } from "./ui";
 import Button from "../Button";
 import { MATERIAL_CATEGORIES } from "../../api/fixtures";
 import { ROLE_VIEWS } from "./roles";
+import { localDateISO } from "../../../lib/dates";
 
 const UNITS = ["ea", "box", "ft", "lf", "sheet", "ton", "reel", "bag", "yd³", "pallet", "pair", "pack"];
 
-const today = () => new Date().toISOString().slice(0, 10);
+const today = () => localDateISO();
 const blankItem = () => ({ description: "", qty: "", unit: "ea" });
 
 function initialForm(role) {
