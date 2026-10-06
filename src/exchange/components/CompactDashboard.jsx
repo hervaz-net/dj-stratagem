@@ -6,6 +6,7 @@ import { MATERIAL_CATEGORIES } from "../api/fixtures";
 import { Card, inputCls } from "./dashboard/ui";
 import { money, shortDate } from "./dashboard/format";
 import Button from "./Button";
+import { localDateISO } from "../../lib/dates";
 
 const isTyping = () => {
   const tag = document.activeElement?.tagName;
@@ -67,7 +68,7 @@ function QuickAdd({ onSaved, onCancel, buyer }) {
         ))}
       </select>
       <input aria-label="Quote value in dollars" type="number" min="1" placeholder="Value" value={form.value} onChange={set("value")} className={inputCls} />
-      <input aria-label="Valid until" type="date" value={form.due} onChange={set("due")} className={inputCls} />
+      <input aria-label="Valid until" type="date" min={localDateISO()} value={form.due} onChange={set("due")} className={inputCls} />
       <div className="flex gap-2">
         <Button type="submit" size="sm" disabled={saving} className="h-11">
           {saving ? "Saving…" : "Add"}

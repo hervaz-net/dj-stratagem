@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { CONTACT_EMAIL } from "./brands";
+import { localDateISO } from "../lib/dates";
 
 /** Per-page title and description, suffixed with the company name only. */
 export function useSeo(brand, { title, description }) {
@@ -67,8 +68,21 @@ export function useInquiry({ role, topic, buildMessage }) {
     if (phone.length > 40) return setInvalid("Phone must be 40 characters or fewer.");
     if (message.length > 4000) return setInvalid("That quote is too long. Shorten the notes and try again.");
     const tripDate = String(d.get("date") || "").trim();
-    if (tripDate && tripDate < new Date().toISOString().slice(0, 10)) {
+    const today = localDateISO();
+    if (tripDate && tripDate < today) {
       return setInvalid("Pickup date is in the past. Choose today or a later date.");
+    }
+    const tripTime = String(d.get("time") || "").trim();
+    if (tripDate === today && /^\d{2}:\d{2}/.test(tripTime)) {
+      const [hh, mm] = tripTime.split(":").map(Number);
+      const now = new Date();
+      if (hh * 60 + mm < now.getHours() * 60 + now.getMinutes()) {
+        return setInvalid("Pickup time is already past. Choose a later time or another date.");
+      }
+    }
+    const passengers = String(d.get("passengers") || "").trim();
+    if (passengers && (!/^\d+$/.test(passengers) || Number(passengers) < 1)) {
+      return setInvalid("Passengers must be at least 1.");
     }
     setInvalid("");
 

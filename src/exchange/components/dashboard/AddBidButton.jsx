@@ -3,6 +3,7 @@ import useAuth from "../../auth/useAuth";
 import { useToast } from "../../contexts/ToastContext";
 import { createBid } from "../../api/dashboard";
 import { MATERIAL_CATEGORIES } from "../../api/fixtures";
+import { localDateISO } from "../../../lib/dates";
 import { Drawer, Field, inputCls } from "./ui";
 import Button from "../Button";
 
@@ -90,7 +91,7 @@ export default function AddBidButton({ onCreated, buyer = false }) {
               <input id="quote-value" type="number" min="1" inputMode="decimal" value={form.value} onChange={set("value")} placeholder="25000" className={inputCls} />
             </Field>
             <Field label="Valid until" htmlFor="quote-due">
-              <input id="quote-due" type="date" value={form.due} onChange={set("due")} className={inputCls} />
+              <input id="quote-due" type="date" min={localDateISO()} value={form.due} onChange={set("due")} className={inputCls} />
             </Field>
           </div>
         </div>
