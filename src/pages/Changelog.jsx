@@ -6,6 +6,14 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.22",
+    date: "October 2026",
+    tag: "Fix",
+    items: [
+      { type: "fixed", text: "Stratagem Exchange canonical and share URLs stay on /exchange. Fleet, Capital, Studio, and Workforce now set og:url to their own page instead of the parent homepage." },
+    ],
+  },
+  {
     version: "1.21",
     date: "October 2026",
     tag: "Fix",

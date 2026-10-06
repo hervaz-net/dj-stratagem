@@ -28,7 +28,11 @@ export default function Seo({ title, description, noindex = false }) {
 
   useEffect(() => {
     const fullTitle = title ? `${title} | ${SUFFIX}` : SUFFIX;
-    const url = `${SITE}${pathname === "/" ? "/" : pathname}`;
+    // BrowserRouter basename is /exchange, so pathname is "/" on the
+    // Exchange home and "/pricing" on Exchange pricing. Prefix the base or
+    // canonical and og:url point at the parent site (homepage or /pricing).
+    const path = pathname === "/" ? "/exchange" : `/exchange${pathname}`;
+    const url = `${SITE}${path}`;
 
     document.title = fullTitle;
     setMeta('meta[property="og:title"]', "content", fullTitle);

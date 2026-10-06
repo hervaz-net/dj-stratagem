@@ -18,13 +18,15 @@ export function useSeo(brand, { title, description }) {
     set('meta[name="description"]', "name", "description", description);
     set('meta[property="og:title"]', "property", "og:title", document.title);
     set('meta[property="og:description"]', "property", "og:description", description);
+    const url = `https://djstratageminc.com${brand.path}`;
+    set('meta[property="og:url"]', "property", "og:url", url);
     let canonical = document.head.querySelector('link[rel="canonical"]');
     if (!canonical) {
       canonical = document.createElement("link");
       canonical.setAttribute("rel", "canonical");
       document.head.appendChild(canonical);
     }
-    canonical.setAttribute("href", `https://djstratageminc.com${brand.path}`);
+    canonical.setAttribute("href", url);
   }, [brand, title, description]);
 }
 
