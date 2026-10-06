@@ -6,6 +6,15 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.21",
+    date: "October 2026",
+    tag: "Fix",
+    items: [
+      { type: "fixed", text: "Sitemap lastmod uses the local calendar day. A build after 5pm Pacific no longer stamps tomorrow on every URL." },
+      { type: "fixed", text: "Annual price captions keep a space between the struck-through list rate and the discounted monthly amount." },
+    ],
+  },
+  {
     version: "1.20",
     date: "October 2026",
     tag: "Fix",
