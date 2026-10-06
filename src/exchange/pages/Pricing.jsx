@@ -336,7 +336,9 @@ export default function Pricing() {
                 <p className="mt-1 min-h-5 text-xs text-fg-muted">
                   {annual && t.monthly > 0 && (
                     <>
-                      <span className="line-through">${t.monthly}/mo</span> billed annually
+                      <span className="line-through" aria-hidden="true">${t.monthly}/mo</span>
+                      <span className="sr-only">Was ${t.monthly} per month. </span>
+                      {amount}/mo billed annually
                     </>
                   )}
                 </p>
