@@ -121,6 +121,18 @@ foreach ($limits as $field => $max) {
     }
 }
 
+if ($topicKey === 'fleet' && preg_match('/^Date:\s*(\d{4}-\d{2}-\d{2})\s*$/m', $message, $dateMatch)) {
+    $today = (new DateTime('now', new DateTimeZone('America/Los_Angeles')))->format('Y-m-d');
+    if ($dateMatch[1] < $today) {
+        $errors[] = 'date';
+    } elseif ($dateMatch[1] === $today && preg_match('/^Pickup time:\s*([01]\d|2[0-3]):([0-5]\d)\s*$/m', $message, $timeMatch)) {
+        $now = (new DateTime('now', new DateTimeZone('America/Los_Angeles')))->format('H:i');
+        if ($timeMatch[1] . ':' . $timeMatch[2] < $now) {
+            $errors[] = 'time';
+        }
+    }
+}
+
 if ($errors !== []) {
     http_response_code(422);
     echo json_encode(['ok' => false, 'error' => 'invalid_submission', 'fields' => $errors]);

@@ -27,6 +27,16 @@ export function useSeo(brand, { title, description }) {
   }, [brand, title, description]);
 }
 
+/** Operator calendar day. UTC midnight is 5pm in Los Angeles, so ISO dates reject same-day quotes after that. */
+export function operatorToday(date = new Date()) {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Los_Angeles",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(date);
+}
+
 export const fieldClass =
   "h-11 w-full rounded-xl border border-line bg-canvas px-3.5 text-sm text-fg outline-hidden transition-colors placeholder:text-fg-muted/70 focus:border-brand";
 
@@ -67,8 +77,20 @@ export function useInquiry({ role, topic, buildMessage }) {
     if (phone.length > 40) return setInvalid("Phone must be 40 characters or fewer.");
     if (message.length > 4000) return setInvalid("That quote is too long. Shorten the notes and try again.");
     const tripDate = String(d.get("date") || "").trim();
-    if (tripDate && tripDate < new Date().toISOString().slice(0, 10)) {
+    if (tripDate && tripDate < operatorToday()) {
       return setInvalid("Pickup date is in the past. Choose today or a later date.");
+    }
+    const tripTime = String(d.get("time") || "").trim();
+    if (tripDate && tripDate === operatorToday() && /^([01]\d|2[0-3]):[0-5]\d$/.test(tripTime)) {
+      const now = new Intl.DateTimeFormat("en-GB", {
+        timeZone: "America/Los_Angeles",
+        hour: "2-digit",
+        minute: "2-digit",
+        hourCycle: "h23",
+      }).format(new Date());
+      if (tripTime < now) {
+        return setInvalid("That pickup time has already passed today. Choose a later time.");
+      }
     }
     setInvalid("");
 
