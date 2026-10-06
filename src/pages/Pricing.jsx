@@ -264,6 +264,7 @@ export default function Pricing() {
                     <p className="mt-1 text-xs text-steel">
                       <span className="line-through" aria-hidden="true">${t.monthly}/mo</span>
                       <span className="sr-only">Was ${t.monthly} per month. </span>
+                      {" "}
                       {amount}/mo billed annually
                     </p>
                   )}

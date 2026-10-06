@@ -57,7 +57,16 @@ const urls = [
   })),
 ];
 
-const today = new Date().toISOString().slice(0, 10);
+// lastmod is a calendar day, not a UTC instant. toISOString() rolls
+// the sitemap to tomorrow after 5pm Pacific.
+function localDateISO(date = new Date()) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+
+const today = localDateISO();
 
 const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
