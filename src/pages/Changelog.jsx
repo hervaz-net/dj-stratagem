@@ -6,6 +6,14 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.25",
+    date: "October 2026",
+    tag: "Fix",
+    items: [
+      { type: "fixed", text: "Share cards now set the company name with the page. Exchange stays Stratagem Exchange, and Fleet, Capital, Studio, and Workforce no longer keep the parent company name after navigation." },
+    ],
+  },
+  {
     version: "1.24",
     date: "October 2026",
     tag: "Fix",

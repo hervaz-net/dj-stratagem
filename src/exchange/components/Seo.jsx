@@ -37,6 +37,7 @@ export default function Seo({ title, description, noindex = false }) {
     document.title = fullTitle;
     setMeta('meta[property="og:title"]', "content", fullTitle);
     setMeta('meta[property="og:url"]', "content", url);
+    setMeta('meta[property="og:site_name"]', "content", SUFFIX);
     setMeta('meta[name="twitter:title"]', "content", fullTitle);
     setMeta('meta[name="twitter:url"]', "content", url);
 
