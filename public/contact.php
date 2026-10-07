@@ -121,6 +121,17 @@ foreach ($limits as $field => $max) {
     }
 }
 
+// Fleet quotes fold the pickup into the message. The browser min attribute
+// is skipped (noValidate), so a crafted POST could still book a past day.
+// Compare against the Los Angeles calendar day — the host clock is UTC, and
+// after 5pm Pacific a UTC "today" is already tomorrow.
+if ($topicKey === 'fleet' && preg_match('/^Date:\s*(\d{4}-\d{2}-\d{2})\s*$/m', $message, $dateMatch)) {
+    $today = (new DateTimeImmutable('now', new DateTimeZone('America/Los_Angeles')))->format('Y-m-d');
+    if ($dateMatch[1] < $today) {
+        $errors[] = 'date';
+    }
+}
+
 if ($errors !== []) {
     http_response_code(422);
     echo json_encode(['ok' => false, 'error' => 'invalid_submission', 'fields' => $errors]);

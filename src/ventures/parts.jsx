@@ -23,6 +23,7 @@ export function useSeo(brand, { title, description }) {
     set('meta[name="twitter:title"]', "name", "twitter:title", document.title);
     set('meta[name="twitter:description"]', "name", "twitter:description", description);
     set('meta[name="twitter:url"]', "name", "twitter:url", url);
+    set('meta[property="og:site_name"]', "property", "og:site_name", brand.name);
     let canonical = document.head.querySelector('link[rel="canonical"]');
     if (!canonical) {
       canonical = document.createElement("link");

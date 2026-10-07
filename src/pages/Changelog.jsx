@@ -6,6 +6,15 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.25",
+    date: "October 2026",
+    tag: "Fix",
+    items: [
+      { type: "fixed", text: "Fleet quote requests now reject a past pickup date on the server, not only in the browser. A direct post can no longer book yesterday." },
+      { type: "fixed", text: "Fleet, Capital, Studio, and Workforce update the share card site name after navigation, so it no longer stays D&J Stratagem, Inc." },
+    ],
+  },
+  {
     version: "1.24",
     date: "October 2026",
     tag: "Fix",
