@@ -177,10 +177,11 @@ domain (create one in cPanel, switch `contact.php` from `mail()` to SMTP).
   apex `https://djstratageminc.com/` returns 200 (not the suspended CGI).
   `/api/health.php` and `/api/me.php` return JSON. Do not treat a 302 to
   `/cgi-sys/suspendedpage.cgi` as current.
-- **cPanel public_html lags GitHub `deploy`.** Rechecked 4 Oct 2026 17:22 PDT:
-  live homepage is `assets/index-b_QNY9vN.js` (Last-Modified 4 Oct 2026 07:05 GMT).
-  That build still shows the pricing calculator as `$2500k` and Growth annual as `$2,988`.
-  GitHub `deploy` already has the calculator fixes (`assets/index-DMAP4_3s.js` at `0971b07`, main `0b8b9ba`).
+- **cPanel public_html lags GitHub `deploy`.** Rechecked 6 Oct 2026 17:17 PDT:
+  live homepage is `assets/index-b_QNY9vN.js`. Changelog on that build stops at 1.16.
+  Exchange `/exchange/pricing` still canonicalizes to `https://djstratageminc.com/pricing`,
+  and Fleet `og:url` is still the parent homepage. GitHub `deploy` at `0ec339b`
+  (`Deploy cfd67f4`) already has `assets/index-CyW8ETOy.js` and the share-URL fix.
   Actions builds and pushes `deploy`, then Pull and deploy fails because repo secret
   `CPANEL_TOKEN` is empty. After `main` updates: `./deploy.sh` on a machine with
   `~/.cpanel_token`, or cPanel → Git Version Control → `dj-stratagem` → Update from Remote →

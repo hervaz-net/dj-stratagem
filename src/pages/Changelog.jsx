@@ -6,6 +6,14 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.23",
+    date: "October 2026",
+    tag: "Fix",
+    items: [
+      { type: "fixed", text: "Share cards now update Twitter title, description, and URL with the page. Exchange, Fleet, Capital, Studio, and Workforce no longer keep the parent homepage text after navigation." },
+    ],
+  },
+  {
     version: "1.22",
     date: "October 2026",
     tag: "Fix",
