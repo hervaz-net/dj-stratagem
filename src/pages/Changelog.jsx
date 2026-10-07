@@ -6,6 +6,14 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.26",
+    date: "October 2026",
+    tag: "Fix",
+    items: [
+      { type: "fixed", text: "Privacy, Terms, and Brand open inside the site again. They no longer drop the navigation or present the parent company as Stratagem Exchange before JavaScript runs." },
+    ],
+  },
+  {
     version: "1.25",
     date: "October 2026",
     tag: "Fix",
