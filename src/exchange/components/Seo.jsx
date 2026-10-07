@@ -37,12 +37,15 @@ export default function Seo({ title, description, noindex = false }) {
     document.title = fullTitle;
     setMeta('meta[property="og:title"]', "content", fullTitle);
     setMeta('meta[property="og:url"]', "content", url);
+    setMeta('meta[name="twitter:title"]', "content", fullTitle);
+    setMeta('meta[name="twitter:url"]', "content", url);
 
     // Always write it — otherwise a route that omits `description` would
     // leave the previous route's text in the head.
     const desc = description ?? DEFAULT_DESCRIPTION;
     setMeta('meta[name="description"]', "content", desc);
     setMeta('meta[property="og:description"]', "content", desc);
+    setMeta('meta[name="twitter:description"]', "content", desc);
 
     let canonical = document.head.querySelector('link[rel="canonical"]');
     if (!canonical) {
