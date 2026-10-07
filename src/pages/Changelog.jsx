@@ -6,6 +6,14 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.25",
+    date: "October 2026",
+    tag: "Fix",
+    items: [
+      { type: "fixed", text: "Exchange, Fleet, Capital, Studio, and Workforce share cards now set the company name, not the parent D&J Stratagem name, after the page loads." },
+    ],
+  },
+  {
     version: "1.24",
     date: "October 2026",
     tag: "Fix",

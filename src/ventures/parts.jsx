@@ -17,6 +17,7 @@ export function useSeo(brand, { title, description }) {
     };
     set('meta[name="description"]', "name", "description", description);
     set('meta[property="og:title"]', "property", "og:title", document.title);
+    set('meta[property="og:site_name"]', "property", "og:site_name", brand.name);
     set('meta[property="og:description"]', "property", "og:description", description);
     const url = `https://djstratageminc.com${brand.path}`;
     set('meta[property="og:url"]', "property", "og:url", url);
