@@ -177,16 +177,18 @@ domain (create one in cPanel, switch `contact.php` from `mail()` to SMTP).
   apex `https://djstratageminc.com/` returns 200 (not the suspended CGI).
   `/api/health.php` and `/api/me.php` return JSON. Do not treat a 302 to
   `/cgi-sys/suspendedpage.cgi` as current.
-- **cPanel public_html lags GitHub `deploy`.** Rechecked 6 Oct 2026 17:17 PDT:
-  live homepage is `assets/index-b_QNY9vN.js`. Changelog on that build stops at 1.16.
-  Exchange `/exchange/pricing` still canonicalizes to `https://djstratageminc.com/pricing`,
-  and Fleet `og:url` is still the parent homepage. GitHub `deploy` at `0ec339b`
-  (`Deploy cfd67f4`) already has `assets/index-CyW8ETOy.js` and the share-URL fix.
-  Actions builds and pushes `deploy`, then Pull and deploy fails because repo secret
-  `CPANEL_TOKEN` is empty. After `main` updates: `./deploy.sh` on a machine with
-  `~/.cpanel_token`, or cPanel → Git Version Control → `dj-stratagem` → Update from Remote →
-  Deploy HEAD Commit. Confirm `public_html` is `djstlime:nobody` mode `0750`.
-  Do not rsync with `-a`. Do not point cPanel at `main`.
+- **cPanel public_html lags GitHub `deploy`.** Rechecked 7 Oct 2026 10:15 PDT:
+  live homepage is still `assets/index-b_QNY9vN.js` (changelog stops at 1.16).
+  `/exchange/pricing` still canonicalizes to `https://djstratageminc.com/pricing`,
+  Fleet share tags still use the parent homepage, and the Fleet date field has
+  no `min` (past pickups still accepted). GitHub `deploy` already has the
+  1.17–1.23 fixes. 1.24 adds `public/spa.php` so crawlers get the route card
+  before JavaScript. Actions builds and pushes `deploy`, then Pull and deploy
+  fails because repo secret `CPANEL_TOKEN` is empty. After `main` updates:
+  `./deploy.sh` on a machine with `~/.cpanel_token`, or cPanel → Git Version
+  Control → `dj-stratagem` → Update from Remote → Deploy HEAD Commit. Confirm
+  `public_html` is `djstlime:nobody` mode `0750`. Do not rsync with `-a`.
+  Do not point cPanel at `main`.
 - **`/changelog` was broken on `main` and restored in 1.78.** Audit 1.77
   (`0f51e8c`) replaced `src/pages/Changelog.jsx` with `PLACEHOLDER_REVERT`.
   Restored in 1.78 (`da55f5d`). Do not overwrite that file with a host-audit
