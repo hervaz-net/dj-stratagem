@@ -93,9 +93,12 @@ fi
 for photo in sedan suv van sprinter minibus; do
   compgen -G "$DIST/media/fleet/${photo}.*.webp" >/dev/null || die "missing media/fleet/${photo}.<hash>.webp"
 done
-grep -q 'RewriteRule \^fleet/?\$ /index.html' "$htaccess" \
+grep -q 'RewriteRule \^fleet/?\$ /spa.php' "$htaccess" \
+  || grep -q 'RewriteRule \^fleet\$ /spa.php' "$htaccess" \
+  || grep -q 'RewriteRule \^fleet/?\$ /index.html' "$htaccess" \
   || grep -q 'RewriteRule \^fleet\$ /index.html' "$htaccess" \
   || die ".htaccess is missing the /fleet SPA override"
+test -f "$DIST/spa.php" || die "dist is missing spa.php"
 
 printf 'verify-dist: ok (%s)\n' "$bundle"
 

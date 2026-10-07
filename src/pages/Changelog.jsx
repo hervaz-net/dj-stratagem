@@ -6,6 +6,14 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.24",
+    date: "October 2026",
+    tag: "Fix",
+    items: [
+      { type: "fixed", text: "Share cards are stamped on the server before JavaScript runs. Exchange, Fleet, Capital, Studio, Workforce, and project pages no longer advertise the parent homepage to Slack, iMessage, or other crawlers." },
+    ],
+  },
+  {
     version: "1.23",
     date: "October 2026",
     tag: "Fix",

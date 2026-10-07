@@ -35,10 +35,11 @@ Options -Indexes
   # /fleet is the Stratagem Fleet page. Vehicle photos used to live in
   # public/fleet/, which made LiteSpeed list the directory instead of the SPA.
   # Photos now live in /media/fleet/. Keep this rule so a leftover directory
-  # cannot bring the listing back. Canonicalize the slash first so /fleet/
+  # cannot bring the listing back. Serve spa.php so the share card is Fleet,
+  # not the parent homepage. Canonicalize the slash first so /fleet/
   # does not duplicate /fleet.
   RewriteRule ^fleet/$ /fleet [R=301,L]
-  RewriteRule ^fleet$ /index.html [L]
+  RewriteRule ^fleet$ /spa.php [L]
 
   # Each company has its own top-level site; old /companies/<slug> links move.
   RewriteRule ^companies/(capital|studio|workforce|fleet)/?$ /$1 [R=301,L]
@@ -173,7 +174,7 @@ Options -Indexes
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteCond %{REQUEST_URI} ![.]php$ [NC]
-  RewriteRule ^ index.html [L]
+  RewriteRule ^ spa.php [L]
 </IfModule>
 
 <IfModule mod_headers.c>
