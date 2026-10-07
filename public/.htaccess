@@ -67,12 +67,14 @@ Options -Indexes
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule ^(.+)/$ /$1 [R=301,L]
 
-  RewriteCond %{DOCUMENT_ROOT}/privacy.html -f
-  RewriteRule ^privacy$ /privacy.html [L]
-  RewriteCond %{DOCUMENT_ROOT}/terms.html -f
-  RewriteRule ^terms$ /terms.html [L]
-  RewriteCond %{DOCUMENT_ROOT}/brand-guidelines.html -f
-  RewriteRule ^brand$ /brand-guidelines.html [L]
+  # Legal and brand URLs are app routes. The printable HTML stays at
+  # /privacy.html, /terms.html, and /brand-guidelines.html for the iframe
+  # and for direct downloads. Do not map the extensionless URLs onto those
+  # files: that dropped the site chrome and stamped Stratagem Exchange on
+  # the parent company's share cards.
+  RewriteRule ^privacy$ /spa.php [L]
+  RewriteRule ^terms$ /spa.php [L]
+  RewriteRule ^brand$ /spa.php [L]
 
   RewriteRule ^blog$ /changelog [R=301,L]
   RewriteRule ^blog/ /changelog [R=301,L]
