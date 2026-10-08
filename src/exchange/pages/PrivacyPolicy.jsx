@@ -1,6 +1,6 @@
 import LegalDoc from "../components/legal/LegalDoc";
 
-// Same wording as privacy.html in /public (the printable copy). Change both together.
+// Same wording as privacy-print.html in /public (the printable copy). Change both together.
 const SECTIONS = [
   {
     id: "who-we-are",
@@ -112,7 +112,7 @@ export default function PrivacyPolicy() {
       description="How D&J Stratagem, Inc. collects, uses, and protects personal information on Stratagem Exchange and djstratageminc.com."
       effective="1 August 2026"
       updated="2 September 2026"
-      printable="/privacy.html"
+      printable="/privacy-print.html"
       contactHeading="Contact"
       intro={
         <>

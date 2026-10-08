@@ -130,7 +130,7 @@ export default function BrandGuidelines() {
         title={`${PRODUCT} brand guidelines`}
         actions={
           <>
-            <Button href="/brand-guidelines.html" variant="secondary">
+            <Button href="/brand-print.html" variant="secondary">
               <IconPrinter width={16} height={16} aria-hidden="true" />
               Printable sheet
             </Button>

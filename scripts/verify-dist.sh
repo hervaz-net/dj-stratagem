@@ -51,8 +51,9 @@ need_files=(
   api/sample-data.php
   api/market-ticker.php
   api/config.example.php
-  privacy.html
-  terms.html
+  privacy-print.html
+  terms-print.html
+  brand-print.html
   fleet-cards.html
   signage.html
   receipts.html

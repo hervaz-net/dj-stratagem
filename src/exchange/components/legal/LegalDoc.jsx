@@ -16,8 +16,8 @@ const prose =
   "[&_td]:py-3 [&_td]:text-fg-muted";
 
 const OTHER = {
-  "/privacy.html": { to: "/terms", label: "Terms and Conditions" },
-  "/terms.html": { to: "/privacy", label: "Privacy Policy" },
+  "/privacy-print.html": { to: "/terms", label: "Terms and Conditions" },
+  "/terms-print.html": { to: "/privacy", label: "Privacy Policy" },
 };
 
 /**

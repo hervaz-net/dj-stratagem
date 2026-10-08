@@ -30,15 +30,19 @@ Options -Indexes -MultiViews
   RewriteRule ^api/health(\.php)?/?$ /health.php [L,PT]
 
   # Extensionless app routes must run before the existing-file stop.
-  # LiteSpeed MultiViews maps /privacy and /terms onto privacy.html and
-  # terms.html, then the -f rule below would end rewriting. That served the
+  # LiteSpeed MultiViews maps /privacy and /terms onto privacy-print.html and
+  # terms-print.html, then the -f rule below would end rewriting. That served the
   # printable Exchange sheets with no site chrome and the wrong share card.
-  # Printable files stay at /privacy.html, /terms.html, and
-  # /brand-guidelines.html for the iframe.
+  # Printable files are privacy-print.html, terms-print.html, and
+  # brand-print.html so MultiViews cannot bind /privacy, /terms, or /brand
+  # even if Options -MultiViews is ignored. Old .html URLs redirect.
   RewriteRule ^privacy/?$ /spa.php [L]
   RewriteRule ^terms/?$ /spa.php [L]
   RewriteRule ^brand/?$ /spa.php [L]
   RewriteRule ^fleet/?$ /spa.php [L]
+  RewriteRule ^privacy\.html$ /privacy-print.html [R=301,L]
+  RewriteRule ^terms\.html$ /terms-print.html [R=301,L]
+  RewriteRule ^brand-guidelines\.html$ /brand-print.html [R=301,L]
   # Same MultiViews trap under the Exchange prefix if a printable sheet
   # is ever added beside these routes.
   RewriteRule ^exchange/(privacy|terms|brand)/?$ /spa.php [L]

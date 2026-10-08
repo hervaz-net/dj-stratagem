@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import LegalDoc from "../components/legal/LegalDoc";
 
-// Same wording as terms.html in /public (the printable copy). Change both together.
+// Same wording as terms-print.html in /public (the printable copy). Change both together.
 const SECTIONS = [
   {
     id: "the-services",
@@ -125,7 +125,7 @@ export default function TermsAndConditions() {
       description="The terms that govern use of Stratagem Exchange and the other services of D&J Stratagem, Inc."
       effective="1 August 2026"
       updated="1 August 2026"
-      printable="/terms.html"
+      printable="/terms-print.html"
       contactHeading="Notices"
       intro={
         <>

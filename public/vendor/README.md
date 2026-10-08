@@ -5,8 +5,8 @@ UMD builds, served from our own origin.
 
 ## Why these are here
 
-The exported document pages — `privacy.html`, `terms.html`,
-`brand-guidelines.html`, and the `/marketing/*` sheets — are driven by
+The exported document pages — `privacy-print.html`, `terms-print.html`,
+`brand-print.html`, and the `/marketing/*` sheets — are driven by
 `support.js`, which ends with:
 
 ```js

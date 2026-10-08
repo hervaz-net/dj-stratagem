@@ -6,6 +6,14 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.29",
+    date: "October 2026",
+    tag: "Fix",
+    items: [
+      { type: "fixed", text: "Privacy, Terms, and Brand stay on the site even if the host maps extensionless URLs onto HTML files. The printable sheets are now privacy-print.html, terms-print.html, and brand-print.html." },
+    ],
+  },
+  {
     version: "1.28",
     date: "October 2026",
     tag: "Fix",

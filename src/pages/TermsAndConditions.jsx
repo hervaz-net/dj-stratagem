@@ -8,7 +8,7 @@ export default function TermsAndConditions() {
         title="Terms and Conditions"
         description="Terms for the websites, applications, and services of D&J Stratagem, Inc., including Stratagem Exchange."
       />
-      <DocFrame src="/terms.html" title="Terms and Conditions" />
+      <DocFrame src="/terms-print.html" title="Terms and Conditions" />
     </>
   );
 }

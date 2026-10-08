@@ -8,7 +8,7 @@ export default function BrandGuidelines() {
         title="Brand guidelines"
         description="How to use the D&J Stratagem name, mark, and color. Printable sheet for partners and press."
       />
-      <DocFrame src="/brand-guidelines.html" title="Brand Guidelines" />
+      <DocFrame src="/brand-print.html" title="Brand Guidelines" />
     </>
   );
 }
