@@ -42,6 +42,14 @@ Options -Indexes -MultiViews
   # Same MultiViews trap under the Exchange prefix if a printable sheet
   # is ever added beside these routes.
   RewriteRule ^exchange/(privacy|terms|brand)/?$ /spa.php [L]
+  # Old Exchange legal aliases are client redirects. Crawlers never run
+  # those, so send them on the server before the existing-file stop.
+  RewriteRule ^exchange/privacy-policy/?$ /exchange/privacy [R=301,L]
+  RewriteRule ^exchange/terms-of-service/?$ /exchange/terms [R=301,L]
+  RewriteRule ^exchange/tos/?$ /exchange/terms [R=301,L]
+  RewriteRule ^exchange/legal/?$ /exchange/terms [R=301,L]
+  RewriteRule ^exchange/eula/?$ /exchange/terms [R=301,L]
+  RewriteRule ^exchange/brand-guidelines/?$ /exchange/brand [R=301,L]
 
   RewriteCond %{REQUEST_FILENAME} -f
   RewriteRule ^ - [L]
