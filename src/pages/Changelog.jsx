@@ -6,6 +6,14 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.27",
+    date: "October 2026",
+    tag: "Fix",
+    items: [
+      { type: "fixed", text: "Privacy, Terms, and Brand stay in the site even when the printable HTML files are present. LiteSpeed was mapping those URLs onto the static sheets and dropping the navigation." },
+    ],
+  },
+  {
     version: "1.26",
     date: "October 2026",
     tag: "Fix",

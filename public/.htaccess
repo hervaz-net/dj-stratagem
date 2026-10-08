@@ -14,7 +14,7 @@
 </IfModule>
 AddType application/manifest+json .webmanifest
 
-Options -Indexes
+Options -Indexes -MultiViews
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
@@ -29,6 +29,15 @@ Options -Indexes
   # the probe to the working root /health.php first. PT forces handler rerun.
   RewriteRule ^api/health(\.php)?/?$ /health.php [L,PT]
 
+  # Extensionless app routes that share a stem with a real file. MultiViews
+  # maps /privacy and /terms onto privacy.html and terms.html, and the -f
+  # pass below would then stop the rewrite. Those URLs dropped the site
+  # chrome and kept the Exchange share card. Stamp them before that pass.
+  RewriteRule ^privacy$ /spa.php [L]
+  RewriteRule ^terms$ /spa.php [L]
+  RewriteRule ^brand$ /spa.php [L]
+  RewriteRule ^fleet$ /spa.php [L]
+
   RewriteCond %{REQUEST_FILENAME} -f
   RewriteRule ^ - [L]
 
@@ -39,7 +48,6 @@ Options -Indexes
   # not the parent homepage. Canonicalize the slash first so /fleet/
   # does not duplicate /fleet.
   RewriteRule ^fleet/$ /fleet [R=301,L]
-  RewriteRule ^fleet$ /spa.php [L]
 
   # Each company has its own top-level site; old /companies/<slug> links move.
   RewriteRule ^companies/(capital|studio|workforce|fleet)/?$ /$1 [R=301,L]
@@ -72,10 +80,6 @@ Options -Indexes
   # and for direct downloads. Do not map the extensionless URLs onto those
   # files: that dropped the site chrome and stamped Stratagem Exchange on
   # the parent company's share cards.
-  RewriteRule ^privacy$ /spa.php [L]
-  RewriteRule ^terms$ /spa.php [L]
-  RewriteRule ^brand$ /spa.php [L]
-
   RewriteRule ^blog$ /changelog [R=301,L]
   RewriteRule ^blog/ /changelog [R=301,L]
 
