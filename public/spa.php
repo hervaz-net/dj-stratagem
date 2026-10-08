@@ -100,6 +100,12 @@ function meta_for(string $path, array $projects, string $parent, string $exchang
         '/exchange/login' => page('Sign in', 'Sign in to your Stratagem Exchange account.', $exchange, true),
         '/exchange/register' => page('Request access', 'Request a Stratagem Exchange account. Accounts are approved before first sign-in.', $exchange, true),
         '/exchange/forgot-password' => page('Forgot password', 'Reset your Stratagem Exchange password.', $exchange, true),
+        '/exchange/privacy' => page('Privacy Policy', 'How Stratagem Exchange collects, uses, and shares information. Stratagem Exchange is a D&J Stratagem company.', $exchange),
+        '/exchange/terms' => page('Terms and Conditions', 'Terms for Stratagem Exchange, a D&J Stratagem company.', $exchange),
+        '/exchange/brand' => page('Brand guidelines', 'How to use the Stratagem Exchange name and mark. Printable sheet for partners and press.', $exchange),
+        '/exchange/changelog' => page('Changelog', 'Releases and fixes for Stratagem Exchange, newest first.', $exchange),
+        '/exchange/solutions' => page('Solutions', 'Workflows for contractors, distributors, and manufacturers on Stratagem Exchange.', $exchange),
+        '/exchange/projects' => page('Projects', 'Illustrative construction supply requests on Stratagem Exchange. Samples, not live solicitations.', $exchange),
     ];
 
     if (isset($pages[$path])) {

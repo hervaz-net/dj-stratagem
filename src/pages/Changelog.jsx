@@ -6,6 +6,15 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.28",
+    date: "October 2026",
+    tag: "Fix",
+    items: [
+      { type: "fixed", text: "Exchange Privacy, Terms, Brand, Changelog, Solutions, and Projects now stamp their own share cards. They no longer fall back to the generic Exchange title before JavaScript runs." },
+      { type: "fixed", text: "Old Exchange legal aliases such as /exchange/privacy-policy and /exchange/terms-of-service now redirect on the server, so a crawler does not wait on the client redirect." },
+    ],
+  },
+  {
     version: "1.27",
     date: "October 2026",
     tag: "Fix",
