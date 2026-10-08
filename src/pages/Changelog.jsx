@@ -6,6 +6,14 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.27",
+    date: "October 2026",
+    tag: "Fix",
+    items: [
+      { type: "fixed", text: "Privacy, Terms, and Brand no longer lose to the printable HTML files. Those routes are rewritten before LiteSpeed can treat /privacy and /terms as privacy.html and terms.html." },
+    ],
+  },
+  {
     version: "1.26",
     date: "October 2026",
     tag: "Fix",
