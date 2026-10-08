@@ -14,7 +14,7 @@
 </IfModule>
 AddType application/manifest+json .webmanifest
 
-Options -Indexes
+Options -Indexes -MultiViews
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
@@ -29,17 +29,22 @@ Options -Indexes
   # the probe to the working root /health.php first. PT forces handler rerun.
   RewriteRule ^api/health(\.php)?/?$ /health.php [L,PT]
 
+  # Extensionless app routes must run before the existing-file stop.
+  # LiteSpeed MultiViews maps /privacy and /terms onto privacy.html and
+  # terms.html, then the -f rule below would end rewriting. That served the
+  # printable Exchange sheets with no site chrome and the wrong share card.
+  # Printable files stay at /privacy.html, /terms.html, and
+  # /brand-guidelines.html for the iframe.
+  RewriteRule ^privacy/?$ /spa.php [L]
+  RewriteRule ^terms/?$ /spa.php [L]
+  RewriteRule ^brand/?$ /spa.php [L]
+  RewriteRule ^fleet/?$ /spa.php [L]
+
   RewriteCond %{REQUEST_FILENAME} -f
   RewriteRule ^ - [L]
 
-  # /fleet is the Stratagem Fleet page. Vehicle photos used to live in
-  # public/fleet/, which made LiteSpeed list the directory instead of the SPA.
-  # Photos now live in /media/fleet/. Keep this rule so a leftover directory
-  # cannot bring the listing back. Serve spa.php so the share card is Fleet,
-  # not the parent homepage. Canonicalize the slash first so /fleet/
-  # does not duplicate /fleet.
-  RewriteRule ^fleet/$ /fleet [R=301,L]
-  RewriteRule ^fleet$ /spa.php [L]
+  # /fleet is served above, before the existing-file stop, so a leftover
+  # public/fleet/ directory cannot list photos instead of the Fleet page.
 
   # Each company has its own top-level site; old /companies/<slug> links move.
   RewriteRule ^companies/(capital|studio|workforce|fleet)/?$ /$1 [R=301,L]
@@ -66,15 +71,6 @@ Options -Indexes
 
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule ^(.+)/$ /$1 [R=301,L]
-
-  # Legal and brand URLs are app routes. The printable HTML stays at
-  # /privacy.html, /terms.html, and /brand-guidelines.html for the iframe
-  # and for direct downloads. Do not map the extensionless URLs onto those
-  # files: that dropped the site chrome and stamped Stratagem Exchange on
-  # the parent company's share cards.
-  RewriteRule ^privacy$ /spa.php [L]
-  RewriteRule ^terms$ /spa.php [L]
-  RewriteRule ^brand$ /spa.php [L]
 
   RewriteRule ^blog$ /changelog [R=301,L]
   RewriteRule ^blog/ /changelog [R=301,L]
