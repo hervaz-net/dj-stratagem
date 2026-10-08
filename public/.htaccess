@@ -39,6 +39,9 @@ Options -Indexes -MultiViews
   RewriteRule ^terms/?$ /spa.php [L]
   RewriteRule ^brand/?$ /spa.php [L]
   RewriteRule ^fleet/?$ /spa.php [L]
+  # Same MultiViews trap under the Exchange prefix if a printable sheet
+  # is ever added beside these routes.
+  RewriteRule ^exchange/(privacy|terms|brand)/?$ /spa.php [L]
 
   RewriteCond %{REQUEST_FILENAME} -f
   RewriteRule ^ - [L]
