@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import Button from "../components/Button";
 import Logo from "../components/Logo";
+import Section from "../components/Section";
 import Seo from "../components/Seo";
 import PasswordField from "../components/PasswordField";
 import { IconCheck } from "../components/icons";
@@ -35,7 +36,7 @@ function PasswordStrengthMeter({ password }) {
         {[1, 2, 3, 4].map((seg) => (
           <div
             key={seg}
-            className={`h-1 flex-1 rounded-full transition-colors duration-300 ${
+            className={`h-1 flex-1 transition-colors duration-300 ${
               score >= seg ? STRENGTH_COLOR[score] : "bg-line"
             }`}
           />
@@ -155,15 +156,16 @@ export default function Register() {
         noindex
       />
 
-      <div className="mx-auto flex w-full max-w-lg flex-col justify-center px-6 py-10 md:py-16">
-        <div className="rounded-md border border-line bg-ink-2 p-8 shadow-xl shadow-brand/5">
+      <Section band="stone" className="md:py-16">
+        <div className="mx-auto w-full max-w-lg">
+        <div className="rounded-sm border border-line bg-ink-2 p-6 sm:p-8">
           <Link to="/" className="inline-block" aria-label="D&J Stratagem — home">
             <Logo />
           </Link>
 
           {done ? (
             <div className="animate-fade-in mt-8">
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-success/10 text-success">
+              <div className="flex h-12 w-12 items-center justify-center rounded-sm bg-success/10 text-success">
                 <IconCheck width={22} height={22} />
               </div>
               <h1 className="mt-5 text-2xl font-semibold tracking-tight text-paper">
@@ -270,7 +272,7 @@ export default function Register() {
 
                 <div aria-live="polite" role="status">
                   {serverError && (
-                    <div className="rounded-md border border-danger/30 bg-danger/10 px-4 py-2.5 text-sm text-danger">
+                    <div className="rounded-sm border border-danger/30 bg-danger/10 px-4 py-2.5 text-sm text-danger">
                       {serverError}
                     </div>
                   )}
@@ -290,7 +292,14 @@ export default function Register() {
             </>
           )}
         </div>
-      </div>
+        <p className="mt-6 text-center text-xs text-steel">
+          Need help?{" "}
+          <Link to="/resources" className="font-medium text-amber hover:text-amber-2">
+            Visit the help center
+          </Link>
+        </p>
+        </div>
+      </Section>
     </>
   );
 }

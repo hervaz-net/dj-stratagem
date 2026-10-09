@@ -1,7 +1,8 @@
-import Section, { Eyebrow } from "../components/Section";
+import Section from "../components/Section";
+import PageHeader from "../components/PageHeader";
+import Button from "../components/Button";
 import CTASection from "../components/CTASection";
 import Seo from "../components/Seo";
-import Reveal from "../components/Reveal";
 
 const entries = [
   {
@@ -268,21 +269,24 @@ const entries = [
   },
 ];
 
-const TYPE_COLOR = {
-  new: "text-[var(--viz-green)] bg-[var(--viz-green)]/10",
-  improved: "text-[var(--viz-cyan)] bg-[var(--viz-cyan)]/10",
-  fix: "text-warning bg-warning/10",
+const TYPE_LABEL = {
+  new: "success",
+  improved: "secondary",
+  fix: "warning",
 };
 
-const TAG_COLOR = {
-  Major: "bg-brand/15 text-brand border-brand/30",
-  Feature: "bg-amber/10 text-amber border-amber/30",
-  Foundation: "bg-[var(--viz-cyan)]/10 text-[var(--viz-cyan)] border-[var(--viz-cyan)]/30",
-  Launch: "bg-[var(--viz-green)]/10 text-[var(--viz-green)] border-[var(--viz-green)]/30",
-  Fix: "bg-warning/10 text-warning border-warning/30",
+const TAG_LABEL = {
+  Major: "primary",
+  Feature: "primary",
+  Foundation: "secondary",
+  Launch: "success",
+  Fix: "warning",
+  New: "success",
 };
 
 export default function Changelog() {
+  const latest = entries[0];
+
   return (
     <>
       <Seo
@@ -290,51 +294,65 @@ export default function Changelog() {
         description="Every update, feature, and improvement to D&J Stratagem — newest first."
       />
 
-      <Section className="pt-10 pb-6 md:pt-14">
-        <Eyebrow>Changelog</Eyebrow>
-        <h1 className="text-balance max-w-3xl text-2xl font-semibold tracking-tight text-paper sm:text-3xl">
-          What's new on the platform.
-        </h1>
-        <p className="mt-6 max-w-2xl text-lg leading-relaxed text-steel">
-          Every release, improvement, and fix — most recent first. There is no email digest yet.
-        </p>
-      </Section>
-
-      <Section className="border-t border-line">
-        <div className="max-w-3xl space-y-14">
-          {entries.map((entry, i) => (
-            <Reveal key={entry.version} delay={i * 60}>
-              <div className="flex gap-6 sm:gap-10">
-                <div className="flex flex-col items-center">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-amber/40 bg-amber/10 text-xs font-semibold text-amber">
-                    {entry.version}
-                  </div>
-                  {i < entries.length - 1 && (
-                    <div className="mt-3 flex-1 w-px bg-line" aria-hidden="true" />
-                  )}
-                </div>
-                <div className="min-w-0 flex-1 pb-8">
-                  <div className="flex flex-wrap items-center gap-3">
-                    <time className="text-sm font-semibold text-paper">{entry.date}</time>
-                    <span className={`rounded-full border px-2.5 py-0.5 text-xs font-medium ${TAG_COLOR[entry.tag]}`}>
-                      {entry.tag}
-                    </span>
-                  </div>
-                  <ul className="mt-5 space-y-3">
-                    {entry.items.map((item) => (
-                      <li key={item.text} className="flex items-start gap-3">
-                        <span className={`mt-0.5 shrink-0 rounded px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${TYPE_COLOR[item.type]}`}>
-                          {item.type}
-                        </span>
-                        <p className="text-sm leading-relaxed text-steel">{item.text}</p>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </Reveal>
-          ))}
+      <PageHeader
+        eyebrow="Changelog"
+        title="What's new on the platform."
+        lede="Every release, improvement, and fix — most recent first. There is no email digest yet."
+        actions={
+          <>
+            <Button to="/resources" variant="primary">
+              Browse the help center
+            </Button>
+            <Button to="/contact?topic=support" variant="secondary">
+              Contact support
+            </Button>
+          </>
+        }
+      >
+        <div className="card-corp p-6">
+          <p className="text-xs font-semibold uppercase tracking-wider text-steel">Latest release</p>
+          <p className="mt-2 text-3xl font-semibold tracking-tight text-paper-2">v{latest.version}</p>
+          <p className="mt-1 text-sm text-steel">
+            {latest.date} &middot; {entries.length} releases listed
+          </p>
+          <ul className="m-0 mt-4 list-none space-y-2 border-t border-line p-0 pt-4">
+            {latest.items.map((item) => (
+              <li key={item.text} className="flex items-start gap-2 text-sm text-steel">
+                <span className={`label ${TYPE_LABEL[item.type]} mt-0.5 shrink-0 uppercase`}>{item.type}</span>
+                <span className="line-clamp-2">{item.text}</span>
+              </li>
+            ))}
+          </ul>
         </div>
+      </PageHeader>
+
+      <Section band="white">
+        <ol className="m-0 max-w-4xl list-none p-0">
+          {entries.map((entry) => (
+            <li
+              key={entry.version}
+              className="grid gap-x-10 gap-y-3 border-t border-line py-8 first:border-t-0 first:pt-0 md:grid-cols-[9rem_1fr]"
+            >
+              <div>
+                <p className="text-xl font-semibold tracking-tight text-paper-2">v{entry.version}</p>
+                <time className="mt-1 block text-sm text-steel">{entry.date}</time>
+                <span className={`label ${TAG_LABEL[entry.tag] ?? "secondary"} mt-3 inline-block uppercase`}>
+                  {entry.tag}
+                </span>
+              </div>
+              <ul className="m-0 min-w-0 list-none space-y-3 p-0">
+                {entry.items.map((item) => (
+                  <li key={item.text} className="flex items-start gap-3">
+                    <span className={`label ${TYPE_LABEL[item.type]} mt-0.5 w-20 shrink-0 text-center uppercase`}>
+                      {item.type}
+                    </span>
+                    <p className="text-sm leading-relaxed text-steel">{item.text}</p>
+                  </li>
+                ))}
+              </ul>
+            </li>
+          ))}
+        </ol>
       </Section>
 
       <CTASection

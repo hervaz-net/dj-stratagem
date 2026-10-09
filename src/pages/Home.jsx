@@ -1,15 +1,13 @@
+import { Link } from "react-router-dom";
 import Section, { Eyebrow } from "../components/Section";
 import Button from "../components/Button";
-import FeatureCard from "../components/FeatureCard";
 import CTASection from "../components/CTASection";
-import HeroPanel from "../components/HeroPanel";
-import OpportunityPreview from "../components/OpportunityPreview";
-import Reveal from "../components/Reveal";
 import Accordion from "../components/Accordion";
-import StatCounter from "../components/StatCounter";
-import CompetitorList from "../components/CompetitorList";
 import Seo from "../components/Seo";
-import { BidStackArt, PipelineArt } from "../components/illustrations";
+import HeroBids from "../components/home/HeroBids";
+import OpportunityTable from "../components/home/OpportunityTable";
+import LinkCard from "../components/home/LinkCard";
+import { competitors } from "../data/competitors";
 import {
   IconGavel,
   IconHelmet,
@@ -18,48 +16,89 @@ import {
   IconPackage,
   IconSparkle,
   IconArrowRight,
-  IconBuilding,
   IconCheck,
-  IconTrendingUp,
+  IconSearch,
 } from "../components/icons";
 
-const pillars = [
+const h2 = "text-balance text-2xl font-semibold tracking-tight text-paper-2 md:text-3xl";
+
+const stats = [
+  { value: "6", label: "Connected suites", detail: "Bidding, marketing, CRM, supply, tools, AI" },
+  { value: "5+", label: "Tools replaced", detail: "One login instead of a patchwork" },
+  { value: "1", label: "Pipeline", detail: "Opportunity through final invoice" },
+];
+
+const roles = [
   {
+    to: "/solutions#gc",
     icon: <IconGavel />,
-    title: "For general contractors",
+    title: "General contractors",
+    text: "Post packages, invite subs, compare bids, and award with a clear paper trail.",
+  },
+  {
+    to: "/solutions#sub",
+    icon: <IconHelmet />,
+    title: "Subcontractors",
+    text: "Find work matching your trades and service area, and submit structured digital bids.",
+  },
+  {
+    to: "/solutions#supplier",
+    icon: <IconPackage />,
+    title: "Suppliers",
+    text: "Quote into sealed RFQs from contractors who need your products, and protect your margin.",
+  },
+  {
+    to: "/platform#marketing-suite",
+    icon: <IconMegaphone />,
+    title: "Service providers",
+    text: "Generate qualified commercial construction leads from a profile that ranks.",
+  },
+];
+
+const shortcuts = [
+  { to: "/projects", label: "Browse open projects", hint: "Bid opportunities by trade and city" },
+  { to: "/supply/catalog", label: "Shop the catalog", hint: "300+ SKUs by brand, type, and quantity" },
+  { to: "/quote", label: "Request a quote", hint: "Review your list and send it to our team" },
+  { to: "/resources", label: "Help center", hint: "FAQs, guides, and how to reach us" },
+];
+
+const suites = [
+  {
+    to: "/solutions#gc",
+    icon: <IconGavel />,
+    title: "Bid management",
     text: "Post projects, invite subs, compare bids side by side, and award with confidence.",
   },
   {
+    to: "/solutions#sub",
     icon: <IconHelmet />,
-    title: "For subcontractors",
+    title: "Project matching",
     text: "Find projects that match your trade, submit digital bids, and build a bid history that wins more work.",
   },
   {
+    to: "/platform#marketing-suite",
     icon: <IconMegaphone />,
     title: "Marketing suite",
     text: "SEO-optimized profiles, lead generation, and AI-generated proposals that keep your pipeline full.",
   },
   {
+    to: "/supply",
     icon: <IconPackage />,
     title: "Supply Exchange",
     text: "Source the materials you burn through every week with sealed, scored bidding — no race to the bottom.",
   },
   {
+    to: "/platform#business-tools",
     icon: <IconBriefcase />,
     title: "Business tools",
     text: "CRM, estimating, invoicing, change orders, and e-signatures — plus a mobile app that keeps the field in sync with the office.",
   },
   {
+    to: "/platform#ai-features",
     icon: <IconSparkle />,
     title: "AI built in",
     text: "Match to the right projects, predict bid competitiveness, and draft proposals in minutes, not hours.",
   },
-];
-
-const stats = [
-  { value: 6, suffix: "", label: "Connected suites", detail: "Bidding, marketing, CRM, supply, tools, AI" },
-  { value: 5, suffix: "+", label: "Tools replaced", detail: "One login instead of a patchwork" },
-  { value: 1, suffix: "", label: "Pipeline", detail: "Opportunity through final invoice" },
 ];
 
 const steps = [
@@ -85,6 +124,19 @@ const steps = [
   },
 ];
 
+const without = [
+  "Five subscriptions, five logins",
+  "Bid data retyped into the CRM",
+  "Marketing handled by an outside agency",
+  "Follow-ups lost in an inbox",
+];
+const withUs = [
+  "One platform, one login",
+  "Bids, awards, and CRM share a record",
+  "Marketing runs from the same dashboard",
+  "Every opportunity tracked to a decision",
+];
+
 const faqs = [
   {
     q: "How is this different from PlanHub or BuildingConnected?",
@@ -108,28 +160,7 @@ const faqs = [
   },
 ];
 
-const audiences = [
-  {
-    icon: <IconGavel />,
-    title: "General contractors",
-    text: "Find projects and manage your entire bid pipeline — post packages, invite subs, compare bids, and award with a clear paper trail.",
-  },
-  {
-    icon: <IconHelmet />,
-    title: "Subcontractors",
-    text: "Find work matching your trades and service area, submit structured digital bids, and build a bid history that wins more of them.",
-  },
-  {
-    icon: <IconPackage />,
-    title: "Suppliers",
-    text: "Identify upcoming projects and the contractors who need your products, then quote into sealed RFQs that protect your margin.",
-  },
-  {
-    icon: <IconMegaphone />,
-    title: "Construction service providers",
-    text: "Generate qualified commercial construction leads from a profile that ranks, instead of paying an agency per lead.",
-  },
-];
+const textLink = "font-semibold text-amber hover:text-amber-2";
 
 export default function Home() {
   return (
@@ -139,24 +170,20 @@ export default function Home() {
         description="D&J Stratagem gives contractors, subcontractors, and suppliers the tools to discover construction bid opportunities, manage their pipeline, market their capabilities, and win more projects."
       />
 
-      <Section className="relative overflow-hidden pt-10 pb-12 md:pt-14">
-        <div
-          className="pointer-events-none absolute inset-0 bg-grid [mask-image:radial-gradient(ellipse_60%_60%_at_50%_0%,black,transparent)]"
-          aria-hidden="true"
-        />
-
-        <div className="relative grid-x grid-margin-x items-center gap-y-10">
-          <div className="cell small-12 large-6">
+      {/* 1 — dark hero */}
+      <Section band="dark" className="pt-10 pb-10 md:pt-14 md:pb-12">
+        <div className="grid-x grid-margin-x items-center gap-y-10">
+          <div className="cell small-12 large-7">
             <Eyebrow>Bid intelligence for construction</Eyebrow>
-            <h1 className="text-balance text-3xl font-semibold leading-[1.15] tracking-tight text-paper sm:text-4xl">
+            <h1 className="text-balance max-w-2xl text-4xl font-semibold leading-[1.08] tracking-tight text-paper-2 md:text-5xl">
               Find better construction projects. Bid smarter. Win more work.
             </h1>
-            <p className="mt-4 max-w-lg text-base leading-relaxed text-steel">
+            <p className="mt-5 max-w-xl text-lg leading-relaxed text-steel">
               D&amp;J Stratagem gives contractors, subcontractors, and suppliers the tools to
               discover bid opportunities, manage their pipeline, market their capabilities, and
               turn more opportunities into awarded projects.
             </p>
-            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
               <Button to="/projects" variant="primary">
                 Find construction projects <IconArrowRight width={16} height={16} />
               </Button>
@@ -164,214 +191,249 @@ export default function Home() {
                 See how it works
               </Button>
             </div>
-            <div className="mt-7 flex flex-wrap gap-x-6 gap-y-2 text-sm text-steel">
-              <span className="flex items-center gap-2">
-                <IconBuilding width={16} height={16} className="text-amber" /> Built for GCs and subs
-              </span>
-              <span className="flex items-center gap-2">
-                <IconTrendingUp width={16} height={16} className="text-amber" /> Grow revenue, not
-                just win bids
-              </span>
+            <p className="mt-6 text-sm text-steel">
+              Built for contractors.{" "}
+              <span className="font-semibold text-paper">Currently onboarding early users.</span>
+            </p>
+          </div>
+          <div className="cell small-12 large-5">
+            <HeroBids />
+          </div>
+        </div>
+
+        <div className="mt-12 grid-x grid-margin-x gap-y-6 md:mt-14">
+          {stats.map((s) => (
+            <div key={s.label} className="cell small-12 medium-4">
+              <div className="border-t border-line pt-4">
+                <p className="mb-0 text-3xl font-semibold tracking-tight text-paper-2">{s.value}</p>
+                <p className="mb-0 mt-1 text-sm font-semibold text-amber">{s.label}</p>
+                <p className="mb-0 mt-0.5 text-sm text-steel">{s.detail}</p>
+              </div>
             </div>
-          </div>
-          <div className="cell small-12 large-6">
-            <HeroPanel />
-          </div>
-        </div>
-      </Section>
-
-      <Section className="border-t border-line py-8">
-        <p className="text-center text-sm text-steel">
-          Built for contractors.{" "}
-          <span className="font-semibold text-paper">Currently onboarding early users.</span>
-        </p>
-      </Section>
-
-      <Section className="border-t border-line">
-        <div className="mx-auto max-w-2xl text-center">
-          <Eyebrow>What you get</Eyebrow>
-          <h2 className="text-balance text-xl font-semibold tracking-tight text-paper md:text-2xl">
-            Matched opportunities, not a firehose of RFPs.
-          </h2>
-          <p className="mt-5 text-base leading-relaxed text-steel">
-            Every project is scored against your trade, service area, project size, and past
-            work &mdash; so you spend your time on the bids you can actually win.
-          </p>
-        </div>
-        <div className="mt-12">
-          <OpportunityPreview />
-        </div>
-      </Section>
-
-      <Section tint className="border-t border-line py-12 md:py-14">
-        <div className="grid-x grid-margin-x gap-y-8">
-          {stats.map((s, i) => (
-            <Reveal key={s.label} delay={i * 90} className="cell small-12 medium-4 text-center sm:text-left">
-              <p className="text-2xl font-semibold tracking-tight text-paper md:text-3xl">
-                <StatCounter value={s.value} suffix={s.suffix} />
-              </p>
-              <p className="mt-2 text-sm font-semibold text-amber">{s.label}</p>
-              <p className="mt-1 text-sm text-steel">{s.detail}</p>
-            </Reveal>
           ))}
         </div>
       </Section>
 
-      <Section className="border-t border-line">
-        <div className="grid-x grid-margin-x gap-y-16 lg:items-start">
-          <Reveal className="cell small-12 large-6">
-            <Eyebrow>The problem</Eyebrow>
-            <h2 className="text-balance text-xl font-semibold tracking-tight text-paper md:text-2xl">
-              Most platforms solve one piece of the puzzle.
-            </h2>
-            <p className="mt-5 text-base leading-relaxed text-steel">
-              PlanHub finds bids. Dodge surfaces leads. BuildingConnected sends invitations.
-              ConstructConnect delivers project intelligence. Contractors end up stitching
-              together five tools to do one job &mdash; and still handle marketing, CRM, and
-              document management somewhere else entirely.
+      {/* 2 — white: role router */}
+      <Section band="white">
+        <div className="max-w-2xl">
+          <Eyebrow>Start here</Eyebrow>
+          <h2 className={h2}>Where do you want to start?</h2>
+          <p className="mb-0 mt-3 text-base leading-relaxed text-steel">
+            Pick the side of the deal you work on, or jump straight to a live page.
+          </p>
+        </div>
+        <div className="mt-8 grid-x grid-margin-x gap-y-5">
+          {roles.map((r) => (
+            <div key={r.title} className="cell small-12 medium-6 large-3">
+              <LinkCard to={r.to} icon={r.icon} title={r.title} cta="See the workflow">
+                {r.text}
+              </LinkCard>
+            </div>
+          ))}
+        </div>
+        <div className="mt-8 grid-x grid-margin-x gap-y-3">
+          {shortcuts.map((s) => (
+            <div key={s.to} className="cell small-12 medium-6 large-3">
+              <Link
+                to={s.to}
+                className="group block border-t border-line pt-3 no-underline hover:border-amber"
+              >
+                <span className="flex items-center justify-between text-sm font-semibold text-paper-2 group-hover:text-amber">
+                  {s.label} <IconArrowRight width={14} height={14} />
+                </span>
+                <span className="mt-0.5 block text-xs text-steel">{s.hint}</span>
+              </Link>
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      {/* 3 — stone: matched opportunities */}
+      <Section band="stone">
+        <div className="grid-x grid-margin-x items-center gap-y-8">
+          <div className="cell small-12 large-5">
+            <Eyebrow>What you get</Eyebrow>
+            <h2 className={h2}>Matched opportunities, not a firehose of RFPs.</h2>
+            <p className="mb-0 mt-4 text-base leading-relaxed text-steel">
+              Every project is scored against your trade, service area, project size, and past
+              work &mdash; so you spend your time on the bids you can actually win.
             </p>
-            <CompetitorList className="mt-6" />
-          </Reveal>
-          <Reveal delay={120} className="cell small-12 large-6">
-            <Eyebrow>The platform</Eyebrow>
-            <h2 className="text-balance text-xl font-semibold tracking-tight text-paper md:text-2xl">
-              We sell growth, not just access to bids.
-            </h2>
-            <p className="mt-5 text-base leading-relaxed text-steel">
-              D&amp;J Stratagem is where a contractor wins work, markets the business, manages
-              relationships, and grows revenue &mdash; bidding, marketing, CRM, estimating, and
-              AI, all in one connected platform.
-            </p>
-            <ul className="mt-6 space-y-3">
+            <ul className="m-0 mt-5 list-none space-y-2.5 p-0">
               {[
-                "Post a project or find one that fits your trade",
-                "Bid, negotiate, and award without leaving the platform",
-                "Market your business and manage every relationship in one CRM",
-                "Source materials without a margin-destroying bid war",
+                "Alerts when new work fits your profile",
+                "Deadlines, documents, and contacts tracked per bid",
+                "A bid history that sharpens every submission",
               ].map((pt) => (
-                <li key={pt} className="flex items-start gap-3 text-sm text-paper/90">
+                <li key={pt} className="flex items-start gap-3 text-sm text-paper">
                   <IconCheck width={16} height={16} className="mt-0.5 shrink-0 text-amber" />
                   {pt}
                 </li>
               ))}
             </ul>
-          </Reveal>
+            <div className="mt-7">
+              <Button to="/projects" variant="primary">
+                <IconSearch width={16} height={16} /> Browse open projects
+              </Button>
+            </div>
+          </div>
+          <div className="cell small-12 large-7">
+            <OpportunityTable />
+          </div>
         </div>
       </Section>
 
-      <Section tint className="border-t border-line">
-        <Eyebrow>The platform</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">
-          Everything a growing contractor needs.
-        </h2>
-        <div className="mt-12 grid-x grid-margin-x gap-y-5">
-          {pillars.map((f, i) => (
-            <Reveal key={f.title} delay={(i % 3) * 90} className="cell small-12 medium-6 large-4">
-              <FeatureCard icon={f.icon} title={f.title} className="h-full">
-                {f.text}
-              </FeatureCard>
-            </Reveal>
-          ))}
-        </div>
-        <div className="mt-10">
-          <Button to="/platform" variant="ghost">
+      {/* 4 — white: suites */}
+      <Section band="white">
+        <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
+          <div className="max-w-2xl">
+            <Eyebrow>The platform</Eyebrow>
+            <h2 className={h2}>Everything a growing contractor needs.</h2>
+          </div>
+          <Button to="/platform" variant="secondary">
             See the full platform <IconArrowRight width={16} height={16} />
           </Button>
         </div>
-      </Section>
-
-      <Section className="border-t border-line">
-        <div className="grid-x grid-margin-x items-center gap-y-14">
-          <Reveal className="cell small-12 large-6">
-            <BidStackArt className="mb-8 h-auto w-full max-w-sm" />
-            <Eyebrow>Why it&rsquo;s different</Eyebrow>
-            <h2 className="text-balance text-xl font-semibold tracking-tight text-paper md:text-2xl">
-              Once you rely on us, switching gets painful &mdash; in a good way.
-            </h2>
-            <p className="mt-5 text-base leading-relaxed text-steel">
-              Marketing, bidding, document management, and customer relationships, all built on
-              one platform. That&rsquo;s how durable businesses are built: not by chasing the next
-              lead source, but by owning the entire pipeline from opportunity to award.
-            </p>
-          </Reveal>
-          <Reveal delay={120} className="cell small-12 large-6">
-            <div className="grid-x grid-margin-x gap-y-4">
-              <div className="cell small-12 medium-6 rounded-md border border-line bg-ink p-5">
-                <p className="text-xs font-semibold uppercase tracking-wider text-steel">Without a platform</p>
-                <ul className="mt-4 space-y-2.5 text-sm text-steel">
-                  {["Five subscriptions, five logins", "Bid data retyped into the CRM", "Marketing handled by an outside agency", "Follow-ups lost in an inbox"].map((t) => (
-                    <li key={t} className="flex items-start gap-2.5">
-                      <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-steel" />
-                      {t}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="cell small-12 medium-6 rounded-md border border-amber/40 bg-amber/8 p-5">
-                <p className="text-xs font-semibold uppercase tracking-wider text-amber">On D&amp;J Stratagem</p>
-                <ul className="mt-4 space-y-2.5 text-sm text-paper/90">
-                  {["One platform, one login", "Bids, awards, and CRM share a record", "Marketing runs from the same dashboard", "Every opportunity tracked to a decision"].map((t) => (
-                    <li key={t} className="flex items-start gap-2.5">
-                      <IconCheck width={14} height={14} className="mt-0.5 shrink-0 text-amber" />
-                      {t}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </Reveal>
-        </div>
-      </Section>
-
-      <Section className="border-t border-line">
-        <Eyebrow>How it works</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">
-          Designed for contractors who are serious about growth.
-        </h2>
-        <PipelineArt className="mx-auto mt-10 hidden w-full max-w-xl sm:block" />
         <div className="mt-8 grid-x grid-margin-x gap-y-5">
-          {steps.map((s, i) => (
-            <Reveal key={s.n} delay={i * 110} className="cell small-12 medium-6 large-3">
-              <div className="relative h-full rounded-md border border-line bg-ink-2 p-6">
-                <span className="text-sm font-semibold tabular-nums text-amber">{s.n}</span>
-                <h3 className="mt-3 text-base font-semibold text-paper">{s.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-steel">{s.text}</p>
-              </div>
-            </Reveal>
+          {suites.map((f) => (
+            <div key={f.title} className="cell small-12 medium-6 large-4">
+              <LinkCard to={f.to} icon={f.icon} title={f.title} cta="Learn more">
+                {f.text}
+              </LinkCard>
+            </div>
           ))}
         </div>
-        <div className="mt-10">
+      </Section>
+
+      {/* 5 — dark: why one platform */}
+      <Section band="dark">
+        <div className="grid-x grid-margin-x gap-y-10">
+          <div className="cell small-12 large-6">
+            <Eyebrow>The problem</Eyebrow>
+            <h2 className={h2}>Most platforms solve one piece of the puzzle.</h2>
+            <p className="mb-0 mt-4 text-base leading-relaxed text-steel">
+              Contractors end up stitching together five tools to do one job &mdash; and still
+              handle marketing, CRM, and document management somewhere else entirely.
+            </p>
+            <ul className="m-0 mt-6 list-none border-t border-line p-0">
+              {competitors.map((c) => (
+                <li
+                  key={c.name}
+                  className="flex items-center justify-between gap-4 border-b border-line py-3 text-sm"
+                >
+                  <span className="font-semibold text-paper">{c.name}</span>
+                  <span className="text-steel">{c.does}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="cell small-12 large-6">
+            <Eyebrow>Why it&rsquo;s different</Eyebrow>
+            <h2 className={h2}>We sell growth, not just access to bids.</h2>
+            <p className="mb-0 mt-4 text-base leading-relaxed text-steel">
+              Bidding, marketing, CRM, estimating, and AI on one connected platform. Once you rely
+              on it, switching gets painful &mdash; in a good way &mdash; because you own the whole
+              pipeline from opportunity to award.
+            </p>
+            <div className="mt-6 grid-x grid-margin-x gap-y-4">
+              <div className="cell small-12 medium-6">
+                <div className="h-full border border-line p-4">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-steel">
+                    Without a platform
+                  </p>
+                  <ul className="m-0 mt-3 list-none space-y-2 p-0 text-sm text-steel">
+                    {without.map((t) => (
+                      <li key={t} className="flex items-start gap-2.5">
+                        <span className="mt-2 h-px w-2.5 shrink-0 bg-steel" aria-hidden="true" />
+                        {t}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+              <div className="cell small-12 medium-6">
+                <div className="h-full border border-amber p-4">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-amber">
+                    On D&amp;J Stratagem
+                  </p>
+                  <ul className="m-0 mt-3 list-none space-y-2 p-0 text-sm text-paper">
+                    {withUs.map((t) => (
+                      <li key={t} className="flex items-start gap-2.5">
+                        <IconCheck width={14} height={14} className="mt-0.5 shrink-0 text-amber" />
+                        {t}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <p className="mt-5 text-sm text-steel">
+              Compare plans on{" "}
+              <Link to="/pricing" className={textLink}>
+                Pricing
+              </Link>{" "}
+              or read{" "}
+              <Link to="/about" className={textLink}>
+                how accounts are vetted
+              </Link>
+              .
+            </p>
+          </div>
+        </div>
+      </Section>
+
+      {/* 6 — white: how it works */}
+      <Section band="white">
+        <div className="max-w-2xl">
+          <Eyebrow>How it works</Eyebrow>
+          <h2 className={h2}>Designed for contractors who are serious about growth.</h2>
+        </div>
+        <div className="mt-8 grid-x grid-margin-x gap-y-6">
+          {steps.map((s) => (
+            <div key={s.n} className="cell small-12 medium-6 large-3">
+              <div className="h-full border-t-2 border-paper pt-4">
+                <span className="text-sm font-semibold tabular-nums text-amber">{s.n}</span>
+                <h3 className="mt-2 text-base font-semibold text-paper-2">{s.title}</h3>
+                <p className="mb-0 mt-2 text-sm leading-relaxed text-steel">{s.text}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
           <Button to="/projects" variant="primary">
             Start finding projects <IconArrowRight width={16} height={16} />
+          </Button>
+          <Button to="/pricing" variant="secondary">
+            View plans
           </Button>
         </div>
       </Section>
 
-      <Section className="border-t border-line">
-        <Eyebrow>Who it&rsquo;s for</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">
-          Built for every side of the deal.
-        </h2>
-        <div className="mt-12 grid-x grid-margin-x gap-y-5">
-          {audiences.map((a, i) => (
-            <Reveal key={a.title} delay={(i % 2) * 100} className="cell small-12 medium-6 h-full">
-              <div className="lift h-full rounded-md border border-line bg-ink-2 p-6 hover:border-amber/40">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber/10 text-amber">{a.icon}</div>
-                <h3 className="mt-5 text-base font-semibold text-paper">{a.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-steel">{a.text}</p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </Section>
-
-      <Section tint className="border-t border-line">
-        <Eyebrow>Questions</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">
-          Answers before you sign up.
-        </h2>
-        <div className="mt-10 max-w-3xl">
-          <Accordion items={faqs} />
+      {/* 7 — stone: FAQ */}
+      <Section band="stone">
+        <div className="grid-x grid-margin-x gap-y-8">
+          <div className="cell small-12 large-4">
+            <Eyebrow>Questions</Eyebrow>
+            <h2 className={h2}>Answers before you sign up.</h2>
+            <p className="mt-4 text-sm leading-relaxed text-steel">
+              Still deciding? Browse the{" "}
+              <Link to="/resources" className={textLink}>
+                help center
+              </Link>
+              , check{" "}
+              <Link to="/pricing" className={textLink}>
+                plans and pricing
+              </Link>
+              , or{" "}
+              <Link to="/contact" className={textLink}>
+                talk to us
+              </Link>
+              .
+            </p>
+          </div>
+          <div className="cell small-12 large-8">
+            <Accordion items={faqs} />
+          </div>
         </div>
       </Section>
 

@@ -227,6 +227,21 @@
   background: #000000;
   border-color: #000000;
 }
+/* Secondary on vermilion: white block with graphite text (the band re-scopes
+   --text to white, which would otherwise make white-on-white). */
+.band-accent .button.secondary {
+  background: #ffffff;
+  border-color: #ffffff;
+  color: #1a1917;
+}
+.band-accent .button.secondary:hover:not(:disabled) {
+  background: #f3f1ec;
+  border-color: #f3f1ec;
+  color: #1a1917;
+}
+.band-accent .button.clear {
+  color: #ffffff;
+}
 
 html {
   scroll-behavior: smooth;

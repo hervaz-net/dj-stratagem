@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import Button from "../components/Button";
 import Logo from "../components/Logo";
+import Section from "../components/Section";
 import Seo from "../components/Seo";
 
 export default function ForgotPassword() {
@@ -27,15 +28,16 @@ export default function ForgotPassword() {
     <>
       <Seo title="Forgot password" description="Reset your D&J Stratagem password." noindex />
 
-      <div className="mx-auto flex w-full max-w-md flex-col justify-center px-6 py-10 md:py-16">
-        <div className="rounded-md border border-line bg-ink-2 p-8 shadow-xl shadow-brand/5">
+      <Section band="stone" className="md:py-16">
+        <div className="mx-auto w-full max-w-md">
+        <div className="rounded-sm border border-line bg-ink-2 p-6 sm:p-8">
           <Link to="/" className="inline-block" aria-label="D&J Stratagem — home">
             <Logo />
           </Link>
 
           {submitted ? (
             <div className="mt-8 text-center">
-              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[var(--viz-green)]/10">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-sm bg-[var(--viz-green)]/10">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--viz-green)]" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
               </div>
               <h1 className="mt-5 text-2xl font-semibold tracking-tight text-paper">How to reset</h1>
@@ -73,12 +75,12 @@ export default function ForgotPassword() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="you@example.com"
-                    className="w-full rounded-md border border-line bg-ink px-4 py-2.5 text-sm text-paper outline-hidden transition-colors placeholder:text-steel/60 focus:border-amber"
+                    className="w-full rounded-sm border border-line-2 bg-ink-2 px-4 py-2.5 text-sm text-paper outline-hidden transition-colors placeholder:text-steel/60 focus:border-amber"
                   />
                 </div>
 
                 {error && (
-                  <div className="rounded-md border border-danger/30 bg-danger/10 px-4 py-2.5 text-sm text-danger">
+                  <div className="rounded-sm border border-danger/30 bg-danger/10 px-4 py-2.5 text-sm text-danger">
                     {error}
                   </div>
                 )}
@@ -93,11 +95,22 @@ export default function ForgotPassword() {
                 <Link to="/login" className="font-medium text-amber hover:text-amber-2">
                   Sign in
                 </Link>
+                {" "}&middot; New here?{" "}
+                <Link to="/register" className="font-medium text-amber hover:text-amber-2">
+                  Request access
+                </Link>
               </p>
             </>
           )}
         </div>
-      </div>
+        <p className="mt-6 text-center text-xs text-steel">
+          Need help?{" "}
+          <Link to="/resources" className="font-medium text-amber hover:text-amber-2">
+            Visit the help center
+          </Link>
+        </p>
+        </div>
+      </Section>
     </>
   );
 }

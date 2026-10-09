@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Section, { Eyebrow } from "../components/Section";
+import PageHeader from "../components/PageHeader";
 import Button from "../components/Button";
 import CTASection from "../components/CTASection";
 import Seo from "../components/Seo";
@@ -189,33 +190,26 @@ export default function Fleet() {
         title="Fleet"
         description="See equipment status, utilization, and dispatch history across your fleet — filters, asset cards, and rate tracking in one board."
       />
-      <Section className="relative overflow-hidden pt-10 pb-6 md:pt-14">
-        <div className="pointer-events-none absolute inset-0 bg-grid [mask-image:radial-gradient(ellipse_60%_60%_at_50%_0%,black,transparent)]" />
-        <div className="relative mx-auto grid-x grid-margin-x max-w-6xl items-center gap-y-10 px-6">
-          <div className="cell small-12 large-7">
-            <Eyebrow>Fleet Management</Eyebrow>
-            <h1 className="mt-4 text-2xl font-semibold leading-tight text-paper md:text-3xl">
-              See how equipment would look on the board.
-            </h1>
-            <p className="mt-4 max-w-2xl text-sm text-steel">
-              Status filters, utilization, and asset cards for every machine on the job &mdash;
-              tracked from dispatch to return.
-            </p>
-            <div className="mt-6 flex flex-wrap gap-4">
-              <Button to="/register" variant="primary">Request access</Button>
-              <Button to="/contact" variant="secondary">Contact us</Button>
-            </div>
-          </div>
-          <FleetArt className="cell small-12 large-5 hidden w-full lg:block" />
-        </div>
-      </Section>
+      <PageHeader
+        eyebrow="Fleet Management"
+        title="See how equipment would look on the board."
+        lede="Status filters, utilization, and asset cards for every machine on the job — tracked from dispatch to return."
+        actions={
+          <>
+            <Button to="/contact?topic=demo" variant="primary">Book a demo</Button>
+            <Button to="/platform" variant="secondary">See the platform</Button>
+          </>
+        }
+      >
+        <FleetArt className="hidden w-full lg:block" />
+      </PageHeader>
 
-      <Section className="border-t border-line">
+      <Section band="dark" className="!py-8 md:!py-10">
         <div className="grid-x grid-margin-x gap-y-5">
           {STATS.map((stat, index) => {
             const Icon = stat.icon;
             return (
-              <div key={index} className="cell small-12 medium-6 large-3 card-corp rounded-lg p-5">
+              <div key={index} className="cell small-12 medium-6 large-3 card-corp p-5">
                 <div className="flex items-start justify-between">
                   <div>
                     <p className="kpi-label">{stat.label}</p>
@@ -231,10 +225,10 @@ export default function Fleet() {
 
       {/* Catalog layout: same sidebar-facet pattern as Projects — an
           equipment board is browsed the same way a bid list is. */}
-      <Section className="border-t border-line">
+      <Section band="white">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-[240px_1fr]">
           <aside className="lg:sticky lg:top-20 lg:self-start">
-            <div className="card-corp rounded-lg p-4">
+            <div className="card-corp rounded-sm p-4">
               <p className="mb-1.5 text-xs font-semibold uppercase tracking-wider text-steel">Status</p>
               <div className="flex flex-col gap-1">
                 {[
@@ -280,7 +274,7 @@ export default function Fleet() {
             </p>
             <div className="grid-x grid-margin-x gap-y-5">
               {filteredFleet.map((asset) => (
-                <article key={asset.id} className="cell small-12 medium-6 large-4 card-corp card-corp-hover rounded-lg p-5">
+                <article key={asset.id} className="cell small-12 medium-6 large-4 card-corp card-corp-hover rounded-sm p-5">
                   <div className="mb-4 flex items-start justify-between">
                     <div>
                       <p className="text-xs font-semibold uppercase tracking-wider text-steel">
@@ -298,8 +292,8 @@ export default function Fleet() {
                       <span className="text-xs font-medium text-steel">Utilization</span>
                       <span className="text-sm font-semibold text-paper">{asset.utilization}%</span>
                     </div>
-                    <div className="h-1.5 overflow-hidden rounded-full bg-ink">
-                      <div className="h-full rounded-full bg-cta" style={{ width: `${asset.utilization}%` }} />
+                    <div className="h-1.5 overflow-hidden bg-line">
+                      <div className="h-full bg-cta" style={{ width: `${asset.utilization}%` }} />
                     </div>
                   </div>
                   <div className="mb-4 space-y-2 border-t border-line pt-4">
@@ -335,9 +329,9 @@ export default function Fleet() {
         </div>
       </Section>
 
-      <Section tint className="border-t border-line">
+      <Section band="stone">
         <div className="text-center">
-          <Eyebrow>Powerful features</Eyebrow>
+          <Eyebrow className="justify-center">Powerful features</Eyebrow>
           <h2 className="text-balance mx-auto max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">
             Built for modern construction operations.
           </h2>
@@ -353,7 +347,7 @@ export default function Fleet() {
           ].map((feature, idx) => {
             const Icon = feature.icon;
             return (
-              <div key={idx} className="cell small-12 medium-6 large-4 card-corp card-corp-hover rounded-lg p-5">
+              <div key={idx} className="cell small-12 medium-6 large-4 card-corp card-corp-hover rounded-sm p-5">
                 <div className="flex h-9 w-9 items-center justify-center rounded-sm bg-amber/10 text-amber">
                   <Icon width={18} height={18} />
                 </div>
@@ -363,11 +357,19 @@ export default function Fleet() {
             );
           })}
         </div>
+        <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
+          <Button to="/platform" variant="secondary">
+            Explore the platform <IconArrowRight width={16} height={16} />
+          </Button>
+          <Button to="/contact?topic=demo" variant="ghost">
+            Book a demo
+          </Button>
+        </div>
       </Section>
 
-      <Section className="border-t border-line">
+      <Section band="white">
         <div className="text-center">
-          <Eyebrow>Simple pricing</Eyebrow>
+          <Eyebrow className="justify-center">Simple pricing</Eyebrow>
           <h2 className="text-balance mx-auto max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">
             Fleet add-on pricing is not live yet.
           </h2>
@@ -380,7 +382,7 @@ export default function Fleet() {
           ].map((plan, idx) => (
             <div
               key={idx}
-              className={`cell small-12 medium-4 card-corp relative rounded-lg p-6 ${plan.highlight ? "border-amber" : ""}`}
+              className={`cell small-12 medium-4 card-corp relative rounded-sm p-6 ${plan.highlight ? "border-amber" : ""}`}
             >
               {plan.highlight && (
                 <span className="label primary absolute -top-3 left-6 uppercase tracking-wider">
@@ -422,12 +424,12 @@ export default function Fleet() {
       />
 
       {selectedAsset && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4" onClick={() => setSelectedAsset(null)}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" onClick={() => setSelectedAsset(null)}>
           <div
             role="dialog"
             aria-modal="true"
             aria-labelledby="fleet-asset-title"
-            className="card-corp max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg p-6"
+            className="card-corp max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-sm p-6"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="mb-5 flex items-start justify-between">
@@ -473,8 +475,8 @@ export default function Fleet() {
                 <p className="text-xs font-semibold uppercase text-steel">Utilization</p>
                 <div className="mt-4 flex items-baseline gap-4">
                   <div className="flex-1">
-                    <div className="h-2 overflow-hidden rounded-full bg-ink">
-                      <div className="h-full rounded-full bg-cta" style={{ width: `${selectedAsset.utilization}%` }} />
+                    <div className="h-2 overflow-hidden bg-line">
+                      <div className="h-full bg-cta" style={{ width: `${selectedAsset.utilization}%` }} />
                     </div>
                   </div>
                   <span className="kpi-value">{selectedAsset.utilization}%</span>

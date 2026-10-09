@@ -1,4 +1,6 @@
 import Section, { Eyebrow } from "../components/Section";
+import PageHeader from "../components/PageHeader";
+import { Link } from "react-router-dom";
 import Button from "../components/Button";
 import CTASection from "../components/CTASection";
 import Reveal from "../components/Reveal";
@@ -142,6 +144,13 @@ const supplierProtections = [
   "Performance ratings compound: deliver well and you rank higher on future matches",
 ];
 
+const nextSteps = [
+  { to: "/supply/catalog", title: "Browse the catalog", text: "Search 300+ SKUs by brand, type, and quantity.", cta: "Open the catalog" },
+  { to: "/quote", title: "Request a quote", text: "Review the items you picked and send them to our team.", cta: "Start a quote" },
+  { to: "/projects", title: "See open projects", text: "Browse construction bid opportunities by trade and territory.", cta: "View projects" },
+  { to: "/pricing", title: "Pricing", text: "Plans, add-ons, and an ROI calculator.", cta: "Compare plans" },
+];
+
 export default function Supply() {
   return (
     <>
@@ -150,33 +159,25 @@ export default function Supply() {
         description="Source fasteners, lumber, conduit, PVC, plate, and power tools through sealed, scored bidding — fast enough for a same-day order, structured so suppliers stay at the table."
       />
 
-      <Section className="relative overflow-hidden pt-10 pb-6 md:pt-14">
-        <div className="pointer-events-none absolute inset-0 bg-grid [mask-image:radial-gradient(ellipse_60%_60%_at_50%_0%,black,transparent)]" />
-        <div className="relative grid-x grid-margin-x items-center gap-y-10">
-          <div className="cell small-12 large-6">
-            <Eyebrow>Supply Exchange</Eyebrow>
-            <h1 className="text-balance max-w-3xl text-2xl font-semibold leading-tight tracking-tight text-paper sm:text-3xl">
-              The materials you always need, priced without the race to the bottom.
-            </h1>
-            <p className="mt-6 max-w-2xl text-lg leading-relaxed text-steel">
-              Fasteners, lumber, conduit, PVC, plate, and power tools move on every job you run.
-              Supply Exchange sources them through sealed, scored bidding &mdash; fast enough for a
-              same-day order, structured so suppliers stay at the table.
-            </p>
-            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-              <Button to="/supply/catalog" variant="primary">
-                Browse the catalog <IconArrowRight width={16} height={16} />
-              </Button>
-              <Button to="/contact" variant="secondary">
-                Contact us
-              </Button>
-            </div>
-          </div>
-          <SupplyStackArt className="cell small-12 large-6 hidden w-full lg:block" />
-        </div>
-      </Section>
+      <PageHeader
+        eyebrow="Supply Exchange"
+        title="The materials you always need, priced without the race to the bottom."
+        lede="Fasteners, lumber, conduit, PVC, plate, and power tools move on every job you run. Supply Exchange sources them through sealed, scored bidding — fast enough for a same-day order, structured so suppliers stay at the table."
+        actions={
+          <>
+            <Button to="/supply/catalog" variant="primary">
+              Browse the catalog <IconArrowRight width={16} height={16} />
+            </Button>
+            <Button to="/quote" variant="secondary">
+              Request a quote
+            </Button>
+          </>
+        }
+      >
+        <SupplyStackArt className="hidden w-full lg:block" />
+      </PageHeader>
 
-      <Section className="border-t border-line">
+      <Section band="white">
         <Eyebrow>What you can source</Eyebrow>
         <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">
           The essentials, not the long tail.
@@ -188,7 +189,7 @@ export default function Supply() {
         <div className="mt-12 grid-x grid-margin-x gap-y-5">
           {categories.map((c, i) => (
             <Reveal key={c.title} delay={(i % 4) * 80} className="cell small-12 medium-6 large-3 h-full">
-              <div className="card-corp card-corp-hover lift h-full rounded-lg p-5">
+              <div className="card-corp card-corp-hover lift h-full rounded-sm p-5">
                 <div className="flex h-9 w-9 items-center justify-center rounded-sm bg-amber/10 text-amber">
                   {c.icon}
                 </div>
@@ -205,7 +206,7 @@ export default function Supply() {
         </div>
       </Section>
 
-      <Section className="border-t border-line">
+      <Section band="dark">
         <div className="grid-x grid-margin-x gap-y-14 lg:items-start">
           <div className="cell small-12 large-6">
             <Eyebrow>Why not a normal reverse auction</Eyebrow>
@@ -221,7 +222,7 @@ export default function Supply() {
               It's also slow. Iterative bidding takes days, and materials rarely have days.
             </p>
           </div>
-          <div className="cell small-12 large-6 rounded-md border border-line bg-ink-2 p-6">
+          <div className="cell small-12 large-6 card-corp p-6">
             <p className="text-xs uppercase tracking-wider text-steel">Award scoring</p>
             <div className="mt-4 space-y-3">
               {[
@@ -230,7 +231,7 @@ export default function Supply() {
                 { label: "Lead time", value: "Weighted 20%", tag: "2 days" },
                 { label: "Past performance", value: "Weighted 15%", tag: "4.8" },
               ].map((row) => (
-                <div key={row.label} className="flex items-center justify-between rounded-lg bg-ink px-4 py-3">
+                <div key={row.label} className="flex items-center justify-between rounded-sm bg-ink px-4 py-3">
                   <div>
                     <p className="text-sm font-medium text-paper">{row.label}</p>
                     <p className="text-xs text-steel">{row.value}</p>
@@ -238,7 +239,7 @@ export default function Supply() {
                   <span className="label secondary">{row.tag}</span>
                 </div>
               ))}
-              <div className="flex items-center justify-between rounded-lg border border-amber/40 bg-amber/10 px-4 py-3">
+              <div className="flex items-center justify-between rounded-sm border border-amber/40 bg-amber/10 px-4 py-3">
                 <span className="text-sm font-medium text-amber">Auto-awarded</span>
                 <span className="text-xs text-amber">Best total score</span>
               </div>
@@ -250,15 +251,15 @@ export default function Supply() {
         </div>
       </Section>
 
-      <Section tint className="border-t border-line">
+      <Section band="stone">
         <Eyebrow>How the bidding works</Eyebrow>
         <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">
           Still competitive. Just not a knife fight.
         </h2>
         <div className="mt-12 grid-x grid-margin-x gap-y-5">
           {mechanics.map((m) => (
-            <div key={m.title} className="cell small-12 medium-6 card-corp rounded-lg p-6">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber/10 text-amber">
+            <div key={m.title} className="cell small-12 medium-6 card-corp rounded-sm p-6">
+              <div className="flex h-10 w-10 items-center justify-center rounded-sm bg-amber/10 text-amber">
                 {m.icon}
               </div>
               <h3 className="mt-5 text-base font-semibold text-paper">{m.title}</h3>
@@ -268,7 +269,7 @@ export default function Supply() {
         </div>
       </Section>
 
-      <Section className="border-t border-line">
+      <Section band="white">
         <Eyebrow>Skip the RFQ entirely</Eyebrow>
         <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">
           Most orders shouldn't need a bid at all.
@@ -279,8 +280,8 @@ export default function Supply() {
         </p>
         <div className="mt-12 grid-x grid-margin-x gap-y-5">
           {efficiencies.map((e) => (
-            <div key={e.title} className="cell small-12 large-6 card-corp rounded-lg p-6">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber/10 text-amber">
+            <div key={e.title} className="cell small-12 large-6 card-corp rounded-sm p-6">
+              <div className="flex h-10 w-10 items-center justify-center rounded-sm bg-amber/10 text-amber">
                 {e.icon}
               </div>
               <h3 className="mt-5 text-base font-semibold text-paper">{e.title}</h3>
@@ -290,7 +291,7 @@ export default function Supply() {
         </div>
       </Section>
 
-      <Section tint className="border-t border-line">
+      <Section band="dark">
         <Eyebrow>The commerce engine</Eyebrow>
         <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">
           Supply Exchange runs on a full B2B commerce platform, not a bid form bolted onto a
@@ -304,7 +305,7 @@ export default function Supply() {
         <div className="mt-12 grid-x grid-margin-x gap-y-5">
           {commerceEngine.map((c, i) => (
             <Reveal key={c.title} delay={(i % 3) * 80} className="cell small-12 medium-6 large-4 h-full">
-              <div className="card-corp card-corp-hover lift h-full rounded-lg p-5">
+              <div className="card-corp card-corp-hover lift h-full rounded-sm p-5">
                 <div className="flex h-9 w-9 items-center justify-center rounded-sm bg-amber/10 text-amber">
                   {c.icon}
                 </div>
@@ -321,7 +322,7 @@ export default function Supply() {
         </p>
       </Section>
 
-      <Section className="border-t border-line">
+      <Section band="stone">
         <div className="grid-x grid-margin-x items-center gap-y-14">
           <div className="cell small-12 large-6">
             <Eyebrow>For suppliers</Eyebrow>
@@ -341,7 +342,7 @@ export default function Supply() {
           </div>
           {/* Was an empty blurred gradient box; this is the supplier-protection
               list the page describes. */}
-          <div className="cell small-12 large-6 rounded-md border border-line bg-ink-2 p-6">
+          <div className="cell small-12 large-6 card-corp p-6">
             <p className="text-xs uppercase tracking-wider text-steel">Supplier protections</p>
             <ul className="mt-4 space-y-4">
               {supplierProtections.map((pt) => (
@@ -355,9 +356,33 @@ export default function Supply() {
         </div>
       </Section>
 
+      <Section band="white">
+        <Eyebrow>Where to next</Eyebrow>
+        <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">
+          Pick up from here.
+        </h2>
+        <div className="mt-8 grid-x grid-margin-x gap-y-5">
+          {nextSteps.map((n) => (
+            <div key={n.to} className="cell small-12 medium-6 large-3">
+              <Link to={n.to} className="card-corp card-corp-hover flex h-full flex-col p-5">
+                <h3 className="text-sm font-semibold text-paper-2">{n.title}</h3>
+                <p className="mt-1.5 flex-1 text-sm leading-relaxed text-steel">{n.text}</p>
+                <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-amber">
+                  {n.cta} <IconArrowRight width={14} height={14} />
+                </span>
+              </Link>
+            </div>
+          ))}
+        </div>
+      </Section>
+
       <CTASection
         title="Stop overpaying for the things you buy every week."
         subtitle="See how Supply Exchange prices your standing materials list — bring a recent PO and we'll walk it through."
+        primaryLabel="Request a quote"
+        primaryTo="/quote"
+        secondaryLabel="See pricing"
+        secondaryTo="/pricing"
       />
     </>
   );

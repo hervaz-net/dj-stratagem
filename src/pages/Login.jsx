@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import Button from "../components/Button";
 import Logo from "../components/Logo";
+import Section from "../components/Section";
 import Seo from "../components/Seo";
 import PasswordField from "../components/PasswordField";
 import useAuth from "../auth/useAuth";
@@ -84,15 +85,16 @@ export default function Login() {
   };
 
   const inputClass =
-    "w-full rounded-md border border-line bg-ink px-4 py-2.5 text-sm text-paper outline-hidden " +
+    "w-full rounded-sm border border-line-2 bg-ink-2 px-4 py-2.5 text-sm text-paper outline-hidden " +
     "transition-colors placeholder:text-steel/60 focus:border-amber";
 
   return (
     <>
       <Seo title="Sign in" description="Sign in to your D&J Stratagem account." noindex />
 
-      <div className="mx-auto flex w-full max-w-md flex-col justify-center px-6 py-10 md:py-16">
-        <div className="rounded-md border border-line bg-ink-2 p-8 shadow-xl shadow-brand/5">
+      <Section band="stone" className="md:py-16">
+        <div className="mx-auto w-full max-w-md">
+        <div className="rounded-sm border border-line bg-ink-2 p-6 sm:p-8">
           <Link to="/" className="inline-block" aria-label="D&J Stratagem — home">
             <Logo />
           </Link>
@@ -137,7 +139,7 @@ export default function Login() {
                   type="checkbox"
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
-                  className="h-3.5 w-3.5 accent-amber"
+                  className="m-0 h-3.5 w-3.5 accent-amber"
                 />
                 Remember me
               </label>
@@ -148,7 +150,7 @@ export default function Login() {
 
             <div aria-live="polite" role="status" id={errorId}>
               {error && (
-                <div className="rounded-md border border-danger/30 bg-danger/10 px-4 py-2.5 text-sm text-danger">
+                <div className="rounded-sm border border-danger/30 bg-danger/10 px-4 py-2.5 text-sm text-danger">
                   {error}
                 </div>
               )}
@@ -180,7 +182,14 @@ export default function Login() {
         <p className="mt-8 text-center text-xs text-steel">
           Accounts are approved by our team before first sign-in.
         </p>
-      </div>
+        <p className="mt-4 text-center text-xs text-steel">
+          Need help?{" "}
+          <Link to="/resources" className="font-medium text-amber hover:text-amber-2">
+            Visit the help center
+          </Link>
+        </p>
+        </div>
+      </Section>
     </>
   );
 }
