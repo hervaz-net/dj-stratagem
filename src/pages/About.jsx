@@ -190,7 +190,9 @@ export default function About() {
               .
             </p>
           </div>
-          <TeamArt className="cell small-12 large-5 hidden w-full lg:block" />
+          <div className="cell small-12 large-5 hidden lg:block">
+            <TeamArt className="mx-auto h-auto w-full max-w-sm" />
+          </div>
         </div>
       </Section>
 

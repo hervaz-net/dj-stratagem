@@ -176,6 +176,23 @@
   background-color: #e7e2d8;
 }
 
+/* Dark theme: white and stone bands keep their roles (clean vs. recessed) but
+   on dark surfaces, using the theme's own text and border tokens. */
+[data-theme="dark"] .band-white {
+  --surface: #161513;
+  --surface-raised: #1f1e1b;
+  --surface-hover: #292723;
+  background-color: #161513;
+}
+[data-theme="dark"] .band-stone {
+  --surface: #1d1c19;
+  --surface-raised: #272622;
+  --surface-hover: #32302b;
+  --border: #35332e;
+  --border-strong: #4b4841;
+  background-color: #1d1c19;
+}
+
 .band-dark {
   --surface: #1a1917;
   --surface-raised: #242321;

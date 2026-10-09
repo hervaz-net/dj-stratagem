@@ -90,7 +90,7 @@ export default function Overview() {
               <div className="border-b border-line px-5 py-3.5">
                 <h2 className="text-sm font-semibold text-paper">Recent activity</h2>
               </div>
-              <ul className="divide-y divide-line/60">
+              <ul className="m-0 list-none p-0 divide-y divide-line/60">
                 {activity.map((a) => (
                   <li key={a.id} className="flex items-start gap-3 px-5 py-3.5">
                     <span className="mt-1 shrink-0">
@@ -110,7 +110,7 @@ export default function Overview() {
                 <h2 className="text-sm font-semibold text-paper">Upcoming bid deadlines</h2>
                 <Link to="/dashboard/bids" className="text-xs text-amber hover:text-amber-2">View all →</Link>
               </div>
-              <ul className="divide-y divide-line/60">
+              <ul className="m-0 list-none p-0 divide-y divide-line/60">
                 {upcomingDeadlines.map((b) => (
                   <li key={b.id} className="flex items-center justify-between gap-3 px-5 py-3.5">
                     <div className="min-w-0">
@@ -144,7 +144,7 @@ export default function Overview() {
                 <h2 className="text-xs font-semibold uppercase tracking-wider text-steel">Active alerts</h2>
                 <Link to="/dashboard/alerts" className="text-xs text-amber hover:text-amber-2">View all →</Link>
               </div>
-              <ul className="divide-y divide-line/60">
+              <ul className="m-0 list-none p-0 divide-y divide-line/60">
                 {topAlerts.map((a) => (
                   <li key={a.id} className="flex items-start gap-3 px-5 py-3">
                     <span className="mt-1 shrink-0">
@@ -163,7 +163,7 @@ export default function Overview() {
               <div className="border-b border-line px-5 py-3">
                 <h2 className="text-xs font-semibold uppercase tracking-wider text-steel">Jump to</h2>
               </div>
-              <ul className="divide-y divide-line/60">
+              <ul className="m-0 list-none p-0 divide-y divide-line/60">
                 {quickLinks.map((l) => (
                   <li key={l.to}>
                     <Link

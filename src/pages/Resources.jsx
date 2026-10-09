@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import Section, { Eyebrow } from "../components/Section";
 import PageHeader from "../components/PageHeader";
@@ -24,12 +24,26 @@ function matches(f, terms) {
 
 export default function Resources() {
   const [params, setParams] = useSearchParams();
-  const q = params.get("q") ?? "";
+  const urlQ = params.get("q") ?? "";
+  // The input is driven by local state (router updates are transitions and
+  // can lag a keystroke); the URL follows it, and an outside change to ?q=
+  // (a link, back/forward) is pulled back in.
+  const [q, setQ] = useState(urlQ);
+  const written = useRef(urlQ);
   const [category, setCategory] = useState(null);
+
+  useEffect(() => {
+    if (urlQ !== written.current) {
+      written.current = urlQ;
+      setQ(urlQ);
+    }
+  }, [urlQ]);
 
   // Keep ?q= in the URL so a search can be shared or bookmarked, without
   // piling up history entries on every keystroke.
   const setQuery = (value) => {
+    written.current = value;
+    setQ(value);
     setParams(
       (prev) => {
         const next = new URLSearchParams(prev);

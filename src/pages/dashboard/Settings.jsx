@@ -433,7 +433,7 @@ export default function Settings() {
           </Section>
 
           <Section title="Email notifications" description="Choose which emails you receive from D&J Stratagem.">
-            <ul className="space-y-4">
+            <ul className="m-0 list-none p-0 space-y-4">
               {NOTIFICATION_OPTIONS.map((opt) => (
                 <li key={opt.key} className="flex items-center justify-between gap-4">
                   <div>
