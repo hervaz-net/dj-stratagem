@@ -6,6 +6,14 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.30",
+    date: "October 2026",
+    tag: "Fix",
+    items: [
+      { type: "fixed", text: "The printable brand sheet now names D&J Stratagem, Inc. It no longer introduces the parent company as Stratagem Exchange." },
+    ],
+  },
+  {
     version: "1.29",
     date: "October 2026",
     tag: "Fix",
