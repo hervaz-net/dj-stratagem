@@ -3,8 +3,9 @@ import StatusDot from "./StatusDot";
 import RiskGauge from "./RiskGauge";
 import Sparkline from "./Sparkline";
 import { IconX } from "../icons";
+import { formatCompactMoney } from "../../lib/money";
 
-const money = (n) => (n >= 1000 ? `$${(n / 1000).toFixed(0)}k` : `$${n}`);
+const money = formatCompactMoney;
 
 const STATUS_LABEL = { active: "Active", watch: "Watch", "at-risk": "At risk" };
 const STATUS_COLOR = {
@@ -37,7 +38,7 @@ export default function SupplierDrawer({ supplier, onClose }) {
   return (
     <>
       <div
-        className="fixed inset-0 z-40 bg-ink/50"
+        className="fixed inset-0 z-40 bg-ink/50 backdrop-blur-sm"
         onClick={onClose}
         aria-hidden="true"
       />
@@ -46,7 +47,7 @@ export default function SupplierDrawer({ supplier, onClose }) {
         role="dialog"
         aria-modal="true"
         aria-label={`${supplier.name} details`}
-        className="fixed right-0 top-0 z-50 flex h-full w-full max-w-md flex-col overflow-y-auto bg-ink-2"
+        className="fixed right-0 top-0 z-50 flex h-full w-full max-w-md flex-col overflow-y-auto bg-ink-2 shadow-2xl"
       >
         {/* Header */}
         <div className="flex items-start justify-between border-b border-line px-6 py-5">
@@ -87,7 +88,7 @@ export default function SupplierDrawer({ supplier, onClose }) {
             </p>
             <div className="grid grid-cols-2 gap-3">
               {metrics(supplier).map((m) => (
-                <div key={m.label} className="rounded-sm border border-line bg-ink px-4 py-3">
+                <div key={m.label} className="rounded-lg border border-line bg-ink px-4 py-3">
                   <p className="text-xs text-steel">{m.label}</p>
                   <p className="mt-1 text-lg font-semibold tabular-nums text-paper">{m.value}</p>
                 </div>
@@ -100,7 +101,7 @@ export default function SupplierDrawer({ supplier, onClose }) {
             <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-steel">
               Risk profile
             </p>
-            <div className="rounded-sm border border-line bg-ink px-4 py-4">
+            <div className="rounded-lg border border-line bg-ink px-4 py-4">
               <RiskGauge score={supplier.riskScore} />
             </div>
           </div>
@@ -110,7 +111,7 @@ export default function SupplierDrawer({ supplier, onClose }) {
             <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-steel">
               30-day delivery trend
             </p>
-            <div className="rounded-sm border border-line bg-ink px-4 py-4">
+            <div className="rounded-lg border border-line bg-ink px-4 py-4">
               <Sparkline
                 data={supplier.trend}
                 accent={accent}

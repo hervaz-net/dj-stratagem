@@ -1,33 +1,23 @@
-const BANDS = {
-  white: "band-white",
-  stone: "band-stone",
-  dark: "band-dark",
-  accent: "band-accent",
-};
+// Nocturne has no ruled section dividers: space and the background carry the
+// rhythm. Border utilities passed by older pages are dropped here.
+const RULES = /\b(border-[tb]|border-y|border-line|border-amber\/\d+)\b/g;
 
-/**
- * Full-bleed page band. `band` picks a flat color block (white / stone /
- * dark / accent — see the .band-* rules in index.scss, which also re-scope
- * the color tokens so everything inside recolors itself). `tint` is the
- * older spelling of band="stone" and still works.
- */
-export default function Section({ id, className = "", tint = false, band, children, ...rest }) {
-  const resolved = band ?? (tint ? "stone" : null);
-  const bandClass = resolved ? BANDS[resolved] ?? "" : "";
+export default function Section({ id, className = "", children, ...rest }) {
+  const cls = className.replace(RULES, "").replace(/\s+/g, " ").trim();
   return (
-    <section id={id} className={`py-10 md:py-14 ${bandClass} ${className}`} {...rest}>
-      <div className="grid-container">{children}</div>
+    <section id={id} className={`relative px-6 py-10 md:py-16 ${cls}`} {...rest}>
+      <div className="mx-auto max-w-7xl">{children}</div>
     </section>
   );
 }
 
-/** Small uppercase section label with a square marker — flat, no pill. */
-export function Eyebrow({ children, className = "" }) {
+export function Eyebrow({ children }) {
   return (
-    <div
-      className={`mb-4 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-amber ${className}`}
-    >
-      <span className="h-1.5 w-1.5 shrink-0 bg-current" aria-hidden="true" />
+    <div className="mono-label mb-6 inline-flex items-center gap-3 text-steel">
+      <span className="relative flex h-2 w-2" aria-hidden="true">
+        <span className="absolute inset-0 animate-ping rounded-full bg-cta/60 motion-reduce:animate-none" />
+        <span className="relative h-2 w-2 rounded-full bg-cta" />
+      </span>
       {children}
     </div>
   );

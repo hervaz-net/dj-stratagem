@@ -30,7 +30,7 @@ export default function RiskGauge({ score = 0, className = "" }) {
           className="h-full rounded-full"
           style={{
             width: `${value}%`,
-            background: color,
+            background: `linear-gradient(90deg, color-mix(in srgb, ${color} 55%, transparent), ${color})`,
             transition: "width 700ms cubic-bezier(0.16,1,0.3,1)",
           }}
         />

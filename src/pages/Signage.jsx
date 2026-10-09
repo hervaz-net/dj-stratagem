@@ -1,11 +1,11 @@
-import { DocPage } from "../components/DocFrame";
+import DocFrame from "../components/DocFrame";
 import Seo from "../components/Seo";
 
 export default function Signage() {
   return (
     <>
-      <Seo title="Signage" description="Site hoarding, gate sign, and safety board layouts." />
-      <DocPage src="/signage.html" title="Signage" eyebrow="Reference" lede="Site hoarding, gate sign, and safety board layouts." />
+      <Seo title="Signage" description="Signage sheet for D&J Stratagem field and office use." />
+      <DocFrame src="/signage.html" title="Signage" />
     </>
   );
 }

@@ -1,11 +1,11 @@
-import { DocPage } from "../components/DocFrame";
+import DocFrame from "../components/DocFrame";
 import Seo from "../components/Seo";
 
 export default function FleetCards() {
   return (
     <>
-      <Seo title="Fleet Cards" description="Fleet fuel cards: controls, network, and how to apply." />
-      <DocPage src="/fleet-cards.html" title="Fleet Cards" eyebrow="Reference" lede="Fleet fuel cards: controls, network, and how to apply." />
+      <Seo title="Fleet cards" description="Printable fleet card sheet for Stratagem Fleet vehicles." />
+      <DocFrame src="/fleet-cards.html" title="Fleet cards" />
     </>
   );
 }

@@ -3,7 +3,7 @@
 # served as plaintext and the password leaks. Deny at the web-server level so
 # that failure mode can't happen.
 
-<FilesMatch "^(config\.php|config\.example\.php|bootstrap\.php|ops\.php|schema\.sql)$">
+<FilesMatch "^(config\.php|config\.example\.php|bootstrap\.php|ops\.php|ops-schema\.php|ops-seed\.php|ops-view\.php|market\.php|schema\.sql)$">
   <IfModule mod_authz_core.c>
     Require all denied
   </IfModule>
@@ -24,20 +24,23 @@
 # Directory listing would expose which endpoints exist.
 Options -Indexes
 
-# /api/ is a real directory. LiteSpeed otherwise serves its HTML 404 for the
-# directory URL and for any missing file under it. Prefer index.php because
-# that is LiteSpeed's default DirectoryIndex; keep not-found.php as the
-# ErrorDocument target so fetch() never parses marketing markup.
-DirectoryIndex index.php not-found.php
-ErrorDocument 404 /api/index.php
+# index.php is LiteSpeed's default DirectoryIndex. Do not ErrorDocument 404 to
+# a PHP script that itself returns 404 — that loop is an HTTP 500 on this host.
+DirectoryIndex index.php
+ErrorDocument 404 default
 
-# LiteSpeed often ignores the document-root rewrite for missing /api/* paths
-# and serves its HTML 404 page. Handle the miss here so fetch() always gets
-# JSON instead of marketing HTML.
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteRule ^index\.php$ - [L]
   RewriteRule ^not-found\.php$ - [L]
+  # Always send the probe to the working root /health.php. PT so LiteSpeed
+  # re-runs the PHP handler on the target instead of 404ing a missing local file.
+  RewriteRule ^health(\.php)?/?$ /health.php [L,PT]
+  # /api/ is the directory itself, not a file. Without this, the catch-all
+  # below answers the directory request with not-found.php (JSON 404) even
+  # though DirectoryIndex is index.php. /api already 301s to /api/.
+  RewriteRule ^$ index.php [L]
   RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteRule ^ index.php [L]
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^ not-found.php [L]
 </IfModule>

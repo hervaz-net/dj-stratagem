@@ -51,36 +51,38 @@ and approved for publication.
 methodology, not a single anecdote. If it is one customer's result, say so and
 say it is not typical.
 
-## Sample product data (2026-09-14: disclaimer labels removed)
+## Sample product data is fine, when labelled
 
-`OpportunityPreview.jsx`, `HeroPanel.jsx`, the Fleet board, the Catalog, and
-the project listing pages (`sampleProjects.js` — `/projects`, project detail,
-trade/location pages) all show illustrative product mockups. Through
-2026-09-14 these carried visible labels: a "Sample view" chip on the two hero
-panels, a "Preview — sample X" banner (`PreviewNotice.jsx`) on Catalog,
-Fleet, Projects, ProjectDetail, and TradeLocation, and a "Sample data" strip
-on the Overview/Suppliers dashboards.
+`OpportunityPreview.jsx` shows representative project rows. That is a product
+mockup, not a customer claim, and it carries a visible "Sample view" label.
+Keep that label as long as the data is illustrative. The same applies to the
+dashboard mockups in `WalkthroughModal.jsx`.
 
-The owner explicitly asked for these removed, was shown this section's
-original warning about the project-listing pages specifically (a contractor
-mistaking a sample listing for a real solicitation loses real hours chasing
-a bid that does not exist), and confirmed removal anyway. `PreviewNotice.jsx`
-was deleted; the "Sample view" and "Sample data" labels were removed from
-their components. A single small line was added to `Footer.jsx` instead:
-"Product data shown throughout this site — projects, bids, pricing, and
-catalog items — is illustrative." That is the only remaining disclosure.
+The line: **showing what the product does** is fine. **Claiming someone
+used it and got a result** requires proof.
 
-Rules that still apply regardless of labelling:
+### Sample project listings carry a higher duty
 
+`src/data/sampleProjects.js` feeds `/projects`, the project detail pages, and
+the trade/location landing pages. These are illustrative, not a live feed.
+
+This matters more than a mockup on a marketing page. A contractor who mistakes
+a sample listing for a real solicitation loses real hours — chasing a bid,
+pulling a team onto an estimate, calling an owner who never posted the work.
+So every surface that renders this data shows `PreviewNotice`: a full-width
+banner stating plainly that the listings are not live solicitations and cannot
+be bid on.
+
+Rules while the feed is illustrative:
+
+- Never remove `PreviewNotice` from a page rendering `sampleProjects`.
 - Never present a sample listing as biddable — no live countdowns implying a
   real deadline, no downloadable "plans" that do not exist.
 - Owner and GC names must stay clearly generic or explicitly marked sample.
   Do not name a real GC as the contractor on an invented project.
-- This is still not a customer claim or a testimonial — the line above ("showing
-  what the product does" is fine, "claiming someone used it and got a result"
-  requires proof) is unchanged and unaffected by this section.
 
-When the real feed lands, replace `sampleProjects.js` with the API client.
+When the real feed lands, replace the module with the API client and drop
+`PreviewNotice` from the pages backed by live data — not before.
 
 ## Also removed: the phantom blog (2026-08-13)
 
@@ -92,7 +94,29 @@ a broken promise in the same family as invented proof, so it came down.
 Put it back when there are posts. It needs real articles at real URLs — not
 cards that link to `/changelog`, which is a changelog, not a blog.
 
+## Also removed: real companies in the dashboard seed (2026-09-30)
+
+`public/api/ops.php` seeded the hosted dashboard's bid tracker with Turner
+Construction, PCL, McCarthy, Hensel Phelps, Swinerton, and Granite
+Construction as the counterparties on bids, two of them marked "awarded". The
+same names were taken off the marketing site on 2026-08-07, but this copy came
+from the API, so the dashboard showed it as live data with no sample label.
+
+Schema v2 (`migrate_ops_v2`) deletes the v1 seed by its fixed ids and reseeds
+with the fictional names from `src/api/fixtures.js`. Every seed row now
+carries `is_seed = 1`, and endpoints answer `sample: true` while seed rows are
+present, so the dashboard keeps its sample notice on the hosted site too.
+Overview, metrics, analytics, and the price ticker always answer
+`sample: true`: their change figures and trend lines are synthetic, not
+measured. An admin can delete the seed rows under Accounts → Remove sample data.
+
 ## Still outstanding
+
+- The blog (`/blog`, from main) is unpublished: routes redirect to
+  /changelog and it is out of the footer, palette, and sitemap. One post
+  claimed a SOC 2 Type II report that is not on file, and the others describe
+  the pre-rebrand bidding product. Republish only with posts that are true
+  for Stratagem Exchange; `src/pages/Blog.jsx` and `src/data/posts.js` remain.
 
 - Starter stays free. Paid tiers are request-access only until billing
   actually exists. Do not put “free trial / no credit card” back on Pricing
@@ -100,3 +124,13 @@ cards that link to `/changelog`, which is a changelog, not a blog.
 - Document pages (`privacy.html`, `terms.html`, brand/fleet/receipts/signage)
   now use the system UI stack and in-repo SVG marks. Do not put
   `fonts.googleapis.com` or missing `uploads/*.png` paths back.
+
+## Stratagem Fleet credentials (2026-10-04)
+
+`/fleet` is a passenger-transportation operator page driven by
+`src/data/fleet.js`. Issued credentials render an Active badge and are not
+printed as raw numbers on the page; permit numbers and the certificate of
+insurance stay available on request. An empty field still renders Pending.
+The FMCSA authority row stays "Intrastate only" until an MC number is on file.
+Do not mark the page "now booking" or list a vehicle in `vehicles` until that
+unit is registered, inspected, and insured, with a photo you own.

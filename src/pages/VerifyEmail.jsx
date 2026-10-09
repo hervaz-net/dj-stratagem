@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import Logo from "../components/Logo";
-import Section from "../components/Section";
 import Seo from "../components/Seo";
 
 export default function VerifyEmail() {
@@ -8,30 +7,29 @@ export default function VerifyEmail() {
     <>
       <Seo title="Account review" description="New D&J Stratagem accounts are approved by the team. There is no automated verification email." noindex />
 
-      <Section band="stone" className="md:py-16">
-        <div className="mx-auto w-full max-w-md">
-        <div className="rounded-sm border border-line bg-ink-2 p-6 sm:p-8">
+      <div className="mx-auto flex w-full max-w-md flex-col justify-center px-6 py-10 md:py-14">
+        <div className="slab p-8">
           <Link to="/" className="inline-block" aria-label="D&J Stratagem — home">
             <Logo />
           </Link>
 
           <div className="mt-8 text-center">
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-sm bg-amber/10">
+            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-amber/10">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" className="text-amber" aria-hidden="true">
                 <rect width="20" height="16" x="2" y="4" rx="2" />
                 <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
               </svg>
             </div>
-            <h1 className="mt-5 text-2xl font-semibold tracking-tight text-paper">Account review, not a magic link</h1>
+            <h1 className="mt-5 text-paper text-6xl leading-[0.95] md:text-8xl">Account review, not a magic link</h1>
             <p className="mt-3 text-sm leading-relaxed text-steel">
               New accounts stay pending until someone on the team approves them. There is no automated verification email and no 24-hour link.
             </p>
             <p className="mt-3 text-sm text-steel">
-              If you just requested access, wait for an email from us. If you never submitted a request, start at the{" "}
+              If you just requested access, wait for an email from us. If you never submitted a request, start at{" "}
               <Link to="/register" className="font-medium text-amber hover:text-amber-2">
-                create account
-              </Link>{" "}
-              page.
+                /register
+              </Link>
+              .
             </p>
 
             <div className="mt-8 space-y-3">
@@ -55,14 +53,7 @@ export default function VerifyEmail() {
         <p className="mt-8 text-center text-xs text-steel">
           Approval notices come from hello@djstratageminc.com. Check spam if nothing arrives after a business day.
         </p>
-        <p className="mt-3 text-center text-xs text-steel">
-          Need help?{" "}
-          <Link to="/resources" className="font-medium text-amber hover:text-amber-2">
-            Visit the help center
-          </Link>
-        </p>
-        </div>
-      </Section>
+      </div>
     </>
   );
 }

@@ -9,11 +9,20 @@ function GlowToggle({ active, onClick, children, dotColor }) {
       type="button"
       onClick={onClick}
       aria-pressed={active}
-      className={`lift inline-flex items-center gap-2 rounded-sm border px-4 py-2 text-xs font-semibold transition-colors ${
+      className={`lift inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-semibold transition-colors ${
         active
           ? "border-amber/60 bg-amber/12 text-amber"
           : "border-line bg-ink/50 text-steel hover:border-amber/35 hover:text-paper"
       }`}
+      style={
+        active
+          ? {
+              boxShadow: `0 0 16px -4px color-mix(in srgb, ${
+                dotColor ?? "var(--brand)"
+              } 70%, transparent)`,
+            }
+          : undefined
+      }
     >
       {dotColor && (
         <span
@@ -107,7 +116,7 @@ export default function FilterBar({
             value={query}
             onChange={(e) => onQueryChange(e.target.value)}
             placeholder="Supplier, category, or region"
-            className="w-full rounded-sm border border-line bg-ink px-3.5 py-2.5 text-sm text-paper outline-hidden transition-colors placeholder:text-steel/70 focus:border-amber"
+            className="w-full rounded-lg border border-line bg-ink px-3.5 py-2.5 text-sm text-paper outline-hidden transition-colors placeholder:text-steel/70 focus:border-amber"
           />
 
           <div className="mt-4 flex flex-wrap gap-2">

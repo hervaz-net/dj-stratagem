@@ -1,0 +1,104 @@
+#!/usr/bin/env bash
+# Fail a production build that would ship a stripped public_html tree.
+# Live broke on 19 Sep 2026 when `deploy` was refreshed from a partial
+# dist (tiny .htaccess, no /api, no health.php). LiteSpeed then SPA-fell
+# every PHP probe and static doc back to index.html.
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+DIST="${1:-$ROOT/dist}"
+
+die() { printf 'verify-dist: %s\n' "$*" >&2; exit 1; }
+
+[[ -d "$DIST" ]] || die "no dist at $DIST — run npm run build"
+
+need_files=(
+  index.html
+  .htaccess
+  contact.php
+  send-demo.php
+  health.php
+  manifest.webmanifest
+  manifest.json
+  api/credit.php
+  robots.txt
+  sitemap.xml
+  favicon.svg
+  api/.htaccess
+  api/health.php
+  api/me.php
+  api/index.php
+  api/not-found.php
+  api/login.php
+  api/register.php
+  api/bootstrap.php
+  api/logout.php
+  api/alerts.php
+  api/bids.php
+  api/analytics.php
+  api/orders.php
+  api/settings.php
+  api/metrics.php
+  api/overview.php
+  api/suppliers.php
+  api/ops.php
+  api/ops-schema.php
+  api/ops-seed.php
+  api/ops-view.php
+  api/market.php
+  api/requests.php
+  api/catalog.php
+  api/sample-data.php
+  api/market-ticker.php
+  api/config.example.php
+  privacy.html
+  terms.html
+  fleet-cards.html
+  signage.html
+  receipts.html
+)
+
+missing=0
+for rel in "${need_files[@]}"; do
+  if [[ ! -f "$DIST/$rel" ]]; then
+    printf 'verify-dist: missing %s\n' "$rel" >&2
+    missing=1
+  fi
+done
+[[ "$missing" -eq 0 ]] || die "dist is incomplete; refusing to ship"
+
+htaccess="$DIST/.htaccess"
+grep -q 'application/x-httpd-alt-php81___lsphp' "$htaccess" \
+  || die ".htaccess is missing the CloudLinux alt-php81 handler"
+grep -q 'RewriteRule \^api/' "$htaccess" \
+  || die ".htaccess is missing the /api/ passthrough"
+grep -q 'RewriteRule \^api/health' "$htaccess" \
+  || die ".htaccess is missing the /api/health.php alias to /health.php"
+grep -q 'REQUEST_URI' "$htaccess" \
+  || die ".htaccess is missing the PHP exclusion on the SPA fallback"
+
+api_htaccess="$DIST/api/.htaccess"
+grep -q 'RewriteRule \^health' "$api_htaccess" \
+  || die "api/.htaccess must alias health.php to /health.php"
+
+bundle="$(grep -oE 'assets/index-[A-Za-z0-9_-]+[.]js' "$DIST/index.html" | head -1 || true)"
+[[ -n "$bundle" ]] || die "index.html has no hashed JS bundle"
+[[ -f "$DIST/$bundle" ]] || die "hashed bundle $bundle is not in dist/"
+
+if [[ -d "$DIST/fleet" ]]; then
+  die "dist/fleet is a directory; that path is the SPA route. Put photos in dist/media/fleet"
+fi
+# Photos carry a content hash (sedan.<hash>.webp) so a new version is a new URL
+# and the week-long image cache can never show a stale one.
+for photo in sedan suv van sprinter minibus; do
+  compgen -G "$DIST/media/fleet/${photo}.*.webp" >/dev/null || die "missing media/fleet/${photo}.<hash>.webp"
+done
+grep -q 'RewriteRule \^fleet/?\$ /spa.php' "$htaccess" \
+  || grep -q 'RewriteRule \^fleet\$ /spa.php' "$htaccess" \
+  || grep -q 'RewriteRule \^fleet/?\$ /index.html' "$htaccess" \
+  || grep -q 'RewriteRule \^fleet\$ /index.html' "$htaccess" \
+  || die ".htaccess is missing the /fleet SPA override"
+test -f "$DIST/spa.php" || die "dist is missing spa.php"
+
+printf 'verify-dist: ok (%s)\n' "$bundle"
+

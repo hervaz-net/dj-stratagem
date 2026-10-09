@@ -1,298 +1,256 @@
-// D&J Stratagem — corporate design system (SASS)
-//
-// Buttons, labels (pill badges), cards, and form fields build on Foundation
-// for Sites' real components (.button, .label, .card, input/select/textarea)
-// rather than bespoke classes — see _settings.scss for the Foundation Sass
-// variables (geometry: radius, padding, sizes) that get this most of the way
-// there. What's layered on top here is color: Foundation's own component
-// colors are compiled once at build time as static values, so they can't
-// respond to the [data-theme="dark"] switch. Every rule below re-points
-// color/background/border at the CSS custom properties in index.css instead,
-// which is what actually keeps light/dark theming working through Foundation
-// exactly as it did under Tailwind. Tables and KPI blocks have no Foundation
-// equivalent worth adopting, so they stay bespoke, unchanged.
-//
-// GRID CONVERSION PATTERN — when converting a page's Tailwind grid/flex
-// layout to Foundation, use exactly this shape:
-//
-//   <div className="grid-x grid-margin-x gap-y-N ...">
-//     <div className="cell small-12 medium-6 large-4">...</div>
-//     ...
-//   </div>
-//
-// Two easy-to-get-wrong points, both found the hard way converting Home.jsx:
-//
-// 1. Never combine bare `.grid-x`/`.cell` with Tailwind's `gap-N` (or
-//    `gap-x-N`) for horizontal spacing. Foundation's .cell width percentages
-//    are sized to sum to exactly 100% (three .large-4 cells = 100%, no
-//    headroom for a gap), so any column-gap forces an unwanted wrap — a row
-//    meant to hold 3 cards renders as 2+1. Always pair `.grid-x` with the
-//    `grid-margin-x` modifier, which is Foundation's own gutter system (it
-//    adjusts the cell width calculation to leave room for the gutter).
-//    `gap-y-N` (vertical only) is fine and necessary alongside grid-margin-x
-//    — Foundation's x-gutters don't add spacing between wrapped rows.
-// 2. Tailwind's breakpoints map cleanly to Foundation's for this purpose:
-//    sm: (640px) → medium:, lg: (1024px) → large:. Tailwind's md: (768px)
-//    has no Foundation equivalent — leave typography/spacing using md: as
-//    plain Tailwind utilities, only grid column counts need conversion.
+// D&J Stratagem - Design System SCSS Tokens
+// This file provides SCSS variables and utilities for consistent styling across the app
 
-$radius-xs: 2px;
-$radius-sm: 3px;
-$radius-md: 4px;
-$radius-lg: 4px;
+// ============================================================
+// COLOR PALETTE
+// ============================================================
 
+// Primary Colors
+$color-ink: #f5f5f7;
+$color-ink-2: #ffffff;
+$color-ink-3: #f5f5f7;
+$color-line: #e5e5e7;
+
+// Text Colors
+$color-paper: #1d1d1f;
+$color-paper-2: #424245;
+$color-steel: #86868b;
+
+// Accent Colors
+$color-amber: #0071e3;
+$color-amber-2: #34c759;
+
+// Status Colors
+$color-success: #34c759;
+$color-warning: #ff9500;
+$color-error: #ff3b30;
+$color-info: #0071e3;
+
+// ============================================================
+// TYPOGRAPHY
+// ============================================================
+
+$font-sans: "Archivo", "Inter", ui-sans-serif, system-ui, sans-serif;
+
+$font-size-xs: 12px;
+$font-size-sm: 14px;
+$font-size-base: 16px;
+$font-size-lg: 18px;
+$font-size-xl: 20px;
+$font-size-2xl: 24px;
+$font-size-3xl: 30px;
+$font-size-4xl: 36px;
+$font-size-5xl: 48px;
+$font-size-6xl: 60px;
+
+$font-weight-light: 300;
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+$font-weight-extrabold: 800;
+
+$line-height-tight: 1;
+$line-height-snug: 1.2;
+$line-height-normal: 1.5;
+$line-height-relaxed: 1.625;
+$line-height-loose: 2;
+
+// ============================================================
+// SPACING
+// ============================================================
+
+$space-0: 0;
 $space-1: 4px;
 $space-2: 8px;
 $space-3: 12px;
 $space-4: 16px;
-$space-5: 20px;
 $space-6: 24px;
-
-$font-size-xs: 0.75rem;
-$font-size-sm: 0.8125rem;
-$font-size-base: 0.9375rem;
-$font-size-md: 1rem;
-
-$transition-base: 150ms ease;
-
-@mixin focus-ring {
-  &:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-  }
-}
-
-// Tailwind v4 registers `@layer theme, base, components, utilities;` (see
-// index.css). Un-layered CSS always beats layered CSS regardless of
-// selector order, so without this every rule below would permanently win
-// over Tailwind utilities like `lg:hidden` or `hover:border-amber` applied
-// alongside these classes — everything from here down joins the
-// `components` layer, one slot below `utilities`, so a plain utility class
-// can still override it as expected.
-@layer components {
+$space-8: 32px;
+$space-10: 40px;
+$space-12: 48px;
+$space-14: 56px;
+$space-16: 64px;
 
 // ============================================================
-// BUTTONS — Foundation's real .button component (geometry tuned in
-// _settings.scss), re-colored per variant against the CSS custom
-// properties so dark mode keeps working. `.button` alone (no modifier)
-// is primary/solid; `.secondary`/`.clear`/`.hollow.alert` cover the rest.
+// BORDER RADIUS
 // ============================================================
 
-.button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: $space-2;
-  white-space: nowrap;
-  background: var(--cta);
-  color: #fff;
-  border-color: var(--cta);
-  @include focus-ring;
-
-  &:hover:not(:disabled) { background: var(--cta-hover); border-color: var(--cta-hover); }
-
-  &:disabled,
-  &[aria-disabled="true"] {
-    opacity: 0.55;
-    cursor: not-allowed;
-    pointer-events: none;
-  }
-
-  // Secondary — light surface, bordered, dark text. Foundation's own
-  // .secondary variant is a solid dark fill, which isn't the look we want,
-  // so it's fully re-colored rather than just re-pointed.
-  &.secondary {
-    background: var(--surface-raised);
-    color: var(--text);
-    border: 1px solid var(--border-strong);
-
-    &:hover:not(:disabled) { background: var(--surface-hover); border-color: var(--accent); }
-  }
-
-  // Ghost — Foundation calls a border-less, background-less button "clear".
-  &.clear {
-    background: transparent;
-    color: var(--text);
-    border-color: transparent;
-
-    &:hover:not(:disabled) { background: var(--surface-hover); color: var(--accent); }
-  }
-
-  // Danger-outline — Foundation's .hollow.alert combination (outlined,
-  // alert-colored) already matches the intent; just re-pointed to the
-  // theme-aware custom properties.
-  &.hollow.alert {
-    background: transparent;
-    color: var(--danger);
-    border-color: color-mix(in srgb, var(--danger) 45%, transparent);
-
-    &:hover:not(:disabled) { background: var(--danger-bg); }
-  }
-}
+$radius-none: 0;
+$radius-sm: 4px;
+$radius-md: 8px;
+$radius-lg: 12px;
+$radius-xl: 16px;
+$radius-2xl: 24px;
+$radius-full: 9999px;
 
 // ============================================================
-// LABELS — Foundation's small pill/tag component (status labels like
-// "Leveled", "Active"). Foundation's own .badge is a different, unrelated
-// component (a small circular count indicator), so labels — not badges —
-// are the right primitive here; geometry from _settings.scss, color
-// re-pointed at the CSS custom properties per variant.
+// SHADOWS
 // ============================================================
 
-.label {
-  display: inline-flex;
-  align-items: center;
-  gap: $space-1;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  border: 1px solid transparent;
-  line-height: 1.4;
-  text-transform: none;
-
-  &.secondary { background: var(--surface-hover); color: var(--text-muted); border-color: var(--border); }
-  &.primary { background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent); border-color: color-mix(in srgb, var(--accent) 28%, transparent); }
-  &.success { background: var(--success-bg); color: var(--success); border-color: color-mix(in srgb, var(--success) 30%, transparent); }
-  &.warning { background: var(--warning-bg); color: var(--warning); border-color: color-mix(in srgb, var(--warning) 30%, transparent); }
-  &.alert { background: var(--danger-bg); color: var(--danger); border-color: color-mix(in srgb, var(--danger) 30%, transparent); }
-}
+$shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+$shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 
 // ============================================================
-// CARDS / PANELS — flat, hairline-bordered, minimal shadow.
+// BREAKPOINTS
 // ============================================================
 
-.card-corp {
-  background: var(--surface-raised);
-  border: 1px solid var(--border);
-  border-radius: $radius-md;
-  box-shadow: var(--panel-shadow);
-}
-
-.card-corp-hover {
-  transition: border-color $transition-base, box-shadow $transition-base;
-
-  &:hover {
-    border-color: var(--accent);
-  }
-}
+$breakpoint-sm: 640px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 1024px;
+$breakpoint-xl: 1280px;
+$breakpoint-2xl: 1536px;
 
 // ============================================================
-// TABLES — dense, ledger-style rows. Zebra via sunken surface, not shadow.
+// TRANSITIONS & ANIMATIONS
 // ============================================================
 
-.table-corp {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: $font-size-sm;
+$transition-fast: 150ms ease-in-out;
+$transition-base: 200ms ease-in-out;
+$transition-slow: 300ms ease-in-out;
 
-  th {
-    text-align: left;
-    font-size: $font-size-xs;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--text-muted);
-    padding: $space-2 $space-3;
-    border-bottom: 1px solid var(--border-strong);
-    white-space: nowrap;
-  }
+// ============================================================
+// MIXINS
+// ============================================================
 
-  td {
-    padding: $space-3;
-    border-bottom: 1px solid var(--border);
-    color: var(--text);
-    vertical-align: middle;
-  }
-
-  tbody tr {
-    transition: background-color $transition-base;
-
-    &:hover {
-      background: var(--surface-hover);
+// Responsive utilities
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == sm {
+    @media (min-width: $breakpoint-sm) {
+      @content;
+    }
+  } @else if $breakpoint == md {
+    @media (min-width: $breakpoint-md) {
+      @content;
+    }
+  } @else if $breakpoint == lg {
+    @media (min-width: $breakpoint-lg) {
+      @content;
+    }
+  } @else if $breakpoint == xl {
+    @media (min-width: $breakpoint-xl) {
+      @content;
+    }
+  } @else if $breakpoint == 2xl {
+    @media (min-width: $breakpoint-2xl) {
+      @content;
     }
   }
+}
 
-  tbody tr:nth-child(even) {
-    background: color-mix(in srgb, var(--surface-sunken) 55%, transparent);
-  }
+// Flexbox centering
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-  tbody tr:nth-child(even):hover {
-    background: var(--surface-hover);
-  }
+// Absolute centering
+@mixin absolute-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+// Truncate text
+@mixin truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Multi-line truncate
+@mixin line-clamp($lines: 2) {
+  display: -webkit-box;
+  -webkit-line-clamp: $lines;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+// Smooth transitions
+@mixin smooth-transition($properties: all, $duration: $transition-base) {
+  transition: $properties $duration;
+}
+
+// Glass morphism effect
+@mixin glass-effect($opacity: 0.1) {
+  background: rgba(255, 255, 255, $opacity);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 // ============================================================
-// KPI / STAT BLOCKS — for dashboard metrics and marketing stat rows alike.
-// Numbers are controlled, not oversized.
+// UTILITY FUNCTIONS
 // ============================================================
 
-.kpi-value {
-  font-size: 1.75rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--text-strong);
-  font-variant-numeric: tabular-nums;
+// Convert px to rem
+@function rem($px) {
+  @return ($px / 16px) * 1rem;
 }
 
-.kpi-label {
-  font-size: $font-size-xs;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--text-muted);
+// Darken/lighten colors
+@function darken-color($color, $amount) {
+  @return mix(black, $color, $amount);
+}
+
+@function lighten-color($color, $amount) {
+  @return mix(white, $color, $amount);
 }
 
 // ============================================================
-// FORM CONTROLS — Foundation styles input/select/textarea elements
-// directly (not through a class), so every field site-wide picks up
-// theme-aware colors automatically now, not just ones explicitly marked
-// .field-corp. .field-corp stays defined, identically, for the handful of
-// pages still using it explicitly — it's redundant with the element
-// defaults below, not a conflicting second system.
+// COMMON COMPONENT STYLES
 // ============================================================
 
-input:not([type="checkbox"]):not([type="radio"]),
-select,
-textarea {
-  border-radius: $radius-sm;
-  border: 1px solid var(--border-strong);
-  background: var(--surface-raised);
-  color: var(--text);
-  transition: border-color $transition-base;
+// Card base style
+@mixin card {
+  border-radius: $radius-lg;
+  border: 1px solid $color-line;
+  background: linear-gradient(to bottom, $color-ink-2, $color-ink-3);
+  padding: $space-6;
+  @include smooth-transition();
 
-  &::placeholder { color: var(--text-muted); }
-
-  &:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 16%, transparent);
+  &:hover {
+    border-color: $color-amber;
+    box-shadow: $shadow-lg;
   }
+}
+
+// Button base style
+@mixin button-base {
+  padding: $space-3 $space-4;
+  border-radius: $radius-md;
+  font-weight: $font-weight-bold;
+  font-size: $font-size-sm;
+  cursor: pointer;
+  @include smooth-transition();
+  border: none;
 
   &:disabled {
-    background: var(--surface-hover);
+    opacity: 0.5;
     cursor: not-allowed;
   }
 }
 
-.field-corp {
-  width: 100%;
-  border-radius: $radius-sm;
-  border: 1px solid var(--border-strong);
-  background: var(--surface-raised);
-  color: var(--text);
-  padding: 0.5rem 0.75rem;
+// Input base style
+@mixin input-base {
+  padding: $space-2 $space-3;
+  border-radius: $radius-md;
+  border: 1px solid $color-line;
+  font-family: $font-sans;
   font-size: $font-size-base;
-  transition: border-color $transition-base;
-
-  &::placeholder { color: var(--text-muted); }
+  @include smooth-transition(border, $transition-fast);
 
   &:focus {
     outline: none;
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 16%, transparent);
+    border-color: $color-amber;
   }
 
   &:disabled {
-    background: var(--surface-hover);
+    background-color: $color-ink-3;
     cursor: not-allowed;
   }
 }
-
-} // @layer components

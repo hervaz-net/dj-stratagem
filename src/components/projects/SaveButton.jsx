@@ -1,10 +1,11 @@
 import { IconBookmark } from "../icons";
+import Button from "../Button";
 import { useSavedProjects } from "../../lib/savedProjects";
 
 /**
  * Bookmark toggle backed by the shared saved-projects store.
- * `full` renders a labelled button (detail header); the default is an
- * icon-only square for dense rows.
+ * `full` renders a labelled Button (detail header); the default is an
+ * icon-only chamfered square for list cards.
  */
 export default function SaveButton({ project, full = false, className = "" }) {
   const { isSaved, toggle } = useSavedProjects();
@@ -20,16 +21,17 @@ export default function SaveButton({ project, full = false, className = "" }) {
 
   if (full) {
     return (
-      <button
+      <Button
         type="button"
+        variant="secondary"
         aria-pressed={saved}
         aria-label={`Save ${project.title}`}
         onClick={() => toggle(project.slug)}
-        className={`button secondary ${saved ? "is-saved" : ""} mb-0! inline-flex items-center justify-center gap-2 ${className}`}
+        className={`${saved ? "text-brand!" : ""} ${className}`}
       >
         {icon}
         {saved ? "Saved" : "Save project"}
-      </button>
+      </Button>
     );
   }
 
@@ -40,10 +42,8 @@ export default function SaveButton({ project, full = false, className = "" }) {
       aria-label={`Save ${project.title}`}
       title={saved ? "Remove from saved" : "Save project"}
       onClick={() => toggle(project.slug)}
-      className={`inline-flex h-9 w-9 items-center justify-center rounded-sm border transition-colors ${
-        saved
-          ? "border-amber bg-ink text-amber"
-          : "border-line-2 bg-ink-2 text-steel hover:border-amber hover:text-paper"
+      className={`inline-flex h-9 w-9 items-center justify-center chamfer-sm bg-ink-2 transition-colors hover:bg-ink-3 ${
+        saved ? "text-brand" : "text-steel hover:text-paper"
       } ${className}`}
     >
       {icon}

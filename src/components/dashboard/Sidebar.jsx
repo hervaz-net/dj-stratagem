@@ -2,7 +2,6 @@ import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import StatusDot from "./StatusDot";
 import Logo from "../Logo";
-import ThemeToggle, { useThemeMode } from "../ThemeToggle";
 import useAuth from "../../auth/useAuth";
 
 const items = [
@@ -67,7 +66,7 @@ function NavItem({ item }) {
     <NavLink
       to={item.to}
       className={({ isActive }) =>
-        `group relative flex shrink-0 items-center gap-3 rounded-sm px-3 py-2.5 text-base font-semibold transition-colors ${
+        `group relative flex shrink-0 items-center gap-3 rounded-xl px-3 py-2.5 text-base font-semibold transition-colors ${
           isActive ? "bg-amber/12 text-amber" : "text-steel hover:bg-ink-3 hover:text-paper"
         }`
       }
@@ -89,7 +88,7 @@ function NavItem({ item }) {
     <span
       aria-disabled="true"
       title={`${item.label} — not built yet`}
-      className="group relative flex shrink-0 cursor-not-allowed items-center gap-3 rounded-sm px-3 py-2.5 text-sm font-medium text-steel/55"
+      className="group relative flex shrink-0 cursor-not-allowed items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-steel/55"
     >
       <ItemIcon item={item} />
       <span className="whitespace-nowrap">{item.label}</span>
@@ -104,7 +103,6 @@ export default function Sidebar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [signingOut, setSigningOut] = useState(false);
-  const { theme } = useThemeMode();
 
   const signOut = async () => {
     setSigningOut(true);
@@ -138,18 +136,10 @@ export default function Sidebar() {
           </nav>
 
           <div className="mt-auto hidden px-2 pt-6 lg:block">
-            {/* Theme toggle */}
-            <div className="mb-3 flex items-center justify-between rounded-sm border border-line bg-ink px-3 py-2.5">
-              <span className="text-xs font-semibold text-steel">
-                {theme === "dark" ? "Dark mode" : "Light mode"}
-              </span>
-              <ThemeToggle />
-            </div>
-
             {/* Settings */}
             <NavItem item={settingsItem} />
 
-            <div className="mt-3 rounded-sm border border-line bg-ink p-3">
+            <div className="mt-3 rounded-xl border border-line bg-ink/60 p-3">
               <div className="flex items-center gap-2">
                 <StatusDot status="active" size={7} />
                 <span className="text-xs font-semibold text-paper">All systems normal</span>
@@ -160,7 +150,7 @@ export default function Sidebar() {
             </div>
 
             {user && (
-              <div className="mt-3 rounded-sm border border-line bg-ink p-3">
+              <div className="mt-3 rounded-xl border border-line bg-ink/60 p-3">
                 <p className="truncate text-xs font-semibold text-paper" title={user.name}>
                   {user.name}
                 </p>
@@ -188,14 +178,14 @@ export default function Sidebar() {
       {/* Mobile bottom navigation bar */}
       <nav
         aria-label="Mobile navigation"
-        className="no-print fixed bottom-0 left-0 right-0 z-40 flex items-center justify-around border-t border-line bg-ink px-2 py-2 lg:hidden"
+        className="no-print fixed bottom-0 left-0 right-0 z-40 flex items-center justify-around border-t border-line bg-ink/95 px-2 py-2 backdrop-blur-sm lg:hidden"
       >
         {[...visibleItems.slice(0, 5), settingsItem].map((item) => (
           <NavLink
             key={item.to}
             to={item.to}
             className={({ isActive }) =>
-              `flex flex-col items-center gap-0.5 rounded-sm px-2 py-1.5 text-[10px] font-medium transition-colors ${
+              `flex flex-col items-center gap-0.5 rounded-lg px-2 py-1.5 text-[10px] font-medium transition-colors ${
                 isActive ? "text-amber" : "text-steel"
               }`
             }

@@ -1,7 +1,6 @@
 import Section, { Eyebrow } from "../components/Section";
-import PageHeader from "../components/PageHeader";
-import { Link } from "react-router-dom";
 import Button from "../components/Button";
+import PageHero from "../components/nocturne/PageHero";
 import CTASection from "../components/CTASection";
 import Reveal from "../components/Reveal";
 import Seo from "../components/Seo";
@@ -18,12 +17,7 @@ import {
   IconClock,
   IconArrowRight,
   IconCheck,
-  IconBuilding,
-  IconSparkle,
-  IconWallet,
-  IconTarget,
 } from "../components/icons";
-import { SupplyStackArt } from "../components/illustrations";
 
 const categories = [
   {
@@ -104,51 +98,11 @@ const efficiencies = [
   },
 ];
 
-const commerceEngine = [
-  {
-    icon: <IconBuilding />,
-    title: "Built for B2B, B2C, and B2B2X",
-    text: "The same commerce engine runs a contractor account, a walk-up retail buyer, and a franchise or marketplace network selling under your suppliers' own storefronts — no separate systems to stitch together.",
-  },
-  {
-    icon: <IconSparkle />,
-    title: "Front-end, CMS, AI, search, and CRM — out of the box",
-    text: "A modern storefront, content management, AI-assisted matching, product search, and a built-in CRM ship together as one stack. Deploy on our SOC 2 Type II–compliant SaaS or on your own infrastructure.",
-  },
-  {
-    icon: <IconLayers />,
-    title: "One portal, the whole buyer relationship",
-    text: "Products, live pricing, order history, and invoices sit in a single responsive portal — with personalized search, quick reorder, order tracking, and shipping and payment integrations built in for a faster checkout.",
-  },
-  {
-    icon: <IconTarget />,
-    title: "A workflow engine you can actually read",
-    text: "Automate order approvals, promotions, and exceptions with a visual builder — tailored by customer, role, or rule, not by a developer's backlog.",
-  },
-  {
-    icon: <IconScale />,
-    title: "Pricing that's synced, not spreadsheet-managed",
-    text: "Contract pricing, order minimums, units of measure, kits, and bundles stay synced everywhere they're quoted, so the price a buyer sees is always the price you meant to give them — no manual workarounds.",
-  },
-  {
-    icon: <IconWallet />,
-    title: "Self-service payments, real-time cash visibility",
-    text: "Give buyers instant, self-service payment options and give your team real-time cash flow visibility — backed by enterprise-grade security and lower transaction fees than a typical card processor.",
-  },
-];
-
 const supplierProtections = [
   "Set floor pricing per SKU so a quote can never be scored below your margin",
   "Win on lead time, fill rate, and reliability — not just by being cheapest",
   "Pooled orders mean fewer, larger, committed POs instead of constant small quotes",
   "Performance ratings compound: deliver well and you rank higher on future matches",
-];
-
-const nextSteps = [
-  { to: "/supply/catalog", title: "Browse the catalog", text: "Search 300+ SKUs by brand, type, and quantity.", cta: "Open the catalog" },
-  { to: "/quote", title: "Request a quote", text: "Review the items you picked and send them to our team.", cta: "Start a quote" },
-  { to: "/projects", title: "See open projects", text: "Browse construction bid opportunities by trade and territory.", cta: "View projects" },
-  { to: "/pricing", title: "Pricing", text: "Plans, add-ons, and an ROI calculator.", cta: "Compare plans" },
 ];
 
 export default function Supply() {
@@ -158,59 +112,47 @@ export default function Supply() {
         title="Supply Exchange"
         description="Source fasteners, lumber, conduit, PVC, plate, and power tools through sealed, scored bidding — fast enough for a same-day order, structured so suppliers stay at the table."
       />
-
-      <PageHeader
-        eyebrow="Supply Exchange"
-        title="The materials you always need, priced without the race to the bottom."
-        lede="Fasteners, lumber, conduit, PVC, plate, and power tools move on every job you run. Supply Exchange sources them through sealed, scored bidding — fast enough for a same-day order, structured so suppliers stay at the table."
-        actions={
-          <>
-            <Button to="/supply/catalog" variant="primary">
-              Browse the catalog <IconArrowRight width={16} height={16} />
-            </Button>
-            <Button to="/quote" variant="secondary">
-              Request a quote
-            </Button>
-          </>
-        }
+      <PageHero
+        index="04"
+        kicker="Supply Exchange"
+        title={<>Materials, sourced <em>without</em> the race to the bottom.</>}
+        lede="Fasteners, lumber, conduit, PVC, plate, and tools move on every job. Sealed, scored quotes keep it fast for you and fair for the suppliers who keep showing up."
       >
-        <SupplyStackArt className="hidden w-full lg:block" />
-      </PageHeader>
+        <div className="flex flex-wrap items-center gap-5">
+            <Button to="/contact">Request a demo →</Button>
+            <Button to="/platform" variant="ghost">See the whole platform</Button>
+          </div>
+      </PageHero>
 
-      <Section band="white">
+      <Section className="border-t border-line">
         <Eyebrow>What you can source</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">
+        <h2 className="text-balance max-w-2xl text-paper text-5xl leading-[1] md:text-6xl">
           The essentials, not the long tail.
         </h2>
         <p className="mt-5 max-w-2xl text-base leading-relaxed text-steel">
           We focus on the categories that turn over constantly and never stop being needed &mdash;
           where a better price and a reliable fill rate compound across every job on your board.
         </p>
-        <div className="mt-12 grid-x grid-margin-x gap-y-5">
+        <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {categories.map((c, i) => (
-            <Reveal key={c.title} delay={(i % 4) * 80} className="cell small-12 medium-6 large-3 h-full">
-              <div className="card-corp card-corp-hover lift h-full rounded-sm p-5">
-                <div className="flex h-9 w-9 items-center justify-center rounded-sm bg-amber/10 text-amber">
+            <Reveal key={c.title} delay={(i % 4) * 80} className="h-full">
+              <div className="lift h-full slab p-6">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber/10 text-amber">
                   {c.icon}
                 </div>
-                <h3 className="mt-4 text-sm font-semibold text-paper">{c.title}</h3>
-                <p className="mt-1.5 text-sm leading-relaxed text-steel">{c.text}</p>
+                <h3 className="mt-5 text-base font-semibold text-paper">{c.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-steel">{c.text}</p>
               </div>
             </Reveal>
           ))}
         </div>
-        <div className="mt-8">
-          <Button to="/supply/catalog" variant="ghost">
-            Browse all 300+ SKUs in the catalog <IconArrowRight width={16} height={16} />
-          </Button>
-        </div>
       </Section>
 
-      <Section band="dark">
-        <div className="grid-x grid-margin-x gap-y-14 lg:items-start">
-          <div className="cell small-12 large-6">
+      <Section className="border-t border-line">
+        <div className="grid grid-cols-1 gap-14 lg:grid-cols-2 lg:items-start">
+          <div>
             <Eyebrow>Why not a normal reverse auction</Eyebrow>
-            <h2 className="text-balance text-xl font-semibold tracking-tight text-paper md:text-2xl">
+            <h2 className="text-balance text-paper text-5xl leading-[1] md:text-6xl">
               Bid wars look like savings and cost you later.
             </h2>
             <p className="mt-5 text-base leading-relaxed text-steel">
@@ -222,7 +164,7 @@ export default function Supply() {
               It's also slow. Iterative bidding takes days, and materials rarely have days.
             </p>
           </div>
-          <div className="cell small-12 large-6 card-corp p-6">
+          <div className="slab p-6">
             <p className="text-xs uppercase tracking-wider text-steel">Award scoring</p>
             <div className="mt-4 space-y-3">
               {[
@@ -231,15 +173,15 @@ export default function Supply() {
                 { label: "Lead time", value: "Weighted 20%", tag: "2 days" },
                 { label: "Past performance", value: "Weighted 15%", tag: "4.8" },
               ].map((row) => (
-                <div key={row.label} className="flex items-center justify-between rounded-sm bg-ink px-4 py-3">
+                <div key={row.label} className="flex items-center justify-between rounded-lg bg-ink px-4 py-3">
                   <div>
                     <p className="text-sm font-medium text-paper">{row.label}</p>
                     <p className="text-xs text-steel">{row.value}</p>
                   </div>
-                  <span className="label secondary">{row.tag}</span>
+                  <span className="rounded-full border border-line px-3 py-1 text-xs text-steel">{row.tag}</span>
                 </div>
               ))}
-              <div className="flex items-center justify-between rounded-sm border border-amber/40 bg-amber/10 px-4 py-3">
+              <div className="flex items-center justify-between slab bg-cta/10 px-4 py-3">
                 <span className="text-sm font-medium text-amber">Auto-awarded</span>
                 <span className="text-xs text-amber">Best total score</span>
               </div>
@@ -251,15 +193,15 @@ export default function Supply() {
         </div>
       </Section>
 
-      <Section band="stone">
+      <Section className="border-t border-line">
         <Eyebrow>How the bidding works</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">
+        <h2 className="text-balance max-w-2xl text-paper text-5xl leading-[1] md:text-6xl">
           Still competitive. Just not a knife fight.
         </h2>
-        <div className="mt-12 grid-x grid-margin-x gap-y-5">
+        <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2">
           {mechanics.map((m) => (
-            <div key={m.title} className="cell small-12 medium-6 card-corp rounded-sm p-6">
-              <div className="flex h-10 w-10 items-center justify-center rounded-sm bg-amber/10 text-amber">
+            <div key={m.title} className="slab p-6">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber/10 text-amber">
                 {m.icon}
               </div>
               <h3 className="mt-5 text-base font-semibold text-paper">{m.title}</h3>
@@ -269,19 +211,19 @@ export default function Supply() {
         </div>
       </Section>
 
-      <Section band="white">
+      <Section className="border-t border-line">
         <Eyebrow>Skip the RFQ entirely</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">
+        <h2 className="text-balance max-w-2xl text-paper text-5xl leading-[1] md:text-6xl">
           Most orders shouldn't need a bid at all.
         </h2>
         <p className="mt-5 max-w-2xl text-base leading-relaxed text-steel">
           Running an auction to buy the same box of deck screws you bought last Tuesday is pure
           friction. Two mechanisms take the repeat volume off the bidding table completely.
         </p>
-        <div className="mt-12 grid-x grid-margin-x gap-y-5">
+        <div className="mt-12 grid grid-cols-1 gap-5 lg:grid-cols-2">
           {efficiencies.map((e) => (
-            <div key={e.title} className="cell small-12 large-6 card-corp rounded-sm p-6">
-              <div className="flex h-10 w-10 items-center justify-center rounded-sm bg-amber/10 text-amber">
+            <div key={e.title} className="slab p-6">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber/10 text-amber">
                 {e.icon}
               </div>
               <h3 className="mt-5 text-base font-semibold text-paper">{e.title}</h3>
@@ -291,42 +233,11 @@ export default function Supply() {
         </div>
       </Section>
 
-      <Section band="dark">
-        <Eyebrow>The commerce engine</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">
-          Supply Exchange runs on a full B2B commerce platform, not a bid form bolted onto a
-          catalog.
-        </h2>
-        <p className="mt-5 max-w-2xl text-base leading-relaxed text-steel">
-          Sealed bidding gets you a fair price. What handles everything after the award &mdash;
-          the storefront, the account, the invoice, the reorder &mdash; is the same engine
-          underneath the rest of the platform.
-        </p>
-        <div className="mt-12 grid-x grid-margin-x gap-y-5">
-          {commerceEngine.map((c, i) => (
-            <Reveal key={c.title} delay={(i % 3) * 80} className="cell small-12 medium-6 large-4 h-full">
-              <div className="card-corp card-corp-hover lift h-full rounded-sm p-5">
-                <div className="flex h-9 w-9 items-center justify-center rounded-sm bg-amber/10 text-amber">
-                  {c.icon}
-                </div>
-                <h3 className="mt-4 text-sm font-semibold text-paper">{c.title}</h3>
-                <p className="mt-1.5 text-sm leading-relaxed text-steel">{c.text}</p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-        <p className="mt-8 max-w-2xl text-sm leading-relaxed text-steel">
-          Underneath the portal: automated inventory management, order fulfillment, pricing
-          calculations, and shipping logistics &mdash; so a bigger order book doesn't mean a
-          bigger back office.
-        </p>
-      </Section>
-
-      <Section band="stone">
-        <div className="grid-x grid-margin-x items-center gap-y-14">
-          <div className="cell small-12 large-6">
+      <Section className="border-t border-line">
+        <div className="grid grid-cols-1 items-center gap-14 lg:grid-cols-2">
+          <div>
             <Eyebrow>For suppliers</Eyebrow>
-            <h2 className="text-balance text-xl font-semibold tracking-tight text-paper md:text-2xl">
+            <h2 className="text-balance text-paper text-5xl leading-[1] md:text-6xl">
               A channel worth quoting into.
             </h2>
             <p className="mt-5 text-base leading-relaxed text-steel">
@@ -342,7 +253,7 @@ export default function Supply() {
           </div>
           {/* Was an empty blurred gradient box; this is the supplier-protection
               list the page describes. */}
-          <div className="cell small-12 large-6 card-corp p-6">
+          <div className="slab p-6">
             <p className="text-xs uppercase tracking-wider text-steel">Supplier protections</p>
             <ul className="mt-4 space-y-4">
               {supplierProtections.map((pt) => (
@@ -356,33 +267,9 @@ export default function Supply() {
         </div>
       </Section>
 
-      <Section band="white">
-        <Eyebrow>Where to next</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">
-          Pick up from here.
-        </h2>
-        <div className="mt-8 grid-x grid-margin-x gap-y-5">
-          {nextSteps.map((n) => (
-            <div key={n.to} className="cell small-12 medium-6 large-3">
-              <Link to={n.to} className="card-corp card-corp-hover flex h-full flex-col p-5">
-                <h3 className="text-sm font-semibold text-paper-2">{n.title}</h3>
-                <p className="mt-1.5 flex-1 text-sm leading-relaxed text-steel">{n.text}</p>
-                <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-amber">
-                  {n.cta} <IconArrowRight width={14} height={14} />
-                </span>
-              </Link>
-            </div>
-          ))}
-        </div>
-      </Section>
-
       <CTASection
         title="Stop overpaying for the things you buy every week."
         subtitle="See how Supply Exchange prices your standing materials list — bring a recent PO and we'll walk it through."
-        primaryLabel="Request a quote"
-        primaryTo="/quote"
-        secondaryLabel="See pricing"
-        secondaryTo="/pricing"
       />
     </>
   );

@@ -1,15 +1,16 @@
 import { formatDue } from "../../data/sampleProjects";
 
-/** Days between now and the bid deadline, floored at zero. */
-export function daysUntil(iso) {
-  const ms = new Date(`${iso}T00:00:00`) - new Date();
-  return Math.max(0, Math.ceil(ms / 86_400_000));
-}
+/**
+ * Every export of a sample listing states, in its first line or first column,
+ * that the listing is a sample (PROOF.md: sample listings carry a higher duty).
+ */
+export const SAMPLE_STATEMENT =
+  "SAMPLE LISTING - this is an illustrative example, not a live solicitation, and it cannot be bid on or quoted.";
 
 export const projectUrl = (p) => `${window.location.origin}/projects/${p.slug}`;
 
 /** Quote a CSV cell; neutralise leading formula characters for spreadsheet apps. */
-function cell(v) {
+export function csvCell(v) {
   let s = String(v ?? "");
   if (/^[=+\-@\t\r]/.test(s)) s = `'${s}`;
   return `"${s.replace(/"/g, '""')}"`;
@@ -17,22 +18,24 @@ function cell(v) {
 
 export function projectsToCsv(list) {
   const head = [
+    "Listing status",
     "Title",
     "City",
     "State",
     "Primary trade",
     "Scope",
     "Project type",
-    "Value (USD)",
-    "Bid due",
+    "Estimated value (USD)",
+    "Sample date",
     "Procurement",
     "Owner",
     "General contractor",
-    "Match %",
-    "Documents",
+    "Sample match %",
+    "Sample documents",
     "URL",
   ];
   const rows = list.map((p) => [
+    "SAMPLE listing - not a live solicitation, cannot be bid on",
     p.title,
     p.city,
     p.state,
@@ -48,14 +51,16 @@ export function projectsToCsv(list) {
     p.documents.join("; "),
     projectUrl(p),
   ]);
-  return [head, ...rows].map((r) => r.map(cell).join(",")).join("\r\n") + "\r\n";
+  return [head, ...rows].map((r) => r.map(csvCell).join(",")).join("\r\n") + "\r\n";
 }
 
-export function briefText(p) {
-  const days = daysUntil(p.bidDue);
+/** Plain-text project summary. The first line is the sample statement. */
+export function summaryText(p) {
   return [
-    "BID BRIEF",
-    "=========",
+    SAMPLE_STATEMENT,
+    "",
+    "PROJECT SUMMARY",
+    "===============",
     p.title,
     "",
     `Location:           ${p.city}, ${p.state}`,
@@ -63,28 +68,28 @@ export function briefText(p) {
     `Primary trade:      ${p.trade}`,
     `Scope:              ${p.scope.join(", ")}`,
     `Estimated value:    ${p.valueLabel}`,
-    `Bid due:            ${formatDue(p.bidDue)}${days === 0 ? " (closed)" : ` (${days} days remaining)`}`,
+    `Sample date:        ${formatDue(p.bidDue)} (illustrative; not a real deadline)`,
     `Procurement:        ${p.procurement}`,
     "",
-    "Contacts",
-    "--------",
+    "Contacts (sample)",
+    "-----------------",
     `Owner:              ${p.owner}`,
     `General contractor: ${p.gc}`,
     "",
-    "Summary",
-    "-------",
+    "Scope of work",
+    "-------------",
     p.summary,
     "",
-    "Documents",
-    "---------",
+    "Sample documents (placeholders, not available)",
+    "----------------------------------------------",
     ...p.documents.map((d) => `- ${d}`),
     "",
-    "Company fit",
-    "-----------",
-    `Match score: ${p.match}%`,
+    "Fit against a sample profile",
+    "----------------------------",
+    `Sample match score: ${p.match}%`,
     ...p.matchReasons.map((r) => `- ${r}`),
     "",
-    `Project page: ${projectUrl(p)}`,
+    `Listing page: ${projectUrl(p)}`,
     `Generated:    ${new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}`,
     "",
   ].join("\r\n");

@@ -53,40 +53,33 @@ export default function CookieBanner() {
     <div
       role="region"
       aria-label="Cookie consent"
-      className="fixed inset-x-0 bottom-0 z-[110] border-t border-line bg-ink-2 px-3 py-2 md:px-4 md:py-2.5"
+      className="fixed bottom-4 right-4 z-[110] w-[min(22rem,calc(100vw-2rem))] slab p-5"
     >
-      <div className="mx-auto flex max-w-6xl items-center gap-3">
-        <p className="min-w-0 flex-1 text-xs leading-snug text-steel md:text-sm">
-          <span className="md:hidden">
-            Theme and this consent stay on your device. No analytics.{" "}
-          </span>
-          <span className="hidden md:inline">
-            This site stores theme preference and this consent choice on your device. There is no analytics or advertising pixel.{" "}
-          </span>
-          <Link
-            to="/privacy"
-            className="font-medium text-amber underline underline-offset-2 hover:text-amber-2"
-          >
-            Privacy Policy
-          </Link>
-          .
-        </p>
-        <div className="flex shrink-0 justify-end gap-2">
-          <button
-            type="button"
-            onClick={decline}
-            className="rounded-full border border-line px-3 py-1.5 text-xs font-semibold text-steel hover:border-line/70 hover:text-paper md:px-4"
-          >
-            Dismiss
-          </button>
-          <button
-            type="button"
-            onClick={accept}
-            className="rounded-full bg-cta px-3 py-1.5 text-xs font-semibold text-white hover:bg-cta-hover md:px-4"
-          >
-            OK
-          </button>
-        </div>
+      <p className="text-sm leading-relaxed text-steel">
+        This site stores theme preference and this consent choice on your device. There is no analytics or advertising pixel.{" "}
+        <Link
+          to="/privacy"
+          className="font-medium text-amber underline underline-offset-2 hover:text-amber-2"
+        >
+          Privacy Policy
+        </Link>
+        .
+      </p>
+      <div className="mt-3 flex shrink-0 justify-end gap-2">
+        <button
+          type="button"
+          onClick={decline}
+          className="draw-link px-2 py-1.5 text-xs font-semibold text-steel hover:text-paper"
+        >
+          Dismiss
+        </button>
+        <button
+          type="button"
+          onClick={accept}
+          className="chamfer-sm bg-cta px-4 py-1.5 text-xs font-semibold text-white hover:bg-cta-hover"
+        >
+          OK
+        </button>
       </div>
     </div>
   );

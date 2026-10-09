@@ -1,5 +1,4 @@
 import { IconCheck } from "./icons";
-import { findProject, formatDue } from "../data/sampleProjects";
 
 /**
  * A product view of matched bid opportunities, shown on the homepage so visitors
@@ -7,42 +6,56 @@ import { findProject, formatDue } from "../data/sampleProjects";
  *
  * The rows are representative sample data, not customer records — the "Sample
  * view" label keeps that unambiguous while the product is pre-launch.
- * Due dates come from sampleProjects so the preview never shows an expired bid.
  */
 
-const PREVIEW_SLUGS = [
-  "commercial-hvac-upgrade-la",
-  "municipal-facility-renovation-riverside",
-  "school-modernization-anaheim",
-];
-
-function formatDueShort(iso) {
-  return formatDue(iso).replace(/,\s*\d{4}$/, "");
+function dueIn(days) {
+  return new Date(Date.now() + days * 86400000).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+  });
 }
 
-const previewProjects = PREVIEW_SLUGS.map((slug) => findProject(slug)).filter(Boolean);
+const opportunities = [
+  {
+    project: "Commercial HVAC Upgrade",
+    location: "Los Angeles, CA",
+    trade: "HVAC",
+    value: "$850K",
+    due: dueIn(44),
+    match: 94,
+  },
+  {
+    project: "Municipal Facility Renovation",
+    location: "Riverside, CA",
+    trade: "General",
+    value: "$2.4M",
+    due: dueIn(50),
+    match: 81,
+  },
+  {
+    project: "School Modernization",
+    location: "Anaheim, CA",
+    trade: "Electrical",
+    value: "$640K",
+    due: dueIn(36),
+    match: 76,
+  },
+];
 
-const opportunities = previewProjects.map((p) => ({
-  project: p.title.replace(/\s+—\s+Electrical Package$/, ""),
-  location: `${p.city}, ${p.state}`,
-  trade: p.trade,
-  value: p.valueLabel,
-  due: formatDueShort(p.bidDue),
-  match: p.match,
-}));
-
-const featured = previewProjects[0];
-const matchReasons = featured?.matchReasons ?? [];
+const matchReasons = [
+  "Trade: HVAC",
+  "Service area: Los Angeles",
+  "Project size: $500K–$2M",
+  "Healthcare experience",
+];
 
 /** Above 90 reads as a strong fit and earns the accent; the rest stay neutral. */
 const toneFor = (score) =>
   score >= 90 ? "text-success" : score >= 80 ? "text-warning" : "text-steel";
 
 export default function OpportunityPreview() {
-  if (!featured) return null;
-
   return (
-    <div className="overflow-hidden rounded-md border border-line bg-ink-2">
+    <div className="overflow-hidden slab">
       {/* window chrome */}
       <div className="flex items-center gap-2 border-b border-line bg-ink px-4 py-3">
         <span className="h-2.5 w-2.5 rounded-full bg-danger/70" />
@@ -91,11 +104,9 @@ export default function OpportunityPreview() {
       {/* match explanation */}
       <div className="border-t border-line bg-ink p-4">
         <div className="flex items-baseline gap-2">
-          <span className={`text-2xl font-bold tabular-nums ${toneFor(featured.match)}`}>
-            {featured.match}%
-          </span>
+          <span className="text-2xl font-bold tabular-nums text-success">94%</span>
           <span className="text-xs font-semibold uppercase tracking-wider text-steel">
-            match &mdash; {featured.title}
+            match &mdash; Commercial HVAC Upgrade
           </span>
         </div>
         <p className="mt-1.5 text-xs leading-relaxed text-steel">

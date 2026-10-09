@@ -187,19 +187,11 @@ export default function AdminUsers() {
         title="Accounts"
         subtitle="Approve new access requests and manage existing accounts."
       >
-        <div className="mb-6 grid-x grid-margin-x gap-y-4">
-          <div className="cell small-6 medium-3">
-            <StatCard label="Total" value={counts.all ?? (counts.pending ?? 0) + (counts.active ?? 0) + (counts.suspended ?? 0)} />
-          </div>
-          <div className="cell small-6 medium-3">
-            <StatCard label="Pending" value={counts.pending} highlight={counts.pending > 0} />
-          </div>
-          <div className="cell small-6 medium-3">
-            <StatCard label="Active" value={counts.active} />
-          </div>
-          <div className="cell small-6 medium-3">
-            <StatCard label="Suspended" value={counts.suspended} />
-          </div>
+        <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
+          <StatCard label="Total" value={counts.all ?? (counts.pending ?? 0) + (counts.active ?? 0) + (counts.suspended ?? 0)} />
+          <StatCard label="Pending" value={counts.pending} highlight={counts.pending > 0} />
+          <StatCard label="Active" value={counts.active} />
+          <StatCard label="Suspended" value={counts.suspended} />
         </div>
 
         <div className="flex flex-wrap gap-2">
@@ -238,7 +230,7 @@ export default function AdminUsers() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Filter by name, email, or company"
-            className="w-full rounded-sm border border-line bg-ink py-2 pl-8 pr-3.5 text-sm text-paper outline-hidden placeholder:text-steel/70 focus:border-amber"
+            className="w-full rounded-lg border border-line bg-ink py-2 pl-8 pr-3.5 text-sm text-paper outline-hidden placeholder:text-steel/70 focus:border-amber"
           />
         </div>
 
@@ -370,16 +362,16 @@ export default function AdminUsers() {
                       </tr>
 
                       {expanded && (
-                        <tr className="border-b border-line/40 bg-ink">
+                        <tr className="border-b border-line/40 bg-ink/60">
                           <td colSpan={6} className="px-8 py-4">
-                            <dl className="grid-x grid-margin-x gap-y-2 text-xs">
+                            <dl className="grid grid-cols-2 gap-x-10 gap-y-2 text-xs sm:grid-cols-4">
                               {[
                                 { label: "Phone", value: u.phone || "—" },
                                 { label: "Role", value: u.role || "—" },
                                 { label: "Approved", value: formatDate(u.approvedAt) },
                                 { label: "User ID", value: `#${u.id}` },
                               ].map(({ label, value }) => (
-                                <div key={label} className="cell small-6 medium-3">
+                                <div key={label}>
                                   <dt className="font-semibold uppercase tracking-wider text-steel">{label}</dt>
                                   <dd className="mt-0.5 text-paper">{value}</dd>
                                 </div>

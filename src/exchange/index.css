@@ -1,0 +1,394 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+  Stratagem Exchange design system
+  B2B supply & demand marketplace: manufacturers → distributors → contractors.
+  Direction: modern marketplace. Bright, generous white space, rounded cards,
+  one deep green brand color, warm amber for highlights. See DESIGN_SYSTEM.md.
+
+  Canonical tokens (use these in new code):
+    bg-canvas / bg-surface / bg-subtle     page, card, tinted fill
+    border-line                            every border and divider
+    text-fg / text-fg-muted                primary and secondary text
+    brand, brand-hover, brand-soft, brand-fg
+    accent, accent-soft                    amber highlight (badges, "new")
+    role-contractor | role-distributor | role-supplier (+ -soft)
+    success | warning | danger (+ -soft)
+
+  Legacy aliases (ink, paper, steel, amber, cta, line, bid-*) still resolve so
+  untouched screens re-skin automatically. Do not use them in new code.
+  Every color below is a CSS variable, so light/dark switch in one place.
+  --------------------------------------------------------------------------- */
+
+@theme inline {
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Inter Display", "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* Canonical */
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface-raised);
+  --color-subtle: var(--subtle);
+  --color-line: var(--border);
+  --color-line-strong: var(--border-strong);
+  --color-fg: var(--text-strong);
+  --color-fg-muted: var(--text-muted);
+
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --color-brand-soft: var(--brand-soft);
+  --color-brand-fg: var(--brand-fg);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+
+  --color-role-contractor: var(--role-contractor);
+  --color-role-contractor-soft: var(--role-contractor-soft);
+  --color-role-distributor: var(--role-distributor);
+  --color-role-distributor-soft: var(--role-distributor-soft);
+  --color-role-supplier: var(--role-supplier);
+  --color-role-supplier-soft: var(--role-supplier-soft);
+
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+
+  /* Legacy aliases — keep until every screen is migrated */
+  --color-ink: var(--canvas);
+  --color-ink-2: var(--surface-raised);
+  --color-ink-3: var(--subtle);
+  --color-paper: var(--text-strong);
+  --color-paper-2: var(--text-strong);
+  --color-steel: var(--text-muted);
+  --color-amber: var(--brand);
+  --color-amber-2: var(--brand-hover);
+  --color-cta: var(--brand);
+  --color-cta-hover: var(--brand-hover);
+  --color-text: var(--text-strong);
+  --color-text-muted: var(--text-muted);
+  --color-card: var(--surface-raised);
+  --color-border: var(--border);
+  --color-success-light: var(--success-soft);
+  --color-warning-light: var(--warning-soft);
+  --color-danger-light: var(--danger-soft);
+  --color-bid-navy: #12201b;
+  --color-bid-navy-hover: #0b1511;
+  --color-bid-blue: var(--brand);
+  --color-bid-blue-hover: var(--brand-hover);
+  --color-bid-orange: var(--brand);
+  --color-bid-orange-hover: var(--brand-hover);
+
+  --radius-card: 1rem;
+}
+
+:root {
+  color-scheme: light;
+
+  --canvas: #fafaf7;
+  --surface-raised: #ffffff;
+  --subtle: #f2f4ef;
+  --surface: var(--surface-raised);
+  --surface-hover: #eef1ea;
+  --border: #e4e7e0;
+  --border-strong: #cfd5cb;
+
+  --text-strong: #15201b;
+  --text: #15201b;
+  --text-muted: #5b6861;
+
+  --brand: #0e6b4f;
+  --brand-hover: #0a553f;
+  --brand-soft: #e6f2ec;
+  --brand-fg: #0a553f;
+  --accent: #b86e12;
+  --accent-soft: #fdf1dc;
+
+  --role-contractor: #c2610c;
+  --role-contractor-soft: #fdeedd;
+  --role-distributor: #2459c4;
+  --role-distributor-soft: #e5edfb;
+  --role-supplier: #0e6b4f;
+  --role-supplier-soft: #e6f2ec;
+
+  --success: #13784a;
+  --success-soft: #e3f4ea;
+  --warning: #a55d06;
+  --warning-soft: #fdf1dc;
+  --danger: #b42318;
+  --danger-soft: #fde8e6;
+
+  /* Older raw names still read by a few components */
+  --cta: var(--brand);
+  --cta-hover: var(--brand-hover);
+  --page-bg: var(--canvas);
+  --grid-line: rgba(21, 32, 27, 0.05);
+  --glass-bg: rgba(255, 255, 255, 0.9);
+  --glass-border: var(--border);
+  --shadow-color: 21 32 27;
+
+  --viz-blue: #2459c4;
+  --viz-cyan: #0e8a8a;
+  --viz-red: #b42318;
+  --viz-gold: #b86e12;
+  --viz-green: #13784a;
+
+  --panel-bg: var(--surface-raised);
+  --panel-border: var(--border);
+  --panel-glow: rgba(14, 107, 79, 0.1);
+  --panel-shadow: 0 1px 2px rgba(21, 32, 27, 0.04), 0 4px 16px -8px rgba(21, 32, 27, 0.1);
+  --shadow-card: 0 1px 2px rgba(21, 32, 27, 0.04), 0 2px 8px -4px rgba(21, 32, 27, 0.08);
+  --shadow-pop: 0 2px 4px rgba(21, 32, 27, 0.04), 0 16px 40px -16px rgba(21, 32, 27, 0.22);
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --canvas: #0d1210;
+  --surface-raised: #151c19;
+  --subtle: #1b2420;
+  --surface-hover: #202b26;
+  --border: #26312c;
+  --border-strong: #35423c;
+
+  --text-strong: #eef3f0;
+  --text: #eef3f0;
+  --text-muted: #9aa8a1;
+
+  --brand: #2fa37c;
+  --brand-hover: #3dbb90;
+  --brand-soft: rgba(47, 163, 124, 0.14);
+  --brand-fg: #6fd3ae;
+  --accent: #f0a93b;
+  --accent-soft: rgba(240, 169, 59, 0.14);
+
+  --role-contractor: #f08b3a;
+  --role-contractor-soft: rgba(240, 139, 58, 0.14);
+  --role-distributor: #6d9bf5;
+  --role-distributor-soft: rgba(109, 155, 245, 0.14);
+  --role-supplier: #3dbb90;
+  --role-supplier-soft: rgba(61, 187, 144, 0.14);
+
+  --success: #4ccb8a;
+  --success-soft: rgba(76, 203, 138, 0.14);
+  --warning: #f0a93b;
+  --warning-soft: rgba(240, 169, 59, 0.14);
+  --danger: #ff7b72;
+  --danger-soft: rgba(255, 123, 114, 0.14);
+
+  --grid-line: rgba(154, 168, 161, 0.07);
+  --glass-bg: rgba(21, 28, 25, 0.9);
+  --shadow-color: 0 0 0;
+
+  --viz-blue: #6d9bf5;
+  --viz-cyan: #4fc4c4;
+  --viz-red: #ff7b72;
+  --viz-gold: #f0a93b;
+  --viz-green: #4ccb8a;
+
+  --panel-glow: rgba(47, 163, 124, 0.2);
+  --panel-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.6);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-pop: 0 16px 40px -16px rgba(0, 0, 0, 0.7);
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 6rem;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Keep the page end clear of the consent bar while it shows. */
+html[data-cookie-banner="1"] body {
+  padding-bottom: 4.5rem;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: var(--canvas);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-optical-sizing: auto;
+  font-weight: 400;
+  letter-spacing: -0.006em;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 300ms ease, color 300ms ease;
+}
+
+::selection {
+  background: var(--brand);
+  color: #fff;
+}
+
+* {
+  scrollbar-color: var(--text-muted) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--text-muted) 45%, transparent);
+  border: 2px solid transparent;
+  background-clip: content-box;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--text-muted) 75%, transparent);
+  background-clip: content-box;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled),
+  [role="radio"]:not(:disabled),
+  [role="switch"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 650;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+    color: var(--text-strong);
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+  }
+}
+
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes menu-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+[data-reveal] {
+  opacity: 0;
+}
+
+[data-reveal="in"] {
+  animation: reveal-up 240ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-fade-in {
+  animation: fade-in 400ms ease forwards;
+}
+
+.animate-menu-in {
+  animation: menu-in 220ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes status-pulse {
+  0% { box-shadow: 0 0 0 0 var(--pulse-color, rgba(34, 197, 94, 0.55)); }
+  70% { box-shadow: 0 0 0 7px rgba(0, 0, 0, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(0, 0, 0, 0); }
+}
+
+.pulse-dot::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  animation: status-pulse 2.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .pulse-dot::after {
+    animation: none !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  [data-reveal],
+  [data-reveal="in"] {
+    opacity: 1;
+    animation: none;
+    transform: none;
+  }
+
+}
+
+@layer base {
+  input,
+  select,
+  textarea,
+  button {
+    font: inherit;
+  }
+
+  input,
+  select,
+  textarea {
+    color: inherit;
+  }
+}
+
+@media print {
+  body {
+    background: #fff;
+    color: #000;
+  }
+
+  header,
+  footer,
+  .no-print {
+    display: none !important;
+  }
+}

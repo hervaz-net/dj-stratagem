@@ -8,11 +8,14 @@
     "sitemap": "node scripts/build-sitemap.mjs",
     "prebuild": "npm run sitemap",
     "build": "vite build",
+    "postbuild": "bash scripts/verify-dist.sh",
     "lint": "oxlint",
     "preview": "vite preview"
   },
   "dependencies": {
-    "foundation-sites": "^6.9.0",
+    "@fontsource-variable/bricolage-grotesque": "^5.3.0",
+    "@fontsource-variable/jetbrains-mono": "^5.3.0",
+    "@fontsource/instrument-serif": "^5.3.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-router-dom": "^7.18.1"

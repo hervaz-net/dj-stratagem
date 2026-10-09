@@ -6,7 +6,7 @@ export default function CompetitorList({ className = "" }) {
       {competitors.map((c) => (
         <div
           key={c.name}
-          className="flex items-center justify-between rounded-sm border border-line bg-ink-2 px-4 py-3 text-sm"
+          className="flex items-center justify-between chamfer-sm bg-glass-2 px-4 py-3 text-sm"
         >
           <span className="font-medium text-paper">{c.name}</span>
           <span className="text-xs text-steel">{c.does}</span>

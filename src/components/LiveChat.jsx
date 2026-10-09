@@ -44,7 +44,7 @@ export default function LiveChat() {
 
       {open && (
         <div
-          className={`fixed bottom-40 left-6 z-[100] flex w-80 max-w-[calc(100vw-3rem)] flex-col overflow-hidden rounded-md border border-line bg-ink-2 [[data-cookie-banner="1"]_&]:invisible [[data-cookie-banner="1"]_&]:pointer-events-none`}
+          className={`fixed bottom-40 left-6 z-[100] flex w-80 max-w-[calc(100vw-3rem)] flex-col overflow-hidden slab [[data-cookie-banner="1"]_&]:invisible [[data-cookie-banner="1"]_&]:pointer-events-none`}
           role="dialog"
           aria-label="Contact support"
         >
@@ -65,7 +65,7 @@ export default function LiveChat() {
             <Link
               to="/contact"
               onClick={() => setOpen(false)}
-              className="flex items-center justify-center rounded-sm bg-cta px-3 py-2 text-sm font-semibold text-white hover:bg-cta-hover"
+              className="flex items-center justify-center rounded-lg bg-cta px-3 py-2 text-sm font-semibold text-white hover:bg-cta-hover"
             >
               Open the contact form
             </Link>

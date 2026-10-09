@@ -1,93 +1,154 @@
 <?php
-// Contact form handler for shared (cPanel/Apache) hosting.
-// Receives the React contact form's POST and relays it via PHP's mail().
+// Canonical demo-request handler. LiteSpeed ModSecurity on this host 403s
+// empty POST /contact.php, but multipart form POSTs from the live form work.
+// /send-demo.php is a thin alias in case a client still posts that path.
+// GET must return JSON, never an empty HTML 500.
 
-header('Content-Type: application/json');
+declare(strict_types=1);
+
+ini_set('display_errors', '0');
+header('Content-Type: application/json; charset=UTF-8');
+header('Cache-Control: no-store, no-cache, must-revalidate');
+
+set_error_handler(static function (int $severity, string $message, string $file, int $line): bool {
+    error_log("contact: PHP error {$message} in {$file}:{$line}");
+    return true;
+});
+
+set_exception_handler(static function (Throwable $e): void {
+    error_log('contact: uncaught ' . get_class($e) . ' — ' . $e->getMessage());
+    if (!headers_sent()) {
+        http_response_code(500);
+        header('Content-Type: application/json; charset=UTF-8');
+    }
+    echo json_encode(['ok' => false, 'error' => 'server_error']);
+});
+
+register_shutdown_function(static function (): void {
+    $err = error_get_last();
+    if ($err === null) {
+        return;
+    }
+    $fatal = [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR];
+    if (!in_array($err['type'], $fatal, true)) {
+        return;
+    }
+    error_log('contact: fatal ' . $err['message']);
+    if (!headers_sent()) {
+        http_response_code(500);
+        header('Content-Type: application/json; charset=UTF-8');
+    }
+    echo json_encode(['ok' => false, 'error' => 'server_error']);
+});
 
 $destination = 'hello@djstratageminc.com';
-// Owner mailbox still receives a copy so a missing hello@ alias cannot drop leads.
 $bcc = 'yeheca@icloud.com';
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
     http_response_code(405);
     echo json_encode(['ok' => false, 'error' => 'method_not_allowed']);
     exit;
 }
 
-// Honeypot: bots fill hidden fields. Pretend success so they don't retry.
-if (!empty($_POST['bot-field'])) {
+$payload = $_POST;
+if ($payload === []) {
+    $raw = file_get_contents('php://input');
+    if (is_string($raw) && $raw !== '') {
+        $decoded = json_decode($raw, true);
+        if (is_array($decoded)) {
+            $payload = $decoded;
+        }
+    }
+}
+
+if (!empty($payload['bot-field'])) {
     echo json_encode(['ok' => true]);
     exit;
 }
 
-function clean_field($value) {
+function clean_field($value): string
+{
     $value = trim((string) ($value ?? ''));
-    // Strip newlines to prevent email header injection via any field.
-    return preg_replace('/[\r\n]+/', ' ', $value);
+    return preg_replace('/[\r\n]+/', ' ', $value) ?? '';
 }
 
-$name    = clean_field($_POST['name'] ?? '');
-$company = clean_field($_POST['company'] ?? '');
-$email   = clean_field($_POST['email'] ?? '');
-$phone   = clean_field($_POST['phone'] ?? '');
-$role    = clean_field($_POST['role'] ?? '');
-$message = trim(str_replace("\r\n", "\n", (string) ($_POST['message'] ?? '')));
-
-// Topic routes the message and sets the subject line. Unknown values fall back
-// to "other" so a tampered field can never inject a subject.
-$topics = [
-    'demo'        => 'New demo request',
-    'quote'       => 'New quote request',
-    'support'     => 'Support request',
-    'partnership' => 'Partnership inquiry',
-    'careers'     => 'Careers inquiry',
-    'other'       => 'New message',
+$name    = clean_field($payload['name'] ?? '');
+$company = clean_field($payload['company'] ?? '');
+$email   = clean_field($payload['email'] ?? '');
+$phone   = clean_field($payload['phone'] ?? '');
+$role    = clean_field($payload['role'] ?? '');
+// Fixed list so the subject line can't be steered by the client.
+$topics  = [
+    'buying' => 'Buying',
+    'selling' => 'Selling',
+    'partnership' => 'Distributor partnership',
+    'support' => 'Support',
+    'fleet' => 'Fleet trip quote',
+    // Parent-site contact form topics.
+    'demo' => 'Demo request',
+    'partner' => 'Partnership',
+    'careers' => 'Careers',
+    'other' => 'Other',
 ];
-$topic = strtolower(clean_field($_POST['topic'] ?? 'demo'));
-if (!isset($topics[$topic])) $topic = 'other';
+$topicKey = clean_field($payload['topic'] ?? '');
+// Older parent demo form posts sent only a role (General Contractor, …) and no
+// topic; fall back to the role so those inquiries are not all labeled "General".
+$topic   = $topics[$topicKey] ?? ($role !== '' ? $role : 'General');
+$message = trim(str_replace("\r\n", "\n", (string) ($payload['message'] ?? '')));
 
-// Quote-only fields.
-$reference = substr(clean_field($_POST['reference'] ?? ''), 0, 40);
-$project   = substr(clean_field($_POST['project'] ?? ''), 0, 120);
-$zip       = substr(clean_field($_POST['zip'] ?? ''), 0, 12);
-$needby    = substr(clean_field($_POST['needby'] ?? ''), 0, 20);
-$lines     = trim(str_replace("\r\n", "\n", (string) ($_POST['lines'] ?? '')));
-// Cap the line-item block so the relay cannot be used to send huge payloads.
-$lines     = substr($lines, 0, 20000);
-$message   = substr($message, 0, 5000);
+// Caps match the marketing forms (message 1000) with room for Fleet quote
+// bodies, which fold several fields into one message. A raw POST used to
+// pass any size straight into mail().
+$limits = [
+    'name' => 120,
+    'company' => 160,
+    'email' => 254,
+    'phone' => 40,
+    'role' => 80,
+    'message' => 4000,
+];
+$lengths = [
+    'name' => $name,
+    'company' => $company,
+    'email' => $email,
+    'phone' => $phone,
+    'role' => $role,
+    'message' => $message,
+];
 
 $errors = [];
-if ($name === '') $errors[] = 'name';
-if ($company === '') $errors[] = 'company';
-if (!filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = 'email';
-if ($topic === 'quote' && $lines === '') $errors[] = 'lines';
+if ($name === '') {
+    $errors[] = 'name';
+}
+if ($company === '') {
+    $errors[] = 'company';
+}
+if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    $errors[] = 'email';
+}
+foreach ($limits as $field => $max) {
+    if (mb_strlen($lengths[$field]) > $max) {
+        $errors[] = $field;
+    }
+}
 
-if (!empty($errors)) {
+if ($errors !== []) {
     http_response_code(422);
     echo json_encode(['ok' => false, 'error' => 'invalid_submission', 'fields' => $errors]);
     exit;
 }
 
-$host = preg_replace('/^www\./', '', $_SERVER['HTTP_HOST'] ?? 'localhost');
+$host = preg_replace('/^www\./', '', (string) ($_SERVER['HTTP_HOST'] ?? 'localhost')) ?: 'localhost';
 
-$subject = $topics[$topic] . ($reference !== '' ? " $reference" : '') . " from $name ($company)";
-$body = "New submission from $host\n\n"
-    . "Topic: $topic\n"
-    . "Name: $name\n"
-    . "Company: $company\n"
-    . "Email: $email\n"
-    . "Phone: $phone\n"
-    . "Role: $role\n";
-
-if ($topic === 'quote') {
-    $body .= "Reference: $reference\n"
-        . "Project: $project\n"
-        . "Delivery ZIP: $zip\n"
-        . "Need by: $needby\n"
-        . "\nLine items:\n$lines\n";
-}
-
-$body .= "\nMessage:\n$message\n";
+$subject = "New inquiry ({$topic}) from {$name} ({$company})";
+$body = "New contact form submission from {$host}\n\n"
+    . "Name: {$name}\n"
+    . "Company: {$company}\n"
+    . "Email: {$email}\n"
+    . "Phone: {$phone}\n"
+    . "Topic: {$topic}\n"
+    . "Role: {$role}\n"
+    . "Message:\n{$message}\n";
 
 $headers = [
     'From: no-reply@' . $host,
@@ -97,11 +158,12 @@ $headers = [
     'X-Mailer: PHP/' . phpversion(),
 ];
 
-$sent = mail($destination, $subject, $body, implode("\r\n", $headers));
+$sent = @mail($destination, $subject, $body, implode("\r\n", $headers));
 
 if ($sent) {
     echo json_encode(['ok' => true]);
-} else {
-    http_response_code(500);
-    echo json_encode(['ok' => false, 'error' => 'mail_failed']);
+    exit;
 }
+
+http_response_code(500);
+echo json_encode(['ok' => false, 'error' => 'mail_failed']);

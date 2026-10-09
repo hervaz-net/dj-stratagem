@@ -3,6 +3,7 @@
  * (`npm run dev` has no PHP). Shapes here ARE the API contract.
  */
 
+import { localDateISO } from "../lib/dates";
 // Deterministic PRNG so sparklines look organic but never change between
 // renders (a random series would redraw on every poll and read as noise).
 function seeded(seed) {
@@ -32,7 +33,7 @@ function daysFromNow(n) {
 }
 
 function isoDays(n) {
-  return daysFromNow(n).toISOString().slice(0, 10);
+  return localDateISO(daysFromNow(n));
 }
 
 function shortDays(n) {
@@ -47,7 +48,7 @@ export const supplierFixtures = [
   { id: "sup-005", name: "Voltage Electrical",    category: "Electrical",            region: "Southeast", riskScore: 67, deliveryRate: 84.3, fillRate: 81.5, leadTimeDays: 7, status: "at-risk",  openOrders: 4,  spendYtd: 154300, trend: series(55, 24, { base: 88, drift: -0.4, spread: 7 }) },
   { id: "sup-006", name: "Pacific PVC & Fitting", category: "Plumbing",              region: "West",      riskScore: 29, deliveryRate: 93.9, fillRate: 94.4, leadTimeDays: 3, status: "active",   openOrders: 11, spendYtd: 297400, trend: series(66, 24, { base: 93, drift: 0.1, spread: 4 }) },
   { id: "sup-007", name: "Anchor Safety Supply",  category: "Safety & consumables",  region: "Midwest",   riskScore: 35, deliveryRate: 92.6, fillRate: 93.1, leadTimeDays: 2, status: "watch",    openOrders: 8,  spendYtd: 132800, trend: series(77, 24, { base: 92, drift: 0, spread: 4 }) },
-  { id: "sup-008", name: "Granite State Tools",   category: "Power tools",           region: "Northeast", riskScore: 8,  deliveryRate: 99.2, fillRate: 99.6, leadTimeDays: 1, status: "active",   openOrders: 17, spendYtd: 543700, trend: series(88, 24, { base: 97, drift: 0.2, spread: 2 }) },
+  { id: "sup-008", name: "Torque Bench Tools",     category: "Power tools",           region: "Northeast", riskScore: 8,  deliveryRate: 99.2, fillRate: 99.6, leadTimeDays: 1, status: "active",   openOrders: 17, spendYtd: 543700, trend: series(88, 24, { base: 97, drift: 0.2, spread: 2 }) },
   { id: "sup-009", name: "Delta Rebar & Plate",   category: "Metal & structural",    region: "South",     riskScore: 52, deliveryRate: 88.1, fillRate: 86.7, leadTimeDays: 6, status: "at-risk",  openOrders: 3,  spendYtd: 98600,  trend: series(99, 24, { base: 90, drift: -0.3, spread: 6 }) },
   { id: "sup-010", name: "Keystone Concrete",     category: "Concrete & masonry",    region: "Northeast", riskScore: 21, deliveryRate: 96.3, fillRate: 95.9, leadTimeDays: 2, status: "active",   openOrders: 12, spendYtd: 418000, trend: series(110, 24, { base: 95, drift: 0.1, spread: 3 }) },
   { id: "sup-011", name: "Redwood Building Co.",  category: "Lumber & wood",         region: "West",      riskScore: 44, deliveryRate: 90.8, fillRate: 89.3, leadTimeDays: 5, status: "watch",    openOrders: 5,  spendYtd: 176500, trend: series(121, 24, { base: 91, drift: -0.1, spread: 5 }) },
@@ -71,14 +72,14 @@ export const tickerFixtures = [
 ];
 
 export const bidFixtures = [
-  { id: "2041", project: "Riverside Medical Office", gc: "Ridgeview Builders (sample)", trade: "Electrical", value: 412000, status: "awarded", due: isoDays(-31), submitted: isoDays(-33) },
-  { id: "2040", project: "Summit Ridge Apartments", gc: "Harborline GC (sample)", trade: "Electrical", value: 288500, status: "review", due: isoDays(2), submitted: isoDays(-6) },
-  { id: "2039", project: "Gateway Logistics Hub", gc: "Westfork Building (sample)", trade: "Low voltage", value: 195000, status: "submitted", due: isoDays(8), submitted: isoDays(-3) },
-  { id: "2038", project: "Harborview Office Tower", gc: "Northspan Construction (sample)", trade: "Electrical", value: 680000, status: "submitted", due: isoDays(14), submitted: null },
-  { id: "2037", project: "Crestwood Elementary", gc: "Mesa & Vale GC (sample)", trade: "Low voltage", value: 142000, status: "draft", due: isoDays(21), submitted: null },
-  { id: "2036", project: "Metro Rail Station B", gc: "Stoneway Civil (sample)", trade: "Electrical", value: 925000, status: "lost", due: isoDays(-41), submitted: isoDays(-43) },
-  { id: "2035", project: "Canyon View Retail", gc: "Ridgeview Builders (sample)", trade: "Electrical", value: 218000, status: "awarded", due: isoDays(-46), submitted: isoDays(-48) },
-  { id: "2034", project: "North Harbor Warehouse", gc: "Harborline GC (sample)", trade: "Low voltage", value: 87000, status: "lost", due: isoDays(-53), submitted: isoDays(-56) },
+  { id: "2041", project: "Riverside Medical Office", gc: "Northline Builders", trade: "Electrical", value: 412000, status: "awarded", due: isoDays(-31), submitted: isoDays(-33) },
+  { id: "2040", project: "Summit Ridge Apartments", gc: "Harborline GC", trade: "Electrical", value: 288500, status: "review", due: isoDays(2), submitted: isoDays(-6) },
+  { id: "2039", project: "Gateway Logistics Hub", gc: "Level & Square Builders", trade: "Low voltage", value: 195000, status: "submitted", due: isoDays(8), submitted: isoDays(-3) },
+  { id: "2038", project: "Harborview Office Tower", gc: "Ridgeline Commercial", trade: "Electrical", value: 680000, status: "submitted", due: isoDays(14), submitted: null },
+  { id: "2037", project: "Crestwood Elementary", gc: "Punch List Plumbing", trade: "Low voltage", value: 142000, status: "draft", due: isoDays(21), submitted: null },
+  { id: "2036", project: "Metro Rail Station B", gc: "Keystone Sitework", trade: "Electrical", value: 925000, status: "lost", due: isoDays(-41), submitted: isoDays(-43) },
+  { id: "2035", project: "Canyon View Retail", gc: "Northline Builders", trade: "Electrical", value: 218000, status: "awarded", due: isoDays(-46), submitted: isoDays(-48) },
+  { id: "2034", project: "North Harbor Warehouse", gc: "Harborline GC", trade: "Low voltage", value: 87000, status: "lost", due: isoDays(-53), submitted: isoDays(-56) },
 ];
 
 export const orderFixtures = [
@@ -95,13 +96,13 @@ export const orderFixtures = [
 export const alertFixtures = [
   { id: 1, type: "risk", title: "GlobalParts risk score exceeded 65", detail: "Score rose from 52 → 68 over 7 days. Consider sourcing alternatives for critical SKUs.", supplier: "GlobalParts Ltd.", time: "14 min ago", group: "today", read: false },
   { id: 2, type: "delivery", title: "IronLine on-time delivery dropped below 90%", detail: "3 of the last 4 orders arrived late. Current 30-day rate: 87.5%.", supplier: "Ironline Distribution", time: "1 hr ago", group: "today", read: false },
-  { id: 3, type: "bid", title: "Bid #2040 under review — deadline in 48 hrs", detail: `Summit Ridge Apartments bid closes ${shortDays(2)}. No response from GC yet.`, supplier: null, time: "2 hr ago", group: "today", read: false },
+  { id: 3, type: "bid", title: "Bid #2040 under review — deadline in 48 hrs", detail: "Summit Ridge Apartments closes in 2 days. No response from the GC yet.", supplier: null, time: "2 hr ago", group: "today", read: false },
   { id: 4, type: "price", title: "Structural steel index up 6.4% this week", detail: "Market movement may affect PO-1187 final pricing. Review before approval.", supplier: "Ironline Distribution", time: "4 hr ago", group: "today", read: true },
   { id: 5, type: "risk", title: "Apex Materials fill rate below SLA", detail: "Fill rate fell to 82% this month against a 90% SLA threshold.", supplier: "Apex Materials", time: "Yesterday, 3pm", group: "yesterday", read: true },
-  { id: 6, type: "delivery", title: "PO-1185 shipment delayed 2 days", detail: `Summit Fasteners reported carrier delay. New ETA: ${shortDays(-2)}.`, supplier: "Summit Fasteners", time: "Yesterday, 11am", group: "yesterday", read: true },
+  { id: 6, type: "delivery", title: "PO-1185 shipment delayed 2 days", detail: "Summit Fasteners reported a carrier delay. New ETA is 2 days out.", supplier: "Summit Fasteners", time: "Yesterday, 11am", group: "yesterday", read: true },
   { id: 7, type: "system", title: "Supplier data refresh completed", detail: "All 124 supplier risk scores and delivery rates updated from last night's feed.", supplier: null, time: "Yesterday, 2am", group: "yesterday", read: true },
   { id: 8, type: "bid", title: "Bid #2041 awarded — Apex Electrical", detail: "Riverside Medical Office awarded. Contract value: $412k.", supplier: null, time: "2 days ago", group: "older", read: true },
-  { id: 9, type: "price", title: "Lumber prices down 4.1%", detail: "Dimensional lumber index retreated from the recent peak. Good timing for upcoming POs.", supplier: null, time: "3 days ago", group: "older", read: true },
+  { id: 9, type: "price", title: "Lumber prices down 4.1%", detail: "Dimensional lumber index retreated from July peak. Good timing for upcoming POs.", supplier: null, time: "3 days ago", group: "older", read: true },
 ];
 
 export const overviewFixtures = {

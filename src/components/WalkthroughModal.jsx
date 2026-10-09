@@ -2,14 +2,6 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { Link } from "react-router-dom";
 import { IconX, IconArrowRight, IconCheck, IconBriefcase } from "./icons";
 
-/** Sample calendar labels stay ahead of today so the mock UI never looks expired. */
-function shortDays(n) {
-  const d = new Date();
-  d.setHours(12, 0, 0, 0);
-  d.setDate(d.getDate() + n);
-  return d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
-}
-
 /**
  * A guided slide walkthrough of the platform, shown in place of a hosted video.
  * Seven slides paced to roughly five minutes: a narrative panel on the left and
@@ -101,7 +93,7 @@ const pad = (n) => String(n).padStart(2, "0");
 
 /* ---------------------------------------------------------------- panels */
 
-const card = "rounded-sm border border-line bg-ink p-2.5";
+const card = "chamfer-sm bg-glass p-2.5";
 const chip = "rounded-full px-2 py-0.5 text-[9px] font-bold tracking-wide";
 
 function Stat({ value, label, tone = "text-paper" }) {
@@ -115,7 +107,7 @@ function Stat({ value, label, tone = "text-paper" }) {
 
 function BidRow({ title, meta, badge, tone }) {
   return (
-    <div className="mb-1.5 flex items-start gap-2.5 rounded-sm border border-line bg-ink p-2.5">
+    <div className="mb-1.5 flex items-start gap-2.5 chamfer-sm bg-glass p-2.5">
       <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded bg-brand/15 text-brand">
         <IconBriefcase width={12} height={12} />
       </div>
@@ -139,13 +131,13 @@ function Panel({ kind }) {
         </div>
         <BidRow
           title="Westside Medical — Electrical"
-          meta={`LA · Pacific Ridge GC (sample) · Due ${shortDays(13)}`}
+          meta="LA · Northline Builders · Due in 17 days"
           badge="OPEN"
           tone="bg-success/15 text-success"
         />
         <BidRow
           title="Harbor Logistics — Framing"
-          meta={`Long Beach · Harborline GC (sample) · Due ${shortDays(17)}`}
+          meta="Long Beach · Harborline GC · Due in 21 days"
           badge="REVIEW"
           tone="bg-amber/15 text-amber"
         />
@@ -173,19 +165,19 @@ function Panel({ kind }) {
         </div>
         <BidRow
           title="Westside Medical Complex"
-          meta={`$4.2M est · Pacific Ridge GC (sample) · ${shortDays(13)}`}
+          meta="$4.2M est · Northline Builders · Due in 17 days"
           badge="NEW"
           tone="bg-success/15 text-success"
         />
         <BidRow
           title="Century City Office Tower"
-          meta={`$11M est · Westfork Building (sample) · ${shortDays(20)}`}
+          meta="$11M est · Ridgeline Commercial · Due in 24 days"
           badge="NEW"
           tone="bg-success/15 text-success"
         />
         <BidRow
           title="Harbor Logistics Hub"
-          meta={`$2.8M est · Harborline GC (sample) · ${shortDays(17)}`}
+          meta="$2.8M est · Harborline GC · Due in 21 days"
           badge="VIEWED"
           tone="bg-amber/15 text-amber"
         />
@@ -199,12 +191,12 @@ function Panel({ kind }) {
         <p className="mb-2.5 text-[11px] font-semibold text-paper">
           Westside Medical Complex — Electrical
         </p>
-        <div className="mb-2.5 rounded-sm border border-brand/30 bg-brand/10 p-2.5">
+        <div className="mb-2.5 rounded-lg border border-brand/30 bg-brand/10 p-2.5">
           <p className="text-[9px] font-semibold uppercase tracking-wider text-brand">
             AI draft ready
           </p>
           <p className="mt-1 text-[10px] leading-relaxed text-steel">
-            Based on your prior hospital and clinic submissions, scope and unit pricing are
+            Based on your last two healthcare submissions, scope and unit pricing are
             pre-filled. Review before sending.
           </p>
         </div>
@@ -213,7 +205,7 @@ function Panel({ kind }) {
           <Stat value="+$42,000" label="Alternates" />
         </div>
         <div className="rounded bg-brand py-2 text-center text-[11px] font-bold text-white">
-          Submit & E-Sign →
+          Submit &amp; E-Sign →
         </div>
       </>
     );
@@ -221,9 +213,9 @@ function Panel({ kind }) {
 
   if (kind === "supply") {
     const quotes = [
-      { name: "Pacific Electrical Supply", meta: `4.9★ · Ships ${shortDays(9)}`, price: "$1,840", best: true },
-      { name: "Western Wire & Cable", meta: `4.7★ · Ships ${shortDays(11)}`, price: "$1,970" },
-      { name: "SoCal Industrial", meta: `4.5★ · Ships ${shortDays(14)}`, price: "$2,040" },
+      { name: "Pacific Electrical Supply", meta: "4.9★ · Ships Oct 14", price: "$1,840", best: true },
+      { name: "Western Wire & Cable", meta: "4.7★ · Ships Oct 16", price: "$1,970" },
+      { name: "SoCal Industrial", meta: "4.5★ · Ships Oct 19", price: "$2,040" },
     ];
     return (
       <>
@@ -234,7 +226,7 @@ function Panel({ kind }) {
           {quotes.map((q) => (
             <div
               key={q.name}
-              className={`flex items-center justify-between rounded-sm border p-2.5 ${
+              className={`flex items-center justify-between rounded-lg border p-2.5 ${
                 q.best ? "border-success/30 bg-success/10" : "border-line bg-ink"
               }`}
             >
@@ -292,6 +284,7 @@ function Panel({ kind }) {
     );
   }
 
+  // analytics
   return (
     <>
       <div className="mb-3 flex justify-between">
@@ -345,19 +338,25 @@ function Panel({ kind }) {
   );
 }
 
+/* ---------------------------------------------------------------- modal */
+
 export default function WalkthroughModal({ open, onClose }) {
   const [step, setStep] = useState(0);
-  const total = slides.length + 1;
+  const total = slides.length + 1; // slides + closing CTA
   const isLast = step === total - 1;
   const dialogRef = useRef(null);
 
   const next = useCallback(() => setStep((s) => Math.min(s + 1, total - 1)), [total]);
   const prev = useCallback(() => setStep((s) => Math.max(s - 1, 0)), []);
 
+  // Reset to the first slide each time it reopens, so a returning visitor
+  // doesn't land mid-deck on whatever they last viewed.
   useEffect(() => {
     if (open) setStep(0);
   }, [open]);
 
+  // Escape closes; arrows page through. Bound only while open so the keys stay
+  // free for the rest of the page.
   useEffect(() => {
     if (!open) return;
     const onKey = (e) => {
@@ -369,6 +368,7 @@ export default function WalkthroughModal({ open, onClose }) {
     return () => window.removeEventListener("keydown", onKey);
   }, [open, onClose, next, prev]);
 
+  // The page behind a full-screen overlay must not scroll under it.
   useEffect(() => {
     if (!open) return;
     const prevOverflow = document.body.style.overflow;
@@ -385,7 +385,7 @@ export default function WalkthroughModal({ open, onClose }) {
 
   return (
     <div
-      className="animate-fade-in fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-4"
+      className="animate-fade-in fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
       onClick={onClose}
       role="presentation"
     >
@@ -396,8 +396,9 @@ export default function WalkthroughModal({ open, onClose }) {
         aria-label="Platform walkthrough"
         tabIndex={-1}
         onClick={(e) => e.stopPropagation()}
-        className="flex max-h-[92vh] w-full max-w-4xl flex-col overflow-hidden rounded-md border border-line bg-ink-2 outline-hidden"
+        className="flex max-h-[92vh] w-full max-w-4xl flex-col overflow-hidden slab outline-hidden"
       >
+        {/* header */}
         <div className="flex shrink-0 items-center justify-between border-b border-line px-5 py-3">
           <div className="flex items-center gap-2.5">
             <span className="text-xs font-bold text-paper">Platform Walkthrough</span>
@@ -420,6 +421,7 @@ export default function WalkthroughModal({ open, onClose }) {
           </div>
         </div>
 
+        {/* progress */}
         <div className="h-0.5 shrink-0 bg-line">
           <div
             className="h-full bg-amber transition-[width] duration-500 ease-out"
@@ -427,6 +429,7 @@ export default function WalkthroughModal({ open, onClose }) {
           />
         </div>
 
+        {/* body */}
         <div className="min-h-0 flex-1 overflow-y-auto">
           {isLast ? (
             <div className="flex flex-col items-center px-8 py-14 text-center">
@@ -437,15 +440,25 @@ export default function WalkthroughModal({ open, onClose }) {
                 Ready to win more work?
               </h3>
               <p className="mt-4 max-w-md text-sm leading-relaxed text-steel">
-                Get in touch and we&rsquo;ll show you where D&J Stratagem fits into how your
+                Request a demo and we&rsquo;ll show you where D&amp;J Stratagem fits into how your
                 team already works &mdash; no slide deck, just a hands-on walkthrough.
               </p>
+              {/* Client-side links, and the modal closes on the way out —
+                  otherwise the overlay would survive the route change. */}
               <div className="mt-8 flex flex-wrap justify-center gap-2.5">
-                <Link to="/contact" onClick={onClose} className="button">
-                  Contact us
+                <Link
+                  to="/contact"
+                  onClick={onClose}
+                  className="rounded-lg bg-cta px-6 py-2.5 text-sm font-bold text-white transition-colors hover:bg-cta-hover"
+                >
+                  Request a Demo
                 </Link>
-                <Link to="/pricing" onClick={onClose} className="button secondary">
-                  View pricing
+                <Link
+                  to="/pricing"
+                  onClick={onClose}
+                  className="rounded-lg border border-line px-6 py-2.5 text-sm font-semibold text-steel transition-colors hover:border-steel hover:text-paper"
+                >
+                  View Pricing
                 </Link>
               </div>
               <p className="mt-7 text-[11px] text-steel">
@@ -482,7 +495,7 @@ export default function WalkthroughModal({ open, onClose }) {
                   className="bg-grid pointer-events-none absolute inset-0 opacity-20"
                   aria-hidden="true"
                 />
-                <div className="relative w-full max-w-sm card-corp rounded-sm p-3.5">
+                <div className="relative w-full max-w-sm slab p-3.5">
                   <Panel kind={slide.panel} />
                 </div>
               </div>
@@ -490,12 +503,13 @@ export default function WalkthroughModal({ open, onClose }) {
           )}
         </div>
 
+        {/* footer nav */}
         <div className="flex shrink-0 items-center justify-between gap-4 border-t border-line px-5 py-3">
           <button
             type="button"
             onClick={prev}
             disabled={step === 0}
-            className="rounded-sm border border-line px-4 py-2 text-xs font-semibold text-steel transition-colors hover:border-steel hover:text-paper disabled:opacity-30 disabled:hover:border-line disabled:hover:text-steel focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-amber"
+            className="rounded-lg border border-line px-4 py-2 text-xs font-semibold text-steel transition-colors hover:border-steel hover:text-paper disabled:opacity-30 disabled:hover:border-line disabled:hover:text-steel focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-amber"
           >
             ← Prev
           </button>
@@ -518,7 +532,7 @@ export default function WalkthroughModal({ open, onClose }) {
           <button
             type="button"
             onClick={isLast ? onClose : next}
-            className="flex items-center gap-1.5 rounded-sm bg-cta px-4 py-2 text-xs font-bold text-white transition-colors hover:bg-cta-hover focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-cta"
+            className="flex items-center gap-1.5 rounded-lg bg-cta px-4 py-2 text-xs font-bold text-white transition-colors hover:bg-cta-hover focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-cta"
           >
             {isLast ? "Close" : "Next"}
             {!isLast && <IconArrowRight width={12} height={12} />}

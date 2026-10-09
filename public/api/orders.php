@@ -6,16 +6,16 @@
 
 declare(strict_types=1);
 require __DIR__ . '/bootstrap.php';
-require __DIR__ . '/ops.php';
 
 require_signin();
+require_ops();
 ensure_ops_schema();
 
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
 if ($method === 'GET') {
     $rows = db()->query('SELECT * FROM purchase_orders ORDER BY ordered_at DESC, id DESC')->fetchAll();
-    respond(['ok' => true, 'live' => true, 'orders' => array_map('order_row', $rows)]);
+    respond(['ok' => true, 'live' => true, 'sample' => has_seed_rows('purchase_orders'), 'orders' => array_map('order_row', $rows)]);
 }
 
 if ($method !== 'POST') {
@@ -60,7 +60,7 @@ if ($n > 0) {
 $rows = $pdo->query('SELECT * FROM purchase_orders ORDER BY ordered_at DESC, id DESC')->fetchAll();
 respond([
     'ok' => true,
-    'live' => true,
+    'live' => true, 'sample' => has_seed_rows('purchase_orders'),
     'cancelled' => $n,
     'orders' => array_map('order_row', $rows),
 ]);

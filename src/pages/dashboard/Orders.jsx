@@ -111,19 +111,17 @@ export default function Orders() {
           </GlassCard>
         )}
 
-        <div className="mb-6 grid-x grid-margin-x gap-y-4">
+        <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
           {[
             { label: "Total orders", value: orders.length },
             { label: "In transit", value: counts.shipped },
             { label: "Pending value", value: money(pendingValue) },
             { label: "Delivered (30d)", value: counts.delivered },
           ].map((s) => (
-            <div key={s.label} className="cell small-6 medium-3">
-              <GlassCard className="px-5 py-4">
-                <p className="text-xs font-semibold uppercase tracking-wider text-steel">{s.label}</p>
-                <p className="mt-1 text-2xl font-semibold tabular-nums text-paper">{s.value}</p>
-              </GlassCard>
-            </div>
+            <GlassCard key={s.label} className="px-5 py-4">
+              <p className="text-xs font-semibold uppercase tracking-wider text-steel">{s.label}</p>
+              <p className="mt-1 text-2xl font-semibold tabular-nums text-paper">{s.value}</p>
+            </GlassCard>
           ))}
         </div>
 
@@ -148,7 +146,7 @@ export default function Orders() {
             <button
               type="button"
               onClick={() => setShowCancelModal(true)}
-              className="ml-auto rounded-sm border border-danger/30 bg-danger/10 px-3 py-1.5 text-xs font-semibold text-danger hover:bg-danger/20"
+              className="ml-auto rounded-lg border border-danger/30 bg-danger/10 px-3 py-1.5 text-xs font-semibold text-danger hover:bg-danger/20"
             >
               Cancel {selected.size} selected
             </button>
@@ -231,14 +229,14 @@ export default function Orders() {
 
         {showCancelModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4" onClick={() => setShowCancelModal(false)}>
-            <div className="w-full max-w-sm rounded-md border border-line bg-ink-2 p-6" onClick={(e) => e.stopPropagation()}>
+            <div className="w-full max-w-sm rounded-2xl border border-line bg-ink-2 p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
               <h2 className="text-base font-semibold text-paper">Cancel {selected.size} order{selected.size !== 1 ? "s" : ""}?</h2>
               <p className="mt-2 text-sm text-steel">This will mark the selected orders as cancelled. This action cannot be undone.</p>
               <div className="mt-6 flex gap-3 justify-end">
                 <button type="button" onClick={() => setShowCancelModal(false)} className="px-4 py-2 text-sm font-semibold text-steel hover:text-paper">
                   Keep orders
                 </button>
-                <button type="button" onClick={confirmCancel} disabled={cancelling} className="rounded-sm bg-danger/15 px-4 py-2 text-sm font-semibold text-danger hover:bg-danger/25 disabled:opacity-60">
+                <button type="button" onClick={confirmCancel} disabled={cancelling} className="rounded-lg bg-danger/15 px-4 py-2 text-sm font-semibold text-danger hover:bg-danger/25 disabled:opacity-60">
                   {cancelling ? "Cancelling…" : "Yes, cancel"}
                 </button>
               </div>

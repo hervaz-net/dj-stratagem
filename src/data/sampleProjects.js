@@ -3,9 +3,8 @@
  * /projects and the trade/location landing pages.
  *
  * THIS IS SAMPLE DATA, NOT A LIVE FEED. Nothing here is a real solicitation.
- * On-page disclaimers were removed 2026-09-14 at the owner's request — see
- * PROOF.md for that decision. This comment is the only remaining record that
- * the data is illustrative; keep it accurate.
+ * Every surface that renders it must say so plainly — a contractor who
+ * mistakes one of these for a real bid has wasted real time. See PROOF.md.
  *
  * When the real project feed lands, replace this module with the API client;
  * the shapes below are the contract to build against.
@@ -47,11 +46,18 @@ export const slugify = (s) =>
     .replace(/^-|-$/g, "");
 
 /** Sample due dates stay ahead of "today" so the preview never looks expired. */
-function isoDaysFromToday(days) {
+
+function localDateFromToday(days) {
   const d = new Date();
-  d.setHours(12, 0, 0, 0);
   d.setDate(d.getDate() + days);
-  return d.toISOString().slice(0, 10);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
+function isoDaysFromToday(days) {
+  return localDateFromToday(days);
 }
 
 export const projects = [
@@ -68,7 +74,7 @@ export const projects = [
     bidDue: isoDaysFromToday(21),
     procurement: "Competitive Bid",
     owner: "Meridian Health Partners",
-    gc: "Pacific Ridge GC (sample)",
+    gc: "Sample GC",
     match: 92,
     matchReasons: [
       "Trade: Electrical",

@@ -4,6 +4,7 @@ import RiskGauge from "./RiskGauge";
 import Sparkline from "./Sparkline";
 import StatusDot from "./StatusDot";
 import { IconColumns, IconRows } from "../icons";
+import { formatCompactMoney } from "../../lib/money";
 
 const ALL_COLUMNS = [
   { key: "name", label: "Supplier", align: "left", required: true, color: "" },
@@ -22,7 +23,7 @@ const DENSITY_OPTIONS = [
 ];
 
 const DENSITY_PY = { compact: "py-2", default: "py-3.5", comfortable: "py-5" };
-const money = (n) => (n >= 1000 ? `$${(n / 1000).toFixed(0)}k` : `$${n}`);
+const money = formatCompactMoney;
 
 function CellContent({ colKey, s }) {
   switch (colKey) {
@@ -135,7 +136,7 @@ export default function SupplierTable({
                   onClick={() => setShowColMenu(false)}
                   aria-hidden="true"
                 />
-                <div className="absolute left-0 top-full z-20 mt-1 w-44 rounded-sm border border-line bg-ink-2 p-2">
+                <div className="absolute left-0 top-full z-20 mt-1 w-44 rounded-lg border border-line bg-ink-2 p-2 shadow-xl">
                   {ALL_COLUMNS.filter((c) => !c.required).map((col) => (
                     <label
                       key={col.key}

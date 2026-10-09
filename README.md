@@ -173,18 +173,26 @@ domain (create one in cPanel, switch `contact.php` from `mail()` to SMTP).
 
 ## Outstanding
 
-- **Apex DNS has no A record.** Namecheap Advanced DNS must publish
-  `A @ 199.188.200.92` (server247.web-hosting.com) and `CNAME www` →
-  `djstratageminc.com.`. Without those records the domain does not resolve,
-  Actions verify fails with `<none>`, and no cPanel pull can make the site
-  reachable.
-- **cPanel is behind GitHub.** `main` and `deploy` can be current while
-  `https://djstratageminc.com` still serves an older hashed bundle
-  (`assets/index-*.js`). Actions can refresh `deploy` but cannot pull the host
-  until repo secret `CPANEL_TOKEN` is set. Until then, finish with
-  `./deploy.sh` on a token machine, or cPanel → Git Version Control →
-  Update from Remote → Deploy HEAD Commit. Confirm `public_html` is
-  `djstlime:nobody` mode `0750`.
+- **Namecheap account is live again.** Re-checked 1 Oct 2026 09:54 PDT:
+  apex `https://djstratageminc.com/` returns 200 (not the suspended CGI).
+  `/api/health.php` and `/api/me.php` return JSON. Do not treat a 302 to
+  `/cgi-sys/suspendedpage.cgi` as current.
+- **cPanel public_html lags GitHub `deploy`.** Rechecked 7 Oct 2026 14:16 PDT:
+  live homepage is still `assets/index-b_QNY9vN.js` (last-modified 4 Oct 2026).
+  `/exchange` and `/fleet` still serve the parent homepage title before JavaScript.
+  After hydration, `/exchange/pricing` still canonicalizes to `/pricing` and keeps
+  the parent Twitter title. Fleet date input still has no `min`. GitHub `deploy`
+  already has `spa.php` and the 1.17–1.24 fixes (`Deploy f6a3ad4`, bundle
+  `assets/index-D5oonncx.js`). Actions builds and pushes `deploy`, then Pull and
+  deploy fails because repo secret `CPANEL_TOKEN` is empty. After `main` updates:
+  `./deploy.sh` on a machine with `~/.cpanel_token`, or cPanel → Git Version
+  Control → `dj-stratagem` → Update from Remote → Deploy HEAD Commit. Confirm
+  `public_html` is `djstlime:nobody` mode `0750`. Do not rsync with `-a`.
+  Do not point cPanel at `main`.
+- **`/changelog` was broken on `main` and restored in 1.78.** Audit 1.77
+  (`0f51e8c`) replaced `src/pages/Changelog.jsx` with `PLACEHOLDER_REVERT`.
+  Restored in 1.78 (`da55f5d`). Do not overwrite that file with a host-audit
+  placeholder again.
 - HTTPS is live (AutoSSL). Auth endpoints stay HTTPS-only via `require_https`.
   Do not disable that flag to "get it working" on plaintext.
 - Pricing figures are placeholders pending a real pricing decision. The annual
@@ -219,9 +227,9 @@ Set `VITE_API_BASE_URL` only if the PHP host is on another origin.
 | `/api/overview.php` | GET KPIs, activity, deadlines, alerts, health | Overview |
 | `/api/bids.php` | GET list; POST `{action:"create"}` or `{action:"status", id, status}` | Bids |
 | `/api/orders.php` | GET list; POST `{action:"cancel", ids}` | Orders |
-| `/api/analytics.php?range=7d\|30d\|90d` | GET live aggregates | Analytics |
-| `/api/alerts.php` | GET list; POST `{action: read\|read_all\|dismiss\|snooze, id?}` | Alerts |
-| `/api/settings.php` | GET; POST `{action: profile\|notifications\|twofa\|billing\|account_type\|,"` | Settings |
+| `/api/analytics.php?range=7d\\|30d\\|90d` | GET live aggregates | Analytics |
+| `/api/alerts.php` | GET list; POST `{action: read\\|read_all\\|dismiss\\|snooze, id?}` | Alerts |
+| `/api/settings.php` | GET; POST `{action: profile\\|notifications\\|twofa\\|billing\\|account_type\\|,"` | Settings |
 
 All of the above require a signed-in `active` session. A 401 is never
 swallowed as sample data.

@@ -2,10 +2,30 @@ import { useState } from "react";
 import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import Button from "../components/Button";
 import Logo from "../components/Logo";
-import Section from "../components/Section";
 import Seo from "../components/Seo";
 import PasswordField from "../components/PasswordField";
 import useAuth from "../auth/useAuth";
+
+const REMEMBER_KEY = "djs-login-email";
+
+function readRememberedEmail() {
+  try {
+    return localStorage.getItem(REMEMBER_KEY) ?? localStorage.getItem("login_email") ?? "";
+  } catch {
+    return "";
+  }
+}
+
+function writeRememberedEmail(email) {
+  try {
+    if (email) localStorage.setItem(REMEMBER_KEY, email);
+    else localStorage.removeItem(REMEMBER_KEY);
+    // Shared key collided with Stratagem Exchange on this origin.
+    localStorage.removeItem("login_email");
+  } catch {
+    /* private mode / blocked storage */
+  }
+}
 
 export default function Login() {
   const { user, loading, login } = useAuth();
@@ -14,7 +34,7 @@ export default function Login() {
 
   const [email, setEmail] = useState(() => {
     try {
-      return localStorage.getItem("login_email") ?? "";
+      return readRememberedEmail();
     } catch {
       return "";
     }
@@ -22,7 +42,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(() => {
     try {
-      return !!localStorage.getItem("login_email");
+      return !!readRememberedEmail();
     } catch {
       return false;
     }
@@ -64,12 +84,7 @@ export default function Login() {
     setSubmitting(true);
     try {
       await login(email, password);
-      try {
-        if (rememberMe) localStorage.setItem("login_email", email);
-        else localStorage.removeItem("login_email");
-      } catch {
-        /* private mode / blocked storage */
-      }
+      writeRememberedEmail(rememberMe ? email : "");
       navigate(destination, { replace: true });
     } catch (err) {
       setError(err.message);
@@ -85,21 +100,20 @@ export default function Login() {
   };
 
   const inputClass =
-    "w-full rounded-sm border border-line-2 bg-ink-2 px-4 py-2.5 text-sm text-paper outline-hidden " +
+    "w-full rounded-md border border-line bg-ink px-4 py-2.5 text-sm text-paper outline-hidden " +
     "transition-colors placeholder:text-steel/60 focus:border-amber";
 
   return (
     <>
       <Seo title="Sign in" description="Sign in to your D&J Stratagem account." noindex />
 
-      <Section band="stone" className="md:py-16">
-        <div className="mx-auto w-full max-w-md">
-        <div className="rounded-sm border border-line bg-ink-2 p-6 sm:p-8">
+      <div className="mx-auto flex w-full max-w-md flex-col justify-center px-6 py-10 md:py-14">
+        <div className="slab p-8">
           <Link to="/" className="inline-block" aria-label="D&J Stratagem — home">
             <Logo />
           </Link>
 
-          <h1 className="mt-8 text-3xl font-semibold tracking-tight text-paper">Sign in</h1>
+          <h1 className="mt-8 text-paper text-6xl leading-[0.95] md:text-8xl">Sign in</h1>
           <p className="mt-2 text-sm text-steel">Access your D&amp;J Stratagem account.</p>
 
           <form onSubmit={handleSubmit} className="mt-8 space-y-4" noValidate>
@@ -138,10 +152,16 @@ export default function Login() {
                 <input
                   type="checkbox"
                   checked={rememberMe}
-                  onChange={(e) => setRememberMe(e.target.checked)}
-                  className="m-0 h-3.5 w-3.5 accent-amber"
+                  onChange={(e) => {
+                    const on = e.target.checked;
+                    setRememberMe(on);
+                    // Apply immediately. Waiting for a successful sign-in left
+                    // the stored address in place after an unchecked failed attempt.
+                    writeRememberedEmail(on ? email : "");
+                  }}
+                  className="h-3.5 w-3.5 accent-amber"
                 />
-                Remember me
+                Remember my email
               </label>
               <Link to="/forgot-password" className="text-sm font-medium text-amber hover:text-amber-2">
                 Forgot password?
@@ -150,7 +170,7 @@ export default function Login() {
 
             <div aria-live="polite" role="status" id={errorId}>
               {error && (
-                <div className="rounded-sm border border-danger/30 bg-danger/10 px-4 py-2.5 text-sm text-danger">
+                <div className="rounded-md border border-danger/30 bg-danger/10 px-4 py-2.5 text-sm text-danger">
                   {error}
                 </div>
               )}
@@ -182,14 +202,7 @@ export default function Login() {
         <p className="mt-8 text-center text-xs text-steel">
           Accounts are approved by our team before first sign-in.
         </p>
-        <p className="mt-4 text-center text-xs text-steel">
-          Need help?{" "}
-          <Link to="/resources" className="font-medium text-amber hover:text-amber-2">
-            Visit the help center
-          </Link>
-        </p>
-        </div>
-      </Section>
+      </div>
     </>
   );
 }

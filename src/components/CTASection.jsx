@@ -1,35 +1,27 @@
 import Button from "./Button";
 import Section from "./Section";
 
-/**
- * Closing call-to-action band. Flat accent block by default; pass band="dark"
- * to sit it above the (dark) footer without two dark bands touching.
- */
 export default function CTASection({
   title = "Start finding better projects.",
   subtitle = "Create your company profile and see the opportunities that match your trade, territory, and project size.",
-  // One primary action across the site — "Find projects" — with contact as
-  // the secondary path, so the CTAs stop competing with each other.
   primaryLabel = "Find construction projects",
   primaryTo = "/projects",
-  secondaryLabel = "Contact us",
+  secondaryLabel = "Request a demo",
   secondaryTo = "/contact",
-  band = "accent",
 }) {
   return (
-    <Section band={band} className="[[data-cookie-banner='1']_&]:pb-8">
-      <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
-        <div className="max-w-2xl">
-          <h2 className="text-balance text-2xl font-semibold tracking-tight text-paper-2 md:text-3xl">
-            {title}
-          </h2>
-          <p className="mt-2 text-sm text-steel md:text-base">{subtitle}</p>
-        </div>
-        <div className="flex shrink-0 flex-col gap-3 sm:flex-row">
-          <Button to={primaryTo} variant="primary">
-            {primaryLabel}
+    <Section className="overflow-hidden">
+      <div className="relative text-center">
+        <span aria-hidden="true" className="bob absolute left-[8%] top-0 hidden h-16 w-16 rounded-full bg-cta/30 blur-2xl md:block" />
+        <span aria-hidden="true" className="bob absolute bottom-0 right-[10%] hidden h-24 w-24 rounded-full bg-brand/30 blur-2xl md:block" style={{ animationDelay: "-3s" }} />
+        <p className="mono-label text-steel">Next step</p>
+        <h2 className="mx-auto mt-6 max-w-4xl text-balance text-5xl text-paper md:text-7xl lg:text-8xl">{title}</h2>
+        <p className="mx-auto mt-6 max-w-xl text-lg text-steel">{subtitle}</p>
+        <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+          <Button to={primaryTo} variant="primary" size="lg">
+            {primaryLabel} <span aria-hidden="true" className="transition-transform group-hover/btn:translate-x-1">→</span>
           </Button>
-          <Button to={secondaryTo} variant="secondary">
+          <Button to={secondaryTo} variant="ghost" size="lg">
             {secondaryLabel}
           </Button>
         </div>

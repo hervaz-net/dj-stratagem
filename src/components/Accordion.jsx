@@ -8,11 +8,12 @@ export default function Accordion({ items }) {
   const [open, setOpen] = useState(null);
 
   return (
-    <div className="divide-y divide-line overflow-hidden rounded-md border border-line bg-ink-2">
+    <div>
       {items.map((item, i) => {
         const isOpen = open === i;
         return (
-          <div key={item.q}>
+          <div key={item.q} className="group/faq">
+            <div className="dotline" />
             <h3>
               <button
                 type="button"
@@ -20,11 +21,11 @@ export default function Accordion({ items }) {
                 aria-expanded={isOpen}
                 aria-controls={`faq-panel-${i}`}
                 onClick={() => setOpen(isOpen ? null : i)}
-                className="flex w-full items-center justify-between gap-6 px-6 py-5 text-left transition-colors hover:bg-ink-3"
+                className="flex w-full items-center justify-between gap-6 py-6 text-left"
               >
-                <span className="text-base font-semibold text-paper">{item.q}</span>
+                <span className="font-display text-2xl leading-tight text-paper transition-colors group-hover/faq:text-cta md:text-3xl">{item.q}</span>
                 <span
-                  className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-line text-amber transition-transform duration-300 ${
+                  className={`flex h-10 w-10 shrink-0 items-center justify-center text-cta transition-transform duration-500 ${
                     isOpen ? "rotate-45" : ""
                   }`}
                   aria-hidden="true"
@@ -40,9 +41,9 @@ export default function Accordion({ items }) {
               role="region"
               aria-labelledby={`faq-trigger-${i}`}
               hidden={!isOpen}
-              className="px-6 pb-5"
+              className="pb-7"
             >
-              <p className="max-w-2xl text-sm leading-relaxed text-steel">{item.a}</p>
+              <p className="max-w-2xl text-base leading-relaxed text-steel">{item.a}</p>
             </div>
           </div>
         );

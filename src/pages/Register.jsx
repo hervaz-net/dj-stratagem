@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import Button from "../components/Button";
 import Logo from "../components/Logo";
-import Section from "../components/Section";
 import Seo from "../components/Seo";
 import PasswordField from "../components/PasswordField";
 import { IconCheck } from "../components/icons";
@@ -15,8 +14,9 @@ const EMPTY = { fullName: "", company: "", email: "", phone: "", password: "", c
 function passwordStrength(pw) {
   if (!pw) return 0;
   let score = 0;
-  if (pw.length >= 8) score++;
+  // 8 characters used to score a point even though the server rejects under 12.
   if (pw.length >= 12) score++;
+  if (pw.length >= 16) score++;
   if (/[A-Z]/.test(pw)) score++;
   if (/[0-9]/.test(pw)) score++;
   if (/[^A-Za-z0-9]/.test(pw)) score++;
@@ -36,7 +36,7 @@ function PasswordStrengthMeter({ password }) {
         {[1, 2, 3, 4].map((seg) => (
           <div
             key={seg}
-            className={`h-1 flex-1 transition-colors duration-300 ${
+            className={`h-1 flex-1 rounded-full transition-colors duration-300 ${
               score >= seg ? STRENGTH_COLOR[score] : "bg-line"
             }`}
           />
@@ -59,8 +59,12 @@ function validate(v) {
 
   if (v.password.length < MIN_PASSWORD) {
     e.password = `Use at least ${MIN_PASSWORD} characters.`;
+  } else if (v.password.length > 200) {
+    e.password = "Password must be 200 characters or fewer.";
   } else if (v.email && v.password.toLowerCase().includes(v.email.toLowerCase())) {
     e.password = "Don't use your email address as your password.";
+  } else if (v.company.trim() && v.password.toLowerCase() === v.company.trim().toLowerCase()) {
+    e.password = "Don't use your company name as your password.";
   }
   if (v.confirm !== v.password) e.confirm = "Passwords don't match.";
 
@@ -82,8 +86,8 @@ function Field({ id, label, value, onChange, onBlur, error, required, ...rest })
         onBlur={onBlur}
         aria-invalid={error ? true : undefined}
         aria-describedby={error ? `${id}-error` : undefined}
-        className={`w-full rounded-sm border bg-ink-2 px-4 py-2.5 text-sm text-paper outline-hidden transition-colors placeholder:text-steel/60 focus:border-amber ${
-          error ? "border-danger" : "border-line-2"
+        className={`w-full rounded-md border bg-ink px-4 py-2.5 text-sm text-paper outline-hidden transition-colors placeholder:text-steel/60 focus:border-amber ${
+          error ? "border-danger" : "border-line"
         }`}
         {...rest}
       />
@@ -156,19 +160,18 @@ export default function Register() {
         noindex
       />
 
-      <Section band="stone" className="md:py-16">
-        <div className="mx-auto w-full max-w-lg">
-        <div className="rounded-sm border border-line bg-ink-2 p-6 sm:p-8">
+      <div className="mx-auto flex w-full max-w-lg flex-col justify-center px-6 py-10 md:py-14">
+        <div className="slab p-8">
           <Link to="/" className="inline-block" aria-label="D&J Stratagem — home">
             <Logo />
           </Link>
 
           {done ? (
             <div className="animate-fade-in mt-8">
-              <div className="flex h-12 w-12 items-center justify-center rounded-sm bg-success/10 text-success">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-success/10 text-success">
                 <IconCheck width={22} height={22} />
               </div>
-              <h1 className="mt-5 text-2xl font-semibold tracking-tight text-paper">
+              <h1 className="mt-5 text-paper text-6xl leading-[0.95] md:text-8xl">
                 Request received.
               </h1>
               <p className="mt-3 text-sm leading-relaxed text-steel">
@@ -182,7 +185,7 @@ export default function Register() {
             </div>
           ) : (
             <>
-              <h1 className="mt-8 text-3xl font-semibold tracking-tight text-paper">
+              <h1 className="mt-8 text-paper text-6xl leading-[0.95] md:text-8xl">
                 Request access
               </h1>
               <p className="mt-2 text-sm text-steel">
@@ -272,7 +275,7 @@ export default function Register() {
 
                 <div aria-live="polite" role="status">
                   {serverError && (
-                    <div className="rounded-sm border border-danger/30 bg-danger/10 px-4 py-2.5 text-sm text-danger">
+                    <div className="rounded-md border border-danger/30 bg-danger/10 px-4 py-2.5 text-sm text-danger">
                       {serverError}
                     </div>
                   )}
@@ -292,14 +295,7 @@ export default function Register() {
             </>
           )}
         </div>
-        <p className="mt-6 text-center text-xs text-steel">
-          Need help?{" "}
-          <Link to="/resources" className="font-medium text-amber hover:text-amber-2">
-            Visit the help center
-          </Link>
-        </p>
-        </div>
-      </Section>
+      </div>
     </>
   );
 }

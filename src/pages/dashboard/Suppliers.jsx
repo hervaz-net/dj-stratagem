@@ -11,6 +11,7 @@ import Seo from "../../components/Seo";
 import usePolledResource from "../../api/usePolledResource";
 import { fetchSuppliers, fetchMetrics, fetchTicker, isConfigured } from "../../api/suppliers";
 import { IconKeyboard } from "../../components/icons";
+import { localDateISO } from "../../lib/dates";
 
 const STATUSES = [
   { key: "active", label: "Active", color: "var(--viz-green)" },
@@ -33,7 +34,7 @@ function exportCsv(rows) {
   const url = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
   const a = document.createElement("a");
   a.href = url;
-  a.download = `suppliers-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.download = `suppliers-${localDateISO()}.csv`;
   a.click();
   URL.revokeObjectURL(url);
 }
@@ -59,7 +60,11 @@ export default function SuppliersDashboard() {
 
   const savePresets = (next) => {
     setPresets(next);
-    localStorage.setItem(LS_PRESETS, JSON.stringify(next));
+    try {
+      localStorage.setItem(LS_PRESETS, JSON.stringify(next));
+    } catch {
+      /* blocked storage: presets last for this visit */
+    }
   };
 
   const toggleStatus = useCallback((key) => {
@@ -84,7 +89,7 @@ export default function SuppliersDashboard() {
       if (!activeStatuses.includes(s.status)) return false;
       if (s.riskScore < risk[0] || s.riskScore > risk[1]) return false;
       if (s.deliveryRate < delivery[0] || s.deliveryRate > delivery[1]) return false;
-      if (q && ![s.name, s.category, s.region].some((f) => f.toLowerCase().includes(q))) return false;
+      if (q && ![s.name, s.category, s.region].some((f) => String(f ?? "").toLowerCase().includes(q))) return false;
       return true;
     });
     const dir = sort.dir === "asc" ? 1 : -1;
@@ -168,7 +173,7 @@ export default function SuppliersDashboard() {
               onClick={() => setShowShortcuts(true)}
               aria-label="Keyboard shortcuts"
               title="Keyboard shortcuts (?)"
-              className="flex h-9 w-9 items-center justify-center rounded-sm border border-line text-steel transition-colors hover:text-paper"
+              className="flex h-9 w-9 items-center justify-center rounded-lg border border-line text-steel transition-colors hover:text-paper"
             >
               <IconKeyboard width={16} height={16} />
             </button>
@@ -176,6 +181,17 @@ export default function SuppliersDashboard() {
           </div>
         }
       >
+        {!isConfigured && (
+          <GlassCard className="mb-6 flex flex-wrap items-center gap-x-2 gap-y-1 px-5 py-3">
+            <span className="text-xs font-semibold uppercase tracking-wider text-amber">
+              Sample data
+            </span>
+            <span className="text-sm text-steel">
+              Live APIs activate on the hosted PHP server after you sign in.
+            </span>
+          </GlassCard>
+        )}
+
         {anyError && (
           <GlassCard className="mb-6 px-5 py-3" role="status">
             <p className="text-sm text-danger">
@@ -191,11 +207,9 @@ export default function SuppliersDashboard() {
           </GlassCard>
         )}
 
-        <div className="grid-x grid-margin-x gap-y-5">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
           {(metrics.data ?? []).map((m) => (
-            <div key={m.id} className="cell small-12 medium-6 large-3">
-              <MetricCard metric={m} live={isConfigured && !metrics.error} />
-            </div>
+            <MetricCard key={m.id} metric={m} live={isConfigured && !metrics.error} />
           ))}
         </div>
 

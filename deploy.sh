@@ -51,6 +51,18 @@ TXT
   exit 0
 fi
 
+# Never ship a build that is missing commits already on origin/main: the live
+# site would silently roll back someone else's work. Set ALLOW_BEHIND=1 to skip.
+if [[ "${1:-}" != "--status" && "${ALLOW_BEHIND:-}" != "1" ]]; then
+  if git -C "$REPO_DIR" fetch -q origin main 2>/dev/null; then
+    behind="$(git -C "$REPO_DIR" rev-list --count HEAD..origin/main)"
+    [[ "$behind" == "0" ]] || die "HEAD is $behind commit(s) behind origin/main.
+Pull or rebase first (git pull --rebase origin main), then deploy."
+  else
+    printf "${YELLOW}warning:${NC} could not fetch origin/main; skipping the up-to-date check\n" >&2
+  fi
+fi
+
 [[ -f "$TOKEN_FILE" ]] || die "no token file at $TOKEN_FILE
 Create one in cPanel → Manage API Tokens, then save it without echoing:
   (umask 077; cat > $TOKEN_FILE)"
@@ -100,6 +112,7 @@ else
   step "Skipping build (--no-build)"
 fi
 [[ -d "$REPO_DIR/dist" ]] || die "no dist/ — run a build first"
+bash "$REPO_DIR/scripts/verify-dist.sh" "$REPO_DIR/dist"
 
 # --------------------------------------------------- refresh deploy branch
 step "Refreshing '$BRANCH' branch from dist/"
@@ -121,7 +134,7 @@ cat > .cpanel.yml <<YML
 ---
 deployment:
   tasks:
-    - /usr/bin/rsync -rltD --delete --exclude='.git' --exclude='.cpanel.yml' ./ ${DOCROOT}/
+    - /usr/bin/rsync -rltD --delete --exclude='.git' --exclude='.cpanel.yml' --exclude='api/config.php' --exclude='djs/config.php' --exclude='djs-config.php' ./ ${DOCROOT}/
     - /usr/bin/find ${DOCROOT} -type d -exec /bin/chmod 0755 {} +
     - /usr/bin/find ${DOCROOT} -type f -exec /bin/chmod 0644 {} +
     - /bin/chgrp nobody ${DOCROOT}

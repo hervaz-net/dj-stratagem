@@ -16,47 +16,58 @@ import { fileURLToPath } from "node:url";
 const here = dirname(fileURLToPath(import.meta.url));
 const root = resolve(here, "..");
 
-// Imported rather than duplicated, so new projects appear without edits here.
 const { projects, landingPairs } = await import(
   resolve(root, "src/data/sampleProjects.js")
 );
-const { posts } = await import(resolve(root, "src/data/blogPosts.js"));
 
 const SITE = "https://djstratageminc.com";
 
-/** Static marketing routes. Auth and dashboard paths stay out — robots.txt
- *  disallows them and they carry no search value. */
 const staticPaths = [
   ["/", "1.0"],
   ["/projects", "0.9"],
   ["/platform", "0.8"],
   ["/solutions", "0.8"],
   ["/supply", "0.8"],
-  ["/supply/catalog", "0.7"],
-  ["/quote", "0.5"],
-  ["/resources", "0.6"],
   ["/fleet", "0.7"],
   ["/pricing", "0.8"],
   ["/about", "0.6"],
   ["/contact", "0.6"],
-  ["/blog", "0.6"],
+  ["/resources", "0.6"],
   ["/changelog", "0.4"],
   ["/privacy", "0.3"],
   ["/terms", "0.3"],
   ["/brand", "0.3"],
+  ["/capital", "0.6"],
+  ["/studio", "0.6"],
+  ["/workforce", "0.6"],
+  // Stratagem Exchange (its own app under /exchange)
+  ["/exchange", "0.9"],
+  ["/exchange/marketplace", "0.8"],
+  ["/exchange/contractors", "0.7"],
+  ["/exchange/distributors", "0.7"],
+  ["/exchange/suppliers", "0.7"],
+  ["/exchange/pricing", "0.6"],
 ];
 
 const urls = [
   ...staticPaths.map(([path, priority]) => ({ path, priority })),
   ...projects.map((p) => ({ path: `/projects/${p.slug}`, priority: "0.7" })),
-  ...posts.map((p) => ({ path: `/blog/${p.slug}`, priority: "0.5" })),
   ...landingPairs().map((p) => ({
     path: `/construction-projects/${p.citySlug}/${p.tradeSlug}`,
     priority: "0.7",
   })),
 ];
 
-const today = new Date().toISOString().slice(0, 10);
+// lastmod is a calendar day, not a UTC instant. toISOString() rolls
+// the sitemap to tomorrow after 5pm Pacific.
+function localDateISO(date = new Date()) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+
+const today = localDateISO();
 
 const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

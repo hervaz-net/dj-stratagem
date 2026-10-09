@@ -1,48 +1,129 @@
-# Serve real files/directories (assets, contact.php) as-is; everything
-# else falls through to index.html so React Router can handle the route.
+# Namecheap LiteSpeed on server247 uses CloudLinux alt-php, not EasyApache.
+# Live responses advertise PHP/8.1.34. The previous ea-php82___lsphp handler
+# is not installed on this account, so LiteSpeed started PHP then returned
+# an empty HTML 500 for every .php request (contact form, /api/me.php, login).
+# Use the CloudLinux lsphp MIME type (three underscores). The short
+# application/x-httpd-alt-php81 name is not registered on this host.
+# Keep the handler in source: rsync --delete wipes the MultiPHP-injected block.
+<FilesMatch "[.]php$">
+  SetHandler application/x-httpd-alt-php81___lsphp
+</FilesMatch>
+<IfModule mime_module>
+  AddHandler application/x-httpd-alt-php81___lsphp .php .php8 .phtml
+  AddType application/manifest+json .webmanifest
+</IfModule>
+AddType application/manifest+json .webmanifest
+
+Options -Indexes -MultiViews
+
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
 
-  # One public origin. www must not keep its own cookie/cache universe.
-  RewriteCond %{HTTP_HOST} ^www\.djstratageminc\.com$ [NC]
+  RewriteCond %{HTTP_HOST} ^www[.]djstratageminc[.]com$ [NC]
   RewriteRule ^ https://djstratageminc.com%{REQUEST_URI} [R=301,L]
 
-  # Drop a trailing slash on non-directories so /login/ matches /login.
+  # /api/health.php must not depend on the file existing under public_html/api.
+  # Live trees have been missing that file; LiteSpeed then emits its HTML 404
+  # before later aliases run because /api/ is a real directory. Always send
+  # the probe to the working root /health.php first. PT forces handler rerun.
+  RewriteRule ^api/health(\.php)?/?$ /health.php [L,PT]
+
+  # Extensionless app routes must run before the existing-file stop.
+  # LiteSpeed MultiViews maps /privacy and /terms onto privacy.html and
+  # terms.html, then the -f rule below would end rewriting. That served the
+  # printable Exchange sheets with no site chrome and the wrong share card.
+  # Printable files stay at /privacy.html, /terms.html, and
+  # /brand-guidelines.html for the iframe.
+  RewriteRule ^privacy/?$ /spa.php [L]
+  RewriteRule ^terms/?$ /spa.php [L]
+  RewriteRule ^brand/?$ /spa.php [L]
+  RewriteRule ^fleet/?$ /spa.php [L]
+  # Same MultiViews trap under the Exchange prefix if a printable sheet
+  # is ever added beside these routes.
+  RewriteRule ^exchange/(privacy|terms|brand)/?$ /spa.php [L]
+  # Old Exchange legal aliases are client redirects. Crawlers never run
+  # those, so send them on the server before the existing-file stop.
+  RewriteRule ^exchange/privacy-policy/?$ /exchange/privacy [R=301,L]
+  RewriteRule ^exchange/terms-of-service/?$ /exchange/terms [R=301,L]
+  RewriteRule ^exchange/tos/?$ /exchange/terms [R=301,L]
+  RewriteRule ^exchange/legal/?$ /exchange/terms [R=301,L]
+  RewriteRule ^exchange/eula/?$ /exchange/terms [R=301,L]
+  RewriteRule ^exchange/brand-guidelines/?$ /exchange/brand [R=301,L]
+
+  RewriteCond %{REQUEST_FILENAME} -f
+  RewriteRule ^ - [L]
+
+  # /fleet is served above, before the existing-file stop, so a leftover
+  # public/fleet/ directory cannot list photos instead of the Fleet page.
+
+  # Each company has its own top-level site; old /companies/<slug> links move.
+  RewriteRule ^companies/(capital|studio|workforce|fleet)/?$ /$1 [R=301,L]
+
+  # /manifest.json must never become index.html. Live public_html has shipped
+  # without the file, and LiteSpeed DOCUMENT_ROOT is unreliable on this account,
+  # so do not gate the alias on a filesystem probe.
+  RewriteRule ^manifest[.]json$ manifest.webmanifest [L]
+  RewriteRule ^credit$ /exchange/dashboard/settings [R=301,L]
+  RewriteRule ^credits$ /exchange/dashboard/settings [R=301,L]
+  RewriteRule ^credit-application$ /exchange/dashboard/settings [R=301,L]
+  # Stratagem Exchange moved under /exchange when D&J Stratagem, Inc. returned
+  # to the root. Keep its old top-level URLs working.
+  RewriteRule ^(marketplace|contractors|distributors|suppliers)$ /exchange/$1 [R=301,L]
+
+  # Partial public_html trees have been missing /api/*.php and health.php.
+  # Never let those URLs become the marketing SPA — JSON or a PHP 404 only.
+  # /api (no slash) 301s to /api/ because it is a directory. Serve the
+  # index from the parent too, so a host that skips the subdirectory rule
+  # still returns the API descriptor instead of the marketing SPA.
+  RewriteRule ^api/?$ api/index.php [L]
+  RewriteRule ^api/ api/index.php [L]
+  RewriteRule [.]php$ contact.php [L]
+
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule ^(.+)/$ /$1 [R=301,L]
 
-  # Intent aliases at the host. A stale SPA bundle used to 404 these even
-  # after GitHub had the client Navigate routes, because public_html lagged.
+  RewriteRule ^blog$ /changelog [R=301,L]
+  RewriteRule ^blog/ /changelog [R=301,L]
+
   RewriteRule ^signin$ /login [R=301,L]
   RewriteRule ^sign-in$ /login [R=301,L]
   RewriteRule ^log-in$ /login [R=301,L]
   RewriteRule ^account$ /login [R=301,L]
+  RewriteRule ^credit$ /exchange/dashboard/settings [R=301,L]
+  RewriteRule ^credits$ /exchange/dashboard/settings [R=301,L]
+  RewriteRule ^credit-application$ /exchange/dashboard/settings [R=301,L]
   RewriteRule ^signup$ /register [R=301,L]
   RewriteRule ^sign-up$ /register [R=301,L]
   RewriteRule ^trial$ /register [R=301,L]
   RewriteRule ^start$ /register [R=301,L]
   RewriteRule ^get-started$ /register [R=301,L]
+  RewriteRule ^join$ /register [R=301,L]
   RewriteRule ^forgot$ /forgot-password [R=301,L]
   RewriteRule ^reset-password$ /forgot-password [R=301,L]
   RewriteRule ^reset$ /forgot-password [R=301,L]
   RewriteRule ^password$ /forgot-password [R=301,L]
   RewriteRule ^project$ /projects [R=301,L]
+  RewriteRule ^bids$ /projects [R=301,L]
+  RewriteRule ^bid$ /projects [R=301,L]
+  RewriteRule ^resource$ /resources [R=301,L]
+  RewriteRule ^profile$ /dashboard/settings [R=301,L]
+  RewriteRule ^settings$ /dashboard/settings [R=301,L]
   RewriteRule ^about-us$ /about [R=301,L]
   RewriteRule ^company$ /about [R=301,L]
   RewriteRule ^team$ /about [R=301,L]
   RewriteRule ^status$ /about [R=301,L]
   RewriteRule ^security$ /about [R=301,L]
   RewriteRule ^investors$ /about [R=301,L]
-  RewriteRule ^partners$ /about [R=301,L]
+  RewriteRule ^partners$ /solutions [R=301,L]
   RewriteRule ^accessibility$ /about [R=301,L]
   RewriteRule ^a11y$ /about [R=301,L]
   RewriteRule ^contact-us$ /contact [R=301,L]
-  RewriteRule ^help$ /contact [R=301,L]
-  RewriteRule ^support$ /contact [R=301,L]
+  RewriteRule ^help$ /resources [R=301,L]
+  RewriteRule ^support$ /resources [R=301,L]
   RewriteRule ^demo$ /contact [R=301,L]
-  RewriteRule ^faq$ /contact [R=301,L]
-  RewriteRule ^faqs$ /contact [R=301,L]
+  RewriteRule ^faq$ /resources [R=301,L]
+  RewriteRule ^faqs$ /resources [R=301,L]
   RewriteRule ^book$ /contact [R=301,L]
   RewriteRule ^book-demo$ /contact [R=301,L]
   RewriteRule ^request-demo$ /contact [R=301,L]
@@ -55,9 +136,8 @@
   RewriteRule ^services$ /platform [R=301,L]
   RewriteRule ^how-it-works$ /platform [R=301,L]
   RewriteRule ^howitworks$ /platform [R=301,L]
-  RewriteRule ^blog$ /changelog [R=301,L]
-  RewriteRule ^news$ /changelog [R=301,L]
-  RewriteRule ^press$ /changelog [R=301,L]
+  RewriteRule ^news$ /changelog [R=302,L]
+  RewriteRule ^press$ /changelog [R=302,L]
   RewriteRule ^privacy-policy$ /privacy [R=301,L]
   RewriteRule ^cookies$ /privacy [R=301,L]
   RewriteRule ^cookie$ /privacy [R=301,L]
@@ -69,48 +149,51 @@
   RewriteRule ^legal$ /terms [R=301,L]
   RewriteRule ^eula$ /terms [R=301,L]
   RewriteRule ^brand-guidelines$ /brand [R=301,L]
-  RewriteRule ^fleet-cards$ /marketing/fleet-cards [R=301,L]
-  RewriteRule ^receipts$ /marketing/receipts [R=301,L]
-  RewriteRule ^signage$ /marketing/signage [R=301,L]
+  # Printable sheets are real files. Do not send them through the SPA:
+  # a stale bundle renders an empty marketing shell and never sets a title.
+  RewriteRule ^fleet-cards$ /fleet-cards.html [L]
+  RewriteRule ^marketing/fleet-cards$ /fleet-cards.html [L]
+  RewriteRule ^signage$ /signage.html [L]
+  RewriteRule ^marketing/signage$ /signage.html [L]
+  RewriteRule ^receipts$ /receipts.html [L]
+  RewriteRule ^marketing/receipts$ /receipts.html [L]
+  # /supply is the parent site's page again; the marketplace lives at
+  # /exchange/marketplace (Stratagem Exchange subsidiary).
+  RewriteRule ^supply/catalog/?$ /exchange/marketplace [R=301,L]
+  RewriteRule ^supply/catalog/ /exchange/marketplace [R=301,L]
+  RewriteRule ^catalog/?$ /exchange/marketplace [R=301,L]
+  RewriteRule ^catalog/ /exchange/marketplace [R=301,L]
+  RewriteRule ^shop$ /exchange/marketplace [R=301,L]
+  RewriteRule ^equipment$ /fleet [R=301,L]
+  RewriteRule ^supplier$ /exchange/suppliers [R=301,L]
   RewriteRule ^sitemap$ /sitemap.xml [R=301,L]
+  RewriteRule ^(feed|rss|atom)$ /changelog [R=301,L]
+  RewriteRule ^app$ /login [R=301,L]
+  RewriteRule ^companies$ / [R=301,L]
 
-  # Hashed Vite files must never fall through to the SPA. A stale index.html
-  # that points at a bundle that is not on disk used to 200 with HTML, which
-  # LiteSpeed then served as application/javascript and the app never booted.
+  RewriteRule ^send-demo[.]php$ contact.php [L]
+  RewriteRule ^favicon[.]ico$ favicon.svg [L]
+  RewriteRule ^apple-touch-icon(-precomposed)?[.]png$ favicon.svg [L]
+  RewriteRule ^manifest[.]json$ manifest.webmanifest [L]
+
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule ^assets/ - [R=404,L]
-  RewriteRule ^assets/ - [L]
-
-  # Brand marks and other static uploads must 404 when missing. On the Aug 21
-  # live tree, /uploads/*.svg was rewritten to index.html and served as the
-  # document mark, so privacy/terms rendered a broken HTML "image".
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteRule ^uploads/ - [R=404,L]
-  RewriteRule ^uploads/ - [L]
-
-  # PHP endpoints must not 200 the SPA. A missing or mistyped /api/*.php used
-  # to return index.html, so fetch() parsed marketing HTML as JSON and the
-  # dashboard looked like the API was up. Send the request into /api/ so the
-  # directory .htaccess can emit a JSON 404 (LiteSpeed HTML 404 is not parseable).
-  RewriteRule ^api/?$ api/index.php [L]
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteRule ^api/ api/index.php [L]
 
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule ^ index.html [L]
+  RewriteCond %{REQUEST_URI} ![.]php$ [NC]
+  RewriteRule ^ spa.php [L]
 </IfModule>
 
-# index.html is the only pointer to the current hashed bundle. Cache it and
-# a deploy that only updates public_html/assets looks like it never shipped.
-# robots.txt / sitemap.xml must also skip long-lived cache or a cPanel pull
-# can look like it never updated crawler files.
 <IfModule mod_headers.c>
-  <FilesMatch "\.(html)$">
+  <FilesMatch "html$">
     Header set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
-  <FilesMatch "^(robots\.txt|sitemap\.xml)$">
+  <FilesMatch "^(robots.txt|sitemap.xml|manifest.webmanifest|manifest.json)$">
     Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+  <FilesMatch "(manifest[.]webmanifest|manifest[.]json)$">
+    Header set Content-Type "application/manifest+json"
   </FilesMatch>
 </IfModule>
 
@@ -120,6 +203,7 @@
   ExpiresByType text/plain "access plus 0 seconds"
   ExpiresByType application/xml "access plus 0 seconds"
   ExpiresByType text/xml "access plus 0 seconds"
+  ExpiresByType application/manifest+json "access plus 0 seconds"
   ExpiresByType text/css "access plus 1 year"
   ExpiresByType application/javascript "access plus 1 year"
   ExpiresByType image/svg+xml "access plus 1 year"
