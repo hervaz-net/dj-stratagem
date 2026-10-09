@@ -33,10 +33,34 @@ $phone   = clean_field($_POST['phone'] ?? '');
 $role    = clean_field($_POST['role'] ?? '');
 $message = trim(str_replace("\r\n", "\n", (string) ($_POST['message'] ?? '')));
 
+// Topic routes the message and sets the subject line. Unknown values fall back
+// to "other" so a tampered field can never inject a subject.
+$topics = [
+    'demo'        => 'New demo request',
+    'quote'       => 'New quote request',
+    'support'     => 'Support request',
+    'partnership' => 'Partnership inquiry',
+    'careers'     => 'Careers inquiry',
+    'other'       => 'New message',
+];
+$topic = strtolower(clean_field($_POST['topic'] ?? 'demo'));
+if (!isset($topics[$topic])) $topic = 'other';
+
+// Quote-only fields.
+$reference = substr(clean_field($_POST['reference'] ?? ''), 0, 40);
+$project   = substr(clean_field($_POST['project'] ?? ''), 0, 120);
+$zip       = substr(clean_field($_POST['zip'] ?? ''), 0, 12);
+$needby    = substr(clean_field($_POST['needby'] ?? ''), 0, 20);
+$lines     = trim(str_replace("\r\n", "\n", (string) ($_POST['lines'] ?? '')));
+// Cap the line-item block so the relay cannot be used to send huge payloads.
+$lines     = substr($lines, 0, 20000);
+$message   = substr($message, 0, 5000);
+
 $errors = [];
 if ($name === '') $errors[] = 'name';
 if ($company === '') $errors[] = 'company';
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = 'email';
+if ($topic === 'quote' && $lines === '') $errors[] = 'lines';
 
 if (!empty($errors)) {
     http_response_code(422);
@@ -46,14 +70,24 @@ if (!empty($errors)) {
 
 $host = preg_replace('/^www\./', '', $_SERVER['HTTP_HOST'] ?? 'localhost');
 
-$subject = "New demo request from $name ($company)";
-$body = "New contact form submission from $host\n\n"
+$subject = $topics[$topic] . ($reference !== '' ? " $reference" : '') . " from $name ($company)";
+$body = "New submission from $host\n\n"
+    . "Topic: $topic\n"
     . "Name: $name\n"
     . "Company: $company\n"
     . "Email: $email\n"
     . "Phone: $phone\n"
-    . "Role: $role\n"
-    . "Message:\n$message\n";
+    . "Role: $role\n";
+
+if ($topic === 'quote') {
+    $body .= "Reference: $reference\n"
+        . "Project: $project\n"
+        . "Delivery ZIP: $zip\n"
+        . "Need by: $needby\n"
+        . "\nLine items:\n$lines\n";
+}
+
+$body .= "\nMessage:\n$message\n";
 
 $headers = [
     'From: no-reply@' . $host,

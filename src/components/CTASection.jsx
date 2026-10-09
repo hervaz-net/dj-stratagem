@@ -1,6 +1,10 @@
 import Button from "./Button";
 import Section from "./Section";
 
+/**
+ * Closing call-to-action band. Flat accent block by default; pass band="dark"
+ * to sit it above the (dark) footer without two dark bands touching.
+ */
 export default function CTASection({
   title = "Start finding better projects.",
   subtitle = "Create your company profile and see the opportunities that match your trade, territory, and project size.",
@@ -10,24 +14,24 @@ export default function CTASection({
   primaryTo = "/projects",
   secondaryLabel = "Contact us",
   secondaryTo = "/contact",
+  band = "accent",
 }) {
   return (
-    <Section className="border-t border-line [[data-cookie-banner='1']_&]:pb-8">
-      <div className="card-corp relative overflow-hidden rounded-lg px-6 py-10 text-center md:px-12">
-        <div className="pointer-events-none absolute inset-0 bg-grid opacity-40" aria-hidden="true" />
-        <div className="relative">
-          <h2 className="text-balance text-2xl font-semibold tracking-tight text-paper md:text-3xl">
+    <Section band={band} className="[[data-cookie-banner='1']_&]:pb-8">
+      <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
+        <div className="max-w-2xl">
+          <h2 className="text-balance text-2xl font-semibold tracking-tight text-paper-2 md:text-3xl">
             {title}
           </h2>
-          <p className="mx-auto mt-3 max-w-xl text-sm text-steel">{subtitle}</p>
-          <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Button to={primaryTo} variant="primary">
-              {primaryLabel}
-            </Button>
-            <Button to={secondaryTo} variant="secondary">
-              {secondaryLabel}
-            </Button>
-          </div>
+          <p className="mt-2 text-sm text-steel md:text-base">{subtitle}</p>
+        </div>
+        <div className="flex shrink-0 flex-col gap-3 sm:flex-row">
+          <Button to={primaryTo} variant="primary">
+            {primaryLabel}
+          </Button>
+          <Button to={secondaryTo} variant="secondary">
+            {secondaryLabel}
+          </Button>
         </div>
       </div>
     </Section>

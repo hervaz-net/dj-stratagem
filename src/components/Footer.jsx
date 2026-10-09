@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import Logo from "./Logo";
 import { IconMail, IconArrowRight, IconShield, IconLock, IconBuilding } from "./icons";
+import { sectionPages } from "../lib/siteMap";
 
 const trustBadges = [
   { icon: <IconShield width={14} height={14} />, label: "SOC 2 Type II" },
@@ -9,19 +10,13 @@ const trustBadges = [
   { icon: <IconBuilding width={14} height={14} />, label: "Our cloud or your infrastructure" },
 ];
 
-// Only routes that actually exist are linked. Resources and per-trade landing
-// pages are P1 — add a column here when those pages ship, not before.
+// Product and Company columns come from the shared site map, so a page added
+// there appears here automatically. Solutions and Legal are not top-level pages.
 const columns = [
   {
-    heading: "Product",
+    heading: "Platform",
     links: [
-      { to: "/platform", label: "Platform" },
-      { to: "/projects", label: "Projects" },
-      { to: "/supply", label: "Supply Exchange" },
-      { to: "/fleet", label: "Fleet" },
-      { to: "/pricing", label: "Pricing" },
-      { to: "/blog", label: "Blog" },
-      { to: "/changelog", label: "Changelog" },
+      ...sectionPages("product").map((p) => ({ to: p.to, label: p.label })),
     ],
   },
   {
@@ -30,13 +25,13 @@ const columns = [
       { to: "/solutions#gc", label: "General contractors" },
       { to: "/solutions#sub", label: "Subcontractors" },
       { to: "/solutions#supplier", label: "Suppliers" },
+      { to: "/quote", label: "Request a quote" },
     ],
   },
   {
     heading: "Company",
     links: [
-      { to: "/about", label: "About" },
-      { to: "/contact", label: "Contact" },
+      ...sectionPages("company").map((p) => ({ to: p.to, label: p.label })),
       { to: "/login", label: "Sign in" },
       { to: "/register", label: "Create account" },
     ],
@@ -46,6 +41,7 @@ const columns = [
     links: [
       { to: "/privacy", label: "Privacy Policy" },
       { to: "/terms", label: "Terms & Conditions" },
+      { to: "/brand", label: "Brand guidelines" },
     ],
   },
 ];
@@ -94,13 +90,13 @@ function Newsletter() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@example.com"
-            className="w-full rounded-lg border border-line bg-ink pl-9 pr-3 py-2 text-xs text-paper outline-hidden transition-colors placeholder:text-steel/60 focus:border-amber"
+            className="w-full border border-line bg-ink pl-9 pr-3 py-2 text-xs text-paper outline-hidden transition-colors placeholder:text-steel/60 focus:border-amber"
           />
         </div>
         <button
           type="submit"
           aria-label="Request market updates"
-          className="flex shrink-0 items-center gap-1 rounded-lg bg-cta hover:bg-cta-hover px-3 py-2 text-xs font-semibold text-white"
+          className="flex shrink-0 items-center gap-1 bg-cta px-3 py-2 text-xs font-semibold text-white hover:bg-cta-hover"
         >
           <IconArrowRight width={13} height={13} />
         </button>
@@ -112,7 +108,7 @@ function Newsletter() {
 
 export default function Footer() {
   return (
-    <footer className="no-print border-t border-line bg-ink-2">
+    <footer className="no-print band-dark">
       <div className="grid-container py-14">
         <div className="grid grid-cols-2 gap-10 md:grid-cols-3 lg:grid-cols-6">
           {/* Brand + newsletter share the wide left block so the four link
@@ -138,7 +134,7 @@ export default function Footer() {
               <h4 className="text-xs font-semibold uppercase tracking-wider text-steel">
                 {col.heading}
               </h4>
-              <ul className="mt-4 space-y-3 text-sm">
+              <ul className="m-0 mt-4 list-none space-y-3 p-0 text-sm">
                 {col.links.map((l) => (
                   // Keyed by label: several Solutions entries share one route.
                   <li key={l.label}>

@@ -36,10 +36,10 @@
 //    has no Foundation equivalent — leave typography/spacing using md: as
 //    plain Tailwind utilities, only grid column counts need conversion.
 
-$radius-xs: 4px;
-$radius-sm: 6px;
-$radius-md: 8px;
-$radius-lg: 10px;
+$radius-xs: 2px;
+$radius-sm: 3px;
+$radius-md: 4px;
+$radius-lg: 4px;
 
 $space-1: 4px;
 $space-2: 8px;
@@ -170,8 +170,7 @@ $transition-base: 150ms ease;
   transition: border-color $transition-base, box-shadow $transition-base;
 
   &:hover {
-    border-color: var(--border-strong);
-    box-shadow: 0 2px 8px rgba(14, 23, 41, 0.06);
+    border-color: var(--accent);
   }
 }
 

@@ -1,6 +1,10 @@
 import { useMemo, useState } from "react";
-import Section, { Eyebrow } from "../components/Section";
+import { Link } from "react-router-dom";
+import Section from "../components/Section";
+import PageHeader from "../components/PageHeader";
 import Seo from "../components/Seo";
+import Button from "../components/Button";
+import { useQuote, money } from "../lib/quoteStore";
 import CTASection from "../components/CTASection";
 import {
   IconLock,
@@ -29,8 +33,6 @@ const CATEGORY_ICON = {
 
 const PAGE_SIZE = 24;
 
-const money = (n) => `$${n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-
 /** A single catalog card: an image placeholder, brand/type selectors that
  * repick the active variant, and a quantity stepper. */
 function ProductCard({ group, selection, onSelectVariant, qty, onQty }) {
@@ -52,8 +54,8 @@ function ProductCard({ group, selection, onSelectVariant, qty, onQty }) {
   };
 
   return (
-    <div className="card-corp card-corp-hover flex flex-col rounded-lg p-4">
-      <div className="flex aspect-square items-center justify-center rounded-md border border-line bg-white">
+    <div className="card-corp card-corp-hover flex flex-col p-4">
+      <div className="flex aspect-square items-center justify-center border border-line bg-white">
         <Icon width={40} height={40} className="text-steel/70" />
       </div>
       <p className="mt-3 text-[10px] font-semibold uppercase tracking-wider text-steel">
@@ -92,7 +94,7 @@ function ProductCard({ group, selection, onSelectVariant, qty, onQty }) {
             type="button"
             aria-label={`Decrease quantity of ${group.name}`}
             onClick={() => onQty(Math.max(0, qty - 1))}
-            className="flex h-7 w-7 items-center justify-center rounded-sm border border-line text-paper transition-colors hover:border-amber/50"
+            className="flex h-7 w-7 items-center justify-center border border-line text-paper transition-colors hover:border-paper"
           >
             −
           </button>
@@ -108,7 +110,7 @@ function ProductCard({ group, selection, onSelectVariant, qty, onQty }) {
             type="button"
             aria-label={`Increase quantity of ${group.name}`}
             onClick={() => onQty(qty + 1)}
-            className="flex h-7 w-7 items-center justify-center rounded-sm border border-line text-paper transition-colors hover:border-amber/50"
+            className="flex h-7 w-7 items-center justify-center border border-line text-paper transition-colors hover:border-paper"
           >
             +
           </button>
@@ -122,8 +124,8 @@ export default function Catalog() {
   const [q, setQ] = useState("");
   const [category, setCategory] = useState(ANY);
   const [page, setPage] = useState(1);
-  const [selections, setSelections] = useState({}); // groupId -> variant
-  const [quantities, setQuantities] = useState({}); // groupId -> qty
+  const [selections, setSelections] = useState({}); // groupId -> variant (view state only)
+  const { lines, count, subtotal, lastReadyDays, qtyOf, setQty, remove, clear } = useQuote();
 
   const filtered = useMemo(() => {
     const needle = q.trim().toLowerCase();
@@ -142,21 +144,6 @@ export default function Catalog() {
 
   const setPageClamped = (p) => setPage(Math.min(Math.max(1, p), totalPages));
 
-  const cartLines = useMemo(() => {
-    return Object.entries(quantities)
-      .filter(([, qty]) => qty > 0)
-      .map(([groupId, qty]) => {
-        const group = PRODUCT_GROUPS.find((g) => g.id === groupId);
-        const variant = selections[groupId] ?? group?.variants[0];
-        if (!group || !variant) return null;
-        return { group, variant, qty, lineTotal: variant.price * qty };
-      })
-      .filter(Boolean);
-  }, [quantities, selections]);
-
-  const subtotal = cartLines.reduce((sum, l) => sum + l.lineTotal, 0);
-  const latestEtaDays = cartLines.reduce((max, l) => Math.max(max, l.variant.leadDaysMax), 0);
-
   return (
     <>
       <Seo
@@ -164,21 +151,16 @@ export default function Catalog() {
         description="Browse fasteners, power tools, electrical, lumber, structural metal, plumbing, and safety supplies with live quantity, brand, and type selection."
       />
 
-      <Section className="pt-10 pb-6 md:pt-14">
-        <Eyebrow>Supply Exchange Catalog</Eyebrow>
-        <h1 className="text-balance max-w-3xl text-2xl font-semibold leading-tight tracking-tight text-paper sm:text-3xl">
-          Build a quote from 300+ SKUs across every trade you buy for.
-        </h1>
-        <p className="mt-6 max-w-2xl text-lg leading-relaxed text-steel">
-          Pick a brand and type per item, set quantities, and see a running subtotal with an
-          estimated delivery window &mdash; before tax and shipping are added at checkout.
-        </p>
-      </Section>
+      <PageHeader
+        eyebrow="Supply Exchange Catalog"
+        title="Build a quote from 300+ SKUs across every trade you buy for."
+        lede="Pick a brand and type per item, set quantities, and see a running subtotal with an estimated delivery window — before tax and shipping. Your quote is saved on this device."
+      />
 
-      <Section className="border-t border-line">
+      <Section band="white">
         <div className="grid grid-cols-1 gap-8 xl:grid-cols-[220px_1fr_300px]">
           <aside className="xl:sticky xl:top-20 xl:self-start">
-            <div className="card-corp rounded-lg p-4">
+            <div className="card-corp p-4">
               <label htmlFor="catalog-search" className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-steel">
                 Search
               </label>
@@ -198,7 +180,7 @@ export default function Catalog() {
                     key={c}
                     type="button"
                     onClick={() => { setCategory(c); setPage(1); }}
-                    className={`rounded-sm px-2.5 py-1.5 text-left text-sm transition-colors ${
+                    className={`px-2.5 py-1.5 text-left text-sm transition-colors ${
                       category === c ? "bg-cta/10 font-semibold text-cta" : "text-steel hover:bg-ink hover:text-paper"
                     }`}
                   >
@@ -216,7 +198,7 @@ export default function Catalog() {
             </p>
 
             {pageItems.length === 0 ? (
-              <div className="card-corp rounded-lg p-10 text-center">
+              <div className="card-corp p-10 text-center">
                 <p className="text-sm font-semibold text-paper">No products match that search.</p>
               </div>
             ) : (
@@ -227,8 +209,8 @@ export default function Catalog() {
                       group={group}
                       selection={selections[group.id]}
                       onSelectVariant={(v) => setSelections((s) => ({ ...s, [group.id]: v }))}
-                      qty={quantities[group.id] ?? 0}
-                      onQty={(qty) => setQuantities((s) => ({ ...s, [group.id]: qty }))}
+                      qty={qtyOf((selections[group.id] ?? group.variants[0]).id)}
+                      onQty={(qty) => setQty(selections[group.id] ?? group.variants[0], qty)}
                     />
                   </div>
                 ))}
@@ -249,21 +231,28 @@ export default function Catalog() {
           </div>
 
           <aside className="xl:sticky xl:top-20 xl:self-start">
-            <div className="card-corp rounded-lg p-4">
-              <p className="text-xs font-semibold uppercase tracking-wider text-steel">Quote summary</p>
+            <div className="card-corp p-4">
+              <p className="text-xs font-semibold uppercase tracking-wider text-steel">
+                Your quote{count > 0 && ` · ${count} ${count === 1 ? "line" : "lines"}`}
+              </p>
 
-              {cartLines.length === 0 ? (
+              {count === 0 ? (
                 <p className="mt-3 text-sm text-steel">Set a quantity on any item to add it here.</p>
               ) : (
                 <>
                   <ul className="mt-3 max-h-80 space-y-3 overflow-y-auto pr-1">
-                    {cartLines.map((l) => (
-                      <li key={l.group.id} className="border-b border-line pb-3 text-sm">
-                        <p className="font-medium text-paper">{l.group.name}</p>
-                        <p className="text-xs text-steel">{l.variant.brand} &middot; {l.variant.type}</p>
+                    {lines.map((l) => (
+                      <li key={l.sku} className="border-b border-line pb-3 text-sm">
+                        <div className="flex items-start justify-between gap-2">
+                          <p className="font-medium text-paper">{l.name}</p>
+                          <button type="button" onClick={() => remove(l.sku)} aria-label={`Remove ${l.name}`} className="text-xs text-steel hover:text-danger">
+                            Remove
+                          </button>
+                        </div>
+                        <p className="text-xs text-steel">{l.brand} &middot; {l.type}</p>
                         <div className="mt-1 flex items-center justify-between text-xs text-steel">
-                          <span>{l.qty} &times; {money(l.variant.price)}</span>
-                          <span className="font-semibold text-paper">{money(l.lineTotal)}</span>
+                          <span>{l.qty} &times; {money(l.price)}</span>
+                          <span className="font-semibold text-paper">{money(l.price * l.qty)}</span>
                         </div>
                       </li>
                     ))}
@@ -273,28 +262,33 @@ export default function Catalog() {
                     <span className="text-sm font-semibold text-paper">Subtotal</span>
                     <span className="kpi-value">{money(subtotal)}</span>
                   </div>
-                  <p className="mt-1 text-xs text-steel">Excludes tax and shipping, calculated at checkout.</p>
-                  {latestEtaDays > 0 && (
-                    <p className="mt-3 label primary">
-                      Full order ready by day {latestEtaDays}
-                    </p>
+                  <p className="mt-1 text-xs text-steel">Excludes tax and shipping; we confirm pricing in our reply.</p>
+                  {lastReadyDays > 0 && (
+                    <p className="mt-3 label primary">Full order ready by day {lastReadyDays}</p>
                   )}
 
+                  <Button to="/quote" variant="primary" className="mt-4 w-full">
+                    Review &amp; request quote
+                  </Button>
                   <button
                     type="button"
-                    onClick={() => { setQuantities({}); setSelections({}); }}
-                    className="mt-4 w-full rounded-sm border border-line py-2 text-xs font-semibold text-steel transition-colors hover:border-amber/50 hover:text-paper"
+                    onClick={clear}
+                    className="mt-2 w-full border border-line py-2 text-xs font-semibold text-steel transition-colors hover:border-paper hover:text-paper"
                   >
                     Clear quote
                   </button>
                 </>
               )}
             </div>
+            <p className="mt-3 text-xs text-steel">
+              Questions about an item? <Link to="/contact" className="font-medium text-amber hover:text-amber-2">Ask our team</Link>.
+            </p>
           </aside>
         </div>
       </Section>
 
       <CTASection
+        band="dark"
         title="Ready to source at these numbers?"
         subtitle="Create your company profile and request access — quotes on the live platform run through sealed, scored bidding, not a fixed price list."
       />

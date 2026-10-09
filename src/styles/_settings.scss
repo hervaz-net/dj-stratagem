@@ -11,11 +11,11 @@
 @use 'sass:color';
 
 // Brand palette (warm-industrial — see public/brand-guidelines.html).
-$djs-ink: #201e1d;
-$djs-ground: #f3f2f2;
+$djs-ink: #1c1b19;
+$djs-ground: #f3f1ec;
 $djs-surface: #ffffff;
-$djs-signal: #ec3013;
-$djs-border: #ddd9d6;
+$djs-signal: #d9370f;
+$djs-border: #d8d2c6;
 
 $primary-color: $djs-signal;
 $secondary-color: $djs-ink;
@@ -67,7 +67,7 @@ $global-width: 72rem;
 // Foundation's gutter mixin splits this value in half between left/right,
 // so it has to be double the actual per-side padding wanted (1.5rem).
 $grid-container-padding: 3rem;
-$global-radius: 0.375rem;
+$global-radius: 3px;
 $global-lineheight: 1.5;
 $global-margin: 1rem;
 $global-padding: 1rem;
@@ -82,7 +82,7 @@ $header-color: inherit;
 // Colors are re-pointed at CSS custom properties in design-system.scss
 // right after this compiles, so dark mode isn't stuck on these light-theme
 // compiled values; only geometry (radius, padding, sizes) matters here.
-$button-radius: 6px;
+$button-radius: 3px;
 $button-padding: 0.5rem 0.875rem;
 $button-font-weight: 600;
 $button-sizes: (
@@ -96,12 +96,12 @@ $button-transition: background-color 150ms ease, border-color 150ms ease, color 
 // Labels — the small colored pill/tag component (our old .badge). Foundation
 // has a separate, unrelated .badge component (a small circular count
 // indicator) that would otherwise collide with a class of that same name.
-$label-radius: 4px;
+$label-radius: 2px;
 $label-font-size: 0.75rem;
 $label-padding: 0.1875rem 0.5rem;
 
 // Cards
-$card-border-radius: 8px;
+$card-border-radius: 4px;
 $card-border: 1px solid $djs-border;
 $card-background: $djs-surface;
 $card-shadow: none;
@@ -109,7 +109,7 @@ $card-shadow: none;
 // Forms — every <input>/<select>/<textarea> site-wide picks this up
 // automatically, not just ones with an explicit class (unlike Tailwind,
 // Foundation styles the elements themselves).
-$input-radius: 6px;
+$input-radius: 3px;
 $input-border-focus: 1px solid $djs-signal;
 $input-background: $djs-surface;
 $input-color: $djs-ink;

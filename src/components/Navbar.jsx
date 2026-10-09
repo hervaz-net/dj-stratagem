@@ -1,45 +1,25 @@
 import { useEffect, useRef, useState } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import Logo from "./Logo";
 import Button from "./Button";
 import ThemeToggle from "./ThemeToggle";
 import ScrollProgress from "./ScrollProgress";
+import { IconPackage } from "./icons";
+import { NAV, navItem } from "../lib/siteMap";
+import { useQuote } from "../lib/quoteStore";
 
 /**
- * Grouped into dropdowns rather than eight flat links — matches the
- * mega-menu pattern most B2B SaaS nav bars use (Solutions ▾, Who We Serve
- * ▾, etc.) so the top-level bar reads as an information hierarchy, not a
- * list of every route that exists.
+ * Menu structure comes from lib/siteMap.js (the same source the footer,
+ * sub-nav, breadcrumbs, and command palette read), so a page added there
+ * shows up everywhere at once.
  */
-const navGroups = [
-  { to: "/projects", label: "Projects" },
-  {
-    label: "Platform",
-    items: [
-      { to: "/platform", label: "Platform overview", desc: "Bidding, marketing, CRM, and AI in one place" },
-      { to: "/supply", label: "Supply Exchange", desc: "Sealed, scored bidding on materials" },
-      { to: "/supply/catalog", label: "Catalog", desc: "300+ SKUs with brand, type, and quantity" },
-      { to: "/fleet", label: "Fleet", desc: "Equipment status and utilization preview" },
-    ],
-  },
-  {
-    label: "Solutions",
-    items: [
-      { to: "/solutions#gc", label: "General contractors", desc: "Run every bid from posting to award" },
-      { to: "/solutions#sub", label: "Subcontractors", desc: "Find work, submit structured digital bids" },
-      { to: "/solutions#supplier", label: "Suppliers", desc: "Quote into sealed RFQs that protect margin" },
-    ],
-  },
-  { to: "/pricing", label: "Pricing" },
-  {
-    label: "Company",
-    items: [
-      { to: "/about", label: "About" },
-      { to: "/blog", label: "Blog" },
-      { to: "/contact", label: "Contact" },
-    ],
-  },
-];
+const groups = NAV.map((entry) => {
+  const resolved = navItem(entry);
+  if (typeof entry === "object" && entry.items) {
+    return { label: entry.label, items: entry.items.map(navItem) };
+  }
+  return { to: resolved.to, label: resolved.short ?? resolved.label };
+});
 
 function DropdownMenu({ group, openLabel, setOpenLabel }) {
   const isOpen = openLabel === group.label;
@@ -85,13 +65,13 @@ function DropdownMenu({ group, openLabel, setOpenLabel }) {
       </button>
 
       {isOpen && (
-        <div className="card-corp animate-menu-in absolute left-1/2 top-full mt-3 w-72 -translate-x-1/2 rounded-lg p-2">
+        <div className="animate-menu-in absolute left-0 top-full z-50 mt-3 w-72 border border-line bg-ink-2 p-1.5">
           {group.items.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
               onClick={() => setOpenLabel(null)}
-              className="block rounded-md px-3 py-2.5 transition-colors hover:bg-ink"
+              className="block px-3 py-2.5 transition-colors hover:bg-ink-3"
             >
               <span className="block text-sm font-semibold text-paper">{item.label}</span>
               {item.desc && <span className="mt-0.5 block text-xs text-steel">{item.desc}</span>}
@@ -103,6 +83,48 @@ function DropdownMenu({ group, openLabel, setOpenLabel }) {
   );
 }
 
+/** Quote cart entry point — the count is the live number of quote lines. */
+function QuoteLink({ className = "", onClick }) {
+  const { count } = useQuote();
+  return (
+    <Link
+      to="/quote"
+      onClick={onClick}
+      aria-label={count ? `Quote cart, ${count} ${count === 1 ? "line" : "lines"}` : "Quote cart, empty"}
+      className={`inline-flex h-9 items-center gap-2 border border-line px-3 text-sm font-semibold text-paper transition-colors hover:border-paper ${className}`}
+    >
+      <IconPackage width={15} height={15} />
+      Quote
+      {count > 0 && (
+        <span className="-mr-1 inline-flex min-w-[1.25rem] items-center justify-center bg-cta px-1 text-[11px] font-bold leading-5 text-white">
+          {count}
+        </span>
+      )}
+    </Link>
+  );
+}
+
+function UtilityBar() {
+  return (
+    <div className="no-print band-dark hidden text-xs lg:block">
+      <div className="grid-container flex items-center justify-between py-2">
+        <p className="m-0 text-steel">
+          Los Angeles, California
+          <span className="mx-2 text-steel/50" aria-hidden="true">/</span>
+          <a href="mailto:hello@djstratageminc.com" className="text-paper hover:text-amber">
+            hello@djstratageminc.com
+          </a>
+        </p>
+        <ul className="m-0 flex list-none items-center gap-5 p-0">
+          <li><Link to="/resources" className="text-steel transition-colors hover:text-paper">Help center</Link></li>
+          <li><Link to="/contact" className="text-steel transition-colors hover:text-paper">Contact sales</Link></li>
+          <li><Link to="/login" className="font-semibold text-paper transition-colors hover:text-amber">Sign in</Link></li>
+        </ul>
+      </div>
+    </div>
+  );
+}
+
 export default function Navbar({ onOpenPalette }) {
   const [open, setOpen] = useState(false);
   const [openLabel, setOpenLabel] = useState(null);
@@ -110,7 +132,6 @@ export default function Navbar({ onOpenPalette }) {
   const { pathname } = useLocation();
   const toggleRef = useRef(null);
 
-  // Condense the header once the page has moved.
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
     onScroll();
@@ -118,15 +139,12 @@ export default function Navbar({ onOpenPalette }) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Close the mobile menu on navigation. Tapping a link for the route you're
-  // already on doesn't change `pathname`, so links close it directly too.
   const close = () => setOpen(false);
   useEffect(() => {
     setOpen(false);
     setOpenLabel(null);
   }, [pathname]);
 
-  // Escape closes the menu and returns focus to the button that opened it.
   useEffect(() => {
     if (!open) return;
     const onKey = (e) => {
@@ -139,7 +157,6 @@ export default function Navbar({ onOpenPalette }) {
     return () => document.removeEventListener("keydown", onKey);
   }, [open]);
 
-  // Lock the page behind the open menu so the background doesn't scroll.
   useEffect(() => {
     if (!open) return;
     const previous = document.body.style.overflow;
@@ -149,127 +166,41 @@ export default function Navbar({ onOpenPalette }) {
     };
   }, [open]);
 
+  const mobileLink = ({ isActive }) =>
+    `block px-3 py-2.5 text-base font-medium transition-colors ${
+      isActive ? "bg-cta/10 text-cta" : "text-paper hover:bg-ink-3"
+    }`;
+
   return (
-    <header
-      className={`no-print sticky top-0 z-50 border-b transition-all duration-300 ${
-        scrolled
-          ? "border-line bg-ink/85 shadow-sm backdrop-blur-xl"
-          : "border-transparent bg-ink/60 backdrop-blur-md"
-      }`}
-    >
-      <div
-        className={`grid-container flex items-center justify-between gap-6 transition-all duration-300 ${
-          scrolled ? "py-2.5" : "py-4"
+    <>
+      <UtilityBar />
+      <header
+        className={`no-print sticky top-0 z-50 border-b bg-ink-2 transition-[border-color] duration-200 ${
+          scrolled ? "border-line-2" : "border-line"
         }`}
       >
-        <NavLink to="/" className="shrink-0" aria-label="D&J Stratagem — home">
-          <Logo />
-        </NavLink>
-
-        <nav className="hidden items-center gap-7 lg:flex" aria-label="Main">
-          {navGroups.map((g) =>
-            g.items ? (
-              <DropdownMenu key={g.label} group={g} openLabel={openLabel} setOpenLabel={setOpenLabel} />
-            ) : (
-              <NavLink
-                key={g.to}
-                to={g.to}
-                className={({ isActive }) =>
-                  `relative py-1 text-sm font-semibold transition-colors after:absolute after:inset-x-0 after:-bottom-0.5 after:h-0.5 after:origin-left after:rounded-full after:bg-cta after:transition-transform after:duration-300 ${
-                    isActive
-                      ? "text-cta after:scale-x-100"
-                      : "text-steel after:scale-x-0 hover:text-paper hover:after:scale-x-100"
-                  }`
-                }
-              >
-                {g.label}
-              </NavLink>
-            ),
-          )}
-        </nav>
-
-        <div className="hidden items-center gap-3 lg:flex">
-          {onOpenPalette && (
-            <button
-              type="button"
-              onClick={onOpenPalette}
-              aria-label="Open command palette"
-              title="Search pages (Ctrl+K)"
-              className="flex h-9 items-center gap-2 rounded-md border border-line px-2.5 text-xs font-medium text-steel transition-colors hover:border-amber/60 hover:text-paper"
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <circle cx="11" cy="11" r="7" />
-                <path d="M20 20 16.65 16.65" />
-              </svg>
-              <kbd className="rounded border border-line bg-ink px-1 py-0.5 font-sans text-[10px] text-steel">⌘K</kbd>
-            </button>
-          )}
-          <ThemeToggle />
-          <Button to="/login" variant="secondary" size="sm">
-            Sign In
-          </Button>
-          <Button to="/projects" variant="primary" size="sm">
-            Find projects
-          </Button>
-        </div>
-
-        <div className="flex items-center gap-2 lg:hidden">
-          <ThemeToggle />
-          <button
-            ref={toggleRef}
-            type="button"
-            className="flex h-9 w-9 items-center justify-center rounded-md border border-line text-paper transition-colors hover:border-amber/60 hover:text-amber"
-            onClick={() => setOpen((v) => !v)}
-            aria-label={open ? "Close menu" : "Open menu"}
-            aria-expanded={open}
-            aria-controls="mobile-menu"
-          >
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-              {open ? (
-                <path d="M2 2L16 16M16 2L2 16" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-              ) : (
-                <path d="M2 4H16M2 9H16M2 14H16" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-              )}
-            </svg>
-          </button>
-        </div>
-      </div>
-
-      {open && (
         <div
-          id="mobile-menu"
-          className="animate-menu-in max-h-[calc(100vh-4rem)] overflow-y-auto border-t border-line bg-ink px-6 pb-6 lg:hidden"
+          className={`grid-container flex items-center justify-between gap-6 transition-all duration-200 ${
+            scrolled ? "py-2.5" : "py-3.5"
+          }`}
         >
-          <nav className="flex flex-col gap-1 pt-3" aria-label="Mobile">
-            {navGroups.map((g) =>
+          <NavLink to="/" className="shrink-0" aria-label="D&J Stratagem — home">
+            <Logo />
+          </NavLink>
+
+          <nav className="hidden items-center gap-7 lg:flex" aria-label="Main">
+            {groups.map((g) =>
               g.items ? (
-                <div key={g.label} className="py-2">
-                  <p className="px-3 text-xs font-semibold uppercase tracking-wider text-steel">{g.label}</p>
-                  <div className="mt-1 flex flex-col gap-1">
-                    {g.items.map((item) => (
-                      <NavLink
-                        key={item.to}
-                        to={item.to}
-                        onClick={close}
-                        className={({ isActive }) =>
-                          `rounded-lg px-3 py-2.5 text-base font-medium transition-colors ${
-                            isActive ? "bg-cta/10 text-cta" : "text-paper hover:bg-ink-3"
-                          }`
-                        }
-                      >
-                        {item.label}
-                      </NavLink>
-                    ))}
-                  </div>
-                </div>
+                <DropdownMenu key={g.label} group={g} openLabel={openLabel} setOpenLabel={setOpenLabel} />
               ) : (
                 <NavLink
                   key={g.to}
                   to={g.to}
-                  onClick={close}
                   className={({ isActive }) =>
-                    `rounded-lg px-3 py-2.5 text-base font-medium transition-colors ${
-                      isActive ? "bg-cta/10 text-cta" : "text-paper hover:bg-ink-3"
+                    `relative py-1 text-sm font-semibold transition-colors after:absolute after:inset-x-0 after:-bottom-[15px] after:h-0.5 after:bg-cta after:transition-transform after:duration-200 ${
+                      isActive
+                        ? "text-paper after:scale-x-100"
+                        : "text-steel after:scale-x-0 hover:text-paper"
                     }`
                   }
                 >
@@ -277,19 +208,92 @@ export default function Navbar({ onOpenPalette }) {
                 </NavLink>
               ),
             )}
-            <div className="mt-3 flex flex-col gap-2 border-t border-line pt-4">
-              <Button to="/login" variant="secondary" className="w-full" onClick={close}>
-                Sign In
-              </Button>
-              <Button to="/projects" variant="primary" className="w-full" onClick={close}>
-                Find projects
-              </Button>
-            </div>
           </nav>
-        </div>
-      )}
 
-      <ScrollProgress />
-    </header>
+          <div className="hidden items-center gap-2.5 lg:flex">
+            {onOpenPalette && (
+              <button
+                type="button"
+                onClick={onOpenPalette}
+                aria-label="Open command palette"
+                title="Search pages (Ctrl+K)"
+                className="hidden h-9 items-center gap-2 border border-line px-2.5 text-xs font-medium text-steel transition-colors hover:border-paper hover:text-paper xl:flex"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <circle cx="11" cy="11" r="7" />
+                  <path d="M20 20 16.65 16.65" />
+                </svg>
+                <kbd className="border border-line bg-ink px-1 py-0.5 font-sans text-[10px] text-steel">⌘K</kbd>
+              </button>
+            )}
+            <ThemeToggle />
+            <QuoteLink />
+            <Button to="/register" variant="primary" size="sm" className="!h-9">
+              Get started
+            </Button>
+          </div>
+
+          <div className="flex items-center gap-2 lg:hidden">
+            <QuoteLink className="!px-2.5" />
+            <ThemeToggle />
+            <button
+              ref={toggleRef}
+              type="button"
+              className="flex h-9 w-9 items-center justify-center border border-line text-paper transition-colors hover:border-paper"
+              onClick={() => setOpen((v) => !v)}
+              aria-label={open ? "Close menu" : "Open menu"}
+              aria-expanded={open}
+              aria-controls="mobile-menu"
+            >
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+                {open ? (
+                  <path d="M2 2L16 16M16 2L2 16" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+                ) : (
+                  <path d="M2 4H16M2 9H16M2 14H16" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+                )}
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        {open && (
+          <div
+            id="mobile-menu"
+            className="animate-menu-in max-h-[calc(100vh-4rem)] overflow-y-auto border-t border-line bg-ink-2 pb-6 lg:hidden"
+          >
+            <nav className="grid-container flex flex-col pt-3" aria-label="Mobile">
+              {groups.map((g) =>
+                g.items ? (
+                  <div key={g.label} className="py-2">
+                    <p className="px-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-steel">{g.label}</p>
+                    <div className="mt-1 flex flex-col">
+                      {g.items.map((item) => (
+                        <NavLink key={item.to} to={item.to} onClick={close} className={mobileLink}>
+                          {item.label}
+                        </NavLink>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <NavLink key={g.to} to={g.to} onClick={close} className={mobileLink}>
+                    {g.label}
+                  </NavLink>
+                ),
+              )}
+              <div className="mt-3 flex flex-col gap-2 border-t border-line pt-4">
+                <Button to="/register" variant="primary" className="w-full" onClick={close}>
+                  Get started
+                </Button>
+                <Button to="/login" variant="secondary" className="w-full" onClick={close}>
+                  Sign in
+                </Button>
+              </div>
+            </nav>
+          </div>
+        )}
+
+        <ScrollProgress />
+      </header>
+    </>
   );
 }

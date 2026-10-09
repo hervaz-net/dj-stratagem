@@ -1,8 +1,8 @@
 export default function FeatureCard({ icon, title, children, className = "" }) {
   return (
-    <div className={`card-corp card-corp-hover rounded-lg p-5 ${className}`}>
+    <div className={`card-corp card-corp-hover p-5 ${className}`}>
       {icon && (
-        <div className="mb-4 flex h-9 w-9 items-center justify-center rounded-sm bg-amber/10 text-amber">
+        <div className="mb-4 flex h-9 w-9 items-center justify-center bg-amber/10 text-amber">
           {icon}
         </div>
       )}

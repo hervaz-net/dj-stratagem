@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../auth/useAuth";
+import { PAGES } from "../lib/siteMap";
 
-const NAV_ITEMS = [
+const DASHBOARD_ITEMS = [
   { label: "Overview", to: "/dashboard/overview", group: "Dashboard" },
   { label: "Suppliers", to: "/dashboard/suppliers", group: "Dashboard" },
   { label: "Bids", to: "/dashboard/bids", group: "Dashboard" },
@@ -11,18 +12,18 @@ const NAV_ITEMS = [
   { label: "Alerts", to: "/dashboard/alerts", group: "Dashboard" },
   { label: "Settings", to: "/dashboard/settings", group: "Dashboard" },
   { label: "Accounts", to: "/dashboard/admin", group: "Dashboard", adminOnly: true },
-  { label: "Home", to: "/", group: "Marketing" },
-  { label: "Platform", to: "/platform", group: "Marketing" },
-  { label: "Solutions", to: "/solutions", group: "Marketing" },
-  { label: "Projects", to: "/projects", group: "Marketing" },
-  { label: "Supply", to: "/supply", group: "Marketing" },
-  { label: "Fleet", to: "/fleet", group: "Marketing" },
-  { label: "Pricing", to: "/pricing", group: "Marketing" },
-  { label: "About", to: "/about", group: "Marketing" },
-  { label: "Contact", to: "/contact", group: "Marketing" },
-  { label: "Changelog", to: "/changelog", group: "Marketing" },
-  { label: "Sign in", to: "/login", group: "Auth" },
-  { label: "Register", to: "/register", group: "Auth" },
+];
+
+// Marketing entries come from the shared site map so the palette can never
+// drift out of sync with the navbar and footer.
+const NAV_ITEMS = [
+  ...DASHBOARD_ITEMS,
+  { label: "Home", to: "/", group: "Site" },
+  ...PAGES.map((p) => ({ label: p.label, to: p.to, group: "Site", hint: p.desc })),
+  { label: "Privacy Policy", to: "/privacy", group: "Site" },
+  { label: "Terms & Conditions", to: "/terms", group: "Site" },
+  { label: "Sign in", to: "/login", group: "Account" },
+  { label: "Register", to: "/register", group: "Account" },
 ];
 
 function score(item, q) {
@@ -30,6 +31,7 @@ function score(item, q) {
   const query = q.toLowerCase();
   if (label.startsWith(query)) return 2;
   if (label.includes(query)) return 1;
+  if (item.hint && item.hint.toLowerCase().includes(query)) return 0.5;
   return 0;
 }
 
@@ -89,14 +91,14 @@ export default function CommandPalette({ open, onClose }) {
 
   return (
     <div
-      className="fixed inset-0 z-[150] flex items-start justify-center pt-[15vh] px-4"
+      className="fixed inset-0 z-[150] flex items-start justify-center bg-black/40 px-4 pt-[15vh]"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
       aria-label="Command palette"
     >
       <div
-        className="w-full max-w-lg overflow-hidden rounded-md border border-line bg-ink-2 shadow-2xl shadow-brand/20"
+        className="w-full max-w-lg overflow-hidden border border-line-2 bg-ink-2"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center gap-3 border-b border-line px-4 py-3.5">
@@ -114,7 +116,7 @@ export default function CommandPalette({ open, onClose }) {
             role="combobox"
             aria-expanded="true"
           />
-          <kbd className="rounded border border-line px-1.5 py-0.5 text-[10px] text-steel">Esc</kbd>
+          <kbd className="border border-line px-1.5 py-0.5 text-[10px] text-steel">Esc</kbd>
         </div>
         <ul role="listbox" className="max-h-72 overflow-y-auto py-2">
           {results.length === 0 && (
@@ -130,7 +132,10 @@ export default function CommandPalette({ open, onClose }) {
                   i === cursor ? "bg-amber/10 text-amber" : "text-paper hover:bg-ink-3"
                 }`}
               >
-                <span className="flex-1">{item.label}</span>
+                <span className="flex-1">
+                  {item.label}
+                  {item.hint && <span className="ml-2 hidden text-xs text-steel sm:inline">{item.hint}</span>}
+                </span>
                 <span className="text-xs text-steel">{item.group}</span>
               </button>
             </li>

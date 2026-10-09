@@ -65,57 +65,59 @@
 :root {
   color-scheme: light;
 
-  /* Warm industrial — graphite ink on a warm (not blue-gray) paper ground,
-     one signal-orange accent. Matches the mark spec in
-     public/brand-guidelines.html: Ink #201E1D, Signal #EC3013,
-     Ground #F3F2F2, Surface #EAE9E9. */
-  --surface: #f3f2f2;
+  /* Graphite & bone — flat, high-end corporate. A warm bone page ground,
+     white raised surfaces, and one deep graphite for ink and dark bands; a
+     single vermilion signal (the logo's cut corner) used sparingly. No
+     gradients, no shadows — depth comes from flat color bands (see .band-*
+     below) and 1px hairlines.
+     Mark spec: public/brand-guidelines.html. */
+  --surface: #f3f1ec;
   --surface-raised: #ffffff;
-  --surface-hover: #eae9e9;
-  --surface-sunken: #ece9e7;
-  --border: #ddd9d6;
-  --border-strong: #bdb7b2;
+  --surface-hover: #e9e5dc;
+  --surface-sunken: #e4dfd4;
+  --border: #d8d2c6;
+  --border-strong: #b6ae9f;
 
-  --text: #201e1d;
-  --text-strong: #161514;
-  --text-muted: #6b655f;
+  --text: #1c1b19;
+  --text-strong: #100f0e;
+  --text-muted: #5d584f;
 
-  --accent: #c62a10;
-  --accent-hover: #a02209;
-  --brand: #201e1d;
-  --cta: #ec3013;
-  --cta-hover: #c62a10;
-  --warning: #9a5b00;
-  --warning-bg: #fbeed4;
+  --accent: #b5300f;
+  --accent-hover: #8e2508;
+  --brand: #1c1b19;
+  --cta: #d9370f;
+  --cta-hover: #b72c0a;
+  --warning: #8a5a00;
+  --warning-bg: #f6ebd0;
 
-  --danger: #b3261e;
-  --danger-bg: #fbeae9;
-  --success: #3d6b2c;
-  --success-bg: #e9f0e4;
+  --danger: #a32a22;
+  --danger-bg: #f6e2df;
+  --success: #2f6a37;
+  --success-bg: #e1eedd;
 
-  --page-bg: #f3f2f2;
-  --grid-line: rgba(32, 30, 29, 0.055);
+  --page-bg: #f3f1ec;
+  --grid-line: rgba(28, 27, 25, 0.05);
 
-  --viz-blue: #5a5e6b;
+  --viz-blue: #55596a;
   --viz-cyan: #7a6a52;
-  --viz-red: #ec3013;
-  --viz-gold: #9a5b00;
-  --viz-green: #3d6b2c;
+  --viz-red: #d9370f;
+  --viz-gold: #8a5a00;
+  --viz-green: #2f6a37;
 
   --panel-bg: #ffffff;
-  --panel-border: #ddd9d6;
-  --panel-shadow: 0 1px 2px rgba(32, 30, 29, 0.06);
+  --panel-border: #d8d2c6;
+  --panel-shadow: none;
 }
 
 [data-theme="dark"] {
   color-scheme: dark;
 
-  --surface: #17140f;
-  --surface-raised: #211d18;
-  --surface-hover: #2b2620;
-  --surface-sunken: #1c1813;
-  --border: #38322a;
-  --border-strong: #4c4438;
+  --surface: #161513;
+  --surface-raised: #1f1e1b;
+  --surface-hover: #292723;
+  --surface-sunken: #121110;
+  --border: #35332e;
+  --border-strong: #4b4841;
 
   --text: #ede8e2;
   --text-strong: #ffffff;
@@ -134,7 +136,7 @@
   --success: #7fb35e;
   --success-bg: #1a2414;
 
-  --page-bg: #141210;
+  --page-bg: #121110;
   --grid-line: rgba(237, 232, 226, 0.05);
 
   --viz-blue: #9a9184;
@@ -143,9 +145,87 @@
   --viz-gold: #e0a53c;
   --viz-green: #7fb35e;
 
-  --panel-bg: #211d18;
-  --panel-border: #38322a;
-  --panel-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
+  --panel-bg: #1f1e1b;
+  --panel-border: #35332e;
+  --panel-shadow: none;
+}
+
+/* ---------------------------------------------------------------------------
+   Flat color bands. A band is a full-bleed section background that also
+   re-scopes the semantic tokens, so every component inside it (text,
+   cards, buttons, borders, the logo) recolors itself with no per-component
+   work. Used by <Section band="..."> and the footer.
+     white  — clean raised page band
+     stone  — recessed warm band (alternates with white / page ground)
+     dark   — graphite band: hero, stat strips, footer
+     accent — vermilion band: one closing call to action per page
+--------------------------------------------------------------------------- */
+.band-white {
+  --surface: #ffffff;
+  --surface-raised: #f6f4ef;
+  --surface-hover: #ece8df;
+  background-color: #ffffff;
+}
+
+.band-stone {
+  --surface: #e7e2d8;
+  --surface-raised: #ffffff;
+  --surface-hover: #ddd7ca;
+  --border: #cbc3b3;
+  --border-strong: #a99f8d;
+  background-color: #e7e2d8;
+}
+
+.band-dark {
+  --surface: #1a1917;
+  --surface-raised: #242321;
+  --surface-hover: #2e2c29;
+  --surface-sunken: #131211;
+  --border: #36342f;
+  --border-strong: #4d4a43;
+  --text: #f1eee8;
+  --text-strong: #ffffff;
+  --text-muted: #aaa498;
+  --accent: #ff8f63;
+  --accent-hover: #ffab88;
+  --cta: #ee4220;
+  --cta-hover: #ff5a38;
+  --danger: #ff7b6e;
+  --danger-bg: #3a1c18;
+  --success: #86c068;
+  --success-bg: #1d2a17;
+  --warning: #e6b04a;
+  --warning-bg: #33280f;
+  --grid-line: rgba(241, 238, 232, 0.06);
+  background-color: #1a1917;
+  color: var(--text);
+}
+
+.band-accent {
+  --surface: #d9370f;
+  --surface-raised: #ffffff;
+  --surface-hover: #c2300b;
+  --border: rgba(255, 255, 255, 0.4);
+  --border-strong: rgba(255, 255, 255, 0.7);
+  --text: #ffffff;
+  --text-strong: #ffffff;
+  --text-muted: rgba(255, 255, 255, 0.86);
+  --accent: #ffffff;
+  --accent-hover: #ffe3da;
+  background-color: #d9370f;
+  color: #ffffff;
+}
+
+/* On the vermilion band the primary action flips to graphite (a vermilion
+   button on a vermilion ground would vanish). */
+.band-accent .button:not(.secondary):not(.clear):not(.hollow) {
+  background: #1a1917;
+  border-color: #1a1917;
+  color: #ffffff;
+}
+.band-accent .button:not(.secondary):not(.clear):not(.hollow):hover:not(:disabled) {
+  background: #000000;
+  border-color: #000000;
 }
 
 html {
@@ -225,9 +305,7 @@ body {
 /* Flat raised surface — replaces the old blurred `.glass`. Used for sticky
    chrome (navbar) where some translucency is still useful over content. */
 .glass {
-  background: color-mix(in srgb, var(--surface-raised) 92%, transparent);
-  backdrop-filter: saturate(140%) blur(8px);
-  -webkit-backdrop-filter: saturate(140%) blur(8px);
+  background: var(--surface-raised);
   border: 1px solid var(--border);
 }
 

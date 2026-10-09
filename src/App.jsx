@@ -7,11 +7,15 @@ import CookieBanner from "./components/CookieBanner";
 import ReadingProgress from "./components/ReadingProgress";
 import CommandPalette from "./components/CommandPalette";
 import LiveChat from "./components/LiveChat";
+import SubNav from "./components/SubNav";
+import PageFlow from "./components/PageFlow";
 import Home from "./pages/Home";
 import Platform from "./pages/Platform";
 import Solutions from "./pages/Solutions";
 import Supply from "./pages/Supply";
 import Catalog from "./pages/Catalog";
+import Quote from "./pages/Quote";
+import Resources from "./pages/Resources";
 import Projects from "./pages/Projects";
 import ProjectDetail from "./pages/ProjectDetail";
 import TradeLocation from "./pages/TradeLocation";
@@ -68,7 +72,7 @@ function ScrollToTop() {
 const SkipLink = () => (
   <a
     href="#main"
-    className="sr-only rounded-lg bg-ink-2 px-4 py-2 text-sm font-semibold text-paper shadow-lg focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60]"
+    className="sr-only bg-ink-2 px-4 py-2 text-sm font-semibold text-paper focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60]"
   >
     Skip to content
   </a>
@@ -96,9 +100,11 @@ function MarketingLayout({ children }) {
     <div className="flex min-h-screen flex-col">
       <SkipLink />
       <Navbar onOpenPalette={openPalette} />
+      <SubNav />
       <main id="main" className="flex-1">
         {children}
       </main>
+      <PageFlow />
       <Footer />
       <BackToTop />
       <CookieBanner />
@@ -152,6 +158,8 @@ function App() {
           <Route path="/solutions" element={<MarketingLayout><Solutions /></MarketingLayout>} />
           <Route path="/supply" element={<MarketingLayout><Supply /></MarketingLayout>} />
           <Route path="/supply/catalog" element={<MarketingLayout><Catalog /></MarketingLayout>} />
+          <Route path="/quote" element={<MarketingLayout><Quote /></MarketingLayout>} />
+          <Route path="/resources" element={<MarketingLayout><Resources /></MarketingLayout>} />
           <Route path="/projects" element={<MarketingLayout><Projects /></MarketingLayout>} />
           <Route path="/project" element={<Navigate to="/projects" replace />} />
           <Route path="/projects/:slug" element={<MarketingLayout><ProjectDetail /></MarketingLayout>} />
@@ -203,12 +211,12 @@ function App() {
           <Route path="/services" element={<Navigate to="/platform" replace />} />
           <Route path="/how-it-works" element={<Navigate to="/platform" replace />} />
           <Route path="/howitworks" element={<Navigate to="/platform" replace />} />
-          <Route path="/docs" element={<Navigate to="/changelog" replace />} />
-          <Route path="/help" element={<Navigate to="/contact" replace />} />
-          <Route path="/support" element={<Navigate to="/contact" replace />} />
+          <Route path="/docs" element={<Navigate to="/resources" replace />} />
+          <Route path="/help" element={<Navigate to="/resources" replace />} />
+          <Route path="/support" element={<Navigate to="/resources" replace />} />
           <Route path="/demo" element={<Navigate to="/contact" replace />} />
-          <Route path="/faq" element={<Navigate to="/contact" replace />} />
-          <Route path="/faqs" element={<Navigate to="/contact" replace />} />
+          <Route path="/faq" element={<Navigate to="/resources" replace />} />
+          <Route path="/faqs" element={<Navigate to="/resources" replace />} />
           <Route path="/book" element={<Navigate to="/contact" replace />} />
           <Route path="/book-demo" element={<Navigate to="/contact" replace />} />
           <Route path="/request-demo" element={<Navigate to="/contact" replace />} />
