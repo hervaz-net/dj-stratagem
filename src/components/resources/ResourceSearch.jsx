@@ -29,7 +29,7 @@ export default function ResourceSearch({ value, onChange, resultLabel, suggestio
             type="search"
             value={value}
             onChange={(e) => onChange(e.target.value)}
-            placeholder="Search: password, approval, sample, billing…"
+            placeholder="Search the help center"
             autoComplete="off"
             spellCheck="false"
             enterKeyHint="search"
