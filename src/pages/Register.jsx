@@ -82,8 +82,8 @@ function Field({ id, label, value, onChange, onBlur, error, required, ...rest })
         onBlur={onBlur}
         aria-invalid={error ? true : undefined}
         aria-describedby={error ? `${id}-error` : undefined}
-        className={`w-full rounded-md border bg-ink px-4 py-2.5 text-sm text-paper outline-hidden transition-colors placeholder:text-steel/60 focus:border-amber ${
-          error ? "border-danger" : "border-line"
+        className={`w-full rounded-sm border bg-ink-2 px-4 py-2.5 text-sm text-paper outline-hidden transition-colors placeholder:text-steel/60 focus:border-amber ${
+          error ? "border-danger" : "border-line-2"
         }`}
         {...rest}
       />
