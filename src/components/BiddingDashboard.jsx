@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Filter, Clock, DollarSign, MapPin, ChevronRight, Star, AlertCircle } from 'lucide-react';
+import { Search, MapPin, ChevronRight, Star, AlertCircle } from 'lucide-react';
 import { formatCompactMoney } from '../lib/money';
 
 export function BiddingDashboard() {
