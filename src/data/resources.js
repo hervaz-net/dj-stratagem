@@ -168,7 +168,7 @@ export const faqs = [
     id: "paid-plans",
     category: "Billing",
     q: "How do I get a paid plan?",
-    a: "Professional ($99/mo) and Growth ($249/mo) are request-access at introductory pricing, and Enterprise is custom. Annual billing is 20% less than paying month to month. Ask us how billing works for your account.",
+    a: "Professional and Growth are request-access at introductory pricing, and Enterprise is custom. The Pricing page lists current plan rates and the annual-billing discount. Ask us how billing works for your account.",
     keywords: "professional growth enterprise upgrade annual discount monthly subscription",
     link: { to: "/contact", label: "Request access" },
   },

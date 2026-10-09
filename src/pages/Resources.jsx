@@ -108,7 +108,7 @@ export default function Resources() {
           />
         </div>
 
-        <div className="mt-8 max-w-4xl">
+        <div className="mt-8 max-w-5xl">
           {visible.length > 0 ? (
             <FaqList items={visible} terms={terms} />
           ) : (
