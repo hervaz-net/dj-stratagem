@@ -6,6 +6,14 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.29",
+    date: "October 2026",
+    tag: "Fix",
+    items: [
+      { type: "fixed", text: "Privacy and Terms printable sheets now name D&J Stratagem, Inc. They no longer introduce the parent company as Stratagem Exchange." },
+    ],
+  },
+  {
     version: "1.28",
     date: "October 2026",
     tag: "Fix",
