@@ -1,5 +1,5 @@
 /**
- * Flat corporate card surface — hairline border, minimal shadow, no blur.
+ * Flat corporate card surface — hairline border, no shadow, no blur.
  * `as` lets it render as a section/article without losing the styling.
  */
 export default function GlassCard({ as: Tag = "div", className = "", children, ...rest }) {

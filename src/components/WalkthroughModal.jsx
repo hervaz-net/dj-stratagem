@@ -101,7 +101,7 @@ const pad = (n) => String(n).padStart(2, "0");
 
 /* ---------------------------------------------------------------- panels */
 
-const card = "rounded-lg border border-line bg-ink p-2.5";
+const card = "rounded-sm border border-line bg-ink p-2.5";
 const chip = "rounded-full px-2 py-0.5 text-[9px] font-bold tracking-wide";
 
 function Stat({ value, label, tone = "text-paper" }) {
@@ -115,7 +115,7 @@ function Stat({ value, label, tone = "text-paper" }) {
 
 function BidRow({ title, meta, badge, tone }) {
   return (
-    <div className="mb-1.5 flex items-start gap-2.5 rounded-lg border border-line bg-ink p-2.5">
+    <div className="mb-1.5 flex items-start gap-2.5 rounded-sm border border-line bg-ink p-2.5">
       <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded bg-brand/15 text-brand">
         <IconBriefcase width={12} height={12} />
       </div>
@@ -199,7 +199,7 @@ function Panel({ kind }) {
         <p className="mb-2.5 text-[11px] font-semibold text-paper">
           Westside Medical Complex — Electrical
         </p>
-        <div className="mb-2.5 rounded-lg border border-brand/30 bg-brand/10 p-2.5">
+        <div className="mb-2.5 rounded-sm border border-brand/30 bg-brand/10 p-2.5">
           <p className="text-[9px] font-semibold uppercase tracking-wider text-brand">
             AI draft ready
           </p>
@@ -234,7 +234,7 @@ function Panel({ kind }) {
           {quotes.map((q) => (
             <div
               key={q.name}
-              className={`flex items-center justify-between rounded-lg border p-2.5 ${
+              className={`flex items-center justify-between rounded-sm border p-2.5 ${
                 q.best ? "border-success/30 bg-success/10" : "border-line bg-ink"
               }`}
             >
@@ -385,7 +385,7 @@ export default function WalkthroughModal({ open, onClose }) {
 
   return (
     <div
-      className="animate-fade-in fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
+      className="animate-fade-in fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-4"
       onClick={onClose}
       role="presentation"
     >
@@ -396,7 +396,7 @@ export default function WalkthroughModal({ open, onClose }) {
         aria-label="Platform walkthrough"
         tabIndex={-1}
         onClick={(e) => e.stopPropagation()}
-        className="flex max-h-[92vh] w-full max-w-4xl flex-col overflow-hidden rounded-md border border-line bg-ink-2 shadow-2xl outline-hidden"
+        className="flex max-h-[92vh] w-full max-w-4xl flex-col overflow-hidden rounded-md border border-line bg-ink-2 outline-hidden"
       >
         <div className="flex shrink-0 items-center justify-between border-b border-line px-5 py-3">
           <div className="flex items-center gap-2.5">
@@ -482,7 +482,7 @@ export default function WalkthroughModal({ open, onClose }) {
                   className="bg-grid pointer-events-none absolute inset-0 opacity-20"
                   aria-hidden="true"
                 />
-                <div className="relative w-full max-w-sm card-corp rounded-lg p-3.5 shadow-xl">
+                <div className="relative w-full max-w-sm card-corp rounded-sm p-3.5">
                   <Panel kind={slide.panel} />
                 </div>
               </div>
@@ -495,7 +495,7 @@ export default function WalkthroughModal({ open, onClose }) {
             type="button"
             onClick={prev}
             disabled={step === 0}
-            className="rounded-lg border border-line px-4 py-2 text-xs font-semibold text-steel transition-colors hover:border-steel hover:text-paper disabled:opacity-30 disabled:hover:border-line disabled:hover:text-steel focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-amber"
+            className="rounded-sm border border-line px-4 py-2 text-xs font-semibold text-steel transition-colors hover:border-steel hover:text-paper disabled:opacity-30 disabled:hover:border-line disabled:hover:text-steel focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-amber"
           >
             ← Prev
           </button>
@@ -518,7 +518,7 @@ export default function WalkthroughModal({ open, onClose }) {
           <button
             type="button"
             onClick={isLast ? onClose : next}
-            className="flex items-center gap-1.5 rounded-lg bg-cta px-4 py-2 text-xs font-bold text-white transition-colors hover:bg-cta-hover focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-cta"
+            className="flex items-center gap-1.5 rounded-sm bg-cta px-4 py-2 text-xs font-bold text-white transition-colors hover:bg-cta-hover focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-cta"
           >
             {isLast ? "Close" : "Next"}
             {!isLast && <IconArrowRight width={12} height={12} />}

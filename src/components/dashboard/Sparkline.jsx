@@ -1,4 +1,3 @@
-import { useId } from "react";
 
 const ACCENTS = {
   blue: "var(--viz-blue)",
@@ -24,7 +23,6 @@ export default function Sparkline({
   label,
   className = "",
 }) {
-  const gradientId = useId();
   const stroke = ACCENTS[accent] ?? ACCENTS.blue;
 
   // A labelled sparkline must keep its accessible name even with no line to
@@ -68,13 +66,7 @@ export default function Sparkline({
       aria-label={label}
       aria-hidden={label ? undefined : "true"}
     >
-      <defs>
-        <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor={stroke} stopOpacity="0.32" />
-          <stop offset="100%" stopColor={stroke} stopOpacity="0" />
-        </linearGradient>
-      </defs>
-      <path d={area} fill={`url(#${gradientId})`} />
+      <path d={area} fill={stroke} fillOpacity="0.12" />
       <path
         d={line}
         fill="none"

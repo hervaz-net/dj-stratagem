@@ -330,7 +330,7 @@ export default function Platform() {
           key={m.eyebrow}
           id={slug(m.eyebrow)}
           band={i % 2 ? "white" : "stone"}
-          className="scroll-mt-32"
+          className="scroll-mt-14"
         >
           <div className={`grid-x grid-margin-x items-center gap-y-8 ${i % 2 ? "lg:[&>*:first-child]:order-2" : ""}`}>
             <div className="cell small-12 large-7">
@@ -363,7 +363,7 @@ export default function Platform() {
         </Section>
       ))}
 
-      <Section id="connects" band="dark" className="scroll-mt-32">
+      <Section id="connects" band="dark" className="scroll-mt-14">
         <div className="max-w-2xl">
           <Eyebrow>How it connects</Eyebrow>
           <h2 className={h2}>One record from first opportunity to final invoice.</h2>
@@ -389,7 +389,7 @@ export default function Platform() {
         </ol>
       </Section>
 
-      <Section id="integrations" band="stone" className="scroll-mt-32">
+      <Section id="integrations" band="stone" className="scroll-mt-14">
         <div className="max-w-2xl">
           <Eyebrow>Integrations</Eyebrow>
           <h2 className={h2}>Works with the tools you already use.</h2>

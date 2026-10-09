@@ -238,7 +238,7 @@ export default function AdminUsers() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Filter by name, email, or company"
-            className="w-full rounded-lg border border-line bg-ink py-2 pl-8 pr-3.5 text-sm text-paper outline-hidden placeholder:text-steel/70 focus:border-amber"
+            className="w-full rounded-sm border border-line bg-ink py-2 pl-8 pr-3.5 text-sm text-paper outline-hidden placeholder:text-steel/70 focus:border-amber"
           />
         </div>
 
@@ -370,7 +370,7 @@ export default function AdminUsers() {
                       </tr>
 
                       {expanded && (
-                        <tr className="border-b border-line/40 bg-ink/60">
+                        <tr className="border-b border-line/40 bg-ink">
                           <td colSpan={6} className="px-8 py-4">
                             <dl className="grid-x grid-margin-x gap-y-2 text-xs">
                               {[

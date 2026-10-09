@@ -1,8 +1,9 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import Section, { Eyebrow } from "../components/Section";
+import PageHeader from "../components/PageHeader";
 import Button from "../components/Button";
 import CTASection from "../components/CTASection";
-import Reveal from "../components/Reveal";
 import Accordion from "../components/Accordion";
 import Seo from "../components/Seo";
 import { IconCheck } from "../components/icons";
@@ -134,48 +135,55 @@ function RoiCalculator() {
   const fmt = (n) => n >= 1000 ? `$${(n / 1000).toFixed(0)}k` : `$${n.toLocaleString()}`;
 
   const sliders = [
-    { label: "Average bid value", value: avgBid, min: 25, max: 2500, step: 25, set: setAvgBid, display: `$${avgBid}k` },
-    { label: "Bids submitted per month", value: bidsPerMonth, min: 1, max: 40, step: 1, set: setBidsPerMonth, display: bidsPerMonth },
-    { label: "Current win rate", value: currentWinRate, min: 5, max: 70, step: 1, set: setCurrentWinRate, display: `${currentWinRate}%` },
-    { label: "Target win rate", value: improvedWinRate, min: 5, max: 80, step: 1, set: setImprovedWinRate, display: `${improvedWinRate}%` },
+    { id: "roi-avg-bid", label: "Average bid value", value: avgBid, min: 25, max: 2500, step: 25, set: setAvgBid, display: `$${avgBid}k` },
+    { id: "roi-bids", label: "Bids submitted per month", value: bidsPerMonth, min: 1, max: 40, step: 1, set: setBidsPerMonth, display: bidsPerMonth },
+    { id: "roi-current", label: "Current win rate", value: currentWinRate, min: 5, max: 70, step: 1, set: setCurrentWinRate, display: `${currentWinRate}%` },
+    { id: "roi-target", label: "Target win rate", value: improvedWinRate, min: 5, max: 80, step: 1, set: setImprovedWinRate, display: `${improvedWinRate}%` },
   ];
 
   return (
-    <div className="mt-10 grid-x grid-margin-x gap-y-8">
+    <div className="mt-8 grid-x grid-margin-x gap-y-8">
       <div className="cell small-12 large-6 space-y-6">
         {sliders.map((s) => (
-          <div key={s.label}>
+          <div key={s.id}>
             <div className="mb-2 flex items-center justify-between text-sm">
-              <label className="font-medium text-paper">{s.label}</label>
+              <label htmlFor={s.id} className="font-medium text-paper">{s.label}</label>
               <span className="tabular-nums font-semibold text-amber">{s.display}</span>
             </div>
             <input
+              id={s.id}
               type="range"
               min={s.min}
               max={s.max}
               step={s.step}
               value={s.value}
               onChange={(e) => s.set(Number(e.target.value))}
-              className="w-full accent-amber"
+              className="!mb-0 w-full accent-amber"
             />
           </div>
         ))}
       </div>
-      <div className="cell small-12 large-6 flex flex-col justify-center rounded-md border border-amber/30 bg-amber/5 p-8 text-center">
-        <p className="text-xs font-semibold uppercase tracking-wider text-steel">Extra revenue per year</p>
-        <p className="mt-2 text-3xl font-semibold tracking-tight text-paper tabular-nums">{fmt(extraRevenue)}</p>
-        <p className="mt-2 text-sm text-steel">{extraWinsPerYear} additional won bid{extraWinsPerYear !== 1 ? "s" : ""} per year</p>
-        <div className="mt-6 grid-x grid-margin-x gap-y-4 text-center">
-          <div className="cell small-6 rounded-xl border border-line bg-ink/60 p-4">
-            <p className="text-2xl font-semibold text-amber tabular-nums">{roi}×</p>
-            <p className="mt-1 text-xs text-steel">ROI vs. Growth plan</p>
+      <div className="cell small-12 large-6">
+        <div className="card-corp h-full p-6 text-center sm:p-8">
+          <p className="text-xs font-semibold uppercase tracking-wider text-steel">Extra revenue per year</p>
+          <p className="mt-2 text-3xl font-semibold tracking-tight text-paper tabular-nums">{fmt(extraRevenue)}</p>
+          <p className="mt-2 text-sm text-steel">{extraWinsPerYear} additional won bid{extraWinsPerYear !== 1 ? "s" : ""} per year</p>
+          <div className="mt-6 grid-x grid-margin-x gap-y-4 text-center">
+            <div className="cell small-6">
+              <div className="border border-line bg-ink p-4">
+                <p className="text-2xl font-semibold text-amber tabular-nums">{roi}×</p>
+                <p className="mt-1 text-xs text-steel">ROI vs. Growth plan</p>
+              </div>
+            </div>
+            <div className="cell small-6">
+              <div className="border border-line bg-ink p-4">
+                <p className="text-2xl font-semibold text-paper tabular-nums">${planCostAnnual.toLocaleString()}/yr</p>
+                <p className="mt-1 text-xs text-steel">Growth plan, billed annually</p>
+              </div>
+            </div>
           </div>
-          <div className="cell small-6 rounded-xl border border-line bg-ink/60 p-4">
-            <p className="text-2xl font-semibold text-paper tabular-nums">${planCostAnnual.toLocaleString()}/yr</p>
-            <p className="mt-1 text-xs text-steel">Growth plan, billed annually</p>
-          </div>
+          <p className="mt-4 text-xs text-steel">Illustrative estimate based on your inputs. Actual results vary.</p>
         </div>
-        <p className="mt-4 text-xs text-steel/60">Illustrative estimate based on your inputs. Actual results vary.</p>
       </div>
     </div>
   );
@@ -191,6 +199,8 @@ export default function Pricing() {
     return { amount: `$${value}`, period: "/mo" };
   };
 
+  const ctaTo = (t) => (t.monthly === 0 ? "/register" : "/contact?topic=demo");
+
   return (
     <>
       <Seo
@@ -198,28 +208,29 @@ export default function Pricing() {
         description="Starter, Professional, Growth, and Enterprise plans for contractors — plus add-ons. Start on the free Starter plan, then request access to paid tiers."
       />
 
-      <Section className="pt-10 pb-6 md:pt-14">
-        <Eyebrow>Pricing</Eyebrow>
-        <h1 className="text-balance max-w-3xl text-2xl font-semibold leading-tight tracking-tight text-paper sm:text-3xl">
-          Plans that pay for themselves with one won bid.
-        </h1>
-        <p className="mt-6 max-w-2xl text-lg leading-relaxed text-steel">
-          Start on the free Starter plan, then request access when you are ready for paid
-          features. Enterprise begins with a conversation, not a self-serve checkout.
-        </p>
-      </Section>
+      <PageHeader
+        eyebrow="Pricing"
+        title="Plans that pay for themselves with one won bid."
+        lede="Start on the free Starter plan, then request access when you are ready for paid features. Enterprise begins with a conversation, not a self-serve checkout."
+        actions={
+          <>
+            <Button to="/contact?topic=demo" variant="primary">Book a demo</Button>
+            <Button to="#compare" variant="secondary">Compare plans</Button>
+          </>
+        }
+      />
 
-      <Section className="border-t border-line">
+      <Section id="plans" band="white">
         <div className="flex flex-col items-center gap-3">
-          <div role="group" aria-label="Billing period" className="inline-flex items-center rounded-full border border-line bg-ink-2 p-1">
+          <div role="group" aria-label="Billing period" className="inline-flex items-center border border-line-2 bg-ink-2 p-0.5">
             {[{ key: false, label: "Monthly" }, { key: true, label: "Annual" }].map((opt) => (
               <button
                 key={opt.label}
                 type="button"
                 onClick={() => setAnnual(opt.key)}
                 aria-pressed={annual === opt.key}
-                className={`rounded-full px-5 py-2 text-sm font-medium transition-colors ${
-                  annual === opt.key ? "bg-cta hover:bg-cta-hover text-white shadow-sm" : "text-steel hover:text-paper"
+                className={`px-5 py-2 text-sm font-medium transition-colors ${
+                  annual === opt.key ? "bg-paper-2 text-ink-2" : "text-steel hover:text-paper"
                 }`}
               >
                 {opt.label}
@@ -231,69 +242,71 @@ export default function Pricing() {
           </p>
         </div>
 
-        <div className="mt-10 grid-x grid-margin-x gap-y-5">
-          {tiers.map((t, i) => {
+        <div className="mt-8 grid-x grid-margin-x gap-y-5">
+          {tiers.map((t) => {
             const { amount, period } = priceFor(t);
             return (
-              <Reveal key={t.name} delay={i * 80} className="cell small-12 medium-6 large-3 h-full">
-                <div className={`lift flex h-full flex-col rounded-md border p-6 ${
-                  t.highlighted ? "border-amber bg-amber/5 shadow-lg shadow-brand/10 xl:-my-2 xl:py-8" : "border-line bg-ink-2 hover:border-amber/40"
-                }`}>
+              <div key={t.name} className="cell small-12 medium-6 large-3">
+                <div className={`card-corp flex h-full flex-col p-6 ${t.highlighted ? "!border-amber" : ""}`}>
                   <div className="flex items-center justify-between gap-2">
                     <h3 className="text-base font-semibold text-paper">{t.name}</h3>
-                    {t.highlighted && (
-                      <span className="rounded-full bg-amber/15 px-3 py-1 text-xs font-medium text-amber">Most popular</span>
-                    )}
+                    {t.highlighted && <span className="label primary">Most popular</span>}
                   </div>
                   <div className="mt-4 flex items-baseline gap-1">
                     <span className="text-4xl font-semibold tracking-tight text-paper tabular-nums">{amount}</span>
                     {period && <span className="text-sm text-steel">{period}</span>}
                   </div>
-                  {annual && t.monthly > 0 && (
-                    <p className="mt-1 text-xs text-steel">
-                      <span className="line-through">${t.monthly}/mo</span> billed annually
-                    </p>
-                  )}
-                  <p className="mt-3 text-sm leading-relaxed text-steel">{t.blurb}</p>
-                  <ul className="mt-6 flex-1 space-y-3">
+                  <p className="mt-1 min-h-4 text-xs text-steel">
+                    {annual && t.monthly > 0 ? (
+                      <><span className="line-through">${t.monthly}/mo</span> billed annually</>
+                    ) : null}
+                  </p>
+                  <p className="mt-2 text-sm leading-relaxed text-steel">{t.blurb}</p>
+                  <ul className="m-0 mt-5 flex-1 list-none space-y-3 p-0">
                     {t.features.map((f) => (
-                      <li key={f} className="flex items-start gap-3 text-sm text-paper/90">
+                      <li key={f} className="flex items-start gap-3 text-sm text-paper">
                         <IconCheck width={16} height={16} className="mt-0.5 shrink-0 text-amber" />
                         {f}
                       </li>
                     ))}
                   </ul>
-                  <Button to={t.monthly === 0 ? "/register" : "/contact"} variant={t.highlighted ? "primary" : "secondary"} className="mt-8 w-full">
+                  <Button to={ctaTo(t)} variant={t.highlighted ? "primary" : "secondary"} className="mt-8 w-full">
                     {t.cta}
                   </Button>
                 </div>
-              </Reveal>
+              </div>
             );
           })}
         </div>
         <p className="mt-6 text-center text-xs text-steel">Introductory pricing. Plans and pricing may change as new features launch.</p>
       </Section>
 
-      <Section tint className="border-t border-line">
+      <Section id="compare" band="stone">
         <Eyebrow>Compare</Eyebrow>
         <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">Every plan, side by side.</h2>
-        <div className="mt-10 -mx-6 overflow-x-auto px-6">
-          <table className="w-full min-w-[640px] border-collapse text-sm">
+        <div className="card-corp mt-8 overflow-x-auto">
+          <table className="table-corp !mb-0 min-w-[720px] [&_thead]:!bg-transparent [&_tfoot]:!bg-transparent [&_tbody_tr]:!bg-transparent [&_tfoot_tr]:!bg-transparent [&_thead_tr]:!bg-transparent">
             <caption className="sr-only">Feature comparison across all four plans</caption>
             <thead>
-              <tr className="border-b border-line">
-                <th scope="col" className="py-4 pr-4 text-left font-semibold text-paper">Feature</th>
+              <tr>
+                <th scope="col" className="sticky left-0 z-10 border-r border-line bg-ink-2 !py-4">Feature</th>
                 {tiers.map((t) => (
-                  <th key={t.name} scope="col" className={`px-4 py-4 text-left font-semibold ${t.highlighted ? "text-amber" : "text-paper"}`}>{t.name}</th>
+                  <th key={t.name} scope="col" className={`!py-4 ${t.highlighted ? "!text-amber" : ""}`}>{t.name}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {comparison.map((row) => (
-                <tr key={row.feature} className="border-b border-line/70 last:border-0">
-                  <th scope="row" className="py-3.5 pr-4 text-left font-medium text-paper/90">{row.feature}</th>
+                <tr key={row.feature}>
+                  <th
+                    scope="row"
+                    className="sticky left-0 z-10 border-r border-line bg-ink-2 !text-sm !font-medium !normal-case !tracking-normal !text-paper"
+                    style={{ whiteSpace: "normal", minWidth: "9.5rem" }}
+                  >
+                    {row.feature}
+                  </th>
                   {row.values.map((v, i) => (
-                    <td key={`${row.feature}-${tiers[i].name}`} className={`px-4 py-3.5 ${v === "—" ? "text-steel/60" : "text-steel"}`}>
+                    <td key={`${row.feature}-${tiers[i].name}`} className={v === "—" ? "text-steel" : ""}>
                       {v === "Yes" ? (
                         <IconCheck width={16} height={16} className="text-amber" role="img" aria-label="Included" />
                       ) : v}
@@ -302,43 +315,86 @@ export default function Pricing() {
                 </tr>
               ))}
             </tbody>
+            <tfoot>
+              <tr>
+                <td className="sticky left-0 z-10 border-r border-line bg-ink-2" />
+                {tiers.map((t) => (
+                  <td key={t.name}>
+                    <Button to={ctaTo(t)} size="sm" variant={t.highlighted ? "primary" : "secondary"}>
+                      {t.cta}
+                    </Button>
+                  </td>
+                ))}
+              </tr>
+            </tfoot>
           </table>
         </div>
+        <p className="mt-4 text-sm text-steel">
+          Not sure which row matters for your team?{" "}
+          <Link to="/contact?topic=demo" className="font-medium text-amber hover:text-amber-2">Book a demo</Link>{" "}
+          and we will map it to your workflow.
+        </p>
       </Section>
 
-      <Section className="border-t border-line">
+      <Section id="addons" band="white">
         <Eyebrow>Add-ons</Eyebrow>
         <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">Scale up only where you need it.</h2>
-        <div className="mt-12 grid-x grid-margin-x gap-y-5">
-          {addOns.map((a, i) => (
-            <Reveal key={a.name} delay={(i % 3) * 90} className="cell small-12 medium-6 large-4 h-full">
-              <div className="lift h-full card-corp rounded-lg p-6 hover:border-amber/40">
+        <div className="mt-8 grid-x grid-margin-x gap-y-5">
+          {addOns.map((a) => (
+            <div key={a.name} className="cell small-12 medium-6 large-4">
+              <div className="card-corp card-corp-hover h-full p-6">
                 <h3 className="text-base font-semibold text-paper">{a.name}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-steel">{a.detail}</p>
               </div>
-            </Reveal>
+            </div>
           ))}
         </div>
+        <p className="mt-6 max-w-3xl text-sm leading-relaxed text-steel">
+          Buying materials rather than software? Supply Exchange items are priced per request: add items from the{" "}
+          <Link to="/supply/catalog" className="font-medium text-amber hover:text-amber-2">catalog</Link>, then{" "}
+          <Link to="/quote" className="font-medium text-amber hover:text-amber-2">request a quote</Link> and we reply with confirmed pricing.
+        </p>
       </Section>
 
-      <Section className="border-t border-line">
+      <Section id="roi" band="stone">
         <Eyebrow>ROI calculator</Eyebrow>
         <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">See what one extra win is worth.</h2>
-        <p className="mt-5 max-w-xl text-base leading-relaxed text-steel">Even a modest improvement in win rate pays for the platform many times over.</p>
+        <p className="mt-4 max-w-xl text-base leading-relaxed text-steel">Even a modest improvement in win rate pays for the platform many times over.</p>
         <RoiCalculator />
       </Section>
 
-      <Section tint className="border-t border-line">
-        <Eyebrow>Billing questions</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">The fine print, in plain language.</h2>
-        <div className="mt-10 max-w-3xl">
-          <Accordion items={pricingFaqs} />
+      <Section id="billing" band="white">
+        <div className="grid-x grid-margin-x gap-y-8">
+          <div className="cell small-12 large-7">
+            <Eyebrow>Billing questions</Eyebrow>
+            <h2 className="text-balance max-w-2xl text-xl font-semibold tracking-tight text-paper md:text-2xl">The fine print, in plain language.</h2>
+            <div className="mt-8 max-w-3xl">
+              <Accordion items={pricingFaqs} />
+            </div>
+          </div>
+          <div className="cell small-12 large-5">
+            <div className="card-corp p-6 lg:mt-14">
+              <h3 className="text-base font-semibold text-paper">More answers</h3>
+              <p className="mt-2 text-sm leading-relaxed text-steel">
+                Accounts, quotes, bidding, and security questions are covered in the help center FAQ.
+              </p>
+              <ul className="m-0 mt-4 list-none space-y-2 p-0 text-sm">
+                <li><Link to="/resources" className="font-medium text-amber hover:text-amber-2">Browse the help center FAQ</Link></li>
+                <li><Link to="/contact?topic=demo" className="font-medium text-amber hover:text-amber-2">Book a demo</Link></li>
+                <li><Link to="/contact?topic=support" className="font-medium text-amber hover:text-amber-2">Ask a billing question</Link></li>
+              </ul>
+            </div>
+          </div>
         </div>
       </Section>
 
       <CTASection
         title="Not sure which plan fits?"
         subtitle="Tell us about your business and we'll recommend the right starting point — no pressure, no lock-in."
+        primaryLabel="Book a demo"
+        primaryTo="/contact?topic=demo"
+        secondaryLabel="Browse the FAQ"
+        secondaryTo="/resources"
       />
     </>
   );

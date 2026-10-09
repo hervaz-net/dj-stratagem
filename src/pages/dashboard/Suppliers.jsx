@@ -168,7 +168,7 @@ export default function SuppliersDashboard() {
               onClick={() => setShowShortcuts(true)}
               aria-label="Keyboard shortcuts"
               title="Keyboard shortcuts (?)"
-              className="flex h-9 w-9 items-center justify-center rounded-lg border border-line text-steel transition-colors hover:text-paper"
+              className="flex h-9 w-9 items-center justify-center rounded-sm border border-line text-steel transition-colors hover:text-paper"
             >
               <IconKeyboard width={16} height={16} />
             </button>

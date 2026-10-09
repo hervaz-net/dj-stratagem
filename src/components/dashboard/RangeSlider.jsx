@@ -33,11 +33,11 @@ export default function RangeSlider({
     "[&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 " +
     "[&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full " +
     "[&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white " +
-    "[&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-grab " +
+    "[&::-webkit-slider-thumb]:cursor-grab " +
     "[&::-webkit-slider-thumb]:bg-[var(--thumb)] " +
     "[&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:w-4 " +
     "[&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:rounded-full " +
-    "[&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-white [&::-moz-range-thumb]:shadow-md " +
+    "[&::-moz-range-thumb]:border-2 [&::-moz-range-thumb]:border-white " +
     "[&::-moz-range-thumb]:bg-[var(--thumb)]";
 
   return (
@@ -58,8 +58,7 @@ export default function RangeSlider({
           style={{
             left: `${pct(low)}%`,
             width: `${Math.max(0, pct(high) - pct(low))}%`,
-            background: `linear-gradient(90deg, color-mix(in srgb, ${accent} 60%, transparent), ${accent})`,
-            boxShadow: `0 0 12px -2px color-mix(in srgb, ${accent} 70%, transparent)`,
+            background: accent,
           }}
         />
 

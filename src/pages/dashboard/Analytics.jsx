@@ -17,7 +17,7 @@ function BarRow({ label, pct, value }) {
       </div>
       <div className="h-2 overflow-hidden rounded-full bg-line">
         <div
-          className="h-full rounded-full bg-gradient-to-r from-brand to-cta transition-all duration-700"
+          className="h-full rounded-full bg-cta transition-all duration-700"
           style={{ width: `${pct}%` }}
           role="presentation"
         />
@@ -71,7 +71,7 @@ export default function Analytics() {
         title="Analytics"
         subtitle={`Performance over the last ${RANGE_LABELS[range]}.`}
         actions={
-          <div role="group" aria-label="Date range" className="flex rounded-lg border border-line overflow-hidden">
+          <div role="group" aria-label="Date range" className="flex rounded-sm border border-line overflow-hidden">
             {RANGE_OPTIONS.map((r) => (
               <button
                 key={r}

@@ -135,7 +135,7 @@ export default function SupplierTable({
                   onClick={() => setShowColMenu(false)}
                   aria-hidden="true"
                 />
-                <div className="absolute left-0 top-full z-20 mt-1 w-44 rounded-lg border border-line bg-ink-2 p-2 shadow-xl">
+                <div className="absolute left-0 top-full z-20 mt-1 w-44 rounded-sm border border-line bg-ink-2 p-2">
                   {ALL_COLUMNS.filter((c) => !c.required).map((col) => (
                     <label
                       key={col.key}

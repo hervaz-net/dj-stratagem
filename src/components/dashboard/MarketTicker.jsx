@@ -33,7 +33,7 @@ export default function MarketTicker({ items = [], live = false }) {
   const summary = items.map((i) => `${i.label} ${i.change >= 0 ? "up" : "down"} ${Math.abs(i.change).toFixed(1)} percent`).join(", ");
 
   return (
-    <div className="panel relative flex items-center gap-3 overflow-hidden rounded-xl px-4 py-2">
+    <div className="panel relative flex items-center gap-3 overflow-hidden rounded-sm px-4 py-2">
       <span className="flex shrink-0 items-center gap-2 border-r border-line pr-3">
         <StatusDot status={live ? "active" : "idle"} size={7} pulse={live} />
         <span className="text-[10px] font-semibold uppercase tracking-widest text-steel">

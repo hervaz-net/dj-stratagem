@@ -50,7 +50,7 @@ export default function AddBidButton({ onCreated }) {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4" onClick={() => setOpen(false)}>
           <form
             onSubmit={submit}
-            className="card-corp w-full max-w-md rounded-lg p-6"
+            className="card-corp w-full max-w-md rounded-sm p-6"
             onClick={(e) => e.stopPropagation()}
           >
             <h2 className="text-base font-semibold text-paper">New bid</h2>

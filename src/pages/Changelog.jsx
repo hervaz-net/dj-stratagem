@@ -343,7 +343,7 @@ export default function Changelog() {
               <ul className="m-0 min-w-0 list-none space-y-3 p-0">
                 {entry.items.map((item) => (
                   <li key={item.text} className="flex items-start gap-3">
-                    <span className={`label ${TYPE_LABEL[item.type]} mt-0.5 w-20 shrink-0 text-center uppercase`}>
+                    <span className={`label ${TYPE_LABEL[item.type]} mt-0.5 w-24 shrink-0 text-center uppercase`}>
                       {item.type}
                     </span>
                     <p className="text-sm leading-relaxed text-steel">{item.text}</p>

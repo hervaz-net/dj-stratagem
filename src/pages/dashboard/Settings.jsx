@@ -28,7 +28,7 @@ function Field({ label, id, children }) {
   );
 }
 
-const inputCls = "w-full rounded-lg border border-line bg-ink px-3.5 py-2.5 text-base font-medium text-paper outline-none transition-colors placeholder:text-steel/60 focus:border-amber";
+const inputCls = "w-full rounded-sm border border-line bg-ink px-3.5 py-2.5 text-base font-medium text-paper outline-none transition-colors placeholder:text-steel/60 focus:border-amber";
 
 const money = (n) =>
   Number(n || 0).toLocaleString(undefined, { style: "currency", currency: "USD", maximumFractionDigits: 0 });
@@ -278,7 +278,7 @@ export default function Settings() {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="rounded-lg bg-amber/15 px-5 py-2.5 text-base font-bold text-amber transition-colors hover:bg-amber/25 disabled:opacity-60"
+                  className="rounded-sm bg-amber/15 px-5 py-2.5 text-base font-bold text-amber transition-colors hover:bg-amber/25 disabled:opacity-60"
                 >
                   {saving ? "Saving…" : "Save profile"}
                 </button>
@@ -321,7 +321,7 @@ export default function Settings() {
                 <button
                   type="submit"
                   disabled={savingBilling}
-                  className="rounded-lg bg-amber/15 px-5 py-2.5 text-base font-bold text-amber transition-colors hover:bg-amber/25 disabled:opacity-60"
+                  className="rounded-sm bg-amber/15 px-5 py-2.5 text-base font-bold text-amber transition-colors hover:bg-amber/25 disabled:opacity-60"
                 >
                   {savingBilling ? "Saving…" : "Save billing contact"}
                 </button>
@@ -394,7 +394,7 @@ export default function Settings() {
                   </label>
                   <button
                     type="submit"
-                    className="rounded-lg bg-amber/15 px-5 py-2.5 text-base font-bold text-amber transition-colors hover:bg-amber/25"
+                    className="rounded-sm bg-amber/15 px-5 py-2.5 text-base font-bold text-amber transition-colors hover:bg-amber/25"
                   >
                     Add funds
                   </button>
@@ -414,7 +414,7 @@ export default function Settings() {
                   </label>
                   <button
                     type="submit"
-                    className="rounded-lg border border-line px-5 py-2.5 text-base font-bold text-paper transition-colors hover:border-amber/40"
+                    className="rounded-sm border border-line px-5 py-2.5 text-base font-bold text-paper transition-colors hover:border-amber/40"
                   >
                     Save limit
                   </button>
@@ -423,7 +423,7 @@ export default function Settings() {
                     role="switch"
                     aria-checked={funded}
                     onClick={toggleFunded}
-                    className="rounded-lg bg-amber/15 px-5 py-2.5 text-base font-bold text-amber transition-colors hover:bg-amber/25"
+                    className="rounded-sm bg-amber/15 px-5 py-2.5 text-base font-bold text-amber transition-colors hover:bg-amber/25"
                   >
                     {funded ? "Mark unfunded" : "Fund account"}
                   </button>
@@ -450,7 +450,7 @@ export default function Settings() {
                     }`}
                   >
                     <span
-                      className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
                         notifications[opt.key] ? "translate-x-5" : "translate-x-0"
                       }`}
                     />
@@ -485,7 +485,7 @@ export default function Settings() {
                     twofa ? "border-amber bg-amber" : "border-line bg-ink"
                   }`}
                 >
-                  <span className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${twofa ? "translate-x-5" : "translate-x-0"}`} />
+                  <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${twofa ? "translate-x-5" : "translate-x-0"}`} />
                 </button>
               </div>
             </div>
@@ -500,7 +500,7 @@ export default function Settings() {
               <button
                 type="button"
                 onClick={() => toast("Contact support to delete your account.", { type: "warning" })}
-                className="shrink-0 rounded-lg border border-danger/30 bg-danger/10 px-4 py-2 text-sm font-bold text-danger transition-colors hover:bg-danger/20"
+                className="shrink-0 rounded-sm border border-danger/30 bg-danger/10 px-4 py-2 text-sm font-bold text-danger transition-colors hover:bg-danger/20"
               >
                 Delete account
               </button>
