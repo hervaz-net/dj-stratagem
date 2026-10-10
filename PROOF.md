@@ -134,3 +134,10 @@ insurance stay available on request. An empty field still renders Pending.
 The FMCSA authority row stays "Intrastate only" until an MC number is on file.
 Do not mark the page "now booking" or list a vehicle in `vehicles` until that
 unit is registered, inspected, and insured, with a photo you own.
+
+2026-10-10: `owned` lists the 2019 Rolls-Royce Cullinan, 2026 Cadillac Escalade
+ESV, and 2025 Mercedes-Maybach GLS 600, live on the owner's RentX account, with
+the owner's photos. The 44 models in `arranged` are booked through partner
+operators and are labeled "Vehicles we arrange", never as owned. Their photos
+are Wikimedia Commons images under CC BY / BY-SA / CC0, credited on each card;
+keep the credit if a photo is reused.

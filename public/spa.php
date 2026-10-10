@@ -84,7 +84,7 @@ function meta_for(string $path, array $projects, string $parent, string $exchang
         '/register' => page('Request access', 'Request a D&J Stratagem account. Accounts are approved by the team before first sign-in.', $parent, true),
         '/forgot-password' => page('Forgot password', 'Reset your D&J Stratagem password.', $parent, true),
         '/verify-email' => page('Account review', 'New D&J Stratagem accounts are approved by the team. There is no automated verification email.', $parent, true),
-        '/fleet' => page('Chauffeured sedans, SUVs, vans, and Sprinters', 'Stratagem Fleet: executives, crews, wedding parties, and conference groups across Southern California. You book a vehicle class. The price is set before you ride.', 'Stratagem Fleet'),
+        '/fleet' => page('Ultra-luxury SUVs, sedans, sports cars, Sprinters, and coaches', 'Stratagem Fleet: Rolls-Royce, Maybach, Escalade ESV, Lamborghini, Sprinters, and motorcoaches across Southern California. Chauffeured or self-drive. The price is set before you ride.', 'Stratagem Fleet'),
         '/capital' => page('Get paid sooner. Bid bigger.', 'Stratagem Capital is being built to lift slow pay: working capital that follows pay apps, retainage, and materials bought months before the invoice clears. No credit is offered today.', 'Stratagem Capital'),
         '/studio' => page('Look like the firm that wins.', 'Stratagem Studio makes the brand, the site, and the proposal that make a strong construction firm look like one.', 'Stratagem Studio'),
         '/workforce' => page('The right crew, on the right day.', 'Stratagem Workforce is being built to match verified tradespeople to awarded work, so a good award never turns into a bad schedule.', 'Stratagem Workforce'),
