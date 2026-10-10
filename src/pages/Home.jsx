@@ -1,411 +1,365 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import Section, { Eyebrow } from "../components/Section";
-import Button from "../components/Button";
-import FeatureCard from "../components/FeatureCard";
-import CTASection from "../components/CTASection";
-import Reveal from "../components/Reveal";
-import Accordion from "../components/Accordion";
 import Seo from "../components/Seo";
-import { projects, TRADES, formatDue } from "../data/sampleProjects";
-import SampleListingsNotice from "../components/SampleListingsNotice";
-import {
-  IconGavel,
-  IconHelmet,
-  IconMegaphone,
-  IconBriefcase,
-  IconPackage,
-  IconSparkle,
-} from "../components/icons";
+import { StratagemMark } from "../components/SubagentHeader";
+import { subagents } from "../data/subagents";
+import "../styles/djx.css";
 
-const capabilities = [
-  { icon: <IconGavel width={30} height={30} />, title: "Bid rooms", text: "Post packages, invite subs, level every number side by side, and award with a paper trail that holds up." },
-  { icon: <IconHelmet width={30} height={30} />, title: "Trade matching", text: "Projects scored against your trade, territory, size, and history, so the good ones find you first." },
-  { icon: <IconMegaphone width={30} height={30} />, title: "Marketing engine", text: "A company profile that ranks, steady inbound leads, and proposals drafted for you in minutes." },
-  { icon: <IconPackage width={30} height={30} />, title: "Supply sourcing", text: "Sealed, single-round quotes scored on more than price, so suppliers stay and fill rates hold." },
-  { icon: <IconBriefcase width={30} height={30} />, title: "Back office", text: "CRM, estimating, invoicing, change orders, and e-signatures, in the field and in the office." },
-  { icon: <IconSparkle width={30} height={30} />, title: "Quiet AI", text: "Fit scores, competitiveness signals, and first drafts. It does the busywork; you make the call." },
-];
+/* ------------------------------------------------------------------ helpers */
 
-const moves = [
-  { n: "01", title: "Tell us who you are", text: "Trades, territory, project sizes, certifications. You verify once, and it travels with every bid." },
-  { n: "02", title: "Let the work come to you", text: "We rank every new project against your profile and nudge you when something worth chasing lands." },
-  { n: "03", title: "Run the pursuit in one place", text: "Deadlines, documents, contacts, and status live together, so nothing dies in an inbox." },
-  { n: "04", title: "Win, learn, repeat", text: "Follow-up, analytics, and marketing turn each result into a better next bid." },
-];
-
-const roles = [
-  { key: "gc", label: "General contractors", line: "Run the whole bid room.", text: "Publish packages, invite the right subs, compare like for like, and award with confidence." },
-  { key: "sub", label: "Subcontractors", line: "Spend time on winnable work.", text: "See projects that fit your trade and area, bid digitally, and build a record that wins more." },
-  { key: "supplier", label: "Suppliers", line: "Meet demand early.", text: "Spot upcoming projects and the contractors who need you, then quote into sealed RFQs that protect margin." },
-  { key: "service", label: "Service providers", line: "Leads without the agency.", text: "A profile that ranks brings qualified commercial leads straight to you." },
-];
-
-const faqs = [
-  {
-    q: "How is this different from PlanHub or BuildingConnected?",
-    a: "Those tools each solve one slice, finding bids or sending invitations. D&J Stratagem connects the whole pipeline: bidding and awards, marketing and leads, CRM and estimating, documents and e-signatures. One login instead of five subscriptions that don't talk to each other.",
-  },
-  {
-    q: "Do I need to be a general contractor?",
-    a: "No. General contractors, subcontractors, and suppliers all work on the same platform, each with workflows built for their side of the deal. Subs can start free with a profile and matched projects.",
-  },
-  {
-    q: "What is Supply Exchange?",
-    a: "Sourcing for the materials you reorder constantly: fasteners, lumber, conduit, PVC, plate, tools. Sealed single-round quotes and multi-factor scored awards replace the open reverse auction, so suppliers stay at the table.",
-  },
-  {
-    q: "How fast can we get going?",
-    a: "Profile setup takes under an hour, and most teams are bidding through the platform the same week. Growth and Enterprise plans include guided onboarding.",
-  },
-  {
-    q: "Can I try it first?",
-    a: "Starter is free: profile, matching, and a small bid cap. Paid plans open after a short review. Request access or email hello@djstratageminc.com.",
-  },
-];
-
-const STATEMENT =
-  "Most contractors stitch together five tools to do one job. We built one place to find the work, win it, market the business, and keep the customer.";
-
-/** Words light up one by one as the statement scrolls through the viewport. */
-function ScrollWords({ text }) {
-  const ref = useRef(null);
-  const [progress, setProgress] = useState(0);
-
+function usePrefersReducedMotion() {
+  const [reduced, setReduced] = useState(() =>
+    typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches,
+  );
   useEffect(() => {
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduced) {
-      setProgress(1);
-      return;
-    }
-    let frame = 0;
-    const update = () => {
-      frame = 0;
-      const el = ref.current;
-      if (!el) return;
-      const r = el.getBoundingClientRect();
-      const vh = window.innerHeight;
-      const p = (vh * 0.85 - r.top) / (r.height + vh * 0.35);
-      setProgress(Math.min(1, Math.max(0, p)));
-    };
-    const onScroll = () => {
-      if (!frame) frame = requestAnimationFrame(update);
-    };
-    update();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      cancelAnimationFrame(frame);
-    };
+    const mq = window.matchMedia?.("(prefers-reduced-motion: reduce)");
+    if (!mq) return undefined;
+    const on = () => setReduced(mq.matches);
+    mq.addEventListener?.("change", on);
+    return () => mq.removeEventListener?.("change", on);
   }, []);
+  return reduced;
+}
 
-  const words = text.split(" ");
-  return (
-    <p ref={ref} className="font-display text-4xl leading-[1.12] text-paper md:text-6xl lg:text-7xl">
-      {words.map((w, i) => {
-        const lit = progress * words.length > i;
-        return (
-          <span key={i} className="transition-opacity duration-500" style={{ opacity: lit ? 1 : 0.14 }}>
-            {w}{" "}
-          </span>
-        );
-      })}
-    </p>
+/** Ticks while the tab is visible; stops on hidden tabs and reduced motion. */
+function useTicker(ms, enabled) {
+  const [tick, setTick] = useState(0);
+  useEffect(() => {
+    if (!enabled) return undefined;
+    let id = null;
+    const start = () => { if (!id) id = window.setInterval(() => setTick((t) => t + 1), ms); };
+    const stop = () => { if (id) window.clearInterval(id); id = null; };
+    const onVis = () => (document.hidden ? stop() : start());
+    if (!document.hidden) start();
+    document.addEventListener("visibilitychange", onVis);
+    return () => { stop(); document.removeEventListener("visibilitychange", onVis); };
+  }, [ms, enabled]);
+  return tick;
+}
+
+function SubagentLink({ s, className, children, style }) {
+  return s.external ? (
+    <a href={s.to} className={className} style={style}>{children}</a>
+  ) : (
+    <Link to={s.to} className={className} style={style}>{children}</Link>
   );
 }
 
-/** Cycles through matched projects like a departures board. */
-function SignalTicker() {
-  const [i, setI] = useState(0);
+const STAGE_COLOR = { find: "#c2610c", win: "#2459c4", build: "#0e6b4f", keep: "#b86e12" };
+
+/* ------------------------------------------------------- typing headline */
+
+const WORDS = ["find work.", "win it.", "build it.", "keep the customer."];
+
+function TypingWord({ reduced }) {
+  const tick = useTicker(70, !reduced);
+  const [state, setState] = useState({ i: 0, n: 0, phase: "type", hold: 0 });
+
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const id = window.setInterval(() => setI((v) => (v + 1) % projects.length), 3200);
-    return () => window.clearInterval(id);
-  }, []);
-  const p = projects[i];
-  return (
-    <Link
-      to={`/projects/${p.slug}`}
-      className="slab group block w-full max-w-sm p-5 transition-transform duration-500 hover:-translate-y-1"
-    >
-      <div className="flex items-center justify-between">
-        <span className="mono-label flex items-center gap-2 text-tide">
-          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-tide" /> Sample
-        </span>
-        <span className="mono-label text-steel">
-          {String(i + 1).padStart(2, "0")}/{String(projects.length).padStart(2, "0")}
-        </span>
-      </div>
-      <div key={p.slug} className="rise-in">
-        <p className="mt-4 font-display text-3xl leading-tight text-paper">{p.title}</p>
-        <p className="mt-2 text-sm text-steel">
-          {p.city}, {p.state} · {p.trade} · {p.valueLabel}
-        </p>
-        <div className="mt-5 flex items-end justify-between">
-          <span className="mono-label text-steel">Sample date {formatDue(p.bidDue)}</span>
-          <span className="font-display text-5xl leading-none text-cta">
-            {p.match}
-            <span className="text-xl">%</span>
-          </span>
-        </div>
-      </div>
-    </Link>
-  );
-}
+    if (reduced) return;
+    setState((s) => {
+      const w = WORDS[s.i];
+      if (s.phase === "type") return s.n < w.length ? { ...s, n: s.n + 1 } : { ...s, phase: "hold", hold: 0 };
+      if (s.phase === "hold") return s.hold < 24 ? { ...s, hold: s.hold + 1 } : { ...s, phase: "erase" };
+      return s.n > 0 ? { ...s, n: s.n - 1 } : { i: (s.i + 1) % WORDS.length, n: 0, phase: "type", hold: 0 };
+    });
+  }, [tick, reduced]);
 
-export default function Home() {
-  const [role, setRole] = useState("gc");
-
+  if (reduced) return <span style={{ color: "var(--x-brand)" }}>{WORDS.join(" ")}</span>;
   return (
     <>
+      <span className="sr-only">{WORDS.join(" ")}</span>
+      <span aria-hidden="true">
+        <span style={{ color: "var(--x-brand)" }}>{WORDS[state.i].slice(0, state.n)}</span>
+        <span className="x-hcaret" />
+      </span>
+    </>
+  );
+}
+
+/* --------------------------------------------------------- code panel */
+
+const CODE = [
+  [["c", "// one account, nine subagents"]],
+  [["kw", "const"], ["d", " job = "], ["kw", "await"], ["d", " projects."], ["fn", "find"], ["d", "({ trade: "], ["s", '"electrical"'], ["d", ", city: "], ["s", '"Pasadena"'], ["d", " })"]],
+  [["kw", "const"], ["d", " quotes = "], ["kw", "await"], ["d", " exchange."], ["fn", "request"], ["d", "(job, "], ["s", '"12 AWG THHN"'], ["d", ")"]],
+  [["kw", "await"], ["d", " capital."], ["fn", "fund"], ["d", "(quotes."], ["fn", "best"], ["d", "().po)"]],
+  [["kw", "await"], ["d", " workforce."], ["fn", "staff"], ["d", "(job, { crew: "], ["s", '"electrical"'], ["d", " })"]],
+  [["d", "studio."], ["fn", "showcase"], ["d", "(job)  "], ["c", "// keep the customer"]],
+];
+const TOKEN_COLOR = { kw: "#7fd1ae", d: "#e6ece8", fn: "#8fb3ff", s: "#f2b766", c: "#6f8178" };
+const OUTPUT = [
+  "✓ open projects matched · electrical · Pasadena",
+  "✓ supplier quotes compared · best one selected",
+  "✓ PO funded · crew scheduled",
+];
+const LINE_LENGTHS = CODE.map((l) => l.reduce((a, t) => a + t[1].length, 0));
+const TOTAL = LINE_LENGTHS.reduce((a, b) => a + b, 0);
+
+function CodePanel({ reduced }) {
+  const tick = useTicker(40, !reduced);
+  const [pos, setPos] = useState({ n: 0, hold: 0 });
+
+  useEffect(() => {
+    if (reduced) return;
+    setPos((p) => (p.n < TOTAL ? { n: p.n + 1, hold: 0 } : p.hold > 110 ? { n: 0, hold: 0 } : { ...p, hold: p.hold + 1 }));
+  }, [tick, reduced]);
+
+  const n = reduced ? TOTAL : pos.n;
+  const done = n >= TOTAL;
+  const outCount = reduced ? OUTPUT.length : done ? Math.min(OUTPUT.length, 1 + Math.floor(pos.hold / 14)) : 0;
+
+  let budget = n;
+  let used = 0;
+  let caretPlaced = false;
+
+  return (
+    <div className="overflow-hidden" style={{ background: "#15201b", borderRadius: 20, boxShadow: "0 2px 4px #15201b0a, 0 24px 60px -20px #15201b66" }}>
+      <div className="flex items-center gap-2 px-4 py-3.5" style={{ borderBottom: "1px solid #2a3a32" }}>
+        {[0, 1, 2].map((i) => <span key={i} className="h-[11px] w-[11px] rounded-full" style={{ background: "#3a4a42" }} />)}
+        <span className="x-mono ml-2 text-xs" style={{ color: "#8a9a91" }}>pipeline.js</span>
+        <span className="x-mono ml-auto rounded-full px-2 py-0.5 text-[11px]" style={{ color: "#7fd1ae", background: "#1f3329" }}>● running</span>
+      </div>
+      <pre className="x-mono m-0 overflow-x-auto py-4 text-[13.5px] leading-[1.75]" aria-label="Example: one job running through the subagents">
+        {CODE.map((line, i) => {
+          used += LINE_LENGTHS[i];
+          const parts = [];
+          for (const [kind, text] of line) {
+            if (budget <= 0) break;
+            const shown = text.slice(0, budget);
+            budget -= shown.length;
+            parts.push(<span key={parts.length} style={{ color: TOKEN_COLOR[kind], fontStyle: kind === "c" ? "italic" : undefined }}>{shown}</span>);
+          }
+          const caret = !reduced && !caretPlaced && (n < used || i === CODE.length - 1);
+          if (caret) caretPlaced = true;
+          return (
+            <div key={i} className="flex pr-5">
+              <span className="w-11 shrink-0 select-none pr-4 text-right" style={{ color: "#4d5e55" }}>{i + 1}</span>
+              <span>{parts}{caret && <span className="x-caret" />}</span>
+            </div>
+          );
+        })}
+      </pre>
+      <div className="x-mono min-h-[92px] px-5 pb-4 pt-3 text-[12.5px]" style={{ borderTop: "1px solid #2a3a32" }} aria-live="off">
+        <div className="mb-1.5" style={{ color: "#8a9a91" }}>output</div>
+        {OUTPUT.slice(0, outCount).map((o) => <div key={o} className="x-out" style={{ color: "#cfe9dc" }}>{o}</div>)}
+      </div>
+    </div>
+  );
+}
+
+/* --------------------------------------------------------- hub diagram */
+
+function HubDiagram() {
+  const nodes = subagents.map((s, i) => {
+    const a = ((-90 + i * 40) * Math.PI) / 180;
+    return { ...s, x: Math.round(320 + Math.cos(a) * 250), y: Math.round(220 + Math.sin(a) * 175), color: STAGE_COLOR[s.stage], delay: `-${(i * 0.29).toFixed(2)}s` };
+  });
+  return (
+    <svg viewBox="0 0 640 440" className="block h-auto w-full" role="img" aria-label="The nine subagents, each connected to the Stratagem AI hub">
+      {nodes.map((n) => (
+        <g key={`l-${n.key}`}>
+          <line x1={n.x} y1={n.y} x2="320" y2="220" stroke="#e4e7e0" strokeWidth="2" />
+          <line className="x-beam" x1={n.x} y1={n.y} x2="320" y2="220" stroke={n.color} strokeWidth="3" strokeLinecap="round" style={{ animationDelay: n.delay }} />
+        </g>
+      ))}
+      <g className="x-hub">
+        <rect x="270" y="190" width="100" height="60" rx="14" fill="#0e6b4f" />
+        <text x="320" y="226" textAnchor="middle" fontFamily="Inter, sans-serif" fontSize="18" fontWeight="800" fill="#fff">D&amp;J</text>
+      </g>
+      {nodes.map((n) => (
+        <g key={`n-${n.key}`}>
+          <rect x={n.x - 52} y={n.y - 17} width="104" height="34" rx="17" fill="#fff" stroke={n.color} strokeWidth="1.5" />
+          <circle cx={n.x - 38} cy={n.y} r="4" fill={n.color} />
+          <text x={n.x - 28} y={n.y + 5} fontFamily="Inter, sans-serif" fontSize="13" fontWeight="600" fill="#15201b">{n.name}</text>
+        </g>
+      ))}
+    </svg>
+  );
+}
+
+/* ------------------------------------------------------ how a job moves */
+
+const STEPS = [
+  { name: "Find", line: "Matched projects and supply requests land in one feed by trade and city.", meta: "projects · exchange" },
+  { name: "Win", line: "Price it, propose it, and track the bid alongside every other job.", meta: "platform · solutions" },
+  { name: "Build", line: "Fund the PO, source the material, staff the crew, roll the fleet.", meta: "capital · supply · workforce · fleet" },
+  { name: "Keep", line: "Turn the finished job into marketing that wins the next one.", meta: "studio" },
+];
+
+function JobSteps({ reduced }) {
+  const tick = useTicker(2400, !reduced);
+  const active = reduced ? -1 : tick % STEPS.length;
+  return (
+    <ol className="grid gap-4" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))" }}>
+      {STEPS.map((st, i) => {
+        const on = i === active;
+        return (
+          <li
+            key={st.name}
+            className="relative flex flex-col gap-2.5 overflow-hidden rounded-2xl p-6"
+            style={{
+              background: "var(--x-surface)",
+              border: `1px solid ${on ? "var(--x-brand)" : "var(--x-border)"}`,
+              boxShadow: on ? "var(--x-shadow-pop)" : "0 1px 2px #15201b0a",
+              transition: "border-color .3s ease, box-shadow .3s ease",
+            }}
+          >
+            <span
+              className="flex h-9 w-9 items-center justify-center rounded-full text-[15px] font-bold"
+              style={{ background: on ? "var(--x-brand)" : "var(--x-brand-soft)", color: on ? "#fff" : "var(--x-brand-hover)", transition: "background-color .3s ease, color .3s ease" }}
+            >
+              {i + 1}
+            </span>
+            <span className="text-xl font-bold tracking-tight">{st.name}</span>
+            <span className="text-[15px] leading-relaxed" style={{ color: "var(--x-muted)" }}>{st.line}</span>
+            <span className="x-mono text-xs" style={{ color: "var(--x-muted)" }}>{st.meta}</span>
+            <span className="absolute inset-x-0 bottom-0 h-[3px]" style={{ background: "var(--x-subtle)" }} aria-hidden="true">
+              {on && <span key={tick} className="x-fill block h-[3px]" style={{ background: "var(--x-brand)" }} />}
+            </span>
+          </li>
+        );
+      })}
+    </ol>
+  );
+}
+
+/* ---------------------------------------------------------------- page */
+
+const H2 = "m-0 font-extrabold leading-[1.1] tracking-[-0.03em]";
+const EYEBROW = "mb-3 text-sm font-semibold";
+
+export default function Home() {
+  const reduced = usePrefersReducedMotion();
+  const ticker = [...subagents, ...subagents];
+
+  return (
+    <div className="djx" style={{ background: "var(--x-bg)" }}>
       <Seo
         title="Build the pipeline, not the paperwork."
         description="D&J Stratagem is one place for contractors, subcontractors, and suppliers to find construction work, win it, market the business, and keep the customer."
       />
 
       {/* Hero */}
-      <section className="relative px-6 pb-8 pt-8 md:pt-14">
-        <div className="mx-auto grid min-h-[60vh] max-w-7xl items-end gap-10 lg:grid-cols-[1fr_auto]">
-          <div>
-            <p className="mono-label rise-in text-steel">D&amp;J Stratagem, Inc. — Los Angeles</p>
-            <h1 className="rise-in mt-8 text-[3.4rem] leading-[0.92] text-paper sm:text-8xl xl:text-[8.25rem]" style={{ animationDelay: "80ms" }}>
-              Build the <span className="ink-flow italic">pipeline,</span>
-              <br />
-              not the paperwork.
+      <section className="x-grid border-b" style={{ borderColor: "var(--x-border)" }}>
+        <div className="flex flex-wrap items-center gap-12" style={{ padding: "72px var(--x-gutter) 80px" }}>
+          <div className="min-w-0 flex-[1_1_480px]">
+            <span className="inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[13px] font-semibold" style={{ background: "var(--x-surface)", borderColor: "var(--x-border)" }}>
+              <span className="x-pulse h-2 w-2 rounded-full" style={{ background: "var(--x-accent)" }} aria-hidden="true" />
+              Nine subagents, one account
+            </span>
+            <h1 className="mt-6 font-extrabold leading-[1.02] tracking-[-0.035em]" style={{ fontSize: "clamp(44px, 6vw, 76px)", color: "var(--x-text)", fontFamily: "inherit", fontStyle: "normal" }}>
+              Build the pipeline, not the paperwork.
             </h1>
-            <div className="rise-in mt-10 grid max-w-3xl gap-8 md:grid-cols-[1fr_auto] md:items-end" style={{ animationDelay: "180ms" }}>
-              <p className="text-lg leading-relaxed text-steel">
-                Construction work, matched to your trade and territory. Then everything after it: the
-                bid, the award, the marketing, the relationship.
-              </p>
-              <div className="flex flex-wrap items-center gap-5">
-                <Button to="/projects" size="lg">
-                  Find projects <span aria-hidden="true" className="transition-transform group-hover/btn:translate-x-1">→</span>
-                </Button>
-                <Button to="/platform" variant="ghost">
-                  See the platform
-                </Button>
-              </div>
+            <p className="mt-5 min-h-[1.3em] font-semibold tracking-[-0.02em]" style={{ fontSize: "clamp(22px, 2.4vw, 28px)", color: "var(--x-muted)" }}>
+              One account to <TypingWord reduced={reduced} />
+            </p>
+            <p className="mt-5 max-w-[560px] text-lg leading-relaxed" style={{ color: "var(--x-muted)" }}>
+              D&amp;J Stratagem AI is one place for contractors, subcontractors, and suppliers to find construction work, win it, market the business, and keep the customer.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link to="/register" className="x-btn x-btn-primary">Join free</Link>
+              <a href="#subagents" className="x-btn x-btn-ghost">Explore the subagents</a>
             </div>
           </div>
-          <div className="rise-in relative hidden lg:block" style={{ animationDelay: "260ms" }}>
-            <SignalTicker />
+          <div className={`min-w-0 flex-[1_1_460px] ${reduced ? "" : "x-float"}`}>
+            <CodePanel reduced={reduced} />
           </div>
-        </div>
-
-        {/* Trade chips drifting at the edge of the hero. */}
-        <div aria-hidden="true" className="pointer-events-none absolute right-6 top-6 hidden flex-col items-end gap-3 xl:flex">
-          {TRADES.slice(0, 4).map((t, i) => (
-            <span
-              key={t}
-              className="bob chamfer-sm bg-glass px-3 py-1.5 font-mono text-xs text-steel backdrop-blur-md"
-              style={{ animationDelay: `${-i * 1.7}s`, marginRight: `${(i % 2) * 48}px` }}
-            >
-              {t}
-            </span>
-          ))}
-        </div>
-
-        <div className="mx-auto mt-10 flex max-w-7xl items-center gap-4 lg:hidden">
-          <SignalTicker />
-        </div>
-
-        <div className="mx-auto mt-8 hidden max-w-7xl items-center gap-4 md:flex" aria-hidden="true">
-          <span className="mono-label text-steel">Scroll</span>
-          <span className="relative h-px w-24 overflow-hidden bg-line">
-            <span className="absolute inset-y-0 left-0 w-1/3 animate-[marquee_2.4s_linear_infinite] bg-cta" />
-          </span>
         </div>
       </section>
 
-      {/* Trades band */}
-      <div className="marquee border-y-0 py-5" aria-hidden="true">
-        <div className="marquee-track reverse gap-6">
-          {[...TRADES, ...TRADES, ...TRADES, ...TRADES].map((t, i) => (
-            <span key={i} className="flex shrink-0 items-center gap-6 font-mono text-sm uppercase tracking-[0.2em] text-steel">
-              {t}
-              <span className="text-cta">✦</span>
-            </span>
+      {/* Ticker */}
+      <div className="overflow-hidden border-b" style={{ background: "var(--x-surface)", borderColor: "var(--x-border)" }} aria-hidden="true">
+        <div className="x-track flex w-max py-4">
+          {ticker.map((s, i) => (
+            <div key={`${s.key}-${i}`} className="flex items-center gap-2.5 whitespace-nowrap px-7 text-[15px] font-semibold" data-stage={s.stage}>
+              <span className="x-chip">{s.stage.toUpperCase()}</span>
+              {s.name}
+            </div>
           ))}
         </div>
       </div>
 
-      {/* Statement */}
-      <Section>
-        <Eyebrow>Why we exist</Eyebrow>
-        <ScrollWords text={STATEMENT} />
-      </Section>
-
-      {/* Four moves: sticky title, scrolling steps */}
-      <Section>
-        <div className="grid gap-16 lg:grid-cols-[0.8fr_1.2fr]">
-          <div className="lg:sticky lg:top-32 lg:self-start">
-            <Eyebrow>How it works</Eyebrow>
-            <h2 className="text-6xl text-paper md:text-7xl">
-              Four moves, <em>one rhythm.</em>
-            </h2>
-            <p className="mt-6 max-w-sm text-steel">From first profile to the next win, the platform keeps the pursuit moving.</p>
-          </div>
-          <ol className="space-y-4">
-            {moves.map((m, i) => (
-              <Reveal as="li" key={m.n} delay={i * 80}>
-                <div className="group grid grid-cols-[auto_1fr] gap-6 py-6 md:gap-10">
-                  <span className="font-display text-7xl leading-none text-paper/15 transition-colors duration-500 group-hover:text-cta md:text-8xl">
-                    {m.n}
-                  </span>
-                  <div className="pt-2">
-                    <h3 className="text-3xl text-paper md:text-4xl">{m.title}</h3>
-                    <p className="mt-3 max-w-md text-steel">{m.text}</p>
-                  </div>
-                </div>
-                <div className="dotline" />
-              </Reveal>
-            ))}
-          </ol>
-        </div>
-      </Section>
-
-      {/* The board */}
-      <Section>
-        <div className="flex flex-wrap items-end justify-between gap-6">
-          <div>
-            <Eyebrow>On the board</Eyebrow>
-            <h2 className="max-w-2xl text-6xl text-paper md:text-7xl">
-              Work that <em>fits</em>, ranked.
-            </h2>
-          </div>
-          <Button to="/projects" variant="ghost">
-            Browse every project →
-          </Button>
-        </div>
-        <SampleListingsNotice className="mt-4 max-w-2xl" />
-        <div className="mt-10">
-          <div className="mono-label hidden grid-cols-[1fr_9rem_7rem_6rem_4rem] gap-6 pb-4 text-steel md:grid">
-            <span>Project</span>
-            <span>Where</span>
-            <span>Trade</span>
-            <span>Value</span>
-            <span className="text-right">Fit</span>
-          </div>
-          {projects.slice(0, 6).map((p, i) => (
-            <Reveal key={p.slug} delay={i * 60}>
-              <div className="dotline" />
-              <Link
-                to={`/projects/${p.slug}`}
-                className="group grid grid-cols-[1fr_auto] items-baseline gap-x-6 gap-y-1 py-5 transition-[padding] duration-500 hover:pl-4 md:grid-cols-[1fr_9rem_7rem_6rem_4rem]"
-              >
-                <span className="font-display text-2xl leading-tight text-paper transition-colors group-hover:text-cta md:text-3xl">{p.title}</span>
-                <span className="text-right font-display text-3xl text-paper md:order-last">{p.match}</span>
-                <span className="text-sm text-steel">{p.city}, {p.state}</span>
-                <span className="hidden font-mono text-xs uppercase tracking-wider text-steel md:block">{p.trade}</span>
-                <span className="hidden text-sm text-paper md:block">{p.valueLabel}</span>
-              </Link>
-            </Reveal>
-          ))}
-          <div className="dotline" />
-        </div>
-      </Section>
-
-      {/* Capabilities: horizontal drift */}
-      <Section>
-        <Eyebrow>The platform</Eyebrow>
-        <h2 className="max-w-3xl text-6xl text-paper md:text-7xl">
-          Six instruments, <em>one</em> desk.
-        </h2>
-        <div className="-mx-6 mt-10 flex snap-x snap-mandatory gap-5 overflow-x-auto px-6 pb-6 [scrollbar-width:none]">
-          {capabilities.map((c, i) => (
-            <Reveal key={c.title} delay={i * 70} className="w-[19rem] shrink-0 snap-start md:w-[22rem]">
-              <FeatureCard icon={c.icon} title={c.title} className="h-full">
-                {c.text}
-              </FeatureCard>
-            </Reveal>
-          ))}
-        </div>
-      </Section>
-
-      {/* Before / after */}
-      <Section>
-        <div className="grid gap-14 lg:grid-cols-2 lg:items-center">
-          <Reveal>
-            <Eyebrow>The switch</Eyebrow>
-            <h2 className="text-6xl text-paper md:text-7xl">
-              Five logins <em>become</em> one.
-            </h2>
-          </Reveal>
-          <Reveal delay={120}>
-            <ul className="space-y-5 text-xl md:text-2xl">
-              {[
-                ["Five subscriptions", "One platform"],
-                ["Bids retyped into a CRM", "Bids, awards, and CRM share a record"],
-                ["Marketing outsourced", "Marketing from the same desk"],
-                ["Follow-ups lost in email", "Every lead tracked to a decision"],
-              ].map(([was, now]) => (
-                <li key={was} className="group">
-                  <span className="block text-steel line-through decoration-cta/70 decoration-2">{was}</span>
-                  <span className="mt-1 block font-display text-3xl text-paper md:text-4xl">{now}</span>
-                </li>
+      {/* Hub */}
+      <section style={{ padding: "96px var(--x-gutter)" }}>
+        <div className="flex flex-wrap items-center gap-12">
+          <div className="min-w-0 flex-[1_1_380px]">
+            <p className={EYEBROW} style={{ color: "var(--x-brand)" }}>One network, nine subagents</p>
+            <h2 className={H2} style={{ fontSize: "clamp(30px, 3.6vw, 44px)", fontFamily: "inherit" }}>Every subagent runs through the same hub.</h2>
+            <p className="mt-4 text-[17px] leading-relaxed" style={{ color: "var(--x-muted)" }}>
+              Schedule all nine subagents to work at the same time while you watch your revenue grow.
+            </p>
+            <p className="mt-3 text-[17px] leading-relaxed" style={{ color: "var(--x-muted)" }}>
+              You approve every job as the administrator before any subagent starts work.
+            </p>
+            <div className="mt-6 flex flex-wrap gap-2">
+              {["find", "win", "build", "keep"].map((st) => (
+                <span key={st} data-stage={st} className="x-chip" style={{ fontSize: 13, padding: "6px 12px" }}>{st[0].toUpperCase() + st.slice(1)}</span>
               ))}
-            </ul>
-          </Reveal>
-        </div>
-      </Section>
-
-      {/* Roles: expanding columns */}
-      <Section>
-        <Eyebrow>Who it serves</Eyebrow>
-        <h2 className="max-w-3xl text-6xl text-paper md:text-7xl">
-          Every side <em>of the deal.</em>
-        </h2>
-        <div className="mt-10 flex flex-col gap-3 lg:h-[24rem] lg:flex-row">
-          {roles.map((r, i) => {
-            const active = role === r.key;
-            return (
-              <button
-                key={r.key}
-                type="button"
-                onMouseEnter={() => setRole(r.key)}
-                onFocus={() => setRole(r.key)}
-                onClick={() => setRole(r.key)}
-                aria-pressed={active}
-                className={`slab relative flex flex-col justify-between overflow-hidden p-7 text-left transition-[flex-grow,background-color] duration-700 ease-[cubic-bezier(0.2,0.7,0.2,1)] ${
-                  active ? "bg-ink-3 lg:grow-[3]" : "lg:grow"
-                } lg:basis-0`}
-              >
-                <span className="mono-label text-steel">{String(i + 1).padStart(2, "0")}</span>
-                <span>
-                  <span className={`block font-display text-3xl text-paper transition-all duration-500 md:text-4xl ${active ? "" : "lg:[writing-mode:vertical-rl] lg:rotate-180"}`}>
-                    {r.label}
-                  </span>
-                  <span className={`block overflow-hidden transition-all duration-700 ${active ? "mt-4 max-h-60 opacity-100" : "max-h-0 opacity-0"}`}>
-                    <span className="block font-display text-2xl italic text-cta">{r.line}</span>
-                    <span className="mt-2 block max-w-md text-steel">{r.text}</span>
-                  </span>
-                </span>
-              </button>
-            );
-          })}
-        </div>
-      </Section>
-
-      {/* FAQ */}
-      <Section>
-        <div className="grid gap-14 lg:grid-cols-[0.7fr_1.3fr]">
-          <div>
-            <Eyebrow>Questions</Eyebrow>
-            <h2 className="text-6xl text-paper md:text-7xl">
-              Asked <em>often.</em>
-            </h2>
+            </div>
           </div>
-          <Accordion items={faqs} />
+          <div className="x-card min-w-0 flex-[1.3_1_520px] p-3" style={{ borderRadius: 20 }}>
+            <HubDiagram />
+          </div>
         </div>
-      </Section>
+      </section>
 
-      <CTASection
-        title="Let's build what's next."
-        subtitle="Create your company profile and see the projects that fit your trade, territory, and size."
-      />
-    </>
+      {/* Subagents */}
+      <section id="subagents" className="scroll-mt-24 border-y" style={{ background: "var(--x-subtle)", borderColor: "var(--x-border)" }}>
+        <div style={{ padding: "96px var(--x-gutter)" }}>
+          <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <p className={EYEBROW} style={{ color: "var(--x-brand)" }}>Subagents</p>
+              <h2 className={H2} style={{ fontSize: "clamp(30px, 3.6vw, 44px)", fontFamily: "inherit" }}>A clear place for every part of the job.</h2>
+            </div>
+            <p className="m-0 max-w-[420px] text-base leading-relaxed" style={{ color: "var(--x-muted)" }}>
+              Same card, same layout, same account. Moving between subagents never feels like leaving.
+            </p>
+          </div>
+          <ul className="grid gap-4" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))" }}>
+            {subagents.map((s) => (
+              <li key={s.key} data-stage={s.stage} className="flex">
+                <SubagentLink s={s} className="x-card flex min-h-[220px] w-full flex-col gap-3 p-6" style={{ color: "var(--x-text)" }}>
+                  <span className="flex items-center justify-between">
+                    <span className="x-chip">● {s.stage.toUpperCase()}</span>
+                    <span className="x-mono text-xs" style={{ color: "var(--x-muted)" }}>{s.code}</span>
+                  </span>
+                  <span className="mt-1 text-[22px] font-bold tracking-tight">{s.name}</span>
+                  <span className="flex-1 text-[15px] leading-relaxed" style={{ color: "var(--x-muted)" }}>{s.line}</span>
+                  <span className="flex items-center gap-1.5 text-[15px] font-semibold" style={{ color: "var(--x-brand)" }}>
+                    Open {s.name}
+                    <svg className="x-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" /></svg>
+                  </span>
+                </SubagentLink>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* How a job moves */}
+      <section id="how" style={{ padding: "96px var(--x-gutter)" }}>
+        <p className={EYEBROW} style={{ color: "var(--x-brand)" }}>How a job moves</p>
+        <h2 className={`${H2} mb-10 max-w-[760px]`} style={{ fontSize: "clamp(30px, 3.6vw, 44px)", fontFamily: "inherit" }}>From first lead to repeat customer in four steps.</h2>
+        <JobSteps reduced={reduced} />
+      </section>
+
+      {/* CTA */}
+      <section style={{ padding: "0 var(--x-gutter) 96px" }}>
+        <div className="x-grid-dark flex flex-wrap items-center justify-between gap-8 rounded-3xl px-10 py-16 text-white" style={{ backgroundColor: "var(--x-brand)" }}>
+          <div className="max-w-[680px]">
+            <div className="mb-4 flex items-center gap-3"><StratagemMark size={36} /></div>
+            <h2 className={H2} style={{ fontSize: "clamp(30px, 3.6vw, 44px)", color: "#fff", fontFamily: "inherit" }}>Bring your next job. We&apos;ll run the pipeline.</h2>
+            <p className="mt-4 text-[17px] leading-relaxed" style={{ color: "#d6ebe1" }}>
+              Create a free company profile, pick your trades and subagents, and work every job from one account.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <Link to="/register" className="x-btn" style={{ background: "#fff", color: "var(--x-brand-hover)" }}>Join free</Link>
+            <Link to="/contact" className="x-btn" style={{ border: "1px solid #ffffff66", color: "#fff" }}>Talk to us</Link>
+          </div>
+        </div>
+      </section>
+    </div>
   );
 }

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
-import Navbar from "./components/Navbar";
+import SubagentHeader from "./components/SubagentHeader";
 import Footer from "./components/Footer";
 import BackToTop from "./components/BackToTop";
 import CookieBanner from "./components/CookieBanner";
@@ -97,8 +97,8 @@ function MarketingLayout({ children }) {
     <div className="relative isolate flex min-h-screen flex-col">
       <Atmosphere />
       <SkipLink />
-      <Navbar onOpenPalette={openPalette} />
-      <main id="main" className="flex-1 pt-20">
+      <SubagentHeader onOpenPalette={openPalette} />
+      <main id="main" className="flex-1">
         {children}
       </main>
       <Footer />
