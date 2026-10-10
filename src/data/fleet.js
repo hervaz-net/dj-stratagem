@@ -3,7 +3,8 @@
 // Everything a booking partner or customer verifies lives here, so the page
 // never states a credential, vehicle, or policy that is not on file. Fill a
 // field in only when the document exists; an empty field renders "Pending".
-// See PROOF.md: no invented permits, policies, vehicles, or reviews.
+// See PROOF.md: no invented permits, policies, vehicles, or reviews. Owned
+// vehicles go in `owned`; models we only arrange go in `arranged`, labeled.
 
 export const operator = {
   legalName: "D&J Stratagem, Inc.",
@@ -54,64 +55,175 @@ const issued = [
 ];
 
 
-// Vehicle classes are definitions of service, not a claim about units owned.
-// Add specific vehicles to `vehicles` only once each is registered, inspected,
-// and insured, with real photos you own.
+// Vehicle classes: what a customer books. The image is a real photo of a
+// vehicle in that class (our own where we have one, licensed otherwise).
 export const vehicleClasses = [
   {
-    key: "sedan",
-    image: "/media/fleet/sedan.94c40405.webp",
-    name: "Executive sedan",
-    passengers: 3,
-    bags: 3,
-    shape: "sedan",
-    bestFor: "Airport runs and one-to-one executive travel",
-    features: ["Leather seating", "Phone charging", "Bottled water", "Rear climate control"],
-  },
-  {
     key: "suv",
-    image: "/media/fleet/suv.e4c330a4.webp",
-    name: "Premium SUV",
+    image: "/media/fleet/ours/cullinan-1.webp",
+    name: "Ultra-luxury SUV",
     passengers: 6,
     bags: 6,
-    shape: "suv",
-    bestFor: "Small teams, families, and extra luggage",
-    features: ["Three-row seating", "Phone charging", "Bottled water", "All-weather capable"],
+    bestFor: "Executives, families, and arrivals that should be noticed",
+    features: ["Rolls-Royce, Maybach, Bentley, Escalade ESV", "Leather or semi-aniline seating", "Phone charging and bottled water", "Rear climate control"],
   },
   {
-    key: "van",
-    image: "/media/fleet/van.614768a5.webp",
-    name: "Executive van",
-    passengers: 7,
-    bags: 7,
-    shape: "van",
-    bestFor: "Families, small groups, and airport runs with luggage",
-    features: ["Captain's chairs", "Sliding doors both sides", "Phone charging", "Rear climate control"],
+    key: "sedan",
+    image: "/media/fleet/vehicles/rr-phantom.webp",
+    name: "Luxury sedan",
+    passengers: 3,
+    bags: 3,
+    bestFor: "Airport runs and one-to-one executive travel",
+    features: ["Phantom, S-Class, Maybach, Flying Spur", "Rear executive seating", "Phone charging and bottled water", "Quiet cabin for calls"],
+  },
+  {
+    key: "sports",
+    image: "/media/fleet/vehicles/huracan.webp",
+    name: "Sports car",
+    passengers: 1,
+    bags: 1,
+    bestFor: "Self-drive weekends, shoots, and special occasions",
+    features: ["Lamborghini, Ferrari, McLaren, Porsche", "Self-drive with a 24-hour minimum", "Delivered or collected in Los Angeles", "Damage deposit set on the quote"],
   },
   {
     key: "sprinter",
-    image: "/media/fleet/sprinter.32676178.webp",
+    image: "/media/fleet/vehicles/sprinter-jet.webp",
     name: "Executive Sprinter",
-    passengers: 12,
-    bags: 12,
-    shape: "van",
+    passengers: 14,
+    bags: 14,
     bestFor: "Site tours, roadshows, and team transfers",
-    features: ["Stand-up cabin", "Forward-facing seats", "Wi-Fi", "Rear luggage bay"],
+    features: ["Stand-up cabin", "Captain's chairs or forward-facing seats", "Wi-Fi on request", "Rear luggage bay"],
   },
   {
-    key: "minibus",
-    image: "/media/fleet/minibus.e7e409c7.webp",
-    name: "Minibus",
-    passengers: 28,
-    bags: 20,
-    shape: "minibus",
-    bestFor: "Crew shuttles, weddings, and event loops",
-    features: ["Wheelchair lift available", "PA system", "Overhead racks", "Climate control"],
+    key: "coach",
+    image: "/media/fleet/vehicles/mci-j4500.webp",
+    name: "Motorcoach",
+    passengers: 56,
+    bags: 56,
+    bestFor: "Conferences, crew moves, weddings, and tours",
+    features: ["MCI, Prevost, Van Hool, Setra", "Under-floor luggage bays", "Restroom and PA system", "Wheelchair lift on request"],
   },
 ];
 
-// Specific vehicles: { classKey, year, make, model, seats, photo }. Empty until real.
-const owned = [];
+// Our own vehicles, listed on RentX and in service. Photos are our own.
+// Specs and features are copied from the live RentX listing; keep them in sync.
+const owned = [
+  {
+    key: "cullinan", classKey: "suv", year: 2019, make: "Rolls-Royce", model: "Cullinan", seats: 5,
+    minimumHours: 24, base: "Downtown Los Angeles",
+    photos: ["/media/fleet/ours/cullinan-1.webp", "/media/fleet/ours/cullinan-2.webp", "/media/fleet/ours/cullinan-3.webp"],
+    features: ["Adaptive cruise control", "All-wheel drive", "Backup camera", "Brake assist", "Lane departure warning", "Bluetooth", "GPS", "Sunroof"],
+  },
+  {
+    key: "escalade-esv", classKey: "suv", year: 2026, make: "Cadillac", model: "Escalade ESV", seats: 7,
+    minimumHours: 24, base: "Downtown Los Angeles",
+    photos: ["/media/fleet/ours/escalade-1.webp", "/media/fleet/ours/escalade-2.webp", "/media/fleet/ours/escalade-3.webp"],
+    features: ["Adaptive cruise control", "All-wheel drive", "Backup camera", "Blind spot warning", "Lane keeping assist", "Android Auto and Apple CarPlay", "Heated seats", "Sunroof"],
+  },
+  {
+    key: "maybach-gls", classKey: "suv", year: 2025, make: "Mercedes-Maybach", model: "GLS 600", seats: 4,
+    minimumHours: 24, base: "Downtown Los Angeles",
+    photos: ["/media/fleet/ours/maybach-1.webp", "/media/fleet/ours/maybach-2.webp", "/media/fleet/ours/maybach-3.webp"],
+    features: ["Adaptive cruise control", "All-wheel drive", "Blind spot warning", "Lane keeping assist", "Apple CarPlay", "USB charging", "Heated seats", "Sunroof"],
+  },
+];
+
+// Vehicles we arrange through partner operators, subject to availability.
+// These are models we can book, not units we own: the page labels them so.
+// Photos are freely licensed from Wikimedia Commons; credit is required and
+// rendered with each photo. passengers = riders besides the driver.
+export const arranged = [
+  { key: "rr-cullinan", seats: 5, name: "Rolls-Royce Cullinan", classKey: "suv", passengers: 4, bags: 4, service: "both", note: "The benchmark ultra-luxury SUV, rear-hinged coach doors", image: "/media/fleet/vehicles/rr-cullinan.webp",
+    credit: { author: "Jengtingchen", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:Rolls-Royce_Cullinan_001.jpg" } },
+  { key: "bentley-bentayga", seats: 5, name: "Bentley Bentayga EWB", classKey: "suv", passengers: 4, bags: 4, service: "both", note: "Long wheelbase with reclining rear airline seats", image: "/media/fleet/vehicles/bentley-bentayga.webp",
+    credit: { author: "Alexander-93", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:Bentley_Bentayga_(FL)_Azure_1X7A7439.jpg" } },
+  { key: "lamborghini-urus", seats: 5, name: "Lamborghini Urus", classKey: "suv", passengers: 4, bags: 4, service: "self", note: "Super-SUV performance with room for four", image: "/media/fleet/vehicles/lamborghini-urus.webp",
+    credit: { author: "Alexander-93", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:Lamborghini_Urus_S_1X7A6796.jpg" } },
+  { key: "mercedes-g63", seats: 5, name: "Mercedes-AMG G 63", classKey: "suv", passengers: 4, bags: 4, service: "both", note: "Hand-built V8 G-Class, an icon in any arrival", image: "/media/fleet/vehicles/mercedes-g63.webp",
+    credit: { author: "Chanokchon", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:2019_Mercedes-AMG_G_63.jpg" } },
+  { key: "range-rover", seats: 5, name: "Range Rover SV", classKey: "suv", passengers: 4, bags: 4, service: "both", note: "Long-wheelbase flagship with executive rear seating", image: "/media/fleet/vehicles/range-rover.webp",
+    credit: { author: "Dinkun Chen", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:LAND_ROVER_RANGE_ROVER_(L460)_China.jpg" } },
+  { key: "aston-dbx", seats: 5, name: "Aston Martin DBX707", classKey: "suv", passengers: 4, bags: 4, service: "self", note: "The most powerful luxury SUV Aston Martin builds", image: "/media/fleet/vehicles/aston-dbx.webp",
+    credit: { author: "Alexander Migl", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:Aston_Martin_DBX_DSC_7244.jpg" } },
+  { key: "ferrari-purosangue", seats: 4, name: "Ferrari Purosangue", classKey: "suv", passengers: 4, bags: 4, service: "self", note: "Ferrari's four-door, four-seat V12", image: "/media/fleet/vehicles/ferrari-purosangue.webp",
+    credit: { author: "Alexander Migl", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:Ferrari_Purosangue_DSC_7008.jpg" } },
+  { key: "escalade-v", seats: 7, name: "Cadillac Escalade", classKey: "suv", passengers: 6, bags: 4, service: "both", note: "Three rows, captain's chairs, the full-size standard", image: "/media/fleet/vehicles/escalade-v.webp",
+    credit: { author: "Dinkun Chen", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:CADILLAC_ESCALADE_China_(1).jpg" } },
+  { key: "navigator", seats: 7, name: "Lincoln Navigator L", classKey: "suv", passengers: 6, bags: 4, service: "both", note: "Extended wheelbase, extra cargo behind the third row", image: "/media/fleet/vehicles/navigator.webp",
+    credit: { author: "Kevauto", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:2018_Lincoln_Navigator_front_9.22.18.jpg" } },
+  { key: "bmw-xm", seats: 5, name: "BMW XM", classKey: "suv", passengers: 4, bags: 4, service: "self", note: "BMW M's plug-in hybrid flagship", image: "/media/fleet/vehicles/bmw-xm.webp",
+    credit: { author: "Alexander-93", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:BMW_XM_(G09)_IMG_7778.jpg" } },
+  { key: "lexus-lx", seats: 7, name: "Lexus LX 600", classKey: "suv", passengers: 6, bags: 4, service: "both", note: "Body-on-frame comfort with three-row seating", image: "/media/fleet/vehicles/lexus-lx.webp",
+    credit: { author: "Damian B Oh", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:Lexus_LX_600_VJA310_Atomic_Silver_(2).jpg" } },
+  { key: "yukon-denali", seats: 7, name: "GMC Yukon Denali", classKey: "suv", passengers: 6, bags: 4, service: "both", note: "Three-row full-size SUV for families and teams", image: "/media/fleet/vehicles/yukon-denali.webp",
+    credit: { author: "Calreyn88", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:2021_GMC_Yukon_Denali.jpg" } },
+  { key: "rr-phantom", seats: 5, name: "Rolls-Royce Phantom", classKey: "sedan", passengers: 3, bags: 3, service: "chauffeured", note: "The flagship limousine for the most important arrivals", image: "/media/fleet/vehicles/rr-phantom.webp",
+    credit: { author: "Alexander-93", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:Rolls-Royce_Phantom_VIII_Series_I_IMG_9101.jpg" } },
+  { key: "rr-ghost", seats: 5, name: "Rolls-Royce Ghost", classKey: "sedan", passengers: 3, bags: 3, service: "both", note: "Quiet, understated Rolls-Royce for daily executive travel", image: "/media/fleet/vehicles/rr-ghost.webp",
+    credit: { author: "Rutger van der Maar", license: "CC BY 2.0", licenseUrl: "https://creativecommons.org/licenses/by/2.0", source: "https://commons.wikimedia.org/wiki/File:2009_Rolls-Royce_Ghost.jpg" } },
+  { key: "flying-spur", seats: 5, name: "Bentley Flying Spur", classKey: "sedan", passengers: 3, bags: 3, service: "both", note: "Grand touring sedan with a rear executive cabin", image: "/media/fleet/vehicles/flying-spur.webp",
+    credit: { author: "Alexander Migl", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:Bentley_Flying_Spur_(2019)_IMG_2635.jpg" } },
+  { key: "maybach-s680", seats: 4, name: "Mercedes-Maybach S 680", classKey: "sedan", passengers: 3, bags: 3, service: "chauffeured", note: "V12 Maybach with rear reclining executive seats", image: "/media/fleet/vehicles/maybach-s680.webp",
+    credit: { author: "Dinkun Chen", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:MERCEDES_MAYBACH_S-CLASS_(W223)_China_(12).jpg" } },
+  { key: "s580", seats: 5, name: "Mercedes-Benz S 580", classKey: "sedan", passengers: 3, bags: 3, service: "both", note: "The executive sedan most airports and boardrooms expect", image: "/media/fleet/vehicles/s580.webp",
+    credit: { author: "Alexander Migl", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:Mercedes-Benz_W223_IAA_2021_1X7A0206.jpg" } },
+  { key: "bmw-i7", seats: 5, name: "BMW i7", classKey: "sedan", passengers: 3, bags: 3, service: "both", note: "All-electric limousine with a rear theater screen option", image: "/media/fleet/vehicles/bmw-i7.webp",
+    credit: { author: "Original photo by User:Alexander-93 retouched by NearEMPTiness", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:BMW_7-Series_(G70)_750e_1X7A1895_(Hintergrund_retuschiert).jpg" } },
+  { key: "audi-a8", seats: 5, name: "Audi A8 L", classKey: "sedan", passengers: 3, bags: 3, service: "both", note: "Long-wheelbase executive sedan, quiet and composed", image: "/media/fleet/vehicles/audi-a8.webp",
+    credit: { author: "Alexander Migl", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:Audi_A8_D5_(2021)_1X7A6342.jpg" } },
+  { key: "panamera", seats: 4, name: "Porsche Panamera", classKey: "sedan", passengers: 3, bags: 3, service: "self", note: "Four-door Porsche with sports-car handling", image: "/media/fleet/vehicles/panamera.webp",
+    credit: { author: "Pangalau", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:Porsche_971_Panamera_(Singapore).jpg" } },
+  { key: "lucid-air", seats: 5, name: "Lucid Air", classKey: "sedan", passengers: 3, bags: 3, service: "both", note: "Long-range electric luxury sedan", image: "/media/fleet/vehicles/lucid-air.webp",
+    credit: { author: "Alexander-93", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:Lucid_Air_DSC_6026.jpg" } },
+  { key: "genesis-g90", seats: 5, name: "Genesis G90", classKey: "sedan", passengers: 3, bags: 3, service: "both", note: "Flagship comfort with a calm, spacious rear cabin", image: "/media/fleet/vehicles/genesis-g90.webp",
+    credit: { author: "Benespit", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:00_Genesis_G90_1.jpg" } },
+  { key: "huracan", seats: 2, name: "Lamborghini Hurac\u00e1n EVO", classKey: "sports", passengers: 1, bags: 1, service: "self", note: "Naturally aspirated V10 supercar", image: "/media/fleet/vehicles/huracan.webp",
+    credit: { author: "Matti Blume", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:Lamborghini_Huracan_Evo,_GIMS_2019,_Le_Grand-Saconnex_(GIMS1010).jpg" } },
+  { key: "revuelto", seats: 2, name: "Lamborghini Revuelto", classKey: "sports", passengers: 1, bags: 1, service: "self", note: "V12 plug-in hybrid flagship supercar", image: "/media/fleet/vehicles/revuelto.webp",
+    credit: { author: "Alexander-93", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:Lamborghini_Revuelto_IMG_0562.jpg" } },
+  { key: "ferrari-296", seats: 2, name: "Ferrari 296 GTB", classKey: "sports", passengers: 1, bags: 1, service: "self", note: "Mid-engine V6 hybrid berlinetta", image: "/media/fleet/vehicles/ferrari-296.webp",
+    credit: { author: "Alexander Migl", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:Ferrari_296_GTB_1X7A6377.jpg" } },
+  { key: "ferrari-roma", seats: 4, name: "Ferrari Roma", classKey: "sports", passengers: 1, bags: 1, service: "self", note: "Front-engine V8 grand tourer, 2+2 seating", image: "/media/fleet/vehicles/ferrari-roma.webp",
+    credit: { author: "Alexander-93", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:Ferrari_Roma_IMG_9620.jpg" } },
+  { key: "mclaren-750s", seats: 2, name: "McLaren 750S", classKey: "sports", passengers: 1, bags: 1, service: "self", note: "Lightweight V8 supercar with dihedral doors", image: "/media/fleet/vehicles/mclaren-750s.webp",
+    credit: { author: "Calreyn88", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:2024_McLaren_750S_5.jpg" } },
+  { key: "911-turbo-s", seats: 4, name: "Porsche 911 Turbo S", classKey: "sports", passengers: 1, bags: 1, service: "self", note: "All-weather, all-wheel-drive everyday supercar", image: "/media/fleet/vehicles/911-turbo-s.webp",
+    credit: { author: "Alexander Migl", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:Porsche_992_Turbo_S_1X7A0411.jpg" } },
+  { key: "db12", seats: 4, name: "Aston Martin DB12", classKey: "sports", passengers: 1, bags: 1, service: "self", note: "Twin-turbo V8 super tourer", image: "/media/fleet/vehicles/db12.webp",
+    credit: { author: "Alexander-93", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:Aston_Martin_DB12_1X7A1921.jpg" } },
+  { key: "continental-gt", seats: 4, name: "Bentley Continental GT", classKey: "sports", passengers: 3, bags: 1, service: "self", note: "Grand tourer built for long, fast drives", image: "/media/fleet/vehicles/continental-gt.webp",
+    credit: { author: "Matti Blume", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:Bentley_Continental_GT_V8_S,_Techno-Classica_2018,_Essen_(IMG_9623).jpg" } },
+  { key: "rr-spectre", seats: 4, name: "Rolls-Royce Spectre", classKey: "sports", passengers: 1, bags: 1, service: "self", note: "The first all-electric Rolls-Royce coupe", image: "/media/fleet/vehicles/rr-spectre.webp",
+    credit: { author: "User3204", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:2023_Rolls-Royce_Spectre.jpg" } },
+  { key: "corvette-z06", seats: 2, name: "Chevrolet Corvette Z06", classKey: "sports", passengers: 1, bags: 1, service: "self", note: "Mid-engine flat-plane V8 track car for the street", image: "/media/fleet/vehicles/corvette-z06.webp",
+    credit: { author: "OWS Photography", license: "CC BY 4.0", licenseUrl: "https://creativecommons.org/licenses/by/4.0", source: "https://commons.wikimedia.org/wiki/File:Chevrolet_Corvette_Z06_(C8)_Miami_Metro_Area,_USA.jpg" } },
+  { key: "sprinter-jet", name: "Mercedes-Benz Sprinter Executive", classKey: "sprinter", passengers: 10, bags: 10, service: "chauffeured", note: "Executive conversion with captain's chairs and a stand-up cabin", image: "/media/fleet/vehicles/sprinter-jet.webp",
+    credit: { author: "Ethan Llamas", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:Mercedes-Benz_Sprinter_VS30_317_CDI_Black_-_front.jpg" } },
+  { key: "sprinter-14", name: "Mercedes-Benz Sprinter 14-passenger", classKey: "sprinter", passengers: 14, bags: 14, service: "chauffeured", note: "Forward-facing seats with a rear luggage bay", image: "/media/fleet/vehicles/sprinter-14.webp",
+    credit: { author: "Damian B Oh", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:Mercedes-Benz_Sprinter_VS30_black_(1).jpg" } },
+  { key: "sprinter-vip", name: "Mercedes-Benz Sprinter VIP Lounge", classKey: "sprinter", passengers: 8, bags: 8, service: "chauffeured", note: "Lounge seating, mood lighting, and a media screen", image: "/media/fleet/vehicles/sprinter-vip.webp",
+    credit: { author: "Damian B Oh", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:Mercedes-Benz_VS30_Sprinter_Tourer_319_CDI_Jet_Black_(1).jpg" } },
+  { key: "transit-15", name: "Ford Transit 15-passenger", classKey: "sprinter", passengers: 14, bags: 14, service: "chauffeured", note: "High-roof passenger van for crew shuttles", image: "/media/fleet/vehicles/transit-15.webp",
+    credit: { author: "Elise240SX", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:2020_Ford_Transit_350_XLT_Passenger_Van_in_Oxford_White,_Front_Right,_05-21-2022.jpg" } },
+  { key: "sprinter-limo", name: "Mercedes-Benz Sprinter minicoach", classKey: "sprinter", passengers: 19, bags: 19, service: "chauffeured", note: "Minicoach body for team transfers and site tours", image: "/media/fleet/vehicles/sprinter-limo.webp",
+    credit: { author: "Djsgmnd", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:EBS_4233.jpg" } },
+  { key: "metris", name: "Mercedes-Benz Metris", classKey: "sprinter", passengers: 7, bags: 7, service: "chauffeured", note: "Compact passenger van for airport runs with luggage", image: "/media/fleet/vehicles/metris.webp",
+    credit: { author: "HJUdall", license: "CC0", licenseUrl: "http://creativecommons.org/publicdomain/zero/1.0/deed.en", source: "https://commons.wikimedia.org/wiki/File:23_Mercedes-Benz_Metris_Passenger.jpg" } },
+  { key: "mci-j4500", name: "MCI J4500", classKey: "coach", passengers: 56, bags: 56, service: "chauffeured", note: "The most common full-size coach on U.S. charters", image: "/media/fleet/vehicles/mci-j4500.webp",
+    credit: { author: "Grendelkhan", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:Google_bus_at_Sunnyvale_campus.jpg" } },
+  { key: "prevost-h345", name: "Prevost H3-45", classKey: "coach", passengers: 56, bags: 56, service: "chauffeured", note: "High-deck touring coach with extra under-floor storage", image: "/media/fleet/vehicles/prevost-h345.webp",
+    credit: { author: "MTATransitFan", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:H3-45_1352.jpg" } },
+  { key: "vanhool-cx45", name: "Van Hool CX45", classKey: "coach", passengers: 56, bags: 56, service: "chauffeured", note: "Smooth-riding charter coach for long-distance groups", image: "/media/fleet/vehicles/vanhool-cx45.webp",
+    credit: { author: "Artsistra", license: "CC0", licenseUrl: "http://creativecommons.org/publicdomain/zero/1.0/deed.en", source: "https://commons.wikimedia.org/wiki/File:Dattco_Van_Hool_CX45.jpg" } },
+  { key: "setra-s517", name: "Setra S 516 HDH", classKey: "coach", passengers: 49, bags: 49, service: "chauffeured", note: "German high-deck coach with premium touring seats", image: "/media/fleet/vehicles/setra-s517.webp",
+    credit: { author: "Travelarz", license: "CC BY-SA 3.0 pl", licenseUrl: "https://creativecommons.org/licenses/by-sa/3.0/pl/deed.en", source: "https://commons.wikimedia.org/wiki/File:Setra_S_516_HDH_IAA_2016_(1)_Travelarz.JPG" } },
+  { key: "prevost-x345", name: "Prevost X3-45", classKey: "coach", passengers: 56, bags: 56, service: "chauffeured", note: "Low-step entry coach for conferences and events", image: "/media/fleet/vehicles/prevost-x345.webp",
+    credit: { author: "Kidfly182", license: "CC BY 4.0", licenseUrl: "https://creativecommons.org/licenses/by/4.0", source: "https://commons.wikimedia.org/wiki/File:MTA_Prevost_X3-45_2717.jpg" } },
+  { key: "mci-d4505", name: "MCI D4505", classKey: "coach", passengers: 56, bags: 56, service: "chauffeured", note: "Proven 45-foot coach for shuttles and charters", image: "/media/fleet/vehicles/mci-d4505.webp",
+    credit: { author: "Robertwu1997", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:AC_Transit_MCI_D45_CRT_LE.jpg" } },
+];
+
+export const serviceLabel = { chauffeured: "Chauffeured", self: "Self-drive", both: "Chauffeured or self-drive" };
 
 export const services = [
   {
@@ -193,9 +305,9 @@ const fixtures =
           insurer: "TEST Insurer, exp. 12/31/2099",
         },
         vehicles: [
-          { classKey: "sedan", year: 2099, make: "TEST", model: "Sedan", seats: 3 },
-          { classKey: "suv", year: 2099, make: "TEST", model: "SUV", seats: 6 },
-          { classKey: "sprinter", year: 2099, make: "TEST", model: "Sprinter", seats: 12 },
+          { key: "t1", classKey: "sedan", year: 2099, make: "TEST", model: "Sedan", seats: 3, photos: [], features: [] },
+          { key: "t2", classKey: "suv", year: 2099, make: "TEST", model: "SUV", seats: 6, photos: [], features: [] },
+          { key: "t3", classKey: "sprinter", year: 2099, make: "TEST", model: "Sprinter", seats: 12, photos: [], features: [] },
         ],
       }
     : null;

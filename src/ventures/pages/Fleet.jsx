@@ -20,6 +20,8 @@ import {
   isTestFixtures,
   vehicleClasses,
   vehicles,
+  arranged,
+  serviceLabel,
   services,
   extras,
   standards,
@@ -29,7 +31,9 @@ import { localDateISO } from "../../lib/dates";
 
 const SERVICE_ICONS = [IconMapPin, IconBriefcase, IconHelmet, IconCalendar, IconClock, IconUsers];
 const STANDARD_ICONS = [IconUsers, IconTruck, IconShield];
-const SHORT = { sedan: "Sedan", suv: "SUV", van: "Van", sprinter: "Sprinter", minibus: "Minibus" };
+const SHORT = { suv: "SUV", sedan: "Sedan", sports: "Sports", sprinter: "Sprinter", coach: "Coach" };
+const CLASS_NAME = Object.fromEntries(vehicleClasses.map((c) => [c.key, c.name]));
+const TOTAL_VEHICLES = vehicles.length + arranged.length;
 
 function Badge({ children, tone = "brand" }) {
   const tones = {
@@ -48,7 +52,7 @@ function ClassPicker() {
     <div className="rounded-3xl border border-line bg-surface p-5 shadow-[var(--panel-shadow)] md:p-6">
       <div className="flex items-center justify-between gap-3">
         <p className="text-sm font-semibold text-fg">Choose a vehicle class</p>
-        <Badge>Up to {v.passengers} passengers</Badge>
+        <Badge>{v.key === "sports" ? "2 to 4 seats" : `Up to ${v.passengers} passengers`}</Badge>
       </div>
       <div
         className="relative mt-4 aspect-[16/10] overflow-hidden rounded-2xl border border-line"
@@ -57,7 +61,7 @@ function ClassPicker() {
         <img
           key={v.key}
           src={v.image}
-          alt={isLicensed && vehicles.length > 0 ? v.name : `${v.name} class illustration, not a vehicle in service`}
+          alt={`${v.name}: example vehicle in this class`}
           className="animate-menu-in absolute inset-0 h-full w-full object-cover"
         />
       </div>
@@ -79,7 +83,7 @@ function ClassPicker() {
       </div>
       <div className="mt-4 flex items-center justify-between gap-3 border-t border-line pt-4 text-sm">
         <span className="text-fg-muted">{v.bestFor}</span>
-        <span className="shrink-0 font-semibold text-fg">{v.bags} bags</span>
+        <span className="shrink-0 font-semibold text-fg">{v.key === "sports" ? "Light luggage" : `${v.bags} bags`}</span>
       </div>
       <p className="mt-3 text-xs text-fg-muted">
         {isLicensed && vehicles.length > 0
@@ -90,7 +94,7 @@ function ClassPicker() {
   );
 }
 
-function QuoteForm() {
+function QuoteForm({ requested = "" }) {
   const { state, invalid, onSubmit } = useInquiry({
     role: "Fleet trip quote",
     topic: "fleet",
@@ -138,10 +142,27 @@ function QuoteForm() {
       <Field label="Drop-off"><input name="dropoff" placeholder="Or “hourly, as directed”" className={fieldClass} /></Field>
       <Field label="Passengers"><input name="passengers" type="number" min="1" className={fieldClass} /></Field>
       <Field label="Vehicle">
-        <select name="vehicle" defaultValue="" className={fieldClass}>
+        <select key={requested} name="vehicle" defaultValue={requested} className={fieldClass}>
           <option value="">Recommend one for me</option>
-          {vehicleClasses.map((v) => (
-            <option key={v.key} value={v.name}>{v.name} (up to {v.passengers})</option>
+          <optgroup label="Vehicle class">
+            {vehicleClasses.map((v) => (
+              <option key={v.key} value={v.name}>{v.name} (up to {v.passengers})</option>
+            ))}
+          </optgroup>
+          {vehicles.length > 0 && (
+            <optgroup label="Our fleet">
+              {vehicles.map((v) => {
+                const label = `${v.year} ${v.make} ${v.model}`;
+                return <option key={v.key} value={label}>{label}</option>;
+              })}
+            </optgroup>
+          )}
+          {vehicleClasses.map((c) => (
+            <optgroup key={c.key} label={`Arranged: ${c.name}`}>
+              {arranged.filter((a) => a.classKey === c.key).map((a) => (
+                <option key={a.key} value={a.name}>{a.name}</option>
+              ))}
+            </optgroup>
           ))}
         </select>
       </Field>
@@ -168,11 +189,132 @@ function QuoteForm() {
   );
 }
 
+function goToQuote() {
+  document.getElementById("quote")?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+/** One of our own vehicles: photo switcher, specs, features. */
+function OwnedVehicle({ v, onRequest }) {
+  const [shot, setShot] = useState(0);
+  const label = `${v.year} ${v.make} ${v.model}`;
+  return (
+    <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-surface shadow-[var(--shadow-card)]">
+      <div className="relative aspect-[4/3] overflow-hidden border-b border-line bg-subtle">
+        <img key={v.photos[shot]} src={v.photos[shot]} alt={`${label}, photo ${shot + 1} of ${v.photos.length}`} loading="lazy" className="animate-menu-in absolute inset-0 h-full w-full object-cover" />
+        <span className="absolute left-3 top-3"><Badge tone="success">In our fleet</Badge></span>
+      </div>
+      {v.photos.length > 1 && (
+        <div className="flex gap-2 px-4 pt-4" role="group" aria-label={`${label} photos`}>
+          {v.photos.map((src, i) => (
+            <button
+              key={src}
+              type="button"
+              onClick={() => setShot(i)}
+              aria-label={`Show photo ${i + 1}`}
+              aria-pressed={i === shot}
+              className={`h-14 w-20 overflow-hidden rounded-lg border-2 transition-colors ${i === shot ? "border-brand" : "border-transparent opacity-70 hover:opacity-100"}`}
+            >
+              <img src={src} alt="" loading="lazy" className="h-full w-full object-cover" />
+            </button>
+          ))}
+        </div>
+      )}
+      <div className="flex flex-1 flex-col p-5">
+        <p className="text-xs font-semibold uppercase tracking-wide text-fg-muted">{CLASS_NAME[v.classKey]}</p>
+        <h4 className="mt-1 text-lg font-semibold text-fg">{label}</h4>
+        <dl className="mt-3 grid grid-cols-3 gap-2 text-sm">
+          <div><dt className="text-fg-muted">Seats</dt><dd className="font-semibold text-fg">{v.seats}</dd></div>
+          <div><dt className="text-fg-muted">Minimum</dt><dd className="font-semibold text-fg">{v.minimumHours} hours</dd></div>
+          <div><dt className="text-fg-muted">Base</dt><dd className="font-semibold text-fg">{v.base}</dd></div>
+        </dl>
+        <ul className="mt-4 flex flex-1 flex-wrap content-start gap-1.5">
+          {v.features.map((f) => (
+            <li key={f} className="rounded-full bg-subtle px-2.5 py-1 text-xs text-fg">{f}</li>
+          ))}
+        </ul>
+        <button
+          type="button"
+          onClick={() => onRequest(label)}
+          className="mt-5 inline-flex h-11 items-center justify-center gap-2 rounded-full bg-brand px-5 text-sm font-semibold text-white transition-colors hover:bg-brand-hover"
+        >
+          Request this vehicle <IconArrowRight width={14} height={14} aria-hidden="true" />
+        </button>
+      </div>
+    </article>
+  );
+}
+
+/** Models we arrange through partners, filterable by class. */
+function ArrangedGrid({ onRequest }) {
+  const [filter, setFilter] = useState("all");
+  const shown = filter === "all" ? arranged : arranged.filter((a) => a.classKey === filter);
+  const tabs = [{ key: "all", label: "All", count: arranged.length }, ...vehicleClasses.map((c) => ({ key: c.key, label: c.name, count: arranged.filter((a) => a.classKey === c.key).length }))];
+  return (
+    <div>
+      <div className="flex flex-wrap gap-2" role="group" aria-label="Filter vehicles by class">
+        {tabs.map((t) => (
+          <button
+            key={t.key}
+            type="button"
+            onClick={() => setFilter(t.key)}
+            aria-pressed={filter === t.key}
+            className={`inline-flex h-11 items-center gap-2 rounded-full border px-4 text-sm font-semibold transition-colors ${
+              filter === t.key ? "border-brand bg-brand text-white" : "border-line bg-surface text-fg-muted hover:text-fg"
+            }`}
+          >
+            {t.label}
+            <span className={`rounded-full px-1.5 text-xs tabular-nums ${filter === t.key ? "bg-white/20" : "bg-subtle"}`}>{t.count}</span>
+          </button>
+        ))}
+      </div>
+      <ul className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        {shown.map((a) => (
+          <li key={a.key} className="flex">
+            <article className="group flex w-full flex-col overflow-hidden rounded-2xl border border-line bg-surface shadow-[var(--shadow-card)] transition-[border-color,box-shadow] hover:border-line-strong hover:shadow-[var(--shadow-pop)]">
+              <figure className="m-0">
+                <div className="relative aspect-[3/2] overflow-hidden bg-subtle">
+                  <img src={a.image} alt={a.name} loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]" />
+                </div>
+                <figcaption className="truncate px-4 pt-2 text-[0.68rem] text-fg-muted">
+                  Photo: <a href={a.credit.source} target="_blank" rel="noopener noreferrer" className="underline-offset-2 hover:underline">{a.credit.author}</a>,{" "}
+                  <a href={a.credit.licenseUrl} target="_blank" rel="noopener noreferrer license" className="underline-offset-2 hover:underline">{a.credit.license}</a>
+                </figcaption>
+              </figure>
+              <div className="flex flex-1 flex-col p-4 pt-2">
+                <div className="flex items-start justify-between gap-2">
+                  <h4 className="text-base font-semibold leading-snug text-fg">{a.name}</h4>
+                </div>
+                <p className="mt-1 flex-1 text-sm leading-relaxed text-fg-muted">{a.note}</p>
+                <p className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-xs font-semibold text-fg">
+                  <span>{a.seats ? `${a.seats} seats` : `Up to ${a.passengers} passengers`}</span>
+                  <span className="text-fg-muted">{serviceLabel[a.service]}</span>
+                </p>
+                <button
+                  type="button"
+                  onClick={() => onRequest(a.name)}
+                  className="mt-4 inline-flex h-10 items-center justify-center gap-1.5 rounded-full border border-line px-4 text-sm font-semibold text-fg transition-colors hover:border-brand hover:text-brand"
+                >
+                  Request this vehicle <IconArrowRight width={13} height={13} aria-hidden="true" />
+                </button>
+              </div>
+            </article>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 export default function Fleet({ brand }) {
   useSeo(brand, {
-    title: "Chauffeured sedans, SUVs, vans, and Sprinters",
-    description: `Chauffeured sedans, SUVs, vans, Sprinters, and minibuses across ${operator.base} and Southern California. Itemized quotes, no surprise charges.`,
+    title: "Ultra-luxury SUVs, sedans, sports cars, Sprinters, and coaches",
+    description: `Rolls-Royce, Maybach, Escalade ESV, Lamborghini, Sprinters, and motorcoaches across ${operator.base} and Southern California. Chauffeured or self-drive, itemized quotes, no surprise charges.`,
   });
+  const [requested, setRequested] = useState("");
+  const request = (name) => {
+    setRequested(name);
+    goToQuote();
+  };
 
   return (
     <>
@@ -194,7 +336,7 @@ export default function Fleet({ brand }) {
               Arrive on time. Every time.
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-fg-muted">
-              Executives, crews, wedding parties, and conference groups across Southern California.
+              Ultra-luxury SUVs, sedans, sports cars, Sprinters, and coaches for executives, crews, wedding parties, and conference groups across Southern California.
               {isLicensed && vehicles.length > 0
                 ? " Licensed drivers, inspected vehicles, and a price that is set before you ride."
                 : " You book a vehicle class. Each unit is listed here once it is registered, inspected, and insured. The price is set before you ride."}
@@ -215,7 +357,7 @@ export default function Fleet({ brand }) {
                 </span>
                 <span>
                   <span className="block font-semibold text-fg">See the vehicles</span>
-                  <span className="block text-sm text-fg-muted">Sedan to 28-seat minibus</span>
+                  <span className="block text-sm text-fg-muted">{TOTAL_VEHICLES} vehicles, sports car to 56-seat coach</span>
                 </span>
               </a>
             </div>
@@ -266,10 +408,10 @@ export default function Fleet({ brand }) {
           {vehicleClasses.map((v, i) => (
             <Reveal key={v.key} delay={(i % 3) * 80} className="h-full">
               <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-surface shadow-[var(--shadow-card)] transition-[border-color,box-shadow] hover:border-line-strong hover:shadow-[var(--shadow-pop)]">
-                <figure className="relative aspect-[16/10] overflow-hidden border-b border-line bg-[#cfe3f1]">
+                <figure className="relative aspect-[16/10] overflow-hidden border-b border-line bg-subtle">
                   <img
                     src={v.image}
-                    alt={isLicensed && vehicles.length > 0 ? v.name : `${v.name} class illustration, not a vehicle in service`}
+                    alt={`${v.name}: example vehicle in this class`}
                     loading="lazy"
                     className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
                   />
@@ -277,7 +419,7 @@ export default function Fleet({ brand }) {
                 <div className="flex flex-1 flex-col p-6">
                   <div className="flex items-start justify-between gap-3">
                     <h3 className="text-lg font-semibold text-fg">{v.name}</h3>
-                    <Badge>Up to {v.passengers}</Badge>
+                    <Badge>{v.key === "sports" ? "2 to 4 seats" : `Up to ${v.passengers}`}</Badge>
                   </div>
                   <p className="mt-1 text-sm text-fg-muted">{v.bestFor}</p>
                   <ul className="mt-5 flex-1 space-y-2.5">
@@ -289,7 +431,9 @@ export default function Fleet({ brand }) {
                     ))}
                   </ul>
                   <p className="mt-5 border-t border-line pt-4 text-sm text-fg-muted">
-                    {v.passengers} passengers &middot; {v.bags} bags
+                    {v.key === "sports"
+                      ? "Driver plus 1 to 3 passengers · light luggage"
+                      : `${v.passengers} passengers · ${v.bags} bags`}
                   </p>
                 </div>
               </article>
@@ -298,22 +442,31 @@ export default function Fleet({ brand }) {
         </div>
 
         {vehicles.length > 0 && (
-          <div className="mt-14">
-            <h3 className="text-xl font-semibold text-fg">In service</h3>
-            <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-3">
-              {vehicles.map((v) => {
-                const cls = vehicleClasses.find((k) => k.key === v.classKey);
-                return (
-                  <article key={`${v.classKey}-${v.make}-${v.model}`} className="rounded-2xl border border-line bg-surface p-5">
-                    {v.photo && <img src={v.photo} alt={`${v.year} ${v.make} ${v.model}`} className="mb-4 aspect-[16/10] w-full rounded-xl object-cover" />}
-                    <p className="font-semibold text-fg">{v.year} {v.make} {v.model}</p>
-                    <p className="mt-1 text-sm text-fg-muted">{cls?.name} &middot; {v.seats} passengers</p>
-                  </article>
-                );
-              })}
+          <div className="mt-16">
+            <div className="flex flex-wrap items-end justify-between gap-3">
+              <div>
+                <h3 className="text-2xl font-semibold tracking-tight text-fg">In our fleet</h3>
+                <p className="mt-1 text-fg-muted">Our own vehicles, based in {vehicles[0].base}.</p>
+              </div>
+            </div>
+            <div className="mt-6 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+              {vehicles.map((v) => (
+                <OwnedVehicle key={v.key} v={v} onRequest={request} />
+              ))}
             </div>
           </div>
         )}
+
+        <div className="mt-16">
+          <h3 className="text-2xl font-semibold tracking-tight text-fg">Vehicles we arrange</h3>
+          <p className="mt-1 max-w-3xl text-fg-muted">
+            {arranged.length} more models we book through partner operators, subject to availability. These are not units we
+            own; your quote confirms the exact vehicle, its year, and its operator before you pay anything.
+          </p>
+          <div className="mt-6">
+            <ArrangedGrid onRequest={request} />
+          </div>
+        </div>
       </Section>
 
       {/* Pricing */}
@@ -444,7 +597,7 @@ export default function Fleet({ brand }) {
               <p className="text-fg-muted">{operator.base}</p>
             </div>
           </div>
-          <QuoteForm />
+          <QuoteForm requested={requested} />
         </div>
       </Section>
     </>
