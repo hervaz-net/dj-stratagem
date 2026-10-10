@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import Section from "../components/Section";
 import PageHero from "../components/PageHero";
 import Button from "../components/Button";
