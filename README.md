@@ -208,6 +208,44 @@ are the real boundary.
 Screens: **Overview**, **Suppliers**, **Bids**, **Orders**, **Analytics**,
 **Alerts**, **Settings**, plus **Accounts** for admins.
 
+### Jobs and subagents
+
+Members submit a job at `/dashboard/jobs` and pick which of the nine
+subagents (Projects, Exchange, Platform, Solutions, Supply, Capital,
+Workforce, Fleet, Studio) should work it. Every job lands in
+`pending_approval`; **nothing runs until an admin approves it** at
+`/dashboard/approvals`. Once approved, the owner presses **Start**, which
+sets every assigned subagent running at the same time. Each task can be
+marked done, blocked, resumed or skipped; when none are left open the job
+completes on its own. Every change is written to the job's activity log.
+
+| Endpoint | Method | Purpose |
+| --- | --- | --- |
+| `/api/jobs.php` | GET | Own jobs + counts (`scope=all` for admins, `status=` filter) |
+| `/api/jobs.php?id=` | GET | One job with tasks and activity |
+| `/api/jobs.php` | POST `{action}` | `create`, `approve`/`reject` (admin; reject needs `note`), `start`, `task`, `cancel` |
+| `/api/subagents.php` | GET | The nine subagents with live queued/running/blocked/done counts |
+
+Tables `jobs`, `job_tasks`, `job_events` are in `schema.sql` and are also
+created automatically on first use, so an existing database needs no manual
+migration. Members only ever see their own jobs (someone else's id returns
+404); admins see everything.
+
+### Testing against a real database
+
+```bash
+# PHP + MySQL running, public/api/config.php pointing at a dev database,
+# an admin account created (see "Creating the first admin").
+npm run build && php -S 127.0.0.1:8080 -t dist <router.php>
+python3 scripts/smoke-api.py http://127.0.0.1:8080 --admin-email you@example.com --admin-password '…'
+python3 scripts/e2e-jobs.py  http://127.0.0.1:8080 you@example.com '…'   # needs Python Playwright
+```
+
+`smoke-api.py` calls every endpoint signed out, as a member and as an admin.
+`e2e-jobs.py` drives a real browser through register → account approval →
+new job → job approval → start → all nine tasks done. Both create rows, so
+never point them at production.
+
 ### Dashboard APIs
 
 Every dashboard screen talks to same-origin `/api/*.php` (session cookie

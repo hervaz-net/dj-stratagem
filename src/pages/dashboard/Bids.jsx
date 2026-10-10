@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import DashboardLayout from "../../components/dashboard/DashboardLayout";
 import { CompactDashboard } from "../../components/CompactDashboard";
 import GlassCard from "../../components/dashboard/GlassCard";

@@ -40,6 +40,8 @@ import Orders from "./pages/dashboard/Orders";
 import Analytics from "./pages/dashboard/Analytics";
 import Alerts from "./pages/dashboard/Alerts";
 import Settings from "./pages/dashboard/Settings";
+import Jobs from "./pages/dashboard/Jobs";
+import Approvals from "./pages/dashboard/Approvals";
 import { AuthProvider } from "./auth/AuthContext";
 import RequireAuth from "./auth/RequireAuth";
 import { ToastProvider } from "./contexts/ToastContext";
@@ -143,6 +145,8 @@ function App() {
                   <Routes>
                     <Route index element={<Navigate to="overview" replace />} />
                     <Route path="overview" element={<Overview />} />
+                    <Route path="jobs" element={<Jobs />} />
+                    <Route path="approvals" element={<Approvals />} />
                     <Route path="suppliers" element={<SuppliersDashboard />} />
                     <Route path="bids" element={<Bids />} />
                     <Route path="bids-compact" element={<BidsCompact />} />
