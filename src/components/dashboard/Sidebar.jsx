@@ -8,6 +8,9 @@ const items = [
   { to: "/dashboard/overview", label: "Overview", status: "active", ready: true, icon: (
     <><rect x="3" y="3" width="7" height="9" rx="1.5" /><rect x="14" y="3" width="7" height="5" rx="1.5" /><rect x="14" y="12" width="7" height="9" rx="1.5" /><rect x="3" y="16" width="7" height="5" rx="1.5" /></>
   ) },
+  { to: "/dashboard/jobs", label: "Jobs", status: "active", ready: true, icon: (
+    <><circle cx="6" cy="6" r="2.5" /><circle cx="18" cy="6" r="2.5" /><circle cx="12" cy="18" r="2.5" /><path d="M8 7.5l3 8.5M16 7.5l-3 8.5M8.5 6h7" /></>
+  ) },
   { to: "/dashboard/suppliers", label: "Suppliers", status: "active", ready: true, icon: (
     <><path d="M3 21V8l6-4 6 4v13" /><path d="M15 21V11l6 3v7" /><path d="M9 21v-5h3v5" /></>
   ) },
@@ -22,6 +25,9 @@ const items = [
   ) },
   { to: "/dashboard/alerts", label: "Alerts", status: "at-risk", ready: true, icon: (
     <><path d="M18 8a6 6 0 1 0-12 0c0 7-3 8-3 8h18s-3-1-3-8" /><path d="M13.7 21a2 2 0 0 1-3.4 0" /></>
+  ) },
+  { to: "/dashboard/approvals", label: "Approvals", status: "watch", ready: true, adminOnly: true, icon: (
+    <><path d="M9 12l2 2 4-4" /><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z" /></>
   ) },
   { to: "/dashboard/admin", label: "Accounts", status: "active", ready: true, adminOnly: true, icon: (
     <><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" /></>
