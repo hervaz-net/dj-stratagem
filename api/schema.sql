@@ -41,3 +41,59 @@ CREATE TABLE IF NOT EXISTS login_attempts (
 -- Dashboard ops tables (suppliers, bids, orders, alerts, settings) are created
 -- and seeded automatically on first authenticated request via ops.php. You do
 -- not need to import them here. Re-importing this file is still safe for auth.
+
+-- Jobs and the subagent queue (/api/jobs.php, /api/subagents.php).
+-- jobs.php also creates these on first use, so importing them here is
+-- optional — but doing it up front means phpMyAdmin shows them right away.
+CREATE TABLE IF NOT EXISTS jobs (
+  id             INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  ref            VARCHAR(16)  NOT NULL,
+  user_id        INT UNSIGNED NOT NULL,
+  title          VARCHAR(160) NOT NULL,
+  location       VARCHAR(160) NOT NULL DEFAULT '',
+  trade          VARCHAR(80)  NOT NULL DEFAULT '',
+  value          DECIMAL(14,2)    NULL,
+  notes          TEXT             NULL,
+  -- Nothing runs until an admin moves a job out of pending_approval.
+  status         ENUM('pending_approval','approved','rejected','in_progress','completed','cancelled')
+                 NOT NULL DEFAULT 'pending_approval',
+  decision_note  VARCHAR(600)     NULL,
+  decided_by     INT UNSIGNED     NULL,
+  decided_at     DATETIME         NULL,
+  started_at     DATETIME         NULL,
+  completed_at   DATETIME         NULL,
+  created_at     DATETIME     NOT NULL,
+  updated_at     DATETIME     NOT NULL,
+  PRIMARY KEY (id),
+  UNIQUE KEY uniq_jobs_ref (ref),
+  KEY idx_jobs_user (user_id, created_at),
+  KEY idx_jobs_status (status, created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- One row per subagent assigned to a job.
+CREATE TABLE IF NOT EXISTS job_tasks (
+  id           INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  job_id       INT UNSIGNED NOT NULL,
+  subagent     VARCHAR(20)  NOT NULL,
+  position     TINYINT UNSIGNED NOT NULL,
+  status       ENUM('queued','running','done','blocked','skipped') NOT NULL DEFAULT 'queued',
+  note         VARCHAR(600)     NULL,
+  started_at   DATETIME         NULL,
+  finished_at  DATETIME         NULL,
+  updated_at   DATETIME     NOT NULL,
+  PRIMARY KEY (id),
+  UNIQUE KEY uniq_task_job_subagent (job_id, subagent),
+  KEY idx_tasks_subagent (subagent, status)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Audit trail shown on each job.
+CREATE TABLE IF NOT EXISTS job_events (
+  id          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  job_id      INT UNSIGNED NOT NULL,
+  user_id     INT UNSIGNED     NULL,
+  kind        VARCHAR(32)  NOT NULL,
+  message     VARCHAR(600) NOT NULL,
+  created_at  DATETIME     NOT NULL,
+  PRIMARY KEY (id),
+  KEY idx_events_job (job_id, id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
