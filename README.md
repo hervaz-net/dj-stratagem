@@ -173,22 +173,9 @@ domain (create one in cPanel, switch `contact.php` from `mail()` to SMTP).
 
 ## Outstanding
 
-- **Namecheap account is live again.** Re-checked 1 Oct 2026 09:54 PDT:
-  apex `https://djstratageminc.com/` returns 200 (not the suspended CGI).
-  `/api/health.php` and `/api/me.php` return JSON. Do not treat a 302 to
-  `/cgi-sys/suspendedpage.cgi` as current.
-- **cPanel public_html lags GitHub `deploy`.** Rechecked 7 Oct 2026 14:16 PDT:
-  live homepage is still `assets/index-b_QNY9vN.js` (last-modified 4 Oct 2026).
-  `/exchange` and `/fleet` still serve the parent homepage title before JavaScript.
-  After hydration, `/exchange/pricing` still canonicalizes to `/pricing` and keeps
-  the parent Twitter title. Fleet date input still has no `min`. GitHub `deploy`
-  already has `spa.php` and the 1.17–1.24 fixes (`Deploy f6a3ad4`, bundle
-  `assets/index-D5oonncx.js`). Actions builds and pushes `deploy`, then Pull and
-  deploy fails because repo secret `CPANEL_TOKEN` is empty. After `main` updates:
-  `./deploy.sh` on a machine with `~/.cpanel_token`, or cPanel → Git Version
-  Control → `dj-stratagem` → Update from Remote → Deploy HEAD Commit. Confirm
-  `public_html` is `djstlime:nobody` mode `0750`. Do not rsync with `-a`.
-  Do not point cPanel at `main`.
+- **Live site is current.** Re-checked 10 Oct 2026 ~17:20 PDT: apex returns the SPA with
+  `assets/index-BBZOGzBe.js`, matching the `deploy` branch tip. `/api/health.php` and
+  `/api/me.php` return JSON. www 301s to apex. No open host lag.
 - **`/changelog` was broken on `main` and restored in 1.78.** Audit 1.77
   (`0f51e8c`) replaced `src/pages/Changelog.jsx` with `PLACEHOLDER_REVERT`.
   Restored in 1.78 (`da55f5d`). Do not overwrite that file with a host-audit
