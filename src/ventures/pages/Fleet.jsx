@@ -20,8 +20,6 @@ import {
   isTestFixtures,
   vehicleClasses,
   vehicles,
-  arranged,
-  serviceLabel,
   services,
   extras,
   standards,
@@ -33,7 +31,6 @@ const SERVICE_ICONS = [IconMapPin, IconBriefcase, IconHelmet, IconCalendar, Icon
 const STANDARD_ICONS = [IconUsers, IconTruck, IconShield];
 const SHORT = { suv: "SUV", sedan: "Sedan", sports: "Sports", sprinter: "Sprinter", coach: "Coach" };
 const CLASS_NAME = Object.fromEntries(vehicleClasses.map((c) => [c.key, c.name]));
-const TOTAL_VEHICLES = vehicles.length + arranged.length;
 
 function Badge({ children, tone = "brand" }) {
   const tones = {
@@ -65,7 +62,8 @@ function ClassPicker() {
           className="animate-menu-in absolute inset-0 h-full w-full object-cover"
         />
       </div>
-      <div className="mt-4 grid grid-cols-5 gap-1.5" role="tablist" aria-label="Vehicle classes">
+      <Credit credit={v.credit} className="mt-1.5" />
+      <div className="mt-3 grid grid-cols-5 gap-1.5" role="tablist" aria-label="Vehicle classes">
         {vehicleClasses.map((c, i) => (
           <button
             key={c.key}
@@ -157,13 +155,6 @@ function QuoteForm({ requested = "" }) {
               })}
             </optgroup>
           )}
-          {vehicleClasses.map((c) => (
-            <optgroup key={c.key} label={`Arranged: ${c.name}`}>
-              {arranged.filter((a) => a.classKey === c.key).map((a) => (
-                <option key={a.key} value={a.name}>{a.name}</option>
-              ))}
-            </optgroup>
-          ))}
         </select>
       </Field>
       <Field label="Accessibility needs" className="sm:col-span-2">
@@ -244,64 +235,14 @@ function OwnedVehicle({ v, onRequest }) {
   );
 }
 
-/** Models we arrange through partners, filterable by class. */
-function ArrangedGrid({ onRequest }) {
-  const [filter, setFilter] = useState("all");
-  const shown = filter === "all" ? arranged : arranged.filter((a) => a.classKey === filter);
-  const tabs = [{ key: "all", label: "All", count: arranged.length }, ...vehicleClasses.map((c) => ({ key: c.key, label: c.name, count: arranged.filter((a) => a.classKey === c.key).length }))];
+/** Photo credit line for a licensed image. */
+function Credit({ credit, className = "" }) {
+  if (!credit) return null;
   return (
-    <div>
-      <div className="flex flex-wrap gap-2" role="group" aria-label="Filter vehicles by class">
-        {tabs.map((t) => (
-          <button
-            key={t.key}
-            type="button"
-            onClick={() => setFilter(t.key)}
-            aria-pressed={filter === t.key}
-            className={`inline-flex h-11 items-center gap-2 rounded-full border px-4 text-sm font-semibold transition-colors ${
-              filter === t.key ? "border-brand bg-brand text-white" : "border-line bg-surface text-fg-muted hover:text-fg"
-            }`}
-          >
-            {t.label}
-            <span className={`rounded-full px-1.5 text-xs tabular-nums ${filter === t.key ? "bg-white/20" : "bg-subtle"}`}>{t.count}</span>
-          </button>
-        ))}
-      </div>
-      <ul className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {shown.map((a) => (
-          <li key={a.key} className="flex">
-            <article className="group flex w-full flex-col overflow-hidden rounded-2xl border border-line bg-surface shadow-[var(--shadow-card)] transition-[border-color,box-shadow] hover:border-line-strong hover:shadow-[var(--shadow-pop)]">
-              <figure className="m-0">
-                <div className="relative aspect-[3/2] overflow-hidden bg-subtle">
-                  <img src={a.image} alt={a.name} loading="lazy" decoding="async" className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]" />
-                </div>
-                <figcaption className="truncate px-4 pt-2 text-[0.68rem] text-fg-muted">
-                  Photo: <a href={a.credit.source} target="_blank" rel="noopener noreferrer" className="underline-offset-2 hover:underline">{a.credit.author}</a>,{" "}
-                  <a href={a.credit.licenseUrl} target="_blank" rel="noopener noreferrer license" className="underline-offset-2 hover:underline">{a.credit.license}</a>
-                </figcaption>
-              </figure>
-              <div className="flex flex-1 flex-col p-4 pt-2">
-                <div className="flex items-start justify-between gap-2">
-                  <h4 className="text-base font-semibold leading-snug text-fg">{a.name}</h4>
-                </div>
-                <p className="mt-1 flex-1 text-sm leading-relaxed text-fg-muted">{a.note}</p>
-                <p className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-xs font-semibold text-fg">
-                  <span>{a.seats ? `${a.seats} seats` : `Up to ${a.passengers} passengers`}</span>
-                  <span className="text-fg-muted">{serviceLabel[a.service]}</span>
-                </p>
-                <button
-                  type="button"
-                  onClick={() => onRequest(a.name)}
-                  className="mt-4 inline-flex h-10 items-center justify-center gap-1.5 rounded-full border border-line px-4 text-sm font-semibold text-fg transition-colors hover:border-brand hover:text-brand"
-                >
-                  Request this vehicle <IconArrowRight width={13} height={13} aria-hidden="true" />
-                </button>
-              </div>
-            </article>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <p className={`truncate text-[0.68rem] text-fg-muted ${className}`}>
+      Photo: <a href={credit.source} target="_blank" rel="noopener noreferrer" className="underline-offset-2 hover:underline">{credit.author}</a>,{" "}
+      <a href={credit.licenseUrl} target="_blank" rel="noopener noreferrer license" className="underline-offset-2 hover:underline">{credit.license}</a>
+    </p>
   );
 }
 
@@ -357,7 +298,7 @@ export default function Fleet({ brand }) {
                 </span>
                 <span>
                   <span className="block font-semibold text-fg">See the vehicles</span>
-                  <span className="block text-sm text-fg-muted">{TOTAL_VEHICLES} vehicles, sports car to 56-seat coach</span>
+                  <span className="block text-sm text-fg-muted">Luxury sedan to 56-seat coach</span>
                 </span>
               </a>
             </div>
@@ -416,7 +357,8 @@ export default function Fleet({ brand }) {
                     className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
                   />
                 </figure>
-                <div className="flex flex-1 flex-col p-6">
+                <Credit credit={v.credit} className="px-6 pt-2" />
+                <div className="flex flex-1 flex-col p-6 pt-3">
                   <div className="flex items-start justify-between gap-3">
                     <h3 className="text-lg font-semibold text-fg">{v.name}</h3>
                     <Badge>{v.key === "sports" ? "2 to 4 seats" : `Up to ${v.passengers}`}</Badge>
@@ -457,16 +399,6 @@ export default function Fleet({ brand }) {
           </div>
         )}
 
-        <div className="mt-16">
-          <h3 className="text-2xl font-semibold tracking-tight text-fg">Vehicles we arrange</h3>
-          <p className="mt-1 max-w-3xl text-fg-muted">
-            {arranged.length} more models we book through partner operators, subject to availability. These are not units we
-            own; your quote confirms the exact vehicle, its year, and its operator before you pay anything.
-          </p>
-          <div className="mt-6">
-            <ArrangedGrid onRequest={request} />
-          </div>
-        </div>
       </Section>
 
       {/* Pricing */}
