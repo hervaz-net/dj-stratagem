@@ -8,7 +8,7 @@ import { PRIMARY_NAV } from "../navigation";
 import { PRODUCT } from "../brand";
 
 const linkClass = ({ isActive }) =>
-  `rounded-full px-3 py-2 text-[0.92rem] font-medium transition-colors ${
+  `whitespace-nowrap rounded-full px-3 py-2 text-[0.92rem] font-medium transition-colors ${
     isActive ? "bg-brand-soft text-brand-fg" : "text-fg-muted hover:bg-subtle hover:text-fg"
   }`;
 
@@ -118,7 +118,7 @@ export default function Navbar({ onOpenPalette }) {
           <Logo />
         </NavLink>
 
-        <nav className="hidden items-center gap-1 lg:flex" aria-label="Main">
+        <nav className="hidden items-center gap-1 xl:flex" aria-label="Main">
           {PRIMARY_NAV.map((item) =>
             item.children ? (
               <NavMenu key={item.label} item={item} />
@@ -134,7 +134,7 @@ export default function Navbar({ onOpenPalette }) {
           )}
         </nav>
 
-        <div className="hidden items-center gap-2 lg:flex">
+        <div className="hidden items-center gap-2 xl:flex">
           {onOpenPalette && (
             <button
               type="button"
@@ -158,7 +158,7 @@ export default function Navbar({ onOpenPalette }) {
           </Button>
         </div>
 
-        <div className="flex items-center gap-2 lg:hidden">
+        <div className="flex items-center gap-2 xl:hidden">
           <ThemeToggle />
           <button
             ref={toggleRef}
@@ -183,7 +183,7 @@ export default function Navbar({ onOpenPalette }) {
       {open && (
         <div
           id="mobile-menu"
-          className="animate-menu-in max-h-[calc(100dvh-4rem)] overflow-y-auto border-t border-line bg-surface px-5 pb-8 lg:hidden"
+          className="animate-menu-in max-h-[calc(100dvh-4rem)] overflow-y-auto border-t border-line bg-surface px-5 pb-8 xl:hidden"
         >
           <nav className="flex flex-col gap-1 pt-3" aria-label="Mobile">
             {PRIMARY_NAV.map((item) =>
