@@ -1,0 +1,279 @@
+@import "@fontsource/dejavu-sans/400.css";
+@import "@fontsource/dejavu-sans/700.css";
+
+/* ===========================================================================
+   Tech Innovation theme: one look for the parent site, Stratagem Exchange and
+   the company sites (Fleet, Capital, Studio, Workforce).
+
+     Electric Blue  #0066ff   fills: primary buttons, active pills, the hub
+     Neon Cyan      #00ffff   highlights: live dots, carets, code, focus
+     Dark Gray      #1e1e1e   page background
+     White          #ffffff   headings and body text
+     Type           DejaVu Sans (bold headers, regular body), bundled from npm
+
+   Electric blue on dark gray is 3.4:1, too low for small text, so text that
+   was "brand colored" uses --ti-ink (#4d94ff, 5.5:1) while fills keep #0066ff
+   behind white text (4.8:1).
+
+   Loaded after each app's own CSS. Selectors start with `html` so they beat
+   the apps' `:root` / `[data-theme]` / `.djx` rules whatever the load order.
+   Dark is the signature; Exchange keeps a light variant behind its toggle.
+   =========================================================================== */
+
+html:root,
+html[data-theme] {
+  --ti-blue: #0066ff;
+  --ti-blue-hover: #1a75ff;
+  --ti-cyan: #00ffff;
+  --ti-ink: #4d94ff;
+  --ti-bg: #1e1e1e;
+  --ti-font: "DejaVu Sans", "Bitstream Vera Sans", Verdana, ui-sans-serif, system-ui, sans-serif;
+
+  --font-sans: var(--ti-font);
+  --font-display: var(--ti-font);
+  --font-serif: var(--ti-font);
+}
+
+/* ---- Dark: the parent site, the company sites, and Exchange by default ---- */
+html:root,
+html[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* Shared surfaces */
+  --navy: #141414;
+  --navy-hover: #0d0d0d;
+  --canvas: #1e1e1e;
+  --page-bg: #1e1e1e;
+  --surface: #1e1e1e;
+  --surface-raised: #262626;
+  --subtle: #2a2a2a;
+  --surface-hover: #303030;
+  --border: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.2);
+
+  --text: #e6e6e6;
+  --text-strong: #ffffff;
+  --text-muted: #a3a3a3;
+
+  --brand: var(--ti-blue);
+  --brand-hover: var(--ti-blue-hover);
+  --brand-soft: rgba(0, 102, 255, 0.16);
+  --brand-fg: var(--ti-ink);
+  --accent: var(--ti-cyan);
+  --accent-hover: #66ffff;
+  --accent-soft: rgba(0, 255, 255, 0.12);
+  --accent-on-brand: var(--ti-cyan);
+  --cta: var(--ti-blue);
+  --cta-hover: var(--ti-blue-hover);
+  --tide: var(--ti-cyan);
+
+  --role-contractor: #00e5ff;
+  --role-contractor-soft: rgba(0, 229, 255, 0.12);
+  --role-distributor: var(--ti-ink);
+  --role-distributor-soft: rgba(77, 148, 255, 0.14);
+  --role-supplier: #7fb2ff;
+  --role-supplier-soft: rgba(127, 178, 255, 0.14);
+
+  --success: #3ddc97;
+  --success-soft: rgba(61, 220, 151, 0.14);
+  --warning: #ffc04d;
+  --warning-soft: rgba(255, 192, 77, 0.14);
+  --danger: #ff6b6b;
+  --danger-soft: rgba(255, 107, 107, 0.14);
+
+  --page-glow-1: rgba(0, 102, 255, 0.16);
+  --page-glow-2: rgba(30, 30, 30, 0);
+  --aurora-1: rgba(0, 102, 255, 0.30);
+  --aurora-2: rgba(0, 255, 255, 0.14);
+  --aurora-3: rgba(0, 102, 255, 0.18);
+  --aurora-4: rgba(0, 200, 255, 0.10);
+  --aurora-blend: screen;
+  --contour: rgba(255, 255, 255, 0.06);
+  --spot: rgba(0, 102, 255, 0.18);
+  --grain-opacity: 0.05;
+  --grid-line: rgba(255, 255, 255, 0.05);
+
+  --glass-bg: rgba(38, 38, 38, 0.86);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --panel-bg: #262626;
+  --panel-border: rgba(255, 255, 255, 0.08);
+  --panel-glow: rgba(0, 102, 255, 0.18);
+  --panel-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px -12px rgba(0, 0, 0, 0.7);
+  --shadow-color: 0 0 0;
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 2px 8px -4px rgba(0, 0, 0, 0.5);
+  --shadow-pop: 0 2px 4px rgba(0, 0, 0, 0.4), 0 18px 44px -18px rgba(0, 102, 255, 0.35);
+
+  --lg-tint: rgba(255, 255, 255, 0.08);
+  --lg-tint-2: rgba(255, 255, 255, 0.02);
+  --lg-rim: rgba(255, 255, 255, 0.3);
+  --lg-rim-low: rgba(255, 255, 255, 0.08);
+  --lg-drop: 0 16px 48px -14px rgba(0, 0, 0, 0.75), 0 2px 8px -2px rgba(0, 0, 0, 0.5);
+  --lg-sheen: rgba(255, 255, 255, 0.14);
+
+  --viz-blue: var(--ti-ink);
+  --viz-cyan: var(--ti-cyan);
+  --viz-red: #ff6b6b;
+  --viz-gold: #ffc04d;
+  --viz-green: #3ddc97;
+}
+
+/* ---- Light: Exchange only, when a visitor picks it ---- */
+html[data-theme="light"] {
+  color-scheme: light;
+  --canvas: #ffffff;
+  --page-bg: #ffffff;
+  --surface: #ffffff;
+  --surface-raised: #ffffff;
+  --subtle: #f2f5fa;
+  --surface-hover: #e9eef7;
+  --border: #e1e6ee;
+  --border-strong: #c9d1de;
+  --text: #1e1e1e;
+  --text-strong: #111111;
+  --text-muted: #5c6370;
+  --brand: var(--ti-blue);
+  --brand-hover: #0052cc;
+  --brand-soft: #e6f0ff;
+  --brand-fg: #0052cc;
+  --ti-ink: #0057d9;
+  --accent: #008b99;
+  --accent-soft: #e0fbfd;
+  --accent-on-brand: var(--ti-cyan);
+  --cta: var(--ti-blue);
+  --cta-hover: #0052cc;
+  --role-contractor: #007c8a;
+  --role-contractor-soft: #e0f7fa;
+  --role-distributor: #0052cc;
+  --role-distributor-soft: #e6f0ff;
+  --role-supplier: #3a4fb8;
+  --role-supplier-soft: #eceffc;
+  --success: #12804e;
+  --success-soft: #e3f5ec;
+  --warning: #a35b00;
+  --warning-soft: #fdf1dc;
+  --danger: #c0271b;
+  --danger-soft: #fde8e6;
+  --glass-bg: rgba(255, 255, 255, 0.9);
+  --glass-border: #e1e6ee;
+  --panel-bg: #ffffff;
+  --panel-border: #e1e6ee;
+  --panel-glow: rgba(0, 102, 255, 0.1);
+  --panel-shadow: 0 1px 2px rgba(17, 17, 17, 0.04), 0 4px 16px -8px rgba(17, 17, 17, 0.1);
+  --shadow-color: 17 17 17;
+  --shadow-card: 0 1px 2px rgba(17, 17, 17, 0.04), 0 2px 8px -4px rgba(17, 17, 17, 0.08);
+  --shadow-pop: 0 2px 4px rgba(17, 17, 17, 0.04), 0 16px 40px -16px rgba(0, 102, 255, 0.25);
+  --grid-line: rgba(17, 17, 17, 0.05);
+  --viz-blue: #0066ff;
+  --viz-cyan: #008b99;
+  --viz-red: #c0271b;
+  --viz-gold: #a35b00;
+  --viz-green: #12804e;
+}
+
+/* ---- Type ---- */
+html body {
+  font-family: var(--ti-font);
+  font-weight: 400;
+  letter-spacing: 0;
+  background-color: var(--page-bg);
+}
+html h1, html h2, html h3, html .font-display {
+  font-family: var(--ti-font);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+html h4, html h5, html h6 { font-family: var(--ti-font); font-weight: 700; }
+html ::selection { background: var(--ti-blue); color: #fff; }
+
+/* Animated heading accents: blue → cyan instead of the old rainbow. */
+html h1 em, html h2 em, html h3 em, html .font-display em {
+  background-image: linear-gradient(100deg, var(--ti-blue), var(--ti-cyan) 45%, var(--ti-ink) 75%, var(--ti-blue));
+}
+
+/* Brand-colored TEXT reads in the lighter ink so small type stays legible.
+   Fills (bg-brand, bg-cta…) keep electric blue behind white text. */
+html .text-brand, html .text-amber, html .text-amber-2, html .text-violet,
+html .text-cta, html .text-bid-blue, html .text-brand-hover, html .text-molten,
+html [class~="hover:text-brand"]:hover, html [class~="hover:text-amber"]:hover,
+html [class~="hover:text-brand-hover"]:hover, html [class~="hover:text-amber-2"]:hover {
+  color: var(--ti-ink);
+}
+html .text-bid-orange, html .text-accent { color: var(--accent); }
+
+/* Keyboard focus glows cyan everywhere. */
+html :focus-visible { outline-color: var(--ti-cyan); }
+
+/* ===========================================================================
+   The redesigned home page and subagent header (.djx scope)
+   =========================================================================== */
+html .djx {
+  --x-bg: #1e1e1e;
+  --x-surface: #262626;
+  --x-subtle: #2a2a2a;
+  --x-border: rgba(255, 255, 255, 0.1);
+  --x-border-strong: rgba(255, 255, 255, 0.2);
+  --x-text: #ffffff;
+  --x-muted: #a3a3a3;
+  --x-brand: var(--ti-blue);
+  --x-brand-hover: var(--ti-ink);
+  --x-brand-soft: rgba(0, 102, 255, 0.18);
+  --x-find: #00e5ff;
+  --x-find-soft: rgba(0, 229, 255, 0.12);
+  --x-win: #4d94ff;
+  --x-win-soft: rgba(77, 148, 255, 0.14);
+  --x-build: #8fb8ff;
+  --x-build-soft: rgba(143, 184, 255, 0.14);
+  --x-keep: #3ddcc4;
+  --x-keep-soft: rgba(61, 220, 196, 0.12);
+  --x-accent: var(--ti-cyan);
+  --x-ink: var(--ti-ink);
+  --x-shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 2px 8px -4px rgba(0, 0, 0, 0.5);
+  --x-shadow-pop: 0 2px 4px rgba(0, 0, 0, 0.4), 0 18px 44px -18px rgba(0, 102, 255, 0.4);
+  font-family: var(--ti-font);
+  letter-spacing: 0;
+}
+html .djx .x-btn-primary { background: var(--ti-blue); color: #fff; }
+html .djx .x-btn-primary:hover { background: var(--ti-blue-hover); color: #fff; }
+html .djx .x-navlink:hover, html .djx .x-navlink.is-active { color: #fff; }
+html .djx .x-grid {
+  background-image: linear-gradient(rgba(0, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px);
+}
+html .djx .x-caret { background: var(--ti-cyan); }
+html .djx .x-mega-arrow { color: var(--ti-ink); }
+html .djx .x-hcaret { background: var(--ti-cyan); }
+html .djx a.x-card:hover { border-color: var(--ti-blue); }
+@keyframes tiPulse { 0% { box-shadow: 0 0 0 0 rgba(0, 255, 255, 0.55); } 70% { box-shadow: 0 0 0 8px rgba(0, 255, 255, 0); } 100% { box-shadow: 0 0 0 0 rgba(0, 255, 255, 0); } }
+html .djx .x-pulse { animation-name: tiPulse; }
+html .djx .x-mega { box-shadow: 0 24px 48px -24px rgba(0, 0, 0, 0.8); }
+@media (prefers-reduced-motion: reduce) {
+  html .djx .x-pulse { animation: none !important; }
+}
+
+/* ===========================================================================
+   Parent-site leftovers that were hard-coded for a light canvas
+   =========================================================================== */
+html .atmosphere ~ main :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), select, textarea) {
+  background-color: #141414;
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.14);
+}
+html .atmosphere ~ main :is(input, textarea)::placeholder { color: #8a8a8a; }
+html .atmosphere ~ main :is(input, select, textarea):focus {
+  border-color: var(--ti-blue);
+  box-shadow: 0 0 0 3px rgba(0, 255, 255, 0.18);
+}
+html .slab:hover { border-color: rgba(0, 102, 255, 0.5); }
+html :is(input, select, textarea) { accent-color: var(--ti-blue); }
+html .card-minimal {
+  background: linear-gradient(135deg, #2a2a2a, #232323);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+html .card-minimal:hover { box-shadow: 0 4px 16px -4px rgba(0, 102, 255, 0.3); }
+html .inline-input:focus { background: #141414; outline-color: rgba(0, 255, 255, 0.3); }
+
+/* Printing stays black on white whatever the screen theme. */
+@media print {
+  html body { background: #fff; color: #000; }
+}

@@ -202,14 +202,14 @@ function Footer({ brand }) {
 
 /** Full page frame for one company: its colors, header, content, footer. */
 export default function Shell({ brand, children }) {
-  // Light only: ignore any dark preference saved on other Stratagem sites.
+  // Tech Innovation theme: the company sites are dark only.
   useEffect(() => {
-    document.documentElement.dataset.theme = "light";
+    document.documentElement.dataset.theme = "dark";
   }, []);
 
   useEffect(() => {
     let link = document.querySelector('link[rel="icon"]');
-    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="9" fill="${brand.colors.light.brand}"/></svg>`;
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><rect width="32" height="32" rx="9" fill="#0066ff"/></svg>`;
     if (link) link.setAttribute("href", `data:image/svg+xml,${encodeURIComponent(svg)}`);
   }, [brand]);
 
