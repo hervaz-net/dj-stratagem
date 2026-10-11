@@ -118,3 +118,56 @@
   .djx .x-btn, .djx .x-card, .djx .x-pill, .djx .x-arrow { transition: none; }
   .djx .x-btn:hover, .djx a.x-card:hover { transform: none; }
 }
+
+/* ---------------------------------------------------------- main nav + mega */
+.djx .x-navlink {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px;
+  border-radius: 999px; font-size: 15px; font-weight: 600; color: var(--x-text);
+  background: transparent; border: 0; cursor: pointer; white-space: nowrap;
+  transition: background-color .2s ease, color .2s ease;
+}
+.djx .x-navlink:hover, .djx .x-navlink.is-active { background: var(--x-brand-soft); color: var(--x-brand-hover); }
+.djx .x-chevron { transition: transform .25s ease; }
+.djx .x-chevron.is-open { transform: rotate(180deg); }
+
+@keyframes djxRipple { 0%, 60%, 100% { transform: scale(1); opacity: 1; } 30% { transform: scale(1.45); opacity: .75; } }
+.djx .x-glyph { overflow: visible; transition: transform .45s cubic-bezier(.3,1.5,.5,1); }
+.djx .x-glyph.is-open { transform: rotate(45deg) scale(1.08); }
+.djx .x-glyph-dot { fill: var(--stage); transform-box: fill-box; transform-origin: center; animation: djxRipple 2.8s ease-in-out infinite; }
+.djx .x-glyph.is-open .x-glyph-dot { animation-duration: 1.2s; }
+
+@keyframes djxDrop { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+.djx .x-mega {
+  position: absolute; left: 0; right: 0; top: 100%;
+  background: var(--x-bg); border-bottom: 1px solid var(--x-border);
+  box-shadow: 0 24px 48px -24px #15201b40;
+  max-height: calc(100vh - 64px); overflow-y: auto;
+  animation: djxDrop .22s ease-out both;
+}
+.djx .x-mega-grid { display: grid; gap: 20px; grid-template-columns: 1fr; }
+@media (min-width: 640px) { .djx .x-mega-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1100px) { .djx .x-mega-grid { grid-template-columns: repeat(4, minmax(0, 1fr)) 18rem; } }
+.djx .x-mega-item {
+  display: flex; gap: 12px; align-items: flex-start; padding: 10px 12px; border-radius: 14px;
+  transition: background-color .2s ease; animation: djxRise .35s ease-out both;
+}
+.djx .x-mega-item:hover, .djx .x-mega-item:focus-visible { background: var(--x-surface); box-shadow: var(--x-shadow-card); }
+.djx .x-mega-item[aria-current="page"] { background: var(--x-brand-soft); }
+.djx .x-mega-icon {
+  flex: none; width: 34px; height: 34px; border-radius: 10px; display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; letter-spacing: .02em; background: var(--stage-soft); color: var(--stage);
+  transition: transform .3s cubic-bezier(.3,1.6,.5,1);
+}
+.djx .x-mega-item:hover .x-mega-icon { transform: rotate(-8deg) scale(1.08); }
+.djx .x-mega-arrow { opacity: 0; transform: translateX(-4px); transition: opacity .2s ease, transform .2s ease; color: var(--x-brand); }
+.djx .x-mega-item:hover .x-mega-arrow, .djx .x-mega-item:focus-visible .x-mega-arrow { opacity: 1; transform: none; }
+.djx .x-mega-feature {
+  border-radius: 18px; padding: 22px; background-color: var(--x-brand); align-self: start;
+  animation: djxRise .4s ease-out .2s both;
+}
+@media (min-width: 640px) and (max-width: 1099px) { .djx .x-mega-feature { grid-column: 1 / -1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .djx .x-glyph, .djx .x-glyph-dot, .djx .x-mega, .djx .x-mega-item, .djx .x-mega-feature,
+  .djx .x-mega-icon, .djx .x-chevron, .djx .x-mega-arrow { animation: none !important; transition: none !important; }
+}
