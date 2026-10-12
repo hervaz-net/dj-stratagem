@@ -1,6 +1,4 @@
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
-import Button from "../exchange/components/Button";
 import { CONTACT_EMAIL, brandCss } from "./brands";
 import SiteNav from "../shared/SiteNav";
 
@@ -51,38 +49,6 @@ export function Logo({ brand }) {
         {first} <span className="font-semibold text-brand">{rest.join(" ")}</span>
       </span>
     </span>
-  );
-}
-
-/**
- * The company's own bar, under the global nav: its name, its page sections,
- * and its main action. Scrolls with the page; the global nav stays on top.
- */
-function Header({ brand }) {
-  return (
-    <div className="border-b border-line bg-canvas">
-      <div className="mx-auto flex min-h-14 max-w-6xl flex-wrap items-center gap-x-4 gap-y-1 px-5 py-2 sm:flex-nowrap sm:px-6">
-        <Link to={brand.path} className="shrink-0" aria-label={`${brand.name} home`} onClick={() => window.scrollTo({ top: 0 })}>
-          <Logo brand={brand} />
-        </Link>
-        {brand.nav && (
-          <nav className="order-last -mx-1 flex min-w-0 basis-full items-center gap-1 overflow-x-auto px-1 [scrollbar-width:none] sm:order-none sm:basis-auto sm:flex-1" aria-label={`${brand.name} sections`}>
-            {brand.nav.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                className="whitespace-nowrap rounded-full px-3 py-2 text-[0.9rem] font-medium text-fg-muted transition-colors hover:bg-subtle hover:text-fg"
-              >
-                {item.label}
-              </a>
-            ))}
-          </nav>
-        )}
-        <Button href={brand.cta.href} size="sm" className="ml-auto hidden shrink-0 sm:inline-flex">
-          {brand.cta.label}
-        </Button>
-      </div>
-    </div>
   );
 }
 
@@ -151,8 +117,10 @@ export default function Shell({ brand, children }) {
       <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-surface focus:px-4 focus:py-2">
         Skip to content
       </a>
-      <SiteNav app="venture" account={{ signInHref: "/login", joinHref: "/register" }} />
-      <Header brand={brand} />
+      {/* One header: the global nav reads "Stratagem AI / Fleet" here, its
+          sections live under Fleet in the Subagents menu, and the company's
+          main action takes the header button. */}
+      <SiteNav app="venture" account={{ signInHref: "/login", joinHref: "/register" }} action={brand.cta} />
       <main id="main">{children}</main>
       <Footer brand={brand} />
     </>
