@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { subagents } from "../data/subagents";
+import { subagents, subagentForPath } from "../data/subagents";
 import { NAV_LINKS, NAV_MENUS, appForPath, isCurrent } from "./siteNav";
 import "./site-nav.css";
 
@@ -77,11 +77,16 @@ function MenuPanel({ menu, app, here, onNavigate, panelRef, id }) {
         </div>
         <ul className="sn-links">
           {menu.links.map((l, i) => (
-            <li key={l.href + l.label} style={{ animationDelay: `${i * 22}ms` }}>
+            <li
+              key={l.href + l.label}
+              className="sn-tile"
+              data-current={isCurrent(l.href, here) || undefined}
+              style={{ animationDelay: `${i * 22}ms` }}
+            >
               <Go
                 href={l.href}
                 app={app}
-                className="sn-tile"
+                className="sn-tile-main"
                 aria-current={isCurrent(l.href, here) ? "page" : undefined}
                 onClick={onNavigate}
               >
@@ -91,6 +96,17 @@ function MenuPanel({ menu, app, here, onNavigate, panelRef, id }) {
                 </span>
                 <span className="sn-tile-text">{l.text}</span>
               </Go>
+              {l.sections?.length > 0 && (
+                <ul className="sn-tile-sections" aria-label={`${l.label} pages`}>
+                  {l.sections.map((sec) => (
+                    <li key={sec.href}>
+                      <Go href={sec.href} app={app} className="sn-section" aria-current={isCurrent(sec.href, here) ? "page" : undefined} onClick={onNavigate}>
+                        {sec.label}
+                      </Go>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </li>
           ))}
         </ul>
@@ -114,15 +130,21 @@ function MenuPanel({ menu, app, here, onNavigate, panelRef, id }) {
 /**
  * @param {"parent"|"exchange"|"venture"} app   which app is rendering the nav
  * @param {{signedIn?:boolean, dashboardHref?:string, signInHref:string, joinHref:string}} account
+ * @param {{href:string, label:string}} [action] the page's main action; replaces "Join free"
  * @param {() => void} [onOpenPalette]          opens site search when provided
  */
-export default function SiteNav({ app, account, onOpenPalette }) {
+export default function SiteNav({ app, account, action, onOpenPalette }) {
   const location = useLocation();
   // Each app routes under its own basename, so read the full path.
   const here = typeof window === "undefined" ? location.pathname : window.location.pathname;
+  // On a subagent's pages its name follows "Stratagem AI" in the header.
+  const current = subagentForPath(here);
   const [open, setOpen] = useState(null); // key of the open desktop menu
   const [sheet, setSheet] = useState(false); // mobile menu
-  const [section, setSection] = useState(null); // open accordion in the sheet
+  // Open accordion in the sheet; on a subagent page, start on Subagents.
+  const [section, setSection] = useState(() =>
+    typeof window !== "undefined" && subagentForPath(window.location.pathname) ? "subagents" : null,
+  );
   const wrapRef = useRef(null);
   const panelRef = useRef(null);
   const triggers = useRef({});
@@ -201,10 +223,20 @@ export default function SiteNav({ app, account, onOpenPalette }) {
     <>
       <header ref={wrapRef} className={`sn no-print ${open ? "has-open" : ""}`} data-app={app}>
         <div className="sn-bar">
-          <Go href="/" app={app} className="sn-brand" aria-label="Stratagem AI home">
-            <StratagemMark />
-            <span className="sn-brand-name">Stratagem AI</span>
-          </Go>
+          <div className="sn-brand">
+            <Go href="/" app={app} className="sn-brand-home" aria-label="Stratagem AI home">
+              <StratagemMark />
+              <span className={`sn-brand-name ${current ? "has-suffix" : ""}`}>Stratagem AI</span>
+            </Go>
+            {current && (
+              <>
+                <span className="sn-brand-sep" aria-hidden="true" />
+                <Go href={current.to} app={app} className="sn-brand-suffix" aria-label={`${current.name} home`}>
+                  {current.name}
+                </Go>
+              </>
+            )}
+          </div>
 
           <nav className="sn-nav" aria-label="Main">
             <ul className="sn-nav-list">
@@ -249,7 +281,9 @@ export default function SiteNav({ app, account, onOpenPalette }) {
             ) : (
               <>
                 <Go href={account.signInHref} app={app} className="sn-signin">Sign in</Go>
-                <Go href={account.joinHref} app={app} className="sn-cta">Join free <Arrow className="sn-cta-arrow" /></Go>
+                <Go href={action?.href ?? account.joinHref} app={app} className="sn-cta" data-action={action ? "" : undefined} data-long={(action?.label?.length ?? 0) > 16 ? "" : undefined}>
+                  {action?.label ?? "Join free"} <Arrow className="sn-cta-arrow" />
+                </Go>
               </>
             )}
             <button
@@ -303,6 +337,18 @@ export default function SiteNav({ app, account, onOpenPalette }) {
                               <span>{l.label}</span>
                               {l.tag && <span className="sn-tag" data-stage={l.stage}>{l.tag}</span>}
                             </Go>
+                            {/* The subagent you're on lists its own pages here. */}
+                            {current && l.href === current.to && l.sections?.length > 0 && (
+                              <ul className="sn-sheet-sections" aria-label={`${l.label} pages`}>
+                                {l.sections.map((sec) => (
+                                  <li key={sec.href}>
+                                    <Go href={sec.href} app={app} className="sn-sheet-section" aria-current={isCurrent(sec.href, here) ? "page" : undefined} onClick={() => setSheet(false)}>
+                                      {sec.label}
+                                    </Go>
+                                  </li>
+                                ))}
+                              </ul>
+                            )}
                           </li>
                         ))}
                         <li>
@@ -326,7 +372,9 @@ export default function SiteNav({ app, account, onOpenPalette }) {
                 <Go href={account.dashboardHref} app={app} className="sn-cta sn-cta-block" onClick={() => setSheet(false)}>Dashboard <Arrow className="sn-cta-arrow" /></Go>
               ) : (
                 <>
-                  <Go href={account.joinHref} app={app} className="sn-cta sn-cta-block" onClick={() => setSheet(false)}>Join free <Arrow className="sn-cta-arrow" /></Go>
+                  <Go href={action?.href ?? account.joinHref} app={app} className="sn-cta sn-cta-block" onClick={() => setSheet(false)}>
+                    {action?.label ?? "Join free"} <Arrow className="sn-cta-arrow" />
+                  </Go>
                   <Go href={account.signInHref} app={app} className="sn-ghost sn-cta-block" onClick={() => setSheet(false)}>Sign in</Go>
                 </>
               )}

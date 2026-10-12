@@ -2,10 +2,33 @@
 // Exchange, and the company sites (Fleet, Capital, Studio, Workforce). They are
 // separate apps, but this list and <SiteNav> are shared, so the nav never
 // changes as you move between them. Hrefs are full site paths.
+//
+// Every subagent appears once, under Subagents. The one you're on shows as
+// the suffix after "Stratagem AI" in the header.
 
 import { subagents } from "../data/subagents";
+import { BRANDS } from "../ventures/brands";
 
 const STAGE_LABEL = { find: "Find", win: "Win", build: "Build", keep: "Keep" };
+
+/**
+ * A subagent's own pages or page sections. They sit under that subagent's
+ * tile in the Subagents menu, so each subagent appears in the nav once.
+ */
+const SECTIONS = {
+  exchange: [
+    { href: "/exchange/marketplace", label: "Marketplace" },
+    { href: "/exchange/projects", label: "Project demand" },
+    { href: "/exchange/contractors", label: "Contractors" },
+    { href: "/exchange/distributors", label: "Distributors" },
+    { href: "/exchange/suppliers", label: "Suppliers" },
+    { href: "/exchange/platform", label: "How it works" },
+    { href: "/exchange/pricing", label: "Pricing" },
+  ],
+  ...Object.fromEntries(
+    Object.values(BRANDS).map((b) => [b.slug, (b.nav ?? []).map((n) => ({ href: `${b.path}${n.href}`, label: n.label }))]),
+  ),
+};
 
 export const NAV_MENUS = [
   {
@@ -25,36 +48,12 @@ export const NAV_MENUS = [
       text: s.line,
       tag: STAGE_LABEL[s.stage],
       stage: s.stage,
+      sections: SECTIONS[s.key] ?? [],
     })),
     feature: {
       href: "/#how",
       eyebrow: "How a job moves",
       title: "Submit a job once. Every subagent you pick starts the moment it's approved.",
-      tone: "dark",
-    },
-  },
-  {
-    key: "exchange",
-    label: "Exchange",
-    intro: {
-      title: "Stratagem Exchange",
-      text: "The marketplace where construction supply meets demand.",
-      href: "/exchange",
-      cta: "Visit Exchange",
-    },
-    columns: 2,
-    links: [
-      { href: "/exchange/marketplace", label: "Marketplace", text: "Browse supply from distributors and makers" },
-      { href: "/exchange/projects", label: "Project demand", text: "See what upcoming jobs need" },
-      { href: "/exchange/contractors", label: "For contractors", text: "Post a request, compare quotes" },
-      { href: "/exchange/distributors", label: "For distributors", text: "Quote the work near you" },
-      { href: "/exchange/suppliers", label: "For suppliers", text: "List products for the trade" },
-      { href: "/exchange/platform", label: "How it works", text: "From request to purchase order" },
-    ],
-    feature: {
-      href: "/exchange/pricing",
-      eyebrow: "Exchange pricing",
-      title: "Free to post a request. See what selling on Exchange costs.",
       tone: "dark",
     },
   },
@@ -120,7 +119,12 @@ export function appForPath(path) {
 
 /** True when a menu link points at the page you're on (or one under it). */
 export function isCurrent(href, here) {
-  const p = href.split(/[?#]/)[0];
+  // A section link (/fleet#vehicles) is current only when you're on that section.
+  if (href.includes("#")) {
+    const [path, frag] = href.split("#");
+    return typeof window !== "undefined" && here === path && window.location.hash === `#${frag}`;
+  }
+  const p = href.split("?")[0];
   if (p === "/") return here === "/";
   if (p === "/exchange") return here === "/exchange" || here === "/exchange/";
   return here === p || here.startsWith(`${p}/`);
