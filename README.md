@@ -78,17 +78,16 @@ Colors are semantic tokens, not literal names — `ink` is the recessed surface,
 (chroma-free, so it never reads as a link), `line` borders, and `amber` the
 accent text. Each Tailwind token in `src/index.css` is declared inside
 `@theme inline` and resolves through a second variable (`--surface`, `--text`,
-`--accent`, …), so `[data-theme="dark"]` swaps the whole palette without
-touching a single component.
+`--accent`, …).
 
 Chromatic tokens have one job each: `amber` is contrast-tuned electric-blue
 text and selected chrome; `brand` is the `#001cf7` identity fill; `cta` is
 coral primary buttons (white-on-cta ≥ 4.5:1); `warning` is watch/caution
 gold; `danger` and `success` are status. CTA is never the same hex as danger.
 
-The theme follows the OS by default and remembers an explicit choice in
-`localStorage` under `djs-theme`. A small inline script in `index.html` applies
-it before first paint so dark-theme visitors never see a white flash.
+The site is light-only. An inline script in `index.html` always sets
+`data-theme="light"` before first paint (and clears any prior dark choice).
+Dark mode and theme toggles were removed site-wide in October 2026.
 
 Motion is opt-in via the `lift` class and the `Reveal` component rather than
 blanket `transition: all` rules, and everything collapses under
@@ -173,31 +172,20 @@ domain (create one in cPanel, switch `contact.php` from `mail()` to SMTP).
 
 ## Outstanding
 
-- **Namecheap account is live again.** Re-checked 1 Oct 2026 09:54 PDT:
-  apex `https://djstratageminc.com/` returns 200 (not the suspended CGI).
-  `/api/health.php` and `/api/me.php` return JSON. Do not treat a 302 to
-  `/cgi-sys/suspendedpage.cgi` as current.
-- **cPanel public_html lags GitHub `deploy`.** Rechecked 7 Oct 2026 14:16 PDT:
-  live homepage is still `assets/index-b_QNY9vN.js` (last-modified 4 Oct 2026).
-  `/exchange` and `/fleet` still serve the parent homepage title before JavaScript.
-  After hydration, `/exchange/pricing` still canonicalizes to `/pricing` and keeps
-  the parent Twitter title. Fleet date input still has no `min`. GitHub `deploy`
-  already has `spa.php` and the 1.17–1.24 fixes (`Deploy f6a3ad4`, bundle
-  `assets/index-D5oonncx.js`). Actions builds and pushes `deploy`, then Pull and
-  deploy fails because repo secret `CPANEL_TOKEN` is empty. After `main` updates:
-  `./deploy.sh` on a machine with `~/.cpanel_token`, or cPanel → Git Version
-  Control → `dj-stratagem` → Update from Remote → Deploy HEAD Commit. Confirm
-  `public_html` is `djstlime:nobody` mode `0750`. Do not rsync with `-a`.
-  Do not point cPanel at `main`.
-- **`/changelog` was broken on `main` and restored in 1.78.** Audit 1.77
-  (`0f51e8c`) replaced `src/pages/Changelog.jsx` with `PLACEHOLDER_REVERT`.
-  Restored in 1.78 (`da55f5d`). Do not overwrite that file with a host-audit
-  placeholder again.
+- **Live site matches GitHub `deploy`.** Rechecked 12 Oct 2026 10:16 PDT:
+  apex `https://djstratageminc.com/` returns 200 with LiteSpeed and bundle
+  `assets/index-DeFnHBC-.js` (last-modified 12 Oct 2026 12:54 UTC, matching
+  `Deploy 1638ae8` from main `1638ae8` "Remove dark mode site-wide").
+  `/api/health.php`, `/api/me.php`, and `/health.php` return JSON.
+  Marketing routes (`/platform`, `/pricing`, `/contact`, `/exchange`) serve the SPA.
+  Do not treat a 302 to `/cgi-sys/suspendedpage.cgi` as current.
 - HTTPS is live (AutoSSL). Auth endpoints stay HTTPS-only via `require_https`.
   Do not disable that flag to "get it working" on plaintext.
 - Pricing figures are placeholders pending a real pricing decision. The annual
   toggle derives its numbers from a flat 20% discount constant in `Pricing.jsx`.
 - Screenshots/mock panels throughout the site are illustrative, not live product.
+- Password reset, email verification of the registrant's own address, and
+  "remember me" are not built yet.
 
 ## Operations dashboard
 
