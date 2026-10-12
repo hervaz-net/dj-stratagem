@@ -139,3 +139,7 @@ unit is registered, inspected, and insured, with a photo you own.
 vehicle list was removed. The five vehicle-class photos are Wikimedia Commons
 images under CC BY-SA, credited on the page; keep the credit if a photo is
 reused.
+
+2026-10-12: at the owner's request, all vehicle photos were removed from
+/fleet and deleted from public/media/fleet. Classes are described in words and
+numbers only. Add photos back only of vehicles we own.

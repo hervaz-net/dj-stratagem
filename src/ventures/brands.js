@@ -25,8 +25,8 @@ export const BRANDS = {
     ],
     cta: { href: "#quote", label: "Request a quote" },
     colors: palette(
-      { brand: "#5b45d6", hover: "#4a36bd", soft: "#efecfd", fg: "#4a36bd", dot: "#ffd27a" },
-      { brand: "#7563ea", hover: "#8a7af0", soft: "rgba(157,140,255,0.14)", fg: "#c4b9ff", dot: "#ffd27a" },
+      { brand: "#c2410c", hover: "#9a3412", soft: "#fff1e8", fg: "#9a3412", dot: "#ffffff" },
+      { brand: "#ea580c", hover: "#f97316", soft: "rgba(249,115,22,0.14)", fg: "#fdba74", dot: "#ffffff" },
     ),
   },
   capital: {

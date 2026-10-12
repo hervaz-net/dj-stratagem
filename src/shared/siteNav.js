@@ -79,7 +79,7 @@ export const NAV_MENUS = [
       href: "/fleet",
       eyebrow: "Featured · Stratagem Fleet",
       title: "Chauffeured SUVs, sedans, Sprinters, and coaches across Southern California.",
-      image: "/media/fleet/vehicles/rr-cullinan.webp",
+      tone: "dark",
     },
   },
   {
