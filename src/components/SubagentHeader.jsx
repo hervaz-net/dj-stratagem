@@ -136,7 +136,7 @@ export default function SubagentHeader({ onOpenPalette }) {
     <header
       ref={wrapRef}
       className="djx no-print sticky top-0 z-50 border-b"
-      style={{ background: "color-mix(in srgb, var(--x-bg) 88%, transparent)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)", borderColor: "var(--x-border)" }}
+      style={{ background: "rgba(250,250,247,0.92)", backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)", borderColor: "var(--x-border)" }}
     >
       <div className="flex items-center gap-x-3 sm:gap-x-6" style={{ padding: "8px var(--x-gutter)" }}>
         <Link to="/" className="flex min-h-11 shrink-0 items-center gap-2.5" style={{ color: "var(--x-text)" }} aria-label="Stratagem AI — home">
@@ -219,10 +219,10 @@ export default function SubagentHeader({ onOpenPalette }) {
               </section>
             ))}
             <aside className="x-mega-feature x-grid-dark">
-              <p className="text-xs font-semibold uppercase tracking-[0.08em]" style={{ color: "#00ffff" }}>One account</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.08em]" style={{ color: "#bfe3d2" }}>One account</p>
               <p className="mt-2 text-xl font-bold leading-snug text-white">Run all nine subagents on one job.</p>
-              <p className="mt-2 text-sm leading-relaxed" style={{ color: "rgba(255,255,255,0.85)" }}>You approve the job; every subagent you pick starts at the same time.</p>
-              <Link to={user ? "/dashboard/jobs" : "/register"} onClick={() => close()} className="x-btn mt-5" style={{ background: "#fff", color: "#0052cc" }}>
+              <p className="mt-2 text-sm leading-relaxed" style={{ color: "#d6ebe1" }}>You approve the job; every subagent you pick starts at the same time.</p>
+              <Link to={user ? "/dashboard/jobs" : "/register"} onClick={() => close()} className="x-btn mt-5" style={{ background: "#fff", color: "var(--x-brand-hover)" }}>
                 {user ? "Open your jobs" : "Join free"}
               </Link>
               <Link to="/#how" onClick={() => close()} className="mt-3 block text-sm font-semibold text-white underline-offset-4 hover:underline">

@@ -45,7 +45,7 @@ function SubagentLink({ s, className, children, style }) {
   );
 }
 
-const STAGE_COLOR = { find: "#00e5ff", win: "#4d94ff", build: "#8fb8ff", keep: "#3ddcc4" };
+const STAGE_COLOR = { find: "#c2610c", win: "#2459c4", build: "#0e6b4f", keep: "#b86e12" };
 
 /* ------------------------------------------------------- typing headline */
 
@@ -65,12 +65,12 @@ function TypingWord({ reduced }) {
     });
   }, [tick, reduced]);
 
-  if (reduced) return <span style={{ color: "var(--x-ink, var(--x-brand))" }}>{WORDS.join(" ")}</span>;
+  if (reduced) return <span style={{ color: "var(--x-brand)" }}>{WORDS.join(" ")}</span>;
   return (
     <>
       <span className="sr-only">{WORDS.join(" ")}</span>
       <span aria-hidden="true">
-        <span style={{ color: "var(--x-ink, var(--x-brand))" }}>{WORDS[state.i].slice(0, state.n)}</span>
+        <span style={{ color: "var(--x-brand)" }}>{WORDS[state.i].slice(0, state.n)}</span>
         <span className="x-hcaret" />
       </span>
     </>
@@ -87,7 +87,7 @@ const CODE = [
   [["kw", "await"], ["d", " workforce."], ["fn", "staff"], ["d", "(job, { crew: "], ["s", '"electrical"'], ["d", " })"]],
   [["d", "studio."], ["fn", "showcase"], ["d", "(job)  "], ["c", "// keep the customer"]],
 ];
-const TOKEN_COLOR = { kw: "#00ffff", d: "#e6e6e6", fn: "#4d94ff", s: "#9fc2ff", c: "#7a7a7a" };
+const TOKEN_COLOR = { kw: "#7fd1ae", d: "#e6ece8", fn: "#8fb3ff", s: "#f2b766", c: "#6f8178" };
 const OUTPUT = [
   "✓ open projects matched · electrical · Pasadena",
   "✓ supplier quotes compared · best one selected",
@@ -114,11 +114,11 @@ function CodePanel({ reduced }) {
   let caretPlaced = false;
 
   return (
-    <div className="overflow-hidden" style={{ background: "#141414", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 20, boxShadow: "0 24px 60px -20px rgba(0,102,255,0.45)" }}>
-      <div className="flex items-center gap-2 px-4 py-3.5" style={{ borderBottom: "1px solid #2a2a2a" }}>
-        {[0, 1, 2].map((i) => <span key={i} className="h-[11px] w-[11px] rounded-full" style={{ background: "#3a3a3a" }} />)}
-        <span className="x-mono ml-2 text-xs" style={{ color: "#a3a3a3" }}>pipeline.js</span>
-        <span className="x-mono ml-auto rounded-full px-2 py-0.5 text-[11px]" style={{ color: "#00ffff", background: "rgba(0,255,255,0.1)" }}>● running</span>
+    <div className="overflow-hidden" style={{ background: "#15201b", borderRadius: 20, boxShadow: "0 2px 4px #15201b0a, 0 24px 60px -20px #15201b66" }}>
+      <div className="flex items-center gap-2 px-4 py-3.5" style={{ borderBottom: "1px solid #2a3a32" }}>
+        {[0, 1, 2].map((i) => <span key={i} className="h-[11px] w-[11px] rounded-full" style={{ background: "#3a4a42" }} />)}
+        <span className="x-mono ml-2 text-xs" style={{ color: "#8a9a91" }}>pipeline.js</span>
+        <span className="x-mono ml-auto rounded-full px-2 py-0.5 text-[11px]" style={{ color: "#7fd1ae", background: "#1f3329" }}>● running</span>
       </div>
       <pre className="x-mono m-0 overflow-x-auto py-4 text-[13.5px] leading-[1.75]" aria-label="Example: one job running through the subagents">
         {CODE.map((line, i) => {
@@ -134,15 +134,15 @@ function CodePanel({ reduced }) {
           if (caret) caretPlaced = true;
           return (
             <div key={i} className="flex pr-5">
-              <span className="w-11 shrink-0 select-none pr-4 text-right" style={{ color: "#5a5a5a" }}>{i + 1}</span>
+              <span className="w-11 shrink-0 select-none pr-4 text-right" style={{ color: "#4d5e55" }}>{i + 1}</span>
               <span>{parts}{caret && <span className="x-caret" />}</span>
             </div>
           );
         })}
       </pre>
-      <div className="x-mono min-h-[92px] px-5 pb-4 pt-3 text-[12.5px]" style={{ borderTop: "1px solid #2a2a2a" }} aria-live="off">
-        <div className="mb-1.5" style={{ color: "#a3a3a3" }}>output</div>
-        {OUTPUT.slice(0, outCount).map((o) => <div key={o} className="x-out" style={{ color: "#b8f9ff" }}>{o}</div>)}
+      <div className="x-mono min-h-[92px] px-5 pb-4 pt-3 text-[12.5px]" style={{ borderTop: "1px solid #2a3a32" }} aria-live="off">
+        <div className="mb-1.5" style={{ color: "#8a9a91" }}>output</div>
+        {OUTPUT.slice(0, outCount).map((o) => <div key={o} className="x-out" style={{ color: "#cfe9dc" }}>{o}</div>)}
       </div>
     </div>
   );
@@ -159,19 +159,19 @@ function HubDiagram() {
     <svg viewBox="0 0 640 440" className="block h-auto w-full" role="img" aria-label="The nine subagents, each connected to the Stratagem AI hub">
       {nodes.map((n) => (
         <g key={`l-${n.key}`}>
-          <line x1={n.x} y1={n.y} x2="320" y2="220" stroke="#3a3a3a" strokeWidth="2" />
+          <line x1={n.x} y1={n.y} x2="320" y2="220" stroke="#e4e7e0" strokeWidth="2" />
           <line className="x-beam" x1={n.x} y1={n.y} x2="320" y2="220" stroke={n.color} strokeWidth="3" strokeLinecap="round" style={{ animationDelay: n.delay }} />
         </g>
       ))}
       <g className="x-hub">
-        <rect x="270" y="190" width="100" height="60" rx="14" fill="#0066ff" />
-        <text x="320" y="226" textAnchor="middle" fontFamily="DejaVu Sans, sans-serif" fontSize="18" fontWeight="800" fill="#fff">D&amp;J</text>
+        <rect x="270" y="190" width="100" height="60" rx="14" fill="#0e6b4f" />
+        <text x="320" y="226" textAnchor="middle" fontFamily="Inter, sans-serif" fontSize="18" fontWeight="800" fill="#fff">D&amp;J</text>
       </g>
       {nodes.map((n) => (
         <g key={`n-${n.key}`}>
-          <rect x={n.x - 52} y={n.y - 17} width="104" height="34" rx="17" fill="#262626" stroke={n.color} strokeWidth="1.5" />
+          <rect x={n.x - 52} y={n.y - 17} width="104" height="34" rx="17" fill="#fff" stroke={n.color} strokeWidth="1.5" />
           <circle cx={n.x - 38} cy={n.y} r="4" fill={n.color} />
-          <text x={n.x - 28} y={n.y + 5} fontFamily="DejaVu Sans, sans-serif" fontSize="13" fontWeight="600" fill="#ffffff">{n.name}</text>
+          <text x={n.x - 28} y={n.y + 5} fontFamily="Inter, sans-serif" fontSize="13" fontWeight="600" fill="#15201b">{n.name}</text>
         </g>
       ))}
     </svg>
@@ -201,7 +201,7 @@ function JobSteps({ reduced }) {
             style={{
               background: "var(--x-surface)",
               border: `1px solid ${on ? "var(--x-brand)" : "var(--x-border)"}`,
-              boxShadow: on ? "var(--x-shadow-pop)" : "0 1px 2px rgba(0,0,0,0.4)",
+              boxShadow: on ? "var(--x-shadow-pop)" : "0 1px 2px #15201b0a",
               transition: "border-color .3s ease, box-shadow .3s ease",
             }}
           >
@@ -284,7 +284,7 @@ export default function Home() {
       <section style={{ padding: "96px var(--x-gutter)" }}>
         <div className="flex flex-wrap items-center gap-12">
           <div className="min-w-0 flex-[1_1_380px]">
-            <p className={EYEBROW} style={{ color: "var(--x-ink, var(--x-brand))" }}>One network, nine subagents</p>
+            <p className={EYEBROW} style={{ color: "var(--x-brand)" }}>One network, nine subagents</p>
             <h2 className={H2} style={{ fontSize: "clamp(30px, 3.6vw, 44px)", fontFamily: "inherit" }}>Every subagent runs through the same hub.</h2>
             <p className="mt-4 text-[17px] leading-relaxed" style={{ color: "var(--x-muted)" }}>
               Schedule all nine subagents to work at the same time while you watch your revenue grow.
@@ -309,7 +309,7 @@ export default function Home() {
         <div style={{ padding: "96px var(--x-gutter)" }}>
           <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
             <div>
-              <p className={EYEBROW} style={{ color: "var(--x-ink, var(--x-brand))" }}>Subagents</p>
+              <p className={EYEBROW} style={{ color: "var(--x-brand)" }}>Subagents</p>
               <h2 className={H2} style={{ fontSize: "clamp(30px, 3.6vw, 44px)", fontFamily: "inherit" }}>A clear place for every part of the job.</h2>
             </div>
             <p className="m-0 max-w-[420px] text-base leading-relaxed" style={{ color: "var(--x-muted)" }}>
@@ -326,7 +326,7 @@ export default function Home() {
                   </span>
                   <span className="mt-1 text-[22px] font-bold tracking-tight">{s.name}</span>
                   <span className="flex-1 text-[15px] leading-relaxed" style={{ color: "var(--x-muted)" }}>{s.line}</span>
-                  <span className="flex items-center gap-1.5 text-[15px] font-semibold" style={{ color: "var(--x-ink, var(--x-brand))" }}>
+                  <span className="flex items-center gap-1.5 text-[15px] font-semibold" style={{ color: "var(--x-brand)" }}>
                     Open {s.name}
                     <svg className="x-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" /></svg>
                   </span>
@@ -339,7 +339,7 @@ export default function Home() {
 
       {/* How a job moves */}
       <section id="how" style={{ padding: "96px var(--x-gutter)" }}>
-        <p className={EYEBROW} style={{ color: "var(--x-ink, var(--x-brand))" }}>How a job moves</p>
+        <p className={EYEBROW} style={{ color: "var(--x-brand)" }}>How a job moves</p>
         <h2 className={`${H2} mb-10 max-w-[760px]`} style={{ fontSize: "clamp(30px, 3.6vw, 44px)", fontFamily: "inherit" }}>From first lead to repeat customer in four steps.</h2>
         <JobSteps reduced={reduced} />
       </section>
@@ -350,12 +350,12 @@ export default function Home() {
           <div className="max-w-[680px]">
             <div className="mb-4 flex items-center gap-3"><StratagemMark size={36} /></div>
             <h2 className={H2} style={{ fontSize: "clamp(30px, 3.6vw, 44px)", color: "#fff", fontFamily: "inherit" }}>Bring your next job. We&apos;ll run the pipeline.</h2>
-            <p className="mt-4 text-[17px] leading-relaxed" style={{ color: "rgba(255,255,255,0.85)" }}>
+            <p className="mt-4 text-[17px] leading-relaxed" style={{ color: "#d6ebe1" }}>
               Create a free company profile, pick your trades and subagents, and work every job from one account.
             </p>
           </div>
           <div className="flex flex-wrap gap-3">
-            <Link to="/register" className="x-btn" style={{ background: "#fff", color: "#0052cc" }}>Join free</Link>
+            <Link to="/register" className="x-btn" style={{ background: "#fff", color: "var(--x-brand-hover)" }}>Join free</Link>
             <Link to="/contact" className="x-btn" style={{ border: "1px solid #ffffff66", color: "#fff" }}>Talk to us</Link>
           </div>
         </div>

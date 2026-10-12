@@ -19,10 +19,11 @@ function writeStoredTheme(value) {
   }
 }
 
-// Tech Innovation is dark first: light only when the visitor picks it.
 function readTheme() {
-  if (typeof window === "undefined") return "dark";
-  return readStoredTheme() === "light" ? "light" : "dark";
+  if (typeof window === "undefined") return "light";
+  const stored = readStoredTheme();
+  if (stored === "light" || stored === "dark") return stored;
+  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
 
 /** Shared so the dashboard sidebar label and every toggle stay on one store. */
@@ -41,6 +42,15 @@ export function useThemeMode() {
     return () => window.removeEventListener(THEME_EVENT, sync);
   }, []);
 
+  // Follow the OS until the visitor makes an explicit choice.
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-color-scheme: dark)");
+    const onChange = (e) => {
+      if (!readStoredTheme()) setTheme(e.matches ? "dark" : "light");
+    };
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
 
   const chooseTheme = (next) => {
     writeStoredTheme(next);
