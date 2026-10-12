@@ -21,7 +21,7 @@
 
   Fonts are bundled from npm (@fontsource), never a third-party CDN, so no
   visitor IP leaves the site before consent. Every color is a CSS variable;
-  dark is the signature theme, daylight is the light variant. Legacy token
+  the site is light only (no dark mode). Legacy token
   names (ink, paper, steel, amber, cta, bid-*) remain as aliases so every
   screen re-skins automatically.
   --------------------------------------------------------------------------- */
@@ -128,8 +128,7 @@
   --panel-shadow: none;
 }
 
-/* Nocturne (dark theme), and on-dark bands inside daylight. */
-[data-theme="dark"],
+/* On-dark bands inside the light site. */
 .on-dark {
   color-scheme: dark;
 
@@ -843,15 +842,6 @@ h4, h5, h6 { font-family: var(--font-sans); }
   --lg-drop: 0 10px 40px -12px rgba(28, 26, 22, 0.28), 0 2px 6px -2px rgba(28, 26, 22, 0.12);
   --lg-sheen: rgba(255, 255, 255, 0.55);
 }
-[data-theme="dark"] {
-  --lg-tint: rgba(255, 255, 255, 0.10);
-  --lg-tint-2: rgba(255, 255, 255, 0.02);
-  --lg-rim: rgba(255, 255, 255, 0.38);
-  --lg-rim-low: rgba(255, 255, 255, 0.08);
-  --lg-drop: 0 16px 48px -14px rgba(0, 0, 0, 0.75), 0 2px 8px -2px rgba(0, 0, 0, 0.5);
-  --lg-sheen: rgba(255, 255, 255, 0.16);
-}
-
 .liquid-glass,
 .liquid-glass-btn {
   position: relative;
@@ -932,8 +922,7 @@ h4, h5, h6 { font-family: var(--font-sans); }
    gradient accents. Light only. Unlayered, so it wins over utilities and the
    Nocturne rules above while keeping every animation.
    =========================================================================== */
-:root,
-[data-theme="dark"] {
+:root {
   color-scheme: light;
   --page-bg: #fafaf7;
   --surface: #fafaf7;

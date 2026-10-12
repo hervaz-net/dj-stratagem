@@ -2,7 +2,6 @@ import { NavLink } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import Breadcrumbs from "./Breadcrumbs";
 import MarketTicker from "./MarketTicker";
-import ThemeToggle from "../ThemeToggle";
 import RoleBadge from "../RoleBadge";
 import { LogoMark } from "../Logo";
 import { useRole } from "../../contexts/RoleContext";
@@ -32,7 +31,6 @@ export default function DashboardLayout({
           </NavLink>
           <div className="flex items-center gap-1">
             <RoleBadge role={role} label={roleView(role).label} />
-            <ThemeToggle />
           </div>
         </div>
 
