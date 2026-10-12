@@ -6,11 +6,10 @@
     <link rel="apple-touch-icon" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="manifest" href="/manifest.webmanifest" />
-    <meta name="theme-color" content="#fafaf7" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#0d1210" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#fafaf7" />
+    <meta name="color-scheme" content="light" />
     <script>
-      // Apply the stored theme before first paint so a dark-theme visitor
-      // never sees a white flash on load.
+      // The site is light only; set it before first paint.
       (function () {
         try {
           // One public origin; www keeps its own storage and cache otherwise.
@@ -18,19 +17,9 @@
             location.replace("https://djstratageminc.com" + location.pathname + location.search + location.hash);
             return;
           }
-          // Only Stratagem Exchange offers dark mode; every other site is light.
-          if (!/^\/exchange(\/|$)/.test(location.pathname)) {
-            document.documentElement.dataset.theme = "light";
-            return;
-          }
-          var stored = localStorage.getItem("djs-theme");
-          var theme =
-            stored === "light" || stored === "dark"
-              ? stored
-              : window.matchMedia("(prefers-color-scheme: dark)").matches
-                ? "dark"
-                : "light";
-          document.documentElement.dataset.theme = theme;
+          // Light only, on every page. Clear any dark choice saved earlier.
+          document.documentElement.dataset.theme = "light";
+          localStorage.removeItem("djs-theme");
         } catch (e) {
           document.documentElement.dataset.theme = "light";
         }
@@ -52,7 +41,7 @@
          These defaults match the parent homepage. Stratagem Exchange is a
          subsidiary at /exchange and sets its own title after hydration. -->
     <title>Build the pipeline, not the paperwork. | D&amp;J Stratagem, Inc.</title>
-    <script type="module" crossorigin src="/assets/index-DeFnHBC-.js"></script>
+    <script type="module" crossorigin src="/assets/index-C0-tB-nW.js"></script>
   </head>
   <body>
     <div id="root"></div>
