@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
-import SubagentHeader from "./components/SubagentHeader";
+import SiteNav from "./shared/SiteNav";
 import Footer from "./components/Footer";
 import BackToTop from "./components/BackToTop";
 import CookieBanner from "./components/CookieBanner";
@@ -45,6 +45,7 @@ import Approvals from "./pages/dashboard/Approvals";
 import { AuthProvider } from "./auth/AuthContext";
 import RequireAuth from "./auth/RequireAuth";
 import { ToastProvider } from "./contexts/ToastContext";
+import useAuth from "./auth/useAuth";
 
 function ScrollToTop() {
   const { pathname, hash } = useLocation();
@@ -78,6 +79,13 @@ const SkipLink = () => (
 /** Public marketing pages: site navbar, footer, back-to-top, cookie banner, floating CTA. */
 function MarketingLayout({ children }) {
   const [paletteOpen, setPaletteOpen] = useState(false);
+  const { user, loading } = useAuth();
+  const account = {
+    signedIn: !loading && !!user,
+    dashboardHref: "/dashboard/overview",
+    signInHref: "/login",
+    joinHref: "/register",
+  };
 
   const openPalette = useCallback(() => setPaletteOpen(true), []);
   const closePalette = useCallback(() => setPaletteOpen(false), []);
@@ -97,7 +105,7 @@ function MarketingLayout({ children }) {
     <div className="relative isolate flex min-h-screen flex-col">
       <Atmosphere />
       <SkipLink />
-      <SubagentHeader onOpenPalette={openPalette} />
+      <SiteNav app="parent" account={account} onOpenPalette={openPalette} />
       <main id="main" className="flex-1">
         {children}
       </main>

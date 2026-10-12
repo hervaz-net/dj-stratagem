@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Seo from "../components/Seo";
-import { StratagemMark } from "../components/SubagentHeader";
+import { StratagemMark } from "../shared/SiteNav";
 import { subagents } from "../data/subagents";
 import "../styles/djx.css";
 

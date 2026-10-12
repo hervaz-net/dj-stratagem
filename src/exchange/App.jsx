@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Routes, Route, Navigate, Link, useLocation } from "react-router-dom";
-import Navbar from "./components/Navbar";
+import SiteNav from "../shared/SiteNav";
+import useAuth from "./auth/useAuth";
 import Logo from "./components/Logo";
 import ThemeToggle from "./components/ThemeToggle";
 import { PRODUCT } from "./brand";
@@ -87,6 +88,13 @@ const OWN_SHELL_ROUTES = ["/login", "/register", "/forgot-password", "/verify-em
 /** Public marketing pages: site navbar, footer, back-to-top, cookie banner, floating CTA. */
 function MarketingLayout({ children }) {
   const { pathname } = useLocation();
+  const { user, loading } = useAuth();
+  const account = {
+    signedIn: !loading && !!user,
+    dashboardHref: "/exchange/dashboard",
+    signInHref: "/exchange/login",
+    joinHref: "/exchange/register",
+  };
   const hideChrome = hideMarketingChrome(pathname);
   const [paletteOpen, setPaletteOpen] = useState(false);
 
@@ -137,7 +145,7 @@ function MarketingLayout({ children }) {
   return (
     <div className="flex min-h-screen flex-col">
       <SkipLink />
-      <Navbar onOpenPalette={openPalette} />
+      <SiteNav app="exchange" account={account} onOpenPalette={openPalette} />
       <main id="main" className="flex-1">
         {children}
       </main>

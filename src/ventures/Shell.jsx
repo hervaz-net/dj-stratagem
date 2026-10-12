@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import Button from "../exchange/components/Button";
 import { CONTACT_EMAIL, brandCss } from "./brands";
+import SiteNav from "../shared/SiteNav";
 
 /** Company mark: one glyph on a rounded brand tile, like the Exchange mark. */
 export function Mark({ glyph, size = 30 }) {
@@ -53,104 +54,35 @@ export function Logo({ brand }) {
   );
 }
 
+/**
+ * The company's own bar, under the global nav: its name, its page sections,
+ * and its main action. Scrolls with the page; the global nav stays on top.
+ */
 function Header({ brand }) {
-  const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const toggleRef = useRef(null);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  useEffect(() => {
-    if (!open) return undefined;
-    const onKey = (e) => {
-      if (e.key === "Escape") {
-        setOpen(false);
-        toggleRef.current?.focus();
-      }
-    };
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [open]);
-
-  const close = () => setOpen(false);
-
   return (
-    <header
-      className={`sticky top-0 z-50 border-b transition-colors duration-200 ${
-        scrolled || open ? "border-line bg-surface/90 backdrop-blur-xl" : "border-transparent bg-canvas"
-      }`}
-    >
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-5 sm:px-6">
+    <div className="border-b border-line bg-canvas">
+      <div className="mx-auto flex min-h-14 max-w-6xl flex-wrap items-center gap-x-4 gap-y-1 px-5 py-2 sm:flex-nowrap sm:px-6">
         <Link to={brand.path} className="shrink-0" aria-label={`${brand.name} home`} onClick={() => window.scrollTo({ top: 0 })}>
           <Logo brand={brand} />
         </Link>
-
         {brand.nav && (
-          <nav className="hidden items-center gap-1 lg:flex" aria-label="Main">
+          <nav className="order-last -mx-1 flex min-w-0 basis-full items-center gap-1 overflow-x-auto px-1 [scrollbar-width:none] sm:order-none sm:basis-auto sm:flex-1" aria-label={`${brand.name} sections`}>
             {brand.nav.map((item) => (
               <a
                 key={item.href}
                 href={item.href}
-                className="rounded-full px-3 py-2 text-[0.92rem] font-medium text-fg-muted transition-colors hover:bg-subtle hover:text-fg"
+                className="whitespace-nowrap rounded-full px-3 py-2 text-[0.9rem] font-medium text-fg-muted transition-colors hover:bg-subtle hover:text-fg"
               >
                 {item.label}
               </a>
             ))}
           </nav>
         )}
-
-        <div className="hidden items-center gap-2 lg:flex">
-          <Button href={brand.cta.href} size="sm">
-            {brand.cta.label}
-          </Button>
-        </div>
-
-        <div className="flex items-center gap-2 lg:hidden">
-          <button
-            ref={toggleRef}
-            type="button"
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-line text-fg transition-colors hover:bg-subtle"
-            onClick={() => setOpen((v) => !v)}
-            aria-label={open ? "Close menu" : "Open menu"}
-            aria-expanded={open}
-            aria-controls="venture-menu"
-          >
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-              {open ? (
-                <path d="M3 3L15 15M15 3L3 15" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
-              ) : (
-                <path d="M2 5H16M2 9H16M2 13H16" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
-              )}
-            </svg>
-          </button>
-        </div>
+        <Button href={brand.cta.href} size="sm" className="ml-auto hidden shrink-0 sm:inline-flex">
+          {brand.cta.label}
+        </Button>
       </div>
-
-      {open && (
-        <div id="venture-menu" className="animate-menu-in border-t border-line bg-surface px-5 pb-6 lg:hidden">
-          <nav className="flex flex-col gap-1 pt-3" aria-label="Mobile">
-            {(brand.nav ?? []).map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                onClick={close}
-                className="rounded-xl px-3 py-3 text-base font-medium text-fg transition-colors hover:bg-subtle"
-              >
-                {item.label}
-              </a>
-            ))}
-            <Button href={brand.cta.href} className="mt-3 w-full" onClick={close}>
-              {brand.cta.label}
-            </Button>
-          </nav>
-        </div>
-      )}
-    </header>
+    </div>
   );
 }
 
@@ -219,6 +151,7 @@ export default function Shell({ brand, children }) {
       <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-surface focus:px-4 focus:py-2">
         Skip to content
       </a>
+      <SiteNav app="venture" account={{ signInHref: "/login", joinHref: "/register" }} />
       <Header brand={brand} />
       <main id="main">{children}</main>
       <Footer brand={brand} />
