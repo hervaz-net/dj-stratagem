@@ -20,9 +20,7 @@ const load = isExchange
     ? Promise.all([import('./exchange/index.css'), import('./ventures/App.jsx')])
     : Promise.all([import('./index.css'), import('./App.jsx')])
 
-// The Tech Innovation theme re-skins all three apps. Its selectors outrank the
-// apps' own tokens, so it can load in parallel.
-Promise.all([load, import('./styles/tech-innovation.css')]).then(([[, { default: App }]]) => {
+load.then(([, { default: App }]) => {
   createRoot(document.getElementById('root')).render(
     <StrictMode>
       <BrowserRouter basename={isExchange ? EXCHANGE_BASE : undefined}>

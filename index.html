@@ -6,7 +6,8 @@
     <link rel="apple-touch-icon" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="manifest" href="/manifest.webmanifest" />
-    <meta name="theme-color" content="#1e1e1e" />
+    <meta name="theme-color" content="#fafaf7" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0d1210" media="(prefers-color-scheme: dark)" />
     <script>
       // Apply the stored theme before first paint so a dark-theme visitor
       // never sees a white flash on load.
@@ -17,16 +18,21 @@
             location.replace("https://djstratageminc.com" + location.pathname + location.search + location.hash);
             return;
           }
-          // Tech Innovation theme: dark everywhere. Only Stratagem Exchange
-          // offers a light variant, and only when the visitor picks it.
+          // Only Stratagem Exchange offers dark mode; every other site is light.
           if (!/^\/exchange(\/|$)/.test(location.pathname)) {
-            document.documentElement.dataset.theme = "dark";
+            document.documentElement.dataset.theme = "light";
             return;
           }
           var stored = localStorage.getItem("djs-theme");
-          document.documentElement.dataset.theme = stored === "light" ? "light" : "dark";
+          var theme =
+            stored === "light" || stored === "dark"
+              ? stored
+              : window.matchMedia("(prefers-color-scheme: dark)").matches
+                ? "dark"
+                : "light";
+          document.documentElement.dataset.theme = theme;
         } catch (e) {
-          document.documentElement.dataset.theme = "dark";
+          document.documentElement.dataset.theme = "light";
         }
       })();
     </script>

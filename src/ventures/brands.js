@@ -140,11 +140,9 @@ export const BRANDS = {
 
 export const VENTURE_PATHS = Object.values(BRANDS).map((b) => b.path);
 
-/**
- * Per-company color overrides. Under the Tech Innovation theme every company
- * shares electric blue (src/styles/tech-innovation.css), so this is empty;
- * the per-brand palettes above stay for a future return to brand colors.
- */
-export function brandCss() {
-  return "";
+/** Override the Exchange brand tokens for one company. The sites are light only. */
+export function brandCss({ colors: { light: l } }) {
+  const vars = (c) =>
+    `--brand:${c.brand};--brand-hover:${c.hover};--brand-soft:${c.soft};--brand-fg:${c.fg};--accent-on-brand:${c.dot};--panel-glow:${c.soft};`;
+  return `:root,[data-theme="dark"]{${vars(l)}}`;
 }

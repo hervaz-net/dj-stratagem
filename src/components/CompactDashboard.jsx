@@ -96,7 +96,7 @@ export function CompactDashboard() {
               value={query}
               onChange={e=>setQuery(e.target.value)}
               placeholder="Search bids, location, specialty..."
-              className="pl-10 pr-4 py-2 rounded-lg border border-border bg-card text-sm w-72"
+              className="pl-10 pr-4 py-2 rounded-lg border border-border bg-white text-sm w-72"
             />
           </div>
 
@@ -109,7 +109,7 @@ export function CompactDashboard() {
 
       {/* Bulk actions */}
       {selected.size > 0 && (
-        <div className="max-w-7xl mx-auto mt-3 p-3 bg-card border border-border rounded-md flex items-center justify-between compact-toolbar">
+        <div className="max-w-7xl mx-auto mt-3 p-3 bg-white border border-border rounded-md flex items-center justify-between compact-toolbar">
           <div className="flex items-center gap-3">
             <span className="text-sm text-text-muted">{selected.size} selected</span>
             <button onClick={()=>bulkAction('export')} className="text-sm px-3 py-1 bg-surface rounded">Export</button>
@@ -124,7 +124,7 @@ export function CompactDashboard() {
       )}
 
       {/* Table header (compact) */}
-      <div className="max-w-7xl mx-auto mt-4 bg-card border border-border rounded-md overflow-hidden">
+      <div className="max-w-7xl mx-auto mt-4 bg-white border border-border rounded-md overflow-hidden">
         <div className="grid grid-cols-12 gap-2 items-center px-4 py-2 text-xs font-semibold text-text-muted border-b border-border">
           <div className="col-span-1">Sel</div>
           <div className="col-span-4">Project</div>
@@ -200,7 +200,7 @@ export function CompactDashboard() {
       {/* Quick add inline modal */}
       {quickAddOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/30 z-50">
-          <div className="w-full max-w-xl bg-card rounded-md p-6">
+          <div className="w-full max-w-xl bg-white rounded-md p-6">
             <div className="flex items-center justify-between">
               <h3 className="font-bold text-bid-navy">Quick Add Bid</h3>
               <button onClick={()=>setQuickAddOpen(false)} className="p-2 text-lg">✕</button>
