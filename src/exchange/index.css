@@ -17,7 +17,7 @@
 
   Legacy aliases (ink, paper, steel, amber, cta, line, bid-*) still resolve so
   untouched screens re-skin automatically. Do not use them in new code.
-  Every color below is a CSS variable, so light/dark switch in one place.
+  Every color below is a CSS variable. The site is light only.
   --------------------------------------------------------------------------- */
 
 @theme inline {
@@ -140,57 +140,6 @@
   --panel-shadow: 0 1px 2px rgba(21, 32, 27, 0.04), 0 4px 16px -8px rgba(21, 32, 27, 0.1);
   --shadow-card: 0 1px 2px rgba(21, 32, 27, 0.04), 0 2px 8px -4px rgba(21, 32, 27, 0.08);
   --shadow-pop: 0 2px 4px rgba(21, 32, 27, 0.04), 0 16px 40px -16px rgba(21, 32, 27, 0.22);
-}
-
-[data-theme="dark"] {
-  color-scheme: dark;
-
-  --canvas: #0d1210;
-  --surface-raised: #151c19;
-  --subtle: #1b2420;
-  --surface-hover: #202b26;
-  --border: #26312c;
-  --border-strong: #35423c;
-
-  --text-strong: #eef3f0;
-  --text: #eef3f0;
-  --text-muted: #9aa8a1;
-
-  --brand: #2fa37c;
-  --brand-hover: #3dbb90;
-  --brand-soft: rgba(47, 163, 124, 0.14);
-  --brand-fg: #6fd3ae;
-  --accent: #f0a93b;
-  --accent-soft: rgba(240, 169, 59, 0.14);
-
-  --role-contractor: #f08b3a;
-  --role-contractor-soft: rgba(240, 139, 58, 0.14);
-  --role-distributor: #6d9bf5;
-  --role-distributor-soft: rgba(109, 155, 245, 0.14);
-  --role-supplier: #3dbb90;
-  --role-supplier-soft: rgba(61, 187, 144, 0.14);
-
-  --success: #4ccb8a;
-  --success-soft: rgba(76, 203, 138, 0.14);
-  --warning: #f0a93b;
-  --warning-soft: rgba(240, 169, 59, 0.14);
-  --danger: #ff7b72;
-  --danger-soft: rgba(255, 123, 114, 0.14);
-
-  --grid-line: rgba(154, 168, 161, 0.07);
-  --glass-bg: rgba(21, 28, 25, 0.9);
-  --shadow-color: 0 0 0;
-
-  --viz-blue: #6d9bf5;
-  --viz-cyan: #4fc4c4;
-  --viz-red: #ff7b72;
-  --viz-gold: #f0a93b;
-  --viz-green: #4ccb8a;
-
-  --panel-glow: rgba(47, 163, 124, 0.2);
-  --panel-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px -12px rgba(0, 0, 0, 0.6);
-  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-pop: 0 16px 40px -16px rgba(0, 0, 0, 0.7);
 }
 
 html {

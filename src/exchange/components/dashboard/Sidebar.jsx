@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import Logo from "../Logo";
-import ThemeToggle, { useThemeMode } from "../ThemeToggle";
 import useAuth from "../../auth/useAuth";
 import { useRole } from "../../contexts/RoleContext";
 import { DASHBOARD_NAV } from "../../navigation";
@@ -212,11 +211,7 @@ function MoreSheet({ items, onClose }) {
             </NavLink>
           ))}
         </nav>
-        <div className="mt-4 flex items-center justify-between rounded-2xl border border-line bg-canvas px-3 py-2">
-          <span className="text-sm font-medium text-fg">Theme</span>
-          <ThemeToggle />
-        </div>
-        <div className="mt-3">
+        <div className="mt-4">
           <AccountCard />
         </div>
       </div>
@@ -226,7 +221,6 @@ function MoreSheet({ items, onClose }) {
 
 export default function Sidebar() {
   const items = useNavItems();
-  const { theme } = useThemeMode();
   const { pathname } = useLocation();
   const [moreOpen, setMoreOpen] = useState(false);
   const closeMore = useCallback(() => setMoreOpen(false), []);
@@ -260,10 +254,6 @@ export default function Sidebar() {
         </nav>
 
         <div className="space-y-3 px-4 pb-5 pt-4">
-          <div className="flex items-center justify-between rounded-2xl border border-line bg-canvas py-1 pl-3 pr-1">
-            <span className="text-xs font-semibold text-fg-muted">{theme === "dark" ? "Dark theme" : "Light theme"}</span>
-            <ThemeToggle />
-          </div>
           <AccountCard />
         </div>
       </aside>

@@ -99,7 +99,7 @@ const ALL_VARS = [
   ...ROLE_ORDER.flatMap((k) => [`--role-${k}`, `--role-${k}-soft`]),
 ];
 
-/** Reads the palette's CSS custom properties and re-reads when the theme flips. */
+/** Reads the palette's CSS custom properties from the page. */
 function usePaletteValues() {
   const [values, setValues] = useState({});
   useEffect(() => {
@@ -222,9 +222,8 @@ export default function BrandGuidelines() {
 
       <Section tone="subtle">
         <SectionHeading eyebrow="Color" title="One green, a little amber, lots of white space">
-          Every color is a token with a light and a dark value. The swatches below read the live
-          values from this page, so switch the theme to see the dark palette. Never hard-code a
-          hex value in a component.
+          Every color is a token. The swatches below read the live values from this page. The site
+          is light only. Never hard-code a hex value in a component.
         </SectionHeading>
 
         <div className="mt-10 space-y-10">

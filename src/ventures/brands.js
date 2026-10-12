@@ -5,8 +5,6 @@
 export const CONTACT_EMAIL = "hello@djstratageminc.com";
 export const LEGAL_ENTITY = "D&J Stratagem, Inc.";
 
-const palette = (light, dark) => ({ light, dark });
-
 export const BRANDS = {
   fleet: {
     slug: "fleet",
@@ -24,10 +22,7 @@ export const BRANDS = {
       { href: "#credentials", label: "Licensing" },
     ],
     cta: { href: "#quote", label: "Request a quote" },
-    colors: palette(
-      { brand: "#c2410c", hover: "#9a3412", soft: "#fff1e8", fg: "#9a3412", dot: "#ffffff" },
-      { brand: "#ea580c", hover: "#f97316", soft: "rgba(249,115,22,0.14)", fg: "#fdba74", dot: "#ffffff" },
-    ),
+    colors: { light: { brand: "#c2410c", hover: "#9a3412", soft: "#fff1e8", fg: "#9a3412", dot: "#ffffff" } },
   },
   capital: {
     slug: "capital",
@@ -61,10 +56,7 @@ export const BRANDS = {
       { href: "#early-list", label: "Questions" },
     ],
     cta: { href: "#early-list", label: "Join the early list" },
-    colors: palette(
-      { brand: "#9a6400", hover: "#7f5200", soft: "#fbf1dc", fg: "#7f5200", dot: "#ffffff" },
-      { brand: "#b7811c", hover: "#c99330", soft: "rgba(233,180,76,0.14)", fg: "#f2c66c", dot: "#ffffff" },
-    ),
+    colors: { light: { brand: "#9a6400", hover: "#7f5200", soft: "#fbf1dc", fg: "#7f5200", dot: "#ffffff" } },
   },
   studio: {
     slug: "studio",
@@ -96,10 +88,7 @@ export const BRANDS = {
       { href: "#early-list", label: "Questions" },
     ],
     cta: { href: "#early-list", label: "Join the early list" },
-    colors: palette(
-      { brand: "#c2185b", hover: "#a3134c", soft: "#fde7f0", fg: "#a3134c", dot: "#ffd27a" },
-      { brand: "#d63f86", hover: "#e2589a", soft: "rgba(255,95,168,0.14)", fg: "#ff9cca", dot: "#ffd27a" },
-    ),
+    colors: { light: { brand: "#c2185b", hover: "#a3134c", soft: "#fde7f0", fg: "#a3134c", dot: "#ffd27a" } },
   },
   workforce: {
     slug: "workforce",
@@ -131,10 +120,7 @@ export const BRANDS = {
       { href: "#early-list", label: "Questions" },
     ],
     cta: { href: "#early-list", label: "Join the early list" },
-    colors: palette(
-      { brand: "#0b7ea3", hover: "#08688a", soft: "#e1f3f9", fg: "#08688a", dot: "#ffd27a" },
-      { brand: "#1b93c2", hover: "#2ba6d6", soft: "rgba(76,201,240,0.14)", fg: "#8fdff6", dot: "#ffd27a" },
-    ),
+    colors: { light: { brand: "#0b7ea3", hover: "#08688a", soft: "#e1f3f9", fg: "#08688a", dot: "#ffd27a" } },
   },
 };
 
@@ -144,5 +130,5 @@ export const VENTURE_PATHS = Object.values(BRANDS).map((b) => b.path);
 export function brandCss({ colors: { light: l } }) {
   const vars = (c) =>
     `--brand:${c.brand};--brand-hover:${c.hover};--brand-soft:${c.soft};--brand-fg:${c.fg};--accent-on-brand:${c.dot};--panel-glow:${c.soft};`;
-  return `:root,[data-theme="dark"]{${vars(l)}}`;
+  return `:root{${vars(l)}}`;
 }

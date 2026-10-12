@@ -3,7 +3,6 @@ import { Routes, Route, Navigate, Link, useLocation } from "react-router-dom";
 import SiteNav from "../shared/SiteNav";
 import useAuth from "./auth/useAuth";
 import Logo from "./components/Logo";
-import ThemeToggle from "./components/ThemeToggle";
 import { PRODUCT } from "./brand";
 import Footer from "./components/Footer";
 import BackToTop from "./components/BackToTop";
@@ -127,7 +126,6 @@ function MarketingLayout({ children }) {
                 <Logo />
               </Link>
               <div className="flex items-center gap-2">
-                <ThemeToggle />
                 <Link to="/" className="rounded-full px-3 py-1.5 text-sm font-medium text-fg-muted hover:bg-subtle hover:text-fg">
                   Back to site
                 </Link>
