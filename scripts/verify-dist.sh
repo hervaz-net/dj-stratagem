@@ -86,13 +86,10 @@ bundle="$(grep -oE 'assets/index-[A-Za-z0-9_-]+[.]js' "$DIST/index.html" | head 
 [[ -f "$DIST/$bundle" ]] || die "hashed bundle $bundle is not in dist/"
 
 if [[ -d "$DIST/fleet" ]]; then
-  die "dist/fleet is a directory; that path is the SPA route. Put photos in dist/media/fleet"
+  die "dist/fleet is a directory; that path is the SPA route. Put any images in dist/media/fleet"
 fi
-# Photos carry a content hash (sedan.<hash>.webp) so a new version is a new URL
-# and the week-long image cache can never show a stale one.
-for photo in sedan suv van sprinter minibus; do
-  compgen -G "$DIST/media/fleet/${photo}.*.webp" >/dev/null || die "missing media/fleet/${photo}.<hash>.webp"
-done
+# The Fleet page has no vehicle photos (removed at the owner's request), so
+# there are no fleet images to check for.
 grep -q 'RewriteRule \^fleet/?\$ /spa.php' "$htaccess" \
   || grep -q 'RewriteRule \^fleet\$ /spa.php' "$htaccess" \
   || grep -q 'RewriteRule \^fleet/?\$ /index.html' "$htaccess" \

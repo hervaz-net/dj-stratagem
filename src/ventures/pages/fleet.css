@@ -1,0 +1,119 @@
+@import "@fontsource/barlow-condensed/600.css";
+@import "@fontsource/barlow-condensed/700.css";
+
+/*
+ * Stratagem Fleet page. Light only, no dark sections. Industrial, after
+ * work-truck rental sites: condensed uppercase headlines, one orange accent,
+ * squared buttons with a double chevron. No vehicle photos.
+ */
+.flt {
+  --flt-ink: #141414;
+  --flt-orange: var(--brand, #c2410c);
+  --flt-orange-hi: #f97316;
+  --flt-paper: #f6f5f3;
+}
+.flt-display {
+  font-family: "Barlow Condensed", "Arial Narrow", ui-sans-serif, system-ui, sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.005em;
+  line-height: 0.95;
+}
+.flt-eyebrow {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--flt-orange);
+}
+
+/* Squared buttons with a double chevron, like a work-site sign. */
+.flt-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  min-height: 48px; padding: 0 22px; border-radius: 4px;
+  font-weight: 700; font-size: 0.95rem; letter-spacing: 0.01em;
+  transition: background-color .18s ease, border-color .18s ease, color .18s ease;
+}
+.flt-btn-primary { background: var(--flt-orange); color: #fff; }
+.flt-btn-primary:hover { background: var(--brand-hover, #9a3412); }
+.flt-btn-ghost { border: 1.5px solid var(--flt-ink); color: var(--flt-ink); }
+.flt-btn-ghost:hover { background: var(--flt-ink); color: #fff; }
+.flt-chev { transition: transform .2s ease; }
+.flt-btn:hover .flt-chev, .flt-link:hover .flt-chev { transform: translateX(4px); }
+.flt-link { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; font-size: 0.9rem; }
+
+/* Hero: a live route drawn across a light grid instead of a photo. */
+.flt-hero-grid {
+  background-image:
+    radial-gradient(ellipse 60% 70% at 78% 40%, rgba(234, 88, 12, 0.12), transparent 70%),
+    linear-gradient(rgba(20, 20, 20, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(20, 20, 20, 0.05) 1px, transparent 1px);
+  background-size: auto, 44px 44px, 44px 44px;
+}
+@keyframes fltDash { to { stroke-dashoffset: 0; } }
+@keyframes fltPing { 0% { transform: scale(.6); opacity: .9; } 100% { transform: scale(2.4); opacity: 0; } }
+.flt-route { stroke-dasharray: 6 10; stroke-dashoffset: 400; animation: fltDash 6s linear infinite; }
+.flt-route-glow { filter: drop-shadow(0 0 5px rgba(234, 88, 12, 0.35)); }
+.flt-ping { transform-box: fill-box; transform-origin: center; animation: fltPing 2s ease-out infinite; }
+
+/* Tall feature tiles: big icon, title over the bottom, orange rule on hover. */
+.flt-tile {
+  position: relative; overflow: hidden; border-radius: 6px; min-height: 15rem;
+  background: var(--color-surface, #fff); border: 1px solid var(--color-line, #e4e7e0);
+  isolation: isolate;
+}
+.flt-tile::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background-image: repeating-linear-gradient(135deg, rgba(194, 65, 12, 0.05) 0 2px, transparent 2px 14px);
+  transition: opacity .3s ease;
+}
+.flt-tile::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 4px; background: var(--flt-orange-hi);
+  transform: scaleX(0); transform-origin: left; transition: transform .35s ease;
+}
+.flt-tile:hover::after, .flt-tile:focus-within::after { transform: scaleX(1); }
+@media (min-width: 768px) { .flt-tile { min-height: 20rem; } }
+.flt-tile-icon { color: var(--flt-orange); transition: transform .4s cubic-bezier(.3, 1.5, .5, 1); }
+.flt-tile:hover .flt-tile-icon { transform: translateY(-4px) rotate(-6deg); }
+.flt-tile-more { max-height: 0; opacity: 0; overflow: hidden; transition: max-height .35s ease, opacity .35s ease; }
+.flt-tile:hover .flt-tile-more, .flt-tile:focus-within .flt-tile-more { max-height: 10rem; opacity: 1; }
+@media (hover: none) { .flt-tile-more { max-height: none; opacity: 1; } }
+
+/* Vehicle class cards: the capacity number is the picture. */
+.flt-class { border-radius: 6px; border: 1px solid var(--color-line, #e4e7e0); background: var(--color-surface, #fff); transition: border-color .2s ease, box-shadow .2s ease; }
+.flt-class:hover { border-color: var(--flt-orange); box-shadow: 0 18px 40px -24px rgba(20, 20, 20, 0.35); }
+.flt-class-head {
+  position: relative; overflow: hidden; border-radius: 5px 5px 0 0; background-color: var(--color-brand-soft, #fff1e8);
+  background-image: repeating-linear-gradient(135deg, rgba(194, 65, 12, 0.07) 0 2px, transparent 2px 16px);
+}
+.flt-class-num { font-size: clamp(4.5rem, 9vw, 6.5rem); color: var(--flt-orange); transition: transform .4s ease; }
+.flt-class:hover .flt-class-num { transform: translateX(6px); }
+
+/* Application scroller with arrows and a progress bar. */
+.flt-rail { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(16rem, 1fr); gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding-bottom: 4px; }
+.flt-rail::-webkit-scrollbar { display: none; }
+.flt-rail > * { scroll-snap-align: start; }
+@media (min-width: 1024px) { .flt-rail { grid-auto-columns: calc((100% - 48px) / 4); } }
+.flt-app {
+  position: relative; display: flex; flex-direction: column; justify-content: flex-end; min-height: 20rem;
+  border-radius: 6px; padding: 22px; overflow: hidden;
+  background: var(--color-surface, #fff); border: 1px solid var(--color-line, #e4e7e0);
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+.flt-app-num { position: absolute; top: 14px; right: 18px; font-size: 4.5rem; color: rgba(20, 20, 20, 0.06); }
+.flt-app:hover { border-color: var(--flt-orange); box-shadow: 0 18px 40px -24px rgba(20, 20, 20, 0.3); }
+.flt-arrow {
+  display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 4px;
+  background: var(--flt-orange); color: #fff; transition: opacity .2s ease, background-color .2s ease;
+}
+.flt-arrow:disabled { opacity: .35; cursor: default; }
+.flt-arrow:not(:disabled):hover { background: var(--brand-hover, #9a3412); }
+.flt-progress { height: 2px; background: var(--color-line, #e4e7e0); }
+.flt-progress > span { display: block; height: 100%; background: var(--flt-orange); transition: width .25s ease, margin-left .25s ease; }
+.flt-tab { min-height: 40px; padding: 0 18px; font-weight: 700; font-size: .85rem; letter-spacing: .08em; text-transform: uppercase; border-bottom: 2px solid transparent; color: var(--color-fg-muted, #5b6861); }
+.flt-tab[aria-selected="true"] { color: var(--color-fg, #15201b); border-color: var(--flt-orange); }
+
+@media (prefers-reduced-motion: reduce) {
+  .flt-route, .flt-ping { animation: none !important; }
+  .flt-tile::after, .flt-tile-icon, .flt-tile-more, .flt-class-num, .flt-chev { transition: none !important; }
+}

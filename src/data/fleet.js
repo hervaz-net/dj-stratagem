@@ -55,13 +55,11 @@ const issued = [
 ];
 
 
-// Vehicle classes: what a customer books. Each image is a freely licensed
-// Wikimedia Commons photo of a vehicle in that class; keep its credit.
+// Vehicle classes: what a customer books. No photos: the page describes each
+// class in words and numbers until our own vehicles can be photographed.
 export const vehicleClasses = [
   {
     key: "suv",
-    image: "/media/fleet/vehicles/rr-cullinan.webp",
-    credit: { author: "Jengtingchen", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:Rolls-Royce_Cullinan_001.jpg" },
     name: "Ultra-luxury SUV",
     passengers: 6,
     bags: 6,
@@ -70,8 +68,6 @@ export const vehicleClasses = [
   },
   {
     key: "sedan",
-    image: "/media/fleet/vehicles/rr-phantom.webp",
-    credit: { author: "Alexander-93", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:Rolls-Royce_Phantom_VIII_Series_I_IMG_9101.jpg" },
     name: "Luxury sedan",
     passengers: 3,
     bags: 3,
@@ -80,8 +76,6 @@ export const vehicleClasses = [
   },
   {
     key: "sports",
-    image: "/media/fleet/vehicles/huracan.webp",
-    credit: { author: "Matti Blume", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:Lamborghini_Huracan_Evo,_GIMS_2019,_Le_Grand-Saconnex_(GIMS1010).jpg" },
     name: "Sports car",
     passengers: 1,
     bags: 1,
@@ -90,8 +84,6 @@ export const vehicleClasses = [
   },
   {
     key: "sprinter",
-    image: "/media/fleet/vehicles/sprinter-jet.webp",
-    credit: { author: "Ethan Llamas", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:Mercedes-Benz_Sprinter_VS30_317_CDI_Black_-_front.jpg" },
     name: "Executive Sprinter",
     passengers: 14,
     bags: 14,
@@ -100,8 +92,6 @@ export const vehicleClasses = [
   },
   {
     key: "coach",
-    image: "/media/fleet/vehicles/mci-j4500.webp",
-    credit: { author: "Grendelkhan", license: "CC BY-SA 4.0", licenseUrl: "https://creativecommons.org/licenses/by-sa/4.0", source: "https://commons.wikimedia.org/wiki/File:Google_bus_at_Sunnyvale_campus.jpg" },
     name: "Motorcoach",
     passengers: 56,
     bags: 56,
