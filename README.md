@@ -352,6 +352,30 @@ a suspended user is cut off mid-session.
 An admin cannot suspend their own account — doing so would lock them out of the
 only screen that could undo it.
 
+### Admin control panel (`/admin`)
+
+Admins sign in at `/login` like everyone else and land on **`/admin`**, a
+separate control panel with its own sidebar:
+
+| Screen | What it does |
+|---|---|
+| **Overview** `/admin` | Members and jobs waiting on you, totals, newest sign-ups, jobs and listings |
+| **Members** `/admin/members` | Search everyone who signed up; approve, decline, suspend, reinstate; make or remove admins. Click a name for their jobs and catalog |
+| **Job postings** `/admin/jobs` | Every job by status; approve or reject (a reason is required to reject); open any job's detail |
+| **Catalog** `/admin/catalog` | Every seller's listings; filter by seller or status; create a listing for any active member, edit or delete any listing |
+
+Endpoints (admin only, 403 for anyone else; POSTs need the CSRF header):
+
+| Endpoint | Method | Purpose |
+|---|---|---|
+| `/api/admin-overview.php` | GET | Counts and newest items for the overview |
+| `/api/admin-members.php` | GET `?q=&status=&role=` / `?id=` | Member list with job and listing counts, or one member with their jobs and listings |
+| `/api/admin-members.php` | POST `{action:"status"\|"role", id, ...}` | Approve/suspend/reinstate, make/remove admin. You can't suspend or demote yourself |
+| `/api/admin-catalog.php` | GET `?q=&owner=&status=` | All listings with their seller, plus the seller list |
+| `/api/admin-catalog.php` | POST `{action:"save"\|"delete", ...}` | Create (needs `ownerId`), edit, or delete any listing. Same validation as a seller's own catalog (`catalog-lib.php`) |
+
+`scripts/e2e-admin.py` runs the whole panel in a browser.
+
 ### Creating the first admin
 
 The admin screen is gated on `role = 'admin'`, and registration always creates
@@ -362,7 +386,7 @@ UPDATE users SET role = 'admin', status = 'active', approved_at = UTC_TIMESTAMP(
  WHERE email = 'you@example.com';
 ```
 
-After that, approvals happen in the UI. The **Accounts** item only appears in
+After that, everything happens in the admin control panel at `/admin`. The **Accounts** item only appears in
 The sidebar for admins, but that is presentation — `admin-users.php` and
 `admin-user-status.php` reject non-admins with 403 regardless of what the
 client renders.

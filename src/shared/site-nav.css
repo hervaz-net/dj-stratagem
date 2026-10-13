@@ -60,7 +60,7 @@
   animation: snIn .25s ease-out both;
 }
 .sn-brand-suffix:hover { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1.5px; }
-.sn-mark { display: inline-flex; align-items: center; justify-content: center; flex: none; border-radius: 8px; background: var(--sn-brand); color: #fff; }
+.sn-mark { display: inline-flex; align-items: center; justify-content: center; flex: none; border-radius: 8px; background: var(--sn-brand, #0e6b4f); color: #fff; }
 
 .sn-nav { display: none; justify-content: center; min-width: 0; }
 .sn-nav-list { display: flex; align-items: center; gap: 2px; }
