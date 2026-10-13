@@ -102,6 +102,16 @@ check("POST login member", m.call("POST", "/api/login.php", {"email": member_ema
 check("GET me (member)", m.refresh())
 check("GET admin-users as member is 403", m.call("GET", "/api/admin-users.php"), 403, False)
 
+# Admin control panel endpoints: admins only.
+for ep in ("admin-overview.php", "admin-members.php", "admin-catalog.php"):
+    check(f"GET {ep} as member is 403", m.call("GET", f"/api/{ep}"), 403, False)
+    check(f"GET {ep} as admin", admin.call("GET", f"/api/{ep}"))
+check("POST admin-catalog as member is 403", m.call("POST", "/api/admin-catalog.php", {"action": "delete", "id": "x"}), 403, False)
+check("GET admin-members detail", admin.call("GET", f"/api/admin-members.php?id={member_id}"))
+check("POST admin-members bad role", admin.call("POST", "/api/admin-members.php", {"action": "role", "id": member_id, "role": "owner"}), 422, False)
+check("POST admin-catalog create needs owner", admin.call("POST", "/api/admin-catalog.php", {
+    "action": "save", "sku": "SMK-ADM", "name": "x", "category": "y", "unit": "each", "price": 5}), 422, False)
+
 for path in [
     "/api/overview.php", "/api/suppliers.php", "/api/metrics.php", "/api/market-ticker.php",
     "/api/bids.php", "/api/orders.php", "/api/analytics.php?range=7d", "/api/analytics.php?range=30d",

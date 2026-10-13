@@ -55,13 +55,16 @@ export default function Login() {
   // Only follow same-origin paths. A poisoned history state must not send
   // a signed-in visitor to //evil.example or an external URL.
   const requested = location.state?.from;
-  const destination =
+  const safeRequested =
     typeof requested === "string" &&
     requested.startsWith("/") &&
     !requested.startsWith("//") &&
     !requested.includes("\\")
       ? requested
-      : "/dashboard/overview";
+      : null;
+  // Admins land in the admin control panel unless they were headed somewhere.
+  const homeFor = (u) => (u?.role === "admin" ? "/admin" : "/dashboard/overview");
+  const destination = safeRequested ?? homeFor(user);
   if (!loading && user) return <Navigate to={destination} replace />;
 
   const fail = (field, message) => {
@@ -83,9 +86,9 @@ export default function Login() {
 
     setSubmitting(true);
     try {
-      await login(email, password);
+      const signedIn = await login(email, password);
       writeRememberedEmail(rememberMe ? email : "");
-      navigate(destination, { replace: true });
+      navigate(safeRequested ?? homeFor(signedIn), { replace: true });
     } catch (err) {
       setError(err.message);
       // Focus the email field for a credentials failure so a retry is one

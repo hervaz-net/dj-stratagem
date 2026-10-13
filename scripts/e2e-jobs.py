@@ -37,7 +37,8 @@ def sign_in(page, email, pw):
     page.locator("#email").fill(email)
     page.get_by_label("Password", exact=True).fill(pw)
     page.get_by_role("button", name=re.compile("sign in", re.I)).click()
-    page.wait_for_url(re.compile(r"/dashboard"), timeout=15000)
+    # Admins land on the control panel at /admin, members on /dashboard.
+    page.wait_for_url(re.compile(r"/(dashboard|admin)"), timeout=15000)
 
 
 with sync_playwright() as p:

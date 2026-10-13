@@ -44,6 +44,12 @@ import { AuthProvider } from "./auth/AuthContext";
 import RequireAuth from "./auth/RequireAuth";
 import { ToastProvider } from "./contexts/ToastContext";
 import useAuth from "./auth/useAuth";
+import { AdminGate } from "./pages/admin/AdminLayout";
+import AdminOverview from "./pages/admin/AdminOverview";
+import AdminMembers from "./pages/admin/AdminMembers";
+import AdminMemberDetail from "./pages/admin/AdminMemberDetail";
+import AdminJobs from "./pages/admin/AdminJobs";
+import AdminCatalog from "./pages/admin/AdminCatalog";
 
 function ScrollToTop() {
   const { pathname, hash } = useLocation();
@@ -182,7 +188,13 @@ function App() {
           <Route path="/login" element={<MarketingLayout><Login /></MarketingLayout>} />
           <Route path="/register" element={<MarketingLayout><Register /></MarketingLayout>} />
           <Route path="/signup" element={<Navigate to="/register" replace />} />
-          <Route path="/admin" element={<Navigate to="/dashboard/admin" replace />} />
+          {/* Admin control panel: its own shell; AdminGate sends non-admins away. */}
+          <Route path="/admin" element={<AdminGate><AdminOverview /></AdminGate>} />
+          <Route path="/admin/members" element={<AdminGate><AdminMembers /></AdminGate>} />
+          <Route path="/admin/members/:id" element={<AdminGate><AdminMemberDetail /></AdminGate>} />
+          <Route path="/admin/jobs" element={<AdminGate><AdminJobs /></AdminGate>} />
+          <Route path="/admin/catalog" element={<AdminGate><AdminCatalog /></AdminGate>} />
+          <Route path="/admin/*" element={<Navigate to="/admin" replace />} />
           <Route path="/bids" element={<Navigate to="/projects" replace />} />
           <Route path="/resources" element={<Navigate to="/changelog" replace />} />
           <Route path="/profile" element={<Navigate to="/dashboard/settings" replace />} />
