@@ -110,7 +110,7 @@ export default function Venture({ brand }) {
           {/* Panel */}
           <div className="rounded-3xl border border-line bg-surface p-6 shadow-[var(--panel-shadow)] md:p-8">
             <div className="flex items-center gap-3">
-              <Mark glyph={brand.glyph} size={44} />
+              <Mark slug={brand.slug} size={44} />
               <div>
                 <p className="font-semibold text-fg">{brand.name}</p>
                 <p className="text-sm text-fg-muted">{brand.status}</p>

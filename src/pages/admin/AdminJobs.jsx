@@ -9,6 +9,7 @@ import JobDrawer from "../../components/dashboard/JobDrawer";
 import { ProgressBar } from "../../components/dashboard/jobUi";
 import { JOB_STATUS_LABEL, SUBAGENTS, fetchJobs, jobAction } from "../../api/jobs";
 import { formatValue, formatWhen } from "../../components/dashboard/jobFormat";
+import SubagentMark from "../../shared/SubagentMark";
 
 const NAME = Object.fromEntries(SUBAGENTS.map((s) => [s.key, s.name]));
 const TONE = { pending_approval: "warning", approved: "neutral", in_progress: "neutral", completed: "success", rejected: "danger", cancelled: "neutral" };
@@ -115,9 +116,14 @@ export default function AdminJobs() {
               </div>
             </div>
 
-            <p className="mt-3 text-sm text-steel">
-              <span className="font-medium text-paper">Subagents:</span> {job.subagents.map((k) => NAME[k] ?? k).join(", ")}
-            </p>
+            <ul className="mt-3 flex flex-wrap gap-1.5" aria-label="Subagents">
+              {job.subagents.map((k) => (
+                <li key={k} className="inline-flex items-center gap-1.5 rounded-full border border-line py-1 pl-1 pr-2.5 text-xs font-semibold text-paper">
+                  <SubagentMark id={k} size={18} />
+                  {NAME[k] ?? k}
+                </li>
+              ))}
+            </ul>
             {job.notes && <p className="mt-2 line-clamp-3 whitespace-pre-line text-sm text-paper">{job.notes}</p>}
             {job.decisionNote && <p className="mt-2 text-sm text-steel">Decision note: {job.decisionNote}</p>}
 

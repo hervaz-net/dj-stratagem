@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import useAuth from "../../auth/useAuth";
 import { useToast } from "../../contexts/ToastContext";
 import { SUBAGENTS, jobAction } from "../../api/jobs";
+import SubagentMark from "../../shared/SubagentMark";
 import { StageChip } from "./jobUi";
 
 const EMPTY = { title: "", location: "", trade: "", value: "", notes: "" };
@@ -149,6 +150,7 @@ export default function NewJobDialog({ onCreated }) {
                     }`}
                   >
                     <input type="checkbox" checked={picked.has(s.key)} onChange={() => toggle(s.key)} className="accent-amber" />
+                    <SubagentMark id={s.key} size={20} />
                     <span className="flex-1 font-semibold">{s.name}</span>
                     <StageChip stage={s.stage} />
                   </label>

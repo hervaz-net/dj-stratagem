@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Seo from "../components/Seo";
 import { StratagemMark } from "../shared/SiteNav";
+import SubagentMark, { subagentColor } from "../shared/SubagentMark";
 import { subagents } from "../data/subagents";
 import "../styles/djx.css";
 
@@ -45,7 +46,6 @@ function SubagentLink({ s, className, children, style }) {
   );
 }
 
-const STAGE_COLOR = { find: "#c2610c", win: "#2459c4", build: "#0e6b4f", keep: "#b86e12" };
 
 /* ------------------------------------------------------- typing headline */
 
@@ -153,7 +153,7 @@ function CodePanel({ reduced }) {
 function HubDiagram() {
   const nodes = subagents.map((s, i) => {
     const a = ((-90 + i * 40) * Math.PI) / 180;
-    return { ...s, x: Math.round(320 + Math.cos(a) * 250), y: Math.round(220 + Math.sin(a) * 175), color: STAGE_COLOR[s.stage], delay: `-${(i * 0.29).toFixed(2)}s` };
+    return { ...s, x: Math.round(320 + Math.cos(a) * 250), y: Math.round(220 + Math.sin(a) * 175), color: subagentColor(s.key), delay: `-${(i * 0.29).toFixed(2)}s` };
   });
   return (
     <svg viewBox="0 0 640 440" className="block h-auto w-full" role="img" aria-label="The nine subagents, each connected to the Stratagem AI hub">
@@ -169,9 +169,9 @@ function HubDiagram() {
       </g>
       {nodes.map((n) => (
         <g key={`n-${n.key}`}>
-          <rect x={n.x - 52} y={n.y - 17} width="104" height="34" rx="17" fill="#fff" stroke={n.color} strokeWidth="1.5" />
-          <circle cx={n.x - 38} cy={n.y} r="4" fill={n.color} />
-          <text x={n.x - 28} y={n.y + 5} fontFamily="Inter, sans-serif" fontSize="13" fontWeight="600" fill="#15201b">{n.name}</text>
+          <rect x={n.x - 58} y={n.y - 18} width="116" height="36" rx="18" fill="#fff" stroke={n.color} strokeWidth="1.5" />
+          <SubagentMark id={n.key} size={24} x={n.x - 51} y={n.y - 12} />
+          <text x={n.x - 21} y={n.y + 5} fontFamily="Inter, sans-serif" fontSize="13" fontWeight="600" fill="#15201b">{n.name}</text>
         </g>
       ))}
     </svg>
@@ -273,8 +273,9 @@ export default function Home() {
         <div className="x-track flex w-max py-4">
           {ticker.map((s, i) => (
             <div key={`${s.key}-${i}`} className="flex items-center gap-2.5 whitespace-nowrap px-7 text-[15px] font-semibold" data-stage={s.stage}>
-              <span className="x-chip">{s.stage.toUpperCase()}</span>
+              <SubagentMark id={s.key} size={22} />
               {s.name}
+              <span className="x-chip">{s.stage.toUpperCase()}</span>
             </div>
           ))}
         </div>
@@ -321,8 +322,11 @@ export default function Home() {
               <li key={s.key} data-stage={s.stage} className="flex">
                 <SubagentLink s={s} className="x-card flex min-h-[220px] w-full flex-col gap-3 p-6" style={{ color: "var(--x-text)" }}>
                   <span className="flex items-center justify-between">
-                    <span className="x-chip">● {s.stage.toUpperCase()}</span>
-                    <span className="x-mono text-xs" style={{ color: "var(--x-muted)" }}>{s.code}</span>
+                    <SubagentMark id={s.key} size={44} />
+                    <span className="flex items-center gap-2">
+                      <span className="x-chip">{s.stage.toUpperCase()}</span>
+                      <span className="x-mono text-xs" style={{ color: "var(--x-muted)" }}>{s.code}</span>
+                    </span>
                   </span>
                   <span className="mt-1 text-[22px] font-bold tracking-tight">{s.name}</span>
                   <span className="flex-1 text-[15px] leading-relaxed" style={{ color: "var(--x-muted)" }}>{s.line}</span>

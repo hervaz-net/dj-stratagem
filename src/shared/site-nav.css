@@ -56,7 +56,7 @@
 .sn-brand-home { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; font-weight: 700; }
 .sn-brand-sep { width: 1.5px; height: 18px; border-radius: 2px; background: var(--sn-line); transform: skewX(-18deg); flex: none; }
 .sn-brand-suffix {
-  display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; color: var(--sn-brand) !important;
+  display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-weight: 600;
   animation: snIn .25s ease-out both;
 }
 .sn-brand-suffix:hover { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1.5px; }
@@ -193,7 +193,8 @@
 .sn-section:hover { color: var(--sn-text); background: color-mix(in srgb, var(--sn-text) 10%, var(--sn-hover)); }
 .sn-section[aria-current="page"] { color: #fff; background: var(--sn-brand); }
 .sn-tile-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-.sn-tile-label { font-size: 14.5px; font-weight: 600; }
+.sn-tile-label { display: inline-flex; align-items: center; gap: 9px; font-size: 14.5px; font-weight: 600; }
+.sn-sheet-link-label { display: inline-flex; align-items: center; gap: 10px; }
 .sn-tile-text { font-size: 12.5px; color: var(--sn-muted); line-height: 1.4; }
 .sn-tag {
   flex: none; padding: 2px 8px; border-radius: 999px; font-size: 10.5px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;

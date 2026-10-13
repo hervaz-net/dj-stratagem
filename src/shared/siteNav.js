@@ -48,6 +48,7 @@ export const NAV_MENUS = [
       text: s.line,
       tag: STAGE_LABEL[s.stage],
       stage: s.stage,
+      mark: s.key,
       sections: SECTIONS[s.key] ?? [],
     })),
     feature: {

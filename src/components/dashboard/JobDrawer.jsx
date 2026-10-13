@@ -4,6 +4,7 @@ import { useToast } from "../../contexts/ToastContext";
 import { fetchJob, jobAction } from "../../api/jobs";
 import { IconX } from "../icons";
 import { JobStatusBadge, ProgressBar, StageChip, TaskStatusBadge } from "./jobUi";
+import SubagentMark from "../../shared/SubagentMark";
 import { formatValue, formatWhen } from "./jobFormat";
 
 /**
@@ -164,6 +165,7 @@ export default function JobDrawer({ jobId, onClose, onChanged }) {
                 {job.tasks.map((t) => (
                   <li key={t.id} className="rounded-xl border border-line bg-ink/50 px-4 py-3">
                     <div className="flex flex-wrap items-center gap-2">
+                      <SubagentMark id={t.subagent} size={22} />
                       <span className="font-semibold text-paper">{t.name}</span>
                       <StageChip stage={t.stage} />
                       <span className="ml-auto"><TaskStatusBadge status={t.status} /></span>

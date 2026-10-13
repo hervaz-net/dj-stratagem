@@ -2,6 +2,7 @@ import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { subagents, subagentForPath } from "../data/subagents";
 import { NAV_LINKS, NAV_MENUS, appForPath, isCurrent } from "./siteNav";
+import SubagentMark, { subagentColor, subagentMarkSvg } from "./SubagentMark";
 import "./site-nav.css";
 
 /**
@@ -41,11 +42,10 @@ function SubagentsGlyph({ open }) {
         <circle
           key={s.key}
           className="sn-glyph-dot"
-          data-stage={s.stage}
+          style={{ fill: subagentColor(s.key), animationDelay: `${((i % 3) + Math.floor(i / 3)) * 0.14}s` }}
           cx={3 + (i % 3) * 6}
           cy={3 + Math.floor(i / 3) * 6}
           r="2"
-          style={{ animationDelay: `${((i % 3) + Math.floor(i / 3)) * 0.14}s` }}
         />
       ))}
     </svg>
@@ -91,7 +91,10 @@ function MenuPanel({ menu, app, here, onNavigate, panelRef, id }) {
                 onClick={onNavigate}
               >
                 <span className="sn-tile-top">
-                  <span className="sn-tile-label">{l.label}</span>
+                  <span className="sn-tile-label">
+                    {l.mark && <SubagentMark id={l.mark} size={24} />}
+                    {l.label}
+                  </span>
                   {l.tag && <span className="sn-tag" data-stage={l.stage}>{l.tag}</span>}
                 </span>
                 <span className="sn-tile-text">{l.text}</span>
@@ -139,6 +142,14 @@ export default function SiteNav({ app, account, action, onOpenPalette }) {
   const here = typeof window === "undefined" ? location.pathname : window.location.pathname;
   // On a subagent's pages its name follows "Stratagem AI" in the header.
   const current = subagentForPath(here);
+
+  // The tab icon is the subagent's mark on its pages, the Stratagem AI mark elsewhere.
+  useEffect(() => {
+    const link = document.querySelector('link[rel="icon"]');
+    if (!link) return;
+    const svg = current ? subagentMarkSvg(current.key) : null;
+    link.setAttribute("href", svg ? `data:image/svg+xml,${encodeURIComponent(svg)}` : "/favicon.svg");
+  }, [current]);
   const [open, setOpen] = useState(null); // key of the open desktop menu
   const [sheet, setSheet] = useState(false); // mobile menu
   // Open accordion in the sheet; on a subagent page, start on Subagents.
@@ -231,7 +242,8 @@ export default function SiteNav({ app, account, action, onOpenPalette }) {
             {current && (
               <>
                 <span className="sn-brand-sep" aria-hidden="true" />
-                <Go href={current.to} app={app} className="sn-brand-suffix" aria-label={`${current.name} home`}>
+                <Go href={current.to} app={app} className="sn-brand-suffix" style={{ color: subagentColor(current.key) }} aria-label={`${current.name} home`}>
+                  <SubagentMark id={current.key} size={22} />
                   {current.name}
                 </Go>
               </>
@@ -334,7 +346,10 @@ export default function SiteNav({ app, account, action, onOpenPalette }) {
                         {m.links.map((l) => (
                           <li key={l.href + l.label}>
                             <Go href={l.href} app={app} className="sn-sheet-link" aria-current={isCurrent(l.href, here) ? "page" : undefined} onClick={() => setSheet(false)}>
-                              <span>{l.label}</span>
+                              <span className="sn-sheet-link-label">
+                                {l.mark && <SubagentMark id={l.mark} size={22} />}
+                                {l.label}
+                              </span>
                               {l.tag && <span className="sn-tag" data-stage={l.stage}>{l.tag}</span>}
                             </Go>
                             {/* The subagent you're on lists its own pages here. */}
