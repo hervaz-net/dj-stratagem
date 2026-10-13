@@ -4,10 +4,8 @@ import SiteNav from "./shared/SiteNav";
 import Footer from "./components/Footer";
 import BackToTop from "./components/BackToTop";
 import CookieBanner from "./components/CookieBanner";
-import FloatingDemo from "./components/FloatingDemo";
 import ReadingProgress from "./components/ReadingProgress";
 import CommandPalette from "./components/CommandPalette";
-import LiveChat from "./components/LiveChat";
 import Atmosphere from "./components/nocturne/Atmosphere";
 import Home from "./pages/Home";
 import Platform from "./pages/Platform";
@@ -111,10 +109,8 @@ function MarketingLayout({ children }) {
       </main>
       <Footer />
       <BackToTop />
-      <FloatingDemo />
       <CookieBanner />
       <ReadingProgress />
-      <LiveChat />
       <CommandPalette open={paletteOpen} onClose={closePalette} />
     </div>
   );
