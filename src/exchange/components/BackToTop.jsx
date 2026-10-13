@@ -32,7 +32,7 @@ export default function BackToTop() {
       aria-label="Back to top"
       tabIndex={visible ? 0 : -1}
       aria-hidden={!visible}
-      className={`no-print fixed bottom-48 right-4 z-[90] flex h-11 w-11 items-center justify-center rounded-full border border-line bg-surface text-fg-muted shadow-[var(--shadow-card)] transition-[opacity,transform,color,border-color] duration-200 hover:border-line-strong hover:text-fg sm:right-6 [[data-cookie-banner="1"]_&]:invisible [[data-cookie-banner="1"]_&]:pointer-events-none ${
+      className={`no-print fixed bottom-6 right-4 z-[90] flex h-11 w-11 items-center justify-center rounded-full border border-line bg-surface text-fg-muted shadow-[var(--shadow-card)] transition-[opacity,transform,color,border-color] duration-200 hover:border-line-strong hover:text-fg sm:right-6 [[data-cookie-banner="1"]_&]:invisible [[data-cookie-banner="1"]_&]:pointer-events-none ${
         visible ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-3 opacity-0"
       }`}
     >
