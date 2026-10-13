@@ -1,3 +1,4 @@
+import Sym from "../../shared/Symbol";
 import { statusQuo } from "../data/competitors";
 import { IconArrowRight } from "./icons";
 
@@ -7,7 +8,10 @@ export default function CompetitorList({ className = "", showInstead = true }) {
     <ul className={`space-y-3 ${className}`}>
       {statusQuo.map((c) => (
         <li key={c.name} className="rounded-2xl border border-line bg-surface p-4 sm:p-5">
-          <p className="font-semibold text-fg">{c.name}</p>
+          <p className="flex items-center gap-3 font-semibold text-fg">
+            <Sym id={c.symbol} size={34} />
+            {c.name}
+          </p>
           <p className="mt-1 text-sm leading-relaxed text-fg-muted">{c.does}</p>
           {showInstead && (
             <p className="mt-3 flex items-start gap-2 text-sm font-medium text-brand-fg">

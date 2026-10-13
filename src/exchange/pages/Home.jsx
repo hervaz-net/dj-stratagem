@@ -15,6 +15,7 @@ import { ROLE_META } from "../components/home/roleMeta";
 import { statusQuo } from "../data/competitors";
 import { IconArrowRight, IconCheck, IconMegaphone, IconPackage } from "../components/icons";
 import { PRODUCT, CONTACT_EMAIL, ROLES, ROLE_ORDER } from "../brand";
+import Sym from "../../shared/Symbol";
 
 const faqs = [
   {
@@ -54,16 +55,13 @@ const faqs = [
 function RoleCard({ roleKey }) {
   const role = ROLES[roleKey];
   const meta = ROLE_META[roleKey];
-  const Icon = meta.icon;
   return (
     <Link
       to={role.path}
       className="group flex h-full flex-col rounded-2xl border border-line bg-surface p-6 shadow-[var(--shadow-card)] transition-[border-color,box-shadow] hover:border-line-strong hover:shadow-[var(--shadow-pop)]"
     >
       <div className="flex items-center justify-between gap-3">
-        <span className={`flex h-12 w-12 items-center justify-center rounded-2xl ${meta.tone.soft} ${meta.tone.text}`}>
-          <Icon width={22} height={22} aria-hidden="true" />
-        </span>
+        <Sym id={roleKey} size={48} />
         <RoleBadge role={roleKey} />
       </div>
       <h3 className="mt-5 text-lg font-semibold text-fg">{role.label}</h3>
@@ -220,7 +218,10 @@ export default function Home() {
           <ul className="divide-y divide-line">
             {statusQuo.map((row) => (
               <li key={row.name} className="grid grid-cols-1 gap-3 bg-surface p-5 md:grid-cols-[0.8fr_1.1fr_1.1fr] md:gap-0 md:p-0">
-                <p className="font-semibold text-fg md:px-5 md:py-5">{row.name}</p>
+                <p className="flex items-center gap-3 font-semibold text-fg md:px-5 md:py-5">
+                  <Sym id={row.symbol} size={36} />
+                  {row.name}
+                </p>
                 <p className="text-sm leading-relaxed text-fg-muted md:px-5 md:py-5">
                   <span className="mb-1 block text-xs font-semibold text-fg md:hidden">The usual way</span>
                   {row.does}
@@ -248,8 +249,9 @@ export default function Home() {
               title: "Honest about where we are",
               text: `${PRODUCT} is early. We show sample data as sample data and add features when they work, not before.`,
             },
-          ].map((item) => (
+          ].map((item, i) => (
             <div key={item.title} className="rounded-2xl border border-line bg-canvas p-6">
+              <Sym id={["net-30", "category", "questions"][i]} size={40} className="mb-4" />
               <h3 className="text-lg font-semibold text-fg">{item.title}</h3>
               <p className="mt-2 text-[0.95rem] leading-relaxed text-fg-muted">{item.text}</p>
             </div>

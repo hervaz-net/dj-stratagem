@@ -1,4 +1,12 @@
-import { IconBuilding, IconTruck, IconHelmet } from "../icons";
+import Sym from "../../../shared/Symbol";
+
+// Each role's symbol as a drop-in icon (width/height props), for any code
+// that still renders ROLE_META[role].icon.
+const roleIcon = (id) => {
+  const RoleIcon = ({ width = 20, className = "" }) => <Sym id={id} variant="plain" glow={false} size={width} className={className} />;
+  RoleIcon.displayName = `RoleIcon(${id})`;
+  return RoleIcon;
+};
 
 /**
  * Marketing detail for each side of the marketplace. Names and paths come
@@ -7,7 +15,7 @@ import { IconBuilding, IconTruck, IconHelmet } from "../icons";
  */
 export const ROLE_META = {
   supplier: {
-    icon: IconBuilding,
+    icon: roleIcon("supplier"),
     tone: {
       text: "text-role-supplier",
       soft: "bg-role-supplier-soft",
@@ -25,7 +33,7 @@ export const ROLE_META = {
     ],
   },
   distributor: {
-    icon: IconTruck,
+    icon: roleIcon("distributor"),
     tone: {
       text: "text-role-distributor",
       soft: "bg-role-distributor-soft",
@@ -43,7 +51,7 @@ export const ROLE_META = {
     ],
   },
   contractor: {
-    icon: IconHelmet,
+    icon: roleIcon("contractor"),
     tone: {
       text: "text-role-contractor",
       soft: "bg-role-contractor-soft",

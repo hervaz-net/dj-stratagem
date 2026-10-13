@@ -1,26 +1,26 @@
-import { IconMegaphone, IconScale, IconPackage, IconTruck } from "../icons";
+import Sym from "../../../shared/Symbol";
 
 const TRADE_STEPS = [
   {
-    icon: IconMegaphone,
+    symbol: "request",
     title: "Request",
     text: "A contractor or distributor posts what they need: line items, quantities, a need-by date, and the jobsite or branch it ships to.",
     detail: "Line items · need-by · ship-to",
   },
   {
-    icon: IconScale,
+    symbol: "quote",
     title: "Quotes",
     text: "Sellers who carry the category and cover the area send quotes. The buyer sees them side by side on one request.",
     detail: "Price · lead time · delivery or will-call",
   },
   {
-    icon: IconPackage,
+    symbol: "order",
     title: "Order",
     text: "The buyer accepts the quote that fits and it becomes a purchase order both sides work from.",
     detail: "PO · agreed terms · confirmations",
   },
   {
-    icon: IconTruck,
+    symbol: "delivery",
     title: "Delivery",
     text: "Status moves from confirmed to shipped to delivered, so nobody has to call to ask where the material is.",
     detail: "Confirmed · shipped · delivered",
@@ -36,12 +36,11 @@ export default function TradeFlow({ className = "" }) {
         aria-hidden="true"
       />
       {TRADE_STEPS.map((step, i) => {
-        const Icon = step.icon;
         return (
           <li key={step.title} className="relative flex flex-col">
             <div className="flex items-center gap-3 lg:flex-col lg:items-center lg:text-center">
-              <span className="relative flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border border-line bg-surface text-brand shadow-[var(--shadow-card)]">
-                <Icon width={22} height={22} aria-hidden="true" />
+              <span className="relative flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-canvas">
+                <Sym id={step.symbol} size={56} />
                 <span className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-brand text-xs font-bold tabular-nums text-white">
                   {i + 1}
                 </span>
