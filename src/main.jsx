@@ -10,9 +10,10 @@ const isExchange =
   window.location.pathname === EXCHANGE_BASE ||
   window.location.pathname.startsWith(`${EXCHANGE_BASE}/`)
 
-// Fleet, Capital, Studio, and Workforce are standalone company sites built on
-// the Exchange design system, each at its own top-level address.
-const isVenture = /^\/(fleet|capital|studio|workforce|companies\/[^/]+)\/?$/.test(window.location.pathname)
+// Every subagent outside Exchange (Projects, Platform, Solutions, Supply,
+// Fleet, Capital, Studio, Workforce) is its own site on the Exchange design
+// system, each at its own top-level address and in its own color.
+const isVenture = /^\/(fleet|capital|studio|workforce|platform|solutions|supply|projects(\/[^/]+)?|construction-projects\/[^/]+\/[^/]+|companies\/[^/]+)\/?$/.test(window.location.pathname)
 
 const load = isExchange
   ? Promise.all([import('./exchange/index.css'), import('./exchange/App.jsx')])
