@@ -9,6 +9,7 @@ import { useToast } from "../../contexts/ToastContext";
 import usePolledResource from "../../api/usePolledResource";
 import { SUBAGENTS, fetchJobs, jobAction } from "../../api/jobs";
 import { StageChip } from "../../components/dashboard/jobUi";
+import SubagentMark from "../../shared/SubagentMark";
 import { formatValue, formatWhen } from "../../components/dashboard/jobFormat";
 
 const STAGE_OF = Object.fromEntries(SUBAGENTS.map((s) => [s.key, s]));
@@ -97,7 +98,8 @@ export default function Approvals() {
 
               <div className="mt-3 flex flex-wrap gap-1.5">
                 {job.subagents.map((k) => (
-                  <span key={k} className="inline-flex items-center gap-1.5 rounded-full border border-line px-2.5 py-1 text-xs font-semibold text-paper">
+                  <span key={k} className="inline-flex items-center gap-1.5 rounded-full border border-line py-1 pl-1 pr-2.5 text-xs font-semibold text-paper">
+                    <SubagentMark id={k} size={18} />
                     {STAGE_OF[k]?.name ?? k}
                     <StageChip stage={STAGE_OF[k]?.stage} />
                   </span>

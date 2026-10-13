@@ -1,13 +1,21 @@
+import { useLocation } from "react-router-dom";
+import SubagentMark from "../../shared/SubagentMark";
+import { subagentForPath } from "../../data/subagents";
+
 /**
  * Editorial page opener: a mono index line that draws itself in, an
  * oversized serif title, and the lede set off to the right. A ghosted
- * chapter number drifts behind the title.
+ * chapter number drifts behind the title. On a subagent's page its mark
+ * leads the index line.
  */
 export default function PageHero({ index, kicker, title, lede, children }) {
+  const { pathname } = useLocation();
+  const subagent = subagentForPath(pathname);
   return (
     <section className="relative overflow-hidden px-6 pb-6 pt-10 md:pb-10 md:pt-16">
       <div className="mx-auto max-w-7xl">
         <div className="rise-in flex items-center gap-4">
+          {subagent && <SubagentMark id={subagent.key} size={40} />}
           <span className="mono-label text-cta">{index}</span>
           <span className="h-px w-16 origin-left animate-[rise-in_1.2s_ease-out_both] bg-line" aria-hidden="true" />
           <span className="mono-label text-steel">{kicker}</span>

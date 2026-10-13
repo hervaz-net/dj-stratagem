@@ -9,6 +9,7 @@ import useAuth from "../../auth/useAuth";
 import usePolledResource from "../../api/usePolledResource";
 import { JOB_STATUS_LABEL, fetchJobs, fetchSubagents } from "../../api/jobs";
 import { JobStatusBadge, ProgressBar, StageChip } from "../../components/dashboard/jobUi";
+import SubagentMark from "../../shared/SubagentMark";
 import { formatValue, formatWhen } from "../../components/dashboard/jobFormat";
 
 const FILTERS = ["all", "pending_approval", "approved", "in_progress", "completed", "rejected", "cancelled"];
@@ -62,7 +63,10 @@ export default function Jobs() {
             {(agents.data?.subagents ?? []).map((a) => (
               <GlassCard key={a.key} className="px-4 py-3">
                 <div className="flex items-center justify-between gap-2">
-                  <span className="truncate text-sm font-semibold text-paper">{a.name}</span>
+                  <span className="flex min-w-0 items-center gap-2">
+                    <SubagentMark id={a.key} size={22} />
+                    <span className="truncate text-sm font-semibold text-paper">{a.name}</span>
+                  </span>
                   <StatusDot status={STATE_DOT[a.state]} size={8} pulse={a.state === "running"} />
                 </div>
                 <div className="mt-1.5"><StageChip stage={a.stage} /></div>
