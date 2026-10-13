@@ -1,3 +1,4 @@
+import Sym from "../../../shared/Symbol";
 import RoleBadge from "../RoleBadge";
 import { ROLES, ROLE_ORDER } from "../../brand";
 import { ROLE_META } from "./roleMeta";
@@ -19,14 +20,11 @@ function Arrow() {
 function Node({ roleKey }) {
   const role = ROLES[roleKey];
   const meta = ROLE_META[roleKey];
-  const Icon = meta.icon;
   return (
     <div className={`relative overflow-hidden rounded-2xl border bg-surface p-5 shadow-[var(--shadow-card)] ${meta.tone.border}`}>
       <span className={`absolute inset-x-0 top-0 h-1 ${meta.tone.bar}`} aria-hidden="true" />
       <div className="flex items-center gap-3">
-        <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${meta.tone.soft} ${meta.tone.text}`}>
-          <Icon width={20} height={20} aria-hidden="true" />
-        </span>
+        <Sym id={roleKey} size={42} />
         <div className="min-w-0">
           <p className="font-semibold text-fg">{role.label}</p>
           <RoleBadge role={roleKey} className="mt-1" />

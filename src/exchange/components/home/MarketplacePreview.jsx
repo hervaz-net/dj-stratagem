@@ -1,3 +1,4 @@
+import Sym from "../../../shared/Symbol";
 import { Link } from "react-router-dom";
 import RoleBadge from "../RoleBadge";
 import {
@@ -104,7 +105,7 @@ export default function MarketplacePreview() {
   return (
     <div className="rounded-3xl border border-line bg-canvas p-4 sm:p-6 md:p-8">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h3 className="text-lg font-semibold text-fg">Shop by category</h3>
+        <h3 className="flex items-center gap-2.5 text-lg font-semibold text-fg"><Sym id="category" size={34} />Shop by category</h3>
         <Link to="/marketplace" className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand hover:text-brand-hover">
           All categories <IconArrowRight width={14} height={14} aria-hidden="true" />
         </Link>
@@ -114,7 +115,7 @@ export default function MarketplacePreview() {
       <div className="mt-10 space-y-10">
         <section aria-labelledby="preview-supply">
           <div className="flex flex-wrap items-center gap-2">
-            <h3 id="preview-supply" className="text-lg font-semibold text-fg">Listed supply</h3>
+            <h3 id="preview-supply" className="flex items-center gap-2.5 text-lg font-semibold text-fg"><Sym id="listed-supply" size={34} />Listed supply</h3>
           </div>
           <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {SAMPLE_LISTINGS.map((item) => (
@@ -125,7 +126,7 @@ export default function MarketplacePreview() {
 
         <section aria-labelledby="preview-demand">
           <div className="flex flex-wrap items-center gap-2">
-            <h3 id="preview-demand" className="text-lg font-semibold text-fg">Open requests</h3>
+            <h3 id="preview-demand" className="flex items-center gap-2.5 text-lg font-semibold text-fg"><Sym id="open-requests" size={34} />Open requests</h3>
           </div>
           <ul className="mt-4 grid grid-cols-1 gap-3 lg:grid-cols-3">
             {SAMPLE_REQUESTS.map((item) => (

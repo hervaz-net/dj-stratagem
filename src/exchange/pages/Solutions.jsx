@@ -1,3 +1,4 @@
+import Sym from "../../shared/Symbol";
 import { Link } from "react-router-dom";
 import Section, { SectionHeading } from "../components/Section";
 import PageHero from "../components/PageHero";
@@ -26,7 +27,6 @@ const CAPABILITIES = [
 function RoleColumn({ roleKey, index }) {
   const role = ROLES[roleKey];
   const meta = ROLE_META[roleKey];
-  const Icon = meta.icon;
   return (
     <Reveal delay={index * 80} className="h-full">
       <article
@@ -38,9 +38,7 @@ function RoleColumn({ roleKey, index }) {
         ))}
         <span className={`absolute inset-x-0 top-0 h-1 ${meta.tone.bar}`} aria-hidden="true" />
         <div className="flex items-center justify-between gap-3">
-          <span className={`flex h-12 w-12 items-center justify-center rounded-2xl ${meta.tone.soft} ${meta.tone.text}`}>
-            <Icon width={22} height={22} aria-hidden="true" />
-          </span>
+          <Sym id={roleKey} size={48} />
           <RoleBadge role={roleKey} />
         </div>
         <h2 className="mt-5 text-xl font-bold tracking-tight text-fg">{role.label}</h2>

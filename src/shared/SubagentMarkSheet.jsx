@@ -1,5 +1,6 @@
 import SubagentMark, { SUBAGENT_MARKS, subagentMarkSvg } from "./SubagentMark";
 import { subagents } from "../data/subagents";
+import Sym, { SYMBOL_GROUPS, SYMBOLS } from "./Symbol";
 
 /** The nine subagent marks with their color, meaning and an SVG download. */
 export default function SubagentMarkSheet() {
@@ -33,6 +34,35 @@ export default function SubagentMarkSheet() {
           );
         })}
       </ul>
+    </section>
+  );
+}
+
+/** Every shared symbol, grouped, for the brand page. */
+export function SymbolSheet() {
+  return (
+    <section aria-labelledby="symbols-heading" className="mx-auto max-w-6xl px-5 pb-12 sm:px-6">
+      <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#5f6661]">Symbols</p>
+      <h2 id="symbols-heading" className="mt-2 text-3xl font-bold tracking-tight text-[#111311]">Roles, the trade, and the usual way</h2>
+      <p className="mt-2 max-w-2xl text-[#5f6661]">
+        The three roles always glow in their own color: supplier green, distributor blue, contractor orange. Every other
+        symbol takes the color of the page it sits on.
+      </p>
+      <div className="mt-8 space-y-8">
+        {SYMBOL_GROUPS.map((g) => (
+          <div key={g.title}>
+            <h3 className="text-sm font-semibold uppercase tracking-[0.08em] text-[#5f6661]">{g.title}</h3>
+            <ul className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+              {g.keys.map((k) => (
+                <li key={k} className="flex items-center gap-3 rounded-2xl border border-[#e8eae7] bg-white p-4">
+                  <Sym id={k} size={44} color={SYMBOLS[k].color ?? "#0e6b4f"} />
+                  <span className="text-sm font-semibold text-[#111311]">{SYMBOLS[k].label}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
     </section>
   );
 }

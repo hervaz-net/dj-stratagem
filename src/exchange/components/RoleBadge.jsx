@@ -1,3 +1,4 @@
+import Sym from "../../shared/Symbol";
 import { ROLES } from "../brand";
 
 const tones = {
@@ -14,7 +15,7 @@ export default function RoleBadge({ role, label, className = "" }) {
     <span
       className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ${tones[role]} ${className}`}
     >
-      <span className="h-1.5 w-1.5 rounded-full bg-current" aria-hidden="true" />
+      <Sym id={role} variant="plain" glow={false} size={14} />
       {label ?? info.short}
     </span>
   );

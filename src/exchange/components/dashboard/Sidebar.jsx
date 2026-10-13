@@ -1,3 +1,4 @@
+import Sym from "../../../shared/Symbol";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import Logo from "../Logo";
@@ -42,19 +43,17 @@ const ICONS = {
 
 const MOBILE_PRIMARY = ["/dashboard/overview", "/dashboard/requests", "/dashboard/quotes", "/dashboard/orders"];
 
-const DOT = {
-  supplier: "bg-role-supplier",
-  distributor: "bg-role-distributor",
-  contractor: "bg-role-contractor",
-};
-
 const ACTIVE_ROLE = {
   supplier: "border-role-supplier bg-role-supplier-soft text-role-supplier",
   distributor: "border-role-distributor bg-role-distributor-soft text-role-distributor",
   contractor: "border-role-contractor bg-role-contractor-soft text-role-contractor",
 };
 
+// Requests, quotes and orders use the shared trade-flow symbols.
+const NAV_SYMBOL = { "/dashboard/requests": "request", "/dashboard/quotes": "quote", "/dashboard/orders": "order" };
+
 function NavIcon({ to, size = 18 }) {
+  if (NAV_SYMBOL[to]) return <Sym id={NAV_SYMBOL[to]} variant="plain" glow={false} size={size} color="currentColor" />;
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="shrink-0">
       {ICONS[to]}
@@ -96,7 +95,7 @@ function RoleSwitcher({ onPicked }) {
                 active ? ACTIVE_ROLE[key] : "border-transparent text-fg-muted hover:bg-subtle hover:text-fg"
               }`}
             >
-              <span className={`h-2 w-2 shrink-0 rounded-full ${DOT[key]}`} aria-hidden="true" />
+              <Sym id={key} size={22} glow={active} />
               {ROLE_VIEWS[key].label}
             </button>
           );
