@@ -20,6 +20,7 @@ import Contact from "./pages/Contact";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import VerifyEmail from "./pages/VerifyEmail";
 import Changelog from "./pages/Changelog";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
@@ -200,6 +201,7 @@ function App() {
           <Route path="/profile" element={<Navigate to="/dashboard/settings" replace />} />
           <Route path="/settings" element={<Navigate to="/dashboard/settings" replace />} />
           <Route path="/forgot-password" element={<MarketingLayout><ForgotPassword /></MarketingLayout>} />
+          <Route path="/reset-password" element={<MarketingLayout><ResetPassword /></MarketingLayout>} />
           <Route path="/verify-email" element={<MarketingLayout><VerifyEmail /></MarketingLayout>} />
           <Route path="/changelog" element={<MarketingLayout><Changelog /></MarketingLayout>} />
           <Route path="/privacy" element={<MarketingLayout><PrivacyPolicy /></MarketingLayout>} />

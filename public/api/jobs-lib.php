@@ -7,30 +7,49 @@
  *
  * Model:
  *   A job is created by a member in `pending_approval`. Nothing runs until an
- *   administrator approves it. Once approved, the owner (or an admin) starts
- *   it, which sets every assigned subagent task running at the same time.
- *   When every task is done or skipped the job completes on its own.
+ *   administrator approves it. Approval starts it: the AI orchestrator
+ *   (ai-lib.php) runs the picked subagents one after another in pipeline
+ *   order, each reading every earlier subagent's work. A subagent can call
+ *   another back in for follow-up work; that call-back runs next, and can
+ *   call further subagents, up to MAX_CALL_DEPTH levels. When every task is
+ *   done or skipped the job completes and the owner is emailed.
  *
  * Must stay PHP 8.1 compatible: the live host runs alt-php81.
  */
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/mail-lib.php';
+
 /** The nine subagents, in pipeline order. Keys are stable; labels are copy. */
 const SUBAGENTS = [
-    'projects'  => ['name' => 'Projects',  'stage' => 'find',  'task' => 'Match open work by trade and city'],
-    'exchange'  => ['name' => 'Exchange',  'stage' => 'find',  'task' => 'Request material quotes from the network'],
-    'platform'  => ['name' => 'Platform',  'stage' => 'win',   'task' => 'Assemble the bid package and track it'],
-    'solutions' => ['name' => 'Solutions', 'stage' => 'win',   'task' => 'Apply the trade playbook to the proposal'],
-    'supply'    => ['name' => 'Supply',    'stage' => 'build', 'task' => 'Source and schedule material deliveries'],
-    'capital'   => ['name' => 'Capital',   'stage' => 'build', 'task' => 'Line up working capital for the PO'],
-    'workforce' => ['name' => 'Workforce', 'stage' => 'build', 'task' => 'Staff the crew for the scope'],
-    'fleet'     => ['name' => 'Fleet',     'stage' => 'build', 'task' => 'Book vehicles and equipment'],
-    'studio'    => ['name' => 'Studio',    'stage' => 'keep',  'task' => 'Turn the finished job into marketing'],
+    'projects'  => ['name' => 'Projects',  'stage' => 'find',  'task' => 'Match open work by trade and city',
+        'brief' => 'Scope the opportunity: summarize the job, break the scope into trade packages, list what to verify on the plans and specs, and flag schedule, site and permitting risks for this location.'],
+    'exchange'  => ['name' => 'Exchange',  'stage' => 'find',  'task' => 'Request material quotes from the network',
+        'brief' => 'Write the request for quote the contractor will send suppliers: a line-item material list with estimated quantities and units, delivery or will-call needs, and the questions suppliers must answer. Quantities are estimates from the job description.'],
+    'platform'  => ['name' => 'Platform',  'stage' => 'win',   'task' => 'Assemble the bid package and track it',
+        'brief' => 'Assemble the bid package: a cost breakdown structure, the documents and forms to include, the bid timeline with internal deadlines, and a checklist of what must be in hand before submission.'],
+    'solutions' => ['name' => 'Solutions', 'stage' => 'win',   'task' => 'Apply the trade playbook to the proposal',
+        'brief' => 'Write the proposal narrative for this trade: approach, schedule, differentiators, exclusions and clarifications, and the win themes to stress with this owner or general contractor.'],
+    'supply'    => ['name' => 'Supply',    'stage' => 'build', 'task' => 'Source and schedule material deliveries',
+        'brief' => 'Plan procurement: long-lead items, a delivery schedule tied to the work sequence, staging and storage on site, and substitution risks to manage.'],
+    'capital'   => ['name' => 'Capital',   'stage' => 'build', 'task' => 'Line up working capital for the PO',
+        'brief' => 'Plan cash flow: when money goes out (materials, labor, equipment) against when it comes in (pay apps, retainage), the peak working-capital need, and options to cover it. Stratagem Capital does not offer credit today; never promise financing.'],
+    'workforce' => ['name' => 'Workforce', 'stage' => 'build', 'task' => 'Staff the crew for the scope',
+        'brief' => 'Plan the crew: roles, headcount and duration by phase, licenses and certifications required in California, and the hiring or subcontracting gaps to close.'],
+    'fleet'     => ['name' => 'Fleet',     'stage' => 'build', 'task' => 'Book vehicles and equipment',
+        'brief' => 'Plan vehicles and equipment: what is needed by phase, own versus rent, transport and site logistics. List what to reserve; you cannot make reservations yourself.'],
+    'studio'    => ['name' => 'Studio',    'stage' => 'keep',  'task' => 'Turn the finished job into marketing',
+        'brief' => 'Plan the marketing for when the job is done: the case-study outline, the photos to capture during the job, a short social post draft, and the review request to send the client.'],
 ];
 
 const JOB_STATUSES  = ['pending_approval', 'approved', 'rejected', 'in_progress', 'completed', 'cancelled'];
 const TASK_STATUSES = ['queued', 'running', 'done', 'blocked', 'skipped'];
+
+/** How deep call-backs may go: a subagent's call-back can call another, and so on. */
+const MAX_CALL_DEPTH = 3;
+/** Hard cap on tasks per job (originals + call-backs) so a job can't run away on cost. */
+const MAX_TASKS_PER_JOB = 24;
 
 /**
  * Creates the three job tables if they are missing. Idempotent, so a host
@@ -71,17 +90,25 @@ function ensure_jobs_schema(): void
     );
     $pdo->exec(
         "CREATE TABLE IF NOT EXISTS job_tasks (
-           id           INT UNSIGNED NOT NULL AUTO_INCREMENT,
-           job_id       INT UNSIGNED NOT NULL,
-           subagent     VARCHAR(20)  NOT NULL,
-           position     TINYINT UNSIGNED NOT NULL,
-           status       ENUM('queued','running','done','blocked','skipped') NOT NULL DEFAULT 'queued',
-           note         VARCHAR(600)     NULL,
-           started_at   DATETIME         NULL,
-           finished_at  DATETIME         NULL,
-           updated_at   DATETIME     NOT NULL,
+           id              INT UNSIGNED NOT NULL AUTO_INCREMENT,
+           job_id          INT UNSIGNED NOT NULL,
+           subagent        VARCHAR(20)  NOT NULL,
+           position        TINYINT UNSIGNED NOT NULL,
+           depth           TINYINT UNSIGNED NOT NULL DEFAULT 0,
+           parent_task_id  INT UNSIGNED     NULL,
+           request         VARCHAR(1000)    NULL,
+           status          ENUM('queued','running','done','blocked','skipped') NOT NULL DEFAULT 'queued',
+           note            VARCHAR(600)     NULL,
+           summary         VARCHAR(600)     NULL,
+           output          MEDIUMTEXT       NULL,
+           attempts        TINYINT UNSIGNED NOT NULL DEFAULT 0,
+           tokens_in       INT UNSIGNED NOT NULL DEFAULT 0,
+           tokens_out      INT UNSIGNED NOT NULL DEFAULT 0,
+           started_at      DATETIME         NULL,
+           finished_at     DATETIME         NULL,
+           updated_at      DATETIME     NOT NULL,
            PRIMARY KEY (id),
-           UNIQUE KEY uniq_task_job_subagent (job_id, subagent),
+           KEY idx_tasks_job (job_id, status),
            KEY idx_tasks_subagent (subagent, status)
          ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci"
     );
@@ -97,7 +124,54 @@ function ensure_jobs_schema(): void
            KEY idx_events_job (job_id, id)
          ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci"
     );
+    upgrade_job_tasks_schema($pdo);
     $done = true;
+}
+
+/**
+ * Brings a job_tasks table created before the AI orchestrator up to date:
+ * adds the output and call-back columns, and drops the one-task-per-subagent
+ * unique key (call-backs mean a subagent can run more than once per job).
+ * Checks one column first, so on an up-to-date table this is a single query.
+ */
+function upgrade_job_tasks_schema(PDO $pdo): void
+{
+    $has = static function (string $column) use ($pdo): bool {
+        $q = $pdo->prepare(
+            'SELECT 1 FROM information_schema.COLUMNS
+              WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = \'job_tasks\' AND COLUMN_NAME = ? LIMIT 1'
+        );
+        $q->execute([$column]);
+        return (bool) $q->fetch();
+    };
+    if ($has('tokens_out')) {
+        return;
+    }
+    $columns = [
+        'depth'          => 'TINYINT UNSIGNED NOT NULL DEFAULT 0 AFTER position',
+        'parent_task_id' => 'INT UNSIGNED NULL AFTER depth',
+        'request'        => 'VARCHAR(1000) NULL AFTER parent_task_id',
+        'summary'        => 'VARCHAR(600) NULL AFTER note',
+        'output'         => 'MEDIUMTEXT NULL AFTER summary',
+        'attempts'       => 'TINYINT UNSIGNED NOT NULL DEFAULT 0 AFTER output',
+        'tokens_in'      => 'INT UNSIGNED NOT NULL DEFAULT 0 AFTER attempts',
+        'tokens_out'     => 'INT UNSIGNED NOT NULL DEFAULT 0 AFTER tokens_in',
+    ];
+    foreach ($columns as $name => $ddl) {
+        if (!$has($name)) {
+            $pdo->exec("ALTER TABLE job_tasks ADD COLUMN {$name} {$ddl}");
+        }
+    }
+    $idx = $pdo->query(
+        "SELECT INDEX_NAME FROM information_schema.STATISTICS
+          WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'job_tasks'"
+    )->fetchAll(PDO::FETCH_COLUMN);
+    if (!in_array('idx_tasks_job', $idx, true)) {
+        $pdo->exec('ALTER TABLE job_tasks ADD KEY idx_tasks_job (job_id, status)');
+    }
+    if (in_array('uniq_task_job_subagent', $idx, true)) {
+        $pdo->exec('ALTER TABLE job_tasks DROP INDEX uniq_task_job_subagent');
+    }
 }
 
 function is_admin(array $user): bool
@@ -175,9 +249,12 @@ function load_job($idOrRef, array $user, bool $forUpdate = false): array
     return $job;
 }
 
+/** Originals in pipeline order, each followed by the call-backs it caused. */
+const TASK_DISPLAY_ORDER = 'position, id';
+
 function job_tasks(int $jobId): array
 {
-    $stmt = db()->prepare('SELECT * FROM job_tasks WHERE job_id = ? ORDER BY position, id');
+    $stmt = db()->prepare('SELECT * FROM job_tasks WHERE job_id = ? ORDER BY ' . TASK_DISPLAY_ORDER);
     $stmt->execute([$jobId]);
     return array_map('public_task', $stmt->fetchAll());
 }
@@ -193,6 +270,12 @@ function public_task(array $t): array
         'label'      => $meta['task'],
         'status'     => $t['status'],
         'note'       => $t['note'] ?? '',
+        'depth'      => (int) ($t['depth'] ?? 0),
+        'parentId'   => isset($t['parent_task_id']) ? (int) $t['parent_task_id'] : null,
+        'request'    => $t['request'] ?? '',
+        'summary'    => $t['summary'] ?? '',
+        'output'     => $t['output'] ?? '',
+        'attempts'   => (int) ($t['attempts'] ?? 0),
         'startedAt'  => $t['started_at'],
         'finishedAt' => $t['finished_at'],
     ];
@@ -206,7 +289,7 @@ function tasks_for_jobs(array $jobIds): array
         return $byJob;
     }
     $in = implode(',', array_fill(0, count($jobIds), '?'));
-    $stmt = db()->prepare("SELECT * FROM job_tasks WHERE job_id IN ({$in}) ORDER BY job_id, position, id");
+    $stmt = db()->prepare("SELECT * FROM job_tasks WHERE job_id IN ({$in}) ORDER BY job_id, " . TASK_DISPLAY_ORDER);
     $stmt->execute(array_map('intval', $jobIds));
     foreach ($stmt->fetchAll() as $row) {
         $byJob[(int) $row['job_id']][] = public_task($row);
@@ -239,7 +322,7 @@ function public_job(array $j, bool $withDetail = false, ?array $prefetchedTasks 
     ];
     $tasks = $prefetchedTasks ?? job_tasks((int) $j['id']);
     $done = count(array_filter($tasks, static fn ($t) => in_array($t['status'], ['done', 'skipped'], true)));
-    $out['subagents'] = array_column($tasks, 'subagent');
+    $out['subagents'] = array_values(array_unique(array_column(array_filter($tasks, static fn ($t) => $t['depth'] === 0), 'subagent')));
     $out['progress'] = ['done' => $done, 'total' => count($tasks)];
     if ($withDetail) {
         $out['tasks'] = $tasks;
@@ -276,32 +359,70 @@ function maybe_complete_job(int $jobId, ?int $userId): bool
     $upd->execute([$jobId]);
     if ($upd->rowCount() > 0) {
         log_job_event($jobId, $userId, 'completed', 'Every subagent finished. Job completed.');
+        mail_job_owner($jobId, 'completed');
         return true;
     }
     return false;
 }
 
-/** Best-effort admin notice; a failure is logged, never shown to the member. */
-function notify_admin_new_job(array $job, array $owner): void
+/** Admin notice for a new or resubmitted job. Never blocks the member. */
+function notify_admin_new_job(array $job, array $owner, bool $resubmitted = false): void
 {
-    global $config;
-    $to = $config['admin_email'] ?? '';
-    if ($to === '') {
+    $names = implode(', ', array_map(static fn ($k) => SUBAGENTS[$k]['name'], $job['subagents']));
+    mail_admins(
+        ($resubmitted ? 'Job resubmitted for approval: ' : 'Job awaiting approval: ') . $job['ref'],
+        ($resubmitted ? "A rejected job was edited and resubmitted.\n\n" : "A new job is waiting for your approval.\n\n")
+        . "Job:       {$job['ref']} — {$job['title']}\n"
+        . "From:      {$owner['full_name']} ({$owner['company']})\n"
+        . "Subagents: {$names}\n\n"
+        . "Approving it starts the AI subagents right away.\n"
+        . "Review it at " . site_url('/admin/jobs') . "\n"
+    );
+}
+
+/**
+ * Emails the job's owner about a change they need to know about:
+ * approved (subagents started), rejected, completed, or needs attention.
+ */
+function mail_job_owner(int $jobId, string $kind, string $detail = ''): void
+{
+    $stmt = db()->prepare(
+        'SELECT j.ref, j.title, j.decision_note, u.email, u.full_name
+           FROM jobs j JOIN users u ON u.id = j.user_id WHERE j.id = ? LIMIT 1'
+    );
+    $stmt->execute([$jobId]);
+    $j = $stmt->fetch();
+    if (!$j) {
         return;
     }
-    $names = implode(', ', array_map(static fn ($k) => SUBAGENTS[$k]['name'], $job['subagents']));
-    $body = "A new job is waiting for your approval.\n\n"
-          . "Job:       {$job['ref']} — {$job['title']}\n"
-          . "From:      {$owner['full_name']} ({$owner['company']})\n"
-          . "Subagents: {$names}\n\n"
-          . "Review it at https://djstratageminc.com/dashboard/approvals\n";
-    $sent = @mail(
-        $to,
-        'Job awaiting approval: ' . $job['ref'],
-        $body,
-        "From: no-reply@djstratageminc.com\r\nContent-Type: text/plain; charset=UTF-8"
-    );
-    if (!$sent) {
-        error_log("jobs: admin notice failed to send for {$job['ref']}");
+    $link = site_url('/dashboard/jobs?job=' . rawurlencode($j['ref']));
+    $hi = 'Hi ' . first_name($j['full_name']) . ",\n\n";
+    switch ($kind) {
+        case 'approved':
+            $subject = "{$j['ref']} approved — subagents are working on it";
+            $body = "{$hi}Your job \"{$j['title']}\" was approved and the AI subagents have started. "
+                  . "Each one builds on the work before it. We'll email you when they finish.\n\n"
+                  . ($j['decision_note'] ? "Approver note: {$j['decision_note']}\n\n" : '')
+                  . "Follow along: {$link}\n";
+            break;
+        case 'rejected':
+            $subject = "{$j['ref']} needs changes";
+            $body = "{$hi}Your job \"{$j['title']}\" wasn't approved yet.\n\nReason: {$j['decision_note']}\n\n"
+                  . "You can edit it and resubmit from your dashboard: {$link}\n";
+            break;
+        case 'completed':
+            $subject = "{$j['ref']} is done — your subagents' work is ready";
+            $body = "{$hi}Every subagent on \"{$j['title']}\" has finished. "
+                  . "Their plans, drafts and checklists are in your dashboard:\n\n  {$link}\n\n"
+                  . "The work is AI-generated. Check quantities, prices and dates before you rely on them.\n";
+            break;
+        case 'attention':
+            $subject = "{$j['ref']} needs your attention";
+            $body = "{$hi}A subagent on \"{$j['title']}\" couldn't finish: {$detail}\n\n"
+                  . "Open the job to retry or skip it: {$link}\n";
+            break;
+        default:
+            return;
     }
+    send_mail($j['email'], $subject, $body);
 }

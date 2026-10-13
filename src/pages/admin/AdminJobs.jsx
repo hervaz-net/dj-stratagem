@@ -61,7 +61,7 @@ export default function AdminJobs() {
     setBusy(`${action}-${job.id}`);
     try {
       await jobAction(action, { id: job.id, note }, { csrf });
-      toast(`${job.ref} ${action === "approve" ? "approved. Its owner can start it now." : "rejected."}`, { type: "success" });
+      toast(`${job.ref} ${action === "approve" ? "approved. Its subagents are running." : "rejected."}`, { type: "success" });
       setNotes((n) => ({ ...n, [job.id]: "" }));
       reload();
     } catch (err) {
@@ -140,7 +140,7 @@ export default function AdminJobs() {
                   />
                 </label>
                 <button type="button" disabled={!!busy} onClick={() => decide(job, "approve")} className={btn.dark}>
-                  {busy === `approve-${job.id}` ? "Approving…" : "Approve"}
+                  {busy === `approve-${job.id}` ? "Approving…" : "Approve and start"}
                 </button>
                 <button type="button" disabled={!!busy} onClick={() => decide(job, "reject")} className={btn.danger}>
                   {busy === `reject-${job.id}` ? "Rejecting…" : "Reject"}

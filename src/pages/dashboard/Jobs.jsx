@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import DashboardLayout from "../../components/dashboard/DashboardLayout";
 import GlassCard from "../../components/dashboard/GlassCard";
 import StatusDot from "../../components/dashboard/StatusDot";
@@ -20,7 +21,9 @@ export default function Jobs() {
   const isAdmin = user?.role === "admin";
   const [filter, setFilter] = useState("all");
   const [scope, setScope] = useState("mine");
-  const [openId, setOpenId] = useState(null);
+  const [params, setParams] = useSearchParams();
+  // Emails link to /dashboard/jobs?job=JOB-12345.
+  const [openId, setOpenId] = useState(() => params.get("job"));
 
   const jobsFetcher = useCallback(
     ({ signal }) => fetchJobs({ status: filter, scope: isAdmin && scope === "all" ? "all" : undefined, signal }),
@@ -45,7 +48,15 @@ export default function Jobs() {
 
   const counts = jobs.data?.counts ?? {};
   const list = jobs.data?.jobs ?? [];
-  const closeDrawer = useCallback(() => setOpenId(null), []);
+  const closeDrawer = useCallback(() => {
+    setOpenId(null);
+    setParams((p) => {
+      if (!p.has("job")) return p;
+      const next = new URLSearchParams(p);
+      next.delete("job");
+      return next;
+    }, { replace: true });
+  }, [setParams]);
 
   return (
     <>
@@ -53,7 +64,7 @@ export default function Jobs() {
       <DashboardLayout
         breadcrumbs={[{ label: "Home", to: "/" }, { label: "Dashboard", to: "/dashboard/overview" }, { label: "Jobs" }]}
         title="Jobs"
-        subtitle="Submit a job, choose its subagents, and watch them work once an administrator approves it."
+        subtitle="Submit a job and pick its subagents. Once an administrator approves it, they run on their own, one building on the next, and we email you the results."
         actions={<NewJobDialog onCreated={(job) => { refreshAll(); setOpenId(job.id); }} />}
       >
         {/* Subagent board */}
@@ -71,9 +82,9 @@ export default function Jobs() {
                 </div>
                 <div className="mt-1.5"><StageChip stage={a.stage} /></div>
                 <p className="mt-2 text-xs tabular-nums text-steel">
-                  <span className="font-semibold text-paper">{a.queue.running}</span> running
+                  <span className="font-semibold text-paper">{a.queue.running}</span> working
                   {a.queue.blocked > 0 && <span className="text-danger"> · {a.queue.blocked} blocked</span>}
-                  <span> · {a.queue.queued} queued</span>
+                  <span> · {a.queue.queued} waiting</span>
                 </p>
               </GlassCard>
             ))}

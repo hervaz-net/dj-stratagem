@@ -36,6 +36,33 @@ function Recent({ title, to, empty, rows }) {
   );
 }
 
+const fmt = (n) => new Intl.NumberFormat("en-US", { notation: "compact", maximumFractionDigits: 1 }).format(n ?? 0);
+
+/** Whether Stratagem AI can run, and how much it has used. */
+function AiEngine({ ai }) {
+  return (
+    <Panel className="mt-4 flex flex-wrap items-center gap-x-8 gap-y-3 px-5 py-4" data-testid="ai-engine">
+      <div className="flex items-center gap-2">
+        <span className={`h-2.5 w-2.5 rounded-full ${ai.configured ? "bg-success" : "bg-danger"}`} aria-hidden="true" />
+        <p className="text-sm font-semibold text-paper">
+          AI engine {ai.configured ? `on · ${ai.model}` : "not set up"}
+        </p>
+      </div>
+      {ai.configured ? (
+        <p className="text-sm text-steel">
+          {fmt(ai.runs)} subagent runs · {fmt(ai.tokensIn)} tokens in · {fmt(ai.tokensOut)} out
+          {ai.waiting > 0 && ` · ${ai.waiting} waiting`}
+          {ai.blocked > 0 && <span className="text-danger"> · {ai.blocked} blocked</span>}
+        </p>
+      ) : (
+        <p className="text-sm text-danger">
+          Approved jobs can't run. Add an Anthropic API key under <code>ai.api_key</code> in the server config (~/djs-config.php).
+        </p>
+      )}
+    </Panel>
+  );
+}
+
 export default function AdminOverview() {
   const fetcher = useCallback(({ signal }) => fetchAdminOverview({ signal }), []);
   const { data, error, loading } = usePolledResource(fetcher, { intervalMs: 30000, initialData: null });
@@ -54,6 +81,8 @@ export default function AdminOverview() {
         <Stat label="Members" value={m.total} note={`${m.active ?? 0} active · ${m.newThisWeek ?? 0} new this week`} to="/admin/members" />
         <Stat label="Catalog listings" value={c.total} note={`${c.sellers ?? 0} sellers · ${c.draft ?? 0} drafts`} to="/admin/catalog" />
       </div>
+
+      {data?.ai && <AiEngine ai={data.ai} />}
 
       <div className="mt-6 grid grid-cols-1 gap-4 xl:grid-cols-3">
         <Recent

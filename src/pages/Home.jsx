@@ -83,15 +83,15 @@ const CODE = [
   [["c", "// one account, nine subagents"]],
   [["kw", "const"], ["d", " job = "], ["kw", "await"], ["d", " projects."], ["fn", "find"], ["d", "({ trade: "], ["s", '"electrical"'], ["d", ", city: "], ["s", '"Pasadena"'], ["d", " })"]],
   [["kw", "const"], ["d", " quotes = "], ["kw", "await"], ["d", " exchange."], ["fn", "request"], ["d", "(job, "], ["s", '"12 AWG THHN"'], ["d", ")"]],
-  [["kw", "await"], ["d", " capital."], ["fn", "fund"], ["d", "(quotes."], ["fn", "best"], ["d", "().po)"]],
+  [["kw", "await"], ["d", " capital."], ["fn", "plan"], ["d", "(quotes."], ["fn", "best"], ["d", "().po)"]],
   [["kw", "await"], ["d", " workforce."], ["fn", "staff"], ["d", "(job, { crew: "], ["s", '"electrical"'], ["d", " })"]],
   [["d", "studio."], ["fn", "showcase"], ["d", "(job)  "], ["c", "// keep the customer"]],
 ];
 const TOKEN_COLOR = { kw: "#7fd1ae", d: "#e6ece8", fn: "#8fb3ff", s: "#f2b766", c: "#6f8178" };
 const OUTPUT = [
   "✓ open projects matched · electrical · Pasadena",
-  "✓ supplier quotes compared · best one selected",
-  "✓ PO funded · crew scheduled",
+  "✓ quote request drafted · ready to send suppliers",
+  "✓ cash-flow plan · crew plan by phase",
 ];
 const LINE_LENGTHS = CODE.map((l) => l.reduce((a, t) => a + t[1].length, 0));
 const TOTAL = LINE_LENGTHS.reduce((a, b) => a + b, 0);
@@ -288,10 +288,10 @@ export default function Home() {
             <p className={EYEBROW} style={{ color: "var(--x-brand)" }}>One network, nine subagents</p>
             <h2 className={H2} style={{ fontSize: "clamp(30px, 3.6vw, 44px)", fontFamily: "inherit" }}>Every subagent runs through the same hub.</h2>
             <p className="mt-4 text-[17px] leading-relaxed" style={{ color: "var(--x-muted)" }}>
-              Schedule all nine subagents to work at the same time while you watch your revenue grow.
+              Pick the subagents a job needs. Each one is powered by AI, builds on the work before it, and calls another back in when it needs more.
             </p>
             <p className="mt-3 text-[17px] leading-relaxed" style={{ color: "var(--x-muted)" }}>
-              You approve every job as the administrator before any subagent starts work.
+              An administrator approves every job before any subagent starts. Then they run on their own and email you when the work is ready.
             </p>
             <div className="mt-6 flex flex-wrap gap-2">
               {["find", "win", "build", "keep"].map((st) => (

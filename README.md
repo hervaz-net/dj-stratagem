@@ -177,14 +177,11 @@ domain (create one in cPanel, switch `contact.php` from `mail()` to SMTP).
   apex `https://djstratageminc.com/` returns 200 (not the suspended CGI).
   `/api/health.php` and `/api/me.php` return JSON. Do not treat a 302 to
   `/cgi-sys/suspendedpage.cgi` as current.
-- **cPanel public_html lags GitHub `deploy`.** Rechecked 7 Oct 2026 14:16 PDT:
-  live homepage is still `assets/index-b_QNY9vN.js` (last-modified 4 Oct 2026).
-  `/exchange` and `/fleet` still serve the parent homepage title before JavaScript.
-  After hydration, `/exchange/pricing` still canonicalizes to `/pricing` and keeps
-  the parent Twitter title. Fleet date input still has no `min`. GitHub `deploy`
-  already has `spa.php` and the 1.17–1.24 fixes (`Deploy f6a3ad4`, bundle
-  `assets/index-D5oonncx.js`). Actions builds and pushes `deploy`, then Pull and
-  deploy fails because repo secret `CPANEL_TOKEN` is empty. After `main` updates:
+- **Stratagem AI needs its API key and cron job on the server** before
+  approved jobs can run. See "Jobs and subagents (Stratagem AI)" below.
+- **cPanel can lag GitHub `deploy`.** On 13 Oct 2026 live matched `main`.
+  Actions builds and pushes `deploy`, then Pull and deploy fails while repo
+  secret `CPANEL_TOKEN` is empty. After `main` updates:
   `./deploy.sh` on a machine with `~/.cpanel_token`, or cPanel → Git Version
   Control → `dj-stratagem` → Update from Remote → Deploy HEAD Commit. Confirm
   `public_html` is `djstlime:nobody` mode `0750`. Do not rsync with `-a`.
@@ -208,43 +205,86 @@ are the real boundary.
 Screens: **Overview**, **Suppliers**, **Bids**, **Orders**, **Analytics**,
 **Alerts**, **Settings**, plus **Accounts** for admins.
 
-### Jobs and subagents
+### Jobs and subagents (Stratagem AI)
 
 Members submit a job at `/dashboard/jobs` and pick which of the nine
 subagents (Projects, Exchange, Platform, Solutions, Supply, Capital,
 Workforce, Fleet, Studio) should work it. Every job lands in
-`pending_approval`; **nothing runs until an admin approves it** at
-`/dashboard/approvals`. Once approved, the owner presses **Start**, which
-sets every assigned subagent running at the same time. Each task can be
-marked done, blocked, resumed or skipped; when none are left open the job
-completes on its own. Every change is written to the job's activity log.
+`pending_approval`; **nothing runs until an admin approves it**. Approval
+starts the run, and the subagents work on their own on the Claude API
+(`public/api/ai-lib.php`):
+
+- **Chained.** Subagents run one after another in pipeline order. Each one
+  gets the job details, its own brief, and every earlier subagent's work.
+- **Recursive call-backs.** A subagent can call up to two others back in
+  for follow-up work. A call-back runs next, one level deeper, and can make
+  its own call-backs (depth-first), up to 3 levels. A job is capped at 24
+  tasks so it can't run away on cost.
+- **Failures.** Rate limits, overloads and network errors retry (3 attempts,
+  with backoff). Anything else, including a missing or rejected API key,
+  blocks that subagent, pauses the chain, and emails the owner, who can
+  **Retry** or **Skip** it. A cancel always wins over a call still in flight.
+- **Output.** Each subagent's Markdown write-up shows in the job panel and
+  downloads as one `.md` file. It's AI-generated planning and drafting; the
+  subagents don't book, buy, fund or submit anything themselves.
+- **Emails.** Owner: approved (running), rejected (with reason, then
+  **Edit and resubmit**), needs attention, completed. Admins: new and
+  resubmitted jobs (to `admin_email`, or every active admin if it's blank).
+
+**Turning it on (one time):**
+
+1. Add an Anthropic API key to `~/djs-config.php` under
+   `'ai' => ['api_key' => '…', 'model' => 'claude-sonnet-5-5']` (see
+   `config.example.php`). Usage is billed to that Anthropic account; the
+   `/admin` overview shows the engine status and tokens used.
+2. Add the worker in cPanel → Cron Jobs, every minute:
+   `/usr/local/bin/php /home/djstlime/public_html/api/ai-worker.php >/dev/null 2>&1`
+   Jobs also advance without it (each finished task triggers the next over
+   a signed loopback request, and an open job panel nudges it along), but
+   the cron job is the guarantee if the host blocks loopback requests.
 
 | Endpoint | Method | Purpose |
 | --- | --- | --- |
 | `/api/jobs.php` | GET | Own jobs + counts (`scope=all` for admins, `status=` filter) |
-| `/api/jobs.php?id=` | GET | One job with tasks and activity |
-| `/api/jobs.php` | POST `{action}` | `create`, `approve`/`reject` (admin; reject needs `note`), `start`, `task`, `cancel` |
-| `/api/subagents.php` | GET | The nine subagents with live queued/running/blocked/done counts |
+| `/api/jobs.php?id=` | GET | One job with tasks, each subagent's output, and activity |
+| `/api/jobs.php` | POST `{action}` | `create`, `resubmit` (owner, rejected jobs), `approve` (admin; starts the run), `reject` (admin; needs `note`), `retry`/`skip` `{taskId}`, `cancel`, `start` (jobs approved before auto-start) |
+| `/api/jobs-run.php` | POST `{id}` | Nudges a running job (owner/admin, or a signed internal kick) |
+| `/api/subagents.php` | GET | The nine subagents with live waiting/working/blocked/done counts |
+| `/api/password-reset.php` | POST | `request {email}` emails a one-hour link; `reset {token, password}` |
 
-Tables `jobs`, `job_tasks`, `job_events` are in `schema.sql` and are also
-created automatically on first use, so an existing database needs no manual
-migration. Members only ever see their own jobs (someone else's id returns
-404); admins see everything.
+Tables `jobs`, `job_tasks`, `job_events` and `password_resets` are created
+and upgraded automatically on first use, so an existing database needs no
+manual migration. Members only ever see their own jobs (someone else's id
+returns 404); admins see everything. The nine subagents are listed in three
+files (`src/data/subagents.js`, `src/api/jobs.js`, `public/api/jobs-lib.php`);
+`scripts/check-subagents.mjs` fails the build if they ever disagree.
 
 ### Testing against a real database
 
 ```bash
 # PHP + MySQL running, public/api/config.php pointing at a dev database,
 # an admin account created (see "Creating the first admin").
+# For the AI tests, point the dev config at the mock Claude:
+#   'ai' => ['api_key' => 'test', 'base_url' => 'http://127.0.0.1:8765'],
+#   'site_url' => 'http://127.0.0.1:8080',
+#   'mail_hook' => fn ($to, $subject, $body) => file_put_contents('/tmp/mail.log', json_encode(compact('to','subject','body'))."\n", FILE_APPEND),
+MOCK_CLAUDE_LOG=/tmp/mock.log python3 scripts/mock-claude.py 8765 &
 npm run build && php -S 127.0.0.1:8080 -t dist <router.php>
 python3 scripts/smoke-api.py http://127.0.0.1:8080 --admin-email you@example.com --admin-password '…'
+python3 scripts/test-ai-subagents.py http://127.0.0.1:8080 /tmp/mail.log /tmp/mock.log --admin-email you@example.com --admin-password '…'
 python3 scripts/e2e-jobs.py  http://127.0.0.1:8080 you@example.com '…'   # needs Python Playwright
+python3 scripts/e2e-admin.py http://127.0.0.1:8080 you@example.com '…'
 ```
 
 `smoke-api.py` calls every endpoint signed out, as a member and as an admin.
+`test-ai-subagents.py` checks the AI run end to end: approval starts it,
+each subagent sees earlier work, call-backs recurse 3 deep and no further,
+the task cap, retry on overload, a bad key blocking with retry/skip, cancel
+mid-call, edit and resubmit, every email, and password reset.
 `e2e-jobs.py` drives a real browser through register → account approval →
-new job → job approval → start → all nine tasks done. Both create rows, so
-never point them at production.
+new job → approval → the subagents finishing on their own → reading the
+output → reject and resubmit. All of them create rows, so never point them
+at production.
 
 ### Dashboard APIs
 
@@ -410,5 +450,6 @@ client renders.
 
 ### Not built yet
 
-Password reset, email verification of the registrant's own address, and
-"remember me".
+Email verification of the registrant's own address, and "remember me".
+Password reset is self-serve at `/forgot-password` (one-hour, single-use
+links; only a hash of each token is stored).

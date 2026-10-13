@@ -72,17 +72,26 @@ CREATE TABLE IF NOT EXISTS jobs (
 
 -- One row per subagent assigned to a job.
 CREATE TABLE IF NOT EXISTS job_tasks (
-  id           INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  job_id       INT UNSIGNED NOT NULL,
-  subagent     VARCHAR(20)  NOT NULL,
-  position     TINYINT UNSIGNED NOT NULL,
-  status       ENUM('queued','running','done','blocked','skipped') NOT NULL DEFAULT 'queued',
-  note         VARCHAR(600)     NULL,
-  started_at   DATETIME         NULL,
-  finished_at  DATETIME         NULL,
-  updated_at   DATETIME     NOT NULL,
+  id              INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  job_id          INT UNSIGNED NOT NULL,
+  subagent        VARCHAR(20)  NOT NULL,
+  position        TINYINT UNSIGNED NOT NULL,
+  -- 0 = picked by the member; 1-3 = a call-back requested by parent_task_id.
+  depth           TINYINT UNSIGNED NOT NULL DEFAULT 0,
+  parent_task_id  INT UNSIGNED     NULL,
+  request         VARCHAR(1000)    NULL,
+  status          ENUM('queued','running','done','blocked','skipped') NOT NULL DEFAULT 'queued',
+  note            VARCHAR(600)     NULL,
+  summary         VARCHAR(600)     NULL,
+  output          MEDIUMTEXT       NULL,
+  attempts        TINYINT UNSIGNED NOT NULL DEFAULT 0,
+  tokens_in       INT UNSIGNED NOT NULL DEFAULT 0,
+  tokens_out      INT UNSIGNED NOT NULL DEFAULT 0,
+  started_at      DATETIME         NULL,
+  finished_at     DATETIME         NULL,
+  updated_at      DATETIME     NOT NULL,
   PRIMARY KEY (id),
-  UNIQUE KEY uniq_task_job_subagent (job_id, subagent),
+  KEY idx_tasks_job (job_id, status),
   KEY idx_tasks_subagent (subagent, status)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 

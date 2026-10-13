@@ -3,12 +3,16 @@ import { Link } from "react-router-dom";
 import Button from "../components/Button";
 import Logo from "../components/Logo";
 import Seo from "../components/Seo";
+import useAuth from "../auth/useAuth";
+import { requestPasswordReset } from "../api/jobs";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [message, setMessage] = useState("");
+  const { csrf } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,11 +20,16 @@ export default function ForgotPassword() {
     if (!email) return setError("Enter your email address.");
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return setError("Enter a valid email address.");
 
-    // No reset-mail endpoint ships yet. Do not pretend a message was sent.
     setBusy(true);
-    await new Promise((r) => setTimeout(r, 300));
-    setBusy(false);
-    setSubmitted(true);
+    try {
+      const res = await requestPasswordReset(email.trim(), { csrf });
+      setMessage(res.message);
+      setSubmitted(true);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setBusy(false);
+    }
   };
 
   return (
@@ -38,13 +47,13 @@ export default function ForgotPassword() {
               <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[var(--viz-green)]/10">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--viz-green)]" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
               </div>
-              <h1 className="mt-5 text-paper text-6xl leading-[0.95] md:text-8xl">How to reset</h1>
+              <h1 className="mt-5 text-paper text-6xl leading-[0.95] md:text-8xl">Check your email</h1>
+              <p className="mt-3 text-sm leading-relaxed text-steel" role="status">{message}</p>
               <p className="mt-3 text-sm leading-relaxed text-steel">
-                Self-serve password reset is not live yet. Email{" "}
+                Nothing after a few minutes? Check spam, or email{" "}
                 <a href="mailto:hello@djstratageminc.com" className="font-medium text-amber hover:text-amber-2">
                   hello@djstratageminc.com
-                </a>{" "}
-                from <span className="font-medium text-paper">{email}</span> and we will reset the account by hand.
+                </a>.
               </p>
               <Link
                 to="/login"
@@ -57,7 +66,7 @@ export default function ForgotPassword() {
             <>
               <h1 className="mt-8 text-paper text-6xl leading-[0.95] md:text-8xl">Forgot password?</h1>
               <p className="mt-2 text-sm text-steel">
-                Enter the email on the account. We will tell you how to reach us — automated reset mail is not live yet.
+                Enter the email on your account and we'll send you a link to choose a new password.
               </p>
 
               <form onSubmit={handleSubmit} className="mt-8 space-y-4" noValidate>
@@ -84,7 +93,7 @@ export default function ForgotPassword() {
                 )}
 
                 <Button type="submit" variant="primary" className="w-full" disabled={busy}>
-                  {busy ? "Checking…" : "Request a reset"}
+                  {busy ? "Sending…" : "Email me a reset link"}
                 </Button>
               </form>
 

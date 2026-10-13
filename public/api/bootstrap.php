@@ -94,7 +94,10 @@ function is_https(): bool
     return false;
 }
 
-if (!empty($config['require_https']) && !is_https()) {
+// The AI worker runs from cron on the command line: no HTTPS, no session.
+const DJS_CLI = PHP_SAPI === 'cli';
+
+if (!DJS_CLI && !empty($config['require_https']) && !is_https()) {
     http_response_code(403);
     echo json_encode([
         'ok'    => false,
@@ -104,19 +107,21 @@ if (!empty($config['require_https']) && !is_https()) {
     exit;
 }
 
-session_set_cookie_params([
-    'lifetime' => 0,
-    'path'     => '/',
-    'secure'   => is_https(),
-    'httponly' => true,
-    'samesite' => 'Lax',
-]);
-session_name('djs_session');
-if (session_status() !== PHP_SESSION_ACTIVE && !@session_start()) {
-    error_log('auth: session_start failed');
-    http_response_code(500);
-    echo json_encode(['ok' => false, 'error' => 'server_error']);
-    exit;
+if (!DJS_CLI) {
+    session_set_cookie_params([
+        'lifetime' => 0,
+        'path'     => '/',
+        'secure'   => is_https(),
+        'httponly' => true,
+        'samesite' => 'Lax',
+    ]);
+    session_name('djs_session');
+    if (session_status() !== PHP_SESSION_ACTIVE && !@session_start()) {
+        error_log('auth: session_start failed');
+        http_response_code(500);
+        echo json_encode(['ok' => false, 'error' => 'server_error']);
+        exit;
+    }
 }
 
 function db(): PDO
@@ -150,6 +155,40 @@ function respond(array $payload, int $status = 200): never
 {
     http_response_code($status);
     echo json_encode($payload);
+    exit;
+}
+
+/**
+ * Sends the JSON response and closes the connection, then keeps running
+ * $after (the AI subagents) in the background of the same PHP process. The
+ * person who clicked gets an instant answer; the work carries on without them.
+ */
+function respond_then(array $payload, callable $after, int $status = 200): never
+{
+    if (session_status() === PHP_SESSION_ACTIVE) {
+        session_write_close(); // don't hold the session lock while the AI works
+    }
+    ignore_user_abort(true);
+    @set_time_limit(0);
+    $body = json_encode($payload);
+    http_response_code($status);
+    header('Content-Length: ' . strlen($body));
+    header('Connection: close');
+    echo $body;
+    while (ob_get_level() > 0) {
+        @ob_end_flush();
+    }
+    flush();
+    if (function_exists('litespeed_finish_request')) {
+        litespeed_finish_request();
+    } elseif (function_exists('fastcgi_finish_request')) {
+        fastcgi_finish_request();
+    }
+    try {
+        $after();
+    } catch (Throwable $e) {
+        error_log('respond_then: ' . get_class($e) . ' — ' . $e->getMessage());
+    }
     exit;
 }
 
