@@ -59,6 +59,8 @@ const issued = [
 
 
 // The lineup: the only vehicles Fleet plans with and members can reserve.
+// `photo`: an owner-supplied studio image (white background, 16:9) under
+// public/media/vehicles/. Models without one show their drawing instead.
 // These are models offered, not specific units; a unit goes in `owned` only
 // once it is registered, inspected, and insured (see PROOF.md). No photos.
 export const lineup = [
@@ -72,6 +74,7 @@ export const lineup = [
         key: "silverado",
         name: "Chevrolet Silverado 2500",
         years: "2025–2026",
+        photo: "/media/vehicles/silverado.webp",
         specs: [["Class", "¾-ton heavy duty"], ["Trims", "WT through LTZ"], ["Engine", "V8"]],
       },
       {
@@ -84,6 +87,7 @@ export const lineup = [
         key: "ram",
         name: "Ram 2500",
         years: "2025–2026",
+        photo: "/media/vehicles/ram.webp",
         specs: [["Class", "¾-ton heavy duty"], ["Trims", "Tradesman through Laramie"], ["Engine", "V8"], ["Bed", "Long or short"], ["Drivetrain", "4x4"]],
       },
     ],
@@ -94,7 +98,7 @@ export const lineup = [
     short: "Vans",
     use: "Tools and materials under a roof, a rolling shop for trades.",
     models: [
-      { key: "sprinter", name: "Mercedes-Benz Sprinter 3500", years: null, specs: [["Body", "Cargo van"], ["Engine", "Diesel"]] },
+      { key: "sprinter", name: "Mercedes-Benz Sprinter 3500", years: null, photo: "/media/vehicles/sprinter.webp", specs: [["Body", "Cargo van"], ["Engine", "Diesel"]] },
       { key: "transit", name: "Ford Transit Cargo", years: "2025–2026", specs: [["Body", "Cargo van"], ["Roof", "High or standard"]] },
     ],
   },
@@ -104,11 +108,12 @@ export const lineup = [
     short: "SUVs",
     use: "Owner walks, client visits, and getting the project team between sites.",
     models: [
-      { key: "suburban", name: "Chevrolet Suburban", years: "2025–2026", specs: [["Body", "Full-size SUV"], ["Seating", "Three rows"]] },
+      { key: "suburban", name: "Chevrolet Suburban", years: "2025–2026", photo: "/media/vehicles/suburban.webp", specs: [["Body", "Full-size SUV"], ["Seating", "Three rows"]] },
       {
         key: "escalade",
         name: "Cadillac Escalade / Escalade ESV",
         years: "2025–2026",
+        photo: "/media/vehicles/escalade.webp",
         specs: [["Body", "Full-size luxury SUV"], ["Length", "Standard or ESV (extended)"], ["Seating", "Three rows"]],
       },
     ],

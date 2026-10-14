@@ -15,17 +15,38 @@ const TRIM = "#2b2f33";
 const GROUND = 178;
 
 /** Crop per body type so every vehicle fills its frame. */
-const VIEW = { pickup: "6 36 412 154", van: "10 16 400 174", suv: "8 38 404 152" };
+const VIEW = { pickup: "6 44 414 146", van: "8 22 406 168", suv: "10 38 404 152" };
+
+/*
+ * Proportions from each model's published exterior dimensions, in inches,
+ * rounded (crew cab; the bed and wheelbase each card shows). One scale per
+ * body type, so vehicles in the same group compare true to size.
+ *   len: overall length, h: height, wb: wheelbase, bed: bed length,
+ *   fo: front overhang, belt / hood: height of the beltline and hood.
+ */
+const SCALE = { pickup: 1.45, van: 1.28, suv: 1.66 };
 
 const SPEC = {
-  silverado: { type: "pickup", cab: "crew", bed: 118, hood: 100, arch: "square", grille: 34, lift: 0 },
-  superduty: { type: "pickup", cab: "crew", bed: 140, hood: 104, arch: "round", grille: 38, lift: 2 },
-  ram: { type: "pickup", cab: "crew", bed: 112, hood: 98, arch: "round", grille: 32, lift: 5 },
-  sprinter: { type: "van", roof: 26, nose: "sloped" },
-  transit: { type: "van", roof: 30, nose: "upright" },
-  suburban: { type: "suv", length: 372, lux: false },
-  escalade: { type: "suv", length: 380, lux: true },
+  // Silverado 2500HD crew cab, standard 6'9" bed.
+  silverado: { type: "pickup", len: 250, h: 80, wb: 159, bed: 81, fo: 40, belt: 56, hood: 58, arch: "square", grille: 36 },
+  // F-250 / F-350 Super Duty crew cab, 8' bed.
+  superduty: { type: "pickup", len: 266, h: 81, wb: 176, bed: 98, fo: 41, belt: 57, hood: 59, arch: "round", grille: 38 },
+  // Ram 2500 crew cab 4x4, 6'4" bed.
+  ram: { type: "pickup", len: 238, h: 80, wb: 149, bed: 76, fo: 39, belt: 56, hood: 57, arch: "round", grille: 34 },
+  // Sprinter 3500, 170" wheelbase, high roof.
+  sprinter: { type: "van", len: 290, h: 108, wb: 170, fo: 38, nose: "sloped" },
+  // Transit Cargo, 148" extended, high roof.
+  transit: { type: "van", len: 264, h: 109, wb: 148, fo: 40, nose: "upright" },
+  // Suburban.
+  suburban: { type: "suv", len: 225, h: 76, wb: 134, fo: 37, lux: false },
+  // Escalade ESV (the longer of the two).
+  escalade: { type: "suv", len: 227, h: 77, wb: 134, fo: 37, lux: true },
 };
+
+/** Inches to drawing units, measured up from the ground. */
+const up = (k, inches) => GROUND - inches * k;
+/** Tire radius from its diameter in inches. */
+const tire = (k, diameter) => (diameter / 2) * k;
 
 function Wheel({ cx, r = 25, lux = false, ids }) {
   const cy = GROUND - r;
@@ -105,18 +126,20 @@ function Shadow({ x0, x1, ids }) {
 }
 
 function Pickup({ s, ids }) {
-  const x0 = 24;
-  const cabLen = s.cab === "crew" ? 132 : 108;
-  const cabStart = x0 + s.bed;
-  const cabEnd = cabStart + cabLen;
-  const x1 = cabEnd + s.hood;
-  const bottom = 148 - s.lift;
-  const belt = 98 - s.lift;
-  const roof = 50 - s.lift;
-  const hoodY = belt - 8;
-  const wsTop = cabEnd - 40;
-  const rearCx = x0 + s.bed * 0.56;
-  const frontCx = x1 - 54;
+  const k = SCALE.pickup;
+  const x0 = 22;
+  const x1 = x0 + s.len * k;
+  const cabStart = x0 + (s.bed + 3) * k;
+  // Crew cab: back of cab to base of windshield is about 100".
+  const cabEnd = cabStart + 100 * k;
+  const cabLen = cabEnd - cabStart;
+  const bottom = up(k, 21);
+  const belt = up(k, s.belt);
+  const roof = up(k, s.h);
+  const hoodY = up(k, s.hood);
+  const wsTop = cabEnd - 30 * k;
+  const frontCx = x1 - s.fo * k;
+  const rearCx = frontCx - s.wb * k;
   const winTop = roof + 8;
   const winBot = belt - 5;
   const split = cabStart + cabLen * 0.5;
@@ -158,25 +181,26 @@ function Pickup({ s, ids }) {
       <Bumper x={x1 - 3} y={bottom - 22} w={10} h={18} />
       <Bumper x={x0 - 7} y={bottom - 18} w={10} h={14} />
       <rect x={cabStart + 8} y={bottom - 3} width={cabLen - 14} height="5" rx="2" fill={TRIM} />
-      <Arch cx={rearCx} bottom={bottom} shape={s.arch} />
-      <Arch cx={frontCx} bottom={bottom} shape={s.arch} />
-      <Wheel cx={rearCx} r={27} ids={ids} />
-      <Wheel cx={frontCx} r={27} ids={ids} />
+      <Arch cx={rearCx} bottom={bottom} shape={s.arch} r={tire(k, 33)} />
+      <Arch cx={frontCx} bottom={bottom} shape={s.arch} r={tire(k, 33)} />
+      <Wheel cx={rearCx} r={tire(k, 33)} ids={ids} />
+      <Wheel cx={frontCx} r={tire(k, 33)} ids={ids} />
     </g>
   );
 }
 
 function Van({ s, ids }) {
-  const x0 = 26;
-  const x1 = 396;
-  const bottom = 152;
-  const roof = s.roof;
-  const belt = 104;
+  const k = SCALE.van;
+  const x1 = 400;
+  const x0 = x1 - s.len * k;
+  const bottom = up(k, 20);
+  const roof = up(k, s.h);
+  const belt = up(k, 58);
   const wsTop = x1 - (s.nose === "sloped" ? 100 : 86);
   const hoodBack = x1 - (s.nose === "sloped" ? 46 : 40);
   const hoodY = s.nose === "sloped" ? 112 : 106;
-  const rearCx = x0 + 82;
-  const frontCx = x1 - 62;
+  const frontCx = x1 - s.fo * k;
+  const rearCx = frontCx - s.wb * k;
   return (
     <g>
       <Shadow x0={x0} x1={x1} ids={ids} />
@@ -207,25 +231,26 @@ function Van({ s, ids }) {
       <rect x={x1 - 8} y={hoodY + 4} width="8" height="9" rx="2" fill="#e8eef5" stroke="#9fb0c2" strokeWidth="0.8" />
       <Grille x={x1 - 8} y={hoodY + 15} w={8} h={18} />
       <rect x={x0 - 1} y={roof + 60} width="5" height="34" rx="1.5" fill="#c43b2f" />
-      <Arch cx={rearCx} bottom={bottom} />
-      <Arch cx={frontCx} bottom={bottom} />
-      <Wheel cx={rearCx} r={24} ids={ids} />
-      <Wheel cx={frontCx} r={24} ids={ids} />
+      <Arch cx={rearCx} bottom={bottom} r={tire(k, 30)} />
+      <Arch cx={frontCx} bottom={bottom} r={tire(k, 30)} />
+      <Wheel cx={rearCx} r={tire(k, 30)} ids={ids} />
+      <Wheel cx={frontCx} r={tire(k, 30)} ids={ids} />
     </g>
   );
 }
 
 function Suv({ s, ids }) {
-  const x1 = 400;
-  const x0 = x1 - s.length;
-  const bottom = 150;
-  const roof = 52;
-  const belt = 100;
-  const wsBase = x1 - 98;
-  const wsTop = wsBase - 40;
-  const hoodY = 94;
-  const rearCx = x0 + 72;
-  const frontCx = x1 - 60;
+  const k = SCALE.suv;
+  const x1 = 402;
+  const x0 = x1 - s.len * k;
+  const bottom = up(k, 17);
+  const roof = up(k, s.h);
+  const belt = up(k, 47);
+  const wsBase = x1 - 60 * k;
+  const wsTop = wsBase - 26 * k;
+  const hoodY = up(k, 50);
+  const frontCx = x1 - s.fo * k;
+  const rearCx = frontCx - s.wb * k;
   const pillars = [x0 + 30, x0 + (wsTop - x0) * 0.38, x0 + (wsTop - x0) * 0.7];
   return (
     <g>
@@ -276,10 +301,10 @@ function Suv({ s, ids }) {
           <rect x={x0 + 1} y={belt - 2} width="5" height="22" rx="1.5" fill="#c43b2f" />
         </>
       )}
-      <Arch cx={rearCx} bottom={bottom} />
-      <Arch cx={frontCx} bottom={bottom} />
-      <Wheel cx={rearCx} r={26} lux={s.lux} ids={ids} />
-      <Wheel cx={frontCx} r={26} lux={s.lux} ids={ids} />
+      <Arch cx={rearCx} bottom={bottom} r={tire(k, 32)} />
+      <Arch cx={frontCx} bottom={bottom} r={tire(k, 32)} />
+      <Wheel cx={rearCx} r={tire(k, 32)} lux={s.lux} ids={ids} />
+      <Wheel cx={frontCx} r={tire(k, 32)} lux={s.lux} ids={ids} />
     </g>
   );
 }
