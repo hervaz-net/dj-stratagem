@@ -87,6 +87,7 @@ export const lineup = [
         key: "ram",
         name: "Ram 2500",
         years: "2025–2026",
+        photo: "/media/vehicles/ram.webp",
         specs: [["Class", "¾-ton heavy duty"], ["Trims", "Tradesman through Laramie"], ["Engine", "V8"], ["Bed", "Long or short"], ["Drivetrain", "4x4"]],
       },
     ],
@@ -97,7 +98,7 @@ export const lineup = [
     short: "Vans",
     use: "Tools and materials under a roof, a rolling shop for trades.",
     models: [
-      { key: "sprinter", name: "Mercedes-Benz Sprinter 3500", years: null, specs: [["Body", "Cargo van"], ["Engine", "Diesel"]] },
+      { key: "sprinter", name: "Mercedes-Benz Sprinter 3500", years: null, photo: "/media/vehicles/sprinter.webp", specs: [["Body", "Cargo van"], ["Engine", "Diesel"]] },
       { key: "transit", name: "Ford Transit Cargo", years: "2025–2026", specs: [["Body", "Cargo van"], ["Roof", "High or standard"]] },
     ],
   },
@@ -107,11 +108,12 @@ export const lineup = [
     short: "SUVs",
     use: "Owner walks, client visits, and getting the project team between sites.",
     models: [
-      { key: "suburban", name: "Chevrolet Suburban", years: "2025–2026", specs: [["Body", "Full-size SUV"], ["Seating", "Three rows"]] },
+      { key: "suburban", name: "Chevrolet Suburban", years: "2025–2026", photo: "/media/vehicles/suburban.webp", specs: [["Body", "Full-size SUV"], ["Seating", "Three rows"]] },
       {
         key: "escalade",
         name: "Cadillac Escalade / Escalade ESV",
         years: "2025–2026",
+        photo: "/media/vehicles/escalade.webp",
         specs: [["Body", "Full-size luxury SUV"], ["Length", "Standard or ESV (extended)"], ["Seating", "Three rows"]],
       },
     ],
