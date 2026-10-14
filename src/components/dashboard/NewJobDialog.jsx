@@ -18,13 +18,16 @@ const fromJob = (job) => ({
 /**
  * "New job" button + dialog. The job lands in pending_approval.
  * Pass `job` (a rejected job) to edit it and resubmit it for approval instead.
+ * Pass `preset` (subagent keys) to open straight away with just those picked,
+ * e.g. from a subagent page's "Add Fleet to a job".
  */
-export default function NewJobDialog({ onCreated, job = null }) {
+export default function NewJobDialog({ onCreated, job = null, preset = null }) {
   const editing = !!job;
-  const [open, setOpen] = useState(false);
+  const presetKeys = !editing && preset?.length ? preset : null;
+  const [open, setOpen] = useState(!!presetKeys);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState(() => (editing ? fromJob(job) : EMPTY));
-  const [picked, setPicked] = useState(() => new Set(editing ? job.subagents : SUBAGENTS.map((s) => s.key)));
+  const [picked, setPicked] = useState(() => new Set(editing ? job.subagents : presetKeys ?? SUBAGENTS.map((s) => s.key)));
   const [errors, setErrors] = useState({});
   const { csrf } = useAuth();
   const { toast } = useToast();

@@ -8,7 +8,7 @@ import JobDrawer from "../../components/dashboard/JobDrawer";
 import Seo from "../../components/Seo";
 import useAuth from "../../auth/useAuth";
 import usePolledResource from "../../api/usePolledResource";
-import { JOB_STATUS_LABEL, fetchJobs, fetchSubagents } from "../../api/jobs";
+import { JOB_STATUS_LABEL, SUBAGENTS, fetchJobs, fetchSubagents } from "../../api/jobs";
 import { JobStatusBadge, ProgressBar, StageChip } from "../../components/dashboard/jobUi";
 import SubagentMark from "../../shared/SubagentMark";
 import { formatValue, formatWhen } from "../../components/dashboard/jobFormat";
@@ -24,6 +24,19 @@ export default function Jobs() {
   const [params, setParams] = useSearchParams();
   // Emails link to /dashboard/jobs?job=JOB-12345.
   const [openId, setOpenId] = useState(() => params.get("job"));
+  // Subagent pages link to /dashboard/jobs?new=fleet: open New job with it picked.
+  const [preset] = useState(() => {
+    const keys = (params.get("new") ?? "").split(",").filter((k) => SUBAGENTS.some((s) => s.key === k));
+    return keys.length ? keys : null;
+  });
+  useEffect(() => {
+    if (!params.has("new")) return;
+    setParams((p) => {
+      const next = new URLSearchParams(p);
+      next.delete("new");
+      return next;
+    }, { replace: true });
+  }, [params, setParams]);
 
   const jobsFetcher = useCallback(
     ({ signal }) => fetchJobs({ status: filter, scope: isAdmin && scope === "all" ? "all" : undefined, signal }),
@@ -65,7 +78,7 @@ export default function Jobs() {
         breadcrumbs={[{ label: "Home", to: "/" }, { label: "Dashboard", to: "/dashboard/overview" }, { label: "Jobs" }]}
         title="Jobs"
         subtitle="Submit a job and pick its subagents. Once an administrator approves it, they run on their own, one building on the next, and we email you the results."
-        actions={<NewJobDialog onCreated={(job) => { refreshAll(); setOpenId(job.id); }} />}
+        actions={<NewJobDialog preset={preset} onCreated={(job) => { refreshAll(); setOpenId(job.id); }} />}
       >
         {/* Subagent board */}
         <section aria-labelledby="subagents-heading">

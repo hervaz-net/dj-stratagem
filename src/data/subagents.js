@@ -14,7 +14,7 @@ export const subagents = [
   { key: "supply", code: "S/05", name: "Supply", stage: "build", to: "/supply", external: true, line: "Source materials from suppliers and distributors on the network." },
   { key: "capital", code: "S/06", name: "Capital", stage: "build", to: "/capital", external: true, line: "Working capital to take on the jobs you win." },
   { key: "workforce", code: "S/07", name: "Workforce", stage: "build", to: "/workforce", external: true, line: "Staff the job with crews and trades that fit the scope." },
-  { key: "fleet", code: "S/08", name: "Fleet", stage: "build", to: "/fleet", external: true, line: "Vehicles and equipment, tracked and ready for the job." },
+  { key: "fleet", code: "S/08", name: "Fleet", stage: "build", to: "/fleet", external: true, line: "Pickups, Sprinters, and SUVs planned and reserved for the job." },
   { key: "studio", code: "S/09", name: "Studio", stage: "keep", to: "/studio", external: true, line: "Marketing that shows finished work and brings the next client." },
 ];
 

@@ -88,12 +88,12 @@ export const companies = [
     href: "/fleet",
     external: true,
     accent: "#9d8cff",
-    status: "Taking quote requests",
-    tagline: "Arrive on time. Every time.",
+    status: "Taking reservation requests",
+    tagline: "The right trucks for the job.",
     summary:
-      "Chauffeured sedans, SUVs, vans, Sprinters, and minibuses across Southern California, with itemized quotes and no surprise charges.",
+      "The Fleet subagent plans and reserves heavy-duty pickups, Sprinter and Transit vans, and full-size SUVs for your jobs across Southern California.",
     lede:
-      "Stratagem Fleet takes quote requests for chauffeured sedans, SUVs, vans, Sprinters, and minibuses across Southern California. A unit is listed only after it is registered, inspected, and insured.",
+      "Fleet is the Stratagem AI subagent that plans the vehicles each phase of a job needs and reserves them from our lineup. A unit is listed only after it is registered, inspected, and insured.",
     glyph: "wheel",
   },
 ];
