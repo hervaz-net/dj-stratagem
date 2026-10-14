@@ -143,3 +143,7 @@ reused.
 2026-10-12: at the owner's request, all vehicle photos were removed from
 /fleet and deleted from public/media/fleet. Classes are described in words and
 numbers only. Add photos back only of vehicles we own.
+
+2026-10-14: at the owner's request, /fleet cards show owner-supplied studio
+images (white background) from public/media/vehicles/ where one exists; the
+other models show their SVG drawing. Only add an image the owner supplies.

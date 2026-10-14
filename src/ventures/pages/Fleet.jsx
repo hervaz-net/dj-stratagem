@@ -140,13 +140,27 @@ function JumpBar() {
   );
 }
 
+/** The model's studio photo when there is one, otherwise its drawing. */
+function VehicleVisual({ model }) {
+  if (model.photo) {
+    return (
+      <div className="flt-model-art is-photo">
+        <img src={model.photo} alt={model.name} width="1131" height="636" loading="lazy" decoding="async" className="h-full w-full object-contain" />
+      </div>
+    );
+  }
+  return (
+    <div className="flt-model-art">
+      <VehicleArt id={model.key} title={`Illustration of a ${model.name}`} className="h-auto w-full" />
+    </div>
+  );
+}
+
 function ModelCard({ model, onRequest }) {
   const label = modelLabel(model);
   return (
     <article className="flt-model flex h-full flex-col" data-model={model.key}>
-      <div className="flt-model-art">
-        <VehicleArt id={model.key} title={`Illustration of a ${model.name}`} className="h-auto w-full" />
-      </div>
+      <VehicleVisual model={model} />
       <div className="flex flex-1 flex-col p-6">
         {model.years && <p className="text-[0.7rem] font-bold uppercase tracking-[0.16em] text-brand-fg">{model.years}</p>}
         <h3 className="mt-1 text-[1.45rem] font-bold leading-tight text-fg">{model.name}</h3>
@@ -308,9 +322,7 @@ export default function Fleet({ brand }) {
             {lineup.map((g, i) => (
               <Reveal key={g.key} delay={i * 80} className="h-full">
                 <button type="button" onClick={() => showCategory(g.key)} className="flt-cat group flex h-full w-full flex-col text-left">
-                  <div className="flt-model-art">
-                    <VehicleArt id={g.models[0].key} title={`Illustration: ${g.name.toLowerCase()}`} className="h-auto w-full" />
-                  </div>
+                  <VehicleVisual model={g.models[0]} />
                   <span className="px-6 pt-5 text-[1.35rem] font-bold leading-tight text-fg">{g.name}</span>
                   <span className="px-6 pt-1 text-sm text-fg-muted">{g.models.length} models · {g.use}</span>
                   <span className="flt-link mt-auto px-6 pb-6 pt-4 text-fg group-hover:text-brand">

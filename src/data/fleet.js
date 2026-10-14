@@ -59,6 +59,8 @@ const issued = [
 
 
 // The lineup: the only vehicles Fleet plans with and members can reserve.
+// `photo`: an owner-supplied studio image (white background, 16:9) under
+// public/media/vehicles/. Models without one show their drawing instead.
 // These are models offered, not specific units; a unit goes in `owned` only
 // once it is registered, inspected, and insured (see PROOF.md). No photos.
 export const lineup = [
@@ -72,6 +74,7 @@ export const lineup = [
         key: "silverado",
         name: "Chevrolet Silverado 2500",
         years: "2025–2026",
+        photo: "/media/vehicles/silverado.webp",
         specs: [["Class", "¾-ton heavy duty"], ["Trims", "WT through LTZ"], ["Engine", "V8"]],
       },
       {
