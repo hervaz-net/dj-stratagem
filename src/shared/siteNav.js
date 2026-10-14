@@ -79,8 +79,8 @@ export const NAV_MENUS = [
     ],
     feature: {
       href: "/fleet",
-      eyebrow: "Featured · Stratagem Fleet",
-      title: "Chauffeured SUVs, sedans, Sprinters, and coaches across Southern California.",
+      eyebrow: "Featured · Fleet subagent",
+      title: "Pickups, Sprinters, and SUVs, planned and reserved for the job.",
       tone: "dark",
     },
   },

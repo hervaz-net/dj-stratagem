@@ -37,8 +37,8 @@ const SUBAGENTS = [
         'brief' => 'Plan cash flow: when money goes out (materials, labor, equipment) against when it comes in (pay apps, retainage), the peak working-capital need, and options to cover it. Stratagem Capital does not offer credit today; never promise financing.'],
     'workforce' => ['name' => 'Workforce', 'stage' => 'build', 'task' => 'Staff the crew for the scope',
         'brief' => 'Plan the crew: roles, headcount and duration by phase, licenses and certifications required in California, and the hiring or subcontracting gaps to close.'],
-    'fleet'     => ['name' => 'Fleet',     'stage' => 'build', 'task' => 'Book vehicles and equipment',
-        'brief' => 'Plan vehicles and equipment: what is needed by phase, own versus rent, transport and site logistics. List what to reserve; you cannot make reservations yourself.'],
+    'fleet'     => ['name' => 'Fleet',     'stage' => 'build', 'task' => 'Plan and reserve the job vehicles',
+        'brief' => 'Plan the work vehicles the job needs, phase by phase: which vehicle, how many, from when to when, and what each is for. Use only the Stratagem Fleet lineup: Chevrolet Silverado 2500 (WT to LTZ, V8, 2025-2026); Ford F-250 or F-350 (V8, long or short bed, Crew Cab or SuperCab, 2025-2026); Ram 2500 (Tradesman to Laramie, V8, long or short bed, 4x4, 2025-2026); Mercedes-Benz Sprinter 3500 diesel cargo; Ford Transit Cargo (high or standard roof, 2025-2026); Chevrolet Suburban (2025-2026); Cadillac Escalade or Escalade ESV (2025-2026). Fleet has no flatbeds, passenger vans, heavy equipment or drivers; if the job needs those, say so as a gap the contractor must cover. End with a reservation table the contractor can confirm. You cannot make reservations yourself.'],
     'studio'    => ['name' => 'Studio',    'stage' => 'keep',  'task' => 'Turn the finished job into marketing',
         'brief' => 'Plan the marketing for when the job is done: the case-study outline, the photos to capture during the job, a short social post draft, and the review request to send the client.'],
 ];
