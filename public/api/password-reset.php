@@ -122,10 +122,22 @@ if ($action === 'reset') {
     if ($error) {
         fail(422, 'validation_failed', $error, ['fields' => ['password' => $error]]);
     }
+    $hash = password_hash($password, PASSWORD_DEFAULT); // slow; keep it out of the transaction
     $pdo = db();
     $pdo->beginTransaction();
-    $pdo->prepare('UPDATE users SET password_hash = ? WHERE id = ?')
-        ->execute([password_hash($password, PASSWORD_DEFAULT), $row['user_id']]);
+    // Claim the link first. Only one of two simultaneous submissions can win
+    // this conditional update; the loser changes nothing.
+    $claim = $pdo->prepare(
+        'UPDATE password_resets SET used_at = UTC_TIMESTAMP()
+          WHERE id = ? AND used_at IS NULL AND expires_at > UTC_TIMESTAMP()'
+    );
+    $claim->execute([$row['id']]);
+    if ($claim->rowCount() !== 1) {
+        $pdo->rollBack();
+        fail(400, 'invalid_token', 'This reset link has expired or was already used. Request a new one.');
+    }
+    $pdo->prepare('UPDATE users SET password_hash = ? WHERE id = ?')->execute([$hash, $row['user_id']]);
+    // Any other live links for this account stop working too.
     $pdo->prepare('UPDATE password_resets SET used_at = UTC_TIMESTAMP() WHERE user_id = ? AND used_at IS NULL')
         ->execute([$row['user_id']]);
     // Failed sign-ins before the reset shouldn't lock the new password out.

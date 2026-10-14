@@ -130,9 +130,13 @@ function ensure_jobs_schema(): void
 
 /**
  * Brings a job_tasks table created before the AI orchestrator up to date:
- * adds the output and call-back columns, and drops the one-task-per-subagent
- * unique key (call-backs mean a subagent can run more than once per job).
- * Checks one column first, so on an up-to-date table this is a single query.
+ * drops the one-task-per-subagent unique key (call-backs mean a subagent can
+ * run more than once per job) and adds the output and call-back columns.
+ *
+ * Safe under concurrency: the first requests after a deploy (the dashboard
+ * loads jobs.php and subagents.php together) take a named lock, re-check, and
+ * ignore "already done" DDL errors. tokens_out is added last, so its presence
+ * means the whole upgrade finished; on an up-to-date table this is one query.
  */
 function upgrade_job_tasks_schema(PDO $pdo): void
 {
@@ -147,30 +151,51 @@ function upgrade_job_tasks_schema(PDO $pdo): void
     if ($has('tokens_out')) {
         return;
     }
-    $columns = [
-        'depth'          => 'TINYINT UNSIGNED NOT NULL DEFAULT 0 AFTER position',
-        'parent_task_id' => 'INT UNSIGNED NULL AFTER depth',
-        'request'        => 'VARCHAR(1000) NULL AFTER parent_task_id',
-        'summary'        => 'VARCHAR(600) NULL AFTER note',
-        'output'         => 'MEDIUMTEXT NULL AFTER summary',
-        'attempts'       => 'TINYINT UNSIGNED NOT NULL DEFAULT 0 AFTER output',
-        'tokens_in'      => 'INT UNSIGNED NOT NULL DEFAULT 0 AFTER attempts',
-        'tokens_out'     => 'INT UNSIGNED NOT NULL DEFAULT 0 AFTER tokens_in',
-    ];
-    foreach ($columns as $name => $ddl) {
-        if (!$has($name)) {
-            $pdo->exec("ALTER TABLE job_tasks ADD COLUMN {$name} {$ddl}");
+    $lock = $pdo->query("SELECT GET_LOCK('djs_job_tasks_upgrade', 30)")->fetchColumn();
+    if ((int) $lock !== 1) {
+        fail(503, 'upgrading', 'The site is finishing an update. Try again in a moment.');
+    }
+    try {
+        if ($has('tokens_out')) {
+            return; // another request finished it while we waited
         }
-    }
-    $idx = $pdo->query(
-        "SELECT INDEX_NAME FROM information_schema.STATISTICS
-          WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'job_tasks'"
-    )->fetchAll(PDO::FETCH_COLUMN);
-    if (!in_array('idx_tasks_job', $idx, true)) {
-        $pdo->exec('ALTER TABLE job_tasks ADD KEY idx_tasks_job (job_id, status)');
-    }
-    if (in_array('uniq_task_job_subagent', $idx, true)) {
-        $pdo->exec('ALTER TABLE job_tasks DROP INDEX uniq_task_job_subagent');
+        // 1060 duplicate column, 1061 duplicate key, 1091 can't drop: already done.
+        $ddl = static function (string $sql) use ($pdo): void {
+            try {
+                $pdo->exec($sql);
+            } catch (PDOException $e) {
+                if (!in_array((int) ($e->errorInfo[1] ?? 0), [1060, 1061, 1091], true)) {
+                    throw $e;
+                }
+            }
+        };
+        $idx = $pdo->query(
+            "SELECT INDEX_NAME FROM information_schema.STATISTICS
+              WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'job_tasks'"
+        )->fetchAll(PDO::FETCH_COLUMN);
+        if (!in_array('idx_tasks_job', $idx, true)) {
+            $ddl('ALTER TABLE job_tasks ADD KEY idx_tasks_job (job_id, status)');
+        }
+        if (in_array('uniq_task_job_subagent', $idx, true)) {
+            $ddl('ALTER TABLE job_tasks DROP INDEX uniq_task_job_subagent');
+        }
+        $columns = [
+            'depth'          => 'TINYINT UNSIGNED NOT NULL DEFAULT 0 AFTER position',
+            'parent_task_id' => 'INT UNSIGNED NULL AFTER depth',
+            'request'        => 'VARCHAR(1000) NULL AFTER parent_task_id',
+            'summary'        => 'VARCHAR(600) NULL AFTER note',
+            'output'         => 'MEDIUMTEXT NULL AFTER summary',
+            'attempts'       => 'TINYINT UNSIGNED NOT NULL DEFAULT 0 AFTER output',
+            'tokens_in'      => 'INT UNSIGNED NOT NULL DEFAULT 0 AFTER attempts',
+            'tokens_out'     => 'INT UNSIGNED NOT NULL DEFAULT 0 AFTER tokens_in', // last: marks done
+        ];
+        foreach ($columns as $name => $def) {
+            if (!$has($name)) {
+                $ddl("ALTER TABLE job_tasks ADD COLUMN {$name} {$def}");
+            }
+        }
+    } finally {
+        $pdo->query("SELECT RELEASE_LOCK('djs_job_tasks_upgrade')");
     }
 }
 

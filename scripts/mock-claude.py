@@ -15,6 +15,7 @@ Jobs whose notes contain these words change behaviour:
   MOCK_BAD_KEY        every call gets HTTP 401 (non-retryable)
   MOCK_LOOP           every subagent asks for two call-backs (tests the caps)
   MOCK_SLOW           every call takes 4 seconds (tests cancelling mid-call)
+  MOCK_BAD_MODEL      every call gets HTTP 404 model not found
 Every request is appended to mock-claude.log (JSON lines) next to this file,
 or to $MOCK_CLAUDE_LOG.
 """
@@ -64,6 +65,8 @@ class Handler(BaseHTTPRequestHandler):
 
         if "MOCK_SLOW" in prompt:
             time.sleep(4)
+        if "MOCK_BAD_MODEL" in prompt:
+            return self.reply(404, {"type": "error", "error": {"type": "not_found_error", "message": f"model: {req.get('model')}"}})
         if self.headers.get("x-api-key") != "test" or "MOCK_BAD_KEY" in prompt:
             return self.reply(401, {"type": "error", "error": {"type": "authentication_error", "message": "invalid x-api-key"}})
         if "MOCK_OVERLOAD_ONCE" in prompt and key == "projects" and ref not in overloaded_once:

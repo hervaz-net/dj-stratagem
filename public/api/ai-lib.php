@@ -118,9 +118,14 @@ function claude_tool_call(string $system, string $prompt, array $tool): array
     if ($status !== 200) {
         $msg = is_array($data) ? (string) ($data['error']['message'] ?? '') : '';
         $retryable = in_array($status, [408, 409, 429, 500, 502, 503, 504, 529], true);
+        $type = is_array($data) ? (string) ($data['error']['type'] ?? '') : '';
         $friendly = match (true) {
             $status === 401 => 'The Anthropic API key on the server was rejected.',
             $status === 403 => 'The Anthropic account does not allow this request.',
+            $status === 404 || ($status === 400 && stripos($msg, 'model') !== false)
+                => "The AI model \"{$s['model']}\" isn't available to this Anthropic account. Set ai.model in the server config.",
+            $status === 400 && $type === 'invalid_request_error' && stripos($msg, 'credit') !== false
+                => 'The Anthropic account is out of credit.',
             $status === 429 => 'The AI service is rate limiting us.',
             $status === 529 => 'The AI service is overloaded.',
             default         => "The AI service returned HTTP {$status}.",

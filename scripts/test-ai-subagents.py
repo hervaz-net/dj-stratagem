@@ -14,6 +14,7 @@ mock started with MOCK_CLAUDE_LOG=MOCK_LOG. Creates rows; use a dev database.
 import json
 import subprocess
 import sys
+import threading
 import time
 import urllib.error
 import urllib.request
@@ -83,8 +84,11 @@ admin = Client(); admin.login(ADMIN_EMAIL, ADMIN_PW)
 # --- New member: register, approval email, sign in
 member = Client(); member.refresh()
 email, pw = f"ai{stamp}@djs.local", "ai-password-12345"
+n0 = len(mails())
 s, d = member.call("POST", "/api/register.php", {"fullName": "Ana Test", "company": "AI Builders", "email": email, "password": pw})
 check("register", s == 200, d)
+check("admins get the new-account notice even with admin_email blank",
+      any(m["to"] == ADMIN_EMAIL and "awaiting approval" in m["subject"] and email in m["body"] for m in mails()[n0:]))
 uid = int(subprocess.check_output(["mysql", "-uroot", "djs", "-N", "-e", f"SELECT id FROM users WHERE email='{email}'"]).strip())
 n0 = len(mails())
 s, d = admin.call("POST", "/api/admin-members.php", {"action": "status", "id": uid, "status": "active"})
@@ -193,6 +197,13 @@ check("rejected job can be edited and resubmitted",
 s, d = admin.call("POST", "/api/jobs.php", {"action": "resubmit", "id": ref5, "title": "x", "subagents": ["projects"]})
 check("only the owner can resubmit", s in (403, 409), s)
 
+# --- A model the account can't use: clear, fixable message
+ref6 = create(f"BadModel {stamp}", "MOCK_BAD_MODEL", ["projects"])
+admin.call("POST", "/api/jobs.php", {"action": "approve", "id": ref6})
+job = wait_job(member, ref6, lambda j: j["tasks"][0]["status"] == "blocked", 20)
+check("unavailable model blocks with a message naming ai.model", "ai.model" in job["tasks"][0]["note"], job["tasks"][0]["note"])
+member.call("POST", "/api/jobs.php", {"action": "cancel", "id": ref6})
+
 # --- Kicks can't be forged
 s, d = Client().call("POST", "/api/jobs-run.php", {"id": 1, "kick": {"ts": int(time.time()), "sig": "0" * 64}})
 check("forged kick is refused", s == 403, s)
@@ -218,6 +229,28 @@ s, d = anon.call("POST", "/api/password-reset.php", {"action": "reset", "token":
 check("password reset with the emailed link", s == 200, d)
 s, d = anon.call("POST", "/api/password-reset.php", {"action": "reset", "token": token, "password": new_pw + "x"})
 check("reset link works only once", s == 400)
+# Two submits of one link at the same moment: exactly one may win.
+n0 = len(mails())
+anon.call("POST", "/api/password-reset.php", {"action": "request", "email": email})
+time.sleep(0.5)
+token2 = [m for m in mails()[n0:] if m["to"] == email][-1]["body"].split("token=")[1].split()[0]
+results = []
+racers = [Client() for _ in range(4)]
+for r in racers:
+    r.csrf = anon.csrf
+    r.op = anon.op
+threads = [threading.Thread(target=lambda r=r, i=i: results.append(
+    r.call("POST", "/api/password-reset.php", {"action": "reset", "token": token2, "password": f"race-password-{i}-abcdef"})[0]))
+    for i, r in enumerate(racers)]
+[t.start() for t in threads]
+[t.join() for t in threads]
+check("simultaneous submits of one reset link: exactly one succeeds", sorted(results) == [200, 400, 400, 400], results)
+def can_login(pw_try):
+    c = Client(); c.refresh()
+    return c.call("POST", "/api/login.php", {"email": email, "password": pw_try})[0] == 200
+winners = [f"race-password-{i}-abcdef" for i in range(4) if can_login(f"race-password-{i}-abcdef")]
+check("only the winning password works", len(winners) == 1, winners)
+new_pw = winners[0] if winners else new_pw
 c = Client(); c.refresh()
 s, d = c.call("POST", "/api/login.php", {"email": email, "password": new_pw})
 check("sign in with the new password", s == 200, d)

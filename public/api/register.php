@@ -10,6 +10,7 @@
 
 declare(strict_types=1);
 require __DIR__ . '/bootstrap.php';
+require_once __DIR__ . '/mail-lib.php';
 
 require_post();
 require_csrf();
@@ -82,10 +83,6 @@ try {
 }
 
 if ($isNew) {
-    global $config;
-    $to      = $config['admin_email'];
-    $subject = 'New D&J Stratagem account awaiting approval';
-
     /**
      * No runnable SQL in this email. The values below are user-submitted, and
      * FILTER_VALIDATE_EMAIL accepts quoted local-parts containing an
@@ -100,21 +97,15 @@ if ($isNew) {
           . "Phone:   " . ($phone !== '' ? $phone : '—') . "\n"
           . "User ID: {$newId}\n\n"
           . "Approve or decline at:\n"
-          . "  https://djstratageminc.com/dashboard/admin\n\n"
+          . "  " . site_url('/admin/members?status=pending') . "\n\n"
           . "The details above were entered by the applicant and have not been verified.\n";
 
-    $sent = @mail(
-        $to,
-        $subject,
-        $body,
-        "From: no-reply@djstratageminc.com\r\nContent-Type: text/plain; charset=UTF-8"
-    );
-
-    // Every other failure path here logs; a silently dropped notice would
-    // leave pending accounts sitting unnoticed with no operational signal.
-    if (!$sent) {
-        error_log("auth: admin approval notice failed to send for user id {$newId}");
+    // admin_email from the config, or every active admin when it's blank, so
+    // a pending account never sits unnoticed. send_mail logs each failure.
+    if (!admin_recipients()) {
+        error_log("auth: no admin to notify about pending user id {$newId} (set admin_email)");
     }
+    mail_admins('New D&J Stratagem account awaiting approval', $body);
 }
 
 // Identical response either way.
