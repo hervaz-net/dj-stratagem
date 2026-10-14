@@ -173,31 +173,16 @@ domain (create one in cPanel, switch `contact.php` from `mail()` to SMTP).
 
 ## Outstanding
 
-- **Namecheap account is live again.** Re-checked 1 Oct 2026 09:54 PDT:
-  apex `https://djstratageminc.com/` returns 200 (not the suspended CGI).
-  `/api/health.php` and `/api/me.php` return JSON. Do not treat a 302 to
-  `/cgi-sys/suspendedpage.cgi` as current.
-- **cPanel public_html lags GitHub `deploy`.** Rechecked 7 Oct 2026 14:16 PDT:
-  live homepage is still `assets/index-b_QNY9vN.js` (last-modified 4 Oct 2026).
-  `/exchange` and `/fleet` still serve the parent homepage title before JavaScript.
-  After hydration, `/exchange/pricing` still canonicalizes to `/pricing` and keeps
-  the parent Twitter title. Fleet date input still has no `min`. GitHub `deploy`
-  already has `spa.php` and the 1.17–1.24 fixes (`Deploy f6a3ad4`, bundle
-  `assets/index-D5oonncx.js`). Actions builds and pushes `deploy`, then Pull and
-  deploy fails because repo secret `CPANEL_TOKEN` is empty. After `main` updates:
-  `./deploy.sh` on a machine with `~/.cpanel_token`, or cPanel → Git Version
-  Control → `dj-stratagem` → Update from Remote → Deploy HEAD Commit. Confirm
-  `public_html` is `djstlime:nobody` mode `0750`. Do not rsync with `-a`.
-  Do not point cPanel at `main`.
-- **`/changelog` was broken on `main` and restored in 1.78.** Audit 1.77
-  (`0f51e8c`) replaced `src/pages/Changelog.jsx` with `PLACEHOLDER_REVERT`.
-  Restored in 1.78 (`da55f5d`). Do not overwrite that file with a host-audit
-  placeholder again.
+- **Live site is current and healthy.** Rechecked 13 Oct 2026 (live Last-Modified Tue, 13 Oct 2026 09:35:15 GMT):
+  apex `https://djstratageminc.com/` returns 200 with `assets/index-BUjMliD-.js` matching GitHub `deploy` tip.
+  `/api/health.php` and `/api/me.php` return JSON. www 301s to apex. Contact form and SPA routes work.
+  No open issues. Do not treat older lag reports as current.
 - HTTPS is live (AutoSSL). Auth endpoints stay HTTPS-only via `require_https`.
   Do not disable that flag to "get it working" on plaintext.
 - Pricing figures are placeholders pending a real pricing decision. The annual
   toggle derives its numbers from a flat 20% discount constant in `Pricing.jsx`.
 - Screenshots/mock panels throughout the site are illustrative, not live product.
+- Open PR #235 adds AI subagent execution on Claude API (requires server API key + cron once merged).
 
 ## Operations dashboard
 
@@ -387,28 +372,10 @@ UPDATE users SET role = 'admin', status = 'active', approved_at = UTC_TIMESTAMP(
 ```
 
 After that, everything happens in the admin control panel at `/admin`. The **Accounts** item only appears in
-The sidebar for admins, but that is presentation — `admin-users.php` and
+the sidebar for admins, but that is presentation — `admin-users.php` and
 `admin-user-status.php` reject non-admins with 403 regardless of what the
 client renders.
 
 ### Security properties
 
-- Passwords hashed with `password_hash()` (bcrypt by default), rehashed on
-  login when the algorithm default moves.
-- **No user enumeration.** Login returns one message for unknown-email and
-  wrong-password, and always runs a hash comparison so response time doesn't
-  differ. Register returns the same response whether or not the address exists.
-- **Throttled** on two axes — failures per email and per IP, default 5 and 20 in
-  a 15-minute window. Only failures count.
-- Session cookie is `HttpOnly`, `SameSite=Lax`, and `Secure` under HTTPS. The ID
-  is regenerated on login to defeat fixation.
-- CSRF token required on every state-changing request.
-- `api/.htaccess` denies direct access to `config.php`, `bootstrap.php`, and
-  `schema.sql`, so a broken PHP handler can't serve credentials as plaintext.
-- DB errors are logged server-side and returned to the client as a generic
-  `server_error` — no driver messages or SQL reach the browser.
-
-### Not built yet
-
-Password reset, email verification of the registrant's own address, and
-"remember me".
+- Passwords hashed with `password_hash()`.
