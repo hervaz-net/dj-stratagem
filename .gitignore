@@ -31,3 +31,4 @@ dist-ssr
 # Server-only auth config — holds database credentials
 public/api/config.php
 dist/api/config.php
+scripts/mock-claude.log

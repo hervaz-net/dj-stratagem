@@ -7,12 +7,24 @@ import { StageChip } from "./jobUi";
 
 const EMPTY = { title: "", location: "", trade: "", value: "", notes: "" };
 
-/** "New job" button + dialog. The job lands in pending_approval. */
-export default function NewJobDialog({ onCreated }) {
+const fromJob = (job) => ({
+  title: job.title ?? "",
+  location: job.location ?? "",
+  trade: job.trade ?? "",
+  value: job.value === null || job.value === undefined ? "" : String(job.value),
+  notes: job.notes ?? "",
+});
+
+/**
+ * "New job" button + dialog. The job lands in pending_approval.
+ * Pass `job` (a rejected job) to edit it and resubmit it for approval instead.
+ */
+export default function NewJobDialog({ onCreated, job = null }) {
+  const editing = !!job;
   const [open, setOpen] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [form, setForm] = useState(EMPTY);
-  const [picked, setPicked] = useState(() => new Set(SUBAGENTS.map((s) => s.key)));
+  const [form, setForm] = useState(() => (editing ? fromJob(job) : EMPTY));
+  const [picked, setPicked] = useState(() => new Set(editing ? job.subagents : SUBAGENTS.map((s) => s.key)));
   const [errors, setErrors] = useState({});
   const { csrf } = useAuth();
   const { toast } = useToast();
@@ -53,20 +65,28 @@ export default function NewJobDialog({ onCreated }) {
 
     setSaving(true);
     try {
-      const res = await jobAction("create", {
+      const res = await jobAction(editing ? "resubmit" : "create", {
+        ...(editing ? { id: job.id } : {}),
         ...form,
         value: form.value === "" ? null : form.value,
         subagents: SUBAGENTS.filter((s) => picked.has(s.key)).map((s) => s.key),
       }, { csrf });
-      toast(`${res.job.ref} submitted. An administrator will review it before any subagent starts.`, { type: "success", duration: 5000 });
-      setForm(EMPTY);
-      setPicked(new Set(SUBAGENTS.map((s) => s.key)));
+      toast(
+        editing
+          ? `${res.job.ref} resubmitted. An administrator will review it again.`
+          : `${res.job.ref} submitted. Once an administrator approves it, the subagents run on their own.`,
+        { type: "success", duration: 5000 },
+      );
+      if (!editing) {
+        setForm(EMPTY);
+        setPicked(new Set(SUBAGENTS.map((s) => s.key)));
+      }
       setErrors({});
       close();
       onCreated?.(res.job);
     } catch (err) {
       if (err.fields && typeof err.fields === "object" && !Array.isArray(err.fields)) setErrors(err.fields);
-      toast(err.message ?? "Couldn't create that job.", { type: "error" });
+      toast(err.message ?? (editing ? "Couldn't resubmit that job." : "Couldn't create that job."), { type: "error" });
     } finally {
       setSaving(false);
     }
@@ -80,13 +100,20 @@ export default function NewJobDialog({ onCreated }) {
       <button
         ref={opener}
         type="button"
-        onClick={() => setOpen(true)}
-        className="lift glow-brand inline-flex min-h-11 items-center gap-2 rounded-full bg-cta px-5 py-3 text-sm font-semibold text-white hover:bg-cta-hover"
+        onClick={() => {
+          if (editing) setForm(fromJob(job));
+          setOpen(true);
+        }}
+        className={editing
+          ? "min-h-11 rounded-full bg-cta px-4 py-2 text-sm font-semibold text-white hover:bg-cta-hover"
+          : "lift glow-brand inline-flex min-h-11 items-center gap-2 rounded-full bg-cta px-5 py-3 text-sm font-semibold text-white hover:bg-cta-hover"}
       >
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true">
-          <path d="M12 5v14M5 12h14" />
-        </svg>
-        New job
+        {!editing && (
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true">
+            <path d="M12 5v14M5 12h14" />
+          </svg>
+        )}
+        {editing ? "Edit and resubmit" : "New job"}
       </button>
 
       {open && (
@@ -100,9 +127,11 @@ export default function NewJobDialog({ onCreated }) {
             className="w-full max-w-xl rounded-2xl border border-line bg-ink-2 p-6 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 id="new-job-title" className="text-lg font-semibold text-paper">New job</h2>
+            <h2 id="new-job-title" className="text-lg font-semibold text-paper">{editing ? `Edit ${job.ref}` : "New job"}</h2>
             <p className="mt-1 text-sm text-steel">
-              Pick the subagents to run on it. Nothing starts until an administrator approves the job.
+              {editing
+                ? `Fix what the approver asked for${job.decisionNote ? ` (“${job.decisionNote}”)` : ""}, then resubmit.`
+                : "Pick the subagents to run on it. Nothing starts until an administrator approves the job; then each subagent runs on its own and builds on the work before it."}
             </p>
 
             <div className="mt-5 grid gap-3 sm:grid-cols-2">
@@ -164,7 +193,7 @@ export default function NewJobDialog({ onCreated }) {
                 Cancel
               </button>
               <button type="submit" disabled={saving} className="min-h-11 rounded-full bg-cta px-5 py-2 text-sm font-semibold text-white hover:bg-cta-hover disabled:opacity-60">
-                {saving ? "Submitting…" : "Submit for approval"}
+                {saving ? "Submitting…" : editing ? "Resubmit for approval" : "Submit for approval"}
               </button>
             </div>
           </form>

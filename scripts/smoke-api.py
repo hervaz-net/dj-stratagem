@@ -147,20 +147,31 @@ if job_id:
     check("POST jobs start before approval is 409", m.call("POST", "/api/jobs.php", {"action": "start", "id": job_id}), 409, False)
     check("POST jobs approve as member is 403", m.call("POST", "/api/jobs.php", {"action": "approve", "id": job_id}), 403, False)
     check("GET jobs (admin pending)", admin.call("GET", "/api/jobs.php?scope=all&status=pending_approval"))
-    check("POST jobs approve as admin", admin.call("POST", "/api/jobs.php", {"action": "approve", "id": job_id, "note": "Looks good"}))
-    check("POST jobs start", m.call("POST", "/api/jobs.php", {"action": "start", "id": job_id}))
+    approved = check("POST jobs approve as admin (starts the AI run)", admin.call("POST", "/api/jobs.php", {"action": "approve", "id": job_id, "note": "Looks good"}))
+    if (approved.get("job") or {}).get("status") != "in_progress":
+        print("FAIL approval did not start the job"); failures.append("approve starts")
+    check("POST jobs start after auto-start is 409", m.call("POST", "/api/jobs.php", {"action": "start", "id": job_id}), 409, False)
     detail = check("GET job detail", m.call("GET", f"/api/jobs.php?id={job_id}"))
     tasks = (detail.get("job") or {}).get("tasks") or []
-    if len(tasks) != 4 or any(t["status"] != "running" for t in tasks):
-        print("FAIL start did not set all 4 tasks running"); failures.append("tasks running")
+    if len(tasks) < 4 or any(t["status"] not in ("queued", "running", "done") for t in tasks):
+        print("FAIL tasks were not queued for the AI"); failures.append("tasks queued")
     other = Client(); other.refresh()
-    if tasks:
-        check("POST task advance", m.call("POST", "/api/jobs.php", {"action": "task", "id": job_id, "taskId": tasks[0]["id"], "status": "done"}))
-    for t in tasks[1:]:
-        check(f"POST task {t['subagent']} done", m.call("POST", "/api/jobs.php", {"action": "task", "id": job_id, "taskId": t["id"], "status": "done"}))
-    final = m.call("GET", f"/api/jobs.php?id={job_id}")[1]
-    if (final.get("job") or {}).get("status") != "completed":
-        print("FAIL job did not auto-complete"); failures.append("auto-complete")
+    # The AI subagents finish on their own. Without an API key on this server
+    # they block instead; skip those like an owner would, so the job closes.
+    final = {}
+    for _ in range(120):
+        final = (m.call("GET", f"/api/jobs.php?id={job_id}")[1].get("job") or {})
+        if final.get("status") == "completed":
+            break
+        for t in final.get("tasks", []):
+            if t["status"] == "blocked":
+                check(f"POST skip blocked {t['subagent']}", m.call("POST", "/api/jobs.php", {"action": "skip", "id": job_id, "taskId": t["id"]}))
+        time.sleep(0.5)
+    if final.get("status") != "completed":
+        print("FAIL job did not complete"); failures.append("auto-complete")
+    else:
+        ran = sum(1 for t in final["tasks"] if t["status"] == "done")
+        print(f"PASS job completed ({ran} subagents ran on the AI, {len(final['tasks']) - ran} skipped)")
     check("POST cancel completed job is 409", m.call("POST", "/api/jobs.php", {"action": "cancel", "id": job_id}), 409, False)
     check("GET another member cannot see job (anon 401)", other.call("GET", f"/api/jobs.php?id={job_id}"), 401, False)
     q = check("GET subagents (admin)", admin.call("GET", "/api/subagents.php"))

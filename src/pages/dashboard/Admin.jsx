@@ -92,11 +92,14 @@ export default function AdminUsers() {
     [filter],
   );
 
+  // Members are redirected below; don't call the admin API for them (it 403s).
+  const isAdmin = user?.role === "admin";
   useEffect(() => {
+    if (!isAdmin) return undefined;
     const controller = new AbortController();
     load(controller.signal);
     return () => controller.abort();
-  }, [load]);
+  }, [load, isAdmin]);
 
   async function change(target, status) {
     setBusyId(target.id);

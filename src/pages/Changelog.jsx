@@ -6,6 +6,18 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.31",
+    date: "October 2026",
+    tag: "Feature",
+    items: [
+      { type: "new", text: "Stratagem AI runs the subagents. Once a job is approved, each subagent you picked does its part on its own, building on the work before it, and can call another subagent back in for follow-up work." },
+      { type: "new", text: "Read each subagent's write-up in the job panel, or download the whole job's results as one file." },
+      { type: "new", text: "Email updates when your account is approved, and when a job is approved, needs changes, needs your attention, or is done." },
+      { type: "new", text: "A rejected job can be edited and resubmitted instead of starting over." },
+      { type: "new", text: "Self-serve password reset: request a link at Forgot password and choose a new one." },
+    ],
+  },
+  {
     version: "1.30",
     date: "October 2026",
     tag: "Fix",

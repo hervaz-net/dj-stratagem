@@ -51,6 +51,21 @@ need_files=(
   api/sample-data.php
   api/market-ticker.php
   api/config.example.php
+  api/jobs.php
+  api/jobs-lib.php
+  api/jobs-run.php
+  api/subagents.php
+  api/ai-lib.php
+  api/ai-worker.php
+  api/mail-lib.php
+  api/password-reset.php
+  api/admin-overview.php
+  api/admin-members.php
+  api/admin-users.php
+  api/admin-user-status.php
+  api/admin-catalog.php
+  api/catalog.php
+  api/catalog-lib.php
   privacy.html
   terms.html
   fleet-cards.html
@@ -80,6 +95,10 @@ grep -q 'REQUEST_URI' "$htaccess" \
 api_htaccess="$DIST/api/.htaccess"
 grep -q 'RewriteRule \^health' "$api_htaccess" \
   || die "api/.htaccess must alias health.php to /health.php"
+for lib in ai-lib ai-worker mail-lib jobs-lib bootstrap; do
+  grep -q "${lib}\\\\.php" "$api_htaccess" \
+    || die "api/.htaccess must deny ${lib}.php over the web"
+done
 
 bundle="$(grep -oE 'assets/index-[A-Za-z0-9_-]+[.]js' "$DIST/index.html" | head -1 || true)"
 [[ -n "$bundle" ]] || die "index.html has no hashed JS bundle"

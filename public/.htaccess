@@ -100,7 +100,6 @@ Options -Indexes -MultiViews
   RewriteRule ^get-started$ /register [R=301,L]
   RewriteRule ^join$ /register [R=301,L]
   RewriteRule ^forgot$ /forgot-password [R=301,L]
-  RewriteRule ^reset-password$ /forgot-password [R=301,L]
   RewriteRule ^reset$ /forgot-password [R=301,L]
   RewriteRule ^password$ /forgot-password [R=301,L]
   RewriteRule ^project$ /projects [R=301,L]

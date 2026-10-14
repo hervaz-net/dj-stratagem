@@ -13,6 +13,7 @@
 
 declare(strict_types=1);
 require __DIR__ . '/bootstrap.php';
+require_once __DIR__ . '/mail-lib.php';
 require __DIR__ . '/ops.php';
 require __DIR__ . '/jobs-lib.php';
 require __DIR__ . '/catalog-lib.php';
@@ -151,6 +152,9 @@ if ($action === 'status') {
           WHERE id = ?"
     )->execute([$status, $status, $id]);
     error_log(sprintf('admin: %d set user %d status %s -> %s', (int) $admin['id'], $id, $target['status'], $status));
+    if ($target['status'] === 'pending' && $status === 'active') {
+        $approvedNow = $id;
+    }
 } elseif ($action === 'role') {
     $role = field('role');
     if (!in_array($role, ['admin', 'member'], true)) {
@@ -171,4 +175,9 @@ $stmt = $pdo->prepare(
        FROM users u WHERE u.id = ?'
 );
 $stmt->execute([$id]);
-respond(['ok' => true, 'member' => member_row($stmt->fetch())]);
+$payload = ['ok' => true, 'member' => member_row($stmt->fetch())];
+if (isset($approvedNow)) {
+    // Registration promises an email once the account is approved.
+    respond_then($payload, static fn () => mail_account_approved($approvedNow));
+}
+respond($payload);

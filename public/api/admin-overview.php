@@ -12,6 +12,7 @@ declare(strict_types=1);
 require __DIR__ . '/bootstrap.php';
 require __DIR__ . '/ops.php';
 require __DIR__ . '/jobs-lib.php';
+require __DIR__ . '/ai-lib.php';
 
 require_get();
 require_admin();
@@ -87,6 +88,7 @@ respond([
     'members' => $members,
     'jobs' => $jobs,
     'catalog' => $catalog,
+    'ai' => ai_usage_summary(),
     'recent' => ['members' => $recentMembers, 'jobs' => $recentJobs, 'listings' => $recentListings],
     'csrf' => csrf_token(),
 ]);

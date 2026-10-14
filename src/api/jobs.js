@@ -61,8 +61,8 @@ export const JOB_STATUS_LABEL = {
 };
 
 export const TASK_STATUS_LABEL = {
-  queued: "Queued",
-  running: "Running",
+  queued: "Waiting",
+  running: "Working",
   done: "Done",
   blocked: "Blocked",
   skipped: "Skipped",
@@ -86,4 +86,17 @@ export function fetchSubagents({ signal } = {}) {
 
 export function jobAction(action, payload, { csrf }) {
   return call("jobs.php", { method: "POST", body: { action, ...payload }, csrf });
+}
+
+/** Nudges an in-progress job's AI subagents along (answers at once). */
+export function runJob(id, { csrf }) {
+  return call("jobs-run.php", { method: "POST", body: { id }, csrf });
+}
+
+export function requestPasswordReset(email, { csrf }) {
+  return call("password-reset.php", { method: "POST", body: { action: "request", email }, csrf });
+}
+
+export function resetPassword(token, password, { csrf }) {
+  return call("password-reset.php", { method: "POST", body: { action: "reset", token, password }, csrf });
 }

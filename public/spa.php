@@ -83,6 +83,7 @@ function meta_for(string $path, array $projects, string $parent, string $exchang
         '/login' => page('Sign in', 'Sign in to your D&J Stratagem account.', $parent, true),
         '/register' => page('Request access', 'Request a D&J Stratagem account. Accounts are approved by the team before first sign-in.', $parent, true),
         '/forgot-password' => page('Forgot password', 'Reset your D&J Stratagem password.', $parent, true),
+        '/reset-password' => page('Choose a new password', 'Set a new password for your D&J Stratagem account.', $parent, true),
         '/verify-email' => page('Account review', 'New D&J Stratagem accounts are approved by the team. There is no automated verification email.', $parent, true),
         '/fleet' => page('Chauffeured luxury SUVs, sedans, Sprinters, and coaches', 'Stratagem Fleet: luxury SUVs, sedans, sports cars, Sprinters, and motorcoaches across Southern California. One itemized quote; the price is set before you ride.', 'Stratagem Fleet'),
         '/capital' => page('Get paid sooner. Bid bigger.', 'Stratagem Capital is being built to lift slow pay: working capital that follows pay apps, retainage, and materials bought months before the invoice clears. No credit is offered today.', 'Stratagem Capital'),

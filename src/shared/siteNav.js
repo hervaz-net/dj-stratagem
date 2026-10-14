@@ -38,7 +38,7 @@ export const NAV_MENUS = [
     glyph: true,
     intro: {
       title: "Subagents",
-      text: "Nine specialists on one account. Pick the ones a job needs and they start together.",
+      text: "Nine AI specialists on one account. Pick the ones a job needs; each builds on the work before it.",
       href: "/#subagents",
       cta: "See all nine",
     },
@@ -55,7 +55,7 @@ export const NAV_MENUS = [
     feature: {
       href: "/#how",
       eyebrow: "How a job moves",
-      title: "Submit a job once. Every subagent you pick starts the moment it's approved.",
+      title: "Submit a job once. After approval, your subagents run on their own and call each other in when they need to.",
       tone: "dark",
     },
   },

@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Browser end-to-end test: register → admin approves account → sign in →
-create job → admin approves job → start → finish every task → completed.
+create job → admin approves job → the AI subagents run on their own →
+completed, with each subagent's work readable → reject + edit and resubmit.
+Run against a dev server wired to scripts/mock-claude.py (or a real key).
 
 Usage: python3 scripts/e2e-jobs.py http://127.0.0.1:8080 [admin_email admin_password] [screenshot_dir]
 Needs Python Playwright with Chromium. Creates real rows; use a dev database.
@@ -82,36 +84,66 @@ with sync_playwright() as p:
     dlg.get_by_role("button", name="Submit for approval").click()
     drawer = m.get_by_role("dialog", name=re.compile(TITLE))
     expect(drawer.get_by_text("Awaiting approval").first).to_be_visible(timeout=10000)
-    expect(drawer.get_by_role("button", name=re.compile("Start all"))).to_have_count(0)
+    expect(drawer.get_by_role("button", name=re.compile("^Start"))).to_have_count(0)
     print("PASS job created, awaiting approval, no start button")
     drawer.get_by_role("button", name="Close job details").click()
 
-    # 4. Admin approves the job on the Approvals screen
+    # 4. Admin approves the job on the Approvals screen — that starts the run
     a.goto(f"{BASE}/dashboard/approvals")
     card = a.get_by_role("article").filter(has_text=TITLE)
     expect(card).to_be_visible(timeout=15000)
     shot(a, "03-approvals")
-    card.get_by_role("button", name="Approve").click()
+    card.get_by_role("button", name="Approve and start").click()
     expect(a.get_by_role("article").filter(has_text=TITLE)).to_have_count(0, timeout=10000)
     print("PASS admin approved job")
 
-    # 5. Member starts it: all nine subagents run at once
+    # 5. Member watches: nobody clicks anything, the subagents run and recurse
     m.reload()
     m.get_by_role("button", name=re.compile(TITLE)).click()
     drawer = m.get_by_role("dialog", name=re.compile(TITLE))
-    drawer.get_by_role("button", name="Start all 9 subagents").click()
-    expect(drawer.get_by_text("Running", exact=True)).to_have_count(9, timeout=10000)
-    shot(m, "04-running")
-    print("PASS all 9 subagents running")
+    expect(drawer.get_by_text("Completed").first).to_be_visible(timeout=120000)
+    shot(m, "04-completed")
+    tasks = drawer.locator("li[data-task]")
+    total = tasks.count()
+    nested = drawer.locator("li[data-task][data-depth='3']").count()
+    assert total >= 9 and nested >= 1, (total, nested)
+    expect(drawer.get_by_text(f"{total}/{total}")).to_be_visible()
+    print(f"PASS job completed on its own: {total} subagent runs, call-backs 3 levels deep")
 
-    # 6. Finish every task → job completes
-    for _ in range(9):
-        drawer.get_by_role("button", name="Mark done").first.click()
-        m.wait_for_timeout(300)
-    expect(drawer.get_by_text("Completed").first).to_be_visible(timeout=10000)
-    expect(drawer.get_by_text("9/9")).to_be_visible()
-    shot(m, "05-completed")
-    print("PASS job completed 9/9")
+    # 6. Read a subagent's work and download the results
+    first = drawer.locator("li[data-task='projects']").first
+    first.get_by_role("button", name="Read the work").click()
+    expect(first.get_by_role("heading", name=re.compile("Projects plan"))).to_be_visible()
+    expect(first.locator("table")).to_be_visible()
+    expect(drawer.locator("li[data-depth='1']").first).to_contain_text("Called back by")
+    with m.expect_download() as dl:
+        drawer.get_by_role("button", name="Download results").click()
+    assert dl.value.suggested_filename.endswith("-results.md")
+    shot(m, "05-output")
+    print("PASS subagent output readable and downloadable")
+    drawer.get_by_role("button", name="Close job details").click()
+
+    # 6b. Rejected job: edit and resubmit
+    m.get_by_role("button", name="New job").click()
+    dlg = m.get_by_role("dialog", name="New job")
+    dlg.get_by_label("Job title").fill(TITLE + " R")
+    dlg.get_by_role("button", name="Submit for approval").click()
+    m.get_by_role("dialog", name=re.compile(TITLE + " R")).get_by_role("button", name="Close job details").click()
+    a.goto(f"{BASE}/dashboard/approvals")
+    card = a.get_by_role("article").filter(has_text=TITLE + " R")
+    card.get_by_label(re.compile("note|reason", re.I)).fill("Add the street address.")
+    card.get_by_role("button", name="Reject").click()
+    expect(a.get_by_role("article").filter(has_text=TITLE + " R")).to_have_count(0, timeout=10000)
+    m.reload()
+    m.get_by_role("button", name=re.compile(TITLE + " R")).click()
+    drawer = m.get_by_role("dialog", name=re.compile(TITLE + " R"))
+    expect(drawer.get_by_text("Add the street address.").first).to_be_visible(timeout=10000)
+    drawer.get_by_role("button", name="Edit and resubmit").click()
+    edit = m.get_by_role("dialog", name=re.compile("Edit JOB-"))
+    edit.get_by_label("Location").fill("12 Main St, Pasadena, CA")
+    edit.get_by_role("button", name="Resubmit for approval").click()
+    expect(drawer.get_by_text("Awaiting approval").first).to_be_visible(timeout=10000)
+    print("PASS rejected job edited and resubmitted")
 
     # 7. Member cannot reach the admin screens
     m.goto(f"{BASE}/dashboard/approvals")
