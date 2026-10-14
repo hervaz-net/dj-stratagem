@@ -120,11 +120,12 @@
   .sn-burger { display: none; }
   .sn-icon-btn { display: inline-flex; }
 }
-/* A long page action ("Join the early list") moves into the menu on phones. */
-@media (max-width: 419px) {
+/* A page action ("Get matched", "Join the early list") moves into the menu
+   on phones, so the header never runs wider than the screen. */
+@media (max-width: 479px) {
   .sn-actions .sn-cta[data-long] { display: none; }
 }
-@media (max-width: 379px) {
+@media (max-width: 419px) {
   .sn-actions .sn-cta[data-action] { display: none; }
 }
 /* Phones: the mark stands in for "Stratagem AI" when a suffix shows. */

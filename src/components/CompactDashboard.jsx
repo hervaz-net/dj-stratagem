@@ -254,7 +254,7 @@ function QuickAddForm({ onSave, onCancel }){
 }
 
 function parseBudget(str){
-  const nums = (str||'').replace(/[^0-9\-]/g,'').split('-').map(n=>Number(n)||0);
+  const nums = (str||'').replace(/[^0-9-]/g,'').split('-').map(n=>Number(n)||0);
   return [nums[0]||0, nums[1]||nums[0]||0];
 }
 

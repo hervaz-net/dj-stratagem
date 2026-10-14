@@ -3,7 +3,7 @@ import { CONTACT_EMAIL } from "./brands";
 import { localDateISO } from "../lib/dates";
 
 /** Per-page title and description, suffixed with the company name only. */
-export function useSeo(brand, { title, description }) {
+export function useSeo(brand, { title, description, path }) {
   useEffect(() => {
     document.title = title ? `${title} | ${brand.name}` : brand.name;
     const set = (sel, attr, key, value) => {
@@ -19,7 +19,7 @@ export function useSeo(brand, { title, description }) {
     set('meta[property="og:title"]', "property", "og:title", document.title);
     set('meta[property="og:description"]', "property", "og:description", description);
     set('meta[property="og:site_name"]', "property", "og:site_name", brand.name);
-    const url = `https://djstratageminc.com${brand.path}`;
+    const url = `https://djstratageminc.com${path ?? brand.path}`;
     set('meta[property="og:url"]', "property", "og:url", url);
     set('meta[name="twitter:title"]', "name", "twitter:title", document.title);
     set('meta[name="twitter:description"]', "name", "twitter:description", description);
@@ -31,7 +31,7 @@ export function useSeo(brand, { title, description }) {
       document.head.appendChild(canonical);
     }
     canonical.setAttribute("href", url);
-  }, [brand, title, description]);
+  }, [brand, title, description, path]);
 }
 
 export const fieldClass =
