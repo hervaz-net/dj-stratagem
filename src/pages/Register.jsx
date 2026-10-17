@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import Button from "../components/Button";
-import Logo from "../components/Logo";
+import AuthShell from "../components/AuthShell";
 import Seo from "../components/Seo";
 import PasswordField from "../components/PasswordField";
 import { IconCheck } from "../components/icons";
@@ -160,18 +160,27 @@ export default function Register() {
         noindex
       />
 
-      <div className="mx-auto flex w-full max-w-lg flex-col justify-center px-6 py-10 md:py-14">
-        <div className="slab p-8">
-          <Link to="/" className="inline-block" aria-label="D&J Stratagem — home">
-            <Logo />
-          </Link>
-
+      <AuthShell
+        mode="register"
+        title={done ? null : "Put your pipeline to work."}
+        lede={done ? null : "One account for finding work, winning it, and keeping the customer. Our team approves accounts before first sign-in."}
+        footer={
+          done ? null : (
+            <>
+              Already have an account?{" "}
+              <Link to="/login" className="font-medium text-violet hover:underline">
+                Sign in
+              </Link>
+            </>
+          )
+        }
+      >
           {done ? (
-            <div className="animate-fade-in mt-8">
+            <div className="animate-fade-in mt-2">
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-success/10 text-success">
                 <IconCheck width={22} height={22} />
               </div>
-              <h1 className="mt-5 text-paper text-6xl leading-[0.95] md:text-8xl">
+              <h1 className="mt-5 text-paper text-5xl leading-[0.95] md:text-6xl">
                 Request received.
               </h1>
               <p className="mt-3 text-sm leading-relaxed text-steel">
@@ -185,14 +194,7 @@ export default function Register() {
             </div>
           ) : (
             <>
-              <h1 className="mt-8 text-paper text-6xl leading-[0.95] md:text-8xl">
-                Request access
-              </h1>
-              <p className="mt-2 text-sm text-steel">
-                Tell us who you are. Our team approves accounts before first sign-in.
-              </p>
-
-              <form onSubmit={handleSubmit} className="mt-8 space-y-4" noValidate>
+              <form onSubmit={handleSubmit} className="mt-7 space-y-4" noValidate>
                 <Field
                   id="fullName"
                   label="Full name"
@@ -282,20 +284,13 @@ export default function Register() {
                 </div>
 
                 <Button type="submit" variant="primary" className="mt-2 w-full" disabled={submitting}>
-                  {submitting ? "Sending request…" : "Request access"}
+                  {submitting ? "Creating account…" : "Create account"}
                 </Button>
               </form>
 
-              <p className="mt-6 text-center text-sm text-steel">
-                Already have an account?{" "}
-                <Link to="/login" className="font-medium text-amber hover:text-amber-2">
-                  Sign in
-                </Link>
-              </p>
             </>
           )}
-        </div>
-      </div>
+      </AuthShell>
     </>
   );
 }

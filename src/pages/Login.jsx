@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import Button from "../components/Button";
-import Logo from "../components/Logo";
+import AuthShell from "../components/AuthShell";
 import Seo from "../components/Seo";
 import PasswordField from "../components/PasswordField";
 import useAuth from "../auth/useAuth";
@@ -110,16 +110,23 @@ export default function Login() {
     <>
       <Seo title="Sign in" description="Sign in to your D&J Stratagem account." noindex />
 
-      <div className="mx-auto flex w-full max-w-md flex-col justify-center px-6 py-10 md:py-14">
-        <div className="slab p-8">
-          <Link to="/" className="inline-block" aria-label="D&J Stratagem — home">
-            <Logo />
-          </Link>
-
-          <h1 className="mt-8 text-paper text-6xl leading-[0.95] md:text-8xl">Sign in</h1>
-          <p className="mt-2 text-sm text-steel">Access your D&amp;J Stratagem account.</p>
-
-          <form onSubmit={handleSubmit} className="mt-8 space-y-4" noValidate>
+      <AuthShell
+        mode="login"
+        title="Welcome back."
+        lede="Sign in to run your subagents, jobs, and Fleet."
+        footer={
+          <>
+            New to Stratagem?{" "}
+            <Link to="/register" className="font-medium text-violet hover:underline">
+              Create an account
+            </Link>
+            <span className="mt-3 block font-mono text-[11px] uppercase tracking-[0.14em]">
+              Accounts are approved before first sign-in
+            </span>
+          </>
+        }
+      >
+          <form onSubmit={handleSubmit} className="mt-7 space-y-4" noValidate>
             <div>
               <label htmlFor="email" className="mb-2 block text-sm font-medium text-paper">
                 Email address
@@ -184,28 +191,7 @@ export default function Login() {
             </Button>
           </form>
 
-          <div className="mt-6 space-y-4">
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center" aria-hidden="true">
-                <div className="w-full border-t border-line" />
-              </div>
-              <div className="relative flex justify-center">
-                <span className="bg-ink-2 px-3 text-xs uppercase tracking-wider text-steel">Or</span>
-              </div>
-            </div>
-            <p className="text-center text-sm text-steel">
-              Don&rsquo;t have an account?{" "}
-              <Link to="/register" className="font-medium text-amber hover:text-amber-2">
-                Request access
-              </Link>
-            </p>
-          </div>
-        </div>
-
-        <p className="mt-8 text-center text-xs text-steel">
-          Accounts are approved by our team before first sign-in.
-        </p>
-      </div>
+      </AuthShell>
     </>
   );
 }

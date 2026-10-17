@@ -1021,3 +1021,11 @@ h1 em, h2 em, h3 em, .font-display em {
 
 /* The cursor light: larger and tinted so it reads on a light canvas. */
 .spotlight { width: 48rem; height: 48rem; transform: translate3d(calc(var(--mx, 50vw) - 24rem), calc(var(--my, 30vh) - 24rem), 0); }
+
+/* ---- Auth pages (AuthShell) ---- */
+.auth-caret { display: inline-block; width: 7px; height: 15px; margin-left: 1px; vertical-align: -2px; background: var(--text); animation: auth-blink 1s steps(1) infinite; }
+@keyframes auth-blink { 50% { opacity: 0; } }
+.auth-rise { animation: auth-rise 0.6s ease both; }
+.auth-rise-2 { animation-delay: 0.08s; }
+@keyframes auth-rise { from { opacity: 0; transform: translateY(10px); } }
+@media (prefers-reduced-motion: reduce) { .auth-caret, .auth-rise { animation: none; } }
