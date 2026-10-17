@@ -39,6 +39,12 @@ Options -Indexes -MultiViews
   RewriteRule ^terms/?$ /spa.php [L]
   RewriteRule ^brand/?$ /spa.php [L]
   RewriteRule ^fleet/?$ /spa.php [L]
+  # Leftover host directories (login/, signup/) make REQUEST_FILENAME -d true
+  # and the later SPA fallback never runs, so LiteSpeed emits its own 404.
+  # Force the real targets before the existing-file stop.
+  RewriteRule ^login/?$ /spa.php [L]
+  RewriteRule ^signup/?$ /register [R=301,L]
+  RewriteRule ^sign-up/?$ /register [R=301,L]
   # Same MultiViews trap under the Exchange prefix if a printable sheet
   # is ever added beside these routes.
   RewriteRule ^exchange/(privacy|terms|brand)/?$ /spa.php [L]
