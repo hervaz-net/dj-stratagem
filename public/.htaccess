@@ -39,6 +39,10 @@ Options -Indexes -MultiViews
   RewriteRule ^terms/?$ /spa.php [L]
   RewriteRule ^brand/?$ /spa.php [L]
   RewriteRule ^fleet/?$ /spa.php [L]
+  # /login can be blocked by a leftover directory on public_html (rsync --delete
+  # should remove it, but a stale dir still 404s the SPA with Options -Indexes).
+  # Force the shell the same way privacy/terms do.
+  RewriteRule ^login/?$ /spa.php [L]
   # Same MultiViews trap under the Exchange prefix if a printable sheet
   # is ever added beside these routes.
   RewriteRule ^exchange/(privacy|terms|brand)/?$ /spa.php [L]
