@@ -12,7 +12,6 @@
 
 declare(strict_types=1);
 require __DIR__ . '/bootstrap.php';
-require_once __DIR__ . '/mail-lib.php';
 
 require_post();
 require_csrf();
@@ -62,10 +61,5 @@ error_log(sprintf(
     $target['status'],
     $status
 ));
-
-// Registration promises an email once the account is approved.
-if ($target['status'] === 'pending' && $status === 'active') {
-    respond_then(['ok' => true, 'id' => $id, 'status' => $status], static fn () => mail_account_approved($id));
-}
 
 respond(['ok' => true, 'id' => $id, 'status' => $status]);

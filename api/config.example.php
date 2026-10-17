@@ -24,27 +24,8 @@ return [
         'charset'  => 'utf8mb4',
     ],
 
-    // Where admin notices go (new accounts, jobs awaiting approval). Comma-
-    // separate several. Leave blank to send them to every active admin.
-    'admin_email' => '',
-
-    /**
-     * Stratagem AI — the engine behind the nine subagents.
-     *
-     * Paste an Anthropic API key from https://console.anthropic.com →
-     * API Keys. Without it, approved jobs stop at the first subagent with
-     * "The AI engine is not set up". Usage is billed to that Anthropic
-     * account; the admin panel shows tokens used.
-     *
-     * Also add the worker in cPanel → Cron Jobs (every minute) so jobs keep
-     * moving even if the server blocks its own loopback requests:
-     *   * * * * * /usr/local/bin/php /home/djstlime/public_html/api/ai-worker.php >/dev/null 2>&1
-     */
-    'ai' => [
-        'api_key'    => '',
-        'model'      => 'claude-sonnet-5-5',
-        'max_tokens' => 4000,
-    ],
+    // Where "a new account is awaiting approval" notices are sent.
+    'admin_email' => 'admin@example.com',
 
     /**
      * IPs of reverse proxies allowed to assert X-Forwarded-Proto.

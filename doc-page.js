@@ -196,17 +196,6 @@
       --doc-hdr-pad: 0px;
       --doc-ftr-pad: 0px;
     }
-    /* Narrow viewports: keep the letter sheet, but scroll it inside the
-       component so privacy/terms/brand do not widen the page. */
-    @media screen and (max-width: 920px) {
-      :host {
-        width: 100%;
-        max-width: 100%;
-        min-width: 0;
-        overflow-x: auto;
-        padding: 24px 12px;
-      }
-    }
     .sheet {
       width: var(--doc-page-w);
       margin: 0 auto;
