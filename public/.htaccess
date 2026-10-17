@@ -39,6 +39,9 @@ Options -Indexes -MultiViews
   RewriteRule ^terms/?$ /spa.php [L]
   RewriteRule ^brand/?$ /spa.php [L]
   RewriteRule ^fleet/?$ /spa.php [L]
+  # /login returns a hard LiteSpeed 404 while other SPA routes work.
+  # Force the shell the same way privacy/terms/fleet do, before the -f stop.
+  RewriteRule ^login/?$ /spa.php [L]
   # Same MultiViews trap under the Exchange prefix if a printable sheet
   # is ever added beside these routes.
   RewriteRule ^exchange/(privacy|terms|brand)/?$ /spa.php [L]
