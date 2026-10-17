@@ -39,6 +39,13 @@ Options -Indexes -MultiViews
   RewriteRule ^terms/?$ /spa.php [L]
   RewriteRule ^brand/?$ /spa.php [L]
   RewriteRule ^fleet/?$ /spa.php [L]
+  # /login 404s on the live host when a leftover directory or MultiViews
+  # match exists. Force the SPA shell before the existing-file stop, the
+  # same way privacy/terms/fleet are protected.
+  RewriteRule ^login/?$ /spa.php [L]
+  RewriteRule ^register/?$ /spa.php [L]
+  RewriteRule ^forgot-password/?$ /spa.php [L]
+  RewriteRule ^reset-password/?$ /spa.php [L]
   # Same MultiViews trap under the Exchange prefix if a printable sheet
   # is ever added beside these routes.
   RewriteRule ^exchange/(privacy|terms|brand)/?$ /spa.php [L]
