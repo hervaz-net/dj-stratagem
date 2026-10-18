@@ -39,6 +39,16 @@ Options -Indexes -MultiViews
   RewriteRule ^terms/?$ /spa.php [L]
   RewriteRule ^brand/?$ /spa.php [L]
   RewriteRule ^fleet/?$ /spa.php [L]
+  # Auth routes must hit spa.php before any leftover directory, MultiViews,
+  # or existing-file stop. Live /login was returning LiteSpeed HTML 404
+  # while /register and /forgot-password served the SPA.
+  RewriteRule ^login/?$ /spa.php [L]
+  RewriteRule ^register/?$ /spa.php [L]
+  RewriteRule ^forgot-password/?$ /spa.php [L]
+  RewriteRule ^reset-password/?$ /spa.php [L]
+  RewriteRule ^verify-email/?$ /spa.php [L]
+  RewriteRule ^signin/?$ /spa.php [L]
+  RewriteRule ^sign-in/?$ /spa.php [L]
   # Same MultiViews trap under the Exchange prefix if a printable sheet
   # is ever added beside these routes.
   RewriteRule ^exchange/(privacy|terms|brand)/?$ /spa.php [L]
