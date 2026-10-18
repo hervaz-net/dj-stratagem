@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, NavLink, Navigate, useLocation } from "react-router-dom";
 import useAuth from "../../auth/useAuth";
 import Seo from "../../components/Seo";
-import { StratagemMark } from "../../shared/SiteNav";
+import { StratagemMark } from "../../shared/SiteNav.jsx";
 
 /**
  * The admin control panel's frame: its own sidebar, separate from the member

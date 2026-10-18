@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { subagents, subagentForPath } from "../data/subagents";
-import { NAV_LINKS, NAV_MENUS, appForPath, isCurrent } from "./siteNav";
+import { NAV_LINKS, NAV_MENUS, appForPath, isCurrent } from "./siteNav.js";
 import SubagentMark, { subagentColor, subagentMarkSvg } from "./SubagentMark";
 import "./site-nav.css";
 

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { Routes, Route, Navigate, Link, useLocation } from "react-router-dom";
-import SiteNav from "../shared/SiteNav";
+import SiteNav from "../shared/SiteNav.jsx";
 import useAuth from "./auth/useAuth";
 import Logo from "./components/Logo";
 import { PRODUCT } from "./brand";

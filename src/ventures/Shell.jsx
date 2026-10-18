@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { CONTACT_EMAIL, brandCss } from "./brands";
-import SiteNav from "../shared/SiteNav";
+import SiteNav from "../shared/SiteNav.jsx";
 import SubagentMark from "../shared/SubagentMark";
 
 /** Company mark: the subagent's own logo, shared with the rest of the site. */

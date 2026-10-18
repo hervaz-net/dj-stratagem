@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
-import SiteNav from "./shared/SiteNav";
+import SiteNav from "./shared/SiteNav.jsx";
 import Footer from "./components/Footer";
 import BackToTop from "./components/BackToTop";
 import CookieBanner from "./components/CookieBanner";

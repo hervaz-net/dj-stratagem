@@ -5,7 +5,7 @@ import Fleet from "./pages/Fleet";
 import Venture from "./pages/Venture";
 import { BRANDS } from "./brands";
 import { SUBAGENT_SITES as S } from "../subagents/sites";
-import { appForPath } from "../shared/siteNav";
+import { appForPath } from "../shared/siteNav.js";
 import SubagentNotFound from "../subagents/pages/SubagentNotFound";
 import Projects from "../subagents/pages/Projects";
 import ProjectDetail from "../subagents/pages/ProjectDetail";
