@@ -1,7 +1,7 @@
 <?php
 /**
  * GET  /api/settings.php
- * POST /api/settings.php  { action: profile|notifications|twofa|billing|account_type|fund }
+ * POST /api/settings.php  { action: profile|notifications|twofa|billing|account_type|fund|marketplace }
  */
 
 declare(strict_types=1);
@@ -55,9 +55,30 @@ function load_settings(int $uid, array $user): array
             'email_alerts' => (bool) ($row['email_alerts'] ?? true),
             'email_weekly' => (bool) ($row['email_weekly'] ?? false),
         ],
+        'marketplace' => [
+            'roles' => csv_list($row['mp_roles'] ?? null),
+            'categories' => json_col($row['mp_categories'] ?? '[]'),
+            'serviceArea' => $row['mp_service_area'] ?? '',
+            'radius' => isset($row['mp_radius']) ? (string) $row['mp_radius'] : '50',
+            'fulfillment' => isset($row['mp_fulfillment']) ? csv_list($row['mp_fulfillment']) : ['delivery', 'will-call'],
+        ],
         'twofa' => (bool) ($row['twofa_enabled'] ?? false),
         'passwordChangedAt' => null,
     ];
+}
+
+function csv_list(?string $v): array
+{
+    return $v === null || $v === '' ? [] : explode(',', $v);
+}
+
+/** Keeps only allowed values from a client-sent list, in a stable order. */
+function pick_list($raw, array $allowed): array
+{
+    if (!is_array($raw)) {
+        return [];
+    }
+    return array_values(array_filter($allowed, static fn ($a) => in_array($a, $raw, true)));
 }
 
 function ensure_settings_row(int $uid): void
@@ -195,6 +216,45 @@ if ($action === 'fund') {
             SET wallet_balance = wallet_balance + ?, account_funded = 1, updated_at = UTC_TIMESTAMP()
           WHERE user_id = ?'
     )->execute([$amount, $uid]);
+    respond(['ok' => true, 'live' => true, 'settings' => load_settings($uid, $user)]);
+}
+
+if ($action === 'marketplace') {
+    $body = input();
+    $roles = pick_list($body['roles'] ?? [], ['supplier', 'distributor', 'contractor']);
+    $fulfillment = pick_list($body['fulfillment'] ?? [], ['delivery', 'will-call']);
+
+    $categories = [];
+    foreach (is_array($body['categories'] ?? null) ? $body['categories'] : [] as $c) {
+        if (is_string($c) && ($c = trim($c)) !== '' && mb_strlen($c) <= 80 && !in_array($c, $categories, true)) {
+            $categories[] = $c;
+        }
+    }
+    if (count($categories) > 30) {
+        fail(422, 'validation_failed', 'Pick 30 categories or fewer.');
+    }
+
+    $area = field('serviceArea');
+    if (mb_strlen($area) > 160) {
+        fail(422, 'validation_failed', 'Service area is too long.');
+    }
+    $radiusRaw = field('radius');
+    if ($radiusRaw !== '' && (!ctype_digit($radiusRaw) || (int) $radiusRaw > 3000)) {
+        fail(422, 'validation_failed', 'Radius must be a whole number of miles up to 3000.');
+    }
+
+    db()->prepare(
+        'UPDATE user_settings
+            SET mp_roles = ?, mp_categories = ?, mp_service_area = ?, mp_radius = ?, mp_fulfillment = ?, updated_at = UTC_TIMESTAMP()
+          WHERE user_id = ?'
+    )->execute([
+        implode(',', $roles),
+        json_encode($categories),
+        $area !== '' ? $area : null,
+        $radiusRaw !== '' ? (int) $radiusRaw : null,
+        implode(',', $fulfillment),
+        $uid,
+    ]);
     respond(['ok' => true, 'live' => true, 'settings' => load_settings($uid, $user)]);
 }
 

@@ -6,15 +6,15 @@
 
 declare(strict_types=1);
 require __DIR__ . '/bootstrap.php';
-require __DIR__ . '/ops.php';
 
 require_signin();
+require_ops();
 ensure_ops_schema();
 
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
 if ($method === 'GET') {
-    respond(['ok' => true, 'live' => true, 'suppliers' => fetch_suppliers()]);
+    respond(['ok' => true, 'live' => true, 'sample' => has_seed_rows('suppliers'), 'suppliers' => fetch_suppliers()]);
 }
 
 if ($method !== 'POST') {
@@ -26,19 +26,26 @@ require_csrf();
 $name = field('name');
 $category = field('category');
 $region = field('region');
+$partnerRole = field('partnerRole') !== '' ? field('partnerRole') : 'supplier';
 if ($name === '' || $category === '' || $region === '') {
     fail(422, 'validation_failed', 'Name, category, and region are required.');
+}
+if (!in_array($partnerRole, ['supplier', 'distributor', 'contractor'], true)) {
+    fail(422, 'validation_failed', 'Partner role must be supplier, distributor, or contractor.');
+}
+if (mb_strlen($name) > 160 || mb_strlen($category) > 120 || mb_strlen($region) > 80) {
+    fail(422, 'validation_failed', 'Name, category, or region is too long.');
 }
 
 $id = 'sup-' . bin2hex(random_bytes(4));
 $trend = json_encode(seeded_series(random_int(1, 9999), 24, 92, 0.1, 4));
 db()->prepare(
-    'INSERT INTO suppliers (id, name, category, region, risk_score, delivery_rate, fill_rate, lead_time_days, status, open_orders, spend_ytd, trend_json, created_at)
-     VALUES (?,?,?,?,12,95.0,95.0,3,?,0,0,?,UTC_TIMESTAMP())'
-)->execute([$id, $name, $category, $region, 'active', $trend]);
+    'INSERT INTO suppliers (id, name, partner_role, category, region, risk_score, delivery_rate, fill_rate, lead_time_days, status, open_orders, spend_ytd, trend_json, created_at)
+     VALUES (?,?,?,?,?,12,95.0,95.0,3,?,0,0,?,UTC_TIMESTAMP())'
+)->execute([$id, $name, $partnerRole, $category, $region, 'active', $trend]);
 
-log_activity('supplier', $name . ' approved and added to network', 'active');
+log_activity('supplier', $name . ' added to your network', 'active');
 
 $stmt = db()->prepare('SELECT * FROM suppliers WHERE id = ?');
 $stmt->execute([$id]);
-respond(['ok' => true, 'live' => true, 'supplier' => supplier_row($stmt->fetch())]);
+respond(['ok' => true, 'live' => true, 'sample' => has_seed_rows('suppliers'), 'supplier' => supplier_row($stmt->fetch())]);

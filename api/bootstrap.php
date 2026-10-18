@@ -16,8 +16,6 @@ header('Cache-Control: no-store');
 header('X-Content-Type-Options: nosniff');
 header('Referrer-Policy: same-origin');
 
-// ── last-resort error handling (before config, so a bad require still JSON) ──
-
 set_exception_handler(static function (Throwable $e): void {
     error_log('auth: uncaught ' . get_class($e) . ' — ' . $e->getMessage());
     if (!headers_sent()) {
@@ -44,20 +42,9 @@ register_shutdown_function(static function (): void {
     echo json_encode(['ok' => false, 'error' => 'server_error']);
 });
 
-// ── config ──────────────────────────────────────────────────────────────────
-
-/**
- * Preferred location is ABOVE the document root, for two reasons:
- *   1. Nothing under public_html can ever serve it, even if PHP breaks.
- *   2. The deploy runs `rsync --delete` into public_html, which would wipe a
- *      config living inside it on every deploy (it is gitignored, so it is
- *      never in the synced tree).
- * The in-directory path is the local-development fallback.
- */
 function locate_config(): ?string
 {
     $candidates = [];
-
     if ($env = getenv('DJS_CONFIG')) {
         $candidates[] = $env;
     }
@@ -66,7 +53,6 @@ function locate_config(): ?string
     }
     $candidates[] = dirname(__DIR__, 2) . '/djs-config.php';
     $candidates[] = __DIR__ . '/config.php';
-
     foreach ($candidates as $path) {
         if ($path && is_file($path)) {
             return $path;
@@ -91,38 +77,27 @@ if (!is_array($config) || empty($config['db']) || !is_array($config['db'])) {
     exit;
 }
 
-// ── transport security ──────────────────────────────────────────────────────
-
 function is_https(): bool
 {
     global $config;
-
     if (!empty($_SERVER['HTTPS']) && strtolower((string) $_SERVER['HTTPS']) !== 'off') {
         return true;
     }
     if (((int) ($_SERVER['SERVER_PORT'] ?? 0)) === 443) {
         return true;
     }
-
-    /**
-     * X-Forwarded-Proto is trusted ONLY when the request actually came from a
-     * configured proxy. Any client can set this header, so honouring it
-     * unconditionally would let an attacker send `X-Forwarded-Proto: https`
-     * over plaintext and walk straight through the require_https gate.
-     *
-     * Empty trusted_proxies (the default) means the header is ignored, which
-     * is correct for cPanel/LiteSpeed with no terminator in front.
-     */
     $trusted = $config['trusted_proxies'] ?? [];
     if ($trusted && in_array($_SERVER['REMOTE_ADDR'] ?? '', $trusted, true)) {
         $proto = strtolower(trim(explode(',', (string) ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? ''))[0]));
         return $proto === 'https';
     }
-
     return false;
 }
 
-if (!empty($config['require_https']) && !is_https()) {
+// The AI worker runs from cron on the command line: no HTTPS, no session.
+const DJS_CLI = PHP_SAPI === 'cli';
+
+if (!DJS_CLI && !empty($config['require_https']) && !is_https()) {
     http_response_code(403);
     echo json_encode([
         'ok'    => false,
@@ -132,24 +107,22 @@ if (!empty($config['require_https']) && !is_https()) {
     exit;
 }
 
-// ── session ─────────────────────────────────────────────────────────────────
-
-session_set_cookie_params([
-    'lifetime' => 0,
-    'path'     => '/',
-    'secure'   => is_https(),
-    'httponly' => true,
-    'samesite' => 'Lax',
-]);
-session_name('djs_session');
-if (session_status() !== PHP_SESSION_ACTIVE && !@session_start()) {
-    error_log('auth: session_start failed');
-    http_response_code(500);
-    echo json_encode(['ok' => false, 'error' => 'server_error']);
-    exit;
+if (!DJS_CLI) {
+    session_set_cookie_params([
+        'lifetime' => 0,
+        'path'     => '/',
+        'secure'   => is_https(),
+        'httponly' => true,
+        'samesite' => 'Lax',
+    ]);
+    session_name('djs_session');
+    if (session_status() !== PHP_SESSION_ACTIVE && !@session_start()) {
+        error_log('auth: session_start failed');
+        http_response_code(500);
+        echo json_encode(['ok' => false, 'error' => 'server_error']);
+        exit;
+    }
 }
-
-// ── database ────────────────────────────────────────────────────────────────
 
 function db(): PDO
 {
@@ -157,7 +130,6 @@ function db(): PDO
     if ($pdo instanceof PDO) {
         return $pdo;
     }
-
     global $config;
     $d = $config['db'];
     $dsn = sprintf(
@@ -166,7 +138,6 @@ function db(): PDO
         $d['name'] ?? '',
         $d['charset'] ?? 'utf8mb4'
     );
-
     try {
         $pdo = new PDO($dsn, (string) ($d['user'] ?? ''), (string) ($d['password'] ?? ''), [
             PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
@@ -177,16 +148,47 @@ function db(): PDO
         error_log('auth: db connect failed — ' . $e->getMessage());
         fail(500, 'server_error');
     }
-
     return $pdo;
 }
-
-// ── responses ───────────────────────────────────────────────────────────────
 
 function respond(array $payload, int $status = 200): never
 {
     http_response_code($status);
     echo json_encode($payload);
+    exit;
+}
+
+/**
+ * Sends the JSON response and closes the connection, then keeps running
+ * $after (the AI subagents) in the background of the same PHP process. The
+ * person who clicked gets an instant answer; the work carries on without them.
+ */
+function respond_then(array $payload, callable $after, int $status = 200): never
+{
+    if (session_status() === PHP_SESSION_ACTIVE) {
+        session_write_close(); // don't hold the session lock while the AI works
+    }
+    ignore_user_abort(true);
+    @set_time_limit(0);
+    $body = json_encode($payload);
+    http_response_code($status);
+    header('Content-Length: ' . strlen($body));
+    header('Connection: close');
+    echo $body;
+    while (ob_get_level() > 0) {
+        @ob_end_flush();
+    }
+    flush();
+    if (function_exists('litespeed_finish_request')) {
+        litespeed_finish_request();
+    } elseif (function_exists('fastcgi_finish_request')) {
+        fastcgi_finish_request();
+    }
+    try {
+        $after();
+    } catch (Throwable $e) {
+        error_log('respond_then: ' . get_class($e) . ' — ' . $e->getMessage());
+    }
     exit;
 }
 
@@ -202,14 +204,12 @@ function require_post(): void
     }
 }
 
-/** Reads a JSON body, falling back to form-encoded. */
 function input(): array
 {
     static $data = null;
     if ($data !== null) {
         return $data;
     }
-
     $raw = file_get_contents('php://input');
     $json = $raw ? json_decode($raw, true) : null;
     $data = is_array($json) ? $json : $_POST;
@@ -221,8 +221,6 @@ function field(string $key): string
     $v = input()[$key] ?? '';
     return is_scalar($v) ? trim((string) $v) : '';
 }
-
-// ── CSRF ────────────────────────────────────────────────────────────────────
 
 function csrf_token(): string
 {
@@ -239,8 +237,6 @@ function require_csrf(): void
         fail(403, 'csrf_failed', 'Your session expired. Reload and try again.');
     }
 }
-
-// ── throttling ──────────────────────────────────────────────────────────────
 
 function client_ip_binary(): string
 {
@@ -261,25 +257,20 @@ function assert_not_throttled(string $email): void
 {
     global $config;
     $window = (int) $config['attempt_window_minutes'];
-
     db()->prepare('DELETE FROM login_attempts WHERE attempted_at < (UTC_TIMESTAMP() - INTERVAL ? MINUTE)')
         ->execute([max($window * 4, 60)]);
-
     $byEmail = db()->prepare(
         'SELECT COUNT(*) c FROM login_attempts
           WHERE email = ? AND succeeded = 0 AND attempted_at > (UTC_TIMESTAMP() - INTERVAL ? MINUTE)'
     );
     $byEmail->execute([$email, $window]);
-
     $byIp = db()->prepare(
         'SELECT COUNT(*) c FROM login_attempts
           WHERE ip = ? AND succeeded = 0 AND attempted_at > (UTC_TIMESTAMP() - INTERVAL ? MINUTE)'
     );
     $byIp->execute([client_ip_binary(), $window]);
-
     $emailHits = (int) $byEmail->fetch()['c'];
     $ipHits    = (int) $byIp->fetch()['c'];
-
     if ($emailHits >= (int) $config['max_attempts_per_email'] || $ipHits >= (int) $config['max_attempts_per_ip']) {
         fail(429, 'too_many_attempts', "Too many attempts. Try again in {$window} minutes.");
     }
@@ -293,7 +284,6 @@ function claim_registration_slot(): void
     $window = (int) $config['attempt_window_minutes'];
     $limit  = (int) ($config['max_registrations_per_ip'] ?? 5);
     $ip     = client_ip_binary();
-
     try {
         $stmt = db()->prepare(
             'INSERT INTO login_attempts (ip, email, succeeded, attempted_at)
@@ -314,40 +304,58 @@ function claim_registration_slot(): void
         error_log('auth: registration slot claim failed — ' . $e->getMessage());
         fail(500, 'server_error');
     }
-
     if ($stmt->rowCount() === 0) {
         fail(429, 'too_many_attempts', "Too many requests. Try again in {$window} minutes.");
     }
 }
-
-// ── current user ────────────────────────────────────────────────────────────
 
 function current_user(): ?array
 {
     if (empty($_SESSION['uid'])) {
         return null;
     }
-
     $stmt = db()->prepare(
         'SELECT id, email, full_name, company, phone, role, status FROM users WHERE id = ? LIMIT 1'
     );
     $stmt->execute([$_SESSION['uid']]);
     $user = $stmt->fetch();
-
     if (!$user || $user['status'] !== 'active') {
         session_destroy();
         return null;
     }
-
     return $user;
 }
 
-function require_admin(): array
+function require_signin(): array
 {
     $user = current_user();
     if (!$user) {
         fail(401, 'not_authenticated', 'Sign in to continue.');
     }
+    return $user;
+}
+
+/** Lives here, not in ops.php: endpoints call it before require_ops(). */
+function require_get(): void
+{
+    if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'GET') {
+        fail(405, 'method_not_allowed');
+    }
+}
+
+/** Load dashboard helpers only after auth. A missing ops.php must be JSON, not LiteSpeed HTML 500. */
+function require_ops(): void
+{
+    $path = __DIR__ . '/ops.php';
+    if (!is_file($path)) {
+        fail(503, 'ops_unavailable', 'Dashboard data files are missing on this host.');
+    }
+    require_once $path;
+}
+
+function require_admin(): array
+{
+    $user = require_signin();
     if (($user['role'] ?? '') !== 'admin') {
         fail(403, 'forbidden', 'This area is restricted to administrators.');
     }

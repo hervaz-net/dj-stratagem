@@ -5,10 +5,10 @@
 
 declare(strict_types=1);
 require __DIR__ . '/bootstrap.php';
-require __DIR__ . '/ops.php';
 
 require_get();
 $user = require_signin();
+require_ops();
 ensure_ops_schema();
 
 $pdo = db();
@@ -29,8 +29,8 @@ $stmtU->execute([$uid]);
 $unread = (int) $stmtU->fetchColumn();
 
 $kpis = [
-    ['label' => 'Active suppliers', 'value' => (string) $activeSuppliers, 'delta' => '+' . max(1, (int) round($activeSuppliers * 0.02)), 'up' => true],
-    ['label' => 'Open bids', 'value' => (string) $openBids, 'delta' => '+' . max(0, $openBids > 0 ? 2 : 0), 'up' => true],
+    ['label' => 'Active partners', 'value' => (string) $activeSuppliers, 'delta' => '+' . max(1, (int) round($activeSuppliers * 0.02)), 'up' => true],
+    ['label' => 'Open quotes', 'value' => (string) $openBids, 'delta' => '+' . max(0, $openBids > 0 ? 2 : 0), 'up' => true],
     ['label' => 'Pending orders', 'value' => (string) $pendingOrders, 'delta' => $pendingOrders > 5 ? '-1' : '+1', 'up' => $pendingOrders <= 5],
     ['label' => 'Alerts', 'value' => (string) $unread, 'delta' => 'new', 'up' => false, 'danger' => $unread > 0],
 ];
@@ -87,8 +87,8 @@ $trend = seeded_series(910, 15, max(50, $health - 20), 1.4, 4);
 $trend[count($trend) - 1] = (float) $health;
 
 $quickLinks = [
-    ['to' => '/dashboard/suppliers', 'label' => 'Supplier network', 'detail' => $activeSuppliers . ' active'],
-    ['to' => '/dashboard/bids', 'label' => 'Bid tracker', 'detail' => $openBids . ' open'],
+    ['to' => '/dashboard/network', 'label' => 'Network', 'detail' => $activeSuppliers . ' active'],
+    ['to' => '/dashboard/quotes', 'label' => 'Quotes', 'detail' => $openBids . ' open'],
     ['to' => '/dashboard/orders', 'label' => 'Orders', 'detail' => $pendingOrders . ' pending'],
     ['to' => '/dashboard/analytics', 'label' => 'Analytics', 'detail' => '30-day report'],
     ['to' => '/dashboard/alerts', 'label' => 'Alerts', 'detail' => $unread . ' unread'],
@@ -97,7 +97,7 @@ $quickLinks = [
 
 respond([
     'ok' => true,
-    'live' => true,
+    'live' => true, 'sample' => true,
     'kpis' => $kpis,
     'activity' => $activity,
     'upcomingDeadlines' => $deadlines,

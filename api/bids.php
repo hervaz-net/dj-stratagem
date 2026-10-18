@@ -6,9 +6,9 @@
 
 declare(strict_types=1);
 require __DIR__ . '/bootstrap.php';
-require __DIR__ . '/ops.php';
 
 require_signin();
+require_ops();
 ensure_ops_schema();
 
 function list_bids(): array
@@ -20,7 +20,7 @@ function list_bids(): array
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
 if ($method === 'GET') {
-    respond(['ok' => true, 'live' => true, 'bids' => list_bids()]);
+    respond(['ok' => true, 'live' => true, 'sample' => has_seed_rows('bids'), 'bids' => list_bids()]);
 }
 
 if ($method !== 'POST') {
@@ -40,10 +40,10 @@ if ($action === 'create') {
     $status = field('status') !== '' ? field('status') : 'draft';
 
     if ($project === '' || $gc === '' || $trade === '' || $value <= 0) {
-        fail(422, 'validation_failed', 'Project, GC, trade, and a positive value are required.');
+        fail(422, 'validation_failed', 'Request, buyer, category, and a positive value are required.');
     }
     if (!in_array($status, $allowedStatus, true)) {
-        fail(422, 'validation_failed', 'Unknown bid status.');
+        fail(422, 'validation_failed', 'Unknown quote status.');
     }
     if ($due !== '' && !preg_match('/^\d{4}-\d{2}-\d{2}$/', $due)) {
         fail(422, 'validation_failed', 'Due date must be YYYY-MM-DD.');
@@ -60,25 +60,25 @@ if ($action === 'create') {
          VALUES (?,?,?,?,?,?,?,?)'
     )->execute([$id, $project, $gc, $trade, $value, $status, $due !== '' ? $due : null, $submitted]);
 
-    log_activity('bid', "Bid #{$id} created for {$project}", $status === 'draft' ? 'watch' : 'active');
+    log_activity('bid', "Quote #{$id} created for {$project}", $status === 'draft' ? 'watch' : 'active');
 
     $created = db()->prepare('SELECT * FROM bids WHERE id = ?');
     $created->execute([$id]);
-    respond(['ok' => true, 'live' => true, 'bid' => bid_row($created->fetch()), 'bids' => list_bids()]);
+    respond(['ok' => true, 'live' => true, 'sample' => has_seed_rows('bids'), 'bid' => bid_row($created->fetch()), 'bids' => list_bids()]);
 }
 
 if ($action === 'status') {
     $id = field('id');
     $status = field('status');
     if ($id === '' || !preg_match('/^\d{3,8}$/', $id) || !in_array($status, $allowedStatus, true)) {
-        fail(422, 'validation_failed', 'A valid bid id and status are required.');
+        fail(422, 'validation_failed', 'A valid quote id and status are required.');
     }
 
     $stmt = db()->prepare('SELECT * FROM bids WHERE id = ?');
     $stmt->execute([$id]);
     $row = $stmt->fetch();
     if (!$row) {
-        fail(404, 'not_found', 'Bid not found.');
+        fail(404, 'not_found', 'Quote not found.');
     }
 
     $submitted = $row['submitted_at'];
@@ -90,13 +90,13 @@ if ($action === 'status') {
         ->execute([$status, $submitted, $id]);
 
     $tone = $status === 'lost' ? 'at-risk' : ($status === 'awarded' ? 'active' : 'watch');
-    log_activity('bid', "Bid #{$id} marked {$status}", $tone);
+    log_activity('bid', "Quote #{$id} marked {$status}", $tone);
 
     $fresh = db()->prepare('SELECT * FROM bids WHERE id = ?');
     $fresh->execute([$id]);
     respond([
         'ok' => true,
-        'live' => true,
+        'live' => true, 'sample' => has_seed_rows('bids'),
         'bid' => bid_row($fresh->fetch()),
         'bids' => list_bids(),
     ]);
