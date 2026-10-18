@@ -51,6 +51,16 @@ Options -Indexes -MultiViews
   RewriteRule ^exchange/eula/?$ /exchange/terms [R=301,L]
   RewriteRule ^exchange/brand-guidelines/?$ /exchange/brand [R=301,L]
 
+  # /login is a LiteSpeed 404 on this host while /Login and every other
+  # client route rewrite to spa.php. Force the auth entry points here,
+  # before the existing-file stop, so a panel-protected or case-sensitive
+  # "login" path cannot swallow the SPA shell. /signin used to 301 to /login
+  # and then 404; send it straight to the shell too.
+  RewriteRule ^login/?$ /spa.php [L]
+  RewriteRule ^signin/?$ /spa.php [L]
+  RewriteRule ^sign-in/?$ /spa.php [L]
+  RewriteRule ^log-in/?$ /spa.php [L]
+
   RewriteCond %{REQUEST_FILENAME} -f
   RewriteRule ^ - [L]
 
@@ -86,9 +96,8 @@ Options -Indexes -MultiViews
   RewriteRule ^blog$ /changelog [R=301,L]
   RewriteRule ^blog/ /changelog [R=301,L]
 
-  RewriteRule ^signin$ /login [R=301,L]
-  RewriteRule ^sign-in$ /login [R=301,L]
-  RewriteRule ^log-in$ /login [R=301,L]
+  # Auth aliases now rewrite directly to spa.php above. Keep the rest of the
+  # short-link table.
   RewriteRule ^account$ /login [R=301,L]
   RewriteRule ^credit$ /exchange/dashboard/settings [R=301,L]
   RewriteRule ^credits$ /exchange/dashboard/settings [R=301,L]
