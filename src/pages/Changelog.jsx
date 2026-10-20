@@ -132,7 +132,7 @@ const entries = [
     ],
   },
   {
-    version: "1.17",
+    version: "1.16.1",
     date: "October 2026",
     tag: "Fix",
     items: [
@@ -322,6 +322,7 @@ const entries = [
 const TYPE_COLOR = {
   new: "text-[var(--viz-green)] bg-[var(--viz-green)]/10",
   improved: "text-[var(--viz-cyan)] bg-[var(--viz-cyan)]/10",
+  fixed: "text-warning bg-warning/10",
   fix: "text-warning bg-warning/10",
 };
 
