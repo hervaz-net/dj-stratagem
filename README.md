@@ -78,7 +78,7 @@ Colors are semantic tokens, not literal names — `ink` is the recessed surface,
 (chroma-free, so it never reads as a link), `line` borders, and `amber` the
 accent text. Each Tailwind token in `src/index.css` is declared inside
 `@theme inline` and resolves through a second variable (`--surface`, `--text`,
-`--accent`, …), so `[data-theme="dark"]` swaps the whole palette without
+`--accent`, …), so a dark theme can be re-enabled later without
 touching a single component.
 
 Chromatic tokens have one job each: `amber` is contrast-tuned electric-blue
@@ -86,9 +86,7 @@ text and selected chrome; `brand` is the `#001cf7` identity fill; `cta` is
 coral primary buttons (white-on-cta ≥ 4.5:1); `warning` is watch/caution
 gold; `danger` and `success` are status. CTA is never the same hex as danger.
 
-The theme follows the OS by default and remembers an explicit choice in
-`localStorage` under `djs-theme`. A small inline script in `index.html` applies
-it before first paint so dark-theme visitors never see a white flash.
+The site is light-only. An inline script in `index.html` forces `data-theme="light"` and clears any saved dark choice under `djs-theme` before first paint.
 
 Motion is opt-in via the `lift` class and the `Reveal` component rather than
 blanket `transition: all` rules, and everything collapses under
@@ -173,10 +171,10 @@ domain (create one in cPanel, switch `contact.php` from `mail()` to SMTP).
 
 ## Outstanding
 
-- **Namecheap account is live again.** Re-checked 1 Oct 2026 09:54 PDT:
-  apex `https://djstratageminc.com/` returns 200 (not the suspended CGI).
-  `/api/health.php` and `/api/me.php` return JSON. Do not treat a 302 to
-  `/cgi-sys/suspendedpage.cgi` as current.
+- **Live site healthy.** Re-checked 21 Oct 2026 17:19 PDT:
+  apex returns 200. www 301s to apex. Live bundle `assets/index-ZkvyWzqZ.js` matches GitHub `deploy` tip.
+  `/api/health.php` returns `{"ok":true,"php":"8.1.34"}`. `/api/me.php` returns JSON. No open issues.
+  Do not treat a 302 to `/cgi-sys/suspendedpage.cgi` as current.
 - **Stratagem AI needs its API key and cron job on the server** before
   approved jobs can run. See "Jobs and subagents (Stratagem AI)" below.
 - **cPanel can lag GitHub `deploy`.** On 13 Oct 2026 live matched `main`.
