@@ -16,6 +16,7 @@ const columns = [
       { to: "/projects", label: "Projects" },
       { to: "/supply", label: "Supply Exchange" },
       { to: "/pricing", label: "Pricing" },
+      { to: "/resources", label: "Help center" },
       { to: "/changelog", label: "Changelog" },
     ],
   },
