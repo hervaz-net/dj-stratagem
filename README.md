@@ -78,17 +78,16 @@ Colors are semantic tokens, not literal names — `ink` is the recessed surface,
 (chroma-free, so it never reads as a link), `line` borders, and `amber` the
 accent text. Each Tailwind token in `src/index.css` is declared inside
 `@theme inline` and resolves through a second variable (`--surface`, `--text`,
-`--accent`, …), so `[data-theme="dark"]` swaps the whole palette without
-touching a single component.
+`--accent`, …).
 
 Chromatic tokens have one job each: `amber` is contrast-tuned electric-blue
 text and selected chrome; `brand` is the `#001cf7` identity fill; `cta` is
 coral primary buttons (white-on-cta ≥ 4.5:1); `warning` is watch/caution
 gold; `danger` and `success` are status. CTA is never the same hex as danger.
 
-The theme follows the OS by default and remembers an explicit choice in
-`localStorage` under `djs-theme`. A small inline script in `index.html` applies
-it before first paint so dark-theme visitors never see a white flash.
+The site is light-only. An inline script in `index.html` sets `data-theme="light"`
+before first paint and clears any previously saved dark preference from
+`localStorage`. There is no theme toggle.
 
 Motion is opt-in via the `lift` class and the `Reveal` component rather than
 blanket `transition: all` rules, and everything collapses under
@@ -376,80 +375,4 @@ Set `require_https` to `false` only for local development against
    ```
 
    Fill in the database credentials. It lives outside `public_html` on purpose:
-   nothing there is web-reachable even if PHP breaks, and the deploy's
-   `rsync --delete` can't wipe it. `bootstrap.php` also accepts a `DJS_CONFIG`
-   env var, or `api/config.php` for local development (gitignored).
-
-### Approving an account
-
-Registration emails the address in `admin_email`. Approve or decline at
-**`/dashboard/admin`** — no SQL required.
-
-`status` is `pending` | `active` | `suspended`. Only `active` can sign in;
-suspending takes effect on the user's *next request*, not their next login, so
-a suspended user is cut off mid-session.
-
-An admin cannot suspend their own account — doing so would lock them out of the
-only screen that could undo it.
-
-### Admin control panel (`/admin`)
-
-Admins sign in at `/login` like everyone else and land on **`/admin`**, a
-separate control panel with its own sidebar:
-
-| Screen | What it does |
-|---|---|
-| **Overview** `/admin` | Members and jobs waiting on you, totals, newest sign-ups, jobs and listings |
-| **Members** `/admin/members` | Search everyone who signed up; approve, decline, suspend, reinstate; make or remove admins. Click a name for their jobs and catalog |
-| **Job postings** `/admin/jobs` | Every job by status; approve or reject (a reason is required to reject); open any job's detail |
-| **Catalog** `/admin/catalog` | Every seller's listings; filter by seller or status; create a listing for any active member, edit or delete any listing |
-
-Endpoints (admin only, 403 for anyone else; POSTs need the CSRF header):
-
-| Endpoint | Method | Purpose |
-|---|---|---|
-| `/api/admin-overview.php` | GET | Counts and newest items for the overview |
-| `/api/admin-members.php` | GET `?q=&status=&role=` / `?id=` | Member list with job and listing counts, or one member with their jobs and listings |
-| `/api/admin-members.php` | POST `{action:"status"\|"role", id, ...}` | Approve/suspend/reinstate, make/remove admin. You can't suspend or demote yourself |
-| `/api/admin-catalog.php` | GET `?q=&owner=&status=` | All listings with their seller, plus the seller list |
-| `/api/admin-catalog.php` | POST `{action:"save"\|"delete", ...}` | Create (needs `ownerId`), edit, or delete any listing. Same validation as a seller's own catalog (`catalog-lib.php`) |
-
-`scripts/e2e-admin.py` runs the whole panel in a browser.
-
-### Creating the first admin
-
-The admin screen is gated on `role = 'admin'`, and registration always creates
-`role = 'member'`. Promote the first one by hand, once:
-
-```sql
-UPDATE users SET role = 'admin', status = 'active', approved_at = UTC_TIMESTAMP()
- WHERE email = 'you@example.com';
-```
-
-After that, everything happens in the admin control panel at `/admin`. The **Accounts** item only appears in
-The sidebar for admins, but that is presentation — `admin-users.php` and
-`admin-user-status.php` reject non-admins with 403 regardless of what the
-client renders.
-
-### Security properties
-
-- Passwords hashed with `password_hash()` (bcrypt by default), rehashed on
-  login when the algorithm default moves.
-- **No user enumeration.** Login returns one message for unknown-email and
-  wrong-password, and always runs a hash comparison so response time doesn't
-  differ. Register returns the same response whether or not the address exists.
-- **Throttled** on two axes — failures per email and per IP, default 5 and 20 in
-  a 15-minute window. Only failures count.
-- Session cookie is `HttpOnly`, `SameSite=Lax`, and `Secure` under HTTPS. The ID
-  is regenerated on login to defeat fixation.
-- CSRF token required on every state-changing request.
-- `api/.htaccess` denies direct access to `config.php`, `bootstrap.php`, and
-  `schema.sql`, so a broken PHP handler can't serve credentials as plaintext.
-- DB errors are logged server-side and returned to the client as a generic
-  `server_error` — no driver messages or SQL reach the browser.
-
-### Not built yet
-
-Email verification of the registrant's own address, and "remember me".
-Password reset is self-serve at `/forgot-password` (one-hour, single-use
-links; only a hash of each token is stored).
+   nothing there is web-reachable even if PHP breaks, and the deploy
