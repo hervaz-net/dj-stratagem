@@ -61,11 +61,6 @@ function Footer({ brand }) {
                   Cookie settings
                 </button>
               </li>
-              <li>
-                <button type="button" onClick={openCookieSettings} className="text-fg-muted transition-colors hover:text-fg">
-                  Cookie settings
-                </button>
-              </li>
             </ul>
           </div>
         </div>
@@ -107,7 +102,6 @@ export default function Shell({ brand, children }) {
       <SiteNav app="venture" account={accountLinks(brand)} action={brand.cta} />
       <main id="main">{children}</main>
       <Footer brand={brand} />
-      <CookieConsent />
       <CookieConsent />
     </>
   );
