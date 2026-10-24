@@ -16,4 +16,6 @@ respond([
     'ok'   => true,
     'user' => $user ? public_user($user) : null,
     'csrf' => csrf_token(),
+    // Null until Turnstile is configured; the forms render the check only then.
+    'turnstileSiteKey' => turnstile_site_key(),
 ]);
