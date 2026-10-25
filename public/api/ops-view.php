@@ -55,23 +55,24 @@ function order_row(array $r): array
 function log_activity(string $type, string $text, string $status = 'active'): void
 {
     db()->prepare(
-        'INSERT INTO activity (type, text, status, created_at) VALUES (?,?,?,UTC_TIMESTAMP())'
-    )->execute([$type, $text, $status]);
+        'INSERT INTO activity (type, text, status, created_at, owner_id) VALUES (?,?,?,UTC_TIMESTAMP(),?)'
+    )->execute([$type, $text, $status, ops_owner()]);
 }
 
 function fetch_suppliers(): array
 {
-    $rows = db()->query('SELECT * FROM suppliers ORDER BY risk_score DESC, name ASC')->fetchAll();
+    $rows = db()->query('SELECT * FROM suppliers WHERE ' . owned() . ' ORDER BY risk_score DESC, name ASC')->fetchAll();
     return array_map('supplier_row', $rows);
 }
 
 function compute_metrics(): array
 {
     $pdo = db();
-    $active = (int) $pdo->query("SELECT COUNT(*) FROM suppliers WHERE status = 'active'")->fetchColumn();
-    $atRisk = (int) $pdo->query("SELECT COUNT(*) FROM suppliers WHERE status = 'at-risk'")->fetchColumn();
-    $avg = (float) $pdo->query('SELECT COALESCE(AVG(delivery_rate), 0) FROM suppliers')->fetchColumn();
-    $spend = (float) $pdo->query('SELECT COALESCE(SUM(spend_ytd), 0) FROM suppliers')->fetchColumn();
+    $w = owned();
+    $active = (int) $pdo->query("SELECT COUNT(*) FROM suppliers WHERE status = 'active' AND {$w}")->fetchColumn();
+    $atRisk = (int) $pdo->query("SELECT COUNT(*) FROM suppliers WHERE status = 'at-risk' AND {$w}")->fetchColumn();
+    $avg = (float) $pdo->query("SELECT COALESCE(AVG(delivery_rate), 0) FROM suppliers WHERE {$w}")->fetchColumn();
+    $spend = (float) $pdo->query("SELECT COALESCE(SUM(spend_ytd), 0) FROM suppliers WHERE {$w}")->fetchColumn();
     $spendM = round($spend / 1000000, 2);
 
     return [

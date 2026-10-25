@@ -126,7 +126,7 @@ function ensure_ops_schema(): void
 /** Tables whose rows can be demo seed data. */
 const SEED_TABLES = ['suppliers', 'bids', 'purchase_orders', 'alerts', 'activity', 'market_ticker'];
 
-const OPS_SCHEMA_VERSION = 2;
+const OPS_SCHEMA_VERSION = 3;
 
 function ops_version(): int
 {
@@ -162,8 +162,33 @@ function migrate_ops(): void
             migrate_ops_v2();
             $pdo->exec("REPLACE INTO ops_meta (k, v) VALUES ('schema_version', '2')");
         }
+        if (ops_version() < 3) {
+            migrate_ops_v3();
+            $pdo->exec("REPLACE INTO ops_meta (k, v) VALUES ('schema_version', '3')");
+        }
     } finally {
         $pdo->query("SELECT RELEASE_LOCK('djs_ops_migrate')");
+    }
+}
+
+/**
+ * v3: per-company dashboard data. suppliers, bids, purchase_orders, and
+ * activity were shared by every member, so one company could read and change
+ * another's records. Each row now carries owner_id; queries scope to the
+ * signed-in company plus the shared sample rows. Rows written before v3 have
+ * no known owner, so they stay hidden from members (owner_id NULL) and admins
+ * can review them in the database.
+ */
+function migrate_ops_v3(): void
+{
+    $pdo = db();
+    foreach (['suppliers', 'bids', 'purchase_orders', 'activity'] as $table) {
+        ensure_column($table, 'owner_id', 'owner_id INT UNSIGNED NULL');
+        try {
+            $pdo->exec("ALTER TABLE {$table} ADD INDEX idx_owner (owner_id)");
+        } catch (PDOException $e) {
+            // Index already there.
+        }
     }
 }
 

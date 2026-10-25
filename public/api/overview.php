@@ -14,9 +14,10 @@ ensure_ops_schema();
 $pdo = db();
 $uid = (int) $user['id'];
 
-$activeSuppliers = (int) $pdo->query("SELECT COUNT(*) FROM suppliers WHERE status = 'active'")->fetchColumn();
-$openBids = (int) $pdo->query("SELECT COUNT(*) FROM bids WHERE status IN ('draft','submitted','review')")->fetchColumn();
-$pendingOrders = (int) $pdo->query("SELECT COUNT(*) FROM purchase_orders WHERE status IN ('pending','confirmed','shipped')")->fetchColumn();
+$w = owned();
+$activeSuppliers = (int) $pdo->query("SELECT COUNT(*) FROM suppliers WHERE status = 'active' AND {$w}")->fetchColumn();
+$openBids = (int) $pdo->query("SELECT COUNT(*) FROM bids WHERE status IN ('draft','submitted','review') AND {$w}")->fetchColumn();
+$pendingOrders = (int) $pdo->query("SELECT COUNT(*) FROM purchase_orders WHERE status IN ('pending','confirmed','shipped') AND {$w}")->fetchColumn();
 
 $stmtU = $pdo->prepare(
     'SELECT COUNT(*) FROM alerts a
@@ -35,7 +36,7 @@ $kpis = [
     ['label' => 'Alerts', 'value' => (string) $unread, 'delta' => 'new', 'up' => false, 'danger' => $unread > 0],
 ];
 
-$actRows = $pdo->query('SELECT id, type, text, status, created_at FROM activity ORDER BY created_at DESC LIMIT 8')->fetchAll();
+$actRows = $pdo->query('SELECT id, type, text, status, created_at FROM activity WHERE ' . owned() . ' ORDER BY created_at DESC LIMIT 8')->fetchAll();
 $activity = array_map(static function (array $r): array {
     return [
         'id' => (int) $r['id'],
@@ -48,7 +49,7 @@ $activity = array_map(static function (array $r): array {
 
 $deadRows = $pdo->query(
     "SELECT id, project, due_date FROM bids
-      WHERE status IN ('draft','submitted','review') AND due_date IS NOT NULL
+      WHERE status IN ('draft','submitted','review') AND due_date IS NOT NULL AND {$w}
       ORDER BY due_date ASC LIMIT 5"
 )->fetchAll();
 $today = new DateTimeImmutable('today', new DateTimeZone('UTC'));
@@ -81,7 +82,7 @@ $topAlerts = array_map(static function (array $r): array {
     ];
 }, $alertStmt->fetchAll());
 
-$avgDelivery = (float) $pdo->query('SELECT COALESCE(AVG(delivery_rate), 0) FROM suppliers')->fetchColumn();
+$avgDelivery = (float) $pdo->query("SELECT COALESCE(AVG(delivery_rate), 0) FROM suppliers WHERE {$w}")->fetchColumn();
 $health = (int) round($avgDelivery);
 $trend = seeded_series(910, 15, max(50, $health - 20), 1.4, 4);
 $trend[count($trend) - 1] = (float) $health;

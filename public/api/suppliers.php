@@ -40,9 +40,9 @@ if (mb_strlen($name) > 160 || mb_strlen($category) > 120 || mb_strlen($region) >
 $id = 'sup-' . bin2hex(random_bytes(4));
 $trend = json_encode(seeded_series(random_int(1, 9999), 24, 92, 0.1, 4));
 db()->prepare(
-    'INSERT INTO suppliers (id, name, partner_role, category, region, risk_score, delivery_rate, fill_rate, lead_time_days, status, open_orders, spend_ytd, trend_json, created_at)
-     VALUES (?,?,?,?,?,12,95.0,95.0,3,?,0,0,?,UTC_TIMESTAMP())'
-)->execute([$id, $name, $partnerRole, $category, $region, 'active', $trend]);
+    'INSERT INTO suppliers (id, name, partner_role, category, region, risk_score, delivery_rate, fill_rate, lead_time_days, status, open_orders, spend_ytd, trend_json, created_at, owner_id)
+     VALUES (?,?,?,?,?,12,95.0,95.0,3,?,0,0,?,UTC_TIMESTAMP(),?)'
+)->execute([$id, $name, $partnerRole, $category, $region, 'active', $trend, ops_owner()]);
 
 log_activity('supplier', $name . ' added to your network', 'active');
 

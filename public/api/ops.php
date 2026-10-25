@@ -113,6 +113,35 @@ function seed_day(DateTimeImmutable $today, int $offset): string
     return $today->modify(sprintf('%+d days', $offset))->format('Y-m-d');
 }
 
+/**
+ * Each company sees only its own dashboard rows plus the shared sample rows
+ * (is_seed = 1). Rows written through the API carry the writer's owner_id.
+ * Returns an SQL condition; the id is an int from the session, never input.
+ */
+function ops_owner(): int
+{
+    static $id = null;
+    if ($id === null) {
+        $u = current_user();
+        $id = $u ? (int) $u['id'] : 0;
+    }
+    return $id;
+}
+
+function owned(string $alias = ''): string
+{
+    $p = $alias !== '' ? "{$alias}." : '';
+    $uid = ops_owner();
+    return "({$p}owner_id = {$uid} OR {$p}is_seed = 1)";
+}
+
+/** Rows a company may change: its own only, never the shared samples. */
+function mine(string $alias = ''): string
+{
+    $p = $alias !== '' ? "{$alias}." : '';
+    return "{$p}owner_id = " . ops_owner();
+}
+
 function ensure_column(string $table, string $column, string $definition): void
 {
     static $allowed = [

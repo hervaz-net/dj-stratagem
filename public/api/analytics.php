@@ -23,17 +23,18 @@ $since = (new DateTimeImmutable('now', new DateTimeZone('UTC')))
     ->modify('-' . $days . ' days')
     ->format('Y-m-d');
 
-$awarded = (int) $pdo->query("SELECT COUNT(*) FROM bids WHERE status = 'awarded'")->fetchColumn();
-$lost = (int) $pdo->query("SELECT COUNT(*) FROM bids WHERE status = 'lost'")->fetchColumn();
+$w = owned();
+$awarded = (int) $pdo->query("SELECT COUNT(*) FROM bids WHERE status = 'awarded' AND {$w}")->fetchColumn();
+$lost = (int) $pdo->query("SELECT COUNT(*) FROM bids WHERE status = 'lost' AND {$w}")->fetchColumn();
 $decided = $awarded + $lost;
 $winRate = $decided > 0 ? (int) round(($awarded / $decided) * 100) : 0;
 
-$delivery = (float) $pdo->query('SELECT COALESCE(AVG(delivery_rate), 0) FROM suppliers')->fetchColumn();
-$risk = (float) $pdo->query('SELECT COALESCE(AVG(risk_score), 0) FROM suppliers')->fetchColumn();
+$delivery = (float) $pdo->query("SELECT COALESCE(AVG(delivery_rate), 0) FROM suppliers WHERE {$w}")->fetchColumn();
+$risk = (float) $pdo->query("SELECT COALESCE(AVG(risk_score), 0) FROM suppliers WHERE {$w}")->fetchColumn();
 
 $spendStmt = $pdo->prepare(
     "SELECT COALESCE(SUM(value), 0) FROM purchase_orders
-      WHERE status <> 'cancelled' AND ordered_at >= ?"
+      WHERE status <> 'cancelled' AND ordered_at >= ? AND {$w}"
 );
 $spendStmt->execute([$since]);
 $spend = (float) $spendStmt->fetchColumn();
@@ -68,7 +69,7 @@ $kpis = [
 
 $catStmt = $pdo->prepare(
     "SELECT category, SUM(value) AS total FROM purchase_orders
-      WHERE status <> 'cancelled' AND ordered_at >= ?
+      WHERE status <> 'cancelled' AND ordered_at >= ? AND {$w}
       GROUP BY category ORDER BY total DESC"
 );
 $catStmt->execute([$since]);
@@ -87,7 +88,7 @@ $topStmt = $pdo->prepare(
     "SELECT supplier_name AS name, SUM(value) AS spend, COUNT(*) AS orders,
             AVG(CASE WHEN status = 'delivered' THEN 100 WHEN status = 'cancelled' THEN 70 ELSE 92 END) AS delivery
        FROM purchase_orders
-      WHERE ordered_at >= ?
+      WHERE ordered_at >= ? AND {$w}
       GROUP BY supplier_name
       ORDER BY spend DESC
       LIMIT 5"
