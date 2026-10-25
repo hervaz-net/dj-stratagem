@@ -6,6 +6,14 @@ import Reveal from "../components/Reveal";
 
 const entries = [
   {
+    version: "1.32",
+    date: "October 2026",
+    tag: "Fix",
+    items: [
+      { type: "fixed", text: "Changelog FIXED badges now use the warning color. The type key was fixed, not fix, so the class was undefined." },
+    ],
+  },
+  {
     version: "1.31",
     date: "October 2026",
     tag: "Feature",
@@ -322,6 +330,7 @@ const entries = [
 const TYPE_COLOR = {
   new: "text-[var(--viz-green)] bg-[var(--viz-green)]/10",
   improved: "text-[var(--viz-cyan)] bg-[var(--viz-cyan)]/10",
+  fixed: "text-warning bg-warning/10",
   fix: "text-warning bg-warning/10",
 };
 
@@ -350,7 +359,7 @@ export default function Changelog() {
       <Section className="border-t border-line">
         <div className="max-w-3xl space-y-14">
           {entries.map((entry, i) => (
-            <Reveal key={entry.version} delay={i * 60}>
+            <Reveal key={`${entry.version}-${i}`} delay={i * 60}>
               <div className="flex gap-6 sm:gap-10">
                 <div className="flex flex-col items-center">
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-amber/40 bg-amber/10 text-xs font-semibold text-amber">
@@ -370,7 +379,7 @@ export default function Changelog() {
                   <ul className="mt-5 space-y-3">
                     {entry.items.map((item) => (
                       <li key={item.text} className="flex items-start gap-3">
-                        <span className={`mt-0.5 shrink-0 rounded px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${TYPE_COLOR[item.type]}`}>
+                        <span className={`mt-0.5 shrink-0 rounded px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${TYPE_COLOR[item.type] || ""}`}>
                           {item.type}
                         </span>
                         <p className="text-sm leading-relaxed text-steel">{item.text}</p>
