@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Logo from "./Logo";
-import CompanyGlyph from "./nocturne/CompanyGlyph";
+import CompanyGlyph from "./CompanyGlyph";
 import { openCookieSettings } from "./CookieConsent";
 import { companies } from "../data/companies";
 import { IconMail, IconArrowRight } from "./icons";

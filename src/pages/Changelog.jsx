@@ -1,6 +1,6 @@
 import Section from "../components/Section";
 import CTASection from "../components/CTASection";
-import PageHero from "../components/nocturne/PageHero";
+import PageHero from "../components/PageHero";
 import Seo from "../components/Seo";
 import Reveal from "../components/Reveal";
 

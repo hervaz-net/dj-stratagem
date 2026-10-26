@@ -19,7 +19,7 @@ export default function HeroPanel() {
         aria-hidden="true"
       />
 
-      <div className="glass animate-float relative rounded-2xl p-5">
+      <div className="glass relative rounded-2xl p-5">
         <div className="flex items-center justify-between">
           <div>
             <p className="text-xs uppercase tracking-wider text-steel">Bid comparison</p>

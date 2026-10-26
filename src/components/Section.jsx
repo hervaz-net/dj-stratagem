@@ -1,4 +1,4 @@
-// Nocturne has no ruled section dividers: space and the background carry the
+// Sections have no ruled dividers: space and the background bands carry the
 // rhythm. Border utilities passed by older pages are dropped here.
 const RULES = /\b(border-[tb]|border-y|border-line|border-amber\/\d+)\b/g;
 

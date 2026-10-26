@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Section from "../components/Section";
-import PageHero from "../components/nocturne/PageHero";
+import PageHero from "../components/PageHero";
 import Button from "../components/Button";
 import Seo from "../components/Seo";
 import { IconMap, IconChat, IconClock, IconCheck } from "../components/icons";

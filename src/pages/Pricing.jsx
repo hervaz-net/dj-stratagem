@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Section, { Eyebrow } from "../components/Section";
-import PageHero from "../components/nocturne/PageHero";
+import PageHero from "../components/PageHero";
 import Button from "../components/Button";
 import CTASection from "../components/CTASection";
 import Reveal from "../components/Reveal";

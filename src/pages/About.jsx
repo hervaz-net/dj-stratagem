@@ -1,6 +1,6 @@
 import Section, { Eyebrow } from "../components/Section";
 import CTASection from "../components/CTASection";
-import PageHero from "../components/nocturne/PageHero";
+import PageHero from "../components/PageHero";
 import Reveal from "../components/Reveal";
 import Seo from "../components/Seo";
 import CompetitorList from "../components/CompetitorList";

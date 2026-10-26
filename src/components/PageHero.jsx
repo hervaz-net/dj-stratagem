@@ -1,12 +1,11 @@
 import { useLocation } from "react-router-dom";
-import SubagentMark from "../../shared/SubagentMark";
-import { subagentForPath } from "../../data/subagents";
+import SubagentMark from "../shared/SubagentMark";
+import { subagentForPath } from "../data/subagents";
 
 /**
- * Editorial page opener: a mono index line that draws itself in, an
- * oversized serif title, and the lede set off to the right. A ghosted
- * chapter number drifts behind the title. On a subagent's page its mark
- * leads the index line.
+ * Interior page opener: an eyebrow index line, a bold display title, and
+ * the lede set off to the right. On a subagent's page its mark leads the
+ * index line.
  */
 export default function PageHero({ index, kicker, title, lede, children }) {
   const { pathname } = useLocation();
@@ -17,17 +16,11 @@ export default function PageHero({ index, kicker, title, lede, children }) {
         <div className="rise-in flex items-center gap-4">
           {subagent && <SubagentMark id={subagent.key} size={40} />}
           <span className="mono-label text-cta">{index}</span>
-          <span className="h-px w-16 origin-left animate-[rise-in_1.2s_ease-out_both] bg-line" aria-hidden="true" />
+          <span className="h-px w-16 origin-left rise-in bg-line" aria-hidden="true" />
           <span className="mono-label text-steel">{kicker}</span>
         </div>
-        <span
-          aria-hidden="true"
-          className="bob pointer-events-none absolute -right-6 top-6 hidden select-none font-display text-[18rem] italic leading-none text-paper/[0.04] lg:block"
-        >
-          {index}
-        </span>
         <h1
-          className="rise-in relative mt-8 max-w-6xl text-balance text-[3.2rem] leading-[0.92] text-paper sm:text-7xl lg:text-[7.5rem]"
+          className="rise-in mt-6 max-w-4xl text-balance text-4xl leading-[1.1] text-fg md:text-5xl"
           style={{ animationDelay: "90ms" }}
         >
           {title}

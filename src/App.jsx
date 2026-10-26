@@ -6,7 +6,6 @@ import BackToTop from "./components/BackToTop";
 import CookieConsent from "./components/CookieConsent";
 import ReadingProgress from "./components/ReadingProgress";
 import CommandPalette from "./components/CommandPalette";
-import Atmosphere from "./components/nocturne/Atmosphere";
 import Home from "./pages/Home";
 import Pricing from "./pages/Pricing";
 import About from "./pages/About";
@@ -102,10 +101,9 @@ function MarketingLayout({ children }) {
 
   return (
     <div className="relative isolate flex min-h-screen flex-col">
-      <Atmosphere />
       <SkipLink />
       <SiteNav app="parent" account={account} onOpenPalette={openPalette} />
-      <main id="main" className="flex-1">
+      <main id="main" className="site-main flex-1">
         {children}
       </main>
       <Footer />
