@@ -55,7 +55,7 @@ export function SubagentCTA({
   secondary = { href: "/contact", label: "Talk to our team" },
 }) {
   return (
-    <Section>
+    <Section className="no-print">
       <div className="relative overflow-hidden rounded-3xl bg-bid-navy px-8 py-14 text-center md:px-16 md:py-20">
         <div
           aria-hidden="true"

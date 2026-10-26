@@ -1,13 +1,15 @@
 import { Link, useParams } from "react-router-dom";
 import Section from "../../exchange/components/Section";
 import Button from "../../exchange/components/Button";
-import { IconCheck, IconArrowRight, IconArrowLeft, IconMapPin } from "../../exchange/components/icons";
+import { IconCheck, IconArrowRight, IconArrowLeft, IconMapPin, IconDownload, IconPrinter } from "../../exchange/components/icons";
 import Sym from "../../shared/Symbol";
 import SampleListingsNotice from "../../components/SampleListingsNotice";
-import { findProject, formatDue, slugify } from "../../data/sampleProjects";
+import { projects, findProject, formatDue, slugify } from "../../data/sampleProjects";
 import { SubagentHero, SubagentCTA, useSeo, card } from "../parts";
 import { MatchRing } from "./projectParts";
 import SubagentNotFound from "./SubagentNotFound";
+import SaveButton from "../../components/projects/SaveButton";
+import { downloadFile, summaryText } from "../../components/projects/utils";
 
 /** Days between now and the sample date, floored at zero. */
 function daysUntil(iso) {
@@ -30,6 +32,16 @@ export default function ProjectDetail({ brand }) {
 
   const days = daysUntil(project.bidDue);
 
+  // Related: same trade or same city (both ranks first), never the project itself.
+  const both = (o) => o.trade === project.trade && o.city === project.city;
+  const related = projects
+    .filter((o) => o.slug !== project.slug && (o.trade === project.trade || o.city === project.city))
+    .sort((a, b) => Number(both(b)) - Number(both(a)) || b.match - a.match)
+    .slice(0, 4);
+
+  const downloadSummary = () =>
+    downloadFile(`project-summary-${project.slug}.txt`, summaryText(project), "text/plain;charset=utf-8");
+
   return (
     <>
       <SubagentHero
@@ -51,6 +63,15 @@ export default function ProjectDetail({ brand }) {
               <span>{project.trade}</span>
             </p>
             <SampleListingsNotice className="mt-5 max-w-xl text-fg-muted" />
+            <div className="no-print mt-6 flex flex-wrap items-center gap-3">
+              <SaveButton project={project} full />
+              <Button type="button" variant="secondary" onClick={downloadSummary}>
+                <IconDownload width={16} height={16} aria-hidden="true" /> Download summary
+              </Button>
+              <Button type="button" variant="secondary" onClick={() => window.print()}>
+                <IconPrinter width={16} height={16} aria-hidden="true" /> Print
+              </Button>
+            </div>
           </>
         }
       />
@@ -114,7 +135,7 @@ export default function ProjectDetail({ brand }) {
             </div>
           </div>
 
-          <aside className="space-y-4 lg:sticky lg:top-24">
+          <aside className="no-print space-y-4 lg:sticky lg:top-24">
             <div className={`${card} p-6 shadow-[var(--panel-shadow)]`}>
               <p className="text-xs font-semibold uppercase tracking-wider text-fg-muted">Company fit</p>
               <div className="mt-3 flex items-center gap-4">
@@ -148,6 +169,33 @@ export default function ProjectDetail({ brand }) {
           </aside>
         </div>
       </Section>
+
+      {related.length > 0 && (
+        <Section className="no-print">
+          <h2 className="text-lg font-semibold text-fg">Related projects</h2>
+          <p className="mt-1 text-sm text-fg-muted">
+            Other sample listings in {project.trade.toLowerCase()} or in {project.city}.
+          </p>
+          <ul className="mt-6 grid grid-cols-1 gap-3 md:grid-cols-2">
+            {related.map((r) => (
+              <li key={r.slug}>
+                <Link
+                  to={`/projects/${r.slug}`}
+                  className={`${card} group flex items-center gap-4 p-4 transition-colors hover:border-brand`}
+                >
+                  <MatchRing value={r.match} size={44} />
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-sm font-semibold text-fg group-hover:text-brand">{r.title}</span>
+                    <span className="block truncate text-xs text-fg-muted">
+                      {r.trade} · {r.city} · {r.valueLabel}
+                    </span>
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </Section>
+      )}
 
       <SubagentCTA
         brand={brand}

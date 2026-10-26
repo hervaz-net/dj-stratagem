@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import Section from "../components/Section";
 import PageHero from "../components/PageHero";
 import Button from "../components/Button";
@@ -7,6 +8,57 @@ import { IconMap, IconChat, IconClock, IconCheck } from "../components/icons";
 
 const roleOptions = ["General Contractor", "Subcontractor", "Supplier", "Engineer", "Other"];
 const MESSAGE_MAX = 1000;
+
+// Values match the keys in public/contact.php $topics. Resource links use
+// ?topic=partnership, which maps to the relay's `partner` key.
+const TOPICS = [
+  {
+    key: "demo",
+    label: "Request a demo",
+    button: "Request a demo",
+    prompt: "What are you looking to solve?",
+    placeholder: "Tell us about your current bidding, procurement, or coordination process.",
+    done: "Someone from our team will follow up shortly to schedule time.",
+    note: "We\u2019ll only use your details to follow up about a demo.",
+  },
+  {
+    key: "support",
+    label: "Product support",
+    button: "Send to support",
+    prompt: "What do you need help with?",
+    placeholder: "What you were doing, what you expected, and what happened instead.",
+    done: "Our team will reply to your email within one business day.",
+    note: "We\u2019ll only use your details to reply to this request.",
+  },
+  {
+    key: "partner",
+    label: "Partnership",
+    button: "Send message",
+    prompt: "What would you like to explore together?",
+    placeholder: "Who you are, what you offer, and how you see us working together.",
+    done: "Someone from our team will review this and reply within one business day.",
+    note: "We\u2019ll only use your details to reply about a partnership.",
+  },
+  {
+    key: "careers",
+    label: "Careers",
+    button: "Send message",
+    prompt: "Tell us about yourself",
+    placeholder: "Your background and the kind of role you\u2019re looking for.",
+    done: "Thanks for reaching out. We\u2019ll reply by email.",
+    note: "We\u2019ll only use your details to reply about careers.",
+  },
+  {
+    key: "other",
+    label: "Something else",
+    button: "Send message",
+    prompt: "How can we help?",
+    placeholder: "Tell us what\u2019s on your mind.",
+    done: "Our team will reply to your email within one business day.",
+    note: "We\u2019ll only use your details to reply to this message.",
+  },
+];
+const TOPIC_ALIASES = { partnership: "partner", sales: "demo" };
 // Must match public/contact.php $limits. A longer paste used to 422 with a
 // generic "something went wrong" and no field to fix.
 const LIMITS = { name: 120, company: 160, email: 254, phone: 40, message: MESSAGE_MAX };
@@ -40,6 +92,23 @@ function validate(values) {
 const EMPTY = { name: "", company: "", email: "", phone: "", message: "" };
 
 export default function Contact() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const rawTopic = (searchParams.get("topic") ?? "").toLowerCase();
+  const topicKey = TOPIC_ALIASES[rawTopic] ?? rawTopic;
+  // The URL is the single source of truth so resource-page links, the select,
+  // and a refreshed tab all agree.
+  const topic = TOPICS.find((t) => t.key === topicKey) ?? TOPICS[0];
+  const setTopic = (key) =>
+    setSearchParams(
+      (prev) => {
+        const next = new URLSearchParams(prev);
+        if (key === TOPICS[0].key) next.delete("topic");
+        else next.set("topic", key);
+        return next;
+      },
+      { replace: true },
+    );
+
   const [submitted, setSubmitted] = useState(false);
   const [role, setRole] = useState(roleOptions[0]);
   const [values, setValues] = useState(EMPTY);
@@ -160,6 +229,13 @@ export default function Contact() {
                 </div>
               </div>
             ))}
+            <p className="text-sm text-steel">
+              Looking for a quick answer? Try the{" "}
+              <Link to="/resources" className="font-semibold text-paper underline-offset-4 hover:underline">
+                help center
+              </Link>
+              .
+            </p>
           </div>
 
           <div className="slab p-6 sm:p-8">
@@ -169,9 +245,7 @@ export default function Contact() {
                   <IconCheck width={22} height={22} />
                 </div>
                 <h2 className="text-xl font-semibold text-paper">Thanks &mdash; message received.</h2>
-                <p className="text-sm text-steel">
-                  Someone from our team will follow up shortly to schedule time.
-                </p>
+                <p className="text-sm text-steel">{topic.done}</p>
                 <Button variant="secondary" onClick={() => setSubmitted(false)}>
                   Send another message
                 </Button>
@@ -236,6 +310,25 @@ export default function Contact() {
                 </div>
 
                 <div>
+                  <label className="mb-2 block text-sm font-medium text-paper" htmlFor="topic">
+                    Topic
+                  </label>
+                  <select
+                    id="topic"
+                    name="topic"
+                    value={topic.key}
+                    onChange={(e) => setTopic(e.target.value)}
+                    className={`${inputClass} border-line`}
+                  >
+                    {TOPICS.map((t) => (
+                      <option key={t.key} value={t.key}>
+                        {t.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
                   <label className="mb-2 block text-sm font-medium text-paper" htmlFor="role">
                     Role
                   </label>
@@ -257,7 +350,7 @@ export default function Contact() {
                 <div>
                   <div className="mb-2 flex items-baseline justify-between gap-3">
                     <label className="block text-sm font-medium text-paper" htmlFor="message">
-                      What are you looking to solve?
+                      {topic.prompt}
                     </label>
                     <span className="text-xs tabular-nums text-steel">
                       {values.message.length}/{MESSAGE_MAX}
@@ -271,7 +364,7 @@ export default function Contact() {
                     value={values.message}
                     onChange={setField("message")}
                     className={`${inputClass} resize-none border-line`}
-                    placeholder="Tell us about your current bidding, procurement, or coordination process."
+                    placeholder={topic.placeholder}
                     aria-invalid={errors.message ? true : undefined}
                     aria-describedby={errors.message ? "message-error" : undefined}
                   />
@@ -291,12 +384,10 @@ export default function Contact() {
                 </div>
 
                 <Button type="submit" variant="primary" className="w-full" disabled={submitting}>
-                  {submitting ? "Sending…" : "Request a demo"}
+                  {submitting ? "Sending…" : topic.button}
                 </Button>
 
-                <p className="text-center text-xs text-steel">
-                  We&rsquo;ll only use your details to follow up about a demo.
-                </p>
+                <p className="text-center text-xs text-steel">{topic.note}</p>
               </form>
             )}
           </div>

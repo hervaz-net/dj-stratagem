@@ -10,6 +10,7 @@ import Home from "./pages/Home";
 import Pricing from "./pages/Pricing";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
+import Resources from "./pages/Resources";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ForgotPassword from "./pages/ForgotPassword";
@@ -180,7 +181,11 @@ function App() {
           <Route path="/admin/catalog" element={<AdminGate><AdminCatalog /></AdminGate>} />
           <Route path="/admin/*" element={<Navigate to="/admin" replace />} />
           <Route path="/bids" element={<Navigate to="/projects" replace />} />
-          <Route path="/resources" element={<Navigate to="/changelog" replace />} />
+          <Route path="/resources" element={<MarketingLayout><Resources /></MarketingLayout>} />
+          <Route path="/help" element={<Navigate to="/resources" replace />} />
+          <Route path="/faq" element={<Navigate to="/resources" replace />} />
+          <Route path="/faqs" element={<Navigate to="/resources" replace />} />
+          <Route path="/support" element={<Navigate to="/resources" replace />} />
           <Route path="/profile" element={<Navigate to="/dashboard/settings" replace />} />
           <Route path="/settings" element={<Navigate to="/dashboard/settings" replace />} />
           <Route path="/forgot-password" element={<MarketingLayout><ForgotPassword /></MarketingLayout>} />
