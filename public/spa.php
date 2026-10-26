@@ -76,6 +76,7 @@ function meta_for(string $path, array $projects, string $parent, string $exchang
         '/pricing' => page('Pricing', 'Starter, Professional, Growth, and Enterprise plans for contractors — plus add-ons. Start on the free Starter plan, then request access to paid tiers.', $parent),
         '/about' => page('About', 'D&J Stratagem, Inc. builds the platform where contractors win work, market their business, manage relationships, and grow revenue.', $parent),
         '/contact' => page('Contact', 'Request a demo of D&J Stratagem. Tell us how your team bids, procures, and coordinates today, and we will show you where the platform fits.', $parent),
+        '/resources' => page('Help center', 'Answers on bidding, projects, Supply Exchange, accounts, and pricing, plus ways to reach the D&J Stratagem team.', $parent),
         '/changelog' => page('Changelog', 'Every release, improvement, and fix on the D&J Stratagem platform, newest first.', $parent),
         '/privacy' => page('Privacy Policy', 'How D&J Stratagem, Inc. collects, uses, and shares information on djstratageminc.com, Stratagem Exchange, and the other Stratagem services.', $parent),
         '/terms' => page('Terms and Conditions', 'Terms for the websites, applications, and services of D&J Stratagem, Inc., including Stratagem Exchange.', $parent),
