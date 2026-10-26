@@ -11,8 +11,8 @@ function GlowToggle({ active, onClick, children, dotColor }) {
       aria-pressed={active}
       className={`lift inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-semibold transition-colors ${
         active
-          ? "border-amber/60 bg-amber/12 text-amber"
-          : "border-line bg-ink/50 text-steel hover:border-amber/35 hover:text-paper"
+          ? "border-brand/60 bg-brand/12 text-brand"
+          : "border-line bg-canvas/50 text-fg-muted hover:border-brand/35 hover:text-fg"
       }`}
       style={
         active
@@ -73,7 +73,7 @@ export default function FilterBar({
       {/* Feature 5: saved filter presets strip */}
       {presets?.length > 0 && (
         <div className="mb-4 flex flex-wrap items-center gap-2">
-          <span className="text-xs font-semibold uppercase tracking-wider text-steel">
+          <span className="text-xs font-semibold uppercase tracking-wider text-fg-muted">
             Presets
           </span>
           {presets.map((p) => (
@@ -84,7 +84,7 @@ export default function FilterBar({
               <button
                 type="button"
                 onClick={() => onLoadPreset?.(p)}
-                className="rounded-l-full px-3 py-1 text-xs font-medium text-paper hover:text-amber"
+                className="rounded-l-full px-3 py-1 text-xs font-medium text-fg hover:text-brand"
               >
                 {p.name}
               </button>
@@ -92,7 +92,7 @@ export default function FilterBar({
                 type="button"
                 onClick={() => onDeletePreset?.(p.name)}
                 aria-label={`Delete preset ${p.name}`}
-                className="rounded-r-full px-2 py-1 text-steel opacity-0 transition-opacity group-hover:opacity-100 hover:text-danger"
+                className="rounded-r-full px-2 py-1 text-fg-muted opacity-0 transition-opacity group-hover:opacity-100 hover:text-danger"
               >
                 ×
               </button>
@@ -105,7 +105,7 @@ export default function FilterBar({
         <div>
           <label
             htmlFor="supplier-search"
-            className="mb-3 block text-xs font-semibold uppercase tracking-wider text-steel"
+            className="mb-3 block text-xs font-semibold uppercase tracking-wider text-fg-muted"
           >
             Search
           </label>
@@ -116,7 +116,7 @@ export default function FilterBar({
             value={query}
             onChange={(e) => onQueryChange(e.target.value)}
             placeholder="Supplier, category, or region"
-            className="w-full rounded-lg border border-line bg-ink px-3.5 py-2.5 text-sm text-paper outline-hidden transition-colors placeholder:text-steel/70 focus:border-amber"
+            className="w-full rounded-lg border border-line bg-canvas px-3.5 py-2.5 text-sm text-fg outline-hidden transition-colors placeholder:text-fg-muted/70 focus:border-brand"
           />
 
           <div className="mt-4 flex flex-wrap gap-2">
@@ -155,8 +155,8 @@ export default function FilterBar({
       </div>
 
       <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4">
-        <p className="text-xs text-steel" aria-live="polite">
-          Showing <span className="font-semibold text-paper">{resultCount}</span> of {totalCount}{" "}
+        <p className="text-xs text-fg-muted" aria-live="polite">
+          Showing <span className="font-semibold text-fg">{resultCount}</span> of {totalCount}{" "}
           suppliers
         </p>
 
@@ -170,9 +170,9 @@ export default function FilterBar({
                 onChange={(e) => setSavingName(e.target.value)}
                 placeholder="Preset name"
                 autoFocus
-                className="w-32 rounded-md border border-line bg-ink px-2.5 py-1 text-xs text-paper outline-hidden focus:border-amber"
+                className="w-32 rounded-md border border-line bg-canvas px-2.5 py-1 text-xs text-fg outline-hidden focus:border-brand"
               />
-              <button type="submit" className="text-xs font-semibold text-amber hover:text-amber-2">
+              <button type="submit" className="text-xs font-semibold text-brand hover:text-brand-hover">
                 Save
               </button>
               <button
@@ -181,7 +181,7 @@ export default function FilterBar({
                   setShowSaveInput(false);
                   setSavingName("");
                 }}
-                className="text-xs text-steel hover:text-paper"
+                className="text-xs text-fg-muted hover:text-fg"
               >
                 Cancel
               </button>
@@ -190,7 +190,7 @@ export default function FilterBar({
             <button
               type="button"
               onClick={() => setShowSaveInput(true)}
-              className="flex items-center gap-1.5 text-xs font-semibold text-steel transition-colors hover:text-paper"
+              className="flex items-center gap-1.5 text-xs font-semibold text-fg-muted transition-colors hover:text-fg"
             >
               <IconBookmark width={13} height={13} />
               Save preset
@@ -201,7 +201,7 @@ export default function FilterBar({
           <button
             type="button"
             onClick={onExport}
-            className="flex items-center gap-1.5 text-xs font-semibold text-steel transition-colors hover:text-paper"
+            className="flex items-center gap-1.5 text-xs font-semibold text-fg-muted transition-colors hover:text-fg"
           >
             <IconDownload width={13} height={13} />
             Export CSV
@@ -210,7 +210,7 @@ export default function FilterBar({
           <button
             type="button"
             onClick={onReset}
-            className="text-xs font-semibold text-amber transition-colors hover:text-amber-2"
+            className="text-xs font-semibold text-brand transition-colors hover:text-brand-hover"
           >
             Reset filters
           </button>

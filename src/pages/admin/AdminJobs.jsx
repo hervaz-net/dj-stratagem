@@ -98,12 +98,12 @@ export default function AdminJobs() {
           <Panel key={job.id} as="article" className="p-5" aria-labelledby={`job-${job.id}`}>
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div className="min-w-0">
-                <p className="font-mono text-xs text-steel">{job.ref} · posted {formatWhen(job.createdAt)}</p>
-                <h2 id={`job-${job.id}`} className="mt-0.5 text-base font-semibold text-paper">
+                <p className="font-mono text-xs text-fg-muted">{job.ref} · posted {formatWhen(job.createdAt)}</p>
+                <h2 id={`job-${job.id}`} className="mt-0.5 text-base font-semibold text-fg">
                   <button type="button" onClick={() => setParam("open", String(job.id))} className="text-left hover:underline">{job.title}</button>
                 </h2>
-                <p className="text-sm text-steel">
-                  <Link to={`/admin/members/${job.owner.id}`} className="font-medium text-paper hover:underline">{job.owner.name}</Link>
+                <p className="text-sm text-fg-muted">
+                  <Link to={`/admin/members/${job.owner.id}`} className="font-medium text-fg hover:underline">{job.owner.name}</Link>
                   {job.owner.company && ` · ${job.owner.company}`}
                   {job.location && ` · ${job.location}`}
                   {job.trade && ` · ${job.trade}`}
@@ -118,19 +118,19 @@ export default function AdminJobs() {
 
             <ul className="mt-3 flex flex-wrap gap-1.5" aria-label="Subagents">
               {job.subagents.map((k) => (
-                <li key={k} className="inline-flex items-center gap-1.5 rounded-full border border-line py-1 pl-1 pr-2.5 text-xs font-semibold text-paper">
+                <li key={k} className="inline-flex items-center gap-1.5 rounded-full border border-line py-1 pl-1 pr-2.5 text-xs font-semibold text-fg">
                   <SubagentMark id={k} size={18} />
                   {NAME[k] ?? k}
                 </li>
               ))}
             </ul>
-            {job.notes && <p className="mt-2 line-clamp-3 whitespace-pre-line text-sm text-paper">{job.notes}</p>}
-            {job.decisionNote && <p className="mt-2 text-sm text-steel">Decision note: {job.decisionNote}</p>}
+            {job.notes && <p className="mt-2 line-clamp-3 whitespace-pre-line text-sm text-fg">{job.notes}</p>}
+            {job.decisionNote && <p className="mt-2 text-sm text-fg-muted">Decision note: {job.decisionNote}</p>}
 
             {job.status === "pending_approval" && (
               <div className="mt-4 flex flex-wrap items-end gap-3 border-t border-line pt-4">
                 <label className="min-w-[16rem] flex-1">
-                  <span className="text-xs font-medium text-steel">Note to the member (required to reject)</span>
+                  <span className="text-xs font-medium text-fg-muted">Note to the member (required to reject)</span>
                   <input
                     id={`note-${job.id}`}
                     value={notes[job.id] ?? ""}
@@ -153,7 +153,7 @@ export default function AdminJobs() {
 
       {!jobs.length && (
         <Panel className="mt-5 px-6 py-14 text-center">
-          <p className="text-sm text-steel">
+          <p className="text-sm text-fg-muted">
             {loading ? "Loading…" : status === "pending_approval" ? "Nothing is waiting for approval." : "No jobs match."}
           </p>
         </Panel>

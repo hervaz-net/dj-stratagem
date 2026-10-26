@@ -44,20 +44,20 @@ export default function ResetPassword() {
           </Link>
           {!token ? (
             <>
-              <h1 className="mt-8 text-paper text-5xl leading-[0.95] md:text-7xl">Link incomplete</h1>
-              <p className="mt-3 text-sm text-steel">This reset link is missing its code. Open the link from the email again, or request a new one.</p>
-              <Link to="/forgot-password" className="mt-6 inline-block text-sm font-medium text-amber hover:text-amber-2">Request a new link →</Link>
+              <h1 className="mt-8 text-fg text-5xl leading-[0.95] md:text-7xl">Link incomplete</h1>
+              <p className="mt-3 text-sm text-fg-muted">This reset link is missing its code. Open the link from the email again, or request a new one.</p>
+              <Link to="/forgot-password" className="mt-6 inline-block text-sm font-medium text-brand hover:text-brand-hover">Request a new link →</Link>
             </>
           ) : done ? (
             <>
-              <h1 className="mt-8 text-paper text-5xl leading-[0.95] md:text-7xl">Password updated</h1>
-              <p className="mt-3 text-sm text-steel" role="status">Sign in with your new password.</p>
-              <Link to="/login" className="mt-6 inline-block text-sm font-medium text-amber hover:text-amber-2">Sign in →</Link>
+              <h1 className="mt-8 text-fg text-5xl leading-[0.95] md:text-7xl">Password updated</h1>
+              <p className="mt-3 text-sm text-fg-muted" role="status">Sign in with your new password.</p>
+              <Link to="/login" className="mt-6 inline-block text-sm font-medium text-brand hover:text-brand-hover">Sign in →</Link>
             </>
           ) : (
             <>
-              <h1 className="mt-8 text-paper text-5xl leading-[0.95] md:text-7xl">Choose a new password</h1>
-              <p className="mt-2 text-sm text-steel">At least 12 characters, and not your email or company name.</p>
+              <h1 className="mt-8 text-fg text-5xl leading-[0.95] md:text-7xl">Choose a new password</h1>
+              <p className="mt-2 text-sm text-fg-muted">At least 12 characters, and not your email or company name.</p>
               <form onSubmit={submit} className="mt-8 space-y-4" noValidate>
                 <PasswordField id="new-password" label="New password" value={password} onChange={setPassword} autoComplete="new-password" />
                 <PasswordField id="confirm-password" label="Confirm new password" value={confirm} onChange={setConfirm} autoComplete="new-password" />

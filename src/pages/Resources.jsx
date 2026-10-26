@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import Section, { Eyebrow } from "../components/Section";
-import PageHero from "../components/nocturne/PageHero";
+import PageHero from "../components/PageHero";
 import Button from "../components/Button";
 import CTASection from "../components/CTASection";
 import FeatureCard from "../components/FeatureCard";
@@ -94,7 +94,7 @@ export default function Resources() {
 
       <Section id="faq" className="scroll-mt-24">
         <Eyebrow>FAQ</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-paper text-5xl leading-[1] md:text-6xl">
+        <h2 className="text-balance max-w-2xl text-fg text-5xl leading-[1] md:text-6xl">
           Frequently asked questions.
         </h2>
 
@@ -113,10 +113,10 @@ export default function Resources() {
             <FaqList items={visible} terms={terms} />
           ) : (
             <div className="slab p-8 text-center md:p-12">
-              <p className="font-display text-3xl text-paper">
+              <p className="font-display text-3xl text-fg">
                 No answers match{trimmed ? ` “${trimmed}”` : " that filter"}.
               </p>
-              <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-steel">
+              <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-fg-muted">
                 Try a shorter search, clear the category, or ask us directly and a person will reply.
               </p>
               <div className="mt-6 flex flex-col items-center justify-center gap-4 sm:flex-row">
@@ -132,7 +132,7 @@ export default function Resources() {
 
       <Section>
         <Eyebrow>Quick links</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-paper text-5xl leading-[1] md:text-6xl">
+        <h2 className="text-balance max-w-2xl text-fg text-5xl leading-[1] md:text-6xl">
           Jump straight to it.
         </h2>
         <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -141,13 +141,13 @@ export default function Resources() {
             const body = (
               <>
                 <span className="min-w-0">
-                  <span className="block text-base font-semibold text-paper">{l.title}</span>
-                  <span className="mt-1 block text-sm leading-relaxed text-steel">{l.text}</span>
+                  <span className="block text-base font-semibold text-fg">{l.title}</span>
+                  <span className="mt-1 block text-sm leading-relaxed text-fg-muted">{l.text}</span>
                 </span>
                 <IconArrowRight
                   width={18}
                   height={18}
-                  className="shrink-0 text-cta transition-transform duration-300 group-hover:translate-x-1"
+                  className="shrink-0 text-brand transition-transform duration-300 group-hover:translate-x-1"
                 />
               </>
             );
@@ -166,10 +166,10 @@ export default function Resources() {
 
       <Section>
         <Eyebrow>Still need help?</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-paper text-5xl leading-[1] md:text-6xl">
+        <h2 className="text-balance max-w-2xl text-fg text-5xl leading-[1] md:text-6xl">
           Talk to a person.
         </h2>
-        <p className="mt-5 max-w-xl text-base leading-relaxed text-steel">
+        <p className="mt-5 max-w-xl text-base leading-relaxed text-fg-muted">
           We reply within one business day. Pick the closest match so your note reaches the right
           person first.
         </p>

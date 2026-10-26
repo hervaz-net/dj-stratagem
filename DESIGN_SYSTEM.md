@@ -47,8 +47,9 @@ Every color is a CSS variable with light and dark values (`src/index.css`).
 | Status | `success`, `warning`, `danger` (+ `-soft`) |
 | Always-dark band (CTA) | `bg-bid-navy` with `text-white` |
 
-Legacy class names (`ink`, `paper`, `steel`, `amber`, `cta`, `bid-*`) are
-aliases kept only so unmigrated code renders. Don't use them in new code.
+All tokens live in `src/shared/tokens.css`, which every site (Exchange, the
+venture sites and the parent site) imports. The old Nocturne class names
+(`ink`, `paper`, `steel`, `amber`, `cta`, `bid-blue`, `bid-orange`) are gone.
 
 **Role colors are fixed across the whole product.** Supplier is green,
 distributor is blue, contractor is orange. Use `<RoleBadge role="…" />`

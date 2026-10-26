@@ -36,7 +36,7 @@ function SideLinks({ onNavigate }) {
           onClick={onNavigate}
           className={({ isActive }) =>
             `flex min-h-11 items-center gap-3 rounded-xl px-3 text-[0.95rem] font-medium transition-colors ${
-              isActive ? "bg-[#111311] text-white" : "text-steel hover:bg-black/[0.04] hover:text-paper"
+              isActive ? "bg-[#111311] text-white" : "text-fg-muted hover:bg-black/[0.04] hover:text-fg"
             }`
           }
         >
@@ -57,7 +57,7 @@ export function AdminGate({ children }) {
   const { pathname, search } = useLocation();
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center text-sm text-steel" role="status">Checking your session…</div>
+      <div className="flex min-h-screen items-center justify-center text-sm text-fg-muted" role="status">Checking your session…</div>
     );
   }
   if (!user) return <Navigate to="/login" replace state={{ from: pathname + search }} />;
@@ -73,12 +73,12 @@ export default function AdminLayout({ title, subtitle, actions, children }) {
 
   const footer = (
     <div className="space-y-2 border-t border-line pt-4 text-sm">
-      <p className="truncate font-semibold text-paper">{user.name || user.email}</p>
-      <p className="truncate text-xs text-steel">{user.email} · Admin</p>
+      <p className="truncate font-semibold text-fg">{user.name || user.email}</p>
+      <p className="truncate text-xs text-fg-muted">{user.email} · Admin</p>
       <div className="flex flex-wrap gap-x-4 gap-y-1 pt-1">
-        <Link to="/dashboard/overview" className="font-medium text-steel hover:text-paper">My dashboard</Link>
-        <Link to="/" className="font-medium text-steel hover:text-paper">View site</Link>
-        <button type="button" onClick={logout} className="font-medium text-steel hover:text-danger">Sign out</button>
+        <Link to="/dashboard/overview" className="font-medium text-fg-muted hover:text-fg">My dashboard</Link>
+        <Link to="/" className="font-medium text-fg-muted hover:text-fg">View site</Link>
+        <button type="button" onClick={logout} className="font-medium text-fg-muted hover:text-danger">Sign out</button>
       </div>
     </div>
   );
@@ -86,8 +86,8 @@ export default function AdminLayout({ title, subtitle, actions, children }) {
   const brand = (
     <Link to="/admin" className="flex items-center gap-2.5" aria-label="Admin control panel home">
       <StratagemMark />
-      <span className="text-[1.05rem] font-bold tracking-tight text-paper">
-        Stratagem AI <span className="font-semibold text-steel">/ Admin</span>
+      <span className="text-[1.05rem] font-bold tracking-tight text-fg">
+        Stratagem AI <span className="font-semibold text-fg-muted">/ Admin</span>
       </span>
     </Link>
   );
@@ -111,7 +111,7 @@ export default function AdminLayout({ title, subtitle, actions, children }) {
           onClick={() => setOpen((v) => !v)}
           aria-expanded={open}
           aria-controls="admin-menu"
-          className="flex h-10 w-10 items-center justify-center rounded-full border border-line text-paper"
+          className="flex h-10 w-10 items-center justify-center rounded-full border border-line text-fg"
           aria-label={open ? "Close menu" : "Open menu"}
         >
           <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" aria-hidden="true">
@@ -130,9 +130,9 @@ export default function AdminLayout({ title, subtitle, actions, children }) {
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-10 lg:py-10">
           <header className="mb-8 flex flex-wrap items-end justify-between gap-4">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.12em] text-steel">Admin control panel</p>
-              <h1 className="mt-1 text-3xl font-bold tracking-tight text-paper">{title}</h1>
-              {subtitle && <p className="mt-1.5 max-w-2xl text-steel">{subtitle}</p>}
+              <p className="text-xs font-semibold uppercase tracking-[0.12em] text-fg-muted">Admin control panel</p>
+              <h1 className="mt-1 text-3xl font-bold tracking-tight text-fg">{title}</h1>
+              {subtitle && <p className="mt-1.5 max-w-2xl text-fg-muted">{subtitle}</p>}
             </div>
             {actions && <div className="flex flex-wrap gap-2">{actions}</div>}
           </header>
@@ -154,7 +154,7 @@ export function Panel({ as: Tag = "section", className = "", children, ...rest }
 
 export function Pill({ tone = "neutral", children }) {
   const tones = {
-    neutral: "bg-black/[0.05] text-paper",
+    neutral: "bg-black/[0.05] text-fg",
     warning: "bg-warning/12 text-warning",
     success: "bg-success/12 text-success",
     danger: "bg-danger/10 text-danger",
@@ -175,7 +175,7 @@ export function Tabs({ value, onChange, options, label }) {
           aria-selected={value === key}
           onClick={() => onChange(key)}
           className={`inline-flex min-h-10 items-center gap-2 rounded-full border px-4 text-sm font-semibold transition-colors ${
-            value === key ? "border-[#111311] bg-[#111311] text-white" : "border-line bg-white text-steel hover:text-paper"
+            value === key ? "border-[#111311] bg-[#111311] text-white" : "border-line bg-white text-fg-muted hover:text-fg"
           }`}
         >
           {text}

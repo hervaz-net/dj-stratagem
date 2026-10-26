@@ -6,7 +6,6 @@ import BackToTop from "./components/BackToTop";
 import CookieConsent from "./components/CookieConsent";
 import ReadingProgress from "./components/ReadingProgress";
 import CommandPalette from "./components/CommandPalette";
-import Atmosphere from "./components/nocturne/Atmosphere";
 import Home from "./pages/Home";
 import Pricing from "./pages/Pricing";
 import About from "./pages/About";
@@ -70,7 +69,7 @@ function ScrollToTop() {
 const SkipLink = () => (
   <a
     href="#main"
-    className="sr-only rounded-lg bg-ink-2 px-4 py-2 text-sm font-semibold text-paper shadow-lg focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60]"
+    className="sr-only rounded-lg bg-surface px-4 py-2 text-sm font-semibold text-fg shadow-lg focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60]"
   >
     Skip to content
   </a>
@@ -103,10 +102,9 @@ function MarketingLayout({ children }) {
 
   return (
     <div className="relative isolate flex min-h-screen flex-col">
-      <Atmosphere />
       <SkipLink />
       <SiteNav app="parent" account={account} onOpenPalette={openPalette} />
-      <main id="main" className="flex-1">
+      <main id="main" className="site-main flex-1">
         {children}
       </main>
       <Footer />

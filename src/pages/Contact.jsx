@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import Section from "../components/Section";
-import PageHero from "../components/nocturne/PageHero";
+import PageHero from "../components/PageHero";
 import Button from "../components/Button";
 import Seo from "../components/Seo";
 import { IconMap, IconChat, IconClock, IconCheck } from "../components/icons";
@@ -64,8 +64,8 @@ const TOPIC_ALIASES = { partnership: "partner", sales: "demo" };
 const LIMITS = { name: 120, company: 160, email: 254, phone: 40, message: MESSAGE_MAX };
 
 const inputClass =
-  "w-full rounded-md border bg-ink px-3.5 py-2.5 text-sm text-paper outline-hidden transition-colors " +
-  "placeholder:text-steel/70 focus:border-amber";
+  "w-full rounded-md border bg-canvas px-3.5 py-2.5 text-sm text-fg outline-hidden transition-colors " +
+  "placeholder:text-fg-muted/70 focus:border-brand";
 
 function validate(values) {
   const errors = {};
@@ -211,27 +211,27 @@ export default function Contact() {
               },
             ].map((item) => (
               <div key={item.title} className="flex items-start gap-4">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-amber/10 text-amber">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-brand/10 text-brand">
                   {item.icon}
                 </div>
                 <div>
                   {item.href ? (
                     <a
                       href={item.href}
-                      className="text-sm font-semibold text-paper transition-colors hover:text-amber"
+                      className="text-sm font-semibold text-fg transition-colors hover:text-brand"
                     >
                       {item.title}
                     </a>
                   ) : (
-                    <p className="text-sm font-semibold text-paper">{item.title}</p>
+                    <p className="text-sm font-semibold text-fg">{item.title}</p>
                   )}
-                  <p className="mt-1 text-sm text-steel">{item.detail}</p>
+                  <p className="mt-1 text-sm text-fg-muted">{item.detail}</p>
                 </div>
               </div>
             ))}
-            <p className="text-sm text-steel">
+            <p className="text-sm text-fg-muted">
               Looking for a quick answer? Try the{" "}
-              <Link to="/resources" className="font-semibold text-paper underline-offset-4 hover:underline">
+              <Link to="/resources" className="font-semibold text-fg underline-offset-4 hover:underline">
                 help center
               </Link>
               .
@@ -244,8 +244,8 @@ export default function Contact() {
                 <div className="flex h-12 w-12 items-center justify-center rounded-full bg-success/10 text-success">
                   <IconCheck width={22} height={22} />
                 </div>
-                <h2 className="text-xl font-semibold text-paper">Thanks &mdash; message received.</h2>
-                <p className="text-sm text-steel">{topic.done}</p>
+                <h2 className="text-xl font-semibold text-fg">Thanks &mdash; message received.</h2>
+                <p className="text-sm text-fg-muted">{topic.done}</p>
                 <Button variant="secondary" onClick={() => setSubmitted(false)}>
                   Send another message
                 </Button>
@@ -310,7 +310,7 @@ export default function Contact() {
                 </div>
 
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-paper" htmlFor="topic">
+                  <label className="mb-2 block text-sm font-medium text-fg" htmlFor="topic">
                     Topic
                   </label>
                   <select
@@ -329,7 +329,7 @@ export default function Contact() {
                 </div>
 
                 <div>
-                  <label className="mb-2 block text-sm font-medium text-paper" htmlFor="role">
+                  <label className="mb-2 block text-sm font-medium text-fg" htmlFor="role">
                     Role
                   </label>
                   <select
@@ -349,10 +349,10 @@ export default function Contact() {
 
                 <div>
                   <div className="mb-2 flex items-baseline justify-between gap-3">
-                    <label className="block text-sm font-medium text-paper" htmlFor="message">
+                    <label className="block text-sm font-medium text-fg" htmlFor="message">
                       {topic.prompt}
                     </label>
-                    <span className="text-xs tabular-nums text-steel">
+                    <span className="text-xs tabular-nums text-fg-muted">
                       {values.message.length}/{MESSAGE_MAX}
                     </span>
                   </div>
@@ -387,7 +387,7 @@ export default function Contact() {
                   {submitting ? "Sending…" : topic.button}
                 </Button>
 
-                <p className="text-center text-xs text-steel">{topic.note}</p>
+                <p className="text-center text-xs text-fg-muted">{topic.note}</p>
               </form>
             )}
           </div>
@@ -401,10 +401,10 @@ function Field({ label, name, type = "text", required, error, ...rest }) {
   const errorId = `${name}-error`;
   return (
     <div>
-      <label className="mb-2 block text-sm font-medium text-paper" htmlFor={name}>
+      <label className="mb-2 block text-sm font-medium text-fg" htmlFor={name}>
         {label}
         {required && (
-          <span className="ml-1 text-amber" aria-hidden="true">
+          <span className="ml-1 text-brand" aria-hidden="true">
             *
           </span>
         )}

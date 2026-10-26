@@ -1,6 +1,6 @@
 import Section from "../components/Section";
 import CTASection from "../components/CTASection";
-import PageHero from "../components/nocturne/PageHero";
+import PageHero from "../components/PageHero";
 import Seo from "../components/Seo";
 import Reveal from "../components/Reveal";
 
@@ -327,7 +327,7 @@ const TYPE_COLOR = {
 
 const TAG_COLOR = {
   Major: "bg-brand/15 text-brand border-brand/30",
-  Feature: "bg-amber/10 text-amber border-amber/30",
+  Feature: "bg-brand/10 text-brand border-brand/30",
   Foundation: "bg-[var(--viz-cyan)]/10 text-[var(--viz-cyan)] border-[var(--viz-cyan)]/30",
   Launch: "bg-[var(--viz-green)]/10 text-[var(--viz-green)] border-[var(--viz-green)]/30",
   Fix: "bg-warning/10 text-warning border-warning/30",
@@ -353,7 +353,7 @@ export default function Changelog() {
             <Reveal key={entry.version} delay={i * 60}>
               <div className="flex gap-6 sm:gap-10">
                 <div className="flex flex-col items-center">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-amber/40 bg-amber/10 text-xs font-semibold text-amber">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-brand/40 bg-brand/10 text-xs font-semibold text-brand">
                     {entry.version}
                   </div>
                   {i < entries.length - 1 && (
@@ -362,7 +362,7 @@ export default function Changelog() {
                 </div>
                 <div className="min-w-0 flex-1 pb-8">
                   <div className="flex flex-wrap items-center gap-3">
-                    <time className="text-sm font-semibold text-paper">{entry.date}</time>
+                    <time className="text-sm font-semibold text-fg">{entry.date}</time>
                     <span className={`rounded-full border px-2.5 py-0.5 text-xs font-medium ${TAG_COLOR[entry.tag]}`}>
                       {entry.tag}
                     </span>
@@ -373,7 +373,7 @@ export default function Changelog() {
                         <span className={`mt-0.5 shrink-0 rounded px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${TYPE_COLOR[item.type]}`}>
                           {item.type}
                         </span>
-                        <p className="text-sm leading-relaxed text-steel">{item.text}</p>
+                        <p className="text-sm leading-relaxed text-fg-muted">{item.text}</p>
                       </li>
                     ))}
                   </ul>

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Logo from "./Logo";
-import CompanyGlyph from "./nocturne/CompanyGlyph";
+import CompanyGlyph from "./CompanyGlyph";
 import { openCookieSettings } from "./CookieConsent";
 import { companies } from "../data/companies";
 import { IconMail, IconArrowRight } from "./icons";
@@ -100,7 +100,7 @@ function Newsletter() {
 
   if (done) {
     return (
-      <p className="mt-4 text-sm leading-relaxed text-steel">
+      <p className="mt-4 text-sm leading-relaxed text-fg-muted">
         Thanks. We received the address and will write when notes go out. A public list is not live yet.
       </p>
     );
@@ -113,7 +113,7 @@ function Newsletter() {
       </label>
       <div className="flex gap-2">
         <div className="relative flex-1">
-          <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-steel/60">
+          <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-fg-muted/60">
             <IconMail width={14} height={14} />
           </span>
           <input
@@ -125,14 +125,14 @@ function Newsletter() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@example.com"
-            className="chamfer-sm w-full bg-glass pl-9 pr-3 py-2.5 text-sm text-paper outline-hidden transition-colors placeholder:text-steel/60 focus:bg-ink-3"
+            className="chamfer-sm w-full bg-surface pl-9 pr-3 py-2.5 text-sm text-fg outline-hidden transition-colors placeholder:text-fg-muted/60 focus:bg-subtle"
           />
         </div>
         <button
           type="submit"
           disabled={sending}
           aria-label="Request market updates"
-          className="chamfer-sm flex shrink-0 items-center gap-1 bg-cta px-3.5 py-2.5 text-xs font-semibold text-white hover:bg-cta-hover disabled:opacity-60"
+          className="chamfer-sm flex shrink-0 items-center gap-1 bg-brand px-3.5 py-2.5 text-xs font-semibold text-white hover:bg-brand-hover disabled:opacity-60"
         >
           <IconArrowRight width={13} height={13} />
         </button>
@@ -157,9 +157,9 @@ export default function Footer() {
       <div className="marquee py-6" aria-hidden="true">
         <div className="marquee-track gap-10">
           {[...phrases, ...phrases].map((p, i) => (
-            <span key={i} className="flex shrink-0 items-center gap-10 font-display text-4xl italic text-paper/80 md:text-6xl">
+            <span key={i} className="flex shrink-0 items-center gap-10 font-display text-4xl italic text-fg/80 md:text-6xl">
               {p}
-              <span className="h-2 w-2 rounded-full bg-cta" />
+              <span className="h-2 w-2 rounded-full bg-brand" />
             </span>
           ))}
         </div>
@@ -168,8 +168,8 @@ export default function Footer() {
       <div className="mx-auto max-w-7xl px-6 pt-10">
         <div className="grid gap-14 lg:grid-cols-[0.9fr_1.5fr]">
           <div>
-            <p className="mono-label text-steel">Stay in the loop</p>
-            <p className="mt-4 max-w-md font-display text-3xl leading-tight text-paper md:text-4xl">
+            <p className="mono-label text-fg-muted">Stay in the loop</p>
+            <p className="mt-4 max-w-md font-display text-3xl leading-tight text-fg md:text-4xl">
               Market notes for builders, <em>now and then.</em>
             </p>
             <div className="max-w-md">
@@ -179,12 +179,12 @@ export default function Footer() {
           <div className="grid grid-cols-2 gap-10 sm:grid-cols-3 xl:grid-cols-5">
             {columns.map((col) => (
               <div key={col.heading}>
-                <h4 className="mono-label text-steel">{col.heading}</h4>
+                <h4 className="mono-label text-fg-muted">{col.heading}</h4>
                 <ul className="mt-4 space-y-2.5 text-sm">
                   {col.links.map((l) => (
                     // Keyed by label: several Solutions entries share one route.
                     <li key={l.label}>
-                      <Link to={l.to} reloadDocument={l.reloadDocument} className="draw-link text-paper/85 hover:text-paper">
+                      <Link to={l.to} reloadDocument={l.reloadDocument} className="draw-link text-fg/85 hover:text-fg">
                         {l.label}
                       </Link>
                     </li>
@@ -197,7 +197,7 @@ export default function Footer() {
 
         {/* Every company, one click away. Each runs its own site. */}
         <div className="mt-16">
-          <p className="mono-label text-steel">Companies</p>
+          <p className="mono-label text-fg-muted">Companies</p>
           <ul className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
             {companies.map((c) => (
               <li key={c.slug}>
@@ -208,11 +208,11 @@ export default function Footer() {
                 >
                   <span className="flex items-center justify-between">
                     <CompanyGlyph glyph={c.glyph} accent={c.accent} size={40} />
-                    <IconArrowRight width={16} height={16} className="text-steel transition-transform duration-300 group-hover:translate-x-1 group-hover:text-paper" />
+                    <IconArrowRight width={16} height={16} className="text-fg-muted transition-transform duration-300 group-hover:translate-x-1 group-hover:text-fg" />
                   </span>
                   <span>
-                    <span className="block text-base font-bold tracking-tight text-paper">{c.name}</span>
-                    <span className="mt-1 block text-sm leading-snug text-steel">{c.tagline}</span>
+                    <span className="block text-base font-bold tracking-tight text-fg">{c.name}</span>
+                    <span className="mt-1 block text-sm leading-snug text-fg-muted">{c.tagline}</span>
                   </span>
                 </a>
               </li>
@@ -222,18 +222,18 @@ export default function Footer() {
 
         <div className="mt-16 flex flex-wrap items-end justify-between gap-6">
           <Logo />
-          <p className="flex flex-col gap-1 text-sm text-steel sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-2 sm:gap-y-1">
-            <a href="mailto:hello@djstratageminc.com" className="draw-link text-paper">hello@djstratageminc.com</a>
-            <span className="hidden text-steel/50 sm:inline" aria-hidden="true">·</span>
+          <p className="flex flex-col gap-1 text-sm text-fg-muted sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-2 sm:gap-y-1">
+            <a href="mailto:hello@djstratageminc.com" className="draw-link text-fg">hello@djstratageminc.com</a>
+            <span className="hidden text-fg-muted/50 sm:inline" aria-hidden="true">·</span>
             <span>Los Angeles, California</span>
           </p>
         </div>
         <div className="dotline mt-6" />
-        <div className="flex flex-col justify-between gap-2 py-6 text-xs text-steel md:flex-row">
+        <div className="flex flex-col justify-between gap-2 py-6 text-xs text-fg-muted md:flex-row">
           <p>
             &copy; {new Date().getFullYear()} D&amp;J Stratagem, Inc.
-            <span className="mx-2 text-steel/50">·</span>
-            <button type="button" onClick={openCookieSettings} className="draw-link hover:text-paper">
+            <span className="mx-2 text-fg-muted/50">·</span>
+            <button type="button" onClick={openCookieSettings} className="draw-link hover:text-fg">
               Cookie settings
             </button>
           </p>
@@ -244,7 +244,7 @@ export default function Footer() {
       {/* Oversized wordmark that bleeds off the bottom edge. */}
       <p
         aria-hidden="true"
-        className="pointer-events-none select-none whitespace-nowrap px-4 text-center -mb-[5vw] font-display text-[19vw] italic leading-[0.75] text-paper/[0.06]"
+        className="pointer-events-none select-none whitespace-nowrap px-4 text-center -mb-[5vw] font-display text-[19vw] italic leading-[0.75] text-fg/[0.06]"
       >
         Stratagem
       </p>

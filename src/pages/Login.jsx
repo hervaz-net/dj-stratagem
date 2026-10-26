@@ -105,8 +105,8 @@ export default function Login() {
   };
 
   const inputClass =
-    "w-full rounded-md border border-line bg-ink px-4 py-2.5 text-sm text-paper outline-hidden " +
-    "transition-colors placeholder:text-steel/60 focus:border-amber";
+    "w-full rounded-md border border-line bg-canvas px-4 py-2.5 text-sm text-fg outline-hidden " +
+    "transition-colors placeholder:text-fg-muted/60 focus:border-brand";
 
   return (
     <>
@@ -119,7 +119,7 @@ export default function Login() {
         footer={
           <>
             New to Stratagem?{" "}
-            <Link to="/register" className="font-medium text-violet hover:underline">
+            <Link to="/register" className="font-medium text-brand hover:underline">
               Create an account
             </Link>
             <span className="mt-3 block font-mono text-[11px] uppercase tracking-[0.14em]">
@@ -130,7 +130,7 @@ export default function Login() {
       >
           <form onSubmit={handleSubmit} className="mt-7 space-y-4" noValidate>
             <div>
-              <label htmlFor="email" className="mb-2 block text-sm font-medium text-paper">
+              <label htmlFor="email" className="mb-2 block text-sm font-medium text-fg">
                 Email address
               </label>
               <input
@@ -160,7 +160,7 @@ export default function Login() {
             />
 
             <div className="flex items-center justify-between">
-              <label className="flex items-center gap-2 text-sm text-steel">
+              <label className="flex items-center gap-2 text-sm text-fg-muted">
                 <input
                   type="checkbox"
                   checked={rememberMe}
@@ -171,11 +171,11 @@ export default function Login() {
                     // the stored address in place after an unchecked failed attempt.
                     writeRememberedEmail(on ? email : "");
                   }}
-                  className="h-3.5 w-3.5 accent-amber"
+                  className="h-3.5 w-3.5 accent-brand"
                 />
                 Remember my email
               </label>
-              <Link to="/forgot-password" className="text-sm font-medium text-amber hover:text-amber-2">
+              <Link to="/forgot-password" className="text-sm font-medium text-brand hover:text-brand-hover">
                 Forgot password?
               </Link>
             </div>

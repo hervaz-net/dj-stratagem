@@ -12,11 +12,9 @@ export default function CTASection({
   return (
     <Section className="overflow-hidden">
       <div className="relative text-center">
-        <span aria-hidden="true" className="bob absolute left-[8%] top-0 hidden h-16 w-16 rounded-full bg-cta/30 blur-2xl md:block" />
-        <span aria-hidden="true" className="bob absolute bottom-0 right-[10%] hidden h-24 w-24 rounded-full bg-brand/30 blur-2xl md:block" style={{ animationDelay: "-3s" }} />
-        <p className="mono-label text-steel">Next step</p>
-        <h2 className="mx-auto mt-6 max-w-4xl text-balance text-5xl text-paper md:text-7xl lg:text-8xl">{title}</h2>
-        <p className="mx-auto mt-6 max-w-xl text-lg text-steel">{subtitle}</p>
+        <p className="mono-label text-fg-muted">Next step</p>
+        <h2 className="mx-auto mt-6 max-w-4xl text-balance text-5xl text-fg md:text-7xl lg:text-8xl">{title}</h2>
+        <p className="mx-auto mt-6 max-w-xl text-lg text-fg-muted">{subtitle}</p>
         <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
           <Button to={primaryTo} variant="primary" size="lg">
             {primaryLabel} <span aria-hidden="true" className="transition-transform group-hover/btn:translate-x-1">→</span>

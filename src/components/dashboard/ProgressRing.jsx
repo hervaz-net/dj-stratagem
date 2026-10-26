@@ -62,7 +62,7 @@ export default function ProgressRing({
           fill="none"
           stroke="currentColor"
           strokeWidth={thickness}
-          className="text-steel/20"
+          className="text-fg-muted/20"
         />
         <circle
           cx={size / 2}
@@ -77,7 +77,7 @@ export default function ProgressRing({
           style={{ transition: "stroke-dashoffset 900ms cubic-bezier(0.16,1,0.3,1)" }}
         />
       </svg>
-      <span className="absolute text-xs font-semibold tabular-nums text-paper">
+      <span className="absolute text-xs font-semibold tabular-nums text-fg">
         {Math.round(target)}%
       </span>
     </div>

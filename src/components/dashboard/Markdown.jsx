@@ -16,7 +16,7 @@ function inline(text, keyBase) {
     const k = `${keyBase}-${i++}`;
     if (m[2] || m[3]) out.push(<strong key={k} className="font-semibold">{m[2] || m[3]}</strong>);
     else if (m[4]) out.push(<em key={k}>{m[4]}</em>);
-    else out.push(<code key={k} className="rounded bg-ink-3 px-1 py-0.5 font-mono text-[12px]">{m[5]}</code>);
+    else out.push(<code key={k} className="rounded bg-subtle px-1 py-0.5 font-mono text-[12px]">{m[5]}</code>);
     last = re.lastIndex;
   }
   if (last < text.length) out.push(text.slice(last));
@@ -44,7 +44,7 @@ export default function Markdown({ text }) {
       i++;
       while (i < lines.length && !lines[i].trim().startsWith("```")) body.push(lines[i++]);
       i++;
-      blocks.push(<pre key={k} className="overflow-x-auto rounded-md bg-ink-3 p-3 font-mono text-[12px]">{body.join("\n")}</pre>);
+      blocks.push(<pre key={k} className="overflow-x-auto rounded-md bg-subtle p-3 font-mono text-[12px]">{body.join("\n")}</pre>);
       continue;
     }
 
@@ -52,7 +52,7 @@ export default function Markdown({ text }) {
     if (h) {
       const level = h[1].length;
       const cls = level <= 2 ? "mt-4 text-[15px] font-bold" : "mt-3 text-sm font-semibold";
-      blocks.push(<p key={k} className={`${cls} text-paper first:mt-0`} role="heading" aria-level={Math.min(level + 3, 6)}>{inline(h[2], k)}</p>);
+      blocks.push(<p key={k} className={`${cls} text-fg first:mt-0`} role="heading" aria-level={Math.min(level + 3, 6)}>{inline(h[2], k)}</p>);
       i++;
       continue;
     }
@@ -72,7 +72,7 @@ export default function Markdown({ text }) {
         <div key={k} className="my-2 overflow-x-auto">
           <table className="w-full border-collapse text-left text-[12.5px]">
             <thead>
-              <tr>{head.map((c, j) => <th key={j} className="border-b border-line px-2 py-1.5 font-semibold text-paper">{inline(c, `${k}h${j}`)}</th>)}</tr>
+              <tr>{head.map((c, j) => <th key={j} className="border-b border-line px-2 py-1.5 font-semibold text-fg">{inline(c, `${k}h${j}`)}</th>)}</tr>
             </thead>
             <tbody>
               {rows.map((r, ri) => (
@@ -108,7 +108,7 @@ export default function Markdown({ text }) {
     if (line.startsWith(">")) {
       const quote = [];
       while (i < lines.length && lines[i].startsWith(">")) quote.push(lines[i++].replace(/^>\s?/, ""));
-      blocks.push(<blockquote key={k} className="my-2 border-l-2 border-line pl-3 text-steel">{inline(quote.join(" "), k)}</blockquote>);
+      blocks.push(<blockquote key={k} className="my-2 border-l-2 border-line pl-3 text-fg-muted">{inline(quote.join(" "), k)}</blockquote>);
       continue;
     }
 
@@ -121,5 +121,5 @@ export default function Markdown({ text }) {
     blocks.push(<p key={k} className="my-2">{inline(para.join(" "), k)}</p>);
   }
 
-  return <div className="break-words text-[13px] leading-relaxed text-paper">{blocks}</div>;
+  return <div className="break-words text-[13px] leading-relaxed text-fg">{blocks}</div>;
 }

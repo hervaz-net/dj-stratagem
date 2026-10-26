@@ -89,13 +89,13 @@ export default function Jobs() {
                 <div className="flex items-center justify-between gap-2">
                   <span className="flex min-w-0 items-center gap-2">
                     <SubagentMark id={a.key} size={22} />
-                    <span className="truncate text-sm font-semibold text-paper">{a.name}</span>
+                    <span className="truncate text-sm font-semibold text-fg">{a.name}</span>
                   </span>
                   <StatusDot status={STATE_DOT[a.state]} size={8} pulse={a.state === "running"} />
                 </div>
                 <div className="mt-1.5"><StageChip stage={a.stage} /></div>
-                <p className="mt-2 text-xs tabular-nums text-steel">
-                  <span className="font-semibold text-paper">{a.queue.running}</span> working
+                <p className="mt-2 text-xs tabular-nums text-fg-muted">
+                  <span className="font-semibold text-fg">{a.queue.running}</span> working
                   {a.queue.blocked > 0 && <span className="text-danger"> · {a.queue.blocked} blocked</span>}
                   <span> · {a.queue.queued} waiting</span>
                 </p>
@@ -117,17 +117,17 @@ export default function Jobs() {
                 onClick={() => setFilter(key)}
                 aria-pressed={active}
                 className={`lift inline-flex min-h-11 items-center gap-2 rounded-full border px-4 py-2 text-xs font-semibold ${
-                  active ? "border-amber/60 bg-amber/12 text-amber" : "border-line bg-ink/50 text-steel hover:border-amber/35 hover:text-paper"
+                  active ? "border-brand/60 bg-brand/12 text-brand" : "border-line bg-canvas/50 text-fg-muted hover:border-brand/35 hover:text-fg"
                 }`}
               >
                 {key === "all" ? "All" : JOB_STATUS_LABEL[key]}
-                {count !== undefined && <span className="rounded-full bg-ink px-1.5 py-0.5 tabular-nums">{count}</span>}
+                {count !== undefined && <span className="rounded-full bg-canvas px-1.5 py-0.5 tabular-nums">{count}</span>}
               </button>
             );
           })}
           {isAdmin && (
-            <label className="ml-auto inline-flex min-h-11 items-center gap-2 text-xs font-semibold text-steel">
-              <input type="checkbox" checked={scope === "all"} onChange={(e) => setScope(e.target.checked ? "all" : "mine")} className="accent-amber" />
+            <label className="ml-auto inline-flex min-h-11 items-center gap-2 text-xs font-semibold text-fg-muted">
+              <input type="checkbox" checked={scope === "all"} onChange={(e) => setScope(e.target.checked ? "all" : "mine")} className="accent-brand" />
               Everyone's jobs
             </label>
           )}
@@ -144,17 +144,17 @@ export default function Jobs() {
               <thead>
                 <tr className="border-b border-line">
                   {["Job", "Status", "Subagents", "Value", "Updated"].map((h) => (
-                    <th key={h} scope="col" className="px-4 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-steel">{h}</th>
+                    <th key={h} scope="col" className="px-4 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-fg-muted">{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 {list.map((j) => (
-                  <tr key={j.id} className="border-b border-line/60 transition-colors last:border-0 hover:bg-ink-3/60">
+                  <tr key={j.id} className="border-b border-line/60 transition-colors last:border-0 hover:bg-subtle/60">
                     <th scope="row" className="px-4 py-3.5 text-left font-normal">
                       <button type="button" onClick={() => setOpenId(j.id)} className="min-h-11 text-left">
-                        <span className="block font-semibold text-paper hover:text-amber">{j.title}</span>
-                        <span className="block text-xs text-steel">
+                        <span className="block font-semibold text-fg hover:text-brand">{j.title}</span>
+                        <span className="block text-xs text-fg-muted">
                           <span className="font-mono">{j.ref}</span>
                           {j.location && ` · ${j.location}`}
                           {isAdmin && scope === "all" && ` · ${j.owner.company}`}
@@ -163,8 +163,8 @@ export default function Jobs() {
                     </th>
                     <td className="px-4 py-3.5"><JobStatusBadge status={j.status} /></td>
                     <td className="px-4 py-3.5"><ProgressBar done={j.progress.done} total={j.progress.total} label={`${j.title} progress`} /></td>
-                    <td className="px-4 py-3.5 tabular-nums text-paper">{formatValue(j.value)}</td>
-                    <td className="px-4 py-3.5 text-steel">{formatWhen(j.updatedAt)}</td>
+                    <td className="px-4 py-3.5 tabular-nums text-fg">{formatValue(j.value)}</td>
+                    <td className="px-4 py-3.5 text-fg-muted">{formatWhen(j.updatedAt)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -172,11 +172,11 @@ export default function Jobs() {
           </div>
           {!list.length && (
             <div className="px-6 py-14 text-center">
-              <p className="text-sm font-medium text-paper">
+              <p className="text-sm font-medium text-fg">
                 {jobs.loading ? "Loading jobs…" : filter === "all" ? "No jobs yet." : `No ${JOB_STATUS_LABEL[filter].toLowerCase()} jobs.`}
               </p>
               {!jobs.loading && filter === "all" && (
-                <p className="mt-1 text-sm text-steel">Create one with New job. It goes to an administrator for approval first.</p>
+                <p className="mt-1 text-sm text-fg-muted">Create one with New job. It goes to an administrator for approval first.</p>
               )}
             </div>
           )}

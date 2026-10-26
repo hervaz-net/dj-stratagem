@@ -12,12 +12,12 @@ function BarRow({ label, pct, value }) {
   return (
     <div>
       <div className="mb-1.5 flex items-center justify-between text-xs">
-        <span className="text-steel">{label}</span>
-        <span className="tabular-nums text-paper">{value} <span className="text-steel/60">({pct}%)</span></span>
+        <span className="text-fg-muted">{label}</span>
+        <span className="tabular-nums text-fg">{value} <span className="text-fg-muted/60">({pct}%)</span></span>
       </div>
       <div className="h-2 overflow-hidden rounded-full bg-line">
         <div
-          className="h-full rounded-full bg-gradient-to-r from-brand to-cta transition-all duration-700"
+          className="h-full rounded-full bg-gradient-to-r from-brand to-brand transition-all duration-700"
           style={{ width: `${pct}%` }}
           role="presentation"
         />
@@ -79,7 +79,7 @@ export default function Analytics() {
                 onClick={() => setRange(r)}
                 aria-pressed={range === r}
                 className={`px-3 py-1.5 text-xs font-semibold transition-colors ${
-                  range === r ? "bg-amber/15 text-amber" : "text-steel hover:text-paper"
+                  range === r ? "bg-brand/15 text-brand" : "text-fg-muted hover:text-fg"
                 }`}
               >
                 {r}
@@ -89,8 +89,8 @@ export default function Analytics() {
         }
       >
         {!isConfigured && (
-          <GlassCard className="mb-6 px-5 py-3 text-sm text-steel">
-            <span className="font-semibold uppercase tracking-wider text-amber">Sample data</span>
+          <GlassCard className="mb-6 px-5 py-3 text-sm text-fg-muted">
+            <span className="font-semibold uppercase tracking-wider text-brand">Sample data</span>
             {" "}— live analytics load from `/api/analytics.php`.
           </GlassCard>
         )}
@@ -102,13 +102,13 @@ export default function Analytics() {
               <GlassCard key={k.label} className="p-5">
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
-                    <p className="text-xs font-semibold uppercase tracking-wider text-steel">{k.label}</p>
-                    <p className="mt-2 text-3xl font-semibold tracking-tight tabular-nums text-paper">{kd.value}</p>
+                    <p className="text-xs font-semibold uppercase tracking-wider text-fg-muted">{k.label}</p>
+                    <p className="mt-2 text-3xl font-semibold tracking-tight tabular-nums text-fg">{kd.value}</p>
                     <p className="mt-1 text-xs font-medium text-[var(--viz-green)]">
                       {kd.delta} vs last period
                     </p>
-                    <p className="mt-0.5 text-xs text-steel/60">
-                      MoM: <span className="text-steel">{mom[i]}</span>
+                    <p className="mt-0.5 text-xs text-fg-muted/60">
+                      MoM: <span className="text-fg-muted">{mom[i]}</span>
                     </p>
                   </div>
                   <ProgressRing value={kd.ring} accent={k.accent} size={52} label={`${k.label}: ${kd.ring}%`} />
@@ -123,9 +123,9 @@ export default function Analytics() {
 
         <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
           <GlassCard className="p-6">
-            <h2 className="text-xs font-semibold uppercase tracking-wider text-steel">Spend by category</h2>
-            <p className="mt-0.5 text-2xl font-semibold text-paper">{d.spend?.value}</p>
-            <p className="text-xs text-steel">{RANGE_LABELS[range]} total</p>
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-fg-muted">Spend by category</h2>
+            <p className="mt-0.5 text-2xl font-semibold text-fg">{d.spend?.value}</p>
+            <p className="text-xs text-fg-muted">{RANGE_LABELS[range]} total</p>
             <div className="mt-6 space-y-4">
               {spendByCategory.map((c) => (
                 <BarRow key={c.label} label={c.label} pct={c.pct} value={c.value} />
@@ -135,13 +135,13 @@ export default function Analytics() {
 
           <GlassCard className="overflow-hidden">
             <div className="border-b border-line px-5 py-3.5">
-              <h2 className="text-xs font-semibold uppercase tracking-wider text-steel">Top suppliers by spend</h2>
+              <h2 className="text-xs font-semibold uppercase tracking-wider text-fg-muted">Top suppliers by spend</h2>
             </div>
             <table className="w-full border-collapse text-sm">
               <thead>
                 <tr className="border-b border-line">
                   {["Supplier", "Spend", "Orders", "On-time"].map((h) => (
-                    <th key={h} scope="col" className={`px-4 py-2.5 text-xs font-semibold uppercase tracking-wider text-steel ${h === "Supplier" ? "text-left" : "text-right"}`}>
+                    <th key={h} scope="col" className={`px-4 py-2.5 text-xs font-semibold uppercase tracking-wider text-fg-muted ${h === "Supplier" ? "text-left" : "text-right"}`}>
                       {h}
                     </th>
                   ))}
@@ -152,12 +152,12 @@ export default function Analytics() {
                   <tr key={s.name} className="border-b border-line/60 last:border-0">
                     <th scope="row" className="px-4 py-3 text-left font-normal">
                       <div className="flex items-center gap-2">
-                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-amber/10 text-xs font-semibold text-amber">{i + 1}</span>
-                        <span className="text-sm text-paper">{s.name}</span>
+                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand/10 text-xs font-semibold text-brand">{i + 1}</span>
+                        <span className="text-sm text-fg">{s.name}</span>
                       </div>
                     </th>
-                    <td className="px-4 py-3 text-right tabular-nums text-paper">{s.spend}</td>
-                    <td className="px-4 py-3 text-right tabular-nums text-steel">{s.orders}</td>
+                    <td className="px-4 py-3 text-right tabular-nums text-fg">{s.spend}</td>
+                    <td className="px-4 py-3 text-right tabular-nums text-fg-muted">{s.orders}</td>
                     <td className="px-4 py-3 text-right tabular-nums">
                       <span className={parseInt(s.delivery, 10) >= 95 ? "text-[var(--viz-green)]" : parseInt(s.delivery, 10) >= 90 ? "text-warning" : "text-[var(--viz-red)]"}>
                         {s.delivery}
@@ -173,15 +173,15 @@ export default function Analytics() {
         <GlassCard className="mt-6 p-6">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
-              <h2 className="text-xs font-semibold uppercase tracking-wider text-steel">On-time delivery trend</h2>
-              <p className="mt-1 text-2xl font-semibold text-paper">{d.delivery?.value}</p>
+              <h2 className="text-xs font-semibold uppercase tracking-wider text-fg-muted">On-time delivery trend</h2>
+              <p className="mt-1 text-2xl font-semibold text-fg">{d.delivery?.value}</p>
               <p className="text-xs text-[var(--viz-green)]">Network average, trailing {RANGE_LABELS[range]}</p>
             </div>
           </div>
           <div className="mt-4">
             <Sparkline data={d.delivery?.series ?? []} accent="cyan" width={900} height={72} className="w-full" />
           </div>
-          <div className="mt-2 flex justify-between text-xs text-steel">
+          <div className="mt-2 flex justify-between text-xs text-fg-muted">
             <span>{RANGE_LABELS[range]} ago</span>
             <span>Today</span>
           </div>

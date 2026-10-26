@@ -70,8 +70,8 @@ export default function Approvals() {
             ["Rejected", counts.rejected],
           ].map(([label, value, hi]) => (
             <GlassCard key={label} className="px-5 py-4">
-              <p className="text-xs font-semibold uppercase tracking-wider text-steel">{label}</p>
-              <p className={`mt-1 text-2xl font-semibold tabular-nums ${hi && value > 0 ? "text-amber" : "text-paper"}`}>{value ?? "—"}</p>
+              <p className="text-xs font-semibold uppercase tracking-wider text-fg-muted">{label}</p>
+              <p className={`mt-1 text-2xl font-semibold tabular-nums ${hi && value > 0 ? "text-brand" : "text-fg"}`}>{value ?? "—"}</p>
             </GlassCard>
           ))}
         </div>
@@ -83,11 +83,11 @@ export default function Approvals() {
             <GlassCard key={job.id} as="article" className="px-5 py-4" aria-labelledby={`job-${job.id}`}>
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="font-mono text-xs text-steel">{job.ref} · submitted {formatWhen(job.createdAt)}</p>
-                  <h2 id={`job-${job.id}`} className="mt-0.5 text-base font-semibold text-paper">
-                    <button type="button" onClick={() => setOpenId(job.id)} className="text-left hover:text-amber">{job.title}</button>
+                  <p className="font-mono text-xs text-fg-muted">{job.ref} · submitted {formatWhen(job.createdAt)}</p>
+                  <h2 id={`job-${job.id}`} className="mt-0.5 text-base font-semibold text-fg">
+                    <button type="button" onClick={() => setOpenId(job.id)} className="text-left hover:text-brand">{job.title}</button>
                   </h2>
-                  <p className="text-sm text-steel">
+                  <p className="text-sm text-fg-muted">
                     {job.owner.name} · {job.owner.company}
                     {job.location && ` · ${job.location}`}
                     {job.trade && ` · ${job.trade}`}
@@ -98,7 +98,7 @@ export default function Approvals() {
 
               <div className="mt-3 flex flex-wrap gap-1.5">
                 {job.subagents.map((k) => (
-                  <span key={k} className="inline-flex items-center gap-1.5 rounded-full border border-line py-1 pl-1 pr-2.5 text-xs font-semibold text-paper">
+                  <span key={k} className="inline-flex items-center gap-1.5 rounded-full border border-line py-1 pl-1 pr-2.5 text-xs font-semibold text-fg">
                     <SubagentMark id={k} size={18} />
                     {STAGE_OF[k]?.name ?? k}
                     <StageChip stage={STAGE_OF[k]?.stage} />
@@ -106,22 +106,22 @@ export default function Approvals() {
                 ))}
               </div>
 
-              {job.notes && <p className="mt-3 whitespace-pre-line text-sm text-paper">{job.notes}</p>}
+              {job.notes && <p className="mt-3 whitespace-pre-line text-sm text-fg">{job.notes}</p>}
 
               <div className="mt-4 flex flex-wrap items-end gap-3">
                 <label className="min-w-[16rem] flex-1">
-                  <span className="text-xs font-medium text-steel">Note to requester (required to reject)</span>
+                  <span className="text-xs font-medium text-fg-muted">Note to requester (required to reject)</span>
                   <input
                     value={notes[job.id] ?? ""}
                     onChange={(e) => setNotes((n) => ({ ...n, [job.id]: e.target.value }))}
                     maxLength={600}
-                    className="mt-1 w-full rounded-md border border-line bg-ink px-3 py-2 text-sm text-paper outline-none focus:border-amber"
+                    className="mt-1 w-full rounded-md border border-line bg-canvas px-3 py-2 text-sm text-fg outline-none focus:border-brand"
                   />
                 </label>
-                <button type="button" disabled={!!busy} onClick={() => decide(job, "approve")} className="min-h-11 rounded-full bg-cta px-5 py-2 text-sm font-semibold text-white hover:bg-cta-hover disabled:opacity-60">
+                <button type="button" disabled={!!busy} onClick={() => decide(job, "approve")} className="min-h-11 rounded-full bg-brand px-5 py-2 text-sm font-semibold text-white hover:bg-brand-hover disabled:opacity-60">
                   {busy === `approve-${job.id}` ? "Approving…" : "Approve and start"}
                 </button>
-                <button type="button" disabled={!!busy} onClick={() => decide(job, "reject")} className="min-h-11 rounded-full border border-line px-5 py-2 text-sm font-semibold text-steel hover:border-danger/50 hover:text-danger disabled:opacity-60">
+                <button type="button" disabled={!!busy} onClick={() => decide(job, "reject")} className="min-h-11 rounded-full border border-line px-5 py-2 text-sm font-semibold text-fg-muted hover:border-danger/50 hover:text-danger disabled:opacity-60">
                   {busy === `reject-${job.id}` ? "Rejecting…" : "Reject"}
                 </button>
               </div>
@@ -131,7 +131,7 @@ export default function Approvals() {
 
         {!list.length && (
           <GlassCard className="px-6 py-14 text-center">
-            <p className="text-sm font-medium text-paper">{pending.loading ? "Loading…" : "Nothing waiting for approval."}</p>
+            <p className="text-sm font-medium text-fg">{pending.loading ? "Loading…" : "Nothing waiting for approval."}</p>
           </GlassCard>
         )}
       </DashboardLayout>

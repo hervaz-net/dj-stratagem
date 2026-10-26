@@ -9,7 +9,7 @@ function Highlight({ text, terms }) {
   const parts = text.split(new RegExp(`(${escaped.join("|")})`, "gi"));
   return parts.map((part, i) =>
     i % 2 === 1 ? (
-      <mark key={i} className="rounded-sm bg-cta/20 px-0.5 text-paper">
+      <mark key={i} className="rounded-sm bg-brand/20 px-0.5 text-fg">
         {part}
       </mark>
     ) : (
@@ -23,7 +23,7 @@ function Highlight({ text, terms }) {
 const isExchange = (to) => to === "/exchange" || to.startsWith("/exchange/");
 
 function AnswerLink({ link }) {
-  const cls = "mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-brand hover:text-paper";
+  const cls = "mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-brand hover:text-fg";
   const inner = (
     <>
       {link.label} <IconArrowRight width={14} height={14} />
@@ -60,16 +60,16 @@ export default function FaqList({ items, terms }) {
           open={autoOpen || undefined}
           className={`group ${i > 0 ? "border-t border-line" : ""}`}
         >
-          <summary className="flex cursor-pointer list-none items-start justify-between gap-6 px-5 py-5 transition-colors hover:bg-ink-3/60 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand sm:px-7 [&::-webkit-details-marker]:hidden">
+          <summary className="flex cursor-pointer list-none items-start justify-between gap-6 px-5 py-5 transition-colors hover:bg-subtle/60 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand sm:px-7 [&::-webkit-details-marker]:hidden">
             <span className="min-w-0">
-              <span className="mono-label block text-steel">{f.category}</span>
-              <span className="mt-1.5 block text-lg font-semibold leading-snug text-paper">
+              <span className="mono-label block text-fg-muted">{f.category}</span>
+              <span className="mt-1.5 block text-lg font-semibold leading-snug text-fg">
                 <Highlight text={f.q} terms={terms} />
               </span>
             </span>
             <span
               aria-hidden="true"
-              className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-line text-cta transition-transform duration-300 group-open:rotate-45"
+              className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-line text-brand transition-transform duration-300 group-open:rotate-45"
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                 <path d="M12 5v14M5 12h14" />
@@ -77,7 +77,7 @@ export default function FaqList({ items, terms }) {
             </span>
           </summary>
           <div className="px-5 pb-6 sm:px-7">
-            <p className="max-w-2xl text-base leading-relaxed text-steel">
+            <p className="max-w-2xl text-base leading-relaxed text-fg-muted">
               <Highlight text={f.a} terms={terms} />
             </p>
             {f.link && <AnswerLink link={f.link} />}

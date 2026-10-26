@@ -18,16 +18,16 @@ export default function FaqFilters({ categories, active, counts, total, onChange
             onClick={() => onChange(it.value)}
             className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
               on
-                ? "border-cta bg-cta text-white"
+                ? "border-brand bg-brand text-white"
                 : empty
-                  ? "border-line bg-ink-2 text-steel/70 hover:text-paper"
-                  : "border-line bg-ink-2 text-paper hover:border-brand hover:text-brand"
+                  ? "border-line bg-surface text-fg-muted/70 hover:text-fg"
+                  : "border-line bg-surface text-fg hover:border-brand hover:text-brand"
             }`}
           >
             <span>{it.name}</span>
             <span
               className={`min-w-5 rounded-full px-1.5 text-center text-xs tabular-nums ${
-                on ? "bg-white/20 text-white" : "bg-line/60 text-steel"
+                on ? "bg-white/20 text-white" : "bg-line/60 text-fg-muted"
               }`}
             >
               {it.count}

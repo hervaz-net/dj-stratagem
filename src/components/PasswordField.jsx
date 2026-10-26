@@ -16,13 +16,13 @@ export default function PasswordField({
   const hintId = hint ? `${id}-hint` : undefined;
 
   const inputClass =
-    "w-full rounded-md border bg-ink px-4 py-2.5 pr-12 text-sm text-paper outline-hidden " +
-    "transition-colors placeholder:text-steel/60 focus:border-amber " +
+    "w-full rounded-md border bg-canvas px-4 py-2.5 pr-12 text-sm text-fg outline-hidden " +
+    "transition-colors placeholder:text-fg-muted/60 focus:border-brand " +
     (invalid ? "border-danger" : "border-line");
 
   return (
     <div>
-      <label htmlFor={id} className="mb-2 block text-sm font-medium text-paper">
+      <label htmlFor={id} className="mb-2 block text-sm font-medium text-fg">
         {label}
       </label>
       <div className="relative">
@@ -43,7 +43,7 @@ export default function PasswordField({
           onClick={() => setShow((v) => !v)}
           aria-label={show ? "Hide password" : "Show password"}
           aria-pressed={show}
-          className="absolute inset-y-0 right-0 flex w-11 items-center justify-center text-steel transition-colors hover:text-amber"
+          className="absolute inset-y-0 right-0 flex w-11 items-center justify-center text-fg-muted transition-colors hover:text-brand"
         >
           {show ? (
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
@@ -59,7 +59,7 @@ export default function PasswordField({
         </button>
       </div>
       {hint && (
-        <p id={hintId} className="mt-1.5 text-xs text-steel">
+        <p id={hintId} className="mt-1.5 text-xs text-fg-muted">
           {hint}
         </p>
       )}
