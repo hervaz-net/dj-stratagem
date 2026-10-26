@@ -65,23 +65,23 @@ export function BiddingDashboard() {
 
   const getStatusBadge = (status, daysLeft) => {
     if (status === 'closed') {
-      return { bg: 'bg-danger-light', text: 'text-danger', label: 'Closed' };
+      return { bg: 'bg-danger-soft', text: 'text-danger', label: 'Closed' };
     }
     if (daysLeft === 0) {
-      return { bg: 'bg-warning-light', text: 'text-warning', label: 'Due Today' };
+      return { bg: 'bg-warning-soft', text: 'text-warning', label: 'Due Today' };
     }
-    return { bg: 'bg-bid-orange/10', text: 'text-bid-orange', label: 'Active' };
+    return { bg: 'bg-brand/10', text: 'text-brand', label: 'Active' };
   };
 
   return (
     <div className="min-h-screen bg-surface">
       {/* Header */}
-      <div className="sticky top-0 bg-white border-b border-border z-40">
+      <div className="sticky top-0 bg-white border-b border-line z-40">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-bid-navy text-6xl leading-[0.95] md:text-8xl">Bid Marketplace</h1>
-              <p className="text-sm text-text-muted mt-1">Discover opportunities matched to your trade and location</p>
+              <p className="text-sm text-fg-muted mt-1">Discover opportunities matched to your trade and location</p>
             </div>
           </div>
         </div>
@@ -89,15 +89,15 @@ export function BiddingDashboard() {
 
       {/* Search & Filters */}
       <div className="max-w-7xl mx-auto px-6 py-8">
-        <div className="bg-white rounded-xl border border-border p-6">
+        <div className="bg-white rounded-xl border border-line p-6">
           <div className="space-y-4">
             {/* Search bar */}
             <div className="relative">
-              <Search className="absolute left-4 top-4 w-5 h-5 text-text-muted" />
+              <Search className="absolute left-4 top-4 w-5 h-5 text-fg-muted" />
               <input
                 type="text"
                 placeholder="Search by project name, location, or specialty..."
-                className="w-full pl-12 pr-4 py-3 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-bid-blue/50 text-text placeholder-text-muted"
+                className="w-full pl-12 pr-4 py-3 border border-line rounded-lg focus:outline-none focus:ring-2 focus:ring-brand/50 text-fg placeholder-fg-muted"
               />
             </div>
 
@@ -110,7 +110,7 @@ export function BiddingDashboard() {
                   className={`px-4 py-2 rounded-lg font-semibold text-sm whitespace-nowrap transition-colors ${
                     activeFilter === filter
                       ? 'bg-bid-navy text-white'
-                      : 'bg-surface text-text-muted hover:bg-border'
+                      : 'bg-surface text-fg-muted hover:bg-line'
                   }`}
                 >
                   {filter === 'all' && 'All Bids'}
@@ -135,22 +135,22 @@ export function BiddingDashboard() {
             return (
               <div
                 key={bid.id}
-                className="group bg-white border border-border rounded-xl p-6 transition-all hover:border-bid-blue/30 cursor-pointer"
+                className="group bg-white border border-line rounded-xl p-6 transition-all hover:border-brand/30 cursor-pointer"
               >
                 <div className="flex items-start justify-between gap-4 mb-4">
                   <div className="flex-1">
                     <div className="flex items-start gap-3">
                       <div className="flex-1">
-                        <h3 className="text-lg font-bold text-text group-hover:text-bid-blue transition-colors">
+                        <h3 className="text-lg font-bold text-fg group-hover:text-brand transition-colors">
                           {bid.title}
                         </h3>
-                        <div className="flex items-center gap-2 mt-2 text-sm text-text-muted">
+                        <div className="flex items-center gap-2 mt-2 text-sm text-fg-muted">
                           <MapPin className="w-4 h-4" />
                           {bid.location}
                         </div>
                       </div>
                       {bid.yourBid && (
-                        <Star className="w-5 h-5 fill-bid-orange text-bid-orange flex-shrink-0" />
+                        <Star className="w-5 h-5 fill-brand text-brand flex-shrink-0" />
                       )}
                     </div>
                   </div>
@@ -163,10 +163,10 @@ export function BiddingDashboard() {
                 </div>
 
                 {/* Details grid */}
-                <div className="grid grid-cols-3 gap-4 mb-6 py-4 border-y border-border">
+                <div className="grid grid-cols-3 gap-4 mb-6 py-4 border-y border-line">
                   {/* Budget */}
                   <div>
-                    <p className="text-xs text-text-muted font-semibold mb-1">Budget</p>
+                    <p className="text-xs text-fg-muted font-semibold mb-1">Budget</p>
                     <p className="text-sm font-bold text-bid-navy">
                       {formatCompactMoney(bid.budget.min)} – {formatCompactMoney(bid.budget.max)}
                     </p>
@@ -174,10 +174,10 @@ export function BiddingDashboard() {
 
                   {/* Time */}
                   <div>
-                    <p className="text-xs text-text-muted font-semibold mb-1">Time Left</p>
+                    <p className="text-xs text-fg-muted font-semibold mb-1">Time Left</p>
                     <p
                       className={`text-sm font-bold ${
-                        isUrgent ? 'text-danger' : 'text-bid-blue'
+                        isUrgent ? 'text-danger' : 'text-brand'
                       }`}
                     >
                       {bid.daysLeft === 0 ? 'Today' : `${bid.daysLeft} days`}
@@ -186,17 +186,17 @@ export function BiddingDashboard() {
 
                   {/* Submissions */}
                   <div>
-                    <p className="text-xs text-text-muted font-semibold mb-1">Submissions</p>
-                    <p className="text-sm font-bold text-text">{bid.submissions} bids</p>
+                    <p className="text-xs text-fg-muted font-semibold mb-1">Submissions</p>
+                    <p className="text-sm font-bold text-fg">{bid.submissions} bids</p>
                   </div>
                 </div>
 
                 {/* Bottom: specialty + CTA */}
                 <div className="flex items-center justify-between">
-                  <span className="inline-block px-3 py-1 bg-bid-blue/10 text-bid-blue text-xs font-semibold rounded-full">
+                  <span className="inline-block px-3 py-1 bg-brand/10 text-brand text-xs font-semibold rounded-full">
                     {bid.specialty}
                   </span>
-                  <button className="flex items-center gap-2 text-bid-orange font-semibold hover:text-bid-orange-hover transition-colors">
+                  <button className="flex items-center gap-2 text-brand font-semibold hover:text-brand-hover transition-colors">
                     View Details
                     <ChevronRight className="w-4 h-4" />
                   </button>
@@ -204,7 +204,7 @@ export function BiddingDashboard() {
 
                 {/* Urgent badge — if applicable */}
                 {isUrgent && (
-                  <div className="mt-4 flex items-center gap-2 p-3 bg-warning-light rounded-lg">
+                  <div className="mt-4 flex items-center gap-2 p-3 bg-warning-soft rounded-lg">
                     <AlertCircle className="w-4 h-4 text-warning flex-shrink-0" />
                     <p className="text-xs font-semibold text-warning">This bid closes soon</p>
                   </div>

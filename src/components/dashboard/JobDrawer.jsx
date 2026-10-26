@@ -36,34 +36,34 @@ function TaskCard({ task, parent, job, busy, onAct }) {
   const canAct = job.status === "in_progress";
   return (
     <li
-      className="rounded-xl border border-line bg-ink/50 px-4 py-3"
+      className="rounded-xl border border-line bg-canvas/50 px-4 py-3"
       style={{ marginLeft: `${Math.min(task.depth, 3) * 18}px` }}
       data-task={task.subagent}
       data-depth={task.depth}
     >
       <div className="flex flex-wrap items-center gap-2">
-        {task.depth > 0 && <span className="text-steel" aria-hidden="true">↳</span>}
+        {task.depth > 0 && <span className="text-fg-muted" aria-hidden="true">↳</span>}
         <SubagentMark id={task.subagent} size={22} />
-        <span className="font-semibold text-paper">{task.name}</span>
+        <span className="font-semibold text-fg">{task.name}</span>
         <StageChip stage={task.stage} />
         <span className="ml-auto"><TaskStatusBadge status={task.status} /></span>
       </div>
       {task.depth > 0 ? (
-        <p className="mt-1 text-xs text-steel">
-          Called back by <span className="font-semibold text-paper">{parent?.name ?? "another subagent"}</span>: {task.request}
+        <p className="mt-1 text-xs text-fg-muted">
+          Called back by <span className="font-semibold text-fg">{parent?.name ?? "another subagent"}</span>: {task.request}
         </p>
       ) : (
-        <p className="mt-1 text-xs text-steel">{task.label}</p>
+        <p className="mt-1 text-xs text-fg-muted">{task.label}</p>
       )}
       {task.status === "running" && (
-        <p className="mt-2 flex items-center gap-2 text-xs text-amber">
+        <p className="mt-2 flex items-center gap-2 text-xs text-brand">
           <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-current motion-reduce:animate-none" aria-hidden="true" />
           Working on it now…
         </p>
       )}
-      {task.summary && <p className="mt-2 text-sm text-paper">{task.summary}</p>}
+      {task.summary && <p className="mt-2 text-sm text-fg">{task.summary}</p>}
       {task.note && (
-        <p className={`mt-2 text-xs ${task.status === "blocked" ? "text-danger" : "text-steel"}`}>{task.note}</p>
+        <p className={`mt-2 text-xs ${task.status === "blocked" ? "text-danger" : "text-fg-muted"}`}>{task.note}</p>
       )}
       {task.output && (
         <div className="mt-2">
@@ -71,12 +71,12 @@ function TaskCard({ task, parent, job, busy, onAct }) {
             type="button"
             onClick={() => setOpen((v) => !v)}
             aria-expanded={open}
-            className="min-h-9 text-xs font-semibold text-amber hover:text-amber-2"
+            className="min-h-9 text-xs font-semibold text-brand hover:text-brand-hover"
           >
             {open ? "Hide the work" : "Read the work"}
           </button>
           {open && (
-            <div className="mt-2 max-h-96 overflow-y-auto rounded-lg border border-line bg-ink px-3 py-2">
+            <div className="mt-2 max-h-96 overflow-y-auto rounded-lg border border-line bg-canvas px-3 py-2">
               <Markdown text={task.output} />
             </div>
           )}
@@ -85,11 +85,11 @@ function TaskCard({ task, parent, job, busy, onAct }) {
       {canAct && ["blocked", "queued"].includes(task.status) && (
         <div className="mt-2 flex flex-wrap gap-2">
           {task.status === "blocked" && (
-            <button type="button" disabled={!!busy} onClick={() => onAct("retry", { taskId: task.id }, `Retrying ${task.name}.`)} className="min-h-9 rounded-full bg-amber/12 px-3 py-1 text-xs font-semibold text-amber hover:bg-amber/20 disabled:opacity-60">
+            <button type="button" disabled={!!busy} onClick={() => onAct("retry", { taskId: task.id }, `Retrying ${task.name}.`)} className="min-h-9 rounded-full bg-brand/12 px-3 py-1 text-xs font-semibold text-brand hover:bg-brand/20 disabled:opacity-60">
               {busy === `retry${task.id}` ? "Retrying…" : "Retry"}
             </button>
           )}
-          <button type="button" disabled={!!busy} onClick={() => onAct("skip", { taskId: task.id }, `${task.name} skipped.`)} className="min-h-9 rounded-full px-3 py-1 text-xs font-semibold text-steel hover:text-paper disabled:opacity-60">
+          <button type="button" disabled={!!busy} onClick={() => onAct("skip", { taskId: task.id }, `${task.name} skipped.`)} className="min-h-9 rounded-full px-3 py-1 text-xs font-semibold text-fg-muted hover:text-fg disabled:opacity-60">
             {busy === `skip${task.id}` ? "Skipping…" : "Skip"}
           </button>
         </div>
@@ -201,24 +201,24 @@ export default function JobDrawer({ jobId, onClose, onChanged }) {
 
   return (
     <>
-      <div className="fixed inset-0 z-40 bg-ink/50 backdrop-blur-sm" onClick={onClose} aria-hidden="true" />
+      <div className="fixed inset-0 z-40 bg-canvas/50 backdrop-blur-sm" onClick={onClose} aria-hidden="true" />
       <div
         role="dialog"
         aria-modal="true"
         aria-label={job ? `${job.ref} ${job.title}` : "Job details"}
-        className="fixed right-0 top-0 z-50 flex h-full w-full max-w-xl flex-col overflow-y-auto bg-ink-2 shadow-2xl"
+        className="fixed right-0 top-0 z-50 flex h-full w-full max-w-xl flex-col overflow-y-auto bg-surface shadow-2xl"
       >
         <div className="flex items-start justify-between gap-4 border-b border-line px-6 py-5">
           <div className="min-w-0">
-            <p className="font-mono text-xs text-steel">{job?.ref ?? "Loading…"}</p>
-            <h2 className="mt-0.5 text-lg font-semibold text-paper">{job?.title ?? ""}</h2>
+            <p className="font-mono text-xs text-fg-muted">{job?.ref ?? "Loading…"}</p>
+            <h2 className="mt-0.5 text-lg font-semibold text-fg">{job?.title ?? ""}</h2>
             {job && (
-              <p className="mt-0.5 text-sm text-steel">
+              <p className="mt-0.5 text-sm text-fg-muted">
                 {[job.trade, job.location, formatValue(job.value)].filter((v) => v && v !== "—").join(" · ") || "No details"}
               </p>
             )}
           </div>
-          <button ref={closeRef} type="button" onClick={onClose} aria-label="Close job details" className="min-h-11 min-w-11 rounded-md p-2 text-steel hover:text-paper">
+          <button ref={closeRef} type="button" onClick={onClose} aria-label="Close job details" className="min-h-11 min-w-11 rounded-md p-2 text-fg-muted hover:text-fg">
             <IconX width={20} height={20} />
           </button>
         </div>
@@ -231,12 +231,12 @@ export default function JobDrawer({ jobId, onClose, onChanged }) {
               <JobStatusBadge status={job.status} />
               <ProgressBar done={job.progress.done} total={job.progress.total} />
               {isAdmin && (
-                <span className="text-xs text-steel">
+                <span className="text-xs text-fg-muted">
                   {job.owner.name} · {job.owner.company}
                 </span>
               )}
               {hasOutput && (
-                <button type="button" onClick={() => downloadResults(job)} className="ml-auto min-h-9 rounded-full border border-line px-3 py-1 text-xs font-semibold text-paper hover:border-amber/50">
+                <button type="button" onClick={() => downloadResults(job)} className="ml-auto min-h-9 rounded-full border border-line px-3 py-1 text-xs font-semibold text-fg hover:border-brand/50">
                   Download results
                 </button>
               )}
@@ -250,20 +250,20 @@ export default function JobDrawer({ jobId, onClose, onChanged }) {
 
             {job.decisionNote && (
               <div className="border-b border-line px-6 py-3 text-sm">
-                <span className="font-semibold text-paper">{job.status === "rejected" ? "Reason: " : "Approver note: "}</span>
-                <span className="text-steel">{job.decisionNote}</span>
+                <span className="font-semibold text-fg">{job.status === "rejected" ? "Reason: " : "Approver note: "}</span>
+                <span className="text-fg-muted">{job.decisionNote}</span>
               </div>
             )}
 
             {job.status === "rejected" && isOwner && (
               <div className="space-y-3 border-b border-line px-6 py-4">
-                <p className="text-sm text-steel">Fix what the approver asked for and send it back. Nothing has run yet.</p>
+                <p className="text-sm text-fg-muted">Fix what the approver asked for and send it back. Nothing has run yet.</p>
                 <NewJobDialog job={job} onCreated={(updated) => { setJob(null); load(); onChanged?.(updated); }} />
               </div>
             )}
 
             {job.status === "completed" && (
-              <p className="border-b border-line px-6 py-3 text-xs text-steel">
+              <p className="border-b border-line px-6 py-3 text-xs text-fg-muted">
                 AI-generated work. Check quantities, prices and dates before you rely on them.
               </p>
             )}
@@ -272,37 +272,37 @@ export default function JobDrawer({ jobId, onClose, onChanged }) {
             {isOpen && (
               <div className="space-y-3 border-b border-line px-6 py-4">
                 {job.status === "pending_approval" && !isAdmin && (
-                  <p className="text-sm text-steel">Waiting for an administrator to approve this job. Once approved, the subagents run on their own and we email you the results.</p>
+                  <p className="text-sm text-fg-muted">Waiting for an administrator to approve this job. Once approved, the subagents run on their own and we email you the results.</p>
                 )}
                 {running && (
-                  <p className="text-sm text-steel">
+                  <p className="text-sm text-fg-muted">
                     The subagents run one after another, each building on the work before it. You can close this; we'll email you when it's done.
                   </p>
                 )}
                 {(isAdmin && job.status === "pending_approval") && (
                   <label className="block">
-                    <span className="text-xs font-medium text-steel">Note to the requester (required to reject)</span>
-                    <textarea value={note} onChange={(e) => setNote(e.target.value)} rows={2} maxLength={600} className="mt-1 w-full rounded-md border border-line bg-ink px-3 py-2 text-sm text-paper outline-none focus:border-amber" />
+                    <span className="text-xs font-medium text-fg-muted">Note to the requester (required to reject)</span>
+                    <textarea value={note} onChange={(e) => setNote(e.target.value)} rows={2} maxLength={600} className="mt-1 w-full rounded-md border border-line bg-canvas px-3 py-2 text-sm text-fg outline-none focus:border-brand" />
                   </label>
                 )}
                 <div className="flex flex-wrap gap-2">
                   {isAdmin && job.status === "pending_approval" && (
                     <>
-                      <button type="button" disabled={!!busy} onClick={() => act("approve", { note }, `${job.ref} approved. Its subagents are running.`)} className="min-h-11 rounded-full bg-cta px-4 py-2 text-sm font-semibold text-white hover:bg-cta-hover disabled:opacity-60">
+                      <button type="button" disabled={!!busy} onClick={() => act("approve", { note }, `${job.ref} approved. Its subagents are running.`)} className="min-h-11 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-hover disabled:opacity-60">
                         {busy === "approve" ? "Approving…" : "Approve and start"}
                       </button>
                       <button
                         type="button"
                         disabled={!!busy}
                         onClick={() => (note.trim() ? act("reject", { note }, `${job.ref} rejected.`) : toast("Add a reason before rejecting.", { type: "warning" }))}
-                        className="min-h-11 rounded-full border border-line px-4 py-2 text-sm font-semibold text-steel hover:border-danger/50 hover:text-danger disabled:opacity-60"
+                        className="min-h-11 rounded-full border border-line px-4 py-2 text-sm font-semibold text-fg-muted hover:border-danger/50 hover:text-danger disabled:opacity-60"
                       >
                         {busy === "reject" ? "Rejecting…" : "Reject"}
                       </button>
                     </>
                   )}
                   {job.status === "approved" && (
-                    <button type="button" disabled={!!busy} onClick={() => act("start", {}, "Subagents started.")} className="min-h-11 rounded-full bg-cta px-4 py-2 text-sm font-semibold text-white hover:bg-cta-hover disabled:opacity-60">
+                    <button type="button" disabled={!!busy} onClick={() => act("start", {}, "Subagents started.")} className="min-h-11 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-hover disabled:opacity-60">
                       {busy === "start" ? "Starting…" : `Start the ${job.progress.total} subagents`}
                     </button>
                   )}
@@ -310,7 +310,7 @@ export default function JobDrawer({ jobId, onClose, onChanged }) {
                     type="button"
                     disabled={!!busy}
                     onClick={() => { if (window.confirm(`Cancel ${job.ref}? Subagents that haven't finished will stop.`)) act("cancel", {}, `${job.ref} cancelled.`); }}
-                    className="min-h-11 rounded-full border border-line px-4 py-2 text-sm font-semibold text-steel hover:border-danger/50 hover:text-danger disabled:opacity-60"
+                    className="min-h-11 rounded-full border border-line px-4 py-2 text-sm font-semibold text-fg-muted hover:border-danger/50 hover:text-danger disabled:opacity-60"
                   >
                     {busy === "cancel" ? "Cancelling…" : "Cancel job"}
                   </button>
@@ -320,7 +320,7 @@ export default function JobDrawer({ jobId, onClose, onChanged }) {
 
             {/* Tasks */}
             <div className="border-b border-line px-6 py-4">
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-steel">Subagents</h3>
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-fg-muted">Subagents</h3>
               <ul className="mt-3 space-y-2" aria-live="polite">
                 {job.tasks.map((t) => (
                   <TaskCard key={t.id} task={t} parent={byId[t.parentId]} job={job} busy={busy} onAct={act} />
@@ -330,18 +330,18 @@ export default function JobDrawer({ jobId, onClose, onChanged }) {
 
             {job.notes && (
               <div className="border-b border-line px-6 py-4">
-                <h3 className="text-xs font-semibold uppercase tracking-wider text-steel">Notes</h3>
-                <p className="mt-2 whitespace-pre-line text-sm text-paper">{job.notes}</p>
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-fg-muted">Notes</h3>
+                <p className="mt-2 whitespace-pre-line text-sm text-fg">{job.notes}</p>
               </div>
             )}
 
             <div className="px-6 py-4">
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-steel">Activity</h3>
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-fg-muted">Activity</h3>
               <ol className="mt-3 space-y-3">
                 {job.events.map((e, i) => (
                   <li key={i} className="text-sm">
-                    <p className="text-paper">{e.message}</p>
-                    <p className="text-xs text-steel">{e.by} · {formatWhen(e.createdAt)}</p>
+                    <p className="text-fg">{e.message}</p>
+                    <p className="text-xs text-fg-muted">{e.by} · {formatWhen(e.createdAt)}</p>
                   </li>
                 ))}
               </ol>

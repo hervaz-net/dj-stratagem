@@ -16,7 +16,7 @@ const sizes = {
 const variants = {
   primary: "rounded-full bg-brand text-white shadow-[var(--shadow-card)] hover:bg-brand-hover",
   secondary: "rounded-full border border-line bg-surface text-fg hover:border-line-strong",
-  ghost: "draw-link px-0! text-paper hover:text-brand",
+  ghost: "draw-link px-0! text-fg hover:text-brand",
 };
 
 export default function Button({

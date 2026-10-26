@@ -43,15 +43,15 @@ export default function RangeSlider({
   return (
     <div className={className}>
       <div className="mb-3 flex items-baseline justify-between gap-3">
-        <span className="text-xs font-semibold uppercase tracking-wider text-steel">{label}</span>
-        <span className="text-xs font-medium tabular-nums text-paper">
+        <span className="text-xs font-semibold uppercase tracking-wider text-fg-muted">{label}</span>
+        <span className="text-xs font-medium tabular-nums text-fg">
           {format(low)} &ndash; {format(high)}
         </span>
       </div>
 
       <div className="relative h-9">
         {/* track */}
-        <div className="absolute inset-x-0 top-1/2 h-1.5 -translate-y-1/2 rounded-full bg-steel/20" />
+        <div className="absolute inset-x-0 top-1/2 h-1.5 -translate-y-1/2 rounded-full bg-fg-muted/20" />
         {/* selected span */}
         <div
           className="absolute top-1/2 h-1.5 -translate-y-1/2 rounded-full"

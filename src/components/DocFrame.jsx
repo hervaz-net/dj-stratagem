@@ -4,7 +4,7 @@ export default function DocFrame({ src, title }) {
     <iframe
       src={src}
       title={title}
-      className="block w-full border-0 bg-paper"
+      className="block w-full border-0 bg-fg"
       style={{ height: "calc(100dvh - 8rem)", minHeight: "32rem" }}
     />
   );

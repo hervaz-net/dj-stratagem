@@ -102,7 +102,7 @@ export default function AdminMembers() {
           ]}
         />
         <div className="flex flex-wrap items-center gap-2">
-          <label className="flex items-center gap-2 text-sm text-steel">
+          <label className="flex items-center gap-2 text-sm text-fg-muted">
             <input type="checkbox" checked={role === "admin"} onChange={(e) => setFilter("role", e.target.checked ? "admin" : "all")} className="h-4 w-4" />
             Admins only ({counts.admins ?? 0})
           </label>
@@ -120,7 +120,7 @@ export default function AdminMembers() {
       {error && <Panel className="mt-4 px-5 py-3"><p className="text-sm text-danger">{error.message}</p></Panel>}
 
       <Panel className="mt-5 overflow-hidden">
-        <div className="hidden grid-cols-[1.6fr_1fr_0.7fr_0.6fr_1.5fr] gap-4 border-b border-line bg-black/[0.02] px-5 py-3 text-xs font-semibold uppercase tracking-[0.08em] text-steel lg:grid">
+        <div className="hidden grid-cols-[1.6fr_1fr_0.7fr_0.6fr_1.5fr] gap-4 border-b border-line bg-black/[0.02] px-5 py-3 text-xs font-semibold uppercase tracking-[0.08em] text-fg-muted lg:grid">
           <span>Member</span>
           <span>Signed up</span>
           <span>Status</span>
@@ -131,24 +131,24 @@ export default function AdminMembers() {
           {members.map((m) => (
             <li key={m.id} className="grid grid-cols-1 gap-3 px-5 py-4 lg:grid-cols-[1.6fr_1fr_0.7fr_0.6fr_1.5fr] lg:items-center lg:gap-4">
               <div className="min-w-0">
-                <Link to={`/admin/members/${m.id}`} className="block truncate font-semibold text-paper hover:underline">
+                <Link to={`/admin/members/${m.id}`} className="block truncate font-semibold text-fg hover:underline">
                   {m.name || m.email}
                   {m.role === "admin" && <span className="ml-2 align-middle"><Pill tone="brand">Admin</Pill></span>}
                 </Link>
-                <p className="truncate text-sm text-steel">{m.email}{m.company && ` · ${m.company}`}</p>
+                <p className="truncate text-sm text-fg-muted">{m.email}{m.company && ` · ${m.company}`}</p>
               </div>
-              <p className="text-sm text-steel">
+              <p className="text-sm text-fg-muted">
                 {formatWhen(m.createdAt, { withTime: false })}
                 <span className="block text-xs">Last sign-in {m.lastLoginAt ? formatWhen(m.lastLoginAt, { withTime: false }) : "never"}</span>
               </p>
               <div><Pill tone={MEMBER_TONE[m.status]}>{MEMBER_LABEL[m.status]}</Pill></div>
-              <p className="text-sm text-steel">{m.jobs} jobs · {m.listings} listings</p>
+              <p className="text-sm text-fg-muted">{m.jobs} jobs · {m.listings} listings</p>
               <MemberActions member={m} onChanged={changed} />
             </li>
           ))}
         </ul>
         {!members.length && (
-          <p className="px-5 py-14 text-center text-sm text-steel">{loading ? "Loading…" : "No members match."}</p>
+          <p className="px-5 py-14 text-center text-sm text-fg-muted">{loading ? "Loading…" : "No members match."}</p>
         )}
       </Panel>
     </AdminLayout>

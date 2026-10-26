@@ -12,18 +12,18 @@ const STAGE_STYLE = {
 const JOB_STYLE = {
   pending_approval: "bg-warning/12 text-warning",
   approved: "bg-[var(--viz-blue)]/12 text-[var(--viz-blue)]",
-  in_progress: "bg-amber/12 text-amber",
+  in_progress: "bg-brand/12 text-brand",
   completed: "bg-success/12 text-success",
   rejected: "bg-danger/12 text-danger",
-  cancelled: "bg-ink-3 text-steel",
+  cancelled: "bg-subtle text-fg-muted",
 };
 
 const TASK_STYLE = {
-  queued: "bg-ink-3 text-steel",
-  running: "bg-amber/12 text-amber",
+  queued: "bg-subtle text-fg-muted",
+  running: "bg-brand/12 text-brand",
   done: "bg-success/12 text-success",
   blocked: "bg-danger/12 text-danger",
-  skipped: "bg-ink-3 text-steel",
+  skipped: "bg-subtle text-fg-muted",
 };
 
 export function StageChip({ stage }) {
@@ -63,9 +63,9 @@ export function ProgressBar({ done, total, label }) {
         aria-valuenow={done}
         aria-label={label ?? "Subagent progress"}
       >
-        <div className="h-full rounded-full bg-amber transition-[width] duration-500" style={{ width: `${pct}%` }} />
+        <div className="h-full rounded-full bg-brand transition-[width] duration-500" style={{ width: `${pct}%` }} />
       </div>
-      <span className="text-xs tabular-nums text-steel">{done}/{total}</span>
+      <span className="text-xs tabular-nums text-fg-muted">{done}/{total}</span>
     </div>
   );
 }

@@ -59,14 +59,14 @@ function Console({ mode }) {
   const lines = SCRIPTS[mode];
   const { line, char } = useTyped(lines);
   const lit = Math.round((9 * Math.min(line, lines.length)) / lines.length);
-  const tone = { k: "text-molten", d: "text-steel", "": "text-paper" };
+  const tone = { k: "text-brand", d: "text-fg-muted", "": "text-fg" };
 
   return (
     <section
       aria-hidden="true"
       className="slab auth-rise order-2 overflow-hidden lg:sticky lg:top-28 lg:order-1 lg:self-start lg:mt-6"
     >
-      <div className="relative flex items-center gap-1.5 border-b border-line px-5 py-3 font-mono text-[11px] uppercase tracking-[0.14em] text-steel">
+      <div className="relative flex items-center gap-1.5 border-b border-line px-5 py-3 font-mono text-[11px] uppercase tracking-[0.14em] text-fg-muted">
         <i className="h-2 w-2 rounded-full bg-line" />
         <i className="h-2 w-2 rounded-full bg-line" />
         <i className="h-2 w-2 rounded-full bg-line" />
@@ -86,11 +86,11 @@ function Console({ mode }) {
           {Array.from({ length: 9 }, (_, i) => (
             <i
               key={i}
-              className={`h-2.5 w-2.5 rounded-[3px] transition-colors duration-500 ${i < lit ? "bg-tide" : "bg-line"}`}
+              className={`h-2.5 w-2.5 rounded-[3px] transition-colors duration-500 ${i < lit ? "bg-success" : "bg-line"}`}
             />
           ))}
         </div>
-        <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-steel">9 subagents · one pipeline</span>
+        <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-fg-muted">9 subagents · one pipeline</span>
       </div>
     </section>
   );
@@ -104,7 +104,7 @@ export default function AuthShell({ mode, title, lede, children, footer }) {
       to={to}
       aria-current={active ? "page" : undefined}
       className={`relative z-10 rounded-full py-2 text-center text-sm font-medium transition-colors ${
-        active ? "text-paper" : "text-steel hover:text-paper"
+        active ? "text-fg" : "text-fg-muted hover:text-fg"
       }`}
     >
       {label}
@@ -117,7 +117,7 @@ export default function AuthShell({ mode, title, lede, children, footer }) {
         <Console mode={mode} />
 
         <section className="slab auth-rise auth-rise-2 order-1 p-6 sm:p-9 lg:order-2">
-          <nav aria-label="Account" className="relative mb-7 grid grid-cols-2 rounded-full border border-line bg-ink/60 p-1">
+          <nav aria-label="Account" className="relative mb-7 grid grid-cols-2 rounded-full border border-line bg-canvas/60 p-1">
             <span
               aria-hidden="true"
               className={`absolute inset-y-1 left-1 w-[calc(50%-4px)] rounded-full border border-line bg-[var(--surface-hover)] shadow-sm transition-transform duration-300 ease-out ${
@@ -129,15 +129,15 @@ export default function AuthShell({ mode, title, lede, children, footer }) {
           </nav>
 
           {title && (
-            <h1 className="text-paper text-5xl leading-[0.95] md:text-6xl">
+            <h1 className="text-fg text-5xl leading-[0.95] md:text-6xl">
               {title}
             </h1>
           )}
-          {lede && <p className="mt-3 text-sm text-steel">{lede}</p>}
+          {lede && <p className="mt-3 text-sm text-fg-muted">{lede}</p>}
 
           {children}
 
-          {footer && <div className="mt-6 text-center text-sm text-steel">{footer}</div>}
+          {footer && <div className="mt-6 text-center text-sm text-fg-muted">{footer}</div>}
         </section>
       </div>
     </div>

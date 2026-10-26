@@ -40,30 +40,9 @@
   --color-danger: var(--danger);
   --color-danger-soft: var(--danger-soft);
 
-  /* Legacy aliases — keep until every screen is migrated */
-  --color-ink: var(--canvas);
-  --color-ink-2: var(--surface-raised);
-  --color-ink-3: var(--subtle);
-  --color-paper: var(--text-strong);
-  --color-paper-2: var(--text-strong);
-  --color-steel: var(--text-muted);
-  --color-amber: var(--brand);
-  --color-amber-2: var(--brand-hover);
-  --color-cta: var(--brand);
-  --color-cta-hover: var(--brand-hover);
-  --color-text: var(--text-strong);
-  --color-text-muted: var(--text-muted);
-  --color-card: var(--surface-raised);
-  --color-border: var(--border);
-  --color-success-light: var(--success-soft);
-  --color-warning-light: var(--warning-soft);
-  --color-danger-light: var(--danger-soft);
+  /* The always-dark CTA band, in both themes */
   --color-bid-navy: #12201b;
   --color-bid-navy-hover: #0b1511;
-  --color-bid-blue: var(--brand);
-  --color-bid-blue-hover: var(--brand-hover);
-  --color-bid-orange: var(--brand);
-  --color-bid-orange-hover: var(--brand-hover);
 
   --radius-card: 1rem;
 }

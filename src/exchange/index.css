@@ -16,8 +16,6 @@
     role-contractor | role-distributor | role-supplier (+ -soft)
     success | warning | danger (+ -soft)
 
-  Legacy aliases (ink, paper, steel, amber, cta, line, bid-*) still resolve so
-  untouched screens re-skin automatically. Do not use them in new code.
   Every token lives in src/shared/tokens.css. The site is light only.
   --------------------------------------------------------------------------- */
 

@@ -23,9 +23,9 @@ export default function Accordion({ items }) {
                 onClick={() => setOpen(isOpen ? null : i)}
                 className="flex w-full items-center justify-between gap-6 py-6 text-left"
               >
-                <span className="font-display text-2xl leading-tight text-paper transition-colors group-hover/faq:text-cta md:text-3xl">{item.q}</span>
+                <span className="font-display text-2xl leading-tight text-fg transition-colors group-hover/faq:text-brand md:text-3xl">{item.q}</span>
                 <span
-                  className={`flex h-10 w-10 shrink-0 items-center justify-center text-cta transition-transform duration-500 ${
+                  className={`flex h-10 w-10 shrink-0 items-center justify-center text-brand transition-transform duration-500 ${
                     isOpen ? "rotate-45" : ""
                   }`}
                   aria-hidden="true"
@@ -43,7 +43,7 @@ export default function Accordion({ items }) {
               hidden={!isOpen}
               className="pb-7"
             >
-              <p className="max-w-2xl text-base leading-relaxed text-steel">{item.a}</p>
+              <p className="max-w-2xl text-base leading-relaxed text-fg-muted">{item.a}</p>
             </div>
           </div>
         );

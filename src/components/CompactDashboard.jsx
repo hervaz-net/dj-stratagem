@@ -85,22 +85,22 @@ export function CompactDashboard() {
       <div className="max-w-7xl mx-auto flex items-center gap-4">
         <div className="flex-1">
           <h1 className="text-bid-navy text-6xl leading-[0.95] md:text-8xl">Compact Bid Console</h1>
-          <p className="text-xs text-text-muted">Keyboard: '/' focus search • 'a' quick-add • 'e' edit selected • Esc cancel</p>
+          <p className="text-xs text-fg-muted">Keyboard: '/' focus search • 'a' quick-add • 'e' edit selected • Esc cancel</p>
         </div>
 
         <div className="flex items-center gap-2">
           <div className="relative">
-            <span className="absolute left-3 top-3 text-text-muted text-sm">🔍</span>
+            <span className="absolute left-3 top-3 text-fg-muted text-sm">🔍</span>
             <input
               ref={searchRef}
               value={query}
               onChange={e=>setQuery(e.target.value)}
               placeholder="Search bids, location, specialty..."
-              className="pl-10 pr-4 py-2 rounded-lg border border-border bg-white text-sm w-72"
+              className="pl-10 pr-4 py-2 rounded-lg border border-line bg-white text-sm w-72"
             />
           </div>
 
-          <button onClick={()=>setQuickAddOpen(true)} className="px-3 py-2 bg-bid-orange text-white rounded-md flex items-center gap-2">
+          <button onClick={()=>setQuickAddOpen(true)} className="px-3 py-2 bg-brand text-white rounded-md flex items-center gap-2">
             <span>➕</span> Quick Add
           </button>
 
@@ -109,9 +109,9 @@ export function CompactDashboard() {
 
       {/* Bulk actions */}
       {selected.size > 0 && (
-        <div className="max-w-7xl mx-auto mt-3 p-3 bg-white border border-border rounded-md flex items-center justify-between compact-toolbar">
+        <div className="max-w-7xl mx-auto mt-3 p-3 bg-white border border-line rounded-md flex items-center justify-between compact-toolbar">
           <div className="flex items-center gap-3">
-            <span className="text-sm text-text-muted">{selected.size} selected</span>
+            <span className="text-sm text-fg-muted">{selected.size} selected</span>
             <button onClick={()=>bulkAction('export')} className="text-sm px-3 py-1 bg-surface rounded">Export</button>
             <button onClick={()=>bulkAction('assign')} className="text-sm px-3 py-1 bg-surface rounded">Assign</button>
             <button onClick={()=>bulkAction('delete')} className="text-sm px-3 py-1 bg-danger/10 text-danger rounded">Delete</button>
@@ -124,8 +124,8 @@ export function CompactDashboard() {
       )}
 
       {/* Table header (compact) */}
-      <div className="max-w-7xl mx-auto mt-4 bg-white border border-border rounded-md overflow-hidden">
-        <div className="grid grid-cols-12 gap-2 items-center px-4 py-2 text-xs font-semibold text-text-muted border-b border-border">
+      <div className="max-w-7xl mx-auto mt-4 bg-white border border-line rounded-md overflow-hidden">
+        <div className="grid grid-cols-12 gap-2 items-center px-4 py-2 text-xs font-semibold text-fg-muted border-b border-line">
           <div className="col-span-1">Sel</div>
           <div className="col-span-4">Project</div>
           <div className="col-span-2">Budget</div>
@@ -150,10 +150,10 @@ export function CompactDashboard() {
                 ) : (
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="text-sm font-semibold text-text">{bid.title}</div>
-                      <div className="text-xs text-text-muted">{bid.location} • {bid.specialty}</div>
+                      <div className="text-sm font-semibold text-fg">{bid.title}</div>
+                      <div className="text-xs text-fg-muted">{bid.location} • {bid.specialty}</div>
                     </div>
-                    <div className="hidden md:block text-xs text-text-muted">{bid.category ?? ''}</div>
+                    <div className="hidden md:block text-xs text-fg-muted">{bid.category ?? ''}</div>
                   </div>
                 )}
               </div>
@@ -168,7 +168,7 @@ export function CompactDashboard() {
               </div>
 
               {/* due */}
-              <div className={`col-span-2 text-sm ${bid.daysLeft<=2 ? 'text-danger' : 'text-text'}`}>
+              <div className={`col-span-2 text-sm ${bid.daysLeft<=2 ? 'text-danger' : 'text-fg'}`}>
                 {editingId === bid.id ? (
                   <InlineEditor initialValue={`${bid.daysLeft}`} onSave={val=>{ const days = Number(val)||0; updateBid(bid.id, { daysLeft: days }); setEditingId(null); }} onCancel={()=>setEditingId(null)} />
                 ) : (
@@ -177,7 +177,7 @@ export function CompactDashboard() {
               </div>
 
               {/* submissions */}
-              <div className="col-span-2 text-sm text-text">
+              <div className="col-span-2 text-sm text-fg">
                 {bid.submissions} bids
               </div>
 
@@ -193,7 +193,7 @@ export function CompactDashboard() {
             </div>
           ))}
 
-          {filtered.length===0 && (<div className="p-6 text-center text-text-muted">No matching bids</div>)}
+          {filtered.length===0 && (<div className="p-6 text-center text-fg-muted">No matching bids</div>)}
         </div>
       </div>
 
@@ -221,7 +221,7 @@ function InlineEditor({ initialValue, onSave, onCancel }){
   return (
     <div className="flex items-center gap-2">
       <input ref={ref} value={val} onChange={e=>setVal(e.target.value)} className="inline-input px-2 py-1 border rounded text-sm" />
-      <button onClick={()=>onSave(val)} className="px-2 py-1 bg-success-light text-success rounded text-xs">Save</button>
+      <button onClick={()=>onSave(val)} className="px-2 py-1 bg-success-soft text-success rounded text-xs">Save</button>
       <button onClick={onCancel} className="px-2 py-1 bg-surface rounded text-xs">Cancel</button>
     </div>
   );
@@ -247,7 +247,7 @@ function QuickAddForm({ onSave, onCancel }){
       </div>
       <div className="flex gap-2 justify-end">
         <button type="button" onClick={onCancel} className="px-4 py-2 bg-surface rounded">Cancel</button>
-        <button type="submit" className="px-4 py-2 bg-bid-orange text-white rounded">Add</button>
+        <button type="submit" className="px-4 py-2 bg-brand text-white rounded">Add</button>
       </div>
     </form>
   );

@@ -25,16 +25,16 @@ export default function MetricCard({ metric, live = false }) {
         <div className="min-w-0">
           <div className="flex items-center gap-2">
             {live && <StatusDot status="active" size={6} />}
-            <p className="truncate text-xs font-semibold uppercase tracking-wider text-steel">
+            <p className="truncate text-xs font-semibold uppercase tracking-wider text-fg-muted">
               {label}
             </p>
           </div>
-          <p className="mt-2 flex items-baseline gap-1 text-3xl font-semibold tracking-tight text-paper">
+          <p className="mt-2 flex items-baseline gap-1 text-3xl font-semibold tracking-tight text-fg">
             <span className="tabular-nums">
               {prefix}
               {value}
             </span>
-            {unit && <span className="text-lg text-steel">{unit}</span>}
+            {unit && <span className="text-lg text-fg-muted">{unit}</span>}
           </p>
         </div>
 
@@ -52,7 +52,7 @@ export default function MetricCard({ metric, live = false }) {
             <path d={up ? "M5 1L9 8H1z" : "M5 9L1 2h8z"} fill="currentColor" />
           </svg>
           {Math.abs(delta).toFixed(1)}%
-          <span className="font-normal text-steel">vs last month</span>
+          <span className="font-normal text-fg-muted">vs last month</span>
         </span>
 
         <Sparkline data={series} accent={accent} width={112} height={34} className={ACCENT_TEXT[accent]} />

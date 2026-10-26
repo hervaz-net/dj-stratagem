@@ -14,14 +14,6 @@
   site before consent); Inter is used when installed. Light only.
   --------------------------------------------------------------------------- */
 
-/* Parent-only alias names, kept until the legacy-class codemod lands. */
-@theme inline {
-  --color-molten: var(--brand);
-  --color-violet: var(--brand);
-  --color-tide: var(--success);
-  --color-glass: var(--glass-bg);
-}
-
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 6rem;

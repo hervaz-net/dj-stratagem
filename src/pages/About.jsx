@@ -47,10 +47,10 @@ export default function About() {
           measured — see PROOF.md. */}
       <Section className="border-t border-line py-12">
         <div className="mx-auto max-w-2xl slab p-6 text-center">
-          <p className="text-xs font-semibold uppercase tracking-wider text-amber">
+          <p className="text-xs font-semibold uppercase tracking-wider text-brand">
             Where we are today
           </p>
-          <p className="mt-3 text-base leading-relaxed text-steel">
+          <p className="mt-3 text-base leading-relaxed text-fg-muted">
             D&amp;J Stratagem is pre-launch and currently onboarding early users. We&rsquo;d
             rather show you the product than quote numbers we haven&rsquo;t earned yet.
           </p>
@@ -61,10 +61,10 @@ export default function About() {
         <div className="grid grid-cols-1 gap-14 lg:grid-cols-2">
           <div>
             <Eyebrow>Why we exist</Eyebrow>
-            <h2 className="text-balance text-paper text-5xl leading-[1] md:text-6xl">
+            <h2 className="text-balance text-fg text-5xl leading-[1] md:text-6xl">
               Every competitor solves one problem.
             </h2>
-            <p className="mt-5 text-base leading-relaxed text-steel">
+            <p className="mt-5 text-base leading-relaxed text-fg-muted">
               Contractors today stitch together plan rooms, lead services, bid tools, CRMs,
               and marketing agencies &mdash; and none of them talk to each other. The result is
               double entry, missed follow-ups, and opportunities that die in an inbox.
@@ -73,15 +73,15 @@ export default function About() {
           </div>
           <div>
             <Eyebrow>What we build</Eyebrow>
-            <h2 className="text-balance text-paper text-5xl leading-[1] md:text-6xl">
+            <h2 className="text-balance text-fg text-5xl leading-[1] md:text-6xl">
               The whole pipeline, opportunity to award.
             </h2>
-            <p className="mt-5 text-base leading-relaxed text-steel">
+            <p className="mt-5 text-base leading-relaxed text-fg-muted">
               We built D&amp;J Stratagem to be the platform a contractor runs their growth on:
               bidding and awards, marketing and lead generation, CRM and estimating, documents
               and e-signatures &mdash; with AI woven through all of it.
             </p>
-            <p className="mt-4 text-base leading-relaxed text-steel">
+            <p className="mt-4 text-base leading-relaxed text-fg-muted">
               That's a stronger promise than access to bid listings. We're selling growth:
               win more projects, build bigger business.
             </p>
@@ -91,18 +91,18 @@ export default function About() {
 
       <Section className="border-t border-line">
         <Eyebrow>What we believe</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-paper text-5xl leading-[1] md:text-6xl">
+        <h2 className="text-balance max-w-2xl text-fg text-5xl leading-[1] md:text-6xl">
           The principles behind the platform.
         </h2>
         <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2">
           {values.map((v, i) => (
             <Reveal key={v.title} delay={(i % 2) * 100} className="h-full">
               <div className="lift h-full slab p-6">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-amber/10 text-amber">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand/10 text-brand">
                   {v.icon}
                 </div>
-                <h3 className="mt-5 text-base font-semibold text-paper">{v.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-steel">{v.text}</p>
+                <h3 className="mt-5 text-base font-semibold text-fg">{v.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-fg-muted">{v.text}</p>
               </div>
             </Reveal>
           ))}
@@ -113,17 +113,17 @@ export default function About() {
           they are real people and real openings — see PROOF.md. */}
       <Section className="border-t border-line">
         <Eyebrow>Careers</Eyebrow>
-        <h2 className="text-balance max-w-2xl text-paper text-5xl leading-[1] md:text-6xl">
+        <h2 className="text-balance max-w-2xl text-fg text-5xl leading-[1] md:text-6xl">
           Help build the platform for construction growth.
         </h2>
-        <p className="mt-5 max-w-xl text-base leading-relaxed text-steel">
+        <p className="mt-5 max-w-xl text-base leading-relaxed text-fg-muted">
           We&rsquo;re a small team with big ambitions. If you care about construction, software,
           and building things that actually get used &mdash; we&rsquo;d love to hear from you.
         </p>
-        <p className="mt-6 text-sm text-steel">
+        <p className="mt-6 text-sm text-fg-muted">
           <a
             href="mailto:careers@djstratageminc.com"
-            className="font-medium text-amber hover:text-amber-2"
+            className="font-medium text-brand hover:text-brand-hover"
           >
             Send us your resume
           </a>{" "}

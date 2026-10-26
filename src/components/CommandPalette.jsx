@@ -101,7 +101,7 @@ export default function CommandPalette({ open, onClose }) {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center gap-3 border-b border-line px-4 py-3.5">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 text-steel" aria-hidden="true"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" /></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="shrink-0 text-fg-muted" aria-hidden="true"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" /></svg>
           <input
             ref={inputRef}
             type="text"
@@ -109,17 +109,17 @@ export default function CommandPalette({ open, onClose }) {
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={onKey}
             placeholder="Go to…"
-            className="flex-1 bg-transparent text-sm text-paper outline-none placeholder:text-steel/60"
+            className="flex-1 bg-transparent text-sm text-fg outline-none placeholder:text-fg-muted/60"
             aria-label="Search pages"
             aria-autocomplete="list"
             role="combobox"
             aria-expanded="true"
           />
-          <kbd className="rounded border border-line px-1.5 py-0.5 text-[10px] text-steel">Esc</kbd>
+          <kbd className="rounded border border-line px-1.5 py-0.5 text-[10px] text-fg-muted">Esc</kbd>
         </div>
         <ul role="listbox" className="max-h-72 overflow-y-auto py-2">
           {results.length === 0 && (
-            <li className="px-4 py-8 text-center text-sm text-steel">No results</li>
+            <li className="px-4 py-8 text-center text-sm text-fg-muted">No results</li>
           )}
           {results.map((item, i) => (
             <li key={item.to} role="option" aria-selected={i === cursor}>
@@ -128,16 +128,16 @@ export default function CommandPalette({ open, onClose }) {
                 onClick={() => go(item)}
                 onMouseEnter={() => setCursor(i)}
                 className={`flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm transition-colors ${
-                  i === cursor ? "bg-amber/10 text-amber" : "text-paper hover:bg-ink-3"
+                  i === cursor ? "bg-brand/10 text-brand" : "text-fg hover:bg-subtle"
                 }`}
               >
                 <span className="flex-1">{item.label}</span>
-                <span className="text-xs text-steel">{item.group}</span>
+                <span className="text-xs text-fg-muted">{item.group}</span>
               </button>
             </li>
           ))}
         </ul>
-        <div className="border-t border-line px-4 py-2 text-[10px] text-steel/60 flex gap-4">
+        <div className="border-t border-line px-4 py-2 text-[10px] text-fg-muted/60 flex gap-4">
           <span><kbd className="font-mono">↑↓</kbd> navigate</span>
           <span><kbd className="font-mono">↵</kbd> go</span>
           <span><kbd className="font-mono">Esc</kbd> close</span>

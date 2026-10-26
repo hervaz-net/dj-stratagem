@@ -69,7 +69,7 @@ function ScrollToTop() {
 const SkipLink = () => (
   <a
     href="#main"
-    className="sr-only rounded-lg bg-ink-2 px-4 py-2 text-sm font-semibold text-paper shadow-lg focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60]"
+    className="sr-only rounded-lg bg-surface px-4 py-2 text-sm font-semibold text-fg shadow-lg focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60]"
   >
     Skip to content
   </a>

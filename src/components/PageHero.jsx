@@ -15,9 +15,9 @@ export default function PageHero({ index, kicker, title, lede, children }) {
       <div className="mx-auto max-w-7xl">
         <div className="rise-in flex items-center gap-4">
           {subagent && <SubagentMark id={subagent.key} size={40} />}
-          <span className="mono-label text-cta">{index}</span>
+          <span className="mono-label text-brand">{index}</span>
           <span className="h-px w-16 origin-left rise-in bg-line" aria-hidden="true" />
-          <span className="mono-label text-steel">{kicker}</span>
+          <span className="mono-label text-fg-muted">{kicker}</span>
         </div>
         <h1
           className="rise-in mt-6 max-w-4xl text-balance text-4xl leading-[1.1] text-fg md:text-5xl"
@@ -27,7 +27,7 @@ export default function PageHero({ index, kicker, title, lede, children }) {
         </h1>
         <div className="rise-in mt-10 grid gap-8 md:grid-cols-[1fr_minmax(0,32rem)]" style={{ animationDelay: "180ms" }}>
           <div className="order-2 md:order-1">{children}</div>
-          {lede && <p className="order-1 text-lg leading-relaxed text-steel md:order-2">{lede}</p>}
+          {lede && <p className="order-1 text-lg leading-relaxed text-fg-muted md:order-2">{lede}</p>}
         </div>
       </div>
     </section>

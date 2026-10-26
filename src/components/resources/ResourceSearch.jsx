@@ -21,7 +21,7 @@ export default function ResourceSearch({ value, onChange, resultLabel, suggestio
           <IconSearch
             width={22}
             height={22}
-            className="pointer-events-none absolute left-5 top-1/2 -translate-y-1/2 text-steel"
+            className="pointer-events-none absolute left-5 top-1/2 -translate-y-1/2 text-fg-muted"
             aria-hidden="true"
           />
           <input
@@ -33,14 +33,14 @@ export default function ResourceSearch({ value, onChange, resultLabel, suggestio
             autoComplete="off"
             spellCheck="false"
             enterKeyHint="search"
-            className="glass block h-16 w-full rounded-2xl! border! border-line! py-0 pl-14 pr-14 text-base text-paper placeholder:text-steel/70 focus:border-brand! [&::-webkit-search-cancel-button]:hidden"
+            className="glass block h-16 w-full rounded-2xl! border! border-line! py-0 pl-14 pr-14 text-base text-fg placeholder:text-fg-muted/70 focus:border-brand! [&::-webkit-search-cancel-button]:hidden"
           />
           {value && (
             <button
               type="button"
               onClick={() => onChange("")}
               aria-label="Clear search"
-              className="absolute right-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full text-steel transition-colors hover:text-paper"
+              className="absolute right-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full text-fg-muted transition-colors hover:text-fg"
             >
               <IconX width={16} height={16} />
             </button>
@@ -50,13 +50,13 @@ export default function ResourceSearch({ value, onChange, resultLabel, suggestio
 
       {suggestions.length > 0 && (
         <div className="mt-4 flex flex-wrap items-center gap-2">
-          <span className="mono-label text-steel">Popular</span>
+          <span className="mono-label text-fg-muted">Popular</span>
           {suggestions.map((s) => (
             <button
               key={s}
               type="button"
               onClick={() => onChange(s)}
-              className="rounded-full border border-line bg-ink-2 px-3 py-1 text-xs font-medium text-paper transition-colors hover:border-brand hover:text-brand"
+              className="rounded-full border border-line bg-surface px-3 py-1 text-xs font-medium text-fg transition-colors hover:border-brand hover:text-brand"
             >
               {s}
             </button>
@@ -64,7 +64,7 @@ export default function ResourceSearch({ value, onChange, resultLabel, suggestio
         </div>
       )}
 
-      <p className="mt-4 text-sm text-steel" role="status" aria-live="polite">
+      <p className="mt-4 text-sm text-fg-muted" role="status" aria-live="polite">
         {resultLabel}
       </p>
     </div>

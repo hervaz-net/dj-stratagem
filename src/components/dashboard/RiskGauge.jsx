@@ -19,7 +19,7 @@ export default function RiskGauge({ score = 0, className = "" }) {
   return (
     <div className={`flex items-center gap-3 ${className}`}>
       <div
-        className="relative h-1.5 w-20 shrink-0 overflow-hidden rounded-full bg-steel/20"
+        className="relative h-1.5 w-20 shrink-0 overflow-hidden rounded-full bg-fg-muted/20"
         role="meter"
         aria-valuenow={value}
         aria-valuemin={0}
@@ -35,7 +35,7 @@ export default function RiskGauge({ score = 0, className = "" }) {
           }}
         />
       </div>
-      <span className="w-7 shrink-0 text-sm font-semibold tabular-nums text-paper">{value}</span>
+      <span className="w-7 shrink-0 text-sm font-semibold tabular-nums text-fg">{value}</span>
       <span className="text-xs font-medium" style={{ color }}>
         {label}
       </span>

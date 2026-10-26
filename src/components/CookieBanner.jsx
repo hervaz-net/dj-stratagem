@@ -55,11 +55,11 @@ export default function CookieBanner() {
       aria-label="Cookie consent"
       className="fixed bottom-4 right-4 z-[110] w-[min(22rem,calc(100vw-2rem))] slab p-5"
     >
-      <p className="text-sm leading-relaxed text-steel">
+      <p className="text-sm leading-relaxed text-fg-muted">
         This site stores theme preference and this consent choice on your device. There is no analytics or advertising pixel.{" "}
         <Link
           to="/privacy"
-          className="font-medium text-amber underline underline-offset-2 hover:text-amber-2"
+          className="font-medium text-brand underline underline-offset-2 hover:text-brand-hover"
         >
           Privacy Policy
         </Link>
@@ -69,14 +69,14 @@ export default function CookieBanner() {
         <button
           type="button"
           onClick={decline}
-          className="draw-link px-2 py-1.5 text-xs font-semibold text-steel hover:text-paper"
+          className="draw-link px-2 py-1.5 text-xs font-semibold text-fg-muted hover:text-fg"
         >
           Dismiss
         </button>
         <button
           type="button"
           onClick={accept}
-          className="chamfer-sm bg-cta px-4 py-1.5 text-xs font-semibold text-white hover:bg-cta-hover"
+          className="chamfer-sm bg-brand px-4 py-1.5 text-xs font-semibold text-white hover:bg-brand-hover"
         >
           OK
         </button>

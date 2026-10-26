@@ -96,7 +96,7 @@ export default function NewJobDialog({ onCreated, job = null, preset = null }) {
   };
 
   const fieldClass = (key) =>
-    `mt-1 w-full rounded-md border bg-ink px-3 py-2 text-sm text-paper outline-none focus:border-amber ${errors[key] ? "border-danger" : "border-line"}`;
+    `mt-1 w-full rounded-md border bg-canvas px-3 py-2 text-sm text-fg outline-none focus:border-brand ${errors[key] ? "border-danger" : "border-line"}`;
 
   return (
     <>
@@ -108,8 +108,8 @@ export default function NewJobDialog({ onCreated, job = null, preset = null }) {
           setOpen(true);
         }}
         className={editing
-          ? "min-h-11 rounded-full bg-cta px-4 py-2 text-sm font-semibold text-white hover:bg-cta-hover"
-          : "lift glow-brand inline-flex min-h-11 items-center gap-2 rounded-full bg-cta px-5 py-3 text-sm font-semibold text-white hover:bg-cta-hover"}
+          ? "min-h-11 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-hover"
+          : "lift glow-brand inline-flex min-h-11 items-center gap-2 rounded-full bg-brand px-5 py-3 text-sm font-semibold text-white hover:bg-brand-hover"}
       >
         {!editing && (
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true">
@@ -127,11 +127,11 @@ export default function NewJobDialog({ onCreated, job = null, preset = null }) {
             aria-modal="true"
             aria-labelledby="new-job-title"
             noValidate
-            className="w-full max-w-xl rounded-2xl border border-line bg-ink-2 p-6 shadow-2xl"
+            className="w-full max-w-xl rounded-2xl border border-line bg-surface p-6 shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 id="new-job-title" className="text-lg font-semibold text-paper">{editing ? `Edit ${job.ref}` : "New job"}</h2>
-            <p className="mt-1 text-sm text-steel">
+            <h2 id="new-job-title" className="text-lg font-semibold text-fg">{editing ? `Edit ${job.ref}` : "New job"}</h2>
+            <p className="mt-1 text-sm text-fg-muted">
               {editing
                 ? `Fix what the approver asked for${job.decisionNote ? ` (“${job.decisionNote}”)` : ""}, then resubmit.`
                 : "Pick the subagents to run on it. Nothing starts until an administrator approves the job; then each subagent runs on its own and builds on the work before it."}
@@ -139,36 +139,36 @@ export default function NewJobDialog({ onCreated, job = null, preset = null }) {
 
             <div className="mt-5 grid gap-3 sm:grid-cols-2">
               <label className="block sm:col-span-2">
-                <span className="text-xs font-medium text-steel">Job title</span>
+                <span className="text-xs font-medium text-fg-muted">Job title</span>
                 <input ref={firstField} value={form.title} onChange={set("title")} maxLength={160} placeholder="Medical office TI" className={fieldClass("title")} aria-invalid={!!errors.title} aria-describedby={errors.title ? "err-title" : undefined} />
                 {errors.title && <span id="err-title" className="mt-1 block text-xs text-danger">{errors.title}</span>}
               </label>
               <label className="block">
-                <span className="text-xs font-medium text-steel">Location</span>
+                <span className="text-xs font-medium text-fg-muted">Location</span>
                 <input value={form.location} onChange={set("location")} maxLength={160} placeholder="Pasadena, CA" className={fieldClass("location")} />
               </label>
               <label className="block">
-                <span className="text-xs font-medium text-steel">Trade</span>
+                <span className="text-xs font-medium text-fg-muted">Trade</span>
                 <input value={form.trade} onChange={set("trade")} maxLength={80} placeholder="Electrical" className={fieldClass("trade")} />
               </label>
               <label className="block">
-                <span className="text-xs font-medium text-steel">Job value (USD, optional)</span>
+                <span className="text-xs font-medium text-fg-muted">Job value (USD, optional)</span>
                 <input value={form.value} onChange={set("value")} inputMode="decimal" placeholder="240000" className={fieldClass("value")} aria-invalid={!!errors.value} />
                 {errors.value && <span className="mt-1 block text-xs text-danger">{errors.value}</span>}
               </label>
               <label className="block sm:col-span-2">
-                <span className="text-xs font-medium text-steel">Notes for the approver (optional)</span>
+                <span className="text-xs font-medium text-fg-muted">Notes for the approver (optional)</span>
                 <textarea value={form.notes} onChange={set("notes")} maxLength={2000} rows={3} className={fieldClass("notes")} />
               </label>
             </div>
 
             <fieldset className="mt-5">
               <div className="flex items-center justify-between">
-                <legend className="text-xs font-medium text-steel">Subagents ({picked.size} of {SUBAGENTS.length})</legend>
+                <legend className="text-xs font-medium text-fg-muted">Subagents ({picked.size} of {SUBAGENTS.length})</legend>
                 <button
                   type="button"
                   onClick={() => setPicked(allPicked ? new Set() : new Set(SUBAGENTS.map((s) => s.key)))}
-                  className="min-h-11 px-2 text-xs font-semibold text-amber hover:text-amber-2"
+                  className="min-h-11 px-2 text-xs font-semibold text-brand hover:text-brand-hover"
                 >
                   {allPicked ? "Clear all" : "Select all nine"}
                 </button>
@@ -178,10 +178,10 @@ export default function NewJobDialog({ onCreated, job = null, preset = null }) {
                   <label
                     key={s.key}
                     className={`flex min-h-11 cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 text-sm transition-colors ${
-                      picked.has(s.key) ? "border-amber/60 bg-amber/10 text-paper" : "border-line text-steel hover:border-amber/35"
+                      picked.has(s.key) ? "border-brand/60 bg-brand/10 text-fg" : "border-line text-fg-muted hover:border-brand/35"
                     }`}
                   >
-                    <input type="checkbox" checked={picked.has(s.key)} onChange={() => toggle(s.key)} className="accent-amber" />
+                    <input type="checkbox" checked={picked.has(s.key)} onChange={() => toggle(s.key)} className="accent-brand" />
                     <SubagentMark id={s.key} size={20} />
                     <span className="flex-1 font-semibold">{s.name}</span>
                     <StageChip stage={s.stage} />
@@ -192,10 +192,10 @@ export default function NewJobDialog({ onCreated, job = null, preset = null }) {
             </fieldset>
 
             <div className="mt-6 flex justify-end gap-3">
-              <button type="button" onClick={close} className="min-h-11 px-4 py-2 text-sm font-semibold text-steel hover:text-paper">
+              <button type="button" onClick={close} className="min-h-11 px-4 py-2 text-sm font-semibold text-fg-muted hover:text-fg">
                 Cancel
               </button>
-              <button type="submit" disabled={saving} className="min-h-11 rounded-full bg-cta px-5 py-2 text-sm font-semibold text-white hover:bg-cta-hover disabled:opacity-60">
+              <button type="submit" disabled={saving} className="min-h-11 rounded-full bg-brand px-5 py-2 text-sm font-semibold text-white hover:bg-brand-hover disabled:opacity-60">
                 {saving ? "Submitting…" : editing ? "Resubmit for approval" : "Submit for approval"}
               </button>
             </div>

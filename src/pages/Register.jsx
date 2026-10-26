@@ -75,9 +75,9 @@ function validate(v) {
 function Field({ id, label, value, onChange, onBlur, error, required, ...rest }) {
   return (
     <div>
-      <label htmlFor={id} className="mb-2 block text-sm font-medium text-paper">
+      <label htmlFor={id} className="mb-2 block text-sm font-medium text-fg">
         {label}
-        {required && <span className="ml-1 text-amber" aria-hidden="true">*</span>}
+        {required && <span className="ml-1 text-brand" aria-hidden="true">*</span>}
       </label>
       <input
         id={id}
@@ -87,7 +87,7 @@ function Field({ id, label, value, onChange, onBlur, error, required, ...rest })
         onBlur={onBlur}
         aria-invalid={error ? true : undefined}
         aria-describedby={error ? `${id}-error` : undefined}
-        className={`w-full rounded-md border bg-ink px-4 py-2.5 text-sm text-paper outline-hidden transition-colors placeholder:text-steel/60 focus:border-amber ${
+        className={`w-full rounded-md border bg-canvas px-4 py-2.5 text-sm text-fg outline-hidden transition-colors placeholder:text-fg-muted/60 focus:border-brand ${
           error ? "border-danger" : "border-line"
         }`}
         {...rest}
@@ -169,7 +169,7 @@ export default function Register() {
           done ? null : (
             <>
               Already have an account?{" "}
-              <Link to="/login" className="font-medium text-violet hover:underline">
+              <Link to="/login" className="font-medium text-brand hover:underline">
                 Sign in
               </Link>
             </>
@@ -181,12 +181,12 @@ export default function Register() {
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-success/10 text-success">
                 <IconCheck width={22} height={22} />
               </div>
-              <h1 className="mt-5 text-paper text-5xl leading-[0.95] md:text-6xl">
+              <h1 className="mt-5 text-fg text-5xl leading-[0.95] md:text-6xl">
                 Request received.
               </h1>
-              <p className="mt-3 text-sm leading-relaxed text-steel">
+              <p className="mt-3 text-sm leading-relaxed text-fg-muted">
                 Accounts are reviewed by our team before first sign-in. We&rsquo;ll email you at{" "}
-                <span className="font-medium text-paper">{values.email}</span> once yours is
+                <span className="font-medium text-fg">{values.email}</span> once yours is
                 approved.
               </p>
               <Button to="/" variant="secondary" className="mt-6">

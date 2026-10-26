@@ -77,13 +77,13 @@ function ListingDialog({ listing, sellers, defaultOwner, onClose, onSaved }) {
         className="max-h-[92vh] w-full max-w-2xl overflow-y-auto rounded-t-2xl bg-white p-6 shadow-2xl sm:rounded-2xl"
       >
         <div className="flex items-start justify-between gap-4">
-          <h2 id="listing-title" className="text-xl font-bold text-paper">{isNew ? "New catalog listing" : `Edit ${listing.sku}`}</h2>
-          <button type="button" onClick={onClose} className="text-sm font-semibold text-steel hover:text-paper">Close</button>
+          <h2 id="listing-title" className="text-xl font-bold text-fg">{isNew ? "New catalog listing" : `Edit ${listing.sku}`}</h2>
+          <button type="button" onClick={onClose} className="text-sm font-semibold text-fg-muted hover:text-fg">Close</button>
         </div>
 
         <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
           <label className="sm:col-span-2">
-            <span className="text-sm font-medium text-paper">Seller</span>
+            <span className="text-sm font-medium text-fg">Seller</span>
             {isNew ? (
               <select ref={first} value={form.ownerId} onChange={set("ownerId")} className={`${field("ownerId")} mt-1`} required>
                 <option value="">Choose the member who sells this</option>
@@ -92,51 +92,51 @@ function ListingDialog({ listing, sellers, defaultOwner, onClose, onSaved }) {
                 ))}
               </select>
             ) : (
-              <p className="mt-1 text-sm text-steel">{listing.owner.company || listing.owner.name} · {listing.owner.email}</p>
+              <p className="mt-1 text-sm text-fg-muted">{listing.owner.company || listing.owner.name} · {listing.owner.email}</p>
             )}
           </label>
           <label>
-            <span className="text-sm font-medium text-paper">SKU</span>
+            <span className="text-sm font-medium text-fg">SKU</span>
             <input ref={isNew ? undefined : first} value={form.sku} onChange={set("sku")} maxLength={40} className={`${field("sku")} mt-1`} required />
           </label>
           <label>
-            <span className="text-sm font-medium text-paper">Category</span>
+            <span className="text-sm font-medium text-fg">Category</span>
             <input value={form.category} onChange={set("category")} maxLength={80} placeholder="Electrical, Lumber, Fasteners…" className={`${field("category")} mt-1`} required />
           </label>
           <label className="sm:col-span-2">
-            <span className="text-sm font-medium text-paper">Product name</span>
+            <span className="text-sm font-medium text-fg">Product name</span>
             <input value={form.name} onChange={set("name")} maxLength={160} className={`${field("name")} mt-1`} required />
           </label>
           <label>
-            <span className="text-sm font-medium text-paper">Price (USD)</span>
+            <span className="text-sm font-medium text-fg">Price (USD)</span>
             <input value={form.price} onChange={set("price")} inputMode="decimal" className={`${field("price")} mt-1`} required />
           </label>
           <label>
-            <span className="text-sm font-medium text-paper">Unit</span>
+            <span className="text-sm font-medium text-fg">Unit</span>
             <input value={form.unit} onChange={set("unit")} list="admin-units" maxLength={16} className={`${field("unit")} mt-1`} required />
             <datalist id="admin-units">{UNITS.map((u) => <option key={u} value={u} />)}</datalist>
           </label>
           <label>
-            <span className="text-sm font-medium text-paper">In stock</span>
+            <span className="text-sm font-medium text-fg">In stock</span>
             <input value={form.stock} onChange={set("stock")} inputMode="numeric" className={`${field("stock")} mt-1`} />
           </label>
           <label>
-            <span className="text-sm font-medium text-paper">Minimum order</span>
+            <span className="text-sm font-medium text-fg">Minimum order</span>
             <input value={form.minOrder} onChange={set("minOrder")} inputMode="numeric" className={`${field("minOrder")} mt-1`} />
           </label>
           <label>
-            <span className="text-sm font-medium text-paper">Lead time (days)</span>
+            <span className="text-sm font-medium text-fg">Lead time (days)</span>
             <input value={form.leadTimeDays} onChange={set("leadTimeDays")} inputMode="numeric" className={`${field("leadTimeDays")} mt-1`} />
           </label>
           <label>
-            <span className="text-sm font-medium text-paper">Who can see it</span>
+            <span className="text-sm font-medium text-fg">Who can see it</span>
             <select value={form.visibility} onChange={set("visibility")} className={`${field("visibility")} mt-1`}>
               <option value="everyone">Everyone</option>
               <option value="distributors">Distributors only</option>
             </select>
           </label>
           <label>
-            <span className="text-sm font-medium text-paper">Status</span>
+            <span className="text-sm font-medium text-fg">Status</span>
             <select value={form.status} onChange={set("status")} className={`${field("status")} mt-1`}>
               <option value="active">Active</option>
               <option value="draft">Draft</option>
@@ -229,16 +229,16 @@ export default function AdminCatalog() {
       </div>
 
       {ownerName && (
-        <p className="mt-4 text-sm text-steel">
-          Showing <Link to={`/admin/members/${ownerName.id}`} className="font-semibold text-paper hover:underline">{sellerLabel(ownerName)}</Link>.{" "}
-          <button type="button" className="font-semibold text-paper underline" onClick={() => setParam("owner", "")}>Show all sellers</button>
+        <p className="mt-4 text-sm text-fg-muted">
+          Showing <Link to={`/admin/members/${ownerName.id}`} className="font-semibold text-fg hover:underline">{sellerLabel(ownerName)}</Link>.{" "}
+          <button type="button" className="font-semibold text-fg underline" onClick={() => setParam("owner", "")}>Show all sellers</button>
         </p>
       )}
       {error && <Panel className="mt-4 px-5 py-3"><p className="text-sm text-danger">{error.message}</p></Panel>}
 
       <Panel className="relative mt-5 overflow-x-auto">
         <table className="w-full min-w-[56rem] text-left text-sm">
-          <thead className="border-b border-line bg-black/[0.02] text-xs font-semibold uppercase tracking-[0.08em] text-steel">
+          <thead className="border-b border-line bg-black/[0.02] text-xs font-semibold uppercase tracking-[0.08em] text-fg-muted">
             <tr>
               <th scope="col" className="px-5 py-3">Product</th>
               <th scope="col" className="px-3 py-3">Seller</th>
@@ -252,15 +252,15 @@ export default function AdminCatalog() {
             {listings.map((l) => (
               <tr key={l.id} className="align-middle">
                 <td className="px-5 py-3">
-                  <p className="font-semibold text-paper">{l.name}</p>
-                  <p className="text-xs text-steel">{l.sku} · {l.category}{l.visibility === "distributors" && " · Distributors only"}</p>
+                  <p className="font-semibold text-fg">{l.name}</p>
+                  <p className="text-xs text-fg-muted">{l.sku} · {l.category}{l.visibility === "distributors" && " · Distributors only"}</p>
                 </td>
                 <td className="px-3 py-3">
-                  <Link to={`/admin/members/${l.owner.id}`} className="font-medium text-paper hover:underline">{l.owner.company || l.owner.name}</Link>
-                  <p className="text-xs text-steel">{l.owner.email}</p>
+                  <Link to={`/admin/members/${l.owner.id}`} className="font-medium text-fg hover:underline">{l.owner.company || l.owner.name}</Link>
+                  <p className="text-xs text-fg-muted">{l.owner.email}</p>
                 </td>
-                <td className="px-3 py-3 text-right tabular-nums text-paper">{money(l.price)}<span className="text-xs text-steel"> / {l.unit}</span></td>
-                <td className="px-3 py-3 text-right tabular-nums text-paper">{l.stock.toLocaleString()}</td>
+                <td className="px-3 py-3 text-right tabular-nums text-fg">{money(l.price)}<span className="text-xs text-fg-muted"> / {l.unit}</span></td>
+                <td className="px-3 py-3 text-right tabular-nums text-fg">{l.stock.toLocaleString()}</td>
                 <td className="px-3 py-3"><Pill tone={l.status === "active" ? "success" : "neutral"}>{l.status === "active" ? "Active" : "Draft"}</Pill></td>
                 <td className="px-5 py-3">
                   <div className="flex justify-end gap-2">
@@ -281,7 +281,7 @@ export default function AdminCatalog() {
             ))}
           </tbody>
         </table>
-        {!listings.length && <p className="px-5 py-14 text-center text-sm text-steel">{loading ? "Loading…" : "No listings match."}</p>}
+        {!listings.length && <p className="px-5 py-14 text-center text-sm text-fg-muted">{loading ? "Loading…" : "No listings match."}</p>}
       </Panel>
 
       {editing && (
