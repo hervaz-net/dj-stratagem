@@ -6,7 +6,7 @@ import BackToTop from "./components/BackToTop";
 import CookieConsent from "./components/CookieConsent";
 import ReadingProgress from "./components/ReadingProgress";
 import CommandPalette from "./components/CommandPalette";
-import Home from "./pages/Home";
+import CorporateHome from "./pages/CorporateHome";
 import Pricing from "./pages/Pricing";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
@@ -74,6 +74,18 @@ const SkipLink = () => (
     Skip to content
   </a>
 );
+
+/** Corporate homepage: the page draws its own top bar, header and footer. */
+function CorporateLayout({ children }) {
+  return (
+    <div className="relative isolate flex min-h-screen flex-col">
+      <SkipLink />
+      {children}
+      <BackToTop />
+      <CookieConsent />
+    </div>
+  );
+}
 
 /** Public marketing pages: site navbar, footer, back-to-top, cookie banner, floating CTA. */
 function MarketingLayout({ children }) {
@@ -166,7 +178,7 @@ function App() {
             }
           />
 
-          <Route path="/" element={<MarketingLayout><Home /></MarketingLayout>} />
+          <Route path="/" element={<CorporateLayout><CorporateHome /></CorporateLayout>} />
           <Route path="/pricing" element={<MarketingLayout><Pricing /></MarketingLayout>} />
           <Route path="/about" element={<MarketingLayout><About /></MarketingLayout>} />
           <Route path="/contact" element={<MarketingLayout><Contact /></MarketingLayout>} />
