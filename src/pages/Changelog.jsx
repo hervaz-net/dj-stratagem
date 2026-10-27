@@ -132,7 +132,7 @@ const entries = [
     ],
   },
   {
-    version: "1.17",
+    version: "1.16.1",
     date: "October 2026",
     tag: "Fix",
     items: [
@@ -350,7 +350,7 @@ export default function Changelog() {
       <Section className="border-t border-line">
         <div className="max-w-3xl space-y-14">
           {entries.map((entry, i) => (
-            <Reveal key={entry.version} delay={i * 60}>
+            <Reveal key={`${entry.version}-${i}`} delay={i * 60}>
               <div className="flex gap-6 sm:gap-10">
                 <div className="flex flex-col items-center">
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-brand/40 bg-brand/10 text-xs font-semibold text-brand">
