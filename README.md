@@ -13,7 +13,7 @@ Built with React, Vite, React Router, and Tailwind CSS v4. Live at
 
 | Route | Purpose |
 | --- | --- |
-| `/` | Positioning, the six platform pillars, competitive framing |
+| `/` | Corporate homepage: one place for the construction business (new design concept 08) |
 | `/platform` | Deep dive on all six suites |
 | `/solutions` | Tabbed by audience: general contractors, subcontractors, suppliers |
 | `/supply` | Supply Exchange — B2B materials sourcing and its bidding model |
@@ -78,17 +78,17 @@ Colors are semantic tokens, not literal names — `ink` is the recessed surface,
 (chroma-free, so it never reads as a link), `line` borders, and `amber` the
 accent text. Each Tailwind token in `src/index.css` is declared inside
 `@theme inline` and resolves through a second variable (`--surface`, `--text`,
-`--accent`, …), so `[data-theme="dark"]` swaps the whole palette without
-touching a single component.
+`--accent`, …).
 
 Chromatic tokens have one job each: `amber` is contrast-tuned electric-blue
 text and selected chrome; `brand` is the `#001cf7` identity fill; `cta` is
 coral primary buttons (white-on-cta ≥ 4.5:1); `warning` is watch/caution
 gold; `danger` and `success` are status. CTA is never the same hex as danger.
 
-The theme follows the OS by default and remembers an explicit choice in
-`localStorage` under `djs-theme`. A small inline script in `index.html` applies
-it before first paint so dark-theme visitors never see a white flash.
+**The site is light-only.** An inline script in `index.html` forces
+`document.documentElement.dataset.theme = "light"` and clears any previous
+`djs-theme` value from localStorage before first paint. There is no dark mode
+toggle or OS preference follow.
 
 Motion is opt-in via the `lift` class and the `Reveal` component rather than
 blanket `transition: all` rules, and everything collapses under
