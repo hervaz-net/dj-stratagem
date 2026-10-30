@@ -251,7 +251,7 @@ export default function Contact() {
                 </Button>
               </div>
             ) : (
-              <form name="contact" className="space-y-5" onSubmit={handleSubmit} noValidate>
+              <form name="contact" method="post" action="/contact.php" className="space-y-5" onSubmit={handleSubmit} noValidate>
                 <p className="hidden">
                   <label>
                     Don&rsquo;t fill this out:{" "}
