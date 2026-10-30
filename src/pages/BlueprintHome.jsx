@@ -4,10 +4,10 @@ import Seo from "../components/Seo";
 import "../styles/blueprint.css";
 
 /**
- * Blueprint homepage at "/": monochrome #0D0D0D, one orange accent, 1px grid
- * lines, monospace system text. Renders its own nav and footer, so App mounts
- * it outside MarketingLayout. The three UI frames are sample views (PROOF.md):
- * they show what each agent does, not anyone's real data.
+ * Homepage at "/": a light page built around three agents (bidding,
+ * logistics, workforce). Renders its own nav and footer, so App mounts it
+ * outside MarketingLayout. The UI frames are sample views (PROOF.md): they
+ * show what each agent does, not anyone's real data.
  *
  * /projects, /supply, /workforce and /platform belong to the ventures app, so
  * they are plain anchors (full load); in-app routes use <Link>.
@@ -16,89 +16,74 @@ import "../styles/blueprint.css";
 const AGENTS = [
   {
     id: "agent-bidding",
-    code: "01_BIDDING_AGENT",
-    core: "01_BIDDING_CORE",
-    suite: "Suite 01: The Bidding Agent",
-    header: "[SUBAGENT_01] // THE CONTRACT & BIDDING UTILITY",
-    blurb: "Automated Estimating & RFPs",
-    features: ["RFP Ingestion", "Margin Protection", "Compliance Flagging"],
-    copy:
-      "Instantly ingest complex public and private RFP documents. This agent extracts hard technical constraints, cross-references regional historical data, and flags strict compliance mandates before you submit, allowing you to bid wider margins with complete legal confidence.",
-    telemetry: ["Reading RFP documentation...", "Extracting compliance bounds...", "Calculating local wage rates..."],
+    num: "01",
+    name: "Bidding agent",
+    line: "Reads RFPs for you, pulls out the constraints that matter, and flags compliance problems before you submit.",
+    features: ["RFP ingestion", "Margin protection", "Compliance flags"],
+    sample: "Civic center roof · $198,300 · Clear",
     href: "/projects",
-    open: "Open the project board",
+    open: "See the project board",
   },
   {
     id: "agent-logistics",
-    code: "02_LOGISTICS_AGENT",
-    core: "02_LOGISTICS_CORE",
-    suite: "Suite 02: The Logistics Agent",
-    header: "[SUBAGENT_02] // THE LOGISTICAL ROUTING AGENT",
-    blurb: "Supply Chain & Hauling",
-    features: ["Material Matching", "Fleet Routing", "Lead Time Tracking"],
-    copy:
-      "Keep tracking logs clean and hauling trucks moving. This agent automates delivery workflows, cross-checks physical material availability with localized suppliers, and highlights supply chain bottlenecks before they stall a job site.",
-    telemetry: ["Mapping material supply lines...", "Optimizing haul routes...", "Flagging delivery lead times..."],
+    num: "02",
+    name: "Logistics agent",
+    line: "Matches materials to local supplier stock, plans haul routes, and warns you about late deliveries before they stall the site.",
+    features: ["Material matching", "Fleet routing", "Lead-time alerts"],
+    sample: "Load L-0413 · Mesh backordered +3d",
     href: "/supply",
-    open: "Open Supply",
+    open: "See Supply",
   },
   {
     id: "agent-workforce",
-    code: "03_WORKFORCE_AGENT",
-    core: "03_WORKFORCE_CORE",
-    suite: "Suite 03: The Workforce Agent",
-    header: "[SUBAGENT_03] // THE COMPLIANT WORKFORCE INTELLIGENCE",
-    blurb: "Compliance & Labor Dispatch",
-    features: ["OSHA Credential Audit", "Certified Payroll Automation", "Trade Matching"],
-    copy:
-      "From dispatching trusted tradespeople to finalizing certified payroll structures. This agent validates credentials, cross-references OSHA compliance logs, and automates multi-tier labor paperwork so you can scale field crews without multiplying your overhead risks.",
-    telemetry: ["Auditing trade licenses...", "Cross-referencing OSHA database...", "Syncing certified payroll data..."],
+    num: "03",
+    name: "Workforce agent",
+    line: "Checks licenses and OSHA cards, builds certified payroll, and helps you fill crew gaps with qualified people.",
+    features: ["Credential checks", "Certified payroll", "Trade matching"],
+    sample: "4 crews · 3 ready to file",
     href: "/workforce",
-    open: "Open Workforce",
+    open: "See Workforce",
   },
 ];
 
 const INTEGRATIONS = [
   {
-    label: "[INTEGRATION_01] // ERP & COLLABORATION HUBS",
-    title: "Construction & project management software",
-    copy:
-      "Sync your subagent actions with systems like Procore, Autodesk Construction Cloud, and general enterprise ERPs. The platform monitors active project sheets, flags change orders, and transfers logistical updates back to your team's existing dashboards without manual copy-pasting.",
+    label: "Project management",
+    title: "Procore, Autodesk and your ERP",
+    copy: "Agent results land in the dashboards your team already uses, so nobody copies data between systems.",
   },
   {
-    label: "[INTEGRATION_02] // GOVERNMENT & MUNICIPAL DATASTORES",
-    title: "Public procurement & bidding portals",
-    copy:
-      "Connect to regional public works registries, electronic bidding networks, and municipal portals. Subagents monitor designated directories continuously, pulling down new RFP document suites the moment they go live to calculate structural matches instantly.",
+    label: "Public bidding",
+    title: "Municipal and public works portals",
+    copy: "New RFP packages are picked up as they're posted and scored against your trades and territory.",
   },
   {
-    label: "[INTEGRATION_03] // LEDGER & ACCOUNTING INFRASTRUCTURE",
-    title: "Financial, payroll & compliance engines",
-    copy:
-      "Route workforce data into enterprise financial pipelines including QuickBooks Enterprise, Sage 300, and local certified payroll clearinghouses. Automate labor reporting records, credential validity receipts, and compliance audit trail ledgers.",
+    label: "Accounting and payroll",
+    title: "QuickBooks, Sage 300 and payroll services",
+    copy: "Crew hours and credentials flow into labor reports and certified payroll records.",
   },
 ];
 
 const FAQ = [
   {
-    q: 'What exactly is a D&J Stratagem "Subagent" and how does it execute work?',
-    a: "A subagent is not a generic chat window. It is a specialized background program running on our platform. Once you feed it a data parameter, like a municipal RFP document or a hauling schedule, the agent executes specific processes. It parses technical specifications, matches compliance matrices, or runs logistical routing variations automatically, delivering finalized data packages directly back to your dashboard.",
+    q: "What is a subagent?",
+    a: "A focused program that runs in the background on one job. Give it an RFP or a hauling schedule and it does the specific work, such as reading specs, checking compliance or planning routes, then returns the results to your dashboard. It is not a chat window.",
   },
   {
-    q: "Construction compliance is legally strict. How reliable is your AI data parsing?",
-    a: 'Our platform is built to counter the "hallucination" problems found in consumer AI tools. Stratagem subagents operate within bounded parameters drawn from regulatory sources, standard public bidding formats, and localized labor rules. The system does not guess: it flags discrepancies, cross-checks variables, and highlights potential risks for human verification before anything is submitted.',
+    q: "How reliable is the AI on compliance?",
+    a: "Agents work inside fixed rules: public bidding formats, labor rules and the requirements in the documents you give them. When something doesn't match, the agent flags it for a person to check. Nothing is submitted without a human review.",
   },
   {
-    q: "Does this software completely replace our existing tools or integrate with them?",
-    a: "Stratagem is designed to act as a coordination layer. It doesn't force you to rip out your operational tech. Through our integration pipeline, the platform ingests and pushes clean data to standard construction management databases, enterprise ERP systems, and municipal bidding networks via JSON/CSV or API connections.",
+    q: "Do we have to replace our current tools?",
+    a: "No. Stratagem sits alongside what you use today and moves data in and out by CSV, JSON or a direct connection.",
   },
   {
-    q: "How is our proprietary estimating and bidding data secured?",
-    a: "Data isolation is a core tenet of our architecture. Your bidding history, supplier margins, and workforce details are encrypted in transit and walled off to your company account. Our agents are never trained on your proprietary business documentation.",
+    q: "How is our bidding data protected?",
+    a: "Your bids, supplier pricing and crew details are encrypted in transit and kept to your company account. Our agents are never trained on your documents.",
   },
 ];
 
-/** Reads the real PHP health probe; the status chip never claims more than it saw. */
+/** Reads the real PHP health probe; the status line never claims more than it saw. */
 function useSystemStatus() {
   const [status, setStatus] = useState("checking");
   useEffect(() => {
@@ -114,14 +99,22 @@ function useSystemStatus() {
   return status;
 }
 
-const STATUS_TEXT = { checking: "CHECKING...", ok: "OPERATIONAL", bad: "UNREACHABLE" };
+const STATUS_TEXT = { checking: "Checking status", ok: "All systems operational", bad: "Status unavailable" };
 
-function StatusChip({ status }) {
+function StatusLine({ status }) {
   return (
     <span className="bp-status" role="status">
       <span className={`bp-dot ${status === "ok" ? "is-ok" : status === "bad" ? "is-bad" : ""}`} aria-hidden="true" />
-      SYSTEM STATUS: {STATUS_TEXT[status]}
+      {STATUS_TEXT[status]}
     </span>
+  );
+}
+
+function Check() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   );
 }
 
@@ -141,72 +134,59 @@ function Nav({ status }) {
     };
   }, [open]);
 
+  const close = () => setOpen(false);
+
   return (
     <header className="bp-nav" ref={ref}>
       <div className="bp-wrap bp-nav-row">
         <a href="#top" className="bp-brand" aria-label="D&J Stratagem home">
-          [D&amp;J <span>STRATAGEM</span>]
+          <span className="bp-mark" aria-hidden="true" />
+          D&amp;J Stratagem
         </a>
         <nav className="bp-links" aria-label="Main">
-          <span className="bp-prefix">// PLATFORM:</span>
-          <button
-            type="button"
-            className="bp-link"
-            aria-expanded={open}
-            aria-controls="bp-directory"
-            onClick={() => setOpen((v) => !v)}
-          >
-            [Subagents {open ? "^" : "v"}]
+          <button type="button" className="bp-link" aria-expanded={open} aria-controls="bp-directory" onClick={() => setOpen((v) => !v)}>
+            Subagents
+            <svg className="bp-caret" viewBox="0 0 10 10" aria-hidden="true">
+              <path d="M2 3.5l3 3 3-3" fill="none" stroke="currentColor" strokeWidth="1.6" />
+            </svg>
           </button>
-          <a className="bp-link" href="#integrations">[Integrations]</a>
-          <a className="bp-link" href="/workforce">[Workforce]</a>
-          <span className="bp-sep" aria-hidden="true" />
-          <Link className="bp-link" to="/resources">[Docs]</Link>
+          <a className="bp-link" href="#integrations">Integrations</a>
+          <a className="bp-link" href="/workforce">Workforce</a>
+          <Link className="bp-link" to="/resources">Docs</Link>
         </nav>
-        <StatusChip status={status} />
-        <Link to="/register" className="bp-btn bp-btn-sm bp-nav-cta">Deploy Agent</Link>
-        <button
-          type="button"
-          className="bp-link bp-menu-btn"
-          aria-expanded={open}
-          aria-controls="bp-directory"
-          onClick={() => setOpen((v) => !v)}
-        >
-          [{open ? "Close" : "Menu"}]
+        <div className="bp-nav-right">
+          <StatusLine status={status} />
+          <Link className="bp-link" to="/login">Sign in</Link>
+          <Link to="/register" className="bp-btn bp-btn-sm">Deploy an agent</Link>
+        </div>
+        <button type="button" className="bp-link bp-menu-btn" aria-expanded={open} aria-controls="bp-directory" onClick={() => setOpen((v) => !v)}>
+          {open ? "Close" : "Menu"}
         </button>
       </div>
 
       {open && (
         <div id="bp-directory" className="bp-drawer">
           <div className="bp-wrap">
-            <div className="bp-drawer-mobile bp-mono">
-              <a className="bp-link" href="#integrations" onClick={() => setOpen(false)}>[Integrations]</a>
-              <a className="bp-link" href="/workforce">[Workforce]</a>
-              <Link className="bp-link" to="/resources">[Docs]</Link>
-              <Link className="bp-link" to="/login">[Sign in]</Link>
-              <Link to="/register" className="bp-btn bp-btn-sm" style={{ marginTop: 8 }}>Deploy Agent</Link>
-              <StatusChip status={status} />
+            <div className="bp-drawer-mobile">
+              <a className="bp-link" href="#integrations" onClick={close}>Integrations</a>
+              <a className="bp-link" href="/workforce">Workforce</a>
+              <Link className="bp-link" to="/resources">Docs</Link>
+              <Link className="bp-link" to="/login">Sign in</Link>
+              <Link to="/register" className="bp-btn">Deploy an agent</Link>
+              <StatusLine status={status} />
             </div>
-            <p className="bp-drawer-head bp-eyebrow" style={{ margin: 0 }}>
-              System directory // choose a suite to deploy
-            </p>
             <div className="bp-drawer-grid">
               {AGENTS.map((a) => (
-                <div key={a.core} className="bp-drawer-col">
-                  <h3>[{a.core}]</h3>
-                  <p>{a.blurb}</p>
-                  <ul>
-                    {a.features.map((f) => (
-                      <li key={f}>{f}</li>
-                    ))}
-                  </ul>
-                  <a className="bp-open" href={`#${a.id}`} onClick={() => setOpen(false)}>&gt; View telemetry</a>
-                </div>
+                <a key={a.id} className="bp-drawer-card" href={`#${a.id}`} onClick={close}>
+                  <span className="bp-label">{a.num}</span>
+                  <h3>{a.name}</h3>
+                  <p>{a.features.join(" · ")}</p>
+                </a>
               ))}
             </div>
             <div className="bp-drawer-foot">
-              <a href="/platform">&gt; View system architecture specs</a>
-              <Link to="/companies">&gt; All nine subagent companies</Link>
+              <a href="/platform">How the platform works →</a>
+              <Link to="/companies">All Stratagem companies →</Link>
             </div>
           </div>
         </div>
@@ -221,7 +201,7 @@ function FrameBar({ title }) {
   return (
     <div className="bp-frame-bar">
       <span>{title}</span>
-      <span className="bp-tag">SAMPLE VIEW</span>
+      <span className="bp-tag">Sample view</span>
     </div>
   );
 }
@@ -236,11 +216,11 @@ function BidFrame() {
   const [compiled, setCompiled] = useState(false);
   return (
     <div className="bp-frame">
-      <FrameBar title="bidding_agent / public_bids?filter=match>80" />
+      <FrameBar title="Matched public bids" />
       <div className="bp-scroll">
         <table className="bp-table">
           <thead>
-            <tr><th>Listing</th><th>City</th><th>Trade</th><th className="num">Line total</th><th>Compliance</th></tr>
+            <tr><th>Listing</th><th>City</th><th>Trade</th><th className="num">Estimate</th><th>Compliance</th></tr>
           </thead>
           <tbody>
             {BIDS.map(([t, c, tr, v, s]) => (
@@ -252,22 +232,10 @@ function BidFrame() {
           </tbody>
         </table>
       </div>
-      <div className="bp-scroll" style={{ borderTop: "1px solid var(--bp-line)" }}>
-        <table className="bp-table">
-          <thead>
-            <tr><th>Line item · Civic center roof</th><th className="num">Qty</th><th className="num">Unit</th><th className="num">Cost</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>Tear-off, built-up roofing</td><td className="num">18,400 sf</td><td className="num">$2.10</td><td className="num">$38,640</td></tr>
-            <tr><td>Modified bitumen, 2-ply</td><td className="num">18,400 sf</td><td className="num">$6.85</td><td className="num">$126,040</td></tr>
-            <tr><td>Labor, prevailing wage adj.</td><td className="num">412 hr</td><td className="num">$81.60</td><td className="num">$33,620</td></tr>
-          </tbody>
-        </table>
-      </div>
       <div className="bp-frame-foot">
-        <span className="bp-muted">{compiled ? "> Package compiled. 3 files ready (sample)." : "3 listings · 1 package draft"}</span>
+        <span className="bp-muted">{compiled ? "Bid package ready (sample)" : "Civic center roof · 3 line items"}</span>
         <button type="button" className="bp-btn bp-btn-sm" onClick={() => setCompiled(true)} disabled={compiled}>
-          {compiled ? "Compiled" : "Compile Package"}
+          {compiled ? "Package ready" : "Compile package"}
         </button>
       </div>
     </div>
@@ -275,38 +243,36 @@ function BidFrame() {
 }
 
 function RouteFrame() {
-  // Plain vector route: supplier yard -> two drops, one flagged for lead time.
   return (
     <div className="bp-frame">
-      <FrameBar title="logistics_agent / routes/today" />
-      <svg className="bp-map" viewBox="0 0 640 260" role="img" aria-label="Sample route map: supplier yard to two job sites, one delivery flagged for lead time">
+      <FrameBar title="Today's deliveries" />
+      <svg className="bp-map" viewBox="0 0 640 240" role="img" aria-label="Sample route map: supplier yard to two job sites, one delivery flagged as late">
         <defs>
           <pattern id="bp-grid" width="32" height="32" patternUnits="userSpaceOnUse">
-            <path d="M32 0H0V32" fill="none" stroke="#1a1a1a" strokeWidth="1" />
+            <path d="M32 0H0V32" fill="none" stroke="#f0f0ee" strokeWidth="1" />
           </pattern>
         </defs>
-        <rect width="640" height="260" fill="url(#bp-grid)" />
-        <path d="M40 200 L180 200 L180 120 L360 120 L360 60 L560 60" fill="none" stroke="#3a3a3a" strokeWidth="8" />
-        <path d="M360 120 L520 200" fill="none" stroke="#3a3a3a" strokeWidth="8" />
-        <path d="M40 200 L180 200 L180 120 L360 120 L360 60 L560 60" fill="none" stroke="#ff6b00" strokeWidth="2" strokeDasharray="6 6" />
-        <path d="M360 120 L520 200" fill="none" stroke="#ffffff" strokeWidth="2" strokeDasharray="6 6" />
-        <g fontFamily="ui-monospace, Menlo, monospace" fontSize="11" fill="#cfcfcf">
-          <rect x="30" y="190" width="20" height="20" fill="#0d0d0d" stroke="#ffffff" />
-          <text x="20" y="232">YARD · REBAR + MESH</text>
-          <circle cx="560" cy="60" r="9" fill="#0d0d0d" stroke="#3ddc84" strokeWidth="2" />
-          <path d="M555 60 l4 4 l7 -8" fill="none" stroke="#3ddc84" strokeWidth="2" />
-          <text x="470" y="36">SITE A · 07:40 ETA ✓</text>
-          <circle cx="520" cy="200" r="9" fill="#0d0d0d" stroke="#ff6b00" strokeWidth="2" />
-          <text x="514" y="204" fill="#ff6b00">!</text>
-          <text x="420" y="232" fill="#ff6b00">SITE B · LEAD TIME +3D</text>
-          <text x="196" y="112">I-10 E · 18 mi</text>
+        <rect width="640" height="240" fill="url(#bp-grid)" />
+        <path d="M60 180 L190 180 L190 110 L360 110 L360 60 L560 60" fill="none" stroke="#e6e6e3" strokeWidth="10" strokeLinejoin="round" />
+        <path d="M360 110 L520 180" fill="none" stroke="#e6e6e3" strokeWidth="10" />
+        <path d="M60 180 L190 180 L190 110 L360 110 L360 60 L560 60" fill="none" stroke="#121212" strokeWidth="2.5" strokeLinejoin="round" />
+        <path d="M360 110 L520 180" fill="none" stroke="#ff6b00" strokeWidth="2.5" strokeDasharray="6 5" />
+        <g fontFamily="Inter, Arial, sans-serif" fontSize="13" fontWeight="600" fill="#121212">
+          <rect x="50" y="170" width="20" height="20" rx="4" fill="#121212" />
+          <text x="40" y="214">Supplier yard</text>
+          <circle cx="560" cy="60" r="10" fill="#fff" stroke="#15803d" strokeWidth="2.5" />
+          <path d="M555 60 l4 4 l7 -8" fill="none" stroke="#15803d" strokeWidth="2.5" />
+          <text x="478" y="36">Site A · on time</text>
+          <circle cx="520" cy="180" r="10" fill="#fff" stroke="#ff6b00" strokeWidth="2.5" />
+          <text x="516" y="185" fill="#c2410c">!</text>
+          <text x="440" y="214" fill="#c2410c">Site B · 3 days late</text>
         </g>
       </svg>
       <div className="bp-scroll" style={{ borderTop: "1px solid var(--bp-line)" }}>
         <table className="bp-table">
           <thead><tr><th>Load</th><th>Material</th><th>Supplier stock</th><th>Status</th></tr></thead>
           <tbody>
-            <tr><td>L-0412</td><td>#5 rebar, 40 tons</td><td className="bp-ok-text">✓ In stock</td><td className="bp-ok-text">Routed</td></tr>
+            <tr><td>L-0412</td><td>#5 rebar, 40 tons</td><td className="bp-ok-text">In stock</td><td className="bp-ok-text">Routed</td></tr>
             <tr><td>L-0413</td><td>Welded wire mesh</td><td className="bp-warn-text">Backorder</td><td className="bp-warn-text">Flagged</td></tr>
           </tbody>
         </table>
@@ -316,19 +282,19 @@ function RouteFrame() {
 }
 
 const CREWS = [
-  ["Crew 14 · Electrical", "C-10 license", "OSHA 30", "Valid"],
-  ["Crew 22 · Concrete", "C-8 license", "OSHA 10", "Valid"],
-  ["Crew 31 · Roofing", "C-39 license", "OSHA 10", "Valid"],
-  ["Crew 09 · Framing", "B license", "OSHA 10", "Renew in 12d"],
+  ["Crew 14 · Electrical", "C-10", "OSHA 30", "Valid"],
+  ["Crew 22 · Concrete", "C-8", "OSHA 10", "Valid"],
+  ["Crew 31 · Roofing", "C-39", "OSHA 10", "Valid"],
+  ["Crew 09 · Framing", "B", "OSHA 10", "Renew in 12 days"],
 ];
 
 function CrewFrame() {
   return (
     <div className="bp-frame">
-      <FrameBar title="workforce_agent / crews?credentials=all" />
+      <FrameBar title="Crew credentials" />
       <div className="bp-scroll">
         <table className="bp-table">
-          <thead><tr><th>Crew</th><th>Trade license</th><th>Safety</th><th>Credential status</th></tr></thead>
+          <thead><tr><th>Crew</th><th>License</th><th>Safety</th><th>Status</th></tr></thead>
           <tbody>
             {CREWS.map(([c, l, o, s]) => (
               <tr key={c}>
@@ -345,7 +311,7 @@ function CrewFrame() {
         </table>
       </div>
       <div className="bp-frame-foot">
-        <span className="bp-muted">Certified payroll · week 43 · 4 crews</span>
+        <span className="bp-muted">Certified payroll · week 43</span>
         <span className="bp-ok-text">3 of 4 ready to file</span>
       </div>
     </div>
@@ -354,13 +320,13 @@ function CrewFrame() {
 
 const FRAMES = [BidFrame, RouteFrame, CrewFrame];
 
-/* ------------------------------------------------------- deployment engine */
+/* ------------------------------------------------------- how it works */
 
 function Engine({ status }) {
   const [active, setActive] = useState(0);
   const refs = useRef([]);
 
-  // The suite crossing the middle of the viewport is the active one.
+  // The agent crossing the middle of the viewport is the active one.
   useEffect(() => {
     const io = new IntersectionObserver(
       (entries) => {
@@ -377,62 +343,41 @@ function Engine({ status }) {
   return (
     <section className="bp-section" aria-labelledby="bp-engine-h">
       <div className="bp-wrap">
-        <div className="bp-engine-head">
-          <p className="bp-eyebrow">// Interactive blueprint</p>
-          <h2 id="bp-engine-h" className="bp-h2">The Stratagem Deployment Engine</h2>
-        </div>
+        <p className="bp-label">How it works</p>
+        <h2 id="bp-engine-h" className="bp-h2">Three agents, one system.</h2>
+        <p className="bp-intro">Each agent handles one part of the job and passes its results to the next.</p>
+
         <div className="bp-engine">
-          <aside className="bp-node" aria-label="Command node">
-            <div className="bp-node-inner">
-              <h3>THE COMMAND NODE</h3>
-              <div className="bp-rule" />
-              <dl>
-                <dt>Active subagents:</dt>
-                <dd>03</dd>
-                <dt>System status:</dt>
-                <dd>
-                  <span className={`bp-dot ${status === "ok" ? "is-ok" : status === "bad" ? "is-bad" : ""}`} aria-hidden="true" />
-                  {status === "ok" ? "Operational" : status === "bad" ? "Unreachable" : "Checking..."}
-                </dd>
-              </dl>
-              <ol className="bp-tree">
-                {AGENTS.map((a, i) => (
-                  <li key={a.id}>
-                    <a href={`#${a.id}`} aria-current={i === active ? "step" : undefined}>
-                      <span className="bp-box" aria-hidden="true" />
-                      {a.code}
-                    </a>
-                  </li>
-                ))}
-              </ol>
-              <p className="bp-node-note">Scroll to step through each agent. UI frames are sample views.</p>
-            </div>
-          </aside>
+          <nav className="bp-steps" aria-label="Agents">
+            <ol>
+              {AGENTS.map((a, i) => (
+                <li key={a.id}>
+                  <a href={`#${a.id}`} aria-current={i === active ? "step" : undefined}>
+                    <span className="bp-num">{a.num}</span>
+                    {a.name}
+                  </a>
+                </li>
+              ))}
+            </ol>
+            <StatusLine status={status} />
+          </nav>
 
           <div>
             {AGENTS.map((a, i) => {
               const Frame = FRAMES[i];
               return (
-                <article
-                  key={a.id}
-                  id={a.id}
-                  data-index={i}
-                  ref={(el) => (refs.current[i] = el)}
-                  className="bp-suite"
-                  aria-labelledby={`${a.id}-h`}
-                >
-                  <p className="bp-eyebrow">{a.suite}</p>
-                  <h3 id={`${a.id}-h`}>{a.header}</h3>
-                  <p className="bp-body">{a.copy}</p>
-                  <div className="bp-telemetry" aria-label="Telemetry">
-                    <p className="bp-tlabel">Telemetry:</p>
-                    {a.telemetry.map((t) => (
-                      <p key={t}>{t}</p>
+                <article key={a.id} id={a.id} data-index={i} ref={(el) => (refs.current[i] = el)} className="bp-agent" aria-labelledby={`${a.id}-h`}>
+                  <p className="bp-label">{a.num}</p>
+                  <h3 id={`${a.id}-h`}>{a.name}</h3>
+                  <p>{a.line}</p>
+                  <ul className="bp-checks">
+                    {a.features.map((f) => (
+                      <li key={f}><Check />{f}</li>
                     ))}
-                  </div>
+                  </ul>
                   <Frame />
-                  <p className="bp-suite-foot">
-                    <a className="bp-textlink" href={a.href}>&gt; {a.open}</a>
+                  <p className="bp-agent-foot">
+                    <a className="bp-textlink" href={a.href}>{a.open} →</a>
                   </p>
                 </article>
               );
@@ -449,115 +394,100 @@ function Engine({ status }) {
 export default function BlueprintHome() {
   const status = useSystemStatus();
 
-  // Paint the root dark too, so overscroll and scroll gaps never flash the light site background.
-  useEffect(() => {
-    const root = document.documentElement;
-    const prev = root.style.backgroundColor;
-    root.style.backgroundColor = "#0d0d0d";
-    return () => {
-      root.style.backgroundColor = prev;
-    };
-  }, []);
-
   return (
     <>
       <Seo
         title="Software for contractors, subcontractors and suppliers"
-        description="D&J Stratagem deploys targeted digital subagents that take the manual drag out of bidding, logistical routing, and labor compliance for commercial construction."
+        description="D&J Stratagem gives commercial contractors focused agents for bidding, material logistics and labor compliance."
       />
       <div id="top" className="bp">
         <Nav status={status} />
 
         <main id="main" tabIndex="-1">
-          <section className="bp-section bp-hero" aria-labelledby="bp-h1">
-            <div className="bp-wrap">
-              <p className="bp-eyebrow">// Stratagem architecture v2.6</p>
-              <h1 id="bp-h1" className="bp-h1">
-                Hardware for your office. <em>Software for your workforce.</em>
-              </h1>
-              <p className="bp-lede">
-                D&amp;J Stratagem is a unified technology platform built specifically for commercial contractors,
-                subcontractors, and suppliers. We don&rsquo;t deal in generic AI gimmicks. We deploy targeted digital
-                subagents that take the manual drag out of bidding, logistical routing, and labor compliance.
-              </p>
-              <div className="bp-actions">
-                <Link to="/register" className="bp-btn">Deploy Your First Agent</Link>
-                <a className="bp-textlink" href="/platform">&gt; Read Technical Specs</a>
+          <section className="bp-hero" aria-labelledby="bp-h1">
+            <div className="bp-wrap bp-hero-grid">
+              <div>
+                <p className="bp-label">For commercial contractors, subs and suppliers</p>
+                <h1 id="bp-h1" className="bp-h1">
+                  Hardware for your office. <span>Software for your workforce.</span>
+                </h1>
+                <p className="bp-lede">
+                  Focused agents take the manual work out of bidding, material logistics and labor compliance.
+                </p>
+                <div className="bp-actions">
+                  <Link to="/register" className="bp-btn">Deploy your first agent</Link>
+                  <a className="bp-btn is-ghost" href="/platform">How it works</a>
+                </div>
+              </div>
+
+              <div className="bp-agents-card">
+                <header>
+                  <span>Your agents</span>
+                  <span className="bp-tag">Sample view</span>
+                </header>
+                <ul>
+                  {AGENTS.map((a) => (
+                    <li key={a.id}>
+                      <a href={`#${a.id}`}>
+                        <span className="bp-num">{a.num}</span>
+                        <span>
+                          <strong>{a.name}</strong>
+                          <small><span className="bp-dot is-ok" aria-hidden="true" />{a.sample}</small>
+                        </span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
           </section>
 
-          <section className="bp-section" aria-labelledby="bp-problem-h">
-            <div className="bp-wrap bp-split">
+          <section className="bp-section is-alt" aria-labelledby="bp-problem-h">
+            <div className="bp-wrap bp-problem">
               <div>
-                <p className="bp-eyebrow">// The philosophy switch</p>
+                <p className="bp-label">Why Stratagem</p>
                 <h2 id="bp-problem-h" className="bp-h2">Stop fighting admin. Start filling the pipeline.</h2>
               </div>
-              <div>
-                <p className="bp-body">
-                  Most software built for construction companies is either too generic to understand real trade
-                  mechanics or too old to handle modern data speed. D&amp;J Stratagem bridges that gap. We designed our
-                  system to act like a highly trained digital back office that runs silently in the background,
-                  keeping your projects profitable and your crews compliant.
-                </p>
-              </div>
+              <p>
+                Most construction software is either too generic for real trade work or too old to keep up. Stratagem
+                works like a back office that runs in the background, keeping jobs profitable and crews compliant.
+              </p>
             </div>
           </section>
 
           <Engine status={status} />
 
-          <section id="integrations" className="bp-section" aria-labelledby="bp-int-h" style={{ scrollMarginTop: 61 }}>
+          <section id="integrations" className="bp-section is-alt" aria-labelledby="bp-int-h" style={{ scrollMarginTop: 72 }}>
             <div className="bp-wrap">
-              <div className="bp-split">
-                <div>
-                  <p className="bp-eyebrow">// Pipeline_connectivity_matrix</p>
-                  <h2 id="bp-int-h" className="bp-h2">Unify your data lakes. Keep your current stack.</h2>
-                </div>
-                <div>
-                  <p className="bp-body">
-                    D&amp;J Stratagem does not force your company to abandon its reliable core infrastructure. Our
-                    platform operates as a secure execution layer that sits on top of your existing environments,
-                    pulling loose files, logs, and sheets into a single, automated intelligence node.
-                  </p>
-                </div>
+              <p className="bp-label">Integrations</p>
+              <h2 id="bp-int-h" className="bp-h2">Keep your current stack.</h2>
+              <p className="bp-intro">Stratagem works on top of the tools you already run. No rip-and-replace.</p>
+              <div className="bp-cards">
+                {INTEGRATIONS.map((it) => (
+                  <div key={it.label} className="bp-card">
+                    <p className="bp-label">{it.label}</p>
+                    <h3>{it.title}</h3>
+                    <p>{it.copy}</p>
+                  </div>
+                ))}
               </div>
-              <div className="bp-scroll" style={{ borderTop: "1px solid var(--bp-line)" }}>
-                <table className="bp-table bp-matrix" style={{ fontFamily: "var(--bp-sans)", fontSize: 15 }}>
-                  <tbody>
-                    {INTEGRATIONS.map((it) => (
-                      <tr key={it.label}>
-                        <td style={{ width: "34%", padding: "24px 24px 24px 0", verticalAlign: "top", whiteSpace: "normal" }}>
-                          <p className="bp-eyebrow" style={{ margin: 0 }}>{it.label}</p>
-                          <p style={{ margin: "8px 0 0", fontWeight: 600 }}>{it.title}</p>
-                        </td>
-                        <td style={{ padding: "24px 0", verticalAlign: "top", whiteSpace: "normal", lineHeight: 1.7, color: "#cfcfcf" }}>
-                          {it.copy}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              <p className="bp-muted bp-mono" style={{ margin: 0, padding: "16px 0 28px", fontSize: 12, borderTop: "1px solid var(--bp-line)" }}>
-                Don&rsquo;t see your system? <Link className="bp-textlink" to="/contact">&gt; Request an integration</Link>
+              <p className="bp-after">
+                Don&rsquo;t see your system? <Link className="bp-textlink" to="/contact">Request an integration →</Link>
               </p>
             </div>
           </section>
 
           <section className="bp-section" aria-labelledby="bp-faq-h">
             <div className="bp-wrap bp-faq">
-              <div className="bp-faq-head">
-                <p className="bp-eyebrow">// Operational verification [FAQ]</p>
-                <h2 id="bp-faq-h" className="bp-h2">System integrity &amp; secure protocols.</h2>
+              <div>
+                <p className="bp-label">FAQ</p>
+                <h2 id="bp-faq-h" className="bp-h2">Questions contractors ask us.</h2>
               </div>
               <ul className="bp-faq-list">
-                {FAQ.map((f, i) => (
+                {FAQ.map((f) => (
                   <li key={f.q}>
-                    <details open={i === 0}>
-                      <summary>
-                        <span className="bp-q">Q{i + 1}</span>
-                        <span>{f.q}</span>
-                      </summary>
+                    <details>
+                      <summary>{f.q}</summary>
                       <p>{f.a}</p>
                     </details>
                   </li>
@@ -566,17 +496,13 @@ export default function BlueprintHome() {
             </div>
           </section>
 
-          <section className="bp-section bp-closer" aria-labelledby="bp-close-h">
-            <div className="bp-wrap">
-              <p className="bp-eyebrow">// Conversion zone</p>
-              <h2 id="bp-close-h" className="bp-h2">Built for builders who scale.</h2>
-              <p className="bp-lede">
-                Get away from messy text strings, disconnected apps, and fractured workflows. Deploy a unified system
-                built around how actual physical construction projects move from award to closeout.
-              </p>
-              <div className="bp-actions">
-                <Link to="/register" className="bp-btn">Initialize Your Environment</Link>
+          <section className="bp-closer" aria-labelledby="bp-close-h">
+            <div className="bp-wrap bp-closer-row">
+              <div>
+                <h2 id="bp-close-h" className="bp-h2">Built for builders who scale.</h2>
+                <p className="bp-intro">One system for how projects really move, from award to closeout.</p>
               </div>
+              <Link to="/register" className="bp-btn">Get started</Link>
             </div>
           </section>
         </main>
