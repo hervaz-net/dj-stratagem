@@ -4,7 +4,7 @@ import Seo from "../components/Seo";
 import "../styles/blueprint.css";
 
 /**
- * Homepage at "/": a light page built around three agents (bidding,
+ * Homepage at "/": a bold, jobsite-colored page built around three agents (bidding,
  * logistics, workforce). Renders its own nav and footer, so App mounts it
  * outside MarketingLayout. The UI frames are sample views (PROOF.md): they
  * show what each agent does, not anyone's real data.
@@ -44,6 +44,16 @@ const AGENTS = [
     href: "/workforce",
     open: "See Workforce",
   },
+];
+
+// Ticker lines, labelled "Sample activity" on the page (PROOF.md).
+const TICKER = [
+  "RFP matched · Riverside · Concrete · $412,800",
+  "Load L-0412 routed · #5 rebar, 40 tons",
+  "Crew 14 cleared · C-10 · OSHA 30",
+  "Compliance flag · Bldg C electrical · 2 items",
+  "Mesh backordered · Site B +3 days · alert sent",
+  "Certified payroll · week 43 · 3 of 4 ready",
 ];
 
 const INTEGRATIONS = [
@@ -255,8 +265,8 @@ function RouteFrame() {
         <rect width="640" height="240" fill="url(#bp-grid)" />
         <path d="M60 180 L190 180 L190 110 L360 110 L360 60 L560 60" fill="none" stroke="#e6e6e3" strokeWidth="10" strokeLinejoin="round" />
         <path d="M360 110 L520 180" fill="none" stroke="#e6e6e3" strokeWidth="10" />
-        <path d="M60 180 L190 180 L190 110 L360 110 L360 60 L560 60" fill="none" stroke="#121212" strokeWidth="2.5" strokeLinejoin="round" />
-        <path d="M360 110 L520 180" fill="none" stroke="#ff6b00" strokeWidth="2.5" strokeDasharray="6 5" />
+        <path className="bp-route" pathLength="1" d="M60 180 L190 180 L190 110 L360 110 L360 60 L560 60" fill="none" stroke="#121212" strokeWidth="3" strokeLinejoin="round" />
+        <path className="bp-route-late" d="M360 110 L520 180" fill="none" stroke="#ff6b00" strokeWidth="3" strokeDasharray="6 5" />
         <g fontFamily="Inter, Arial, sans-serif" fontSize="13" fontWeight="600" fill="#121212">
           <rect x="50" y="170" width="20" height="20" rx="4" fill="#121212" />
           <text x="40" y="214">Supplier yard</text>
@@ -324,7 +334,25 @@ const FRAMES = [BidFrame, RouteFrame, CrewFrame];
 
 function Engine({ status }) {
   const [active, setActive] = useState(0);
+  const [seen, setSeen] = useState(() => new Set());
   const refs = useRef([]);
+
+  // Frames play their animation once, the first time they scroll into view.
+  useEffect(() => {
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (!e.isIntersecting) continue;
+          const i = Number(e.target.dataset.index);
+          setSeen((prev) => (prev.has(i) ? prev : new Set(prev).add(i)));
+          io.unobserve(e.target);
+        }
+      },
+      { threshold: 0.25 },
+    );
+    refs.current.forEach((el) => el && io.observe(el));
+    return () => io.disconnect();
+  }, []);
 
   // The agent crossing the middle of the viewport is the active one.
   useEffect(() => {
@@ -366,8 +394,8 @@ function Engine({ status }) {
             {AGENTS.map((a, i) => {
               const Frame = FRAMES[i];
               return (
-                <article key={a.id} id={a.id} data-index={i} ref={(el) => (refs.current[i] = el)} className="bp-agent" aria-labelledby={`${a.id}-h`}>
-                  <p className="bp-label">{a.num}</p>
+                <article key={a.id} id={a.id} data-index={i} ref={(el) => (refs.current[i] = el)} className={`bp-agent${seen.has(i) ? " is-in" : ""}`} aria-labelledby={`${a.id}-h`}>
+                  <span className="bp-bignum" aria-hidden="true">{a.num}</span>
                   <h3 id={`${a.id}-h`}>{a.name}</h3>
                   <p>{a.line}</p>
                   <ul className="bp-checks">
@@ -407,7 +435,7 @@ export default function BlueprintHome() {
           <section className="bp-hero" aria-labelledby="bp-h1">
             <div className="bp-wrap bp-hero-grid">
               <div>
-                <p className="bp-label">For commercial contractors, subs and suppliers</p>
+                <p className="bp-kicker">For commercial contractors, subs and suppliers</p>
                 <h1 id="bp-h1" className="bp-h1">
                   Hardware for your office. <span>Software for your workforce.</span>
                 </h1>
@@ -416,7 +444,7 @@ export default function BlueprintHome() {
                 </p>
                 <div className="bp-actions">
                   <Link to="/register" className="bp-btn">Deploy your first agent</Link>
-                  <a className="bp-btn is-ghost" href="/platform">How it works</a>
+                  <a className="bp-btn is-line" href="/platform">How it works</a>
                 </div>
               </div>
 
@@ -442,11 +470,25 @@ export default function BlueprintHome() {
             </div>
           </section>
 
-          <section className="bp-section is-alt" aria-labelledby="bp-problem-h">
+          <div className="bp-hazard" aria-hidden="true" />
+          <div className="bp-ticker" aria-label="Sample activity">
+            <span className="bp-ticker-tag">Sample activity</span>
+            <div className="bp-ticker-track">
+              {[0, 1].map((k) => (
+                <ul key={k} aria-hidden={k === 1 ? "true" : undefined}>
+                  {TICKER.map((t) => (
+                    <li key={t}><span className="bp-dot is-ok" aria-hidden="true" />{t}</li>
+                  ))}
+                </ul>
+              ))}
+            </div>
+          </div>
+
+          <section className="bp-section is-dark" aria-labelledby="bp-problem-h">
             <div className="bp-wrap bp-problem">
               <div>
                 <p className="bp-label">Why Stratagem</p>
-                <h2 id="bp-problem-h" className="bp-h2">Stop fighting admin. Start filling the pipeline.</h2>
+                <h2 id="bp-problem-h" className="bp-h2">Stop fighting admin. Start filling the <span>pipeline.</span></h2>
               </div>
               <p>
                 Most construction software is either too generic for real trade work or too old to keep up. Stratagem
@@ -499,7 +541,7 @@ export default function BlueprintHome() {
           <section className="bp-closer" aria-labelledby="bp-close-h">
             <div className="bp-wrap bp-closer-row">
               <div>
-                <h2 id="bp-close-h" className="bp-h2">Built for builders who scale.</h2>
+                <h2 id="bp-close-h" className="bp-h2 bp-xl">Built for builders who scale.</h2>
                 <p className="bp-intro">One system for how projects really move, from award to closeout.</p>
               </div>
               <Link to="/register" className="bp-btn">Get started</Link>
