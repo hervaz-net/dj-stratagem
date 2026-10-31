@@ -129,13 +129,6 @@ const entries = [
     tag: "Fix",
     items: [
       { type: "fixed", text: "Pricing calculator shows a $2.5M average bid as $2.5M, not $2500k. Extra revenue stays in millions, and the Growth comparison uses the annual price ($2,388/yr), not twelve times the monthly rate." },
-    ],
-  },
-  {
-    version: "1.17",
-    date: "October 2026",
-    tag: "Fix",
-    items: [
       { type: "fixed", text: "Fleet quote requests no longer accept a pickup date that has already passed. The date field starts at today, and the server-bound form rejects a backdated trip before it sends." },
     ],
   },
@@ -322,7 +315,7 @@ const entries = [
 const TYPE_COLOR = {
   new: "text-[var(--viz-green)] bg-[var(--viz-green)]/10",
   improved: "text-[var(--viz-cyan)] bg-[var(--viz-cyan)]/10",
-  fix: "text-warning bg-warning/10",
+  fixed: "text-warning bg-warning/10",
 };
 
 const TAG_COLOR = {
