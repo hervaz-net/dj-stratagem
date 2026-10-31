@@ -14,7 +14,7 @@ ensure_ops_schema();
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
 if ($method === 'GET') {
-    $rows = db()->query('SELECT * FROM purchase_orders ORDER BY ordered_at DESC, id DESC')->fetchAll();
+    $rows = db()->query('SELECT * FROM purchase_orders WHERE ' . owned() . ' ORDER BY ordered_at DESC, id DESC')->fetchAll();
     respond(['ok' => true, 'live' => true, 'sample' => has_seed_rows('purchase_orders'), 'orders' => array_map('order_row', $rows)]);
 }
 
@@ -48,7 +48,7 @@ $pdo = db();
 $placeholders = implode(',', array_fill(0, count($clean), '?'));
 $stmt = $pdo->prepare(
     "UPDATE purchase_orders SET status = 'cancelled', eta = NULL
-      WHERE id IN ($placeholders) AND status IN ('pending','confirmed','shipped')"
+      WHERE id IN ($placeholders) AND status IN ('pending','confirmed','shipped') AND " . mine()
 );
 $stmt->execute($clean);
 $n = $stmt->rowCount();
@@ -57,7 +57,7 @@ if ($n > 0) {
     log_activity('order', $n . ' purchase order' . ($n === 1 ? '' : 's') . ' cancelled', 'at-risk');
 }
 
-$rows = $pdo->query('SELECT * FROM purchase_orders ORDER BY ordered_at DESC, id DESC')->fetchAll();
+$rows = $pdo->query('SELECT * FROM purchase_orders WHERE ' . owned() . ' ORDER BY ordered_at DESC, id DESC')->fetchAll();
 respond([
     'ok' => true,
     'live' => true, 'sample' => has_seed_rows('purchase_orders'),

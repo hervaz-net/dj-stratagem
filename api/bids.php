@@ -13,7 +13,7 @@ ensure_ops_schema();
 
 function list_bids(): array
 {
-    $rows = db()->query('SELECT * FROM bids ORDER BY id DESC')->fetchAll();
+    $rows = db()->query('SELECT * FROM bids WHERE ' . owned() . ' ORDER BY id DESC')->fetchAll();
     return array_map('bid_row', $rows);
 }
 
@@ -56,9 +56,9 @@ if ($action === 'create') {
         : null;
 
     db()->prepare(
-        'INSERT INTO bids (id, project, gc, trade, value, status, due_date, submitted_at)
-         VALUES (?,?,?,?,?,?,?,?)'
-    )->execute([$id, $project, $gc, $trade, $value, $status, $due !== '' ? $due : null, $submitted]);
+        'INSERT INTO bids (id, project, gc, trade, value, status, due_date, submitted_at, owner_id)
+         VALUES (?,?,?,?,?,?,?,?,?)'
+    )->execute([$id, $project, $gc, $trade, $value, $status, $due !== '' ? $due : null, $submitted, ops_owner()]);
 
     log_activity('bid', "Quote #{$id} created for {$project}", $status === 'draft' ? 'watch' : 'active');
 
@@ -74,11 +74,14 @@ if ($action === 'status') {
         fail(422, 'validation_failed', 'A valid quote id and status are required.');
     }
 
-    $stmt = db()->prepare('SELECT * FROM bids WHERE id = ?');
+    $stmt = db()->prepare('SELECT * FROM bids WHERE id = ? AND ' . owned());
     $stmt->execute([$id]);
     $row = $stmt->fetch();
     if (!$row) {
         fail(404, 'not_found', 'Quote not found.');
+    }
+    if ((int) ($row['owner_id'] ?? 0) !== ops_owner()) {
+        fail(409, 'sample_row', 'This is sample data and can\'t be changed. Add your own quote to track it.');
     }
 
     $submitted = $row['submitted_at'];
@@ -86,7 +89,7 @@ if ($action === 'status') {
         $submitted = (new DateTimeImmutable('today', new DateTimeZone('UTC')))->format('Y-m-d');
     }
 
-    db()->prepare('UPDATE bids SET status = ?, submitted_at = ? WHERE id = ?')
+    db()->prepare('UPDATE bids SET status = ?, submitted_at = ? WHERE id = ? AND ' . mine())
         ->execute([$status, $submitted, $id]);
 
     $tone = $status === 'lost' ? 'at-risk' : ($status === 'awarded' ? 'active' : 'watch');
