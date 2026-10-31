@@ -6,7 +6,7 @@ import BackToTop from "./components/BackToTop";
 import CookieConsent from "./components/CookieConsent";
 import ReadingProgress from "./components/ReadingProgress";
 import CommandPalette from "./components/CommandPalette";
-import CorporateHome from "./pages/CorporateHome";
+import BlueprintHome from "./pages/BlueprintHome";
 import Pricing from "./pages/Pricing";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
@@ -178,7 +178,7 @@ function App() {
             }
           />
 
-          <Route path="/" element={<CorporateLayout><CorporateHome /></CorporateLayout>} />
+          <Route path="/" element={<CorporateLayout><BlueprintHome /></CorporateLayout>} />
           <Route path="/pricing" element={<MarketingLayout><Pricing /></MarketingLayout>} />
           <Route path="/about" element={<MarketingLayout><About /></MarketingLayout>} />
           <Route path="/contact" element={<MarketingLayout><Contact /></MarketingLayout>} />
