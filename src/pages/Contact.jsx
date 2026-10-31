@@ -19,7 +19,7 @@ const TOPICS = [
     prompt: "What are you looking to solve?",
     placeholder: "Tell us about your current bidding, procurement, or coordination process.",
     done: "Someone from our team will follow up shortly to schedule time.",
-    note: "We\u2019ll only use your details to follow up about a demo.",
+    note: "We’ll only use your details to follow up about a demo.",
   },
   {
     key: "support",
@@ -28,7 +28,7 @@ const TOPICS = [
     prompt: "What do you need help with?",
     placeholder: "What you were doing, what you expected, and what happened instead.",
     done: "Our team will reply to your email within one business day.",
-    note: "We\u2019ll only use your details to reply to this request.",
+    note: "We’ll only use your details to reply to this request.",
   },
   {
     key: "partner",
@@ -37,25 +37,25 @@ const TOPICS = [
     prompt: "What would you like to explore together?",
     placeholder: "Who you are, what you offer, and how you see us working together.",
     done: "Someone from our team will review this and reply within one business day.",
-    note: "We\u2019ll only use your details to reply about a partnership.",
+    note: "We’ll only use your details to reply about a partnership.",
   },
   {
     key: "careers",
     label: "Careers",
     button: "Send message",
     prompt: "Tell us about yourself",
-    placeholder: "Your background and the kind of role you\u2019re looking for.",
-    done: "Thanks for reaching out. We\u2019ll reply by email.",
-    note: "We\u2019ll only use your details to reply about careers.",
+    placeholder: "Your background and the kind of role you’re looking for.",
+    done: "Thanks for reaching out. We’ll reply by email.",
+    note: "We’ll only use your details to reply about careers.",
   },
   {
     key: "other",
     label: "Something else",
     button: "Send message",
     prompt: "How can we help?",
-    placeholder: "Tell us what\u2019s on your mind.",
+    placeholder: "Tell us what’s on your mind.",
     done: "Our team will reply to your email within one business day.",
-    note: "We\u2019ll only use your details to reply to this message.",
+    note: "We’ll only use your details to reply to this message.",
   },
 ];
 const TOPIC_ALIASES = { partnership: "partner", sales: "demo" };
@@ -251,7 +251,7 @@ export default function Contact() {
                 </Button>
               </div>
             ) : (
-              <form name="contact" className="space-y-5" onSubmit={handleSubmit} noValidate>
+              <form name="contact" method="post" action="/contact.php" className="space-y-5" onSubmit={handleSubmit} noValidate>
                 <p className="hidden">
                   <label>
                     Don&rsquo;t fill this out:{" "}
