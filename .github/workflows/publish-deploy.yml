@@ -21,6 +21,18 @@ jobs:
         with:
           fetch-depth: 0
 
+      # Same guard as deploy.sh: never ship a build that is missing commits
+      # already on origin/main (e.g. a manual dispatch from an old branch).
+      - name: Guard against deploying behind main
+        run: |
+          set -euo pipefail
+          git fetch -q origin main
+          behind="$(git rev-list --count HEAD..origin/main)"
+          if [ "$behind" != "0" ]; then
+            echo "::error::HEAD is ${behind} commit(s) behind origin/main. Refusing to deploy a stale build."
+            exit 1
+          fi
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -110,50 +122,81 @@ jobs:
 
       - name: Pull and deploy on cPanel
         id: cpanel
-        if: always()
+        # Run even if the deploy-branch push was skipped or rejected, so the
+        # server still pulls the current deploy tip. Never after a failed build
+        # or behind-main guard.
+        if: ${{ !cancelled() && steps.refresh.conclusion != 'skipped' }}
         env:
           CPANEL_TOKEN: ${{ secrets.CPANEL_TOKEN }}
+          CPANEL_USER: ${{ secrets.CPANEL_USER }}
+          CPANEL_HOST: ${{ secrets.CPANEL_HOST }}
         run: |
           set -euo pipefail
-          if [ -z "${CPANEL_TOKEN}" ]; then
+          missing=""
+          [ -n "${CPANEL_TOKEN}" ] || missing="${missing} CPANEL_TOKEN"
+          [ -n "${CPANEL_USER}" ]  || missing="${missing} CPANEL_USER"
+          [ -n "${CPANEL_HOST}" ]  || missing="${missing} CPANEL_HOST"
+          if [ -n "$missing" ]; then
             echo "pulled=false" >> "$GITHUB_OUTPUT"
-            echo "::error::CPANEL_TOKEN repo secret is missing."
+            echo "::error::Missing repo secret(s):${missing}. See README → Automatic deploys."
             echo "GitHub deploy branch is current. public_html was not pulled."
-            echo "Add repo secret CPANEL_TOKEN, or cPanel Git Version Control: Update from Remote then Deploy HEAD."
-            echo "Or run ./deploy.sh on a machine with ~/.cpanel_token."
+            echo "Fallback: cPanel Git Version Control → Update from Remote → Deploy HEAD Commit, or ./deploy.sh."
             exit 1
           fi
+          # CPANEL_HOST may be given with or without scheme/port.
+          HOST="${CPANEL_HOST#https://}"; HOST="${HOST%/}"
+          case "$HOST" in *:*) ;; *) HOST="${HOST}:2083" ;; esac
+          ROOT="/home/${CPANEL_USER}/repositories/dj-stratagem"
+          uapi() {
+            local module="$1" func="$2"; shift 2
+            curl -sS --fail-with-body --max-time 90 \
+              -H "Authorization: cpanel ${CPANEL_USER}:${CPANEL_TOKEN}" \
+              "https://${HOST}/execute/${module}/${func}" "$@"
+          }
+          # UAPI answers HTTP 200 even on failure; the verdict is in the JSON.
+          api_check() {
+            python3 -c '
+          import json,sys
+          raw=sys.stdin.read()
+          try: d=json.loads(raw)
+          except Exception: print("::error::non-JSON UAPI response:", raw[:300]); sys.exit(1)
+          if not d.get("status") or d.get("errors"):
+              print("::error::UAPI failed:", "; ".join(map(str, d.get("errors") or ["status=0"]))); sys.exit(1)
+          print("  ok")
+          '
+          }
+          echo "==> VersionControl/update (branch deploy)"
+          uapi VersionControl update --get \
+            --data-urlencode "repository_root=${ROOT}" \
+            --data-urlencode "branch=deploy" | api_check
+          echo "==> VersionControlDeployment/create"
+          uapi VersionControlDeployment create -X POST \
+            --data-urlencode "repository_root=${ROOT}" | api_check
           echo "pulled=true" >> "$GITHUB_OUTPUT"
-          AUTH="cpanel djstlime:${CPANEL_TOKEN}"
-          HOST="https://server247.web-hosting.com:2083"
-          ROOT="/home/djstlime/repositories/dj-stratagem"
-          curl -sS --max-time 90 -H "Authorization: ${AUTH}" --get --data-urlencode "repository_root=${ROOT}" --data-urlencode "branch=deploy" "${HOST}/execute/VersionControl/update"
-          echo
-          curl -sS --max-time 90 -H "Authorization: ${AUTH}" -X POST --data-urlencode "repository_root=${ROOT}" "${HOST}/execute/VersionControlDeployment/create"
-          echo
 
-      - name: Report live vs dist hash
-        if: always()
+      - name: Verify live site serves this build
+        if: ${{ !cancelled() && steps.cpanel.outputs.pulled == 'true' }}
         run: |
           set -uo pipefail
           EXPECTED="$(grep -oE 'assets/index-[A-Za-z0-9_-]+[.]js' dist/index.html | head -1 || true)"
-          LIVE="$(curl -sS --max-time 30 https://djstratageminc.com/ | grep -oE 'assets/index-[A-Za-z0-9_-]+[.]js' | head -1 || true)"
-          echo "expected ${EXPECTED:-<none>}"
+          [ -n "$EXPECTED" ] || { echo "::error::no bundle hash in dist/index.html"; exit 1; }
+          LIVE=""
+          for i in $(seq 1 12); do
+            LIVE="$(curl -sS --max-time 30 -H 'Cache-Control: no-cache' "https://djstratageminc.com/?v=${GITHUB_SHA}" | grep -oE 'assets/index-[A-Za-z0-9_-]+[.]js' | head -1 || true)"
+            [ "$LIVE" = "$EXPECTED" ] && break
+            echo "  attempt ${i}: live ${LIVE:-<none>}, waiting for cPanel rsync…"
+            sleep 10
+          done
+          echo "expected ${EXPECTED}"
           echo "live     ${LIVE:-<none>}"
-          if [ -z "$EXPECTED" ] || [ "$EXPECTED" != "$LIVE" ]; then
-            echo "live hash differs; waiting for cPanel rsync window"
-            sleep 20
-            LIVE="$(curl -sS --max-time 30 https://djstratageminc.com/ | grep -oE 'assets/index-[A-Za-z0-9_-]+[.]js' | head -1 || true)"
-            echo "live     ${LIVE:-<none>}"
-          fi
-          if [ -z "$EXPECTED" ] || [ "$EXPECTED" != "$LIVE" ]; then
-            echo "::error::Live bundle does not match this build. cPanel did not pull deploy, or Deploy HEAD was skipped."
-            echo "cPanel → Git Version Control → dj-stratagem → Update from Remote → Deploy HEAD Commit."
+          if [ "$EXPECTED" != "$LIVE" ]; then
+            echo "::error::Live bundle does not match this build after ~2 min."
+            echo "Check: ./deploy.sh --status, and that public_html is djstlime:nobody 0750."
             exit 1
           fi
 
       - name: Verify live PHP probes and assets
-        if: always()
+        if: ${{ !cancelled() && steps.cpanel.outputs.pulled == 'true' }}
         run: |
           set -euo pipefail
           fail=0
