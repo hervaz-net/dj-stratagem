@@ -128,9 +128,33 @@ Two branches:
 - **`deploy`** — build output only (the contents of `dist/`) plus `.cpanel.yml`. This is the
   branch cPanel checks out, so the server never needs Node or a build step.
 
+### Automatic deploys (merge to `main`)
+
+Every push to `main` runs `.github/workflows/publish-deploy.yml`, which:
+
+1. refuses to run if the commit is behind `origin/main` (same guard as `deploy.sh`),
+2. builds and checks `dist/`, then refreshes the `deploy` branch,
+3. calls the cPanel UAPI `VersionControl/update` (branch `deploy`) and
+   `VersionControlDeployment/create`, failing on any UAPI error,
+4. polls https://djstratageminc.com for up to ~2 minutes until it serves the new
+   `assets/index-*.js` hash, then probes the PHP health endpoints.
+
+One-time setup: add these under GitHub → Settings → Secrets and variables → Actions →
+**New repository secret**:
+
+| Secret | Value |
+| --- | --- |
+| `CPANEL_TOKEN` | cPanel → Security → **Manage API Tokens** → Create (no expiry, or note the date) |
+| `CPANEL_USER` | `djstlime` |
+| `CPANEL_HOST` | `server247.web-hosting.com` (port `2083` is assumed if omitted) |
+| `DEPLOY_PAT` | optional; only if the branch ruleset blocks `github-actions[bot]` from pushing `deploy` |
+
+Re-run a deploy any time from Actions → **Publish deploy branch** → Run workflow.
+If the cPanel step fails, the `deploy` branch is still current, so the manual path below works.
+
 ### Shipping a change
 
-Preferred path, from a machine that has Node, git, curl, and `~/.cpanel_token`:
+Manual path, from a machine that has Node, git, curl, and `~/.cpanel_token`:
 
 ```bash
 git checkout main && git pull origin main
