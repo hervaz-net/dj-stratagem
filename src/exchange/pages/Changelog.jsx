@@ -227,6 +227,7 @@ const entries = [
 const TYPE_STYLE = {
   new: "bg-brand-soft text-brand-fg",
   improved: "bg-role-distributor-soft text-role-distributor",
+  fixed: "bg-warning-soft text-warning",
   fix: "bg-warning-soft text-warning",
 };
 
@@ -285,7 +286,7 @@ export default function Changelog() {
                     <ul className="mt-5 space-y-3">
                       {entry.items.map((item) => (
                         <li key={item.text} className="flex items-start gap-3">
-                          <span className={`mt-0.5 w-[4.75rem] shrink-0 rounded-full px-2 py-0.5 text-center text-[0.7rem] font-semibold capitalize ${TYPE_STYLE[item.type]}`}>
+                          <span className={`mt-0.5 w-[4.75rem] shrink-0 rounded-full px-2 py-0.5 text-center text-[0.7rem] font-semibold capitalize ${TYPE_STYLE[item.type] || ""}`}>
                             {item.type}
                           </span>
                           <p className="text-[0.95rem] leading-relaxed text-fg">{item.text}</p>
