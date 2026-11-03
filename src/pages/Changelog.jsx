@@ -132,7 +132,7 @@ const entries = [
     ],
   },
   {
-    version: "1.17",
+    version: "1.17b",
     date: "October 2026",
     tag: "Fix",
     items: [
@@ -322,6 +322,7 @@ const entries = [
 const TYPE_COLOR = {
   new: "text-[var(--viz-green)] bg-[var(--viz-green)]/10",
   improved: "text-[var(--viz-cyan)] bg-[var(--viz-cyan)]/10",
+  fixed: "text-warning bg-warning/10",
   fix: "text-warning bg-warning/10",
 };
 
@@ -350,11 +351,11 @@ export default function Changelog() {
       <Section className="border-t border-line">
         <div className="max-w-3xl space-y-14">
           {entries.map((entry, i) => (
-            <Reveal key={entry.version} delay={i * 60}>
+            <Reveal key={`${entry.version}-${i}`} delay={i * 60}>
               <div className="flex gap-6 sm:gap-10">
                 <div className="flex flex-col items-center">
                   <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-brand/40 bg-brand/10 text-xs font-semibold text-brand">
-                    {entry.version}
+                    {entry.version.replace(/b$/, "")}
                   </div>
                   {i < entries.length - 1 && (
                     <div className="mt-3 flex-1 w-px bg-line" aria-hidden="true" />
@@ -368,9 +369,9 @@ export default function Changelog() {
                     </span>
                   </div>
                   <ul className="mt-5 space-y-3">
-                    {entry.items.map((item) => (
-                      <li key={item.text} className="flex items-start gap-3">
-                        <span className={`mt-0.5 shrink-0 rounded px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${TYPE_COLOR[item.type]}`}>
+                    {entry.items.map((item, j) => (
+                      <li key={`${item.type}-${j}-${item.text.slice(0, 20)}`} className="flex items-start gap-3">
+                        <span className={`mt-0.5 shrink-0 rounded px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${TYPE_COLOR[item.type] || ""}`}>
                           {item.type}
                         </span>
                         <p className="text-sm leading-relaxed text-fg-muted">{item.text}</p>
