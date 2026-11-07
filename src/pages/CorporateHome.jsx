@@ -4,8 +4,8 @@ import "../styles/corporate.css";
 
 /**
  * Corporate homepage for D&J Stratagem, Inc. (design concept 08 · Corporate).
- * Renders its own utility bar, header and footer, so App mounts it outside
- * MarketingLayout. Dashboard figures and supplier names are illustrative.
+ * Uses the shared site navigation (SiteNav) like every other public page,
+ * and renders its own footer. Dashboard figures and supplier names are illustrative.
  */
 export default function CorporateHome() {
   return (
@@ -15,64 +15,7 @@ export default function CorporateHome() {
         description="Find projects that match your trade, bid with confidence, source materials, staff the crew, and reserve the trucks. Stratagem connects every part of the job."
       />
       <div id="top" className="co" style={{ background: "#FFFFFF", color: "#111926", fontFamily: "'Inter', 'Helvetica Neue', Arial, sans-serif" }}>
-        <div style={{ position: "relative", zIndex: "2", background: "linear-gradient(180deg, rgba(255,255,255,0.78), rgba(138,148,163,0.16))", backdropFilter: "blur(12px) saturate(160%)", borderBottom: "1px solid rgba(138,148,163,0.24)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.9)", color: "#474B53", fontSize: "13px" }}>
-          <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "9px clamp(20px, 4vw, 40px)", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: "6px 24px" }}>
-            <span>
-              D&J Stratagem, Inc. · Los Angeles, California
-            </span>
-            <span style={{ display: "flex", flexWrap: "wrap", gap: "4px 22px" }}>
-              <Link to="/help" className="lk">
-                Help center
-              </Link>
-              <a className="lk" href="mailto:support@djstratageminc.com">
-                support@djstratageminc.com
-              </a>
-            </span>
-          </div>
-        </div>
-        <header style={{ background: "#FFFFFF", borderBottom: "1px solid #E8E2D6" }}>
-          <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "14px clamp(20px, 4vw, 40px)", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: "12px 32px" }}>
-            <a href="#top" aria-label="Stratagem home" style={{ display: "flex", alignItems: "center", gap: "10px", color: "#111926" }}>
-              <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true">
-                <rect width="30" height="30" rx="7" fill="#111926" />
-                <path d="M8 20.5L15 8.5L22 20.5" fill="none" stroke="#FFFFFF" strokeWidth="2.6" strokeLinejoin="round" />
-                <path d="M10.5 23H19.5" stroke="#B8893B" strokeWidth="2.2" />
-              </svg>
-              <span style={{ fontFamily: "'Inter Tight', 'Inter', sans-serif", fontSize: "19px", fontWeight: "700", letterSpacing: "-0.02em" }}>
-                Stratagem
-              </span>
-            </a>
-            <nav aria-label="Main" style={{ display: "flex", flexWrap: "wrap", gap: "2px 26px", fontSize: "14.5px", fontWeight: "500" }}>
-              <a className="lk" href="#platform" style={{ padding: "10px 0" }}>
-                Platform
-              </a>
-              <a className="lk" href="#companies" style={{ display: "inline-flex", alignItems: "center", gap: "5px", padding: "10px 0" }}>
-                Companies
-                <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
-                  <path d="M3 4.5L6 7.5L9 4.5" fill="none" stroke="currentColor" strokeWidth="1.6" />
-                </svg>
-              </a>
-              <a className="lk" href="#how" style={{ padding: "10px 0" }}>
-                How it works
-              </a>
-              <a className="lk" href="#company" style={{ padding: "10px 0" }}>
-                About
-              </a>
-              <Link to="/pricing" className="lk" style={{ padding: "10px 0" }}>
-                Pricing
-              </Link>
-            </nav>
-            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <Link to="/login" className="lk" style={{ display: "inline-flex", alignItems: "center", minHeight: "44px", padding: "0 12px", fontSize: "14.5px", fontWeight: "500" }}>
-                Sign in
-              </Link>
-              <Link to="/register" className="btn btn-ink" style={{ display: "inline-flex", alignItems: "center", minHeight: "40px", padding: "0 16px", background: "#111926", color: "#FFFFFF", borderRadius: "6px", fontSize: "14.5px", fontWeight: "600" }}>
-                Get started
-              </Link>
-            </div>
-          </div>
-        </header>
-        <section id="main" tabIndex="-1" aria-labelledby="co-h1" style={{ background: "radial-gradient(1000px 560px at 76% -120px, rgba(234,216,186,0.8), rgba(255,255,255,0) 70%), linear-gradient(180deg, #F8F9FB 0%, #FFFFFF 38%)" }}>
+        <section aria-labelledby="co-h1" style={{ background: "radial-gradient(1000px 560px at 76% -120px, rgba(234,216,186,0.8), rgba(255,255,255,0) 70%), linear-gradient(180deg, #F8F9FB 0%, #FFFFFF 38%)" }}>
           <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "88px clamp(20px, 4vw, 40px) 96px" }}>
             <div style={{ maxWidth: "880px" }}>
               <Link to="/fleet" className="more" style={{ display: "inline-flex", alignItems: "center", gap: "10px", padding: "5px 12px 5px 5px", border: "1px solid #E8E2D6", borderRadius: "999px", fontSize: "13.5px", fontWeight: "500", color: "#111926" }}>
@@ -673,12 +616,12 @@ export default function CorporateHome() {
                       <span style={{ width: "7px", height: "7px", borderRadius: "50%", background: "#1F9D63" }} />
                       Onboarding early members
                     </span>
-                    <Link to="/exchange" className="more" style={{ display: "inline-flex", alignItems: "center", gap: "6px", fontSize: "14px", fontWeight: "600", color: "#111926" }}>
+                    <a href="/exchange" className="more" style={{ display: "inline-flex", alignItems: "center", gap: "6px", fontSize: "14px", fontWeight: "600", color: "#111926" }}>
                       Visit Exchange
                       <svg className="arw" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
                         <path d="M2 7H11M8 4L11 7L8 10" fill="none" stroke="#111926" strokeWidth="1.6" />
                       </svg>
-                    </Link>
+                    </a>
                   </div>
                 </div>
               </article>
@@ -1089,9 +1032,9 @@ export default function CorporateHome() {
               <span style={{ fontWeight: "700" }}>
                 Companies
               </span>
-              <Link to="/exchange" className="lk">
+              <a href="/exchange" className="lk">
                 Stratagem Exchange
-              </Link>
+              </a>
               <Link to="/fleet" className="lk">
                 Stratagem Fleet
               </Link>
