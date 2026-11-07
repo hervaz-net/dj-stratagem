@@ -296,6 +296,7 @@ MOCK_CLAUDE_LOG=/tmp/mock.log python3 scripts/mock-claude.py 8765 &
 npm run build && php -S 127.0.0.1:8080 -t dist <router.php>
 python3 scripts/smoke-api.py http://127.0.0.1:8080 --admin-email you@example.com --admin-password '…'
 python3 scripts/test-ai-subagents.py http://127.0.0.1:8080 /tmp/mail.log /tmp/mock.log --admin-email you@example.com --admin-password '…'
+python3 scripts/test-tenant-isolation.py http://127.0.0.1:8080 --admin-email you@example.com --admin-password '…' --mysql djs
 python3 scripts/e2e-jobs.py  http://127.0.0.1:8080 you@example.com '…'   # needs Python Playwright
 python3 scripts/e2e-admin.py http://127.0.0.1:8080 you@example.com '…'
 ```
@@ -309,6 +310,17 @@ mid-call, edit and resubmit, every email, and password reset.
 new job → approval → the subagents finishing on their own → reading the
 output → reject and resubmit. All of them create rows, so never point them
 at production.
+
+`test-tenant-isolation.py` checks that two companies can't see or change each
+other's suppliers, quotes, purchase orders, activity, dashboard totals or alert
+read state. It is the one test that is safe on production, because it only
+signs in as two test accounts you approved in advance and only adds rows to
+company A (named "Isolation test …", visible only to that account):
+
+```bash
+python3 scripts/test-tenant-isolation.py https://djstratageminc.com \
+  --a-email qa-a@yourdomain --a-password '…' --b-email qa-b@yourdomain --b-password '…'
+```
 
 ### Dashboard APIs
 
