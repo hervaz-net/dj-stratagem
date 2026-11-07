@@ -75,20 +75,8 @@ const SkipLink = () => (
   </a>
 );
 
-/** Corporate homepage: the page draws its own top bar, header and footer. */
-function CorporateLayout({ children }) {
-  return (
-    <div className="relative isolate flex min-h-screen flex-col">
-      <SkipLink />
-      {children}
-      <BackToTop />
-      <CookieConsent />
-    </div>
-  );
-}
-
 /** Public marketing pages: site navbar, footer, back-to-top, cookie banner, floating CTA. */
-function MarketingLayout({ children }) {
+function MarketingLayout({ children, siteFooter = true }) {
   const [paletteOpen, setPaletteOpen] = useState(false);
   const { user, loading } = useAuth();
   const account = {
@@ -119,7 +107,7 @@ function MarketingLayout({ children }) {
       <main id="main" className="site-main flex-1">
         {children}
       </main>
-      <Footer />
+      {siteFooter && <Footer />}
       <BackToTop />
       <CookieConsent />
       <ReadingProgress />
@@ -178,7 +166,8 @@ function App() {
             }
           />
 
-          <Route path="/" element={<CorporateLayout><CorporateHome /></CorporateLayout>} />
+          {/* The homepage draws its own footer but shares the site nav. */}
+          <Route path="/" element={<MarketingLayout siteFooter={false}><CorporateHome /></MarketingLayout>} />
           <Route path="/pricing" element={<MarketingLayout><Pricing /></MarketingLayout>} />
           <Route path="/about" element={<MarketingLayout><About /></MarketingLayout>} />
           <Route path="/contact" element={<MarketingLayout><Contact /></MarketingLayout>} />
