@@ -29,8 +29,9 @@ The look is bright and friendly, like a B2B Faire or Shopify, in a trade setting
 
 ## Tokens (Tailwind classes)
 
-Every color is a CSS variable with light and dark values (`src/index.css`).
-**Never hard-code hex values in components**, or dark mode breaks.
+Every color is a CSS variable (`src/index.css`). The site is light-only today,
+but the tokens keep dark values so a dark theme can return.
+**Never hard-code hex values in components**; use the tokens.
 
 | Purpose | Class |
 |---|---|
