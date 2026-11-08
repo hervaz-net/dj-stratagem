@@ -19,6 +19,7 @@ import {
 } from "../../exchange/components/icons";
 import Sym from "../../shared/Symbol";
 import { SubagentHero, SubagentCTA, RowsPanel, useSeo, card } from "../parts";
+import SupplyCatalog from "../components/SupplyCatalog";
 
 const categories = [
   { Icon: IconTool, title: "Power tools & accessories", text: "Drills, saws, grinders, batteries, blades, and bits: the consumables that walk off every jobsite." },
@@ -135,6 +136,16 @@ export default function Supply({ brand }) {
               </div>
             </Reveal>
           ))}
+        </div>
+      </Section>
+
+      <Section id="catalog" className="scroll-mt-20">
+        <SectionHeading eyebrow="Supplier catalog" symbol="supplier" title="Browse what's on the shelf.">
+          Search published products and list prices from national suppliers by name, SKU, brand, or part number, then
+          bring the lines you need to a quote.
+        </SectionHeading>
+        <div className="mt-10">
+          <SupplyCatalog />
         </div>
       </Section>
 
