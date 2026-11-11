@@ -70,13 +70,13 @@ export const companies = [
     status: "In development",
     tagline: "The right crew, on the right day.",
     summary:
-      "Skilled-trades staffing that plugs into the projects you are already winning, with credentials checked before anyone shows up on site.",
+      "Skilled-trades staffing for projects you have already won. Not available yet.",
     lede:
-      "Winning the bid is half the job; staffing it is the other half. Stratagem Workforce is being built to match verified tradespeople to awarded work, so a good award never turns into a bad schedule.",
+      "Winning the bid is half the job; staffing it is the other half. Stratagem Workforce is being built to match tradespeople to awarded work. It does not place crews today.",
     offerings: [
-      { title: "Crews on demand", text: "Request journeymen, apprentices, and foremen by trade, date, and site, sized to the phase of the job." },
-      { title: "Credentials up front", text: "Licenses, OSHA cards, and certifications verified and attached to every placement." },
-      { title: "Payroll paperwork handled", text: "Support for prevailing wage and certified payroll reporting on public work." },
+      { title: "Crews on demand", text: "The plan is to request journeymen, apprentices, and foremen by trade, date, and site, sized to the phase of the job." },
+      { title: "Credentials up front", text: "The plan is to check licenses, OSHA cards, and certifications before a placement. That check is not offered today." },
+      { title: "Payroll paperwork handled", text: "The plan includes support for prevailing wage and certified payroll reporting on public work. That is not offered today." },
     ],
     audience: ["Subcontractors scaling for a big award", "General contractors covering gaps between phases", "Tradespeople looking for steady, well-run jobs"],
     glyph: "helmet",

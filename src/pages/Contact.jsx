@@ -5,6 +5,7 @@ import PageHero from "../components/PageHero";
 import Button from "../components/Button";
 import Seo from "../components/Seo";
 import { IconMap, IconChat, IconClock, IconCheck } from "../components/icons";
+import { track } from "../lib/analytics";
 
 const roleOptions = ["General Contractor", "Subcontractor", "Supplier", "Engineer", "Other"];
 const MESSAGE_MAX = 1000;
@@ -167,6 +168,7 @@ export default function Contact() {
         setValues(EMPTY);
         setTouched({});
         setSubmitted(true);
+        track("contact_submit", { topic: topic.key });
       }
     } catch {
       setError(true);

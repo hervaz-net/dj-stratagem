@@ -6,7 +6,7 @@ import Seo from "../../components/Seo";
 import { useToast } from "../../contexts/ToastContext";
 import useAuth from "../../auth/useAuth";
 import usePolledResource from "../../api/usePolledResource";
-import { fetchAlerts, mutateAlert, isConfigured } from "../../api/dashboard";
+import { fetchAlerts, mutateAlert, isSample } from "../../api/dashboard";
 import { alertFixtures } from "../../api/fixtures";
 
 const TYPES = {
@@ -90,10 +90,10 @@ export default function Alerts() {
           </div>
         }
       >
-        {!isConfigured && (
+        {isSample("alerts.php") && (
           <GlassCard className="mb-6 px-5 py-3 text-sm text-fg-muted">
-            <span className="font-semibold uppercase tracking-wider text-brand">Sample data</span>
-            {" "}— live alerts load from `/api/alerts.php`. Read/dismiss persist per account.
+            <span className="font-semibold uppercase tracking-wider text-brand">Example</span>
+            {" "}— these alerts are samples until your account has its own.
           </GlassCard>
         )}
 

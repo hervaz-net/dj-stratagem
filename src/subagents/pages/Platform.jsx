@@ -33,9 +33,9 @@ const modules = [
     panel: {
       title: "Bid comparison",
       rows: [
-        { label: "Apex Electrical", value: "$412,000", tag: "Leveled" },
-        { label: "Circuit Partners", value: "$438,500", tag: "Leveled" },
-        { label: "Voltage Group", value: "$399,200", tag: "Under review" },
+        { label: "Example Electric", value: "$412,000", tag: "Leveled" },
+        { label: "Example Circuit Co.", value: "$438,500", tag: "Leveled" },
+        { label: "Example Voltage Co.", value: "$399,200", tag: "Under review" },
       ],
     },
   },
@@ -48,7 +48,7 @@ const modules = [
       "Find projects matching your trades",
       "Submit bids digitally with structured forms",
       "Company profile and portfolio that sells your work",
-      "License and insurance verification built in",
+      "Space to list licenses and insurance. We don't verify them yet",
       "Bid history and analytics to sharpen your win rate",
       "CRM for follow-ups so no opportunity goes cold",
     ],
@@ -77,9 +77,9 @@ const modules = [
     panel: {
       title: "This month",
       rows: [
-        { label: "Profile views", value: "1,284", tag: "+38%" },
-        { label: "New leads", value: "23", tag: "+9" },
-        { label: "Review rating", value: "4.8 / 5", tag: "62 reviews" },
+        { label: "Profile views", value: "Example", tag: "Not measured" },
+        { label: "New leads", value: "Example", tag: "Not measured" },
+        { label: "Review rating", value: "None yet", tag: "No public reviews" },
       ],
     },
   },
@@ -99,9 +99,9 @@ const modules = [
     panel: {
       title: "RFQ · Fasteners & hardware",
       rows: [
-        { label: "Metro Supply Co.", value: "Score 94 · 2-day", tag: "Awarded" },
-        { label: "Ironline Distribution", value: "Score 89 · same-day", tag: "Partial" },
-        { label: "Cardinal Hardware", value: "Score 81 · 4-day", tag: "Quoted" },
+        { label: "Example Metro Supply", value: "Score 94 · 2-day", tag: "Awarded" },
+        { label: "Example Ironline", value: "Score 89 · same-day", tag: "Partial" },
+        { label: "Example Hardware Co.", value: "Score 81 · 4-day", tag: "Quoted" },
       ],
     },
   },
@@ -130,8 +130,8 @@ const modules = [
   {
     Icon: IconSparkle,
     eyebrow: "AI features",
-    title: "An unfair advantage on every bid.",
-    text: "AI works alongside your team: matching you to the right work, flagging what's missing, and drafting the documents that used to eat your evenings.",
+    title: "Drafts and checks, beside your judgment.",
+    text: "AI can match work, flag what's missing, and draft documents. Planning and drafting only: nothing is submitted, bought, or awarded for you.",
     points: [
       "Match contractors to the right projects automatically",
       "Predict bid competitiveness before you submit",
@@ -143,9 +143,9 @@ const modules = [
     panel: {
       title: "AI insights",
       rows: [
-        { label: "Bid competitiveness", value: "High, within 4% of est.", tag: "92%" },
-        { label: "Missing documents", value: "Bond form, W-9", tag: "2 flagged" },
-        { label: "Pipeline forecast", value: "$2.4M next quarter", tag: "+18%" },
+        { label: "Bid competitiveness", value: "Example only", tag: "Not a score" },
+        { label: "Missing documents", value: "Bond form, W-9", tag: "Example" },
+        { label: "Pipeline forecast", value: "Not measured", tag: "No forecast yet" },
       ],
     },
   },
@@ -279,8 +279,8 @@ export default function Platform({ brand }) {
 
       <Section id="integrations" className="scroll-mt-20">
         <Reveal>
-          <SectionHeading align="center" eyebrow="Integrations" title="Works with the tools you already use.">
-            The platform connects to the systems your office and field teams rely on every day. No rip-and-replace.
+          <SectionHeading align="center" eyebrow="Integrations" title="Tell us which tools you already use.">
+            Nothing here is connected yet. QuickBooks, Procore, and the rest are names offices ask about, not live integrations. Tell us what you run and we will say whether it is on the list.
           </SectionHeading>
         </Reveal>
         <div className="mt-12 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">

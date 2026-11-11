@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { IconX, IconArrowRight, IconCheck, IconBriefcase } from "../../exchange/components/icons";
+import SampleLabel from "../../components/SampleLabel";
 
 /**
  * A guided slide walkthrough of the platform, shown in place of a hosted video.
@@ -17,7 +18,7 @@ const slides = [
       "Find and respond to projects that match your trade",
       "Market your business to the right decision-makers",
       "Track relationships, bids, and awards in one place",
-      "AI tools that write, estimate, and learn with you",
+      "AI that drafts and flags. It does not submit, buy, or award",
     ],
     panel: "overview",
   },
@@ -25,12 +26,12 @@ const slides = [
     tag: "Bid Discovery",
     time: "~40 sec",
     title: "Find the right work before your competitors do",
-    text: "Real-time alerts match new opportunities to your trade, geography, and project size — so you spend time on projects you can win, not every RFP that comes through.",
+    text: "The public project board is a labeled preview, not a live plan room. Matching by trade and Southern California city is what the real feed is being built to do.",
     points: [
-      "50+ markets across 8 states, updated daily",
-      "Filter by trade, GC, owner, project type, and value",
-      "One-click access to plans, specs, and addenda",
-      "Saved searches with instant email and app alerts",
+      "Southern California, not a national plan room",
+      "Filter sample cards by trade and city",
+      "No downloadable plans on sample listings",
+      "A live feed opens as members come on board",
     ],
     panel: "discovery",
   },
@@ -51,12 +52,12 @@ const slides = [
     tag: "Supply Exchange",
     time: "~35 sec",
     title: "Cut procurement costs without the phone tag",
-    text: "The Supply Exchange connects you to verified distributors who compete for your orders — better pricing on every project, with less effort than calling three reps.",
+    text: "Supply Exchange is for sealed quotes from suppliers and distributors on the network. It does not verify sellers, hold payment, or run delivery.",
     points: [
-      "Request quotes from multiple suppliers simultaneously",
-      "Compare pricing with verified ratings and lead times",
-      "Order tracking from PO through job-site delivery",
-      "Automatic cost capture feeds into job costing",
+      "Request quotes from more than one seller",
+      "Compare price, lead time, and fill rate",
+      "Order status stays on the same record",
+      "Buyers and sellers still agree payment and delivery themselves",
     ],
     panel: "supply",
   },
@@ -77,12 +78,12 @@ const slides = [
     tag: "Analytics",
     time: "~35 sec",
     title: "Know your numbers, sharpen your strategy",
-    text: "Win rate by GC, bid volume by month, market activity by zip — intelligence to bid smarter and price with confidence, not gut feel alone.",
+    text: "Win rate, bid volume, and pipeline are the reports this screen is meant to hold. The chart beside this is an example, not a measurement.",
     points: [
-      "Win rate trends over time and by general contractor",
-      "Revenue recognition and pipeline forecasting",
-      "Market heat maps by geography and trade type",
-      "Award data and competitor activity in your markets",
+      "Win rate over time, once awards are real",
+      "Pipeline totals from your own bids",
+      "No market heat map and no competitor feed",
+      "Example numbers on this slide are not your results",
     ],
     panel: "analytics",
   },
@@ -129,14 +130,14 @@ function Panel({ kind }) {
           <Stat value="38%" label="Win Rate" tone="text-success" />
         </div>
         <BidRow
-          title="Westside Medical — Electrical"
-          meta="LA · Northline Builders · Due in 17 days"
+          title="Example medical TI — Electrical"
+          meta="Pasadena · Example Builders · Due in 17 days"
           badge="OPEN"
           tone="bg-success/15 text-success"
         />
         <BidRow
-          title="Harbor Logistics — Framing"
-          meta="Long Beach · Harborline GC · Due in 21 days"
+          title="Example warehouse — Framing"
+          meta="Long Beach · Example Builders · Due in 21 days"
           badge="REVIEW"
           tone="bg-brand/15 text-brand"
         />
@@ -252,10 +253,10 @@ function Panel({ kind }) {
 
   if (kind === "pipeline") {
     const cols = [
-      { head: "Identified", items: [["Westside Medical", "$4.2M"], ["Harbor Hub", "$2.8M"]], bar: "border-l-brand" },
-      { head: "Bid Sent", items: [["Century City", "$11M"], ["SFO Terminal", "$6.5M"]], bar: "border-l-brand" },
-      { head: "In Review", items: [["SD Convention", "$8.1M"]], bar: "border-l-brand" },
-      { head: "Awarded", items: [["UCLA Research", "$3.4M"]], bar: "border-l-success" },
+      { head: "Identified", items: [["Example medical TI", "$4.2M"], ["Example warehouse", "$2.8M"]], bar: "border-l-brand" },
+      { head: "Bid Sent", items: [["Example office TI", "$11M"], ["Example terminal", "$6.5M"]], bar: "border-l-brand" },
+      { head: "In Review", items: [["Example civic hall", "$8.1M"]], bar: "border-l-brand" },
+      { head: "Awarded", items: [["Example lab build", "$3.4M"]], bar: "border-l-success" },
     ];
     return (
       <>
@@ -288,7 +289,7 @@ function Panel({ kind }) {
     <>
       <div className="mb-3 flex justify-between">
         <div>
-          <p className="text-[9px] text-fg-muted">Win Rate — 6 months</p>
+          <p className="text-[9px] text-fg-muted">Example win rate — not measured</p>
           <p className="text-xl font-bold tracking-tight text-fg">
             38% <span className="text-[11px] font-semibold text-success">↑ 9 pts</span>
           </p>
@@ -491,6 +492,9 @@ export default function WalkthroughModal({ open, onClose }) {
                   aria-hidden="true"
                 />
                 <div className="relative w-full max-w-sm rounded-2xl border border-line bg-surface shadow-[var(--shadow-card)] p-3.5">
+                  <div className="mb-2 flex justify-end">
+                    <SampleLabel />
+                  </div>
                   <Panel kind={slide.panel} />
                 </div>
               </div>

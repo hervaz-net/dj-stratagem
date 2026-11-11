@@ -5,7 +5,7 @@ import Seo from "../../components/Seo";
 import { Link } from "react-router-dom";
 import useAuth from "../../auth/useAuth";
 import usePolledResource from "../../api/usePolledResource";
-import { fetchOverview, isConfigured } from "../../api/dashboard";
+import { fetchOverview, isConfigured, isSample } from "../../api/dashboard";
 import { overviewFixtures } from "../../api/fixtures";
 
 function greeting() {
@@ -43,6 +43,7 @@ export default function Overview() {
   const topAlerts = data.topAlerts ?? [];
   const quickLinks = data.quickLinks ?? [];
   const health = data.networkHealth ?? { value: 0, trend: [], up: false };
+  const illustrative = !isConfigured || data.sample === true || isSample("overview.php");
 
   return (
     <>
@@ -56,11 +57,13 @@ export default function Overview() {
         title={`${greeting()}${user?.name ? `, ${user.name.split(" ")[0]}` : ""}.`}
         subtitle="Here's what's happening in your supply chain today."
       >
-        {!isConfigured && (
+        {illustrative && (
           <div className="accent-warning mb-5 rounded-lg p-4 flex flex-wrap items-center gap-2">
-            <span className="text-xs font-semibold uppercase tracking-wider text-brand">Sample data</span>
+            <span className="text-xs font-semibold uppercase tracking-wider text-brand">Example</span>
             <span className="text-sm text-fg-muted">
-              Live APIs activate on the hosted PHP server after you sign in.
+              {!isConfigured
+                ? "These figures are a local preview. The hosted dashboard loads after you sign in."
+                : "Counts can come from your account. Change figures and trend lines on this screen are illustrative, not measured."}
             </span>
           </div>
         )}
@@ -83,8 +86,8 @@ export default function Overview() {
               <p className={`mt-2 text-2xl font-semibold tracking-tight tabular-nums ${k.danger ? "text-danger" : "text-fg"}`}>
                 {k.value}
               </p>
-              <p className={`mt-1 text-xs font-medium ${k.up ? "text-[var(--viz-green)]" : "text-[var(--viz-gold)]"}`}>
-                {k.delta} since yesterday
+              <p className={`mt-1 text-xs font-medium ${illustrative ? "text-fg-muted" : (k.up ? "text-[var(--viz-green)]" : "text-[var(--viz-gold)]")}`}>
+                {illustrative ? "Day-to-day change isn’t measured yet." : `${k.delta} since yesterday`}
               </p>
             </div>
           ))}

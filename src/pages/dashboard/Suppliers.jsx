@@ -9,7 +9,7 @@ import AddSupplierButton from "../../components/dashboard/AddSupplierButton";
 import GlassCard from "../../components/dashboard/GlassCard";
 import Seo from "../../components/Seo";
 import usePolledResource from "../../api/usePolledResource";
-import { fetchSuppliers, fetchMetrics, fetchTicker, isConfigured } from "../../api/suppliers";
+import { fetchSuppliers, fetchMetrics, fetchTicker, isConfigured, isSample } from "../../api/suppliers";
 import { IconKeyboard } from "../../components/icons";
 import { localDateISO } from "../../lib/dates";
 
@@ -163,7 +163,7 @@ export default function SuppliersDashboard() {
           { label: "Suppliers" },
         ]}
         ticker={ticker.data ?? []}
-        tickerLive={isConfigured && !ticker.error}
+        tickerLive={isConfigured && !ticker.error && !isSample("market-ticker.php")}
         title="Suppliers"
         subtitle="Risk, delivery performance, and spend across your supplier network."
         actions={
@@ -181,13 +181,15 @@ export default function SuppliersDashboard() {
           </div>
         }
       >
-        {!isConfigured && (
+        {(!isConfigured || isSample("suppliers.php") || isSample("metrics.php")) && (
           <GlassCard className="mb-6 flex flex-wrap items-center gap-x-2 gap-y-1 px-5 py-3">
             <span className="text-xs font-semibold uppercase tracking-wider text-brand">
-              Sample data
+              Example
             </span>
             <span className="text-sm text-fg-muted">
-              Live APIs activate on the hosted PHP server after you sign in.
+              {!isConfigured
+                ? "This is a local preview. The hosted dashboard loads after you sign in."
+                : "Metric changes and the price strip are illustrative, not a measured feed."}
             </span>
           </GlassCard>
         )}
@@ -209,7 +211,7 @@ export default function SuppliersDashboard() {
 
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
           {(metrics.data ?? []).map((m) => (
-            <MetricCard key={m.id} metric={m} live={isConfigured && !metrics.error} />
+            <MetricCard key={m.id} metric={m} live={isConfigured && !metrics.error && !isSample("metrics.php")} />
           ))}
         </div>
 

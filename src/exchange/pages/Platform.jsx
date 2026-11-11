@@ -25,6 +25,7 @@ import {
 } from "../components/icons";
 import { PRODUCT } from "../brand";
 import { daysFromToday } from "../data/sampleDates";
+import SampleLabel from "../../components/SampleLabel";
 
 /* Small mock panels. Every one carries a SampleLabel. */
 
@@ -33,6 +34,7 @@ function MockFrame({ title, children }) {
     <div className="rounded-2xl border border-line bg-surface p-5 shadow-[var(--shadow-card)] sm:p-6">
       <div className="flex items-center justify-between gap-3">
         <p className="text-sm font-semibold text-fg">{title}</p>
+        <SampleLabel />
       </div>
       <div className="mt-4">{children}</div>
     </div>

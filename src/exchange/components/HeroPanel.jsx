@@ -1,4 +1,5 @@
 import RoleBadge from "./RoleBadge";
+import SampleLabel from "../../components/SampleLabel";
 import { IconCheck, IconClock } from "./icons";
 import { daysFromToday } from "../data/sampleDates";
 
@@ -15,7 +16,10 @@ export default function HeroPanel() {
       <div className="rounded-3xl border border-line bg-surface p-5 shadow-[var(--shadow-pop)] sm:p-6">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <RoleBadge role="contractor" label="Contractor request" />
+            <span className="flex flex-wrap items-center gap-2">
+              <RoleBadge role="contractor" label="Contractor request" />
+              <SampleLabel />
+            </span>
             <p className="mt-3 text-lg font-semibold leading-snug text-fg">
               4,000 ft 12 AWG THHN copper
             </p>

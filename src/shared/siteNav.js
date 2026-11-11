@@ -70,9 +70,8 @@ export const NAV_MENUS = [
     },
     columns: 2,
     links: [
-      { href: "/projects", label: "Project board", text: "Open construction work, ranked for you" },
+      { href: "/projects", label: "Project board", text: "Sample project cards by trade and city" },
       { href: "/solutions", label: "Solutions", text: "Playbooks for your trade" },
-      { href: "/exchange/blog", label: "Blog", text: "Notes on bidding, supply, and growth" },
       { href: "/changelog", label: "Changelog", text: "Everything we've shipped" },
       { href: "/brand", label: "Brand", text: "Logos, colors, and usage" },
       { href: "/resources", label: "Guides", text: "Templates and how-tos" },

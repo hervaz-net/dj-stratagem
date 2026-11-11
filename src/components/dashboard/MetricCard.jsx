@@ -52,7 +52,7 @@ export default function MetricCard({ metric, live = false }) {
             <path d={up ? "M5 1L9 8H1z" : "M5 9L1 2h8z"} fill="currentColor" />
           </svg>
           {Math.abs(delta).toFixed(1)}%
-          <span className="font-normal text-fg-muted">vs last month</span>
+          <span className="font-normal text-fg-muted">{live ? "vs last month" : "illustrative"}</span>
         </span>
 
         <Sparkline data={series} accent={accent} width={112} height={34} className={ACCENT_TEXT[accent]} />

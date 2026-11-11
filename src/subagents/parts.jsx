@@ -1,4 +1,5 @@
 import { useLocation } from "react-router-dom";
+import SampleLabel from "../components/SampleLabel";
 import { Eyebrow } from "../exchange/components/Section";
 import Section from "../exchange/components/Section";
 import Button from "../exchange/components/Button";
@@ -80,7 +81,10 @@ export function SubagentCTA({
 export function RowsPanel({ title, rows, footer, className = "" }) {
   return (
     <div className={`rounded-2xl border border-line bg-surface p-6 shadow-[var(--panel-shadow)] ${className}`}>
-      <p className="text-xs font-semibold uppercase tracking-wider text-fg-muted">{title}</p>
+      <p className="flex items-center justify-between gap-3 text-xs font-semibold uppercase tracking-wider text-fg-muted">
+        <span>{title}</span>
+        <SampleLabel />
+      </p>
       <div className="mt-4 space-y-2.5">
         {rows.map((row) => (
           <div key={row.label} className="flex items-center justify-between gap-3 rounded-xl border border-line bg-canvas px-4 py-3">

@@ -2,7 +2,7 @@
  * Dashboard data access. Hits same-origin `/api/*.php` (session cookie + CSRF).
  * Falls back to fixtures when PHP isn't running (local Vite).
  */
-import { apiGet, apiPost, liveOrFixture, isConfigured } from "./client";
+import { apiGet, apiPost, liveOrFixture, isConfigured, isSample } from "./client";
 import {
   supplierFixtures,
   metricFixtures,
@@ -15,7 +15,7 @@ import {
   settingsFixture,
 } from "./fixtures";
 
-export { isConfigured };
+export { isConfigured, isSample };
 
 export async function fetchSuppliers({ signal } = {}) {
   const data = await liveOrFixture(
