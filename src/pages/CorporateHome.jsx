@@ -1,6 +1,19 @@
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import Seo from "../components/Seo";
+import { openCookieSettings } from "../components/CookieConsent";
+import { subagents } from "../data/subagents";
+import SubagentMark from "../shared/SubagentMark";
 import "../styles/corporate.css";
+
+/** Homepage-only lines where the shared subagent blurb would overclaim. */
+const SUBAGENT_NOTE = {
+  projects: "Sample project cards by trade and city. Not live solicitations, and they cannot be bid.",
+  capital: "In development. Does not offer credit, loans, or bonds today.",
+  workforce: "In development. Crew staffing is not available yet.",
+  studio: "In development. Not taking creative work yet.",
+  fleet: "Reservation requests for pickups, vans, and SUVs in Southern California.",
+};
 
 /**
  * Corporate homepage for D&J Stratagem, Inc. (design concept 08 · Corporate).
@@ -8,11 +21,38 @@ import "../styles/corporate.css";
  * and renders its own footer. Dashboard figures and supplier names are illustrative.
  */
 export default function CorporateHome() {
+  useEffect(() => {
+    const id = "djs-org-jsonld";
+    let el = document.getElementById(id);
+    if (!el) {
+      el = document.createElement("script");
+      el.id = id;
+      el.type = "application/ld+json";
+      document.head.appendChild(el);
+    }
+    el.textContent = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      name: "D&J Stratagem, Inc.",
+      url: "https://djstratageminc.com/",
+      email: "hello@djstratageminc.com",
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "Los Angeles",
+        addressRegion: "CA",
+        addressCountry: "US",
+      },
+    });
+    return () => {
+      el.remove();
+    };
+  }, []);
+
   return (
     <>
       <Seo
         title="The construction business, run from one place."
-        description="Find projects that match your trade, bid with confidence, source materials, staff the crew, and reserve the trucks. Stratagem connects every part of the job."
+        description="Find projects that match your trade, bid them, and source materials in one account. Truck reservation requests are open. Crew staffing is still in development."
       />
       <div id="top" className="co" style={{ background: "#FFFFFF", color: "#111926", fontFamily: "'Inter', 'Helvetica Neue', Arial, sans-serif" }}>
         <section aria-labelledby="co-h1" style={{ background: "radial-gradient(1000px 560px at 76% -120px, rgba(234,216,186,0.8), rgba(255,255,255,0) 70%), linear-gradient(180deg, #F8F9FB 0%, #FFFFFF 38%)" }}>
@@ -35,13 +75,13 @@ export default function CorporateHome() {
                 </span>
               </h1>
               <p style={{ margin: "26px 0 0", maxWidth: "60ch", fontSize: "clamp(17px, 1.4vw, 19px)", lineHeight: "1.6", color: "#474B53" }}>
-                Find projects that match your trade, bid with confidence, source materials, staff the crew, and reserve the trucks. Stratagem connects every part of the job.
+                Find projects that match your trade, bid them, and source materials in one account. Truck reservation requests are open. Crew staffing is still in development.
               </p>
               <div style={{ marginTop: "32px", display: "flex", flexWrap: "wrap", gap: "12px" }}>
                 <Link to="/register" className="btn btn-ink" style={{ display: "inline-flex", alignItems: "center", minHeight: "48px", padding: "0 22px", background: "#111926", color: "#FFFFFF", borderRadius: "6px", fontSize: "15.5px", fontWeight: "600" }}>
                   Create your account
                 </Link>
-                <Link to="/contact" className="btn btn-line" style={{ display: "inline-flex", alignItems: "center", minHeight: "48px", padding: "0 20px", border: "1px solid #DCD5C8", borderRadius: "6px", color: "#111926", fontSize: "15.5px", fontWeight: "600" }}>
+                <Link to="/contact?topic=demo" className="btn btn-line" style={{ display: "inline-flex", alignItems: "center", minHeight: "48px", padding: "0 20px", border: "1px solid #DCD5C8", borderRadius: "6px", color: "#111926", fontSize: "15.5px", fontWeight: "600" }}>
                   Talk to our team
                 </Link>
               </div>
@@ -66,24 +106,34 @@ export default function CorporateHome() {
                 </li>
               </ul>
             </div>
-            <div style={{ marginTop: "64px", border: "1px solid #E8E2D6", borderRadius: "12px", overflow: "hidden", background: "#FFFFFF", boxShadow: "0 1px 2px rgba(17,25,38,0.04), 0 28px 64px rgba(17,25,38,0.09)" }}>
+            <figure style={{ marginTop: "64px" }}>
+              <figcaption style={{ margin: "0 0 10px", display: "flex", flexWrap: "wrap", alignItems: "center", gap: "8px 12px", fontSize: "13.5px", lineHeight: "1.45", color: "#474B53" }}>
+                <span style={{ padding: "2px 8px", borderRadius: "5px", background: "#F3EEE4", color: "#5E626B", fontSize: "11.5px", fontWeight: "700", letterSpacing: "0.06em" }}>
+                  EXAMPLE
+                </span>
+                Illustrative product preview. The names, counts, and prices are not a live account and are not measured results.
+              </figcaption>
+              <div aria-hidden="true" style={{ border: "1px solid #E8E2D6", borderRadius: "12px", overflow: "hidden", background: "#FFFFFF", boxShadow: "0 1px 2px rgba(17,25,38,0.04), 0 28px 64px rgba(17,25,38,0.09)" }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "12px", padding: "10px 16px", borderBottom: "1px solid #E8E2D6", background: "#FBF9F5" }}>
                 <span style={{ display: "inline-flex", alignItems: "center", gap: "8px", padding: "5px 12px", border: "1px solid #E8E2D6", borderRadius: "6px", background: "#FFFFFF", fontSize: "12.5px", color: "#5E626B" }}>
                   <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
                     <path d="M3 5.5V4a3 3 0 0 1 6 0v1.5M2.5 5.5h7v5h-7z" fill="none" stroke="#5E626B" strokeWidth="1.2" />
                   </svg>
-                  djstratageminc.com/dashboard
+                  Example preview · not a live account
+                </span>
+                <span style={{ padding: "2px 8px", borderRadius: "5px", background: "#F3EEE4", color: "#5E626B", fontSize: "11.5px", fontWeight: "700", letterSpacing: "0.06em" }}>
+                  EXAMPLE
                 </span>
               </div>
               <div style={{ display: "flex", flexWrap: "wrap" }}>
                 <aside className="hide-sm" aria-label="Dashboard menu" style={{ flex: "0 0 220px", background: "#FAF7F2", borderRight: "1px solid #E8E2D6" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "16px", borderBottom: "1px solid #E8E2D6" }}>
                     <span aria-hidden="true" style={{ width: "32px", height: "32px", flex: "none", display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "6px", background: "#111926", color: "#FFFFFF", fontSize: "12px", fontWeight: "700" }}>
-                      RB
+                      EX
                     </span>
                     <span style={{ display: "flex", flexDirection: "column", gap: "2px", minWidth: "0" }}>
                       <span style={{ fontSize: "13.5px", fontWeight: "600" }}>
-                        Ridgeline Builders
+                        Example Builders
                       </span>
                       <span style={{ fontSize: "12px", color: "#5E626B" }}>
                         General contractor
@@ -142,18 +192,18 @@ export default function CorporateHome() {
                   <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-start", justifyContent: "space-between", gap: "12px 24px" }}>
                     <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
                       <span style={{ fontSize: "18px", fontWeight: "700", letterSpacing: "-0.01em" }}>
-                        Good morning, Dana
+                        Good morning
                       </span>
                       <span style={{ fontSize: "13.5px", color: "#5E626B" }}>
-                        Here's where your pursuits stand today.
+                        Example pursuits. Not your account.
                       </span>
                     </div>
-                    <button type="button" style={{ display: "inline-flex", alignItems: "center", gap: "8px", minHeight: "36px", padding: "0 14px", border: "0", borderRadius: "6px", background: "#111926", color: "#FFFFFF", font: "inherit", fontSize: "13.5px", fontWeight: "600", cursor: "pointer" }}>
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: "8px", minHeight: "36px", padding: "0 14px", border: "0", borderRadius: "6px", background: "#111926", color: "#FFFFFF", font: "inherit", fontSize: "13.5px", fontWeight: "600" }}>
                       <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
                         <path d="M6 1.5V10.5M1.5 6H10.5" fill="none" stroke="#FFFFFF" strokeWidth="1.8" />
                       </svg>
                       New bid
-                    </button>
+                    </span>
                   </div>
                   <div style={{ marginTop: "18px", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(150px, 100%), 1fr))", gap: "12px" }}>
                     <div style={{ display: "flex", flexDirection: "column", gap: "6px", padding: "14px", border: "1px solid #E8E2D6", borderRadius: "8px" }}>
@@ -244,7 +294,7 @@ export default function CorporateHome() {
                                 Pasadena
                               </td>
                               <td className="num" style={{ padding: "11px 10px", color: "#474B53" }}>
-                                Oct 31
+                                This week
                               </td>
                               <td style={{ padding: "11px 14px" }}>
                                 <span style={{ padding: "3px 8px", borderRadius: "5px", background: "#EEF2F7", color: "#33445C", fontSize: "12px", fontWeight: "600" }}>
@@ -263,7 +313,7 @@ export default function CorporateHome() {
                                 Riverside
                               </td>
                               <td className="num" style={{ padding: "11px 10px", color: "#474B53" }}>
-                                Nov 12
+                                Next week
                               </td>
                               <td style={{ padding: "11px 14px" }}>
                                 <span style={{ padding: "3px 8px", borderRadius: "5px", background: "#FBF3E4", color: "#7A5312", fontSize: "12px", fontWeight: "600" }}>
@@ -282,7 +332,7 @@ export default function CorporateHome() {
                                 Ontario
                               </td>
                               <td className="num" style={{ padding: "11px 10px", color: "#474B53" }}>
-                                Nov 19
+                                In 3 weeks
                               </td>
                               <td style={{ padding: "11px 14px" }}>
                                 <span style={{ padding: "3px 8px", borderRadius: "5px", background: "#F3EEE4", color: "#4A5462", fontSize: "12px", fontWeight: "600" }}>
@@ -301,7 +351,7 @@ export default function CorporateHome() {
                                 Long Beach
                               </td>
                               <td className="num" style={{ padding: "11px 10px", color: "#474B53" }}>
-                                Dec 3
+                                Later
                               </td>
                               <td style={{ padding: "11px 14px" }}>
                                 <span style={{ padding: "3px 8px", borderRadius: "5px", background: "#111926", color: "#FFFFFF", fontSize: "12px", fontWeight: "600" }}>
@@ -371,8 +421,9 @@ export default function CorporateHome() {
                 </div>
               </div>
             </div>
+            </figure>
             <div style={{ margin: "56px 0 0", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(300px, 100%), 1fr))", gap: "16px" }}>
-              <Link to="/solutions" className="card more" style={{ display: "flex", flexDirection: "column", gap: "10px", padding: "22px 24px", background: "#FFFFFF", border: "1px solid #E8E2D6", borderTop: "3px solid #B8893B", borderRadius: "10px", color: "#111926" }}>
+              <Link to="/solutions#gc" className="card more" style={{ display: "flex", flexDirection: "column", gap: "10px", padding: "22px 24px", background: "#FFFFFF", border: "1px solid #E8E2D6", borderTop: "3px solid #B8893B", borderRadius: "10px", color: "#111926" }}>
                 <span style={{ fontSize: "12px", fontWeight: "700", letterSpacing: "0.12em", color: "#5E626B" }}>
                   FOR GENERAL CONTRACTORS
                 </span>
@@ -386,7 +437,7 @@ export default function CorporateHome() {
                   </svg>
                 </span>
               </Link>
-              <Link to="/solutions" className="card more" style={{ display: "flex", flexDirection: "column", gap: "10px", padding: "22px 24px", background: "#FFFFFF", border: "1px solid #E8E2D6", borderTop: "3px solid #B8893B", borderRadius: "10px", color: "#111926" }}>
+              <Link to="/solutions#sub" className="card more" style={{ display: "flex", flexDirection: "column", gap: "10px", padding: "22px 24px", background: "#FFFFFF", border: "1px solid #E8E2D6", borderTop: "3px solid #B8893B", borderRadius: "10px", color: "#111926" }}>
                 <span style={{ fontSize: "12px", fontWeight: "700", letterSpacing: "0.12em", color: "#5E626B" }}>
                   FOR SUBCONTRACTORS
                 </span>
@@ -400,7 +451,7 @@ export default function CorporateHome() {
                   </svg>
                 </span>
               </Link>
-              <Link to="/solutions" className="card more" style={{ display: "flex", flexDirection: "column", gap: "10px", padding: "22px 24px", background: "#FFFFFF", border: "1px solid #E8E2D6", borderTop: "3px solid #B8893B", borderRadius: "10px", color: "#111926" }}>
+              <Link to="/solutions#supplier" className="card more" style={{ display: "flex", flexDirection: "column", gap: "10px", padding: "22px 24px", background: "#FFFFFF", border: "1px solid #E8E2D6", borderTop: "3px solid #B8893B", borderRadius: "10px", color: "#111926" }}>
                 <span style={{ fontSize: "12px", fontWeight: "700", letterSpacing: "0.12em", color: "#5E626B" }}>
                   FOR SUPPLIERS
                 </span>
@@ -441,7 +492,7 @@ export default function CorporateHome() {
                   Projects
                 </span>
                 <span style={{ fontSize: "15px", lineHeight: "1.55", color: "#474B53" }}>
-                  Open construction work by city and trade, across Southern California.
+                  Sample project cards by city and trade. Not live solicitations.
                 </span>
                 <span style={{ marginTop: "auto", display: "inline-flex", alignItems: "center", gap: "6px", fontSize: "14px", fontWeight: "600" }}>
                   Browse projects
@@ -529,6 +580,37 @@ export default function CorporateHome() {
                 </svg>
               </Link>
             </div>
+          </div>
+        </section>
+        <section id="subagents" aria-labelledby="co-subagents" style={{ background: "#FFFFFF", borderTop: "1px solid #E8E2D6", scrollMarginTop: "6rem" }}>
+          <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "112px clamp(20px, 4vw, 40px)" }}>
+            <div style={{ display: "flex", flexWrap: "wrap", alignItems: "flex-end", justifyContent: "space-between", gap: "20px 56px", marginBottom: "36px" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "14px", maxWidth: "640px" }}>
+                <span style={{ fontSize: "12.5px", fontWeight: "600", letterSpacing: "0.14em", color: "rgb(127,95,41)" }}>
+                  SUBAGENTS
+                </span>
+                <h2 id="co-subagents" style={{ margin: "0", fontFamily: "'Inter Tight', 'Inter', sans-serif", fontSize: "clamp(32px, 3.6vw, 50px)", lineHeight: "1.06", fontWeight: "700", letterSpacing: "-0.03em" }}>
+                  Nine parts of one account.
+                </h2>
+              </div>
+              <p style={{ margin: "0", maxWidth: "46ch", fontSize: "16.5px", lineHeight: "1.6", color: "#474B53" }}>
+                Pick the ones a job needs. An admin approves every AI job before it runs, and the write-up is planning only.
+              </p>
+            </div>
+            <ul style={{ listStyle: "none", margin: "0", padding: "0", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(240px, 100%), 1fr))", gap: "12px" }}>
+              {subagents.map((s) => (
+                <li key={s.key}>
+                  <a href={s.to} className="card more" style={{ display: "flex", flexDirection: "column", gap: "10px", minHeight: "148px", padding: "18px", background: "#FFFFFF", border: "1px solid #E8E2D6", borderRadius: "10px", color: "#111926" }}>
+                    <span style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "8px" }}>
+                      <SubagentMark id={s.key} size={28} />
+                      <span style={{ fontSize: "12px", fontWeight: "600", color: "#5E626B" }}>{s.code}</span>
+                    </span>
+                    <span style={{ fontSize: "17px", fontWeight: "700" }}>{s.name}</span>
+                    <span style={{ fontSize: "14px", lineHeight: "1.5", color: "#474B53" }}>{SUBAGENT_NOTE[s.key] ?? s.line}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
           </div>
         </section>
         <section id="companies" aria-labelledby="co-companies" style={{ background: "#FFFFFF" }}>
@@ -860,7 +942,7 @@ export default function CorporateHome() {
                   Bid, quote, and book
                 </h3>
                 <p style={{ margin: "0", fontSize: "15px", lineHeight: "1.6", color: "#474B53" }}>
-                  Bids, material quotes, crews, and vehicles live in one record.
+                  Bids, material quotes, and vehicle requests live in one record. Crew staffing is still in development.
                 </p>
                 <p style={{ margin: "auto 0 0", paddingTop: "14px", borderTop: "1px solid #F0EBE2", display: "flex", flexDirection: "column", gap: "3px" }}>
                   <span style={{ fontSize: "11.5px", fontWeight: "600", letterSpacing: "0.12em", color: "#5E626B" }}>
@@ -1095,9 +1177,9 @@ export default function CorporateHome() {
               <Link to="/terms" className="lk">
                 Terms
               </Link>
-              <Link to="/privacy#cookies" className="lk">
+              <button type="button" onClick={openCookieSettings} className="lk" style={{ padding: 0, border: 0, background: "transparent", font: "inherit", textAlign: "left", cursor: "pointer" }}>
                 Cookie settings
-              </Link>
+              </button>
             </nav>
           </div>
           <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "0 clamp(20px, 4vw, 40px)" }}>

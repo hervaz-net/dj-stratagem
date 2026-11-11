@@ -5,7 +5,7 @@ import Sparkline from "../../components/dashboard/Sparkline";
 import ProgressRing from "../../components/dashboard/ProgressRing";
 import Seo from "../../components/Seo";
 import usePolledResource from "../../api/usePolledResource";
-import { fetchAnalytics, isConfigured } from "../../api/dashboard";
+import { fetchAnalytics, isSample } from "../../api/dashboard";
 import { analyticsFixtures } from "../../api/fixtures";
 
 function BarRow({ label, pct, value }) {
@@ -88,10 +88,10 @@ export default function Analytics() {
           </div>
         }
       >
-        {!isConfigured && (
+        {isSample("analytics.php") && (
           <GlassCard className="mb-6 px-5 py-3 text-sm text-fg-muted">
-            <span className="font-semibold uppercase tracking-wider text-brand">Sample data</span>
-            {" "}— live analytics load from `/api/analytics.php`.
+            <span className="font-semibold uppercase tracking-wider text-brand">Example</span>
+            {" "}— period-over-period changes on this screen are illustrative, not measured.
           </GlassCard>
         )}
 
@@ -104,8 +104,8 @@ export default function Analytics() {
                   <div className="min-w-0">
                     <p className="text-xs font-semibold uppercase tracking-wider text-fg-muted">{k.label}</p>
                     <p className="mt-2 text-3xl font-semibold tracking-tight tabular-nums text-fg">{kd.value}</p>
-                    <p className="mt-1 text-xs font-medium text-[var(--viz-green)]">
-                      {kd.delta} vs last period
+                    <p className="mt-1 text-xs font-medium text-fg-muted">
+                      {isSample("analytics.php") ? "Illustrative, not measured" : `${kd.delta} vs last period`}
                     </p>
                     <p className="mt-0.5 text-xs text-fg-muted/60">
                       MoM: <span className="text-fg-muted">{mom[i]}</span>

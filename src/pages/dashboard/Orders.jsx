@@ -6,7 +6,7 @@ import Seo from "../../components/Seo";
 import { useToast } from "../../contexts/ToastContext";
 import useAuth from "../../auth/useAuth";
 import usePolledResource from "../../api/usePolledResource";
-import { fetchOrders, cancelOrders, isConfigured } from "../../api/dashboard";
+import { fetchOrders, cancelOrders, isSample } from "../../api/dashboard";
 import { orderFixtures } from "../../api/fixtures";
 
 const STATUS = {
@@ -104,10 +104,10 @@ export default function Orders() {
         title="Orders"
         subtitle="Purchase orders across your supply network."
       >
-        {!isConfigured && (
+        {isSample("orders.php") && (
           <GlassCard className="mb-6 px-5 py-3 text-sm text-fg-muted">
-            <span className="font-semibold uppercase tracking-wider text-brand">Sample data</span>
-            {" "}— live orders load from `/api/orders.php` on the hosted server.
+            <span className="font-semibold uppercase tracking-wider text-brand">Example</span>
+            {" "}— shared sample orders can’t be cancelled. Add your own to track a real one.
           </GlassCard>
         )}
 

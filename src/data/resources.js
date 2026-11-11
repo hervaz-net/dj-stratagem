@@ -74,7 +74,7 @@ export const faqs = [
     id: "license-insurance",
     category: "Bidding & projects",
     q: "How are licenses and insurance handled?",
-    a: "License and insurance verification is part of the subcontractor side of the platform, including Starter. What we check can depend on your trade and state, so ask us before you rely on it.",
+    a: "You can list licenses and insurance on your profile, including on Starter. We don't verify them yet, so a GC should still check the documents. Ask us before you rely on a check we don't do.",
     keywords: "verification verify credentials vetting profile",
     link: { to: "/platform#for-subcontractors", label: "For subcontractors" },
   },

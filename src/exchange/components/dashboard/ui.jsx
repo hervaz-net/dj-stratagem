@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef } from "react";
+import SampleLabel from "../../../components/SampleLabel";
 
 /**
  * Small building blocks shared by every dashboard screen so cards, pills,
@@ -17,7 +18,7 @@ export function Card({ as: Tag = "div", className = "", children, ...rest }) {
 }
 
 /** Card with a title row. `sample` adds the SampleLabel next to the title. */
-export function Panel({ title, description, actions, sample: _sample, className = "", bodyClassName = "p-5", children, ...rest }) {
+export function Panel({ title, description, actions, sample = false, className = "", bodyClassName = "p-5", children, ...rest }) {
   const headingId = useId();
   return (
     <Card as="section" aria-labelledby={title ? headingId : undefined} className={className} {...rest}>
@@ -26,6 +27,7 @@ export function Panel({ title, description, actions, sample: _sample, className 
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
               <h2 id={headingId} className="text-base font-semibold text-fg">{title}</h2>
+              {sample && <SampleLabel />}
             </div>
             {description && <p className="mt-0.5 text-sm text-fg-muted">{description}</p>}
           </div>
@@ -71,7 +73,10 @@ export function StatTile({ label, value, hint, icon, tone = "brand", sample = fa
   return (
     <Card className="flex flex-col gap-3 p-4 sm:p-5">
       <div className="flex items-start justify-between gap-3">
-        <p className="text-sm font-medium text-fg-muted">{label}</p>
+        <p className="flex items-center gap-2 text-sm font-medium text-fg-muted">
+          {label}
+          {sample && <SampleLabel />}
+        </p>
         {icon && (
           <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl ${ICON_TONES[tone] ?? ICON_TONES.brand}`}>
             {icon}

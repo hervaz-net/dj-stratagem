@@ -128,11 +128,17 @@ function DashboardShell({ children }) {
 
 /** Full page load into a company site, which runs its own app and styles. */
 function ToCompanySite() {
-  const { pathname } = useLocation();
+  const { pathname, search, hash } = useLocation();
   useEffect(() => {
-    window.location.replace(pathname);
-  }, [pathname]);
-  return null;
+    // Hash and query have to survive the full reload. Dropping them sent
+    // /solutions#gc and /solutions#supplier to the top of the page.
+    window.location.replace(`${pathname}${search}${hash}`);
+  }, [pathname, search, hash]);
+  return (
+    <p className="px-6 py-24 text-center text-sm text-fg-muted" role="status">
+      Opening this page…
+    </p>
+  );
 }
 
 function App() {

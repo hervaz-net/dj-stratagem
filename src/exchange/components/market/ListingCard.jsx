@@ -1,4 +1,5 @@
 import RoleBadge from "../RoleBadge";
+import SampleLabel from "../../../components/SampleLabel";
 import { formatPrice } from "./format";
 
 const FULFILLMENT_LABEL = { delivery: "Delivery", "will-call": "Will-call" };
@@ -30,7 +31,10 @@ export default function ListingCard({ listing, icon, className = "" }) {
       </div>
 
       <div className="flex flex-1 flex-col p-5">
-        <p className="font-mono text-xs text-fg-muted">{sku}</p>
+        <p className="flex items-center justify-between gap-2 font-mono text-xs text-fg-muted">
+          <span>{sku}</span>
+          <SampleLabel />
+        </p>
         <h3 className="mt-1 text-base font-semibold leading-snug text-fg">{title}</h3>
         <div className="mt-2 flex flex-wrap items-center gap-2">
           <span className="text-sm text-fg-muted">{seller}</span>

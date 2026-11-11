@@ -21,7 +21,7 @@ const tiers = [
       "Company profile and portfolio",
       "Browse and match to open projects",
       "Submit up to 3 bids per month",
-      "License and insurance verification",
+      "Profile fields for licenses and insurance (not verified by us yet)",
     ],
     cta: "Get started",
     highlighted: false,

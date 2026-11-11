@@ -8,7 +8,7 @@ import Seo from "../../components/Seo";
 import { useToast } from "../../contexts/ToastContext";
 import useAuth from "../../auth/useAuth";
 import usePolledResource from "../../api/usePolledResource";
-import { fetchBids, updateBidStatus, isConfigured } from "../../api/dashboard";
+import { fetchBids, updateBidStatus, isSample } from "../../api/dashboard";
 import { bidFixtures } from "../../api/fixtures";
 import { formatCompactMoney } from "../../lib/money";
 
@@ -121,10 +121,10 @@ export default function Bids() {
         {/* Traditional view */}
         {viewMode === "traditional" && (
           <>
-            {!isConfigured && (
+            {isSample("bids.php") && (
               <GlassCard className="mb-6 px-5 py-3 text-sm text-fg-muted">
-                <span className="font-semibold uppercase tracking-wider text-brand">Sample data</span>
-                {" "}— live bids load from `/api/bids.php` on the hosted server.
+                <span className="font-semibold uppercase tracking-wider text-brand">Example</span>
+                {" "}— shared sample rows can’t be edited. Add your own quote to track a real one.
               </GlassCard>
             )}
 

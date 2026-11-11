@@ -3,8 +3,9 @@ import Button from "../components/Button";
 import Seo from "../components/Seo";
 
 const suggestions = [
-  { to: "/platform", label: "Platform", detail: "All six connected suites" },
-  { to: "/supply", label: "Supply Exchange", detail: "Sealed, scored materials sourcing" },
+  { to: "/platform", label: "Platform", detail: "Bidding, sourcing, and the workspace" },
+  { to: "/projects", label: "Projects", detail: "Sample listings by trade and city" },
+  { to: "/supply", label: "Supply", detail: "Sealed, scored materials sourcing" },
   { to: "/pricing", label: "Pricing", detail: "Plans from free to enterprise" },
   { to: "/contact", label: "Contact", detail: "Book a walkthrough with our team" },
 ];

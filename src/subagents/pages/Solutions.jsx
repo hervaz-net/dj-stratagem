@@ -29,11 +29,11 @@ const roles = [
     label: "Subcontractors",
     short: "Get matched to work",
     title: "Get matched to work worth bidding, and win more of it.",
-    text: "Stratagem finds projects that fit your trade, helps you present a professional profile with verified credentials, and tracks your bid history so every submission gets sharper.",
+    text: "Stratagem finds projects that fit your trade, gives you a place to show your company and the licenses and insurance you carry, and tracks your bid history so every submission gets sharper.",
     points: [
       "Automatic matching to projects in your trade and territory",
       "Digital bid submission with a profile and portfolio that sells your work",
-      "License and insurance verification that builds GC trust",
+      "Space to list licenses and insurance. We don't verify them yet",
       "Bid analytics and a follow-up CRM so opportunities never go cold",
     ],
     flow: ["open-requests", "quote", "order", "net-30"],

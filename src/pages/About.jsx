@@ -25,7 +25,7 @@ const values = [
   {
     icon: <IconShield />,
     title: "Trust runs through everything",
-    text: "Verified licenses, transparent bid histories, and vendor ratings — so both sides of every deal can move fast with confidence.",
+    text: "Profiles can list licenses, insurance, and bid history. We don't verify licenses, insurance, or credit yet, and we won't say we do.",
   },
 ];
 
