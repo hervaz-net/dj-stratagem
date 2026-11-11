@@ -8,6 +8,7 @@ import "../styles/corporate.css";
 
 /** Homepage-only lines where the shared subagent blurb would overclaim. */
 const SUBAGENT_NOTE = {
+  projects: "Sample project cards by trade and city. Not live solicitations, and they cannot be bid.",
   capital: "In development. Does not offer credit, loans, or bonds today.",
   workforce: "In development. Crew staffing is not available yet.",
   studio: "In development. Not taking creative work yet.",
@@ -491,7 +492,7 @@ export default function CorporateHome() {
                   Projects
                 </span>
                 <span style={{ fontSize: "15px", lineHeight: "1.55", color: "#474B53" }}>
-                  Open construction work by city and trade, across Southern California.
+                  Sample project cards by city and trade. Not live solicitations.
                 </span>
                 <span style={{ marginTop: "auto", display: "inline-flex", alignItems: "center", gap: "6px", fontSize: "14px", fontWeight: "600" }}>
                   Browse projects
