@@ -13,12 +13,12 @@ const roles = [
     label: "General Contractors",
     short: "Run the whole pipeline",
     title: "Run the whole pipeline, not a dozen disconnected tools.",
-    text: "Post projects, build a qualified sub list, and manage every bid, RFI, and deadline from one dashboard, then award and track performance so your next project starts smarter.",
+    text: "One place to post work, invite subs, and keep bids, RFIs, and deadlines together. Early members get the workspace as we roll each piece out — we will not claim a step is live before it is.",
     points: [
-      "Post projects and invite the right subcontractors in minutes",
-      "Compare leveled bids side by side before awarding",
-      "Manage RFIs, addenda, and deadlines without email archaeology",
-      "Award contracts and rate vendor performance in one place",
+      "Post projects and invite subcontractors from one account (rolling out with early members)",
+      "Compare bids side by side before awarding (planned)",
+      "Keep RFIs, addenda, and deadlines off email chains (planned)",
+      "Award and rate vendors in one record (planned)",
     ],
     flow: ["request", "quote", "order", "delivery"],
     link: { href: "/platform#for-general-contractors", label: "See the GC suite" },
@@ -29,12 +29,12 @@ const roles = [
     label: "Subcontractors",
     short: "Get matched to work",
     title: "Get matched to work worth bidding, and win more of it.",
-    text: "Stratagem finds projects that fit your trade, gives you a place to show your company and the licenses and insurance you carry, and tracks your bid history so every submission gets sharper.",
+    text: "Browse a sample project board ranked by trade and region today. When the live feed opens, the same profile and bid history stay with your account.",
     points: [
-      "Automatic matching to projects in your trade and territory",
-      "Digital bid submission with a profile and portfolio that sells your work",
+      "Sample board ranked by trade and territory today; live matching as members join",
+      "Company profile and portfolio ready for digital bids",
       "Space to list licenses and insurance. We don't verify them yet",
-      "Bid analytics and a follow-up CRM so opportunities never go cold",
+      "Bid history and follow-up CRM (planned)",
     ],
     flow: ["open-requests", "quote", "order", "net-30"],
     link: { href: "/projects", label: "Browse the project board" },
@@ -45,12 +45,12 @@ const roles = [
     label: "Suppliers",
     short: "Compete on what you're good at",
     title: "Compete on what you're actually good at.",
-    text: "Distributors and manufacturers quote into Supply Exchange without getting dragged into a margin-destroying bid war. Sealed quotes, scored awards, and pooled demand mean fewer, larger, better orders.",
+    text: "Supply Exchange is onboarding early sellers now. Browse sample catalogs today; sealed quotes, scored awards, and pooled demand roll out with those members.",
     points: [
-      "Sealed single-round quotes, so competitors never see your number",
-      "Win on lead time, fill rate, and reliability, not just lowest price",
-      "Floor pricing per SKU so a quote is never scored below your margin",
-      "Pooled contractor demand delivers larger committed POs",
+      "Browse sample catalogs and list products while we onboard (available for early sellers)",
+      "Sealed single-round quotes so competitors never see your number (planned)",
+      "Floor pricing per SKU to protect margin (planned)",
+      "Pooled contractor demand for larger committed POs (planned)",
     ],
     flow: ["listed-supply", "quote", "order", "delivery"],
     link: { href: "/supply#suppliers", label: "How supply works" },
@@ -154,10 +154,6 @@ export default function Solutions({ brand }) {
 
       <Section id="roles" tone="subtle" className="scroll-mt-20">
         <SectionHeading eyebrow="Playbooks" title="Choose your side of the bid." />
-        {/* Anchors the Subagents menu links to (#gc, #sub, #supplier). */}
-        <span id="gc" className="sr-only" />
-        <span id="sub" className="sr-only" />
-        <span id="supplier" className="sr-only" />
 
         <div
           role="tablist"
@@ -175,12 +171,12 @@ export default function Solutions({ brand }) {
                 }}
                 type="button"
                 role="tab"
-                id={`tab-${r.key}`}
-                aria-selected={selected}
+                id={r.key}
                 aria-controls={`panel-${r.key}`}
+                aria-selected={selected}
                 tabIndex={selected ? 0 : -1}
                 onClick={() => selectTab(r.key)}
-                className={`flex items-center gap-3 rounded-2xl border p-4 text-left transition-[border-color,box-shadow,background-color] ${
+                className={`scroll-mt-24 flex items-center gap-3 rounded-2xl border p-4 text-left transition-[border-color,box-shadow,background-color] ${
                   selected
                     ? "border-brand bg-surface shadow-[var(--panel-shadow)] ring-1 ring-brand"
                     : "border-line bg-surface/60 hover:border-line-strong hover:bg-surface"
@@ -200,7 +196,7 @@ export default function Solutions({ brand }) {
           ref={panelRef}
           role="tabpanel"
           id={`panel-${role.key}`}
-          aria-labelledby={`tab-${role.key}`}
+          aria-labelledby={role.key}
           tabIndex={0}
           key={role.key}
           className={`${card} animate-fade-in mt-6 scroll-mt-24 grid grid-cols-1 gap-10 p-6 md:p-10 lg:grid-cols-[1.2fr_1fr]`}

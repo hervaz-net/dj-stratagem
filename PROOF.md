@@ -110,6 +110,16 @@ Overview, metrics, analytics, and the price ticker always answer
 `sample: true`: their change figures and trend lines are synthetic, not
 measured. An admin can delete the seed rows under Accounts → Remove sample data.
 
+## Demo product catalogs (2026-11-13)
+
+`public/data/catalog/` holds bundled marketplace browse data imported from
+public price-list spreadsheets (Uline-, Global Industrial-, and MyFBM-shaped
+columns). Seller names on the site are generic demo catalogs
+(“Demo Packaging & Shipping Catalog”, and so on). **Do not** rename those
+sellers to the real retailers or imply they sell on Stratagem. Every
+`/api/products.php` response is `sample: true`, and listing cards keep the
+SampleLabel. Rebuild with `scripts/import-catalog-xlsx.py`.
+
 ## Still outstanding
 
 - The blog (`/blog`, from main) is unpublished: routes redirect to
@@ -120,7 +130,8 @@ measured. An admin can delete the seed rows under Accounts → Remove sample dat
 
 - Starter stays free. Paid tiers are request-access only until billing
   actually exists. Do not put “free trial / no credit card” back on Pricing
-  or Home unless a real trial is wired.
+  or Home unless a real trial is wired. Pricing copy must keep “planned” /
+  “request access” language until checkout is real.
 - Document pages (`privacy.html`, `terms.html`, brand/fleet/receipts/signage)
   now use the system UI stack and in-repo SVG marks. Do not put
   `fonts.googleapis.com` or missing `uploads/*.png` paths back.
