@@ -235,9 +235,9 @@ export default function SiteNav({ app, account, action, onOpenPalette }) {
       <header ref={wrapRef} className={`sn no-print ${open ? "has-open" : ""}`} data-app={app}>
         <div className="sn-bar">
           <div className="sn-brand">
-            <Go href="/" app={app} className="sn-brand-home" aria-label="Stratagem AI home">
+            <Go href="/" app={app} className="sn-brand-home" aria-label={app === "parent" ? "D&J Stratagem home" : "Stratagem AI home"}>
               <StratagemMark />
-              <span className={`sn-brand-name ${current ? "has-suffix" : ""}`}>Stratagem AI</span>
+              <span className={`sn-brand-name ${current ? "has-suffix" : ""}`}>{app === "parent" ? "D&J Stratagem" : "Stratagem AI"}</span>
             </Go>
             {current && (
               <>

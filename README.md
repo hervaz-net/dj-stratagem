@@ -94,6 +94,20 @@ Motion is opt-in via the `lift` class and the `Reveal` component rather than
 blanket `transition: all` rules, and everything collapses under
 `prefers-reduced-motion: reduce`.
 
+## Marketplace product catalogs
+
+Exchange Marketplace browse is backed by bundled demo catalogs in
+`public/data/catalog/` (SQLite + gzipped JSONL), served by
+`GET /api/products.php`. Responses are always `sample: true` with generic
+demo seller names — not live storefronts (see `PROOF.md`).
+
+Rebuild from supplier spreadsheets:
+
+```bash
+pip install openpyxl
+python3 scripts/import-catalog-xlsx.py --from-dir /path/to/xlsx
+```
+
 ## Development
 
 ```bash

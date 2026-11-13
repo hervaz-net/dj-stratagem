@@ -27,12 +27,12 @@ const STEPS = [
   },
   {
     title: "Fleet plans the vehicles",
-    text: "Once the job is approved, Fleet reads the scope and the work before it (Supply's delivery schedule, Workforce's crew plan) and lays out which vehicles each phase needs, and for how long.",
+    text: "Once the job is approved, Fleet reads the scope (and Supply delivery dates when they exist) and lays out which vehicles each phase needs, and for how long. Workforce crew plans are not available yet.",
     icon: IconTruck,
   },
   {
-    title: "Confirm and we reserve",
-    text: "You check the plan and confirm. We reserve the vehicles against that job, so they show up on the job, not on a separate rental account.",
+    title: "Confirm your reservation request",
+    text: "You check the plan and confirm. We reply with availability and a per-vehicle quote. Nothing is reserved until you confirm that quote in writing.",
     icon: IconCheck,
   },
 ];
@@ -95,7 +95,7 @@ function JobPlan() {
       </ul>
       <div className="flex flex-wrap items-center gap-2 border-t border-line px-5 py-3 text-xs text-fg-muted">
         <span>Built on</span>
-        {["Projects", "Supply", "Workforce"].map((n) => (
+        {["Projects", "Supply"].map((n) => (
           <span key={n} className="rounded-full border border-line px-2 py-0.5 font-semibold text-fg">{n}</span>
         ))}
       </div>
@@ -248,7 +248,7 @@ function ReserveForm({ requested = "" }) {
         <FormStatus state={state} invalid={invalid} />
       </div>
       <p className="text-xs leading-relaxed text-fg-muted sm:col-span-2">
-        We use these details only to quote and reserve your vehicles. We never sell them or use them for unrelated marketing.
+        We use these details only to quote reservation requests. We never sell them or use them for unrelated marketing.
       </p>
     </form>
   );
@@ -257,7 +257,7 @@ function ReserveForm({ requested = "" }) {
 export default function Fleet({ brand }) {
   useSeo(brand, {
     title: "Pickups, Sprinters, and SUVs for the job",
-    description: `Fleet is the Stratagem AI subagent that plans and reserves work vehicles for your jobs: heavy-duty pickups, Sprinter and Transit vans, and full-size SUVs across ${operator.serviceArea}.`,
+    description: `Fleet is the Stratagem AI subagent that plans work vehicles and takes reservation requests: heavy-duty pickups, Sprinter and Transit vans, and full-size SUVs across ${operator.serviceArea}.`,
   });
   const [requested, setRequested] = useState("");
   const [filter, setFilter] = useState("all");
@@ -302,7 +302,7 @@ export default function Fleet({ brand }) {
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-fg-muted">
               Fleet works on your jobs like the other subagents. It reads the scope, plans the vehicles each phase needs, and
-              reserves them from our lineup: heavy-duty pickups, Sprinter and Transit vans, and full-size SUVs.
+              takes reservation requests from our lineup: heavy-duty pickups, Sprinter and Transit vans, and full-size SUVs.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <a href={ADD_TO_JOB} className="flt-btn flt-btn-primary">Add Fleet to a job <Chevrons /></a>
@@ -394,8 +394,8 @@ export default function Fleet({ brand }) {
       <section id="how" className="scroll-mt-32 border-t border-line bg-surface py-16 md:py-24">
         <div className={WRAP}>
           <Heading eyebrow="How Fleet works on a job" title="Planned with the job, not booked on the side.">
-            Vehicles follow the schedule. Fleet builds its plan from the same job your other subagents are working, and can call
-            Supply or Workforce back in when the plan depends on their dates.
+            Vehicles follow the schedule. Fleet builds its plan from the same job your other subagents are working, and can use
+            Supply delivery dates when they exist. Workforce crew plans are still in development.
           </Heading>
           <ol className="mt-12 grid grid-cols-1 gap-5 md:grid-cols-3">
             {STEPS.map((s, i) => {
@@ -475,8 +475,8 @@ export default function Fleet({ brand }) {
             </dl>
             <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
               {[
-                { icon: IconShield, text: "Every vehicle is maintained on a written schedule and roadworthy before it's reserved." },
-                { icon: IconUsers, text: "Your job details are used only to plan and reserve vehicles, and are never sold." },
+                { icon: IconShield, text: "Every vehicle we put on a confirmed reservation is maintained on a written schedule and roadworthy before it goes out." },
+                { icon: IconUsers, text: "Your job details are used only to plan and quote vehicles, and are never sold." },
               ].map(({ icon: Icon, text }) => (
                 <p key={text} className="flex items-start gap-3 rounded-md border border-line bg-surface p-4 text-sm leading-relaxed text-fg-muted">
                   <Icon width={18} height={18} className="mt-0.5 shrink-0 text-brand" aria-hidden="true" />

@@ -67,7 +67,10 @@ export default function CorporateHome() {
                   <path d="M2 7H11M8 4L11 7L8 10" fill="none" stroke="#111926" strokeWidth="1.6" />
                 </svg>
               </Link>
-              <h1 id="co-h1" style={{ margin: "28px 0 0", fontFamily: "'Inter Tight', 'Inter', sans-serif", fontSize: "clamp(42px, 5.8vw, 80px)", lineHeight: "1.02", fontWeight: "700", letterSpacing: "-0.035em" }}>
+              <p style={{ margin: "28px 0 0", fontSize: "13px", fontWeight: "700", letterSpacing: "0.14em", textTransform: "uppercase", color: "#5E626B" }}>
+                D&amp;J Stratagem
+              </p>
+              <h1 id="co-h1" style={{ margin: "12px 0 0", fontFamily: "'Inter Tight', 'Inter', sans-serif", fontSize: "clamp(42px, 5.8vw, 80px)", lineHeight: "1.02", fontWeight: "700", letterSpacing: "-0.035em" }}>
                 The construction business,
                 <br />
                 <span style={{ color: "#B8893B" }}>
@@ -75,7 +78,7 @@ export default function CorporateHome() {
                 </span>
               </h1>
               <p style={{ margin: "26px 0 0", maxWidth: "60ch", fontSize: "clamp(17px, 1.4vw, 19px)", lineHeight: "1.6", color: "#474B53" }}>
-                Find projects that match your trade, bid them, and source materials in one account. Truck reservation requests are open. Crew staffing is still in development.
+                One account for projects, materials, and truck requests. Crew staffing is still in development.
               </p>
               <div style={{ marginTop: "32px", display: "flex", flexWrap: "wrap", gap: "12px" }}>
                 <Link to="/register" className="btn btn-ink" style={{ display: "inline-flex", alignItems: "center", minHeight: "48px", padding: "0 22px", background: "#111926", color: "#FFFFFF", borderRadius: "6px", fontSize: "15.5px", fontWeight: "600" }}>
@@ -543,7 +546,7 @@ export default function CorporateHome() {
                   Supply
                 </span>
                 <span style={{ fontSize: "15px", lineHeight: "1.55", color: "#474B53" }}>
-                  Source materials from suppliers and distributors on the network.
+                  Browse sample supply catalogs and post requests as we onboard early members.
                 </span>
                 <span style={{ marginTop: "auto", display: "inline-flex", alignItems: "center", gap: "6px", fontSize: "14px", fontWeight: "600" }}>
                   Source materials
@@ -708,19 +711,24 @@ export default function CorporateHome() {
                 </div>
               </article>
               <article className="card" style={{ flex: "1 1 340px", minWidth: "0", display: "flex", flexDirection: "column", border: "1px solid #E8E2D6", borderRadius: "12px", overflow: "hidden", background: "#FFFFFF" }}>
-                <div style={{ minHeight: "250px", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", padding: "20px 14px", background: "#FFFFFF", borderBottom: "1px solid #E8E2D6" }}>
-                  <figure style={{ flex: "1 1 0", minWidth: "0", margin: "0", display: "flex", flexDirection: "column", alignItems: "center", gap: "8px" }}>
-                    <img src="/media/vehicles/ram.webp" alt="White heavy-duty crew-cab pickup truck" style={{ display: "block", width: "100%", height: "auto", aspectRatio: "16 / 9", objectFit: "contain" }} />
-                    <figcaption style={{ fontSize: "12px", color: "#5E626B" }}>
-                      Heavy-duty pickup
-                    </figcaption>
-                  </figure>
-                  <figure style={{ flex: "1 1 0", minWidth: "0", margin: "0", display: "flex", flexDirection: "column", alignItems: "center", gap: "8px" }}>
-                    <img src="/media/vehicles/sprinter.webp" alt="White high-roof Sprinter van" style={{ display: "block", width: "100%", height: "auto", aspectRatio: "16 / 9", objectFit: "contain" }} />
-                    <figcaption style={{ fontSize: "12px", color: "#5E626B" }}>
-                      Sprinter van
-                    </figcaption>
-                  </figure>
+                <div style={{ minHeight: "250px", display: "flex", flexDirection: "column", justifyContent: "center", gap: "10px", padding: "16px 14px", background: "#FFFFFF", borderBottom: "1px solid #E8E2D6" }}>
+                  <p style={{ margin: "0", textAlign: "center", fontSize: "11.5px", fontWeight: "700", letterSpacing: "0.08em", color: "#5E626B" }}>
+                    STUDIO ILLUSTRATIONS · NOT UNITS IN SERVICE
+                  </p>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" }}>
+                    <figure style={{ flex: "1 1 0", minWidth: "0", margin: "0", display: "flex", flexDirection: "column", alignItems: "center", gap: "8px" }}>
+                      <img src="/media/vehicles/ram.webp" alt="Studio illustration of a white heavy-duty crew-cab pickup" style={{ display: "block", width: "100%", height: "auto", aspectRatio: "16 / 9", objectFit: "contain" }} />
+                      <figcaption style={{ fontSize: "12px", color: "#5E626B" }}>
+                        Heavy-duty pickup
+                      </figcaption>
+                    </figure>
+                    <figure style={{ flex: "1 1 0", minWidth: "0", margin: "0", display: "flex", flexDirection: "column", alignItems: "center", gap: "8px" }}>
+                      <img src="/media/vehicles/sprinter.webp" alt="Studio illustration of a white high-roof Sprinter van" style={{ display: "block", width: "100%", height: "auto", aspectRatio: "16 / 9", objectFit: "contain" }} />
+                      <figcaption style={{ fontSize: "12px", color: "#5E626B" }}>
+                        Sprinter van
+                      </figcaption>
+                    </figure>
+                  </div>
                 </div>
                 <div style={{ flex: "1", display: "flex", flexDirection: "column", gap: "10px", padding: "24px" }}>
                   <span style={{ fontSize: "12px", fontWeight: "600", letterSpacing: "0.12em", color: "#5E626B" }}>
@@ -809,7 +817,7 @@ export default function CorporateHome() {
                     </li>
                     <li style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                       <span aria-hidden="true" style={{ width: "14px", height: "2px", background: "#B8893B" }} />
-                      Credentials checked before day one
+                      Credentials checked before day one (planned)
                     </li>
                   </ul>
                 </div>
@@ -822,6 +830,9 @@ export default function CorporateHome() {
                   </h3>
                   <p style={{ margin: "0", fontSize: "15px", lineHeight: "1.6", color: "#474B53" }}>
                     Staffing that plugs into the projects you're already winning.
+                  </p>
+                  <p style={{ margin: "0", fontSize: "13px", lineHeight: "1.5", color: "#5E626B" }}>
+                    Stratagem Workforce is not staffing crews today. Credentials are not checked yet.
                   </p>
                   <div style={{ marginTop: "auto", paddingTop: "14px", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: "10px" }}>
                     <span style={{ display: "inline-flex", alignItems: "center", gap: "7px", padding: "4px 10px", border: "1px solid #E8E2D6", borderRadius: "999px", fontSize: "12.5px", fontWeight: "500", color: "#474B53" }}>
@@ -866,6 +877,9 @@ export default function CorporateHome() {
                   </h3>
                   <p style={{ margin: "0", fontSize: "15px", lineHeight: "1.6", color: "#474B53" }}>
                     Made by people who understand how owners and GCs choose who to hire.
+                  </p>
+                  <p style={{ margin: "0", fontSize: "13px", lineHeight: "1.5", color: "#5E626B" }}>
+                    Stratagem Studio is not taking creative work yet.
                   </p>
                   <div style={{ marginTop: "auto", paddingTop: "14px", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: "10px" }}>
                     <span style={{ display: "inline-flex", alignItems: "center", gap: "7px", padding: "4px 10px", border: "1px solid #E8E2D6", borderRadius: "999px", fontSize: "12.5px", fontWeight: "500", color: "#474B53" }}>
@@ -920,17 +934,17 @@ export default function CorporateHome() {
                   2
                 </span>
                 <h3 style={{ margin: "0", fontSize: "18px", fontWeight: "700", letterSpacing: "-0.01em" }}>
-                  Get matched
+                  See how matching will work
                 </h3>
                 <p style={{ margin: "0", fontSize: "15px", lineHeight: "1.6", color: "#474B53" }}>
-                  Projects and requests that fit your work come to you, ranked by fit.
+                  Browse the sample project board ranked against a sample profile. A live feed opens as members come on board.
                 </p>
                 <p style={{ margin: "auto 0 0", paddingTop: "14px", borderTop: "1px solid #F0EBE2", display: "flex", flexDirection: "column", gap: "3px" }}>
                   <span style={{ fontSize: "11.5px", fontWeight: "600", letterSpacing: "0.12em", color: "#5E626B" }}>
                     YOU GET
                   </span>
                   <span style={{ fontSize: "14.5px", fontWeight: "600" }}>
-                    Work ranked by fit
+                    A clear preview of ranked fit
                   </span>
                 </p>
               </li>
