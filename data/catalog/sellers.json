@@ -1,0 +1,27 @@
+{
+  "sample": true,
+  "note": "Demo catalogs for marketplace browse. Not live seller storefronts and not an affiliation with the source retailers.",
+  "sellers": [
+    {
+      "key": "uline",
+      "name": "Demo Packaging & Shipping Catalog",
+      "role": "distributor",
+      "sourceLabel": "Uline",
+      "count": 44748
+    },
+    {
+      "key": "gi",
+      "name": "Demo Industrial Supplies Catalog",
+      "role": "distributor",
+      "sourceLabel": "Global Industrial",
+      "count": 4599
+    },
+    {
+      "key": "myfbm",
+      "name": "Demo Building Materials Catalog",
+      "role": "distributor",
+      "sourceLabel": "MyFBM",
+      "count": 6416
+    }
+  ]
+}
