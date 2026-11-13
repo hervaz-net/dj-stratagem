@@ -3,13 +3,6 @@
   "note": "Demo catalogs for marketplace browse. Not live seller storefronts and not an affiliation with the source retailers.",
   "sellers": [
     {
-      "key": "uline",
-      "name": "Demo Packaging & Shipping Catalog",
-      "role": "distributor",
-      "sourceLabel": "Uline",
-      "count": 44748
-    },
-    {
       "key": "gi",
       "name": "Demo Industrial Supplies Catalog",
       "role": "distributor",
@@ -22,6 +15,13 @@
       "role": "distributor",
       "sourceLabel": "MyFBM",
       "count": 6416
+    },
+    {
+      "key": "uline",
+      "name": "Demo Packaging & Shipping Catalog",
+      "role": "distributor",
+      "sourceLabel": "Uline",
+      "count": 44748
     }
   ]
 }

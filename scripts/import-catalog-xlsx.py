@@ -107,8 +107,35 @@ def truncate(s: object, n: int) -> str:
     return " ".join(str(s or "").split())[:n]
 
 
+def uline_image_urls(raw: object) -> tuple[str, str]:
+    """Return (card thumb, HD) Scene7 URLs. HD is 2000px JPEG."""
+    s = str(raw or "").strip()
+    if not s:
+        return "", ""
+    # https://img.uline.com/is/image/uline/H-1000?$Mobile_Zoom$
+    base = s.split("?", 1)[0]
+    if "img.uline.com/is/image/uline/" not in base:
+        return truncate(s, 400), truncate(s, 400)
+    thumb = f"{base}?wid=800&hei=800&fmt=jpg&qlt=85"
+    hd = f"{base}?wid=2000&hei=2000&fmt=jpg&qlt=90"
+    return thumb, hd
+
+
+def gi_image_urls(sku: str) -> tuple[str, str]:
+    """
+    Best-effort Global Industrial CDN URLs.
+    Numeric SKUs usually have a real 1000x1000 asset; B-prefix SKUs often 404
+    or serve a shared placeholder — those are left blank for enrich to fill.
+    """
+    if not re.fullmatch(r"\d+", sku):
+        return "", ""
+    thumb = f"https://images.globalindustrial.com/images/800x800/{sku}_01.webp"
+    hd = f"https://images.globalindustrial.com/images/1000x1000/{sku}_01.webp"
+    return thumb, hd
+
+
 def convert_sheet(path: pathlib.Path, source: str) -> tuple[pathlib.Path, int, int]:
-    seller_name, role, source_label = SELLERS[source]
+    _seller_name, _role, source_label = SELLERS[source]
     wb = openpyxl.load_workbook(path, read_only=True, data_only=True)
     ws = wb[wb.sheetnames[0]]
     headers = [c.value for c in next(ws.iter_rows(max_row=1))]
@@ -136,6 +163,14 @@ def convert_sheet(path: pathlib.Path, source: str) -> tuple[pathlib.Path, int, i
                 min_order = max(1, int(float(d.get("min_qty") or d.get("minOrder") or 1)))
             except (TypeError, ValueError):
                 min_order = 1
+
+            image = ""
+            image_hd = ""
+            if source == "uline":
+                image, image_hd = uline_image_urls(d.get("image"))
+            elif source == "gi":
+                image, image_hd = gi_image_urls(sku)
+
             rec = {
                 "sku": sku,
                 "name": name,
@@ -149,6 +184,8 @@ def convert_sheet(path: pathlib.Path, source: str) -> tuple[pathlib.Path, int, i
                 "mfg": truncate(d.get("mfg") or d.get("mpn") or "", 80),
                 "description": truncate(d.get("description") or "", 500),
                 "url": truncate(d.get("url") or "", 300),
+                "image": truncate(image, 400),
+                "imageHd": truncate(image_hd, 400),
                 "source": source,
                 "sellerKey": source,
             }
@@ -180,6 +217,8 @@ def build_sqlite(manifest: list[dict]) -> None:
       mfg TEXT,
       description TEXT,
       url TEXT,
+      image TEXT,
+      image_hd TEXT,
       source TEXT NOT NULL,
       seller_key TEXT NOT NULL,
       seller_name TEXT NOT NULL,
@@ -218,6 +257,8 @@ def build_sqlite(manifest: list[dict]) -> None:
                         r.get("mfg") or "",
                         r.get("description") or "",
                         r.get("url") or "",
+                        r.get("image") or "",
+                        r.get("imageHd") or "",
                         r["source"],
                         r["sellerKey"],
                         seller_name,
@@ -225,17 +266,17 @@ def build_sqlite(manifest: list[dict]) -> None:
                     )
                 )
                 if len(batch) >= 2000:
-                    con.executemany("INSERT INTO products VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", batch)
+                    con.executemany("INSERT INTO products VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", batch)
                     con.executemany(
                         "INSERT INTO products_fts(rowid,sku,name,brand,category,seller_name) VALUES (?,?,?,?,?,?)",
-                        [(b[0], b[1], b[2], b[9], b[3], b[15]) for b in batch],
+                        [(b[0], b[1], b[2], b[9], b[3], b[17]) for b in batch],
                     )
                     batch.clear()
         if batch:
-            con.executemany("INSERT INTO products VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", batch)
+            con.executemany("INSERT INTO products VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", batch)
             con.executemany(
                 "INSERT INTO products_fts(rowid,sku,name,brand,category,seller_name) VALUES (?,?,?,?,?,?)",
-                [(b[0], b[1], b[2], b[9], b[3], b[15]) for b in batch],
+                [(b[0], b[1], b[2], b[9], b[3], b[17]) for b in batch],
             )
     con.commit()
     con.close()

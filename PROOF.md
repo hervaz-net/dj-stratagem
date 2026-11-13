@@ -120,6 +120,11 @@ sellers to the real retailers or imply they sell on Stratagem. Every
 `/api/products.php` response is `sample: true`, and listing cards keep the
 SampleLabel. Rebuild with `scripts/import-catalog-xlsx.py`.
 
+Product photos are remote CDN URLs (Uline Scene7 HD 2000px; Global Industrial
+1000px where available), shown with SampleLabel for demo browse only. Do not
+download and re-host retailer photo libraries into `public/` without a license.
+Enrich missing GI/MyFBM URLs with `scripts/enrich-catalog-images.py`.
+
 ## Still outstanding
 
 - The blog (`/blog`, from main) is unpublished: routes redirect to

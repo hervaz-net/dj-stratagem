@@ -124,7 +124,8 @@ $countStmt->execute($params);
 $total = (int) $countStmt->fetchColumn();
 
 $listSql = "SELECT p.id, p.sku, p.name, p.category, p.unit, p.price, p.stock, p.min_order,
-                   p.lead_time_days, p.brand, p.seller_key, p.seller_name, p.seller_role
+                   p.lead_time_days, p.brand, p.seller_key, p.seller_name, p.seller_role,
+                   p.image, p.image_hd
               FROM products p {$join}
              WHERE {$whereSql}
              ORDER BY {$order}
@@ -147,6 +148,11 @@ $leadLabel = static function (int $days): string {
 
 $listings = [];
 foreach ($listStmt as $r) {
+    $image = (string) ($r['image'] ?? '');
+    $imageHd = (string) ($r['image_hd'] ?? '');
+    if ($imageHd === '' && $image !== '') {
+        $imageHd = $image;
+    }
     $listings[] = [
         'id' => 'p' . $r['id'],
         'sku' => $r['sku'],
@@ -165,6 +171,8 @@ foreach ($listStmt as $r) {
         'leadTimeDays' => (int) $r['lead_time_days'],
         'inStock' => ((int) $r['stock']) > 0,
         'stock' => (int) $r['stock'],
+        'image' => $image !== '' ? $image : null,
+        'imageHd' => $imageHd !== '' ? $imageHd : null,
         'fulfillment' => ['delivery', 'will-call'],
         'sample' => true,
     ];
