@@ -22,10 +22,15 @@ if ($path !== '/') {
 // Reset emails point at /reset-password?token=… on the parent site. The
 // Exchange route used to send people to forgot-password and drop the token.
 if ($path === '/exchange/reset-password') {
-    $qs = $_SERVER['QUERY_STRING'] ?? '';
-    header('Location: /reset-password' . ($qs !== '' ? '?' . $qs : ''), true, 302);
-    header('Cache-Control: no-cache, must-revalidate');
-    exit;
+    redirect_to('/reset-password', 302);
+}
+
+// Exchange aliases are client redirects. Root .htaccess does not match
+// /exchange/about-us and the rest, so they must leave here as redirects
+// rather than the unknown-path 404.
+$exchangeAlias = exchange_alias($path);
+if ($exchangeAlias !== null) {
+    redirect_to($exchangeAlias, 301);
 }
 
 $htmlFile = __DIR__ . '/index.html';
@@ -177,6 +182,102 @@ function meta_for(string $path, array $projects, string $parent, string $exchang
         return page('Page not found', "The page you're looking for has moved or no longer exists.", $exchange, true, 404);
     }
     return page('Page not found', "The page you're looking for has moved or no longer exists.", $parent, true, 404);
+}
+
+/**
+ * Registered Exchange <Navigate> targets. Keys are the public path.
+ * Returns null for real pages, including /exchange/suppliers.
+ */
+function exchange_alias(string $path): ?string
+{
+    $map = [
+        '/exchange/supply' => '/exchange/marketplace',
+        '/exchange/supply/catalog' => '/exchange/marketplace',
+        '/exchange/catalog' => '/exchange/marketplace',
+        '/exchange/supplier' => '/exchange/suppliers',
+        '/exchange/contractor' => '/exchange/contractors',
+        '/exchange/distributor' => '/exchange/distributors',
+        '/exchange/project' => '/exchange/projects',
+        '/exchange/about-us' => '/exchange/about',
+        '/exchange/contact-us' => '/exchange/contact',
+        '/exchange/signin' => '/exchange/login',
+        '/exchange/sign-in' => '/exchange/login',
+        '/exchange/log-in' => '/exchange/login',
+        '/exchange/account' => '/exchange/login',
+        '/exchange/signup' => '/exchange/register',
+        '/exchange/sign-up' => '/exchange/register',
+        '/exchange/trial' => '/exchange/register',
+        '/exchange/start' => '/exchange/register',
+        '/exchange/get-started' => '/exchange/register',
+        '/exchange/join' => '/exchange/register',
+        '/exchange/credit' => '/exchange/dashboard/settings',
+        '/exchange/credits' => '/exchange/dashboard/settings',
+        '/exchange/credit-application' => '/exchange/dashboard/settings',
+        '/exchange/admin' => '/exchange/dashboard/admin',
+        '/exchange/forgot' => '/exchange/forgot-password',
+        '/exchange/reset' => '/exchange/forgot-password',
+        '/exchange/password' => '/exchange/forgot-password',
+        '/exchange/blog' => '/exchange/changelog',
+        '/exchange/privacy-policy' => '/exchange/privacy',
+        '/exchange/terms-of-service' => '/exchange/terms',
+        '/exchange/tos' => '/exchange/terms',
+        '/exchange/legal' => '/exchange/terms',
+        '/exchange/eula' => '/exchange/terms',
+        '/exchange/unsubscribe' => '/exchange/privacy',
+        '/exchange/brand-guidelines' => '/exchange/brand',
+        '/exchange/equipment' => '/exchange/fleet',
+        '/exchange/fleet-cards' => '/exchange/marketing/fleet-cards',
+        '/exchange/receipts' => '/exchange/marketing/receipts',
+        '/exchange/signage' => '/exchange/marketing/signage',
+        '/exchange/home' => '/exchange',
+        '/exchange/exchange' => '/exchange/marketplace',
+        '/exchange/shop' => '/exchange/marketplace',
+        '/exchange/features' => '/exchange/platform',
+        '/exchange/product' => '/exchange/platform',
+        '/exchange/services' => '/exchange/platform',
+        '/exchange/how-it-works' => '/exchange/platform',
+        '/exchange/howitworks' => '/exchange/platform',
+        '/exchange/docs' => '/exchange/changelog',
+        '/exchange/help' => '/exchange/contact',
+        '/exchange/support' => '/exchange/contact',
+        '/exchange/demo' => '/exchange/contact',
+        '/exchange/faq' => '/exchange/contact',
+        '/exchange/faqs' => '/exchange/contact',
+        '/exchange/book' => '/exchange/contact',
+        '/exchange/book-demo' => '/exchange/contact',
+        '/exchange/request-demo' => '/exchange/contact',
+        '/exchange/company' => '/exchange/about',
+        '/exchange/team' => '/exchange/about',
+        '/exchange/news' => '/exchange/changelog',
+        '/exchange/press' => '/exchange/changelog',
+        '/exchange/careers' => '/exchange/contact',
+        '/exchange/jobs' => '/exchange/contact',
+        '/exchange/cookies' => '/exchange/privacy',
+        '/exchange/cookie' => '/exchange/privacy',
+        '/exchange/cookie-policy' => '/exchange/privacy',
+        '/exchange/gdpr' => '/exchange/privacy',
+        '/exchange/status' => '/exchange/about',
+        '/exchange/security' => '/exchange/about',
+        '/exchange/investors' => '/exchange/about',
+        '/exchange/partners' => '/exchange/solutions',
+        '/exchange/accessibility' => '/exchange/about',
+        '/exchange/a11y' => '/exchange/about',
+    ];
+    if (isset($map[$path])) {
+        return $map[$path];
+    }
+    if (preg_match('#^/exchange/blog/.+#', $path) === 1) {
+        return '/exchange/changelog';
+    }
+    return null;
+}
+
+function redirect_to(string $target, int $status): void
+{
+    $qs = $_SERVER['QUERY_STRING'] ?? '';
+    header('Location: ' . $target . ($qs !== '' ? '?' . $qs : ''), true, $status);
+    header('Cache-Control: no-cache, must-revalidate');
+    exit;
 }
 
 /** "hvac" must stay HVAC. ucwords() turns the slug into "Hvac". */
