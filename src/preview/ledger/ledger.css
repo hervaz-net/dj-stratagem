@@ -208,6 +208,16 @@
 .l-caption b { color: var(--l-ox); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.75rem; }
 
 .l-sheet { border-top: 3px solid var(--l-ink); border-bottom: 1px solid var(--l-ink); }
+.l-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin: 0;
+  padding: 8px 0 12px;
+  list-style: none;
+  border-bottom: 1px solid var(--l-rule);
+}
+.l-nav li { font-weight: 600; }
 .l-sheet header {
   display: flex;
   justify-content: space-between;
@@ -344,7 +354,7 @@
 
 .l-foot { padding: 28px 0 48px; border-top: 1px solid var(--l-ink); }
 .l-foot-top { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; margin-bottom: 28px; }
-.l-foot-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 18px; }
+.l-foot-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
 .l-foot-col { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
 .l-foot-title { font-size: 0.75rem; letter-spacing: 0.14em; text-transform: uppercase; }
 .l-foot-link { color: var(--l-muted); font-size: 0.98rem; text-align: left; }

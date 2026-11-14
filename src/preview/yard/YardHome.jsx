@@ -10,9 +10,7 @@ import {
   HOME,
   concepts,
   exampleDashboard,
-  exampleRfq,
   facts,
-  fleetPhotos,
   sections,
   subagentItems,
 } from "../content";
@@ -71,7 +69,7 @@ export default function YardHome() {
         <header className="y-mobile">
           <SiteLink to="/" className="y-brand">
             <span className="y-brand-mark"><Mark /></span>
-            Stratagem
+            {HOME.product}
           </SiteLink>
           <button
             type="button"
@@ -107,7 +105,7 @@ export default function YardHome() {
         <aside className="y-rail">
           <SiteLink to="/" className="y-brand">
             <span className="y-brand-mark"><Mark /></span>
-            Stratagem
+            {HOME.product}
           </SiteLink>
           <nav aria-label="Sections">
             <IndexLinks active={active} />
@@ -140,15 +138,11 @@ export default function YardHome() {
               {HOME.assurances.map((item) => <li key={item}>{item}</li>)}
             </ul>
 
-            <figure className="y-figure">
-              <figcaption className="y-caption">
-                <span className="y-badge">Example</span>
-                {HOME.example}
-              </figcaption>
+            <figure className="y-figure" aria-label="Dashboard">
               <Plate>
                 <div className="y-dash-top">
-                  <span>{HOME.exampleChrome}</span>
-                  <span className="y-badge">Example</span>
+                  <span>{HOME.product}</span>
+                  <span>{exampleDashboard.account}</span>
                 </div>
                 <div className="y-dash" aria-hidden="true">
                   <div className="y-side">
@@ -157,8 +151,8 @@ export default function YardHome() {
                       <span>{exampleDashboard.role}</span>
                     </p>
                     <ul>
-                      {["Overview", "Projects", "Bids", "Materials", "Crews", "Fleet"].map((item) => (
-                        <li key={item} className={item === "Overview" ? "is-on" : undefined}>{item}</li>
+                      {subagentItems.map((item) => (
+                        <li key={item.key} className={item.key === "projects" ? "is-on" : undefined}>{item.name}</li>
                       ))}
                     </ul>
                   </div>
@@ -287,78 +281,10 @@ export default function YardHome() {
             </ul>
           </section>
 
-          <section className="y-section" id="companies" aria-labelledby="yard-cos">
-            <div className="y-section-head">
-              <div>
-                <p className="y-kicker">04 / Companies</p>
-                <h2 id="yard-cos">{HOME.companies.title}</h2>
-              </div>
-              <p>{HOME.companies.lede}</p>
-            </div>
-            <article className="y-feature y-plate">
-              <div className="y-copy">
-                <p className="y-kicker">{HOME.companies.items[0].kicker}</p>
-                <h3>{HOME.companies.items[0].title}</h3>
-                <p>{HOME.companies.items[0].body}</p>
-                <div className="y-co-foot">
-                  <span className="y-status">{HOME.companies.items[0].status}</span>
-                  <SiteLink className="y-more" to={HOME.companies.items[0].href}>{HOME.companies.items[0].cta} <Arrow /></SiteLink>
-                </div>
-              </div>
-              <div className="y-rfq" aria-hidden="true">
-                <header>
-                  <span>{exampleRfq.title}</span>
-                  <span className="y-badge">Sample</span>
-                </header>
-                <ul>
-                  {exampleRfq.rows.map(([item, qty]) => (
-                    <li key={item}><span>{item}</span><span>{qty}</span></li>
-                  ))}
-                </ul>
-                <footer>
-                  <span>{exampleRfq.received}</span>
-                  <span>{exampleRfq.low}</span>
-                </footer>
-              </div>
-            </article>
-            <div className="y-cos">
-              {HOME.companies.items.slice(1).map((company) => (
-                <article key={company.id} className="y-co y-plate">
-                  {company.media === "photos" && (
-                    <div className="y-photos">
-                      {fleetPhotos.map((photo) => (
-                        <figure key={photo.src}>
-                          <img src={photo.src} alt={photo.alt} width={photo.width} height={photo.height} />
-                          <figcaption>{photo.caption}</figcaption>
-                        </figure>
-                      ))}
-                    </div>
-                  )}
-                  {company.planned && (
-                    <>
-                      <p className="y-kicker">{company.plannedTitle}</p>
-                      <ul className="y-planned">
-                        {company.planned.map((item) => <li key={item}>{item}</li>)}
-                      </ul>
-                    </>
-                  )}
-                  <p className="y-kicker">{company.kicker}</p>
-                  <h3>{company.title}</h3>
-                  <p>{company.body}</p>
-                  {company.note && <p className="y-note">{company.note}</p>}
-                  <div className="y-co-foot">
-                    <span className={`y-status ${company.status === "In development" ? "is-wait" : ""}`}>{company.status}</span>
-                    <SiteLink className="y-more" to={company.href}>{company.cta} <Arrow /></SiteLink>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </section>
-
           <section className="y-section" id="method" aria-labelledby="yard-method">
             <div className="y-section-head">
               <div>
-                <p className="y-kicker">05 / {HOME.method.eyebrow}</p>
+                <p className="y-kicker">04 / {HOME.method.eyebrow}</p>
                 <h2 id="yard-method">{HOME.method.title}</h2>
               </div>
             </div>
@@ -378,7 +304,7 @@ export default function YardHome() {
 
           <section id="company" aria-labelledby="yard-company">
             <div className="y-nameplate">
-              <p className="y-kicker">06 / {HOME.company.eyebrow}</p>
+              <p className="y-kicker">05 / {HOME.company.eyebrow}</p>
               <h2 id="yard-company">{HOME.company.title}</h2>
               <p className="y-lede">{HOME.company.body}</p>
               <p style={{ marginTop: 16 }}>
@@ -408,7 +334,7 @@ export default function YardHome() {
 
           <footer className="y-foot">
             <div className="y-foot-brand">
-              <SiteLink to="/" className="y-brand"><span className="y-brand-mark"><Mark /></span>Stratagem</SiteLink>
+              <SiteLink to="/" className="y-brand"><span className="y-brand-mark"><Mark /></span>{HOME.product}</SiteLink>
               <span>D&J Stratagem, Inc.<br />Los Angeles, California</span>
               <a href="mailto:hello@djstratageminc.com">hello@djstratageminc.com</a>
             </div>

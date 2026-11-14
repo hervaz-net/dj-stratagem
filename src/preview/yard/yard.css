@@ -115,9 +115,10 @@
   min-height: 44px;
   font-family: var(--y-display);
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
-  font-size: 22px;
+  font-size: 16px;
+  line-height: 1.05;
 }
 
 .y-brand-mark {
@@ -381,7 +382,10 @@
 .y-dash {
   display: grid;
   grid-template-columns: 180px minmax(0, 1fr);
+  min-width: 0;
+  max-width: 100%;
 }
+.y-side { min-width: 0; }
 
 .y-side {
   padding: 12px;
@@ -651,7 +655,7 @@
 .y-foot-brand a { color: var(--y-amber); }
 .y-foot-grid {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 22px;
 }
 .y-foot-col { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
@@ -703,7 +707,9 @@
 
 @media (max-width: 800px) {
   .y-dash { grid-template-columns: 1fr; }
-  .y-side { display: none; }
+  .y-side { border-right: 0; border-bottom: 1px solid var(--y-line); }
+  .y-side ul { flex-direction: row; overflow-x: auto; }
+  .y-side li { white-space: nowrap; }
   .y-metrics { grid-template-columns: 1fr 1fr; }
   .y-split,
   .y-tools,

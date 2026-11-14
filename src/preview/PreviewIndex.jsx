@@ -12,7 +12,7 @@ export default function PreviewIndex() {
         <p>Design previews · not the live homepage · noindex</p>
         <h1>Three ways to redesign the homepage.</h1>
         <p className="pv-index-lead">
-          The page at / is unchanged. These concepts use the current copy, including the labeled example workspace, and they are not linked from the site navigation.
+          The page at / is unchanged. These concepts are not linked from the site navigation.
         </p>
         <div className="pv-index-grid">
           {concepts.map((concept) => (

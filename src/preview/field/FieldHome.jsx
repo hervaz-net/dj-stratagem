@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import SubagentMark from "../../shared/SubagentMark";
 import FooterNav from "../FooterNav";
 import { Arrow, Mark } from "../icons";
@@ -10,9 +10,9 @@ import {
   HOME,
   concepts,
   exampleDashboard,
-  exampleRfq,
   facts,
   fleetPhotos,
+  navFocus,
   roleFocus,
   sections,
   subagentItems,
@@ -30,14 +30,10 @@ export default function FieldHome() {
   usePreviewFrame(field.scheme, field.theme);
   const active = useActiveSection(sectionIds, "start");
   const [role, setRole] = useState(HOME.audiences[0].id);
-  const [companyId, setCompanyId] = useState(HOME.companies.items[0].id);
   const roleRefs = useRef([]);
-  const tabRefs = useRef([]);
   const dialogRef = useRef(null);
   const [menuOpen, setMenuOpen] = useState(false);
-  const tabsId = useId();
   const audience = HOME.audiences.find((item) => item.id === role);
-  const company = HOME.companies.items.find((item) => item.id === companyId);
   const roleIndex = HOME.audiences.findIndex((item) => item.id === role);
 
   useEffect(() => {
@@ -57,18 +53,6 @@ export default function FieldHome() {
     roleRefs.current[next]?.focus();
   };
 
-  const onTabKey = (event) => {
-    if (!["ArrowRight", "ArrowLeft", "Home", "End"].includes(event.key)) return;
-    event.preventDefault();
-    const index = HOME.companies.items.findIndex((item) => item.id === companyId);
-    let next = index;
-    if (event.key === "Home") next = 0;
-    else if (event.key === "End") next = HOME.companies.items.length - 1;
-    else next = moveIndex(index, event.key === "ArrowRight" ? 1 : -1, HOME.companies.items.length);
-    setCompanyId(HOME.companies.items[next].id);
-    tabRefs.current[next]?.focus();
-  };
-
   const hotMetric = role === "sub" ? "matched" : role === "gc" ? "bids" : null;
 
   return (
@@ -77,7 +61,7 @@ export default function FieldHome() {
         <header className="f-nav">
           <SiteLink to="/" className="f-brand">
             <span className="f-brand-mark"><Mark /></span>
-            Stratagem
+            {HOME.product}
           </SiteLink>
           <nav className="f-nav-links" aria-label="Sections">
             {sections.map((section) => (
@@ -117,7 +101,7 @@ export default function FieldHome() {
         }}
       >
         <header>
-          <strong>Stratagem</strong>
+          <strong>{HOME.product}</strong>
           <button type="button" onClick={() => dialogRef.current?.close()}>Close</button>
         </header>
         <nav>
@@ -140,7 +124,7 @@ export default function FieldHome() {
                 {HOME.headline[0]}<br />{HOME.headline[1]}
               </h1>
               <p className="f-lede">{HOME.lede}</p>
-              <div className="f-seg" role="radiogroup" aria-label="Show the example workspace for" onKeyDown={onRoleKey}>
+              <div className="f-seg" role="radiogroup" aria-label="Show the workspace for" onKeyDown={onRoleKey}>
                 <span className="f-seg-thumb" style={{ "--i": roleIndex }} aria-hidden="true" />
                 {HOME.audiences.map((item, index) => (
                   <button
@@ -175,18 +159,24 @@ export default function FieldHome() {
                 ))}
               </ul>
             </div>
-            <figure className="f-frame-rise">
-              <figcaption className="f-caption">
-                <span className="f-badge">Example</span>
-                {HOME.example}
-              </figcaption>
+            <figure className="f-frame-rise" aria-label="Dashboard">
               <div className="f-frame">
                 <div className="f-frame-bar">
-                  <span>{HOME.exampleChrome}</span>
-                  <span className="f-badge">Example</span>
+                  <span>{HOME.product}</span>
+                  <span>{exampleDashboard.account}</span>
                 </div>
                 <p className="f-focus">{roleFocus[role]}</p>
                 <div className="f-frame-body" aria-hidden="true">
+                  <div className="f-dash">
+                  <div className="f-side">
+                    <p>After approval</p>
+                    <ul>
+                      {subagentItems.map((item) => (
+                        <li key={item.key} className={item.key === navFocus[role] ? "is-on" : undefined}>{item.name}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="f-work">
                   <div className="f-account">
                     <strong>{exampleDashboard.account}</strong>
                     <span>{exampleDashboard.role}</span>
@@ -235,6 +225,8 @@ export default function FieldHome() {
                         <b>{quote.flag ? `${quote.flag} ${quote.price}` : quote.price}</b>
                       </div>
                     ))}
+                  </div>
+                  </div>
                   </div>
                 </div>
               </div>
@@ -288,82 +280,22 @@ export default function FieldHome() {
                 </a>
               ))}
             </div>
-          </div>
-        </section>
-
-        <section className="f-section" id="companies" aria-labelledby="field-cos" style={{ paddingTop: 0 }}>
-          <div className="f-wrap">
-            <div className="f-head">
+            <aside className="f-fleet">
               <div>
-                <p className="f-eyebrow">{HOME.companies.eyebrow}</p>
-                <h2 id="field-cos">{HOME.companies.title}</h2>
+                <p className="f-eyebrow">{HOME.fleetStrip.eyebrow}</p>
+                <h3>{HOME.fleetStrip.title}</h3>
+                <p>{HOME.fleetStrip.body}</p>
+                <SiteLink className="f-more" to={HOME.fleetStrip.href}>{HOME.fleetStrip.cta} <Arrow /></SiteLink>
               </div>
-              <p>{HOME.companies.lede}</p>
-            </div>
-            <div className="f-tabs" role="tablist" aria-label="Stratagem companies" onKeyDown={onTabKey}>
-              {HOME.companies.items.map((item, index) => (
-                <button
-                  key={item.id}
-                  type="button"
-                  role="tab"
-                  id={`${tabsId}-tab-${item.id}`}
-                  aria-selected={item.id === companyId}
-                  aria-controls={`${tabsId}-panel`}
-                  tabIndex={item.id === companyId ? 0 : -1}
-                  ref={(node) => { tabRefs.current[index] = node; }}
-                  onClick={() => setCompanyId(item.id)}
-                >
-                  {item.kicker.replace("Stratagem ", "")}
-                </button>
-              ))}
-            </div>
-            <div
-              className="f-panel"
-              role="tabpanel"
-              id={`${tabsId}-panel`}
-              aria-labelledby={`${tabsId}-tab-${company.id}`}
-              key={company.id}
-            >
-              <div className="f-panel-top">
-                <div>
-                  <p className="f-eyebrow">{company.kicker}</p>
-                  <h3>{company.title}</h3>
-                  <p>{company.body}</p>
-                  {company.note && <p style={{ marginTop: 8 }}>{company.note}</p>}
-                  <span className={`f-status ${company.status === "In development" ? "is-wait" : ""}`}>{company.status}</span>
-                  <div>
-                    <SiteLink className="f-more" to={company.href}>{company.cta} <Arrow /></SiteLink>
-                  </div>
-                </div>
-                {company.media === "rfq" && (
-                  <div className="f-rfq">
-                    <header><strong>{exampleRfq.title}</strong><span className="f-badge">Sample</span></header>
-                    <ul>
-                      {exampleRfq.rows.map(([item, qty]) => <li key={item}><span>{item}</span><span>{qty}</span></li>)}
-                    </ul>
-                    <footer><span>{exampleRfq.received}</span><span>{exampleRfq.low}</span></footer>
-                  </div>
-                )}
-                {company.media === "photos" && (
-                  <div className="f-photos">
-                    {fleetPhotos.map((photo) => (
-                      <figure key={photo.src}>
-                        <img src={photo.src} alt={photo.alt} width={photo.width} height={photo.height} loading="lazy" />
-                        <figcaption>{photo.caption}</figcaption>
-                      </figure>
-                    ))}
-                  </div>
-                )}
-                {company.planned && (
-                  <div>
-                    <p className="f-eyebrow">{company.plannedTitle}</p>
-                    <ul className="f-planned">
-                      {company.planned.map((item) => <li key={item}>{item}</li>)}
-                    </ul>
-                  </div>
-                )}
+              <div className="f-photos">
+                {fleetPhotos.map((photo) => (
+                  <figure key={photo.src}>
+                    <img src={photo.src} alt={photo.alt} width={photo.width} height={photo.height} loading="lazy" />
+                    <figcaption>{photo.caption}</figcaption>
+                  </figure>
+                ))}
               </div>
-            </div>
+            </aside>
           </div>
         </section>
 
@@ -425,7 +357,7 @@ export default function FieldHome() {
       <footer className="f-wrap f-foot">
         <div className="f-foot-top">
           <div>
-            <SiteLink to="/" className="f-brand"><span className="f-brand-mark"><Mark /></span>Stratagem</SiteLink>
+            <SiteLink to="/" className="f-brand"><span className="f-brand-mark"><Mark /></span>{HOME.product}</SiteLink>
             <p style={{ color: "var(--f-muted)" }}>D&J Stratagem, Inc. · Los Angeles, California</p>
           </div>
           <a href="mailto:hello@djstratageminc.com">hello@djstratageminc.com</a>

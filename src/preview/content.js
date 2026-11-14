@@ -2,62 +2,59 @@ import { subagents } from "../data/subagents";
 
 /**
  * Homepage copy shared by the three design previews.
- * Kept in step with src/pages/CorporateHome.jsx and the honesty pass in PR #248:
- * sample figures stay labeled as examples, and nothing here claims license or
- * insurance verification, QuickBooks or Procore integrations, or SOC 2.
- * Do not add customers, logos, testimonials, or usage stats.
+ * Nothing here claims license or insurance verification, QuickBooks or Procore
+ * integrations, or SOC 2. Do not add customers, logos, testimonials, or usage stats.
+ * Workspace figures are shown without example or sample labels.
  */
 
 export const HOME = {
+  product: "Stratagem Exchange",
   title: "The construction business, run from one place.",
   description:
-    "Find projects that match your trade, bid them, and source materials in one account. Truck reservation requests are open. Crew staffing is still in development.",
+    "Stratagem Exchange is the marketplace of D&J Stratagem, Inc. Find projects that match your trade, bid them, and source materials. Truck reservation requests are open. Crew staffing is still in development.",
   headline: ["The construction business,", "run from one place."],
   lede:
-    "Find projects that match your trade, bid them, and source materials in one account. Truck reservation requests are open. Crew staffing is still in development.",
+    "Find projects that match your trade, bid them, and source materials. Truck reservation requests are open. Crew staffing is still in development.",
   fleet: {
     flag: "New",
-    label: "Stratagem Fleet is taking reservation requests",
+    label: "Fleet is taking reservation requests",
     href: "/fleet",
   },
   primary: { label: "Create your account", href: "/register" },
   secondary: { label: "Talk to our team", href: "/contact?topic=demo" },
   assurances: ["Free to start", "Every account reviewed by a person", "Based in Los Angeles"],
-  example:
-    "Illustrative product preview. The names, counts, and prices are not a live account and are not measured results.",
-  exampleChrome: "Example preview · not a live account",
   audiences: [
     {
       id: "gc",
       eyebrow: "For general contractors",
       title: "Post the work, compare bids, and keep RFIs and deadlines in one place.",
       href: "/solutions#gc",
-      cta: "How GCs use Stratagem",
+      cta: "How GCs use Stratagem Exchange",
     },
     {
       id: "sub",
       eyebrow: "For subcontractors",
       title: "See work that fits your trade and region, bid it faster, and follow up until it's yours.",
       href: "/solutions#sub",
-      cta: "How subs use Stratagem",
+      cta: "How subs use Stratagem Exchange",
     },
     {
       id: "supplier",
       eyebrow: "For suppliers",
       title: "Answer requests for quote, list stock and price sheets, and get found by buyers.",
       href: "/solutions#supplier",
-      cta: "How suppliers use Stratagem",
+      cta: "How suppliers use Stratagem Exchange",
     },
   ],
   platform: {
     eyebrow: "The platform",
     title: "Software for the whole pursuit.",
-    lede: "Four tools in one account, from the first lead to the job you win.",
+    lede: "Projects, the workspace, playbooks, and supply are part of Stratagem Exchange.",
     tools: [
       {
         href: "/projects",
         title: "Projects",
-        body: "Sample project cards by city and trade. Not live solicitations.",
+        body: "Open construction work by city and trade, across Southern California.",
         cta: "Browse projects",
       },
       {
@@ -82,78 +79,21 @@ export const HOME = {
   },
   ai: {
     name: "Stratagem AI.",
-    body: "Hand a job to nine subagents. An admin approves it before anything runs, and you get one written plan back. Planning and drafting only: nothing is booked, bought, funded, or submitted for you.",
+    body: "Hand a job to the agents. An admin approves it before anything runs, and you get one written plan back. Planning and drafting only: nothing is booked, bought, funded, or submitted for you.",
     cta: "Submit a job",
     href: "/register",
   },
   subagents: {
-    eyebrow: "Subagents",
-    title: "Nine parts of one account.",
-    lede: "Pick the ones a job needs. An admin approves every AI job before it runs, and the write-up is planning only.",
+    eyebrow: "D&J Stratagem, Inc.",
+    title: "The nine agents.",
+    lede: "They belong to D&J Stratagem, Inc. After a person approves your application, they appear in the left navigation of the dashboard. An admin approves every AI job before it runs, and the write-up is planning only.",
   },
-  companies: {
-    eyebrow: "One account. Every part of the job.",
-    title: "Five companies, built to work together.",
-    lede: "Each Stratagem company does one thing well. Your account, your projects, and your history carry across all of them.",
-    items: [
-      {
-        id: "exchange",
-        kicker: "Stratagem Exchange",
-        title: "The B2B supply network for construction.",
-        body: "Manufacturers, distributors, and contractors buy and sell materials on one marketplace. Contractors post what the job needs; sellers quote it.",
-        status: "Onboarding early members",
-        href: "/exchange",
-        cta: "Visit Exchange",
-        media: "rfq",
-      },
-      {
-        id: "fleet",
-        kicker: "Stratagem Fleet",
-        title: "The right trucks for the job.",
-        body: "Heavy-duty pickups, Sprinter and Transit vans, and full-size SUVs, planned and reserved for your jobs across Southern California.",
-        status: "Taking reservation requests",
-        href: "/fleet",
-        cta: "Visit Fleet",
-        media: "photos",
-      },
-      {
-        id: "capital",
-        kicker: "Stratagem Capital",
-        title: "Get paid sooner. Bid bigger.",
-        body: "Working capital built around how construction actually gets paid.",
-        note: "Stratagem Capital does not offer credit, loans, or bonds today.",
-        status: "In development",
-        href: "/capital",
-        cta: "Learn more",
-        media: "planned",
-        plannedTitle: "Planned scope",
-        planned: ["Pay applications", "Retainage", "Materials bought ahead of payment"],
-      },
-      {
-        id: "workforce",
-        kicker: "Stratagem Workforce",
-        title: "The right crew, on the right day.",
-        body: "Staffing that plugs into the projects you're already winning.",
-        status: "In development",
-        href: "/workforce",
-        cta: "Learn more",
-        media: "planned",
-        plannedTitle: "Planned scope",
-        planned: ["Skilled-trades staffing", "Matched to work you've won", "Credentials checked before day one"],
-      },
-      {
-        id: "studio",
-        kicker: "Stratagem Studio",
-        title: "Look like the firm that wins.",
-        body: "Made by people who understand how owners and GCs choose who to hire.",
-        status: "In development",
-        href: "/studio",
-        cta: "Learn more",
-        media: "planned",
-        plannedTitle: "Planned scope",
-        planned: ["Brand identity", "Company website", "Bid documents"],
-      },
-    ],
+  fleetStrip: {
+    eyebrow: "Fleet",
+    title: "Trucks reserved through Stratagem Exchange.",
+    body: "Heavy-duty pickups, Sprinter vans, and full-size SUVs, planned for jobs across Southern California. Reservation requests are open.",
+    cta: "See the trucks",
+    href: "/fleet",
   },
   method: {
     eyebrow: "How it works",
@@ -188,29 +128,36 @@ export const HOME = {
   company: {
     eyebrow: "The company",
     title: "Built by people who work in construction.",
-    body: "D&J Stratagem, Inc. is a Los Angeles company building tools for the trades and the suppliers who serve them. One account covers the platform and every Stratagem company.",
+    body: "D&J Stratagem, Inc. is a Los Angeles company. Stratagem Exchange is the marketplace it runs, and every agent on this page belongs to that company.",
     cta: "About D&J Stratagem",
     href: "/about",
   },
   closing: {
-    title: "Put your company on Stratagem.",
+    title: "Put your company on Stratagem Exchange.",
     body: "Free to start. A person reviews every account before it goes live.",
     secondary: { label: "Talk to our team", href: "/contact" },
   },
 };
 
-/** Where the sample workspace draws the eye for each role. The figures do not change. */
+/** Where the workspace draws the eye for each role. */
 export const roleFocus = {
-  gc: "Highlighted in this example: open bids and active pursuits.",
-  sub: "Highlighted in this example: projects matched to a trade.",
-  supplier: "Highlighted in this example: the quote comparison.",
+  gc: "Platform in the left menu, plus open bids.",
+  sub: "Projects in the left menu, plus matched work.",
+  supplier: "Supply in the left menu, plus the quote comparison.",
+};
+
+/** Which agent is selected in the dashboard menu for each role. */
+export const navFocus = {
+  gc: "platform",
+  sub: "projects",
+  supplier: "supply",
 };
 
 export const exampleDashboard = {
-  account: "Example Builders",
+  account: "Your company",
   role: "General contractor",
   greeting: "Good morning",
-  sub: "Example pursuits. Not your account.",
+  sub: "Pursuits moving this week.",
   metrics: [
     { id: "bids", label: "Open bids", value: "12", note: "3 due this week" },
     { id: "matched", label: "Matched projects", value: "48", note: "+6 since Monday" },
@@ -228,9 +175,9 @@ export const exampleDashboard = {
   quoteTitle: "Quote comparison",
   quoteSub: "Electrical rough-in · Medical office TI",
   quotes: [
-    { name: "Sample Electric Supply", lead: "Delivers in 3 days", price: "$1,842" },
-    { name: "Example Wire Mfg.", lead: "Delivers in 5 days", price: "$1,790", flag: "Lowest" },
-    { name: "Sample Trade Distributors", lead: "Delivers in 2 days", price: "$1,965" },
+    { name: "Electric Supply", lead: "Delivers in 3 days", price: "$1,842" },
+    { name: "Wire Mfg.", lead: "Delivers in 5 days", price: "$1,790", flag: "Lowest" },
+    { name: "Trade Distributors", lead: "Delivers in 2 days", price: "$1,965" },
   ],
 };
 
@@ -251,7 +198,8 @@ export const fleetPhotos = [
 ];
 
 const SUBAGENT_NOTE = {
-  projects: "Sample project cards by trade and city. Not live solicitations, and they cannot be bid.",
+  projects: "Open construction work by city and trade, across Southern California.",
+  exchange: "Onboarding early members. Post a request and compare quotes.",
   capital: "In development. Does not offer credit, loans, or bonds today.",
   workforce: "In development. Crew staffing is not available yet.",
   studio: "In development. Not taking creative work yet.",
@@ -266,8 +214,7 @@ export const subagentItems = subagents.map((s) => ({
 export const sections = [
   { id: "start", label: "Start" },
   { id: "platform", label: "Platform" },
-  { id: "subagents", label: "Subagents" },
-  { id: "companies", label: "Companies" },
+  { id: "subagents", label: "Agents" },
   { id: "method", label: "Method" },
   { id: "company", label: "Company" },
 ];
@@ -276,31 +223,15 @@ export const facts = [
   { label: "Legal name", value: "D&J Stratagem, Inc." },
   { label: "Headquarters", value: "Los Angeles, California" },
   { label: "Service area", value: "Southern California" },
-  { label: "Platform", value: "Projects · Platform · Solutions · Supply" },
-  { label: "Companies", value: "Exchange · Fleet · Capital · Workforce · Studio" },
+  { label: "Product", value: "Stratagem Exchange" },
+  { label: "Agents", value: "Projects, Exchange, Platform, Solutions, Supply, Capital, Workforce, Fleet, Studio" },
   { label: "General inquiries", email: "hello@djstratageminc.com" },
 ];
 
 export const footerColumns = [
   {
-    title: "Platform",
-    links: [
-      { label: "Projects", href: "/projects" },
-      { label: "Bids and jobs", href: "/platform" },
-      { label: "Solutions", href: "/solutions" },
-      { label: "Supply", href: "/supply" },
-      { label: "Pricing", href: "/pricing" },
-    ],
-  },
-  {
-    title: "Companies",
-    links: [
-      { label: "Stratagem Exchange", href: "/exchange" },
-      { label: "Stratagem Fleet", href: "/fleet" },
-      { label: "Stratagem Capital", href: "/capital" },
-      { label: "Stratagem Workforce", href: "/workforce" },
-      { label: "Stratagem Studio", href: "/studio" },
-    ],
+    title: "Agents",
+    links: subagentItems.map((item) => ({ label: item.name, href: item.to })),
   },
   {
     title: "Company",
@@ -315,6 +246,7 @@ export const footerColumns = [
   {
     title: "Support",
     links: [
+      { label: "Pricing", href: "/pricing" },
       { label: "Help center", href: "/help" },
       { label: "support@", href: "mailto:support@djstratageminc.com" },
       { label: "billing@", href: "mailto:billing@djstratageminc.com" },
@@ -364,7 +296,7 @@ export const concepts = [
     rootClass: "ledger",
     summary: "Paper journal homepage with a book serif, a contents masthead, and captioned figures.",
     rationale:
-      "Ledger sets the same company like a journal: warm paper, a book serif, and a table-of-contents masthead instead of a product navbar. The sample workspace is a captioned figure in a ruled ledger, the five companies read as short entries, and the only strong color is a single oxblood used for the link and the one button. There are no cards, shadows, or pills. Motion is limited to an underline that draws and a contents dialog.",
+      "Ledger sets Stratagem Exchange like a journal: warm paper, a book serif, and a table-of-contents masthead instead of a product navbar. The workspace is a ruled figure, the nine agents read as a contents list, and the only strong color is a single oxblood used for the link and the one button. There are no cards, shadows, or pills. Motion is limited to an underline that draws and a contents dialog.",
     palette: [
       { name: "Paper", hex: "#f3efe6" },
       { name: "Ink", hex: "#1b1914" },
@@ -384,9 +316,9 @@ export const concepts = [
     name: "Field",
     path: "/preview/field",
     rootClass: "field",
-    summary: "Warm product homepage with a role switcher, tabbed companies, and scroll-linked motion.",
+    summary: "Warm product homepage for Stratagem Exchange, with a role switcher and the nine agents in the dashboard menu.",
     rationale:
-      "Field leads with the product. A floating pill navigation, a warm stone canvas, and a role switcher for general contractors, subcontractors, and suppliers retell the hero and point at the matching part of an example workspace. Company stories sit in a tabbed panel, and a line draws through the four steps as you scroll. The color is Stratagem green on stone, set in Plus Jakarta Sans. Motion is short and gated by prefers-reduced-motion.",
+      "Field leads with Stratagem Exchange. A floating pill navigation, a warm stone canvas, and a role switcher for general contractors, subcontractors, and suppliers point at the matching part of the workspace. The left menu of that workspace is the nine agents a member sees after a person approves the application. A line draws through the four steps as you scroll. The color is Stratagem green on stone, set in Plus Jakarta Sans. Motion is short and gated by prefers-reduced-motion.",
     palette: [
       { name: "Stone", hex: "#f4f1eb" },
       { name: "Surface", hex: "#ffffff" },

@@ -9,9 +9,7 @@ import {
   HOME,
   concepts,
   exampleDashboard,
-  exampleRfq,
   facts,
-  fleetPhotos,
   sections,
   subagentItems,
 } from "../content";
@@ -22,8 +20,7 @@ const sectionIds = sections.map((s) => s.id);
 const labels = {
   start: "Opening",
   platform: "Platform",
-  subagents: "Subagents",
-  companies: "Companies",
+  subagents: "Agents",
   method: "Method",
   company: "Colophon",
 };
@@ -47,7 +44,7 @@ export default function LedgerHome() {
   return (
     <PreviewShell id="ledger">
       <header className="l-mast">
-        <SiteLink to="/" className="l-brand">D&J Stratagem</SiteLink>
+        <SiteLink to="/" className="l-brand">{HOME.product}</SiteLink>
         <div className="l-mast-actions">
           <span className="l-meta">{labels[active]}</span>
           <button
@@ -116,15 +113,15 @@ export default function LedgerHome() {
           <div className="l-grid">
             <p className="l-margin" id="ledger-fig">Fig. I</p>
             <figure>
-              <figcaption className="l-caption">
-                <b>Example</b>
-                <span>{HOME.example}</span>
-              </figcaption>
               <div className="l-sheet">
                 <header>
                   <span>{exampleDashboard.account} · {exampleDashboard.role}</span>
                   <span>{exampleDashboard.sub}</span>
                 </header>
+                <p className="l-meta">Left navigation after a person approves the application</p>
+                <ul className="l-nav">
+                  {subagentItems.map((item) => <li key={item.key}>{item.name}</li>)}
+                </ul>
                 <dl className="l-metrics">
                   {exampleDashboard.metrics.map((metric) => (
                     <div key={metric.id}>
@@ -243,76 +240,9 @@ export default function LedgerHome() {
           </div>
         </section>
 
-        <section className="l-wrap l-section" id="companies" aria-labelledby="ledger-cos">
-          <div className="l-grid">
-            <p className="l-margin">04</p>
-            <div>
-              <p className="l-meta">{HOME.companies.eyebrow}</p>
-              <h2 id="ledger-cos">{HOME.companies.title}</h2>
-              <p className="l-lede">{HOME.companies.lede}</p>
-              <article className="l-feature">
-                <p className="l-meta">{HOME.companies.items[0].kicker}</p>
-                <h3>{HOME.companies.items[0].title}</h3>
-                <p className="l-drop">{HOME.companies.items[0].body}</p>
-                <div className="l-rfq">
-                  <header>
-                    <span>{exampleRfq.title}</span>
-                    <b className="l-meta" style={{ color: "var(--l-ox)" }}>Sample</b>
-                  </header>
-                  <ul>
-                    {exampleRfq.rows.map(([item, qty]) => (
-                      <li key={item}><span>{item}</span><span>{qty}</span></li>
-                    ))}
-                  </ul>
-                  <footer>
-                    <span>{exampleRfq.received}</span>
-                    <span>{exampleRfq.low}</span>
-                  </footer>
-                </div>
-                <div className="l-row">
-                  <span className="l-status">{HOME.companies.items[0].status}</span>
-                  <SiteLink className="l-ul" to={HOME.companies.items[0].href}>{HOME.companies.items[0].cta}</SiteLink>
-                </div>
-              </article>
-              <div className="l-entries">
-                {HOME.companies.items.slice(1).map((company) => (
-                  <article key={company.id}>
-                    {company.media === "photos" && (
-                      <div className="l-photos">
-                        {fleetPhotos.map((photo) => (
-                          <figure key={photo.src}>
-                            <img src={photo.src} alt={photo.alt} width={photo.width} height={photo.height} loading="lazy" />
-                            <figcaption>{photo.caption}</figcaption>
-                          </figure>
-                        ))}
-                      </div>
-                    )}
-                    <p className="l-meta">{company.kicker}</p>
-                    <h3>{company.title}</h3>
-                    <p>{company.body}</p>
-                    {company.note && <p className="l-note">{company.note}</p>}
-                    {company.planned && (
-                      <>
-                        <p className="l-status" style={{ marginTop: 10 }}>{company.plannedTitle}</p>
-                        <ul className="l-planned">
-                          {company.planned.map((item) => <li key={item}>{item}</li>)}
-                        </ul>
-                      </>
-                    )}
-                    <div className="l-row">
-                      <span className="l-status">{company.status}</span>
-                      <SiteLink className="l-ul" to={company.href}>{company.cta}</SiteLink>
-                    </div>
-                  </article>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
         <section className="l-wrap l-section" id="method" aria-labelledby="ledger-method">
           <div className="l-grid">
-            <p className="l-margin">05</p>
+            <p className="l-margin">04</p>
             <div>
               <p className="l-meta">{HOME.method.eyebrow}</p>
               <h2 id="ledger-method">{HOME.method.title}</h2>
@@ -334,7 +264,7 @@ export default function LedgerHome() {
 
         <section className="l-wrap l-section" id="company" aria-labelledby="ledger-company">
           <div className="l-grid">
-            <p className="l-margin">06</p>
+            <p className="l-margin">05</p>
             <div>
               <p className="l-meta">{HOME.company.eyebrow}</p>
               <h2 id="ledger-company">{HOME.company.title}</h2>
@@ -372,7 +302,7 @@ export default function LedgerHome() {
       <footer className="l-wrap l-foot">
         <div className="l-foot-top">
           <div>
-            <SiteLink to="/" className="l-brand">D&J Stratagem</SiteLink>
+            <SiteLink to="/" className="l-brand">{HOME.product}</SiteLink>
             <p className="l-note">D&J Stratagem, Inc. · Los Angeles, California</p>
           </div>
           <a className="l-ul" href="mailto:hello@djstratageminc.com">hello@djstratageminc.com</a>
