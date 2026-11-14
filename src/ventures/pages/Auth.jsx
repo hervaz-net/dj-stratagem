@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import useAuth from "../../auth/useAuth";
 import HumanCheck from "../../auth/HumanCheck";
 import PasswordField from "../../exchange/components/PasswordField";
@@ -40,7 +40,8 @@ function SubmitButton({ busy, children }) {
 const FieldError = ({ children }) => (children ? <p className="mt-1.5 text-xs text-danger">{children}</p> : null);
 
 export function SignUp({ brand }) {
-  useSeo(brand, { title: "Create an account", description: `Create a ${brand.name} account.` });
+  const { pathname } = useLocation();
+  useSeo(brand, { title: "Create an account", description: `Create a ${brand.name} account.`, path: pathname, noindex: true });
   const { register, user, turnstileSiteKey, setChallengeToken, challengeReset } = useAuth();
   const [values, setValues] = useState({ fullName: "", company: "", email: "", phone: "" });
   const [password, setPassword] = useState("");
@@ -148,7 +149,8 @@ export function SignUp({ brand }) {
 }
 
 export function SignIn({ brand }) {
-  useSeo(brand, { title: "Sign in", description: `Sign in to your ${brand.name} account.` });
+  const { pathname } = useLocation();
+  useSeo(brand, { title: "Sign in", description: `Sign in to your ${brand.name} account.`, path: pathname, noindex: true });
   const { login, user, turnstileSiteKey, setChallengeToken, challengeReset } = useAuth();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -194,7 +196,8 @@ export function SignIn({ brand }) {
         {message && <p role="alert" className="text-sm text-danger">{message}</p>}
         <SubmitButton busy={busy}>Sign in</SubmitButton>
         <p className="text-xs text-fg-muted">
-          Forgot your password? Email <a href={`mailto:${CONTACT_EMAIL}`} className="font-medium text-brand">{CONTACT_EMAIL}</a>.
+          Forgot your password? <a href="/forgot-password" className="font-medium text-brand">Reset it</a>
+          , or email <a href={`mailto:${CONTACT_EMAIL}`} className="font-medium text-brand">{CONTACT_EMAIL}</a>.
         </p>
       </form>
     </AuthCard>
@@ -202,7 +205,8 @@ export function SignIn({ brand }) {
 }
 
 export function Account({ brand }) {
-  useSeo(brand, { title: "Your account", description: `Your ${brand.name} account.` });
+  const { pathname } = useLocation();
+  useSeo(brand, { title: "Your account", description: `Your ${brand.name} account.`, path: pathname, noindex: true });
   const { user, loading, logout } = useAuth();
   const navigate = useNavigate();
 

@@ -25,7 +25,7 @@ export default function ProjectDetail({ brand }) {
         title: `${project.title} — ${project.city}, ${project.state}`,
         description: `${project.summary} Illustrative sample, not a live solicitation. Estimated value ${project.valueLabel}.`,
       }
-    : { title: "Project not found", description: "That project isn't on the board." });
+    : { title: "Project not found", description: "That project isn't on the board.", noindex: true });
 
   // An unknown slug is a genuine 404 rather than an empty detail page.
   if (!project) return <SubagentNotFound brand={brand} />;

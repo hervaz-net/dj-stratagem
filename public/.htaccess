@@ -150,12 +150,11 @@ Options -Indexes -MultiViews
   RewriteRule ^brand-guidelines$ /brand [R=301,L]
   # Printable sheets are real files. Do not send them through the SPA:
   # a stale bundle renders an empty marketing shell and never sets a title.
+  # Short URLs are the printable sheets. /marketing/* is the site page that
+  # frames the same file, so a refresh keeps the navigation.
   RewriteRule ^fleet-cards$ /fleet-cards.html [L]
-  RewriteRule ^marketing/fleet-cards$ /fleet-cards.html [L]
   RewriteRule ^signage$ /signage.html [L]
-  RewriteRule ^marketing/signage$ /signage.html [L]
   RewriteRule ^receipts$ /receipts.html [L]
-  RewriteRule ^marketing/receipts$ /receipts.html [L]
   # /supply is the parent site's page again; the marketplace lives at
   # /exchange/marketplace (Stratagem Exchange subsidiary).
   RewriteRule ^supply/catalog/?$ /exchange/marketplace [R=301,L]
@@ -185,6 +184,10 @@ Options -Indexes -MultiViews
 </IfModule>
 
 <IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
   <FilesMatch "html$">
     Header set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>

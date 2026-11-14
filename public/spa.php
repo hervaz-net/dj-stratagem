@@ -19,6 +19,15 @@ if ($path !== '/') {
     $path = rtrim($path, '/');
 }
 
+// Reset emails point at /reset-password?token=… on the parent site. The
+// Exchange route used to send people to forgot-password and drop the token.
+if ($path === '/exchange/reset-password') {
+    $qs = $_SERVER['QUERY_STRING'] ?? '';
+    header('Location: /reset-password' . ($qs !== '' ? '?' . $qs : ''), true, 302);
+    header('Cache-Control: no-cache, must-revalidate');
+    exit;
+}
+
 $htmlFile = __DIR__ . '/index.html';
 $html = is_readable($htmlFile) ? file_get_contents($htmlFile) : false;
 if ($html === false) {
@@ -40,6 +49,9 @@ $projects = [
 ];
 
 $page = meta_for($path, $projects, $parent, $exchange);
+if (!empty($page['status']) && (int) $page['status'] !== 200) {
+    http_response_code((int) $page['status']);
+}
 $url = $site . $path;
 $title = $page['title'];
 $description = $page['description'];
@@ -66,8 +78,6 @@ echo $html;
 
 function meta_for(string $path, array $projects, string $parent, string $exchange): array
 {
-    $parentDesc = 'D&J Stratagem is one place for contractors, subcontractors, and suppliers to find construction work, win it, market the business, and keep the customer.';
-    $exchangeDesc = 'The B2B supply network for construction. Manufacturers sell to distributors, distributors sell to contractors, and contractors post what the job needs, all on one marketplace.';
     $pages = [
         '/platform' => page('Platform', 'Six connected suites — bidding, subcontractor tools, marketing, Supply Exchange, business tools, and AI — replacing the patchwork of point tools contractors juggle today.', $parent),
         '/solutions' => page('Solutions', 'Workflows built for each side of the bid — general contractors, subcontractors, and suppliers, all working from one platform.', $parent),
@@ -108,6 +118,14 @@ function meta_for(string $path, array $projects, string $parent, string $exchang
         '/exchange/changelog' => page('Changelog', 'Releases and fixes for Stratagem Exchange, newest first.', $exchange),
         '/exchange/solutions' => page('Solutions', 'Workflows for contractors, distributors, and manufacturers on Stratagem Exchange.', $exchange),
         '/exchange/projects' => page('Projects', 'Illustrative construction supply requests on Stratagem Exchange. Samples, not live solicitations.', $exchange),
+        '/exchange/fleet' => page('Equipment & fleet', 'Preview of equipment listings on the marketplace: mixers, excavators, trucks, generators, and scaffolding from rental yards, distributors, and contractors. Sample listings only.', $exchange),
+        '/exchange/verify-email' => page('Account review', 'New Stratagem Exchange accounts are approved by the team. There is no automated verification email.', $exchange, true),
+        '/marketing/fleet-cards' => page('Fleet cards', 'Printable fleet card sheet for Stratagem Fleet vehicles.', $parent),
+        '/marketing/receipts' => page('Receipts', 'Receipt layout sheet for Stratagem Fleet and Stratagem Exchange.', $parent),
+        '/marketing/signage' => page('Signage', 'Signage sheet for D&J Stratagem field and office use.', $parent),
+        '/exchange/marketing/fleet-cards' => page('Fleet cards', 'Design concept for Stratagem Exchange fleet cards: card faces, controls layout, and a sample statement.', $exchange),
+        '/exchange/marketing/receipts' => page('Receipts', 'Thermal and emailed receipt templates in the Stratagem Exchange brand.', $exchange),
+        '/exchange/marketing/signage' => page('Signage', 'Exhibit banner, will-call counter sign, and vehicle panel templates for Stratagem Exchange.', $exchange),
     ];
 
     if (isset($pages[$path])) {
@@ -117,10 +135,37 @@ function meta_for(string $path, array $projects, string $parent, string $exchang
         [$name, $where] = $projects[$m[1]];
         return page($name . ' — ' . $where, $name . ' in ' . $where . '. Illustrative sample, not a live solicitation. Dates and fit scores cannot be bid or quoted.', $parent);
     }
-    if (preg_match('#^/construction-projects/([a-z0-9-]+)/([a-z0-9-]+)$#', $path, $m)) {
+    if (preg_match('#^/exchange/projects/([a-z0-9-]+)$#', $path, $m) && isset($projects[$m[1]])) {
+        [$name, $where] = $projects[$m[1]];
+        return page($name . ' — ' . $where, $name . ' in ' . $where . '. Illustrative sample on Stratagem Exchange, not a live solicitation.', $exchange);
+    }
+    if (preg_match('#^/(?:exchange/)?construction-projects/([a-z0-9-]+)/([a-z0-9-]+)$#', $path, $m)) {
         $city = ucwords(str_replace('-', ' ', $m[1]));
-        $trade = ucwords(str_replace('-', ' ', $m[2]));
-        return page($trade . ' projects in ' . $city, 'Illustrative ' . $trade . ' project cards in ' . $city . '. Samples, not live solicitations.', $parent);
+        $trade = trade_label($m[2]);
+        $siteName = str_starts_with($path, '/exchange/') ? $exchange : $parent;
+        return page($trade . ' projects in ' . $city, 'Illustrative ' . $trade . ' project cards in ' . $city . '. Samples, not live solicitations.', $siteName);
+    }
+    if (preg_match('#^/(fleet|capital|studio|workforce)/(signup|signin|account)$#', $path, $m)) {
+        $names = [
+            'fleet' => 'Stratagem Fleet',
+            'capital' => 'Stratagem Capital',
+            'studio' => 'Stratagem Studio',
+            'workforce' => 'Stratagem Workforce',
+        ];
+        $titles = [
+            'signup' => 'Create an account',
+            'signin' => 'Sign in',
+            'account' => 'Your account',
+        ];
+        $descs = [
+            'signup' => 'Create a ' . $names[$m[1]] . ' account.',
+            'signin' => 'Sign in to your ' . $names[$m[1]] . ' account.',
+            'account' => 'Your ' . $names[$m[1]] . ' account.',
+        ];
+        return page($titles[$m[2]], $descs[$m[2]], $names[$m[1]], true);
+    }
+    if ($path === '/admin' || str_starts_with($path, '/admin/')) {
+        return page('Admin', 'D&J Stratagem admin.', $parent, true);
     }
     if (str_starts_with($path, '/exchange/dashboard')) {
         return page('Dashboard', 'Your Stratagem Exchange dashboard.', $exchange, true);
@@ -129,14 +174,25 @@ function meta_for(string $path, array $projects, string $parent, string $exchang
         return page('Dashboard', 'Your D&J Stratagem dashboard.', $parent, true);
     }
     if (str_starts_with($path, '/exchange')) {
-        return page('Stratagem Exchange', $exchangeDesc, $exchange);
+        return page('Page not found', "The page you're looking for has moved or no longer exists.", $exchange, true, 404);
     }
-    return page('Page not found', "The page you're looking for has moved or no longer exists.", $parent, true);
+    return page('Page not found', "The page you're looking for has moved or no longer exists.", $parent, true, 404);
 }
 
-function page(string $title, string $description, string $site, bool $noindex = false): array
+/** "hvac" must stay HVAC. ucwords() turns the slug into "Hvac". */
+function trade_label(string $slug): string
 {
-    return ['title' => $title, 'description' => $description, 'site' => $site, 'noindex' => $noindex];
+    $acronyms = ['hvac' => 'HVAC', 'pvc' => 'PVC'];
+    $words = [];
+    foreach (explode('-', $slug) as $part) {
+        $words[] = $acronyms[$part] ?? ucfirst($part);
+    }
+    return implode(' ', $words);
+}
+
+function page(string $title, string $description, string $site, bool $noindex = false, int $status = 200): array
+{
+    return ['title' => $title, 'description' => $description, 'site' => $site, 'noindex' => $noindex, 'status' => $status];
 }
 
 function e(string $value): string

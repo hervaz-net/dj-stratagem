@@ -31,7 +31,7 @@ export default function CollateralFrame({ src, title, description, children }) {
               </div>
               <p className="mt-3 text-lg leading-relaxed text-fg-muted">{children}</p>
             </div>
-            <Button href={src} variant="secondary" target="_blank" rel="noopener" className="self-start md:self-auto">
+            <Button href={src} variant="secondary" target="_blank" rel="noopener noreferrer" className="self-start md:self-auto">
               <IconExternal width={16} height={16} aria-hidden="true" />
               Open printable page
             </Button>
