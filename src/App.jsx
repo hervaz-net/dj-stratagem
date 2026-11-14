@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, lazy, Suspense } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import SiteNav from "./shared/SiteNav.jsx";
 import Footer from "./components/Footer";
@@ -45,6 +45,23 @@ import AdminMembers from "./pages/admin/AdminMembers";
 import AdminMemberDetail from "./pages/admin/AdminMemberDetail";
 import AdminJobs from "./pages/admin/AdminJobs";
 import AdminCatalog from "./pages/admin/AdminCatalog";
+
+const PreviewIndex = lazy(() => import("./preview/PreviewIndex"));
+const YardHome = lazy(() => import("./preview/yard/YardHome"));
+const LedgerHome = lazy(() => import("./preview/ledger/LedgerHome"));
+const FieldHome = lazy(() => import("./preview/field/FieldHome"));
+
+function PreviewFallback() {
+  return (
+    <p role="status" style={{ margin: 0, padding: "3rem 1.25rem", fontFamily: "system-ui, sans-serif" }}>
+      Loading design preview…
+    </p>
+  );
+}
+
+function Preview({ children }) {
+  return <Suspense fallback={<PreviewFallback />}>{children}</Suspense>;
+}
 
 function ScrollToTop() {
   const { pathname, hash } = useLocation();
@@ -223,6 +240,14 @@ function App() {
           <Route path="/marketing/fleet-cards" element={<MarketingLayout><FleetCards /></MarketingLayout>} />
           <Route path="/marketing/receipts" element={<MarketingLayout><Receipts /></MarketingLayout>} />
           <Route path="/marketing/signage" element={<MarketingLayout><Signage /></MarketingLayout>} />
+          {/* Homepage redesign previews. Unlinked, noindex, not the live page. */}
+          <Route path="/preview" element={<Preview><PreviewIndex /></Preview>} />
+          <Route path="/preview/yard" element={<Preview><YardHome /></Preview>} />
+          <Route path="/preview/ledger" element={<Preview><LedgerHome /></Preview>} />
+          <Route path="/preview/field" element={<Preview><FieldHome /></Preview>} />
+          <Route path="/preview/a" element={<Navigate to="/preview/yard" replace />} />
+          <Route path="/preview/b" element={<Navigate to="/preview/ledger" replace />} />
+          <Route path="/preview/c" element={<Navigate to="/preview/field" replace />} />
           {/* Same aliases as public/.htaccess, so an in-app link doesn't 404 while a full load redirects. */}
           {[
             ["/signin", "/login"],

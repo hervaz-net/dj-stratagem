@@ -1,0 +1,60 @@
+/* Shared preview chrome. Not part of any concept's design system. */
+
+a.pv-skip {
+  position: absolute;
+  left: 12px;
+  top: 8px;
+  z-index: 80;
+  padding: 8px 12px;
+  transform: translateY(-160%);
+  background: #111;
+  color: #fff;
+  font-family: system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+a.pv-skip:focus {
+  transform: none;
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+nav.pv-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 14px;
+  padding: 8px 16px;
+  background: #1a1a1a;
+  color: #f3f3f3;
+  font-family: system-ui, sans-serif;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+nav.pv-bar a {
+  color: #fff;
+  font-family: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+nav.pv-bar a[aria-current="page"] {
+  font-weight: 800;
+  text-decoration-thickness: 2px;
+}
+
+.pv-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
