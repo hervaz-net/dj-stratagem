@@ -1,6 +1,8 @@
 @import "tailwindcss";
-@import "@fontsource/barlow-condensed/600.css";
-@import "@fontsource/barlow-condensed/700.css";
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/500.css";
+@import "@fontsource/inter/600.css";
+@import "@fontsource/inter/700.css";
 @import "./shared/tokens.css";
 @import "./entity/desk.css";
 
@@ -86,8 +88,8 @@ body {
   h1, h2, h3, h4 {
     font-family: var(--font-display);
     font-weight: 700;
-    letter-spacing: 0.01em;
-    line-height: 1.08;
+    letter-spacing: -0.04em;
+    line-height: 0.98;
     text-wrap: balance;
     color: var(--text-strong);
   }
@@ -115,7 +117,7 @@ body {
   }
 }
 
-.font-display { font-weight: 700; letter-spacing: 0.01em; }
+.font-display { font-weight: 700; letter-spacing: -0.04em; }
 
 /* Headline accents: brand green, upright. No serif italics, no gradient ink. */
 h1 em, h2 em, h3 em, .font-display em, .font-display.italic {
