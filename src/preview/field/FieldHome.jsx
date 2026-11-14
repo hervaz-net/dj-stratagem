@@ -13,7 +13,6 @@ import {
   facts,
   fleetPhotos,
   navFocus,
-  roleFocus,
   sections,
   subagentItems,
 } from "../content";
@@ -165,11 +164,9 @@ export default function FieldHome() {
                   <span>{HOME.product}</span>
                   <span>{exampleDashboard.account}</span>
                 </div>
-                <p className="f-focus">{roleFocus[role]}</p>
                 <div className="f-frame-body" aria-hidden="true">
                   <div className="f-dash">
                   <div className="f-side">
-                    <p>After approval</p>
                     <ul>
                       {subagentItems.map((item) => (
                         <li key={item.key} className={item.key === navFocus[role] ? "is-on" : undefined}>{item.name}</li>

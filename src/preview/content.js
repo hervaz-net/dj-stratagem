@@ -86,7 +86,7 @@ export const HOME = {
   subagents: {
     eyebrow: "D&J Stratagem, Inc.",
     title: "The nine agents.",
-    lede: "They belong to D&J Stratagem, Inc. After a person approves your application, they appear in the left navigation of the dashboard. An admin approves every AI job before it runs, and the write-up is planning only.",
+    lede: "They belong to D&J Stratagem, Inc. They appear in the left navigation of the dashboard. An admin approves every AI job before it runs, and the write-up is planning only.",
   },
   fleetStrip: {
     eyebrow: "Fleet",
@@ -137,13 +137,6 @@ export const HOME = {
     body: "Free to start. A person reviews every account before it goes live.",
     secondary: { label: "Talk to our team", href: "/contact" },
   },
-};
-
-/** Where the workspace draws the eye for each role. */
-export const roleFocus = {
-  gc: "Platform in the left menu, plus open bids.",
-  sub: "Projects in the left menu, plus matched work.",
-  supplier: "Supply in the left menu, plus the quote comparison.",
 };
 
 /** Which agent is selected in the dashboard menu for each role. */
@@ -318,7 +311,7 @@ export const concepts = [
     rootClass: "field",
     summary: "Warm product homepage for Stratagem Exchange, with a role switcher and the nine agents in the dashboard menu.",
     rationale:
-      "Field leads with Stratagem Exchange. A floating pill navigation, a warm stone canvas, and a role switcher for general contractors, subcontractors, and suppliers point at the matching part of the workspace. The left menu of that workspace is the nine agents a member sees after a person approves the application. A line draws through the four steps as you scroll. The color is Stratagem green on stone, set in Plus Jakarta Sans. Motion is short and gated by prefers-reduced-motion.",
+      "Field leads with Stratagem Exchange. A floating pill navigation, a warm stone canvas, and a role switcher for general contractors, subcontractors, and suppliers point at the matching part of the workspace. The left menu of that workspace lists the nine agents. A line draws through the four steps as you scroll. The color is Stratagem green on stone, set in Plus Jakarta Sans. Motion is short and gated by prefers-reduced-motion.",
     palette: [
       { name: "Stone", hex: "#f4f1eb" },
       { name: "Surface", hex: "#ffffff" },

@@ -268,7 +268,7 @@
   box-shadow: var(--f-shadow);
   overflow: hidden;
 }
-.f-frame-bar, .f-focus {
+.f-frame-bar {
   display: flex;
   justify-content: space-between;
   gap: 8px;
@@ -277,18 +277,9 @@
   font-size: 12.5px;
   color: var(--f-muted);
 }
-.f-focus { background: var(--f-teal-soft); color: var(--f-ink); font-weight: 700; }
 .f-frame-body { padding: 0; }
 .f-dash { display: grid; grid-template-columns: 148px minmax(0, 1fr); }
 .f-side { padding: 10px 8px; border-right: 1px solid var(--f-line); background: #faf8f4; }
-.f-side p {
-  margin: 2px 8px 8px;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--f-muted);
-}
 .f-side ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
 .f-side li { padding: 6px 8px; border-radius: 8px; font-size: 13px; font-weight: 600; color: var(--f-muted); }
 .f-side li.is-on { background: var(--f-teal); color: #fff; }

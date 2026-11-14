@@ -118,7 +118,6 @@ export default function LedgerHome() {
                   <span>{exampleDashboard.account} · {exampleDashboard.role}</span>
                   <span>{exampleDashboard.sub}</span>
                 </header>
-                <p className="l-meta">Left navigation after a person approves the application</p>
                 <ul className="l-nav">
                   {subagentItems.map((item) => <li key={item.key}>{item.name}</li>)}
                 </ul>
