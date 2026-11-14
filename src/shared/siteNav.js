@@ -1,10 +1,5 @@
-// One site map for the global nav on every page: the main site, Stratagem
-// Exchange, and the company sites (Fleet, Capital, Studio, Workforce). They are
-// separate apps, but this list and <SiteNav> are shared, so the nav never
-// changes as you move between them. Hrefs are full site paths.
-//
-// Every subagent appears once, under Subagents. The one you're on shows as
-// the suffix after "Stratagem AI" in the header.
+// One site map for the global nav. Capabilities are modes of DJ Stratagem
+// on /command, not separate sites. Hrefs are full site paths.
 
 import { subagents } from "../data/subagents";
 import { BRANDS } from "../ventures/brands";
@@ -16,31 +11,31 @@ const STAGE_LABEL = { find: "Find", win: "Win", build: "Build", keep: "Keep" };
  * A subagent's own pages or page sections. They sit under that subagent's
  * tile in the Subagents menu, so each subagent appears in the nav once.
  */
+const desk = (path) => `/command${path}`;
+
 const SECTIONS = {
   exchange: [
     { href: "/exchange/marketplace", label: "Marketplace" },
-    { href: "/exchange/projects", label: "Project demand" },
+    { href: "/command/projects", label: "Project board" },
     { href: "/exchange/contractors", label: "Contractors" },
     { href: "/exchange/distributors", label: "Distributors" },
     { href: "/exchange/suppliers", label: "Suppliers" },
-    { href: "/exchange/platform", label: "How it works" },
-    { href: "/exchange/pricing", label: "Pricing" },
+    { href: "/pricing", label: "Pricing" },
   ],
   ...Object.fromEntries(
-    [...Object.values(SUBAGENT_SITES), ...Object.values(BRANDS)].map((b) => [b.slug, (b.nav ?? []).map((n) => ({ href: `${b.path}${n.href}`, label: n.label }))]),
+    [...Object.values(SUBAGENT_SITES), ...Object.values(BRANDS)].map((b) => [b.slug, (b.nav ?? []).map((n) => ({ href: `${desk(b.path)}${n.href}`, label: n.label }))]),
   ),
 };
 
 export const NAV_MENUS = [
   {
     key: "subagents",
-    label: "Subagents",
-    glyph: true,
+    label: "Capabilities",
     intro: {
-      title: "Subagents",
-      text: "Nine AI specialists on one account. Pick the ones a job needs; each builds on the work before it.",
-      href: "/#subagents",
-      cta: "See all nine",
+      title: "Capabilities",
+      text: "Nine modes of one desk. Ask Stratagem, and the workspace changes in place.",
+      href: "/command/projects",
+      cta: "Open the desk",
     },
     columns: 3,
     links: subagents.map((s) => ({
@@ -49,13 +44,13 @@ export const NAV_MENUS = [
       text: s.line,
       tag: STAGE_LABEL[s.stage],
       stage: s.stage,
-      mark: s.key,
+      mark: null,
       sections: SECTIONS[s.key] ?? [],
     })),
     feature: {
-      href: "/#how",
-      eyebrow: "How a job moves",
-      title: "Submit a job once. After approval, your subagents run on their own and call each other in when they need to.",
+      href: "/services",
+      eyebrow: "One entity",
+      title: "Submit the work once. I open the mode it needs. Nothing here is a separate bot.",
       tone: "dark",
     },
   },
@@ -70,15 +65,15 @@ export const NAV_MENUS = [
     },
     columns: 2,
     links: [
-      { href: "/projects", label: "Project board", text: "Sample project cards by trade and city" },
-      { href: "/solutions", label: "Solutions", text: "Playbooks for your trade" },
+      { href: "/command/projects", label: "Project board", text: "Sample project cards by trade and city" },
+      { href: "/command/solutions", label: "Solutions", text: "Playbooks for your side of the deal" },
       { href: "/changelog", label: "Changelog", text: "Everything we've shipped" },
       { href: "/brand", label: "Brand", text: "Logos, colors, and usage" },
       { href: "/resources", label: "Guides", text: "Templates and how-tos" },
     ],
     feature: {
-      href: "/fleet",
-      eyebrow: "Featured · Fleet subagent",
+      href: "/command/fleet",
+      eyebrow: "Fleet mode",
       title: "Pickups, Sprinters, and SUVs, planned and reserved for the job.",
       tone: "dark",
     },
@@ -88,7 +83,7 @@ export const NAV_MENUS = [
     label: "Company",
     intro: {
       title: "Company",
-      text: "D&J Stratagem, Inc. builds one account for the whole construction pipeline.",
+      text: "D&J Stratagem, Inc. is DJ Stratagem: one desk for the construction pipeline.",
       href: "/about",
       cta: "About us",
     },
@@ -108,14 +103,16 @@ export const NAV_MENUS = [
   },
 ];
 
-export const NAV_LINKS = [{ href: "/pricing", label: "Pricing" }];
+export const NAV_LINKS = [
+  { href: "/services", label: "Services" },
+  { href: "/pricing", label: "Pricing" },
+];
 
 /** Which app serves a path. Links into another app need a full page load. */
 export function appForPath(path) {
   const p = path.split(/[?#]/)[0] || "/";
   if (p === "/exchange" || p.startsWith("/exchange/")) return "exchange";
-  if (/^\/((fleet|capital|studio|workforce)(\/(signup|signin|account))?|platform|solutions|supply)\/?$/.test(p)) return "venture";
-  if (/^\/(projects(\/[^/]+)?|construction-projects\/[^/]+\/[^/]+|companies\/[^/]+)\/?$/.test(p)) return "venture";
+  if (/^\/command(\/|$)/.test(p)) return "parent";
   return "parent";
 }
 

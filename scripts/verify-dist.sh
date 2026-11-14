@@ -112,12 +112,15 @@ if [[ -d "$DIST/fleet" ]]; then
   die "dist/fleet is a directory; that path is the SPA route. Put any images in dist/media/fleet"
 fi
 # The Fleet page has no vehicle photos (removed at the owner's request), so
-# there are no fleet images to check for.
-grep -q 'RewriteRule \^fleet/?\$ /spa.php' "$htaccess" \
+# there are no fleet images to check for. /fleet must be rewritten before the
+# existing-file stop so a leftover fleet/ directory cannot list. It now 301s
+# into the command desk; the old SPA targets still count.
+grep -q 'RewriteRule \^fleet/?\$ /command/fleet' "$htaccess" \
+  || grep -q 'RewriteRule \^fleet/?\$ /spa.php' "$htaccess" \
   || grep -q 'RewriteRule \^fleet\$ /spa.php' "$htaccess" \
   || grep -q 'RewriteRule \^fleet/?\$ /index.html' "$htaccess" \
   || grep -q 'RewriteRule \^fleet\$ /index.html' "$htaccess" \
-  || die ".htaccess is missing the /fleet SPA override"
+  || die ".htaccess is missing the /fleet override"
 test -f "$DIST/spa.php" || die "dist is missing spa.php"
 
 printf 'verify-dist: ok (%s)\n' "$bundle"

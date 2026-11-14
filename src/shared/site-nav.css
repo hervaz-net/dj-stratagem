@@ -4,23 +4,23 @@
  * that app's own Tailwind tokens are.
  */
 .sn {
-  --sn-bg: #ffffff;
-  --sn-text: #111311;
-  --sn-muted: #5f6661;
-  --sn-line: #e8eae7;
-  --sn-hover: #f2f3f1;
-  --sn-tile-hover: #f7f8f6;
-  --sn-intro: #f3f4f2;
-  --sn-brand: #0e6b4f;
-  --sn-cta: #111311;
+  --sn-bg: #fffcf7;
+  --sn-text: #1c1915;
+  --sn-muted: #4a453e;
+  --sn-line: #e0d6c8;
+  --sn-hover: #f4f0e8;
+  --sn-tile-hover: #f6efe2;
+  --sn-intro: #f4f0e8;
+  --sn-brand: #9a3412;
+  --sn-cta: #9a3412;
   --sn-cta-text: #ffffff;
-  --sn-arrow: #5fe0a7;
-  --sn-focus: #0e6b4f;
+  --sn-arrow: #ffd7c2;
+  --sn-focus: #9a3412;
   --sn-shadow: 0 1px 2px rgba(17, 19, 17, 0.04), 0 24px 56px -20px rgba(17, 19, 17, 0.28);
-  --sn-find: #c2610c; --sn-find-soft: #fdeedd;
-  --sn-win: #2459c4;  --sn-win-soft: #e5edfb;
-  --sn-build: #0e6b4f; --sn-build-soft: #e2f1ea;
-  --sn-keep: #8a4f0a; --sn-keep-soft: #fbefd9;
+  --sn-find: #9a3412; --sn-find-soft: #f8ebe3;
+  --sn-win: #9a3412;  --sn-win-soft: #f8ebe3;
+  --sn-build: #9a3412; --sn-build-soft: #f8ebe3;
+  --sn-keep: #9a3412; --sn-keep-soft: #f8ebe3;
   --sn-gutter: clamp(16px, 3.2vw, 48px);
 
   position: sticky;
@@ -29,7 +29,7 @@
   background: var(--sn-bg);
   border-bottom: 1px solid var(--sn-line);
   color: var(--sn-text);
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: "Barlow Condensed", "Inter", ui-sans-serif, system-ui, sans-serif;
   font-size: 15px;
   line-height: 1.3;
   letter-spacing: -0.006em;

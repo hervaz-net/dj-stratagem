@@ -214,7 +214,7 @@ export default function Pricing() {
       <PageHero
         index="06"
         kicker="Pricing"
-        title={<>Priced to pay for itself <em>in one win.</em></>}
+        title={<>One desk. <em>Priced in the open.</em></>}
         lede="Start free on Starter. Paid tiers are request-access only until billing is live — prices below are what we intend to charge, not a checkout."
       />
 

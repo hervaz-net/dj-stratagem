@@ -2,7 +2,7 @@ import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { subagents, subagentForPath } from "../data/subagents";
 import { NAV_LINKS, NAV_MENUS, appForPath, isCurrent } from "./siteNav.js";
-import SubagentMark, { subagentColor, subagentMarkSvg } from "./SubagentMark";
+import SubagentMark, { subagentColor } from "./SubagentMark";
 import "./site-nav.css";
 
 /**
@@ -140,16 +140,7 @@ export default function SiteNav({ app, account, action, onOpenPalette }) {
   const location = useLocation();
   // Each app routes under its own basename, so read the full path.
   const here = typeof window === "undefined" ? location.pathname : window.location.pathname;
-  // On a subagent's pages its name follows "Stratagem AI" in the header.
   const current = subagentForPath(here);
-
-  // The tab icon is the subagent's mark on its pages, the Stratagem AI mark elsewhere.
-  useEffect(() => {
-    const link = document.querySelector('link[rel="icon"]');
-    if (!link) return;
-    const svg = current ? subagentMarkSvg(current.key) : null;
-    link.setAttribute("href", svg ? `data:image/svg+xml,${encodeURIComponent(svg)}` : "/favicon.svg");
-  }, [current]);
   const [open, setOpen] = useState(null); // key of the open desktop menu
   const [sheet, setSheet] = useState(false); // mobile menu
   // Open accordion in the sheet; on a subagent page, start on Subagents.
@@ -235,19 +226,10 @@ export default function SiteNav({ app, account, action, onOpenPalette }) {
       <header ref={wrapRef} className={`sn no-print ${open ? "has-open" : ""}`} data-app={app}>
         <div className="sn-bar">
           <div className="sn-brand">
-            <Go href="/" app={app} className="sn-brand-home" aria-label={app === "parent" ? "D&J Stratagem home" : "Stratagem AI home"}>
+            <Go href="/" app={app} className="sn-brand-home" aria-label="DJ Stratagem home">
               <StratagemMark />
-              <span className={`sn-brand-name ${current ? "has-suffix" : ""}`}>{app === "parent" ? "D&J Stratagem" : "Stratagem AI"}</span>
+              <span className="sn-brand-name">DJ Stratagem</span>
             </Go>
-            {current && (
-              <>
-                <span className="sn-brand-sep" aria-hidden="true" />
-                <Go href={current.to} app={app} className="sn-brand-suffix" style={{ color: subagentColor(current.key) }} aria-label={`${current.name} home`}>
-                  <SubagentMark id={current.key} size={22} />
-                  {current.name}
-                </Go>
-              </>
-            )}
           </div>
 
           <nav className="sn-nav" aria-label="Main">

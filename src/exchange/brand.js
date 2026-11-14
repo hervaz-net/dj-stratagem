@@ -5,7 +5,7 @@
 
 export const COMPANY = "D&J Stratagem";
 export const COMPANY_LEGAL = "D&J Stratagem, Inc.";
-export const PRODUCT = "Stratagem Exchange";
+export const PRODUCT = "DJ Stratagem";
 export const PRODUCT_SHORT = "Exchange";
 export const TAGLINE = "The B2B supply network for construction.";
 export const SITE_URL = "https://djstratageminc.com";

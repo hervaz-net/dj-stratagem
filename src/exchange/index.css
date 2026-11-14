@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@import "@fontsource/barlow-condensed/600.css";
+@import "@fontsource/barlow-condensed/700.css";
 @import "../shared/tokens.css";
 
 /* ---------------------------------------------------------------------------
