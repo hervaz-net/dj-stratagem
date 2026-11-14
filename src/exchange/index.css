@@ -32,6 +32,25 @@ html[data-cookie-banner="1"] body {
   padding-bottom: 4.5rem;
 }
 
+/* Phones: venture pages use this sheet. Scroll above the card instead of under it. */
+@media (max-width: 767px) {
+  html[data-cookie-banner="1"],
+  html[data-cookie-banner="1"] body {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  html[data-cookie-banner="1"] body {
+    padding-bottom: 0;
+  }
+
+  html[data-cookie-banner="1"] #root {
+    height: calc(100dvh - var(--cookie-banner-h, 0px) - 8px);
+    max-height: calc(100dvh - var(--cookie-banner-h, 0px) - 8px);
+    overflow: auto;
+  }
+}
+
 body {
   margin: 0;
   min-height: 100vh;

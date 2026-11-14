@@ -22,9 +22,34 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Keep first-fold CTAs and form fields above the compact consent card. */
+/* Keep the end of a long page clear of the fixed consent card. */
 html[data-cookie-banner="1"] body {
   padding-bottom: 8.5rem;
+}
+
+/* Phones: scroll the page in the space above the card so first-fold actions stay clickable. */
+@media (max-width: 767px) {
+  html[data-cookie-banner="1"],
+  html[data-cookie-banner="1"] body {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  html[data-cookie-banner="1"] body {
+    padding-bottom: 0;
+  }
+
+  html[data-cookie-banner="1"] #root {
+    height: calc(100dvh - var(--cookie-banner-h, 0px) - 8px);
+    max-height: calc(100dvh - var(--cookie-banner-h, 0px) - 8px);
+    overflow: auto;
+  }
+
+  /* The homepage hero's inline padding leaves the account buttons under the card. */
+  html[data-cookie-banner="1"] :is(section):has(#co-h1) {
+    padding-top: 1.5rem !important;
+    padding-bottom: 1.5rem !important;
+  }
 }
 
 body {
