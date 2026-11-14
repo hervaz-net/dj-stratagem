@@ -140,8 +140,32 @@ if ($errors !== []) {
 
 $host = preg_replace('/^www\./', '', (string) ($_SERVER['HTTP_HOST'] ?? 'localhost')) ?: 'localhost';
 
-$subject = "New inquiry ({$topic}) from {$name} ({$company})";
+$isFleet = $topicKey === 'fleet' || strcasecmp($role, 'Fleet reservation request') === 0;
+$reference = null;
+if ($isFleet) {
+    require_once __DIR__ . '/api/fleet-requests-lib.php';
+    $reference = fleet_request_store([
+        'name' => $name,
+        'company' => $company,
+        'email' => $email,
+        'phone' => $phone,
+        'role' => $role,
+        'topic' => $topic,
+        'message' => $message,
+        'host' => $host,
+    ]);
+    if ($reference === null) {
+        http_response_code(500);
+        echo json_encode(['ok' => false, 'error' => 'store_failed']);
+        exit;
+    }
+}
+
+$subject = $reference !== null
+    ? "Fleet reservation {$reference} from {$name} ({$company})"
+    : "New inquiry ({$topic}) from {$name} ({$company})";
 $body = "New contact form submission from {$host}\n\n"
+    . ($reference !== null ? "Reference: {$reference}\n" : '')
     . "Name: {$name}\n"
     . "Company: {$company}\n"
     . "Email: {$email}\n"
@@ -159,6 +183,14 @@ $headers = [
 ];
 
 $sent = @mail($destination, $subject, $body, implode("\r\n", $headers));
+
+if ($reference !== null) {
+    if (!$sent) {
+        error_log('contact: fleet mail failed for ' . $reference);
+    }
+    echo json_encode(['ok' => true, 'reference' => $reference, 'notified' => $sent]);
+    exit;
+}
 
 if ($sent) {
     echo json_encode(['ok' => true]);

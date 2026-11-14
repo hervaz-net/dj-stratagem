@@ -59,6 +59,8 @@ need_files=(
   api/ai-worker.php
   api/mail-lib.php
   api/password-reset.php
+  api/fleet-requests.php
+  api/fleet-requests-lib.php
   api/admin-overview.php
   api/admin-members.php
   api/admin-users.php
@@ -99,7 +101,7 @@ grep -q 'REQUEST_URI' "$htaccess" \
 api_htaccess="$DIST/api/.htaccess"
 grep -q 'RewriteRule \^health' "$api_htaccess" \
   || die "api/.htaccess must alias health.php to /health.php"
-for lib in ai-lib ai-worker mail-lib jobs-lib bootstrap; do
+for lib in ai-lib ai-worker mail-lib jobs-lib bootstrap fleet-requests-lib; do
   grep -q "${lib}\\\\.php" "$api_htaccess" \
     || die "api/.htaccess must deny ${lib}.php over the web"
 done
