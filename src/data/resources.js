@@ -31,8 +31,8 @@ export const faqs = [
   {
     id: "is-it-live",
     category: "Getting started",
-    q: "Is the platform live yet?",
-    a: "We are pre-launch and onboarding early users, and some pages show sample data while that happens. If you need to know whether a specific feature is open to your account today, ask us and we will tell you plainly.",
+    q: "How do I start?",
+    a: "Create an account or send a pursuit, a materials list, a vehicle request, a crew request, or a studio brief. A person reviews it and replies.",
     keywords: "launch available early access beta sample",
     link: { to: "/contact?topic=demo", label: "Ask for a walkthrough" },
   },
@@ -49,10 +49,10 @@ export const faqs = [
   {
     id: "sample-projects",
     category: "Bidding & projects",
-    q: "Can I bid on the projects listed on the Projects page?",
-    a: "No. Those listings are illustrative samples, not live solicitations, and they cannot be bid or quoted. A real project feed opens as members come on board.",
-    keywords: "sample listings fake real solicitation opportunities",
-    link: { to: "/command/projects", label: "See the sample projects" },
+    q: "How do I send a project?",
+    a: "Open Projects, name the trade, the city, and the scope, and send it. A person reads the pursuit and replies.",
+    keywords: "pursuit trade city scope bid project",
+    link: { to: "/command/projects", label: "Send a pursuit" },
   },
   {
     id: "starter-bids",
@@ -92,7 +92,7 @@ export const faqs = [
     id: "exchange-vs-supply",
     category: "Supply & Exchange",
     q: "What is the difference between Supply Exchange and Stratagem Exchange?",
-    a: "Supply is the materials mode on this desk: sealed, scored quotes, described here and not awarding orders today. The marketplace is where the sample catalogs, requests, and quotes are browsed. Both are DJ Stratagem.",
+    a: "Supply takes the material list and scores sealed quotes. The marketplace is where you post the request and sellers answer. Both are DJ Stratagem.",
     keywords: "marketplace companies listings requests quotes stratagem",
     link: { to: "/exchange/marketplace", label: "Open the marketplace" },
   },
@@ -100,7 +100,7 @@ export const faqs = [
     id: "exchange-listings",
     category: "Supply & Exchange",
     q: "Are the listings on the Exchange marketplace real?",
-    a: "Not yet. Stratagem Exchange is onboarding early members, and the listings, prices, and requests shown today are labelled samples. Real listings open as members come on board.",
+    a: "Post what the job needs, or list what you sell. A person routes the request. Compare the quotes that come back.",
     keywords: "sample marketplace catalog prices products",
     link: { to: "/exchange/marketplace", label: "Browse the marketplace" },
   },
@@ -126,7 +126,7 @@ export const faqs = [
     id: "reset-password",
     category: "Accounts & security",
     q: "How do I reset my password?",
-    a: "Self-serve reset is not live yet. Email hello@djstratageminc.com from the address on the account and we will reset it by hand.",
+    a: "Use Forgot password and enter the email on the account. If the message does not arrive, write hello@djstratageminc.com from that address.",
     keywords: "forgot lost locked out change login",
     link: { to: "/forgot-password", label: "Password help" },
   },
@@ -184,7 +184,7 @@ export const faqs = [
     id: "payments",
     category: "Billing",
     q: "Do you handle payments, escrow, or financing?",
-    a: "Not on Stratagem Exchange: it does not process payments, hold funds, or extend credit, and buyers and sellers agree terms between themselves. Stratagem Capital is still in development and does not offer credit, loans, or bonds today.",
+    a: "Buyers and sellers agree payment terms between themselves. For a pay-app, materials, or bonding request, send it on Capital. A person reviews it and replies. The form does not fund the job.",
     keywords: "escrow pay invoice credit loans capital terms net-30 delivery",
     link: { to: "/exchange/marketplace", label: "Open the marketplace" },
   },
@@ -193,14 +193,14 @@ export const faqs = [
 export const quickLinks = [
   { to: "/command/platform", title: "Platform", text: "Bidding, trade tools, marketing, sourcing, and drafts." },
   { to: "/command/supply", title: "Supply", text: "Sealed, scored quoting for materials." },
-  { to: "/command/projects", title: "Projects", text: "Sample project cards by trade and city." },
+  { to: "/command/projects", title: "Projects", text: "Send a pursuit by trade and city." },
   { to: "/pricing", title: "Pricing", text: "Starter, Professional, Growth, Enterprise." },
   { to: "/changelog", title: "Changelog", text: "What shipped, and when." },
-  { to: "/exchange/marketplace", title: "Exchange marketplace", text: "Sample listings on Stratagem Exchange.", reload: true },
+  { to: "/exchange/marketplace", title: "Exchange marketplace", text: "Post a materials request or list what you sell.", reload: true },
 ];
 
 // Searches worth suggesting; each should return at least one answer.
-export const POPULAR_SEARCHES = ["password", "approval", "sample", "Exchange", "free"];
+export const POPULAR_SEARCHES = ["password", "approval", "pursuit", "Exchange", "free"];
 
 export const supportRoutes = [
   { to: "/contact?topic=support", title: "Product support", text: "Something not working, or a question about your account." },

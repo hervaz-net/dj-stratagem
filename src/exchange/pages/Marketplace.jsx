@@ -180,8 +180,7 @@ export default function Marketplace() {
           </>
         }
       >
-        Browse demo catalogs from packaging, industrial, and building-materials suppliers. Listings are
-        sample data for browsing — not live seller storefronts. Compare unit price, minimums, and lead time.
+        Post what the job needs, or search the categories and list what you sell. A person routes the request.
       </PageHero>
 
       <Section className="!pt-10 md:!pt-14">
@@ -202,7 +201,7 @@ export default function Marketplace() {
         >
           <IconSearch width={18} height={18} className="shrink-0 text-fg-muted" aria-hidden="true" />
           <label htmlFor="market-search" className="sr-only">
-            Search sample listings
+            Search listings
           </label>
           <input
             id="market-search"
@@ -355,10 +354,10 @@ export default function Marketplace() {
         <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
           <p className="text-sm text-fg-muted" aria-live="polite">
             {loading ? (
-              "Loading sample listings…"
+              "Loading listings…"
             ) : (
               <>
-                <span className="font-semibold text-fg tabular-nums">{total.toLocaleString()}</span> sample{" "}
+                <span className="font-semibold text-fg tabular-nums">{total.toLocaleString()}</span>{" "}
                 {total === 1 ? "listing" : "listings"}
                 {categoryLabel && <> in {categoryLabel}</>}
                 {trade && <> · {trades.find((t) => t.key === trade)?.title}</>}
@@ -418,7 +417,7 @@ export default function Marketplace() {
           !loading &&
           !error && (
             <div className="mt-5 rounded-2xl border border-dashed border-line-strong bg-surface px-6 py-14 text-center">
-              <p className="text-base font-semibold text-fg">No sample listings match those filters.</p>
+              <p className="text-base font-semibold text-fg">No listings match those filters.</p>
               <p className="mx-auto mt-2 max-w-md text-sm text-fg-muted">
                 On the live Exchange, a search that comes up empty is a good reason to post a request and let
                 sellers come to you.

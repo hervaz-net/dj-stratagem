@@ -100,7 +100,7 @@ function Newsletter() {
   if (done) {
     return (
       <p className="mt-4 text-sm leading-relaxed text-fg-muted">
-        Thanks. We received the address and will write when notes go out. A public list is not live yet.
+        Thanks. We received the address and will write when the notes go out.
       </p>
     );
   }

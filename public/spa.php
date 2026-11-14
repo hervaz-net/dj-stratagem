@@ -179,18 +179,18 @@ function meta_for(string $path, array $projects, string $parent, string $exchang
         return page('Dashboard', 'Your D&J Stratagem dashboard.', $parent, true);
     }
     if ($path === '/services') {
-        return page('Services', 'DJ Stratagem is one desk: projects, exchange, platform, solutions, supply, capital, workforce, fleet, and studio. Some modes are open. Others are still in development.', $parent);
+        return page('Services', 'DJ Stratagem is one desk. Send a pursuit, a materials list, a vehicle request, a crew request, a capital request, or a studio brief.', $parent);
     }
     $modes = [
-        'projects' => page('Projects', 'Sample construction cards by trade and city across Southern California. They are not live solicitations, and they cannot be bid.', $parent),
-        'exchange' => page('Exchange', 'Exchange connects manufacturers, distributors, and contractors. Public catalogs are samples while early members come on.', $parent),
-        'platform' => page('Platform', 'Six suites in one workspace: bidding, subcontractor tools, marketing, supply, business tools, and drafts. Steps still in build are marked planned.', $parent),
-        'solutions' => page('Solutions', 'The same desk, shaped for general contractors, subcontractors, and suppliers. Steps that are still planned are marked that way.', $parent),
-        'supply' => page('Supply', 'Materials sourced with sealed, scored quotes. That bidding model is described here and is not awarding orders today.', $parent),
-        'capital' => page('Capital', 'Working capital shaped around how construction gets paid. In development. No credit, loans, or bonds are offered today.', $parent),
-        'workforce' => page('Workforce', 'Crews matched to awarded work. In development. Crew staffing is not available today.', $parent),
-        'fleet' => page('Fleet', 'Pickups, vans, and SUVs planned for a job in Southern California. Reservation requests are open. A request is not a confirmed booking.', $parent),
-        'studio' => page('Studio', 'Brand, websites, and bid documents for construction companies. In development. Not taking creative work yet.', $parent),
+        'projects' => page('Projects', 'Send the trade, the city, and the scope. A person reads the pursuit and replies.', $parent),
+        'exchange' => page('Exchange', 'Post what the job needs, or list what you sell. A person routes the request.', $parent),
+        'platform' => page('Platform', 'Six suites in one workspace. Send the pursuit and a person keeps bids, documents, and follow-up on the account.', $parent),
+        'solutions' => page('Solutions', 'The same desk for general contractors, subcontractors, and suppliers. Send which side you are on.', $parent),
+        'supply' => page('Supply', 'Send the material list. Quotes come back sealed and scored on the weights you set.', $parent),
+        'capital' => page('Capital', 'Send the pay-app, materials, or bonding need. A person reviews it and replies. The form does not fund the job.', $parent),
+        'workforce' => page('Workforce', 'Send the trade, the dates, and the site. A person matches the request and replies.', $parent),
+        'fleet' => page('Fleet', 'Send the vehicle and the dates for a job in Southern California. A person confirms.', $parent),
+        'studio' => page('Studio', 'Send a brand, site, or proposal brief. A person replies with how the work starts.', $parent),
     ];
     if ($path === '/command' || $path === '/command/projects') {
         return $modes['projects'];
@@ -200,12 +200,12 @@ function meta_for(string $path, array $projects, string $parent, string $exchang
     }
     if (preg_match('#^/command/projects/([a-z0-9-]+)$#', $path, $m) && isset($projects[$m[1]])) {
         [$name, $where] = $projects[$m[1]];
-        return page($name . ' — ' . $where, 'Sample card: ' . $name . ' in ' . $where . '. Not a live solicitation.', $parent);
+        return page('Send a pursuit in ' . $where, 'Send the trade, the city, and the scope. A person replies.', $parent);
     }
     if (preg_match('#^/command/projects/markets/([a-z0-9-]+)/([a-z0-9-]+)$#', $path, $m)) {
         $city = ucwords(str_replace('-', ' ', $m[1]));
         $trade = trade_label($m[2]);
-        return page($trade . ' Construction Projects in ' . $city, 'Illustrative ' . strtolower($trade) . ' project cards in ' . $city . ', CA. Samples only — not live solicitations.', $parent);
+        return page($trade . ' work in ' . $city, 'Send a ' . strtolower($trade) . ' pursuit in ' . $city . '. A person replies.', $parent);
     }
     if (str_starts_with($path, '/exchange')) {
         return page('Page not found', "The page you're looking for has moved or no longer exists.", $exchange, true, 404);
