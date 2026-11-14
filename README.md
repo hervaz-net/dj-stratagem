@@ -106,7 +106,12 @@ Rebuild from supplier spreadsheets:
 ```bash
 pip install openpyxl
 python3 scripts/import-catalog-xlsx.py --from-dir /path/to/xlsx
+# Optional: fill missing GI/MyFBM photos from product-page og:image
+python3 scripts/enrich-catalog-images.py --sources gi,myfbm
 ```
+
+Listing cards use `image` (card) and `imageHd` (2000px / largest available) from
+`/api/products.php`.
 
 ## Development
 
