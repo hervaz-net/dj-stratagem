@@ -187,8 +187,8 @@ export default function Contact() {
       <PageHero
         index="09"
         kicker="Contact"
-        title={<>Say hello. <em>We answer.</em></>}
-        lede="Tell us how your team bids, sources, and coordinates today. A person reads every note and replies within one business day."
+        title={<>Say hello. <em>A person answers.</em></>}
+        lede="Tell me how your team bids, sources, and coordinates today. A person reads every note and replies within one business day."
       />
 
       <Section className="border-t border-line">

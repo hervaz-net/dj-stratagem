@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Logo from "./Logo";
-import CompanyGlyph from "./CompanyGlyph";
 import { openCookieSettings } from "./CookieConsent";
-import { companies } from "../data/companies";
+import { CAPABILITIES } from "../entity/capabilities";
 import { IconMail, IconArrowRight } from "./icons";
 
 // Only routes that actually exist are linked. Resources and per-trade landing
@@ -12,9 +11,9 @@ const columns = [
   {
     heading: "Product",
     links: [
-      { to: "/platform", label: "Platform" },
-      { to: "/projects", label: "Projects" },
-      { to: "/supply", label: "Supply Exchange" },
+      { to: "/command/platform", label: "Platform" },
+      { to: "/command/projects", label: "Projects" },
+      { to: "/command/supply", label: "Supply" },
       { to: "/pricing", label: "Pricing" },
       { to: "/resources", label: "Help center" },
       { to: "/changelog", label: "Changelog" },
@@ -23,19 +22,19 @@ const columns = [
   {
     heading: "Solutions",
     links: [
-      { to: "/solutions#gc", label: "General contractors" },
-      { to: "/solutions#sub", label: "Subcontractors" },
-      { to: "/solutions#supplier", label: "Suppliers" },
+      { to: "/command/solutions#gc", label: "General contractors" },
+      { to: "/command/solutions#sub", label: "Subcontractors" },
+      { to: "/command/solutions#supplier", label: "Suppliers" },
     ],
   },
   {
-    heading: "Companies",
+    heading: "Modes",
     links: [
-      { to: "/exchange", label: "Stratagem Exchange", reloadDocument: true },
-      { to: "/capital", label: "Stratagem Capital", reloadDocument: true },
-      { to: "/studio", label: "Stratagem Studio", reloadDocument: true },
-      { to: "/workforce", label: "Stratagem Workforce", reloadDocument: true },
-      { to: "/fleet", label: "Stratagem Fleet", reloadDocument: true },
+      { to: "/command/exchange", label: "Exchange" },
+      { to: "/command/capital", label: "Capital" },
+      { to: "/command/studio", label: "Studio" },
+      { to: "/command/workforce", label: "Workforce" },
+      { to: "/command/fleet", label: "Fleet" },
     ],
   },
   {
@@ -195,26 +194,18 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Every company, one click away. Each runs its own site. */}
         <div className="mt-16">
-          <p className="mono-label text-fg-muted">Companies</p>
-          <ul className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
-            {companies.map((c) => (
-              <li key={c.slug}>
-                <a
-                  href={c.href}
-                  className="slab group flex h-full flex-col gap-4 p-5 hover:-translate-y-1"
-                  style={{ "--panel-glow": `${c.accent}1f` }}
-                >
+          <p className="mono-label text-fg-muted">One desk</p>
+          <ul className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {CAPABILITIES.map((c) => (
+              <li key={c.id}>
+                <Link to={`/command/${c.id}`} className="slab group flex h-full flex-col gap-2 p-5">
                   <span className="flex items-center justify-between">
-                    <CompanyGlyph glyph={c.glyph} accent={c.accent} size={40} />
+                    <span className="text-base font-bold tracking-tight text-fg">{c.label}</span>
                     <IconArrowRight width={16} height={16} className="text-fg-muted transition-transform duration-300 group-hover:translate-x-1 group-hover:text-fg" />
                   </span>
-                  <span>
-                    <span className="block text-base font-bold tracking-tight text-fg">{c.name}</span>
-                    <span className="mt-1 block text-sm leading-snug text-fg-muted">{c.tagline}</span>
-                  </span>
-                </a>
+                  <span className="text-sm leading-snug text-fg-muted">{c.summary}</span>
+                </Link>
               </li>
             ))}
           </ul>

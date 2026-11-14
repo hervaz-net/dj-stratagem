@@ -10,21 +10,26 @@ const isExchange =
   window.location.pathname === EXCHANGE_BASE ||
   window.location.pathname.startsWith(`${EXCHANGE_BASE}/`)
 
-// Every subagent outside Exchange (Projects, Platform, Solutions, Supply,
-// Fleet, Capital, Studio, Workforce) is its own site on the Exchange design
-// system, each at its own top-level address and in its own color.
-const isVenture = /^\/((fleet|capital|studio|workforce)(\/(signup|signin|account))?|platform|solutions|supply|projects(\/[^/]+)?|construction-projects\/[^/]+\/[^/]+|companies\/[^/]+)\/?$/.test(window.location.pathname)
+// Persona homepages (the old subagent sites, and Exchange's marketing
+// duplicates) are modes of the one desk. They load the parent app, which
+// redirects into /command. The marketplace, accounts, and role pages stay
+// on the Exchange bundle.
+const exchangePath = window.location.pathname.replace(/\/$/, "") || "/"
+const exchangeHandoff =
+  exchangePath === "/exchange" ||
+  /^\/exchange\/(platform|solutions|supply|fleet|about|contact|pricing|project|about-us|company|team|contact-us|features|product|how-it-works|howitworks|partners)$/.test(exchangePath) ||
+  /^\/exchange\/projects(\/[^/]+)?$/.test(exchangePath) ||
+  /^\/exchange\/construction-projects\/[^/]+\/[^/]+$/.test(exchangePath)
+const isExchangeProduct = isExchange && !exchangeHandoff
 
-const load = isExchange
+const load = isExchangeProduct
   ? Promise.all([import('./exchange/index.css'), import('./exchange/App.jsx')])
-  : isVenture
-    ? Promise.all([import('./exchange/index.css'), import('./ventures/App.jsx')])
-    : Promise.all([import('./index.css'), import('./App.jsx')])
+  : Promise.all([import('./index.css'), import('./App.jsx')])
 
 load.then(([, { default: App }]) => {
   createRoot(document.getElementById('root')).render(
     <StrictMode>
-      <BrowserRouter basename={isExchange ? EXCHANGE_BASE : undefined}>
+      <BrowserRouter basename={isExchangeProduct ? EXCHANGE_BASE : undefined}>
         <App />
       </BrowserRouter>
     </StrictMode>,

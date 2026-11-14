@@ -7,7 +7,7 @@
 
 @theme inline {
   --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-display: "Inter Display", "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display: "Barlow Condensed", "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
 
   /* Canonical */
@@ -40,9 +40,9 @@
   --color-danger: var(--danger);
   --color-danger-soft: var(--danger-soft);
 
-  /* The always-dark CTA band, in both themes */
-  --color-bid-navy: #12201b;
-  --color-bid-navy-hover: #0b1511;
+  /* The always-dark CTA band */
+  --color-bid-navy: #1c1915;
+  --color-bid-navy-hover: #0f0d0b;
 
   --radius-card: 1rem;
 }
@@ -50,24 +50,24 @@
 :root {
   color-scheme: light;
 
-  --canvas: #fafaf7;
-  --surface-raised: #ffffff;
-  --subtle: #f2f4ef;
+  --canvas: #f4f0e8;
+  --surface-raised: #fffcf7;
+  --subtle: #ebe4d8;
   --surface: var(--surface-raised);
-  --surface-hover: #eef1ea;
-  --border: #e4e7e0;
-  --border-strong: #cfd5cb;
+  --surface-hover: #e4dccf;
+  --border: #e0d6c8;
+  --border-strong: #c9bba8;
 
-  --text-strong: #15201b;
-  --text: #15201b;
-  --text-muted: #5b6861;
+  --text-strong: #1c1915;
+  --text: #1c1915;
+  --text-muted: #4a453e;
 
-  --brand: #0e6b4f;
-  --brand-hover: #0a553f;
-  --brand-soft: #e6f2ec;
-  --brand-fg: #0a553f;
-  --accent: #b86e12;
-  --accent-soft: #fdf1dc;
+  --brand: #9a3412;
+  --brand-hover: #7c2d12;
+  --brand-soft: #f8ebe3;
+  --brand-fg: #7c2d12;
+  --accent: #8a5a12;
+  --accent-soft: #f6efe2;
 
   --role-contractor: #c2610c;
   --role-contractor-soft: #fdeedd;
@@ -90,7 +90,7 @@
   --grid-line: rgba(21, 32, 27, 0.05);
   --glass-bg: rgba(255, 255, 255, 0.9);
   --glass-border: var(--border);
-  --shadow-color: 21 32 27;
+  --shadow-color: 28 25 21;
 
   --viz-blue: #2459c4;
   --viz-cyan: #0e8a8a;
@@ -100,8 +100,8 @@
 
   --panel-bg: var(--surface-raised);
   --panel-border: var(--border);
-  --panel-glow: rgba(14, 107, 79, 0.1);
-  --panel-shadow: 0 1px 2px rgba(21, 32, 27, 0.04), 0 4px 16px -8px rgba(21, 32, 27, 0.1);
-  --shadow-card: 0 1px 2px rgba(21, 32, 27, 0.04), 0 2px 8px -4px rgba(21, 32, 27, 0.08);
-  --shadow-pop: 0 2px 4px rgba(21, 32, 27, 0.04), 0 16px 40px -16px rgba(21, 32, 27, 0.22);
+  --panel-glow: rgba(154, 52, 18, 0.12);
+  --panel-shadow: 0 1px 2px rgba(28, 25, 21, 0.04), 0 4px 16px -8px rgba(28, 25, 21, 0.12);
+  --shadow-card: 0 1px 2px rgba(28, 25, 21, 0.04), 0 2px 8px -4px rgba(28, 25, 21, 0.08);
+  --shadow-pop: 0 2px 4px rgba(28, 25, 21, 0.04), 0 16px 40px -16px rgba(28, 25, 21, 0.22);
 }

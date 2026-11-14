@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { Routes, Route, Navigate, Link, useLocation } from "react-router-dom";
+import { Routes, Route, Navigate, Link, useLocation, useParams } from "react-router-dom";
 import SiteNav from "../shared/SiteNav.jsx";
 import useAuth from "./auth/useAuth";
 import Logo from "./components/Logo";
@@ -9,19 +9,10 @@ import BackToTop from "./components/BackToTop";
 import CookieBanner from "./components/CookieBanner";
 import ReadingProgress from "./components/ReadingProgress";
 import CommandPalette from "./components/CommandPalette";
-import Home from "./pages/Home";
-import Platform from "./pages/Platform";
-import Solutions from "./pages/Solutions";
 import Marketplace from "./pages/Marketplace";
 import ForContractors from "./pages/ForContractors";
 import ForDistributors from "./pages/ForDistributors";
 import ForSuppliers from "./pages/ForSuppliers";
-import Projects from "./pages/Projects";
-import ProjectDetail from "./pages/ProjectDetail";
-import TradeLocation from "./pages/TradeLocation";
-import Pricing from "./pages/Pricing";
-import About from "./pages/About";
-import Contact from "./pages/Contact";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ForgotPassword from "./pages/ForgotPassword";
@@ -30,7 +21,6 @@ import Changelog from "./pages/Changelog";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsAndConditions from "./pages/TermsAndConditions";
 import BrandGuidelines from "./pages/BrandGuidelines";
-import Fleet from "./pages/Fleet";
 import FleetCards from "./pages/FleetCards";
 import Receipts from "./pages/Receipts";
 import Signage from "./pages/Signage";
@@ -177,6 +167,24 @@ function DashboardShell({ children }) {
   );
 }
 
+/** Persona and duplicate marketing URLs belong to the one desk on the parent site. */
+function Leave({ to }) {
+  const params = useParams();
+  const { search, hash } = useLocation();
+  useEffect(() => {
+    const path = to
+      .replace(":slug", params.slug || "")
+      .replace(":city", params.city || "")
+      .replace(":trade", params.trade || "");
+    window.location.replace(`${path}${search}${hash}`);
+  }, [to, params.slug, params.city, params.trade, search, hash]);
+  return (
+    <p className="px-6 py-24 text-center text-sm text-fg-muted" role="status">
+      Opening the desk…
+    </p>
+  );
+}
+
 function App() {
   return (
     <AuthProvider>
@@ -212,31 +220,28 @@ function App() {
             }
           />
 
-          <Route path="/" element={<MarketingLayout><Home /></MarketingLayout>} />
-          <Route path="/platform" element={<MarketingLayout><Platform /></MarketingLayout>} />
-          <Route path="/solutions" element={<MarketingLayout><Solutions /></MarketingLayout>} />
+          <Route path="/" element={<Leave to="/command/exchange" />} />
+          <Route path="/platform" element={<Leave to="/command/platform" />} />
+          <Route path="/solutions" element={<Leave to="/command/solutions" />} />
           <Route path="/marketplace" element={<MarketingLayout><Marketplace /></MarketingLayout>} />
           <Route path="/contractors" element={<MarketingLayout><ForContractors /></MarketingLayout>} />
           <Route path="/distributors" element={<MarketingLayout><ForDistributors /></MarketingLayout>} />
           <Route path="/suppliers" element={<MarketingLayout><ForSuppliers /></MarketingLayout>} />
-          <Route path="/supply" element={<Navigate to="/marketplace" replace />} />
+          <Route path="/supply" element={<Leave to="/command/supply" />} />
           <Route path="/supply/catalog" element={<Navigate to="/marketplace" replace />} />
           <Route path="/catalog" element={<Navigate to="/marketplace" replace />} />
           <Route path="/supplier" element={<Navigate to="/suppliers" replace />} />
           <Route path="/contractor" element={<Navigate to="/contractors" replace />} />
           <Route path="/distributor" element={<Navigate to="/distributors" replace />} />
-          <Route path="/project" element={<Navigate to="/projects" replace />} />
-          <Route path="/projects" element={<MarketingLayout><Projects /></MarketingLayout>} />
-          <Route path="/projects/:slug" element={<MarketingLayout><ProjectDetail /></MarketingLayout>} />
-          <Route
-            path="/construction-projects/:city/:trade"
-            element={<MarketingLayout><TradeLocation /></MarketingLayout>}
-          />
-          <Route path="/pricing" element={<MarketingLayout><Pricing /></MarketingLayout>} />
-          <Route path="/about" element={<MarketingLayout><About /></MarketingLayout>} />
-          <Route path="/about-us" element={<Navigate to="/about" replace />} />
-          <Route path="/contact" element={<MarketingLayout><Contact /></MarketingLayout>} />
-          <Route path="/contact-us" element={<Navigate to="/contact" replace />} />
+          <Route path="/project" element={<Leave to="/command/projects" />} />
+          <Route path="/projects" element={<Leave to="/command/projects" />} />
+          <Route path="/projects/:slug" element={<Leave to="/command/projects/:slug" />} />
+          <Route path="/construction-projects/:city/:trade" element={<Leave to="/command/projects/markets/:city/:trade" />} />
+          <Route path="/pricing" element={<Leave to="/pricing" />} />
+          <Route path="/about" element={<Leave to="/about" />} />
+          <Route path="/about-us" element={<Leave to="/about" />} />
+          <Route path="/contact" element={<Leave to="/contact" />} />
+          <Route path="/contact-us" element={<Leave to="/contact" />} />
           <Route path="/login" element={<MarketingLayout><Login /></MarketingLayout>} />
           <Route path="/signin" element={<Navigate to="/login" replace />} />
           <Route path="/sign-in" element={<Navigate to="/login" replace />} />
@@ -273,19 +278,19 @@ function App() {
           <Route path="/unsubscribe" element={<Navigate to="/privacy" replace />} />
           <Route path="/brand" element={<MarketingLayout><BrandGuidelines /></MarketingLayout>} />
           <Route path="/brand-guidelines" element={<Navigate to="/brand" replace />} />
-          <Route path="/fleet" element={<MarketingLayout><Fleet /></MarketingLayout>} />
-          <Route path="/equipment" element={<Navigate to="/fleet" replace />} />
+          <Route path="/fleet" element={<Leave to="/command/fleet" />} />
+          <Route path="/equipment" element={<Leave to="/command/fleet" />} />
           <Route path="/fleet-cards" element={<Navigate to="/marketing/fleet-cards" replace />} />
           <Route path="/receipts" element={<Navigate to="/marketing/receipts" replace />} />
           <Route path="/signage" element={<Navigate to="/marketing/signage" replace />} />
-          <Route path="/home" element={<Navigate to="/" replace />} />
+          <Route path="/home" element={<Leave to="/" />} />
           <Route path="/exchange" element={<Navigate to="/marketplace" replace />} />
           <Route path="/shop" element={<Navigate to="/marketplace" replace />} />
-          <Route path="/features" element={<Navigate to="/platform" replace />} />
-          <Route path="/product" element={<Navigate to="/platform" replace />} />
-          <Route path="/services" element={<Navigate to="/platform" replace />} />
-          <Route path="/how-it-works" element={<Navigate to="/platform" replace />} />
-          <Route path="/howitworks" element={<Navigate to="/platform" replace />} />
+          <Route path="/features" element={<Leave to="/services" />} />
+          <Route path="/product" element={<Leave to="/services" />} />
+          <Route path="/services" element={<Leave to="/services" />} />
+          <Route path="/how-it-works" element={<Leave to="/services" />} />
+          <Route path="/howitworks" element={<Leave to="/services" />} />
           <Route path="/docs" element={<Navigate to="/changelog" replace />} />
           <Route path="/help" element={<Navigate to="/contact" replace />} />
           <Route path="/support" element={<Navigate to="/contact" replace />} />
@@ -295,8 +300,8 @@ function App() {
           <Route path="/book" element={<Navigate to="/contact" replace />} />
           <Route path="/book-demo" element={<Navigate to="/contact" replace />} />
           <Route path="/request-demo" element={<Navigate to="/contact" replace />} />
-          <Route path="/company" element={<Navigate to="/about" replace />} />
-          <Route path="/team" element={<Navigate to="/about" replace />} />
+          <Route path="/company" element={<Leave to="/about" />} />
+          <Route path="/team" element={<Leave to="/about" />} />
           <Route path="/news" element={<Navigate to="/changelog" replace />} />
           <Route path="/press" element={<Navigate to="/changelog" replace />} />
           <Route path="/careers" element={<Navigate to="/contact" replace />} />
@@ -308,7 +313,7 @@ function App() {
           <Route path="/status" element={<Navigate to="/about" replace />} />
           <Route path="/security" element={<Navigate to="/about" replace />} />
           <Route path="/investors" element={<Navigate to="/about" replace />} />
-          <Route path="/partners" element={<Navigate to="/solutions" replace />} />
+          <Route path="/partners" element={<Leave to="/command/solutions" />} />
           <Route path="/accessibility" element={<Navigate to="/about" replace />} />
           <Route path="/a11y" element={<Navigate to="/about" replace />} />
           <Route path="/marketing/fleet-cards" element={<MarketingLayout><FleetCards /></MarketingLayout>} />

@@ -11,8 +11,7 @@ export default function Logo({ className = "" }) {
         </g>
       </svg>
       <span className="leading-none text-fg">
-        <span className="font-display text-[1.45rem] italic">D&amp;J</span>{" "}
-        <span className="text-[0.95rem] font-semibold tracking-tight">Stratagem</span>
+        <span className="font-display text-[1.45rem] tracking-wide">DJ Stratagem</span>
       </span>
     </span>
   );

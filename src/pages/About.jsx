@@ -39,8 +39,8 @@ export default function About() {
       <PageHero
         index="08"
         kicker="About the company"
-        title={<>A company for the people <em>who build.</em></>}
-        lede="D&J Stratagem, Inc. is a Los Angeles team making one place where construction businesses find work, win it, market themselves, and keep their customers."
+        title={<>One company. <em>One desk.</em></>}
+        lede="D&J Stratagem, Inc. is DJ Stratagem, a Los Angeles company. Projects, materials, trucks, and the work still being built are modes of one desk, not a roster of separate products."
       />
 
       {/* Where we are. Usage metrics go here only once they are real and
@@ -77,9 +77,9 @@ export default function About() {
               The whole pipeline, opportunity to award.
             </h2>
             <p className="mt-5 text-base leading-relaxed text-fg-muted">
-              We built D&amp;J Stratagem to be the platform a contractor runs their growth on:
+              DJ Stratagem is the desk a contractor runs growth from:
               bidding and awards, marketing and lead generation, CRM and estimating, documents
-              and e-signatures &mdash; with AI woven through all of it.
+              and e-signatures. Drafts stay beside your judgment.
             </p>
             <p className="mt-4 text-base leading-relaxed text-fg-muted">
               That's a stronger promise than access to bid listings. We're selling growth:

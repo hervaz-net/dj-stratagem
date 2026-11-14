@@ -38,7 +38,7 @@ Options -Indexes -MultiViews
   RewriteRule ^privacy/?$ /spa.php [L]
   RewriteRule ^terms/?$ /spa.php [L]
   RewriteRule ^brand/?$ /spa.php [L]
-  RewriteRule ^fleet/?$ /spa.php [L]
+  RewriteRule ^fleet/?$ /command/fleet [R=301,L]
   # Same MultiViews trap under the Exchange prefix if a printable sheet
   # is ever added beside these routes.
   RewriteRule ^exchange/(privacy|terms|brand)/?$ /spa.php [L]
@@ -54,11 +54,11 @@ Options -Indexes -MultiViews
   RewriteCond %{REQUEST_FILENAME} -f
   RewriteRule ^ - [L]
 
-  # /fleet is served above, before the existing-file stop, so a leftover
-  # public/fleet/ directory cannot list photos instead of the Fleet page.
+  # /fleet redirects above, before the existing-file stop, so a leftover
+  # public/fleet/ directory cannot list photos instead of the desk.
 
   # Each company has its own top-level site; old /companies/<slug> links move.
-  RewriteRule ^companies/(capital|studio|workforce|fleet)/?$ /$1 [R=301,L]
+  RewriteRule ^companies/(capital|studio|workforce|fleet)/?$ /command/$1 [R=301,L]
 
   # /manifest.json must never become index.html. Live public_html has shipped
   # without the file, and LiteSpeed DOCUMENT_ROOT is unreliable on this account,
@@ -102,9 +102,9 @@ Options -Indexes -MultiViews
   RewriteRule ^forgot$ /forgot-password [R=301,L]
   RewriteRule ^reset$ /forgot-password [R=301,L]
   RewriteRule ^password$ /forgot-password [R=301,L]
-  RewriteRule ^project$ /projects [R=301,L]
-  RewriteRule ^bids$ /projects [R=301,L]
-  RewriteRule ^bid$ /projects [R=301,L]
+  RewriteRule ^project$ /command/projects [R=301,L]
+  RewriteRule ^bids$ /command/projects [R=301,L]
+  RewriteRule ^bid$ /command/projects [R=301,L]
   RewriteRule ^resource$ /resources [R=301,L]
   RewriteRule ^profile$ /dashboard/settings [R=301,L]
   RewriteRule ^settings$ /dashboard/settings [R=301,L]
@@ -114,7 +114,7 @@ Options -Indexes -MultiViews
   RewriteRule ^status$ /about [R=301,L]
   RewriteRule ^security$ /about [R=301,L]
   RewriteRule ^investors$ /about [R=301,L]
-  RewriteRule ^partners$ /solutions [R=301,L]
+  RewriteRule ^partners$ /command/solutions [R=301,L]
   RewriteRule ^accessibility$ /about [R=301,L]
   RewriteRule ^a11y$ /about [R=301,L]
   RewriteRule ^contact-us$ /contact [R=301,L]
@@ -130,11 +130,10 @@ Options -Indexes -MultiViews
   RewriteRule ^jobs$ /contact [R=301,L]
   RewriteRule ^docs$ /changelog [R=301,L]
   RewriteRule ^home$ / [R=301,L]
-  RewriteRule ^features$ /platform [R=301,L]
-  RewriteRule ^product$ /platform [R=301,L]
-  RewriteRule ^services$ /platform [R=301,L]
-  RewriteRule ^how-it-works$ /platform [R=301,L]
-  RewriteRule ^howitworks$ /platform [R=301,L]
+  RewriteRule ^features$ /services [R=301,L]
+  RewriteRule ^product$ /services [R=301,L]
+  RewriteRule ^how-it-works$ /services [R=301,L]
+  RewriteRule ^howitworks$ /services [R=301,L]
   RewriteRule ^news$ /changelog [R=302,L]
   RewriteRule ^press$ /changelog [R=302,L]
   RewriteRule ^privacy-policy$ /privacy [R=301,L]
@@ -162,12 +161,31 @@ Options -Indexes -MultiViews
   RewriteRule ^catalog/?$ /exchange/marketplace [R=301,L]
   RewriteRule ^catalog/ /exchange/marketplace [R=301,L]
   RewriteRule ^shop$ /exchange/marketplace [R=301,L]
-  RewriteRule ^equipment$ /fleet [R=301,L]
+  RewriteRule ^equipment$ /command/fleet [R=301,L]
   RewriteRule ^supplier$ /exchange/suppliers [R=301,L]
   RewriteRule ^sitemap$ /sitemap.xml [R=301,L]
   RewriteRule ^(feed|rss|atom)$ /changelog [R=301,L]
   RewriteRule ^app$ /login [R=301,L]
   RewriteRule ^companies$ / [R=301,L]
+
+  # Former subagent sites are modes of the one desk. Keep the old URLs.
+  RewriteRule ^(platform|solutions|supply|capital|studio|workforce)/?$ /command/$1 [R=301,L]
+  RewriteRule ^(fleet|capital|studio|workforce)/(signup)/?$ /register [R=301,L]
+  RewriteRule ^(fleet|capital|studio|workforce)/(signin)/?$ /login [R=301,L]
+  RewriteRule ^(fleet|capital|studio|workforce)/(account)/?$ /login [R=301,L]
+  RewriteRule ^projects/?$ /command/projects [R=301,L]
+  RewriteRule ^projects/([^/]+)/?$ /command/projects/$1 [R=301,L]
+  RewriteRule ^construction-projects/([^/]+)/([^/]+)/?$ /command/projects/markets/$1/$2 [R=301,L]
+  RewriteRule ^exchange/?$ /command/exchange [R=301,L]
+  RewriteRule ^exchange/(platform|solutions|supply|fleet)/?$ /command/$1 [R=301,L]
+  RewriteRule ^exchange/projects/?$ /command/projects [R=301,L]
+  RewriteRule ^exchange/projects/([^/]+)/?$ /command/projects/$1 [R=301,L]
+  RewriteRule ^exchange/construction-projects/([^/]+)/([^/]+)/?$ /command/projects/markets/$1/$2 [R=301,L]
+  RewriteRule ^exchange/(about|about-us|company|team)/?$ /about [R=301,L]
+  RewriteRule ^exchange/(contact|contact-us)/?$ /contact [R=301,L]
+  RewriteRule ^exchange/pricing/?$ /pricing [R=301,L]
+  RewriteRule ^exchange/(features|product|services|how-it-works|howitworks)/?$ /services [R=301,L]
+  RewriteRule ^exchange/partners/?$ /command/solutions [R=301,L]
 
   RewriteRule ^send-demo[.]php$ contact.php [L]
   RewriteRule ^favicon[.]ico$ favicon.svg [L]

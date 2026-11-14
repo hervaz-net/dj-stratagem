@@ -1,12 +1,14 @@
 import { useState, useEffect, useCallback } from "react";
-import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation, useParams } from "react-router-dom";
 import SiteNav from "./shared/SiteNav.jsx";
 import Footer from "./components/Footer";
 import BackToTop from "./components/BackToTop";
 import CookieConsent from "./components/CookieConsent";
 import ReadingProgress from "./components/ReadingProgress";
 import CommandPalette from "./components/CommandPalette";
-import CorporateHome from "./pages/CorporateHome";
+import Home from "./entity/Home";
+import Services from "./entity/Services";
+import CommandPage from "./entity/CommandPage";
 import Pricing from "./pages/Pricing";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
@@ -126,6 +128,41 @@ function DashboardShell({ children }) {
   );
 }
 
+function CommandLayout({ children }) {
+  return (
+    <>
+      <SkipLink />
+      <main id="main">{children}</main>
+      <CookieConsent />
+    </>
+  );
+}
+
+function RedirectTo({ to }) {
+  const { search, hash } = useLocation();
+  return <Navigate to={`${to}${search}${hash}`} replace />;
+}
+
+function ProjectRedirect() {
+  const { slug } = useParams();
+  const { search, hash } = useLocation();
+  return <Navigate to={`/command/projects/${slug}${search}${hash}`} replace />;
+}
+
+function MarketRedirect() {
+  const { city, trade } = useParams();
+  const { search, hash } = useLocation();
+  return <Navigate to={`/command/projects/markets/${city}/${trade}${search}${hash}`} replace />;
+}
+
+function CompanyRedirect() {
+  const { slug } = useParams();
+  const { search, hash } = useLocation();
+  const known = ["capital", "studio", "workforce", "fleet", "exchange", "projects", "platform", "solutions", "supply"];
+  const to = known.includes(slug) ? `/command/${slug}` : "/";
+  return <Navigate to={`${to}${search}${hash}`} replace />;
+}
+
 /** Leave this app for a URL the server (or another bundle) owns. */
 function FullLoad({ to }) {
   const { search, hash } = useLocation();
@@ -139,19 +176,49 @@ function FullLoad({ to }) {
   );
 }
 
-/** Full page load into a company site, which runs its own app and styles. */
-function ToCompanySite() {
+function ExchangeAlias() {
   const { pathname, search, hash } = useLocation();
+  const rest = pathname.replace(/^\/exchange/, "") || "/";
+  const exact = {
+    "/": "/command/exchange",
+    "/platform": "/command/platform",
+    "/solutions": "/command/solutions",
+    "/supply": "/command/supply",
+    "/projects": "/command/projects",
+    "/fleet": "/command/fleet",
+    "/about": "/about",
+    "/about-us": "/about",
+    "/company": "/about",
+    "/team": "/about",
+    "/contact": "/contact",
+    "/contact-us": "/contact",
+    "/pricing": "/pricing",
+    "/features": "/services",
+    "/product": "/services",
+    "/services": "/services",
+    "/how-it-works": "/services",
+    "/howitworks": "/services",
+    "/partners": "/command/solutions",
+    "/project": "/command/projects",
+    "/home": "/",
+    "/equipment": "/command/fleet",
+  };
+  const project = rest.match(/^\/projects\/([^/]+)$/);
+  const market = rest.match(/^\/construction-projects\/([^/]+)\/([^/]+)$/);
+  const to = project
+    ? `/command/projects/${project[1]}`
+    : market
+      ? `/command/projects/markets/${market[1]}/${market[2]}`
+      : exact[rest];
   useEffect(() => {
-    // Hash and query have to survive the full reload. Dropping them sent
-    // /solutions#gc and /solutions#supplier to the top of the page.
-    window.location.replace(`${pathname}${search}${hash}`);
-  }, [pathname, search, hash]);
-  return (
-    <p className="px-6 py-24 text-center text-sm text-fg-muted" role="status">
-      Opening this page…
-    </p>
-  );
+    // Marketplace, accounts, and the signed-in tools are the Exchange bundle.
+    // A client-side miss would bounce them back to the desk.
+    if (!to) window.location.replace(`${pathname}${search}${hash}`);
+  }, [to, pathname, search, hash]);
+  if (!to) {
+    return <p className="px-6 py-24 text-center text-sm text-fg-muted" role="status">Opening this page…</p>;
+  }
+  return <Navigate to={`${to}${search}${hash}`} replace />;
 }
 
 function App() {
@@ -186,7 +253,12 @@ function App() {
           />
 
           {/* The homepage draws its own footer but shares the site nav. */}
-          <Route path="/" element={<MarketingLayout siteFooter={false}><CorporateHome /></MarketingLayout>} />
+          <Route path="/" element={<MarketingLayout><Home /></MarketingLayout>} />
+          <Route path="/services" element={<MarketingLayout><Services /></MarketingLayout>} />
+          <Route path="/command" element={<CommandLayout><CommandPage /></CommandLayout>} />
+          <Route path="/command/projects/markets/:city/:trade" element={<CommandLayout><CommandPage view="market" /></CommandLayout>} />
+          <Route path="/command/projects/:slug" element={<CommandLayout><CommandPage view="project" /></CommandLayout>} />
+          <Route path="/command/:module" element={<CommandLayout><CommandPage /></CommandLayout>} />
           <Route path="/pricing" element={<MarketingLayout><Pricing /></MarketingLayout>} />
           <Route path="/about" element={<MarketingLayout><About /></MarketingLayout>} />
           <Route path="/contact" element={<MarketingLayout><Contact /></MarketingLayout>} />
@@ -200,7 +272,7 @@ function App() {
           <Route path="/admin/jobs" element={<AdminGate><AdminJobs /></AdminGate>} />
           <Route path="/admin/catalog" element={<AdminGate><AdminCatalog /></AdminGate>} />
           <Route path="/admin/*" element={<Navigate to="/admin" replace />} />
-          <Route path="/bids" element={<Navigate to="/projects" replace />} />
+          <Route path="/bids" element={<RedirectTo to="/command/projects" />} />
           <Route path="/resources" element={<MarketingLayout><Resources /></MarketingLayout>} />
           <Route path="/help" element={<Navigate to="/resources" replace />} />
           <Route path="/faq" element={<Navigate to="/resources" replace />} />
@@ -216,10 +288,26 @@ function App() {
           <Route path="/terms" element={<MarketingLayout><TermsAndConditions /></MarketingLayout>} />
           <Route path="/brand" element={<MarketingLayout><BrandGuidelines /></MarketingLayout>} />
           <Route path="/companies" element={<Navigate to="/" replace />} />
-          {/* Subagent sites are a separate bundle; a client-side link lands here, so load the real page. */}
-          {["/fleet", "/capital", "/studio", "/workforce", "/fleet/*", "/capital/*", "/studio/*", "/workforce/*", "/companies/:slug", "/platform", "/solutions", "/supply", "/projects", "/projects/:slug", "/construction-projects/:city/:trade"].map((p) => (
-            <Route key={p} path={p} element={<ToCompanySite />} />
+          <Route path="/projects/:slug" element={<ProjectRedirect />} />
+          <Route path="/projects" element={<RedirectTo to="/command/projects" />} />
+          <Route path="/construction-projects/:city/:trade" element={<MarketRedirect />} />
+          <Route path="/companies/:slug" element={<CompanyRedirect />} />
+          {["platform", "solutions", "supply", "fleet", "capital", "studio", "workforce", "exchange"].map((slug) => (
+            <Route key={slug} path={`/${slug}`} element={<RedirectTo to={`/command/${slug}`} />} />
           ))}
+          {["fleet", "capital", "studio", "workforce"].map((slug) => (
+            <Route key={`${slug}-rest`} path={`/${slug}/*`} element={<RedirectTo to={`/command/${slug}`} />} />
+          ))}
+          <Route path="/exchange/projects/:slug" element={<ProjectRedirect />} />
+          <Route path="/exchange/projects" element={<RedirectTo to="/command/projects" />} />
+          <Route path="/exchange/platform" element={<RedirectTo to="/command/platform" />} />
+          <Route path="/exchange/solutions" element={<RedirectTo to="/command/solutions" />} />
+          <Route path="/exchange/supply" element={<RedirectTo to="/command/supply" />} />
+          <Route path="/exchange/fleet" element={<RedirectTo to="/command/fleet" />} />
+          <Route path="/exchange/about" element={<RedirectTo to="/about" />} />
+          <Route path="/exchange/contact" element={<RedirectTo to="/contact" />} />
+          <Route path="/exchange/pricing" element={<RedirectTo to="/pricing" />} />
+          <Route path="/exchange/construction-projects/:city/:trade" element={<MarketRedirect />} />
           <Route path="/marketing/fleet-cards" element={<MarketingLayout><FleetCards /></MarketingLayout>} />
           <Route path="/marketing/receipts" element={<MarketingLayout><Receipts /></MarketingLayout>} />
           <Route path="/marketing/signage" element={<MarketingLayout><Signage /></MarketingLayout>} />
@@ -272,15 +360,14 @@ function App() {
             ["/docs", "/changelog"],
             ["/news", "/changelog"],
             ["/press", "/changelog"],
-            ["/features", "/platform"],
-            ["/product", "/platform"],
-            ["/services", "/platform"],
-            ["/how-it-works", "/platform"],
-            ["/howitworks", "/platform"],
+            ["/features", "/services"],
+            ["/product", "/services"],
+            ["/how-it-works", "/services"],
+            ["/howitworks", "/services"],
             ["/home", "/"],
-            ["/partners", "/solutions"],
-            ["/project", "/projects"],
-            ["/bid", "/projects"],
+            ["/partners", "/command/solutions"],
+            ["/project", "/command/projects"],
+            ["/bid", "/command/projects"],
             ["/profile", "/dashboard/settings"],
             ["/settings", "/dashboard/settings"],
           ].map(([from, to]) => (
@@ -295,10 +382,11 @@ function App() {
             ["/shop", "/exchange/marketplace"],
             ["/catalog", "/exchange/marketplace"],
             ["/supplier", "/exchange/suppliers"],
-            ["/equipment", "/fleet"],
+            ["/equipment", "/command/fleet"],
           ].map(([from, to]) => (
-            <Route key={from} path={from} element={<FullLoad to={to} />} />
+            <Route key={from} path={from} element={to.startsWith("/command") ? <Navigate to={to} replace /> : <FullLoad to={to} />} />
           ))}
+          <Route path="/exchange/*" element={<ExchangeAlias />} />
           <Route path="*" element={<MarketingLayout><NotFound /></MarketingLayout>} />
         </Routes>
       </ToastProvider>

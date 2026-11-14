@@ -1,5 +1,8 @@
 @import "tailwindcss";
+@import "@fontsource/barlow-condensed/600.css";
+@import "@fontsource/barlow-condensed/700.css";
 @import "./shared/tokens.css";
+@import "./entity/desk.css";
 
 /* ---------------------------------------------------------------------------
   D&J Stratagem, Inc. — parent site styles on the Stratagem Exchange system
@@ -83,7 +86,7 @@ body {
   h1, h2, h3, h4 {
     font-family: var(--font-display);
     font-weight: 700;
-    letter-spacing: -0.025em;
+    letter-spacing: 0.01em;
     line-height: 1.08;
     text-wrap: balance;
     color: var(--text-strong);
@@ -112,7 +115,7 @@ body {
   }
 }
 
-.font-display { font-weight: 700; letter-spacing: -0.025em; }
+.font-display { font-weight: 700; letter-spacing: 0.01em; }
 
 /* Headline accents: brand green, upright. No serif italics, no gradient ink. */
 h1 em, h2 em, h3 em, .font-display em, .font-display.italic {

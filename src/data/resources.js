@@ -26,7 +26,7 @@ export const faqs = [
     q: "What is D&J Stratagem?",
     a: "A Los Angeles company building one place where contractors, subs, and suppliers find work, bid it, market themselves, and source materials. The platform is six connected suites, and it is built for general contractors, subcontractors, and suppliers.",
     keywords: "platform overview who for gc sub supplier solutions",
-    link: { to: "/platform", label: "See the platform" },
+    link: { to: "/command/platform", label: "See the platform" },
   },
   {
     id: "is-it-live",
@@ -52,7 +52,7 @@ export const faqs = [
     q: "Can I bid on the projects listed on the Projects page?",
     a: "No. Those listings are illustrative samples, not live solicitations, and they cannot be bid or quoted. A real project feed opens as members come on board.",
     keywords: "sample listings fake real solicitation opportunities",
-    link: { to: "/projects", label: "See the sample projects" },
+    link: { to: "/command/projects", label: "See the sample projects" },
   },
   {
     id: "starter-bids",
@@ -68,7 +68,7 @@ export const faqs = [
     q: "Can I post a project and compare the bids?",
     a: "Yes, on Professional and above. Publish a project, build your sub list, compare bids side by side, and keep RFIs, addenda, and deadlines in the same place through to the award.",
     keywords: "post project invite subs rfi addenda award general contractor gc",
-    link: { to: "/platform#for-general-contractors", label: "How bidding works" },
+    link: { to: "/command/platform#for-general-contractors", label: "How bidding works" },
   },
   {
     id: "license-insurance",
@@ -76,7 +76,7 @@ export const faqs = [
     q: "How are licenses and insurance handled?",
     a: "You can list licenses and insurance on your profile, including on Starter. We don't verify them yet, so a GC should still check the documents. Ask us before you rely on a check we don't do.",
     keywords: "verification verify credentials vetting profile",
-    link: { to: "/platform#for-subcontractors", label: "For subcontractors" },
+    link: { to: "/command/platform#for-subcontractors", label: "For subcontractors" },
   },
 
   // ---- Supply & Exchange ----
@@ -86,15 +86,15 @@ export const faqs = [
     q: "How does sealed, scored quoting work on Supply Exchange?",
     a: "Suppliers send one sealed quote and cannot see competitors' numbers or re-bid. Quotes are scored on price plus lead time, fill rate, delivery, and past performance, weighted the way the buyer sets them, and awards can be split by line item.",
     keywords: "rfq auction bidding materials weights award split",
-    link: { to: "/supply", label: "Read how it works" },
+    link: { to: "/command/supply", label: "Read how it works" },
   },
   {
     id: "exchange-vs-supply",
     category: "Supply & Exchange",
     q: "What is the difference between Supply Exchange and Stratagem Exchange?",
-    a: "Supply Exchange is the materials-sourcing suite described on this site. Stratagem Exchange is a sister company's separate marketplace at /exchange, with its own listings, requests, and quotes.",
-    keywords: "marketplace companies sister separate app stratagem",
-    link: { to: "/exchange", label: "Open Stratagem Exchange" },
+    a: "Supply is the materials mode on this desk: sealed, scored quotes, described here and not awarding orders today. The marketplace is where the sample catalogs, requests, and quotes are browsed. Both are DJ Stratagem.",
+    keywords: "marketplace companies listings requests quotes stratagem",
+    link: { to: "/exchange/marketplace", label: "Open the marketplace" },
   },
   {
     id: "exchange-listings",
@@ -186,14 +186,14 @@ export const faqs = [
     q: "Do you handle payments, escrow, or financing?",
     a: "Not on Stratagem Exchange: it does not process payments, hold funds, or extend credit, and buyers and sellers agree terms between themselves. Stratagem Capital is still in development and does not offer credit, loans, or bonds today.",
     keywords: "escrow pay invoice credit loans capital terms net-30 delivery",
-    link: { to: "/exchange", label: "About Stratagem Exchange" },
+    link: { to: "/exchange/marketplace", label: "Open the marketplace" },
   },
 ];
 
 export const quickLinks = [
-  { to: "/platform", title: "Platform", text: "Bidding, trade tools, marketing, sourcing, and AI." },
-  { to: "/supply", title: "Supply Exchange", text: "Sealed, scored quoting for materials." },
-  { to: "/projects", title: "Projects", text: "Sample project cards by trade and city." },
+  { to: "/command/platform", title: "Platform", text: "Bidding, trade tools, marketing, sourcing, and drafts." },
+  { to: "/command/supply", title: "Supply", text: "Sealed, scored quoting for materials." },
+  { to: "/command/projects", title: "Projects", text: "Sample project cards by trade and city." },
   { to: "/pricing", title: "Pricing", text: "Starter, Professional, Growth, Enterprise." },
   { to: "/changelog", title: "Changelog", text: "What shipped, and when." },
   { to: "/exchange/marketplace", title: "Exchange marketplace", text: "Sample listings on Stratagem Exchange.", reload: true },
