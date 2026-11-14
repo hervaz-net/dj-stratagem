@@ -24,19 +24,19 @@ export default function CommandPage({ view = "module" }) {
   const project = view === "project" ? findProject(params.slug) : null;
   const market = view === "market" ? projectsFor(params.city, params.trade) : [];
   const marketTitle = market.length
-    ? `${market[0].trade} Construction Projects in ${market[0].city}`
-    : "Sample market";
+    ? `${market[0].trade} work in ${market[0].city}`
+    : "Send a pursuit";
   const title = view === "project"
-    ? (project ? `${project.title} — ${project.city}, ${project.state}` : "Sample project")
+    ? (project ? `${project.trade} pursuit in ${project.city}` : "Send a pursuit")
     : view === "market"
       ? marketTitle
       : cap?.label || "Desk";
   const description = view === "project"
-    ? (project ? `Sample card: ${project.summary}` : "That card is not on the sample board.")
+    ? (project ? `Send a ${project.trade.toLowerCase()} pursuit in ${project.city}. A person replies.` : "Send the trade, the city, and the scope.")
     : view === "market"
       ? (market.length
-        ? `Illustrative ${market[0].trade.toLowerCase()} project cards in ${market[0].city}, CA. Samples only — not live solicitations.`
-        : "Sample market.")
+        ? `Send a ${market[0].trade.toLowerCase()} pursuit in ${market[0].city}. A person replies.`
+        : "Send the trade, the city, and the scope.")
       : cap?.voice || "DJ Stratagem command desk.";
 
   return (

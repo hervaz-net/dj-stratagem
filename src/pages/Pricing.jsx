@@ -19,9 +19,9 @@ const tiers = [
     blurb: "For subs getting started — build a profile and explore the board.",
     features: [
       "Company profile and portfolio",
-      "Browse the sample project board (live feed opens as members join)",
-      "Account reviewed by a person before you bid for real",
-      "Profile fields for licenses and insurance (not verified by us yet)",
+      "Send a pursuit by trade and city",
+      "Account reviewed by a person",
+      "List licenses and insurance in the account request, and email copies to hello@djstratageminc.com",
     ],
     cta: "Get started",
     highlighted: false,
@@ -33,12 +33,12 @@ const tiers = [
     blurb: "Request access when you want the full pursuit workspace.",
     features: [
       "Everything in Starter",
-      "Planned: unlimited bids and project postings",
-      "Planned: bid comparison, RFIs, and awards",
-      "Planned: CRM, estimating, and invoicing",
-      "Planned: AI proposal drafts",
-      "Planned: Supply Exchange RFQs with scored awards",
-      "Access opens after we approve your account — no self-serve checkout yet",
+      "The request covers bids and project postings",
+      "The request covers bid comparison, RFIs, and awards",
+      "The request covers CRM, estimating, and invoicing",
+      "The request covers proposal drafts",
+      "The request covers supply quotes scored on your weights",
+      "A person confirms the rate before any invoice",
     ],
     cta: "Request access",
     highlighted: true,
@@ -49,13 +49,13 @@ const tiers = [
     period: "/mo",
     blurb: "For firms that want marketing and forecasting instruments next.",
     features: [
-      "Everything targeted for Professional",
-      "Planned: marketing suite (SEO, campaigns, reviews)",
-      "Planned: lead generation and featured listings",
-      "Planned: AI forecasting and plan/spec analysis",
-      "Planned: standing price books and pooled-demand buying",
-      "Priority support once the plan is live",
-      "Request access — billing is not wired yet",
+      "Everything in Professional",
+      "The request covers marketing for the company profile",
+      "The request covers lead generation and featured listings",
+      "The request covers forecasting and plan review",
+      "The request covers standing price books and pooled buying",
+      "Priority support from a person",
+      "A person confirms the rate before any invoice",
     ],
     cta: "Request access",
     highlighted: false,
@@ -66,8 +66,8 @@ const tiers = [
     period: "",
     blurb: "For large contractors with teams, volume, and custom needs.",
     features: [
-      "Everything targeted for Growth",
-      "Planned: unlimited team seats and roles",
+      "Everything in Growth",
+      "Team seats and roles",
       "Dedicated onboarding conversation",
       "Custom integrations and reporting (scoped per account)",
       "Volume pricing by agreement",
@@ -88,33 +88,33 @@ const addOns = [
 
 const comparison = [
   { feature: "Company profile", values: ["Yes", "Yes", "Yes", "Yes"] },
-  { feature: "Sample project board today", values: ["Yes", "Yes", "Yes", "Yes"] },
-  { feature: "Live bids / awards (planned)", values: ["—", "Yes", "Yes", "Yes"] },
-  { feature: "CRM, estimating, invoicing (planned)", values: ["—", "Yes", "Yes", "Yes"] },
-  { feature: "Supply Exchange RFQs (planned)", values: ["—", "Yes", "Yes", "Yes"] },
-  { feature: "Marketing suite (planned)", values: ["—", "—", "Yes", "Yes"] },
-  { feature: "AI forecasting / plan analysis (planned)", values: ["—", "Partial", "Yes", "Yes"] },
-  { feature: "Standing price books, pooled demand (planned)", values: ["—", "—", "Yes", "Yes"] },
-  { feature: "Team seats (planned)", values: ["1", "5", "15", "Unlimited"] },
+  { feature: "Post a project", values: ["Yes", "Yes", "Yes", "Yes"] },
+  { feature: "Bids and awards", values: ["—", "On request", "On request", "On request"] },
+  { feature: "CRM, estimating, invoicing", values: ["—", "On request", "On request", "On request"] },
+  { feature: "Supply requests", values: ["—", "On request", "On request", "On request"] },
+  { feature: "Marketing", values: ["—", "—", "On request", "On request"] },
+  { feature: "Forecasting and plan review", values: ["—", "On request", "On request", "On request"] },
+  { feature: "Standing price books, pooled demand", values: ["—", "—", "On request", "On request"] },
+  { feature: "Team seats", values: ["1", "5", "15", "Unlimited"] },
   { feature: "Support", values: ["Community", "Standard", "Priority", "Dedicated"] },
 ];
 
 const pricingFaqs = [
   {
     q: "Can I change plans later?",
-    a: "Yes — when paid billing is live. Today, Starter is free and paid tiers are request-access only. We will move you between plans by agreement until self-serve billing ships; there is no automatic proration yet.",
+    a: "Yes. Send a request and a person moves the account between plans. The rate is confirmed before any invoice.",
   },
   {
     q: "Is there a free trial?",
-    a: "Not a card-on-file trial. Starter is the free plan while we onboard early users. Paid features start after we approve an account and you pick Professional, Growth, or Enterprise.",
+    a: "Starter is free. Request Professional, Growth, or Enterprise when you want the rest of the desk. A person confirms the rate before any invoice.",
   },
   {
     q: "Do you charge per bid or take a cut of awards?",
-    a: "No. When billing is live, subscription plans are flat. Optional add-ons like pay-per-lead and featured listings will be priced separately and always opt-in.",
+    a: "No. Plans are a flat rate. Add-ons such as pay-per-lead and featured listings are separate and opt-in.",
   },
   {
     q: "How does annual billing work?",
-    a: "The annual toggle shows the intended 20% savings once billing ships. Nothing is charged today — request access and we will confirm pricing before any invoice.",
+    a: "Annual is 20% off the monthly rate. Request the plan and a person confirms the rate before any invoice.",
   },
 ];
 
@@ -215,12 +215,12 @@ export default function Pricing() {
         index="06"
         kicker="Pricing"
         title={<>One desk. <em>Priced in the open.</em></>}
-        lede="Start free on Starter. Paid tiers are request-access only until billing is live — prices below are what we intend to charge, not a checkout."
+        lede="Start free on Starter. Request Professional, Growth, or Enterprise. A person confirms the rate before any invoice."
       />
 
       <Section className="border-t border-line">
         <p className="mx-auto mb-8 max-w-2xl text-center text-sm text-fg-muted">
-          Early access: Starter is free today. Professional, Growth, and Enterprise open by request. There is no self-serve card checkout yet.
+          Starter is free. Request Professional, Growth, or Enterprise. A person confirms the rate before any invoice.
         </p>
         <div className="flex flex-col items-center gap-3">
           <div role="group" aria-label="Intended billing period" className="inline-flex items-center rounded-full border border-line bg-surface p-1">
@@ -239,7 +239,7 @@ export default function Pricing() {
             ))}
           </div>
           <p className="text-xs text-fg-muted" aria-live="polite">
-            {annual ? "Intended annual rate (20% off) — not billed yet" : "Intended monthly rate — switch to see annual savings"}
+            {annual ? "Annual rate, 20% off the monthly price" : "Monthly rate. Switch to see the annual price"}
           </p>
         </div>
 
