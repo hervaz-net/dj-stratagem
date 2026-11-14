@@ -9,15 +9,15 @@
 @import "@fontsource/dm-mono/latin-500.css";
 
 .field {
-  --f-canvas: #f4f1eb;
+  --f-canvas: #f6f7fb;
   --f-surface: #ffffff;
-  --f-ink: #1c1915;
-  --f-muted: #5e584e;
-  --f-line: #e3dbd0;
-  --f-teal: #0e6b4f;
-  --f-teal-soft: #e6f2ec;
-  --f-coral: #f4e6c8;
-  --f-amber-ink: #1c1915;
+  --f-ink: #0f172a;
+  --f-muted: #475569;
+  --f-line: #e2e8f0;
+  --f-teal: #4f46e5;
+  --f-teal-soft: #eef2ff;
+  --f-coral: #e0e7ff;
+  --f-amber-ink: #312e81;
 
   --f-display: "Plus Jakarta Sans", "Segoe UI", sans-serif;
   --f-sans: "Plus Jakarta Sans", "Segoe UI", sans-serif;
@@ -33,7 +33,7 @@
   --f-s8: 104px;
   --f-radius: 20px;
   --f-radius-sm: 12px;
-  --f-shadow: 0 16px 40px rgba(28, 25, 21, 0.08);
+  --f-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
   --f-dur: 220ms;
   --f-ease: cubic-bezier(0.22, 1, 0.36, 1);
 
@@ -151,12 +151,12 @@
   font-weight: 700;
 }
 .f-btn-teal { background: var(--f-teal); color: #fff; }
-.f-btn-teal:hover { background: #0a553f; }
+.f-btn-teal:hover { background: #3730a3; }
 .f-btn-teal:focus-visible { outline-color: var(--f-ink); }
 .f-btn-line { border: 1px solid var(--f-line); background: var(--f-surface); }
 .f-btn-line:hover { border-color: var(--f-ink); }
 .f-btn-coral { background: var(--f-coral); color: var(--f-amber-ink); }
-.f-btn-coral:hover { background: #ead7ad; }
+.f-btn-coral:hover { background: #c7d2fe; }
 .f-btn-white { background: #fff; color: var(--f-teal); }
 .f-btn-white:hover { background: var(--f-teal-soft); }
 .f-btn-ghost { border: 1px solid rgba(255, 255, 255, 0.45); color: #fff; }
@@ -172,7 +172,7 @@
   background: var(--f-surface);
   color: var(--f-ink);
 }
-.f-dialog::backdrop { background: rgba(28, 25, 21, 0.4); }
+.f-dialog::backdrop { background: rgba(15, 23, 42, 0.45); }
 .f-dialog header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
 .f-dialog a { display: flex; padding: 12px 4px; border-top: 1px solid var(--f-line); font-weight: 700; }
 
@@ -188,8 +188,8 @@
 .f-hero {
   padding: 36px 0 20px;
   background:
-    radial-gradient(720px 360px at 100% 0%, rgba(14, 107, 79, 0.14), transparent 60%),
-    radial-gradient(520px 280px at 0% 10%, rgba(184, 137, 59, 0.16), transparent 55%);
+    radial-gradient(720px 360px at 100% 0%, rgba(79, 70, 229, 0.18), transparent 60%),
+    radial-gradient(520px 280px at 0% 10%, rgba(124, 58, 237, 0.14), transparent 55%);
 }
 .f-hero-grid {
   display: grid;
@@ -226,7 +226,7 @@
   margin-top: 20px;
   padding: 4px;
   border-radius: 999px;
-  background: #e6e0d6;
+  background: #e7e9f2;
 }
 .f-seg-thumb {
   position: absolute;
@@ -236,7 +236,7 @@
   width: calc((100% - 8px) / 3);
   border-radius: 999px;
   background: var(--f-surface);
-  box-shadow: 0 4px 12px rgba(28, 25, 21, 0.08);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
   transform: translateX(calc(var(--i) * 100%));
   transition: transform var(--f-dur) var(--f-ease);
 }
@@ -279,7 +279,7 @@
 }
 .f-frame-body { padding: 0; }
 .f-dash { display: grid; grid-template-columns: 148px minmax(0, 1fr); }
-.f-side { padding: 10px 8px; border-right: 1px solid var(--f-line); background: #faf8f4; }
+.f-side { padding: 10px 8px; border-right: 1px solid var(--f-line); background: #f8fafc; }
 .f-side ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
 .f-side li { padding: 6px 8px; border-radius: 8px; font-size: 13px; font-weight: 600; color: var(--f-muted); }
 .f-side li.is-on { background: var(--f-teal); color: #fff; }
@@ -323,7 +323,7 @@
 }
 .f-card:hover { transform: translateY(-3px); box-shadow: var(--f-shadow); }
 .f-card-lg { grid-row: span 2; background: var(--f-ink); color: #fff; min-height: 280px; }
-.f-card-lg p { color: #ddd6cb; }
+.f-card-lg p { color: #cbd5e1; }
 .f-card-lg span, .f-card span { margin-top: auto; font-weight: 700; }
 .f-card h3 { font-size: 1.55rem; }
 .f-card-lg h3 { color: #fff; font-size: 2rem; }
@@ -466,7 +466,7 @@
   color: #fff;
 }
 .f-cta h2 { color: #fff; font-size: clamp(2.2rem, 4vw, 3.4rem); max-width: 14ch; }
-.f-cta p { color: #e4f3ec; max-width: 36ch; }
+.f-cta p { color: #e0e7ff; max-width: 36ch; }
 
 .f-foot { padding: 12px 0 40px; }
 .f-foot-top { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; margin-bottom: 22px; }
