@@ -12,7 +12,7 @@ export default function PageHero({ index, kicker, title, lede, children }) {
           <span className="mono-label text-fg-muted">{kicker}</span>
         </div>
         <h1
-          className="rise-in mt-6 max-w-4xl text-balance text-4xl leading-[1.1] text-fg md:text-5xl"
+          className="rise-in mt-6 max-w-4xl text-balance text-5xl leading-[0.98] text-fg md:text-7xl"
           style={{ animationDelay: "90ms" }}
         >
           {title}

@@ -2,11 +2,11 @@
    except the ink rail, which is a fixed dark surface with light text. */
 
 .dk {
-  --dk-ink: #1c1915;
-  --dk-ink-2: #2a261f;
-  --dk-ink-line: rgba(244, 240, 232, 0.14);
-  --dk-ink-text: #f4f0e8;
-  --dk-ink-muted: #c9c0b2;
+  --dk-ink: #071a33;
+  --dk-ink-2: #102848;
+  --dk-ink-line: rgba(255, 255, 255, 0.12);
+  --dk-ink-text: #f7f8fb;
+  --dk-ink-muted: #c5cedb;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -36,8 +36,8 @@
 }
 .dk-brand strong {
   font-family: var(--font-display);
-  font-size: 1.35rem;
-  letter-spacing: 0.01em;
+  font-size: 1.15rem;
+  letter-spacing: -0.04em;
   line-height: 1;
   font-weight: 700;
 }
@@ -60,7 +60,7 @@
   height: 44px;
   border: 1px solid var(--border-strong);
   background: var(--canvas);
-  border-radius: 999px;
+  border-radius: 8px;
   padding: 0 16px;
   color: var(--text);
 }
@@ -69,7 +69,7 @@
   height: 44px;
   padding: 0 16px;
   border: 0;
-  border-radius: 999px;
+  border-radius: 8px;
   background: var(--brand);
   color: #fff;
   font-weight: 650;
@@ -211,7 +211,7 @@
   font-size: 0.68rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #ffd7c2;
+  color: #ffb088;
 }
 
 .dk-ask-msg { margin: 8px 0 0; color: var(--brand-fg); font-size: 0.88rem; }
@@ -246,7 +246,7 @@
 .dk-tabs button {
   border: 1px solid var(--border-strong);
   background: var(--surface-raised);
-  border-radius: 999px;
+  border-radius: 8px;
   padding: 8px 12px;
   color: var(--text);
 }
