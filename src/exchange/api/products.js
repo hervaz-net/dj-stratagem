@@ -7,6 +7,9 @@ export async function fetchProducts({
   q = "",
   category = "",
   seller = "",
+  trade = "",
+  lead = "",
+  fulfillment = "",
   inStock = false,
   sort = "relevance",
   page = 1,
@@ -17,6 +20,9 @@ export async function fetchProducts({
   if (q.trim()) params.set("q", q.trim());
   if (category) params.set("category", category);
   if (seller && seller !== "all") params.set("seller", seller);
+  if (trade) params.set("trade", trade);
+  if (lead) params.set("lead", lead);
+  if (fulfillment) params.set("fulfillment", fulfillment);
   if (inStock) params.set("inStock", "1");
   if (sort) params.set("sort", sort);
   params.set("page", String(page));
