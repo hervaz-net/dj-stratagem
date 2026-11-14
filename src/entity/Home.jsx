@@ -39,31 +39,70 @@ function rowsFor(id) {
   return (extras[id] || []).map((title) => ({ title, meta: cap?.status || "", tag: cap?.status || "" }));
 }
 
+function stepMode(current, key) {
+  const i = CAPABILITIES.findIndex((c) => c.id === current);
+  if (key === "Home") return CAPABILITIES[0].id;
+  if (key === "End") return CAPABILITIES[CAPABILITIES.length - 1].id;
+  const dir = key === "ArrowRight" ? 1 : -1;
+  return CAPABILITIES[(i + dir + CAPABILITIES.length) % CAPABILITIES.length].id;
+}
+
+/** Roving tabindex: arrows move the selection and the keyboard focus together. */
+function ModeTabs({ selected, onPick, listId, className, label }) {
+  function onKey(event) {
+    if (!["ArrowRight", "ArrowLeft", "Home", "End"].includes(event.key)) return;
+    event.preventDefault();
+    const next = stepMode(selected, event.key);
+    onPick(next);
+    requestAnimationFrame(() => {
+      const tab = document.getElementById(`${listId}-${next}`);
+      tab?.focus({ preventScroll: true });
+      const scroller = tab?.parentElement;
+      if (tab && scroller) {
+        const left = tab.offsetLeft - (scroller.offsetLeft || 0);
+        scroller.scrollTo({ left: Math.max(0, left - 12) });
+      }
+    });
+  }
+  return (
+    <div className={className} role="tablist" aria-label={label} onKeyDown={onKey}>
+      {CAPABILITIES.map((c) => (
+        <button
+          key={c.id}
+          id={`${listId}-${c.id}`}
+          type="button"
+          role="tab"
+          aria-selected={c.id === selected}
+          aria-controls="workflow-panel"
+          tabIndex={c.id === selected ? 0 : -1}
+          onClick={() => onPick(c.id)}
+        >
+          {c.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 function ProductCanvas({ id, onPick }) {
   const cap = capabilityById(id) || CAPABILITIES[0];
   const rows = rowsFor(cap.id);
   return (
-    <div className="pc" aria-label="Product preview">
+    <div className="pc">
       <div className="pc-bar">
         <strong>DJ Stratagem</strong>
-        <div className="pc-mods" role="tablist" aria-label="Modes in the product">
-          {CAPABILITIES.map((c) => (
-            <button key={c.id} type="button" role="tab" aria-selected={c.id === cap.id} onClick={() => onPick(c.id)}>
-              {c.label}
-            </button>
-          ))}
-        </div>
+        <ModeTabs selected={cap.id} onPick={onPick} listId="pc" className="pc-mods" label="Modes in the product" />
       </div>
       <div className="pc-body">
         <div className="pc-side">
           <p>Workflow</p>
           {CAPABILITIES.map((c) => (
-            <button key={c.id} type="button" aria-selected={c.id === cap.id} onClick={() => onPick(c.id)}>
+            <button key={c.id} type="button" aria-current={c.id === cap.id ? "true" : undefined} onClick={() => onPick(c.id)}>
               {c.label}
             </button>
           ))}
         </div>
-        <div className="pc-main">
+        <div className="pc-main" id="workflow-panel" role="tabpanel" aria-labelledby={`hx-${cap.id}`}>
           <h2>{cap.label}</h2>
           <p className="pc-voice">{cap.voice}</p>
           <ul className="pc-rows">
@@ -130,15 +169,6 @@ export default function Home() {
     setId(next);
   }
 
-  function onTabKey(event) {
-    const i = CAPABILITIES.findIndex((c) => c.id === id);
-    if (event.key === "ArrowRight" || event.key === "ArrowLeft") {
-      event.preventDefault();
-      const dir = event.key === "ArrowRight" ? 1 : -1;
-      pick(CAPABILITIES[(i + dir + CAPABILITIES.length) % CAPABILITIES.length].id);
-    }
-  }
-
   return (
     <>
       <Seo
@@ -161,13 +191,7 @@ export default function Home() {
             <li>Every account reviewed by a person</li>
             <li>Based in Los Angeles</li>
           </ul>
-          <div className="hx-tabs" role="tablist" aria-label="Workflow modes" onKeyDown={onTabKey}>
-            {CAPABILITIES.map((c) => (
-              <button key={c.id} type="button" role="tab" aria-selected={c.id === id} onClick={() => pick(c.id)}>
-                {c.label}
-              </button>
-            ))}
-          </div>
+          <ModeTabs selected={id} onPick={pick} listId="hx" className="hx-tabs" label="Workflow modes" />
           <div className="hx-stage">
             <figure className="hx-photo">
               <img src="/media/jobsite/crew.jpg" alt="Two workers tying rebar on a concrete deck" />
