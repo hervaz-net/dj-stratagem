@@ -1,0 +1,41 @@
+[
+  {
+    "source": "gi",
+    "sourceLabel": "Global Industrial",
+    "sellerKey": "gi",
+    "sellerName": "Demo Industrial Supplies Catalog",
+    "sellerRole": "distributor",
+    "file": "gi.jsonl.gz",
+    "count": 4599,
+    "skipped": 0,
+    "bytes": 250233,
+    "sample": true,
+    "images": 4338
+  },
+  {
+    "source": "myfbm",
+    "sourceLabel": "MyFBM",
+    "sellerKey": "myfbm",
+    "sellerName": "Demo Building Materials Catalog",
+    "sellerRole": "distributor",
+    "file": "myfbm.jsonl.gz",
+    "count": 6416,
+    "skipped": 4,
+    "bytes": 494192,
+    "sample": true,
+    "images": 0
+  },
+  {
+    "source": "uline",
+    "sourceLabel": "Uline",
+    "sellerKey": "uline",
+    "sellerName": "Demo Packaging & Shipping Catalog",
+    "sellerRole": "distributor",
+    "file": "uline.jsonl.gz",
+    "count": 44748,
+    "skipped": 0,
+    "bytes": 3388080,
+    "sample": true,
+    "images": 44748
+  }
+]

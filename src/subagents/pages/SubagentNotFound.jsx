@@ -1,9 +1,15 @@
 import Section from "../../exchange/components/Section";
 import Button from "../../exchange/components/Button";
 import SubagentMark from "../../shared/SubagentMark";
+import { useSeo } from "../parts";
 
 /** A 404 inside a subagent's site, in its own colors. */
 export default function SubagentNotFound({ brand }) {
+  useSeo(brand, {
+    title: "Page not found",
+    description: "That page isn't on this site.",
+    noindex: true,
+  });
   return (
     <Section className="text-center">
       <SubagentMark id={brand.slug} size={56} className="mx-auto" />

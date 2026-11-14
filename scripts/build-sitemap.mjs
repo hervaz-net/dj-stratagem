@@ -47,6 +47,16 @@ const staticPaths = [
   ["/exchange/distributors", "0.7"],
   ["/exchange/suppliers", "0.7"],
   ["/exchange/pricing", "0.6"],
+  ["/exchange/about", "0.5"],
+  ["/exchange/contact", "0.5"],
+  ["/exchange/platform", "0.6"],
+  ["/exchange/solutions", "0.6"],
+  ["/exchange/projects", "0.6"],
+  ["/exchange/fleet", "0.5"],
+  ["/exchange/changelog", "0.4"],
+  ["/exchange/privacy", "0.3"],
+  ["/exchange/terms", "0.3"],
+  ["/exchange/brand", "0.3"],
 ];
 
 const urls = [

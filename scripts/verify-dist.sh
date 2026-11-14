@@ -66,6 +66,10 @@ need_files=(
   api/admin-catalog.php
   api/catalog.php
   api/catalog-lib.php
+  api/products.php
+  data/catalog/products.sqlite
+  data/catalog/manifest.json
+  data/catalog/sellers.json
   privacy.html
   terms.html
   fleet-cards.html

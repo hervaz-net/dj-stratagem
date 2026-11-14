@@ -16,11 +16,11 @@ const tiers = [
     name: "Starter",
     monthly: 0,
     period: "",
-    blurb: "For subs getting started — build a profile and find work.",
+    blurb: "For subs getting started — build a profile and explore the board.",
     features: [
       "Company profile and portfolio",
-      "Browse and match to open projects",
-      "Submit up to 3 bids per month",
+      "Browse the sample project board (live feed opens as members join)",
+      "Account reviewed by a person before you bid for real",
       "Profile fields for licenses and insurance (not verified by us yet)",
     ],
     cta: "Get started",
@@ -30,16 +30,15 @@ const tiers = [
     name: "Professional",
     monthly: 99,
     period: "/mo",
-    blurb: "For contractors ready to win consistently.",
+    blurb: "Request access when you want the full pursuit workspace.",
     features: [
       "Everything in Starter",
-      "Unlimited bids and project postings",
-      "Bid comparison, RFIs, and awards",
-      "CRM, estimating, and invoicing",
-      "Bid history and analytics",
-      "AI proposal drafts",
-      "Supply Exchange RFQs with scored auto-award",
-      "Premium profile placement",
+      "Planned: unlimited bids and project postings",
+      "Planned: bid comparison, RFIs, and awards",
+      "Planned: CRM, estimating, and invoicing",
+      "Planned: AI proposal drafts",
+      "Planned: Supply Exchange RFQs with scored awards",
+      "Access opens after we approve your account — no self-serve checkout yet",
     ],
     cta: "Request access",
     highlighted: true,
@@ -48,16 +47,15 @@ const tiers = [
     name: "Growth",
     monthly: 249,
     period: "/mo",
-    blurb: "For firms that treat marketing as a growth engine.",
+    blurb: "For firms that want marketing and forecasting instruments next.",
     features: [
-      "Everything in Professional",
-      "Full marketing suite: SEO, campaigns, reviews",
-      "Lead generation with pay-per-lead options",
-      "Featured project listings",
-      "AI bid competitiveness and pipeline forecasting",
-      "AI plan and spec analysis with missing-document detection",
-      "Standing price books and pooled-demand buying",
-      "Priority support",
+      "Everything targeted for Professional",
+      "Planned: marketing suite (SEO, campaigns, reviews)",
+      "Planned: lead generation and featured listings",
+      "Planned: AI forecasting and plan/spec analysis",
+      "Planned: standing price books and pooled-demand buying",
+      "Priority support once the plan is live",
+      "Request access — billing is not wired yet",
     ],
     cta: "Request access",
     highlighted: false,
@@ -66,13 +64,13 @@ const tiers = [
     name: "Enterprise",
     monthly: null,
     period: "",
-    blurb: "For large contractors with teams, volume, and integrations.",
+    blurb: "For large contractors with teams, volume, and custom needs.",
     features: [
-      "Everything in Growth",
-      "Unlimited team seats and roles",
-      "Dedicated onboarding and account manager",
-      "Custom integrations and reporting",
-      "Volume pricing",
+      "Everything targeted for Growth",
+      "Planned: unlimited team seats and roles",
+      "Dedicated onboarding conversation",
+      "Custom integrations and reporting (scoped per account)",
+      "Volume pricing by agreement",
     ],
     cta: "Talk to sales",
     highlighted: false,
@@ -80,43 +78,43 @@ const tiers = [
 ];
 
 const addOns = [
-  { name: "Premium contractor profile", detail: "Stand out in search and matching results." },
-  { name: "Pay-per-lead", detail: "Buy qualified leads only when you want them." },
-  { name: "Featured project listings", detail: "Put your project in front of more qualified subs." },
-  { name: "Supplier advertising", detail: "Reach contractors at the moment they're buying." },
-  { name: "Supply Exchange for suppliers", detail: "Quote into sealed RFQs with floor pricing that protects your margin." },
-  { name: "CRM & AI add-ons", detail: "Scale up automation as your team grows." },
+  { name: "Premium contractor profile", detail: "Planned: stand out in search and matching results." },
+  { name: "Pay-per-lead", detail: "Planned: buy qualified leads only when you want them." },
+  { name: "Featured project listings", detail: "Planned: put your project in front of more qualified subs." },
+  { name: "Supplier advertising", detail: "Planned: reach contractors at the moment they're buying." },
+  { name: "Supply Exchange for suppliers", detail: "Planned: quote into sealed RFQs with floor pricing." },
+  { name: "CRM & AI add-ons", detail: "Planned: scale automation as your team grows." },
 ];
 
 const comparison = [
-  { feature: "Company profile and matching", values: ["Yes", "Yes", "Yes", "Yes"] },
-  { feature: "Bids per month", values: ["3", "Unlimited", "Unlimited", "Unlimited"] },
-  { feature: "Project postings and awards", values: ["—", "Yes", "Yes", "Yes"] },
-  { feature: "CRM, estimating, invoicing", values: ["—", "Yes", "Yes", "Yes"] },
-  { feature: "Supply Exchange RFQs", values: ["—", "Yes", "Yes", "Yes"] },
-  { feature: "Full marketing suite", values: ["—", "—", "Yes", "Yes"] },
-  { feature: "AI forecasting and plan analysis", values: ["—", "Partial", "Yes", "Yes"] },
-  { feature: "Standing price books, pooled demand", values: ["—", "—", "Yes", "Yes"] },
-  { feature: "Team seats", values: ["1", "5", "15", "Unlimited"] },
+  { feature: "Company profile", values: ["Yes", "Yes", "Yes", "Yes"] },
+  { feature: "Sample project board today", values: ["Yes", "Yes", "Yes", "Yes"] },
+  { feature: "Live bids / awards (planned)", values: ["—", "Yes", "Yes", "Yes"] },
+  { feature: "CRM, estimating, invoicing (planned)", values: ["—", "Yes", "Yes", "Yes"] },
+  { feature: "Supply Exchange RFQs (planned)", values: ["—", "Yes", "Yes", "Yes"] },
+  { feature: "Marketing suite (planned)", values: ["—", "—", "Yes", "Yes"] },
+  { feature: "AI forecasting / plan analysis (planned)", values: ["—", "Partial", "Yes", "Yes"] },
+  { feature: "Standing price books, pooled demand (planned)", values: ["—", "—", "Yes", "Yes"] },
+  { feature: "Team seats (planned)", values: ["1", "5", "15", "Unlimited"] },
   { feature: "Support", values: ["Community", "Standard", "Priority", "Dedicated"] },
 ];
 
 const pricingFaqs = [
   {
     q: "Can I change plans later?",
-    a: "Yes. Upgrade or downgrade at any time — changes prorate against your current billing period, and nothing is locked behind an annual commitment unless you choose annual billing.",
+    a: "Yes — when paid billing is live. Today, Starter is free and paid tiers are request-access only. We will move you between plans by agreement until self-serve billing ships; there is no automatic proration yet.",
   },
   {
     q: "Is there a free trial?",
-    a: "Not yet. Starter is the free plan: profile, matching, and a small monthly bid cap. Paid features start after we approve an account and you pick Professional, Growth, or Enterprise. There is no card-on-file trial that auto-converts.",
+    a: "Not a card-on-file trial. Starter is the free plan while we onboard early users. Paid features start after we approve an account and you pick Professional, Growth, or Enterprise.",
   },
   {
     q: "Do you charge per bid or take a cut of awards?",
-    a: "No. Subscription plans are flat. Optional add-ons like pay-per-lead and featured listings are priced separately and are always opt-in.",
+    a: "No. When billing is live, subscription plans are flat. Optional add-ons like pay-per-lead and featured listings will be priced separately and always opt-in.",
   },
   {
     q: "How does annual billing work?",
-    a: "Annual plans are paid up front and shown here as the equivalent monthly rate, a 20% saving against paying month to month.",
+    a: "The annual toggle shows the intended 20% savings once billing ships. Nothing is charged today — request access and we will confirm pricing before any invoice.",
   },
 ];
 
@@ -217,12 +215,15 @@ export default function Pricing() {
         index="06"
         kicker="Pricing"
         title={<>Priced to pay for itself <em>in one win.</em></>}
-        lede="Start free on Starter. Request access when you want the paid instruments. Enterprise starts with a conversation, never a checkout page."
+        lede="Start free on Starter. Paid tiers are request-access only until billing is live — prices below are what we intend to charge, not a checkout."
       />
 
       <Section className="border-t border-line">
+        <p className="mx-auto mb-8 max-w-2xl text-center text-sm text-fg-muted">
+          Early access: Starter is free today. Professional, Growth, and Enterprise open by request. There is no self-serve card checkout yet.
+        </p>
         <div className="flex flex-col items-center gap-3">
-          <div role="group" aria-label="Billing period" className="inline-flex items-center rounded-full border border-line bg-surface p-1">
+          <div role="group" aria-label="Intended billing period" className="inline-flex items-center rounded-full border border-line bg-surface p-1">
             {[{ key: false, label: "Monthly" }, { key: true, label: "Annual" }].map((opt) => (
               <button
                 key={opt.label}
@@ -238,7 +239,7 @@ export default function Pricing() {
             ))}
           </div>
           <p className="text-xs text-fg-muted" aria-live="polite">
-            {annual ? "Saving 20% — billed annually" : "Switch to annual and save 20%"}
+            {annual ? "Intended annual rate (20% off) — not billed yet" : "Intended monthly rate — switch to see annual savings"}
           </p>
         </div>
 

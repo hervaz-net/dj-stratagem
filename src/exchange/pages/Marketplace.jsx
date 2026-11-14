@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import Section, { SectionHeading } from "../components/Section";
 import PageHero from "../components/PageHero";
@@ -10,7 +10,8 @@ import ListingCard from "../components/market/ListingCard";
 import RequestCard from "../components/market/RequestCard";
 import CategoryTile from "../components/market/CategoryTile";
 import FilterChip from "../components/market/FilterChip";
-import { CATEGORIES, SAMPLE_LISTINGS, SAMPLE_REQUESTS, categoryIcon } from "../components/market/catalog";
+import { SAMPLE_REQUESTS, categoryIcon } from "../components/market/catalog";
+import { fetchProducts } from "../api/products";
 import { PRODUCT } from "../brand";
 import {
   IconSearch,
@@ -25,17 +26,11 @@ import {
   IconTruck,
 } from "../components/icons";
 
-const SELLER_FILTERS = [
-  { key: "all", label: "All sellers" },
-  { key: "supplier", label: "Manufacturers" },
-  { key: "distributor", label: "Distributors" },
-];
-
 const SORTS = {
-  relevance: { label: "Featured", fn: null },
-  "price-asc": { label: "Price: low to high", fn: (a, b) => a.price - b.price },
-  "price-desc": { label: "Price: high to low", fn: (a, b) => b.price - a.price },
-  stock: { label: "In stock first", fn: (a, b) => Number(b.inStock) - Number(a.inStock) },
+  relevance: { label: "Featured" },
+  "price-asc": { label: "Price: low to high" },
+  "price-desc": { label: "Price: high to low" },
+  stock: { label: "In stock first" },
 };
 
 const mechanics = [
@@ -85,46 +80,78 @@ export default function Marketplace() {
   const [searchParams] = useSearchParams();
   const urlQuery = searchParams.get("q") ?? "";
   const [query, setQuery] = useState(urlQuery);
+  const [draftQuery, setDraftQuery] = useState(urlQuery);
   // The home page search links here with ?q=; follow later changes too.
-  useEffect(() => setQuery(urlQuery), [urlQuery]);
+  useEffect(() => {
+    setQuery(urlQuery);
+    setDraftQuery(urlQuery);
+  }, [urlQuery]);
   const [category, setCategory] = useState(null);
   const [seller, setSeller] = useState("all");
   const [inStockOnly, setInStockOnly] = useState(false);
   const [fulfillment, setFulfillment] = useState(null);
   const [sort, setSort] = useState("relevance");
+  const [page, setPage] = useState(1);
+  const [results, setResults] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [sellers, setSellers] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const [catalogNote, setCatalogNote] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  const counts = useMemo(() => {
-    const c = {};
-    SAMPLE_LISTINGS.forEach((l) => {
-      c[l.category] = (c[l.category] ?? 0) + 1;
-    });
-    return c;
-  }, []);
-
-  const results = useMemo(() => {
-    const q = query.trim().toLowerCase();
-    const list = SAMPLE_LISTINGS.filter((l) => {
-      if (category && l.category !== category) return false;
-      if (seller !== "all" && l.sellerRole !== seller) return false;
-      if (inStockOnly && !l.inStock) return false;
-      if (fulfillment && !(Array.isArray(l.fulfillment) ? l.fulfillment : []).includes(fulfillment)) return false;
-      if (q && !`${l.title ?? ""} ${l.sku ?? ""} ${l.seller ?? ""}`.toLowerCase().includes(q)) return false;
-      return true;
-    });
-    const fn = SORTS[sort]?.fn;
-    return fn ? [...list].sort(fn) : list;
-  }, [query, category, seller, inStockOnly, fulfillment, sort]);
+  useEffect(() => {
+    const ctrl = new AbortController();
+    setLoading(true);
+    setError("");
+    fetchProducts({
+      q: query,
+      category: category || "",
+      seller,
+      inStock: inStockOnly,
+      sort,
+      page,
+      limit: 24,
+      signal: ctrl.signal,
+    })
+      .then((data) => {
+        let list = data.listings ?? [];
+        if (fulfillment) {
+          list = list.filter((l) => (l.fulfillment ?? []).includes(fulfillment));
+        }
+        setResults(list);
+        setCategories(data.categories ?? []);
+        setSellers(data.sellers ?? []);
+        setTotal(data.total ?? 0);
+        setTotalPages(data.totalPages ?? 1);
+        setCatalogNote(data.note ?? "");
+      })
+      .catch((err) => {
+        if (err?.name === "AbortError") return;
+        setError(err.message || "Could not load products.");
+        setResults([]);
+        setTotal(0);
+      })
+      .finally(() => {
+        if (!ctrl.signal.aborted) setLoading(false);
+      });
+    return () => ctrl.abort();
+  }, [query, category, seller, inStockOnly, sort, page, fulfillment]);
 
   const filtersActive = query || category || seller !== "all" || inStockOnly || fulfillment;
   const resetFilters = () => {
     setQuery("");
+    setDraftQuery("");
     setCategory(null);
     setSeller("all");
     setInStockOnly(false);
     setFulfillment(null);
+    setPage(1);
   };
 
-  const categoryLabel = CATEGORIES.find((c) => c.key === category)?.title;
+  const categoryLabel = categories.find((c) => c.key === category)?.title;
+  const catalogTotal = sellers.reduce((n, s) => n + (s.count || 0), 0);
 
   return (
     <>
@@ -145,15 +172,24 @@ export default function Marketplace() {
           </>
         }
       >
-        Browse catalog listings from manufacturers and local distributors side by side. Compare unit
-        price, minimums, lead time, and whether it ships to the jobsite or waits at the counter.
+        Browse demo catalogs from packaging, industrial, and building-materials suppliers. Listings are
+        sample data for browsing — not live seller storefronts. Compare unit price, minimums, and lead time.
       </PageHero>
 
       <Section className="!pt-10 md:!pt-14">
+        {catalogNote && (
+          <p className="rounded-xl border border-line bg-subtle px-4 py-3 text-sm text-fg-muted" role="note">
+            {catalogNote}
+          </p>
+        )}
 
         <form
           role="search"
-          onSubmit={(e) => e.preventDefault()}
+          onSubmit={(e) => {
+            e.preventDefault();
+            setPage(1);
+            setQuery(draftQuery);
+          }}
           className="mt-8 flex items-center gap-3 rounded-full border border-line bg-surface py-1.5 pl-5 pr-1.5 shadow-[var(--shadow-card)] focus-within:border-brand"
         >
           <IconSearch width={18} height={18} className="shrink-0 text-fg-muted" aria-hidden="true" />
@@ -163,8 +199,8 @@ export default function Marketplace() {
           <input
             id="market-search"
             type="search"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            value={draftQuery}
+            onChange={(e) => setDraftQuery(e.target.value)}
             placeholder="Search SKUs, products, or sellers"
             className="h-10 min-w-0 flex-1 bg-transparent text-base text-fg outline-hidden placeholder:text-fg-muted/70"
           />
@@ -178,18 +214,24 @@ export default function Marketplace() {
           <CategoryTile
             icon={<IconLayers />}
             title="All supply"
-            count={SAMPLE_LISTINGS.length}
+            count={catalogTotal || total}
             active={category === null}
-            onClick={() => setCategory(null)}
+            onClick={() => {
+              setCategory(null);
+              setPage(1);
+            }}
           />
-          {CATEGORIES.map((c) => (
+          {categories.slice(0, 9).map((c) => (
             <CategoryTile
               key={c.key}
-              icon={c.icon}
+              icon={categoryIcon(c.key) ?? <IconPackage />}
               title={c.title}
-              count={counts[c.key] ?? 0}
+              count={c.count ?? 0}
               active={category === c.key}
-              onClick={() => setCategory(category === c.key ? null : c.key)}
+              onClick={() => {
+                setCategory(category === c.key ? null : c.key);
+                setPage(1);
+              }}
             />
           ))}
           <CategoryTile icon={<IconTruck />} title="Equipment rental" text="Machines and trucks by the day" to="/fleet" />
@@ -197,24 +239,52 @@ export default function Marketplace() {
 
         <div className="mt-10 flex flex-col gap-4 border-b border-line pb-5 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex flex-wrap gap-2" role="group" aria-label="Filter listings">
-            {SELLER_FILTERS.map((f) => (
-              <FilterChip key={f.key} active={seller === f.key} onClick={() => setSeller(f.key)}>
-                {f.label}
+            <FilterChip
+              active={seller === "all"}
+              onClick={() => {
+                setSeller("all");
+                setPage(1);
+              }}
+            >
+              All catalogs
+            </FilterChip>
+            {sellers.map((s) => (
+              <FilterChip
+                key={s.key}
+                active={seller === s.key}
+                onClick={() => {
+                  setSeller(seller === s.key ? "all" : s.key);
+                  setPage(1);
+                }}
+              >
+                {s.name.replace(/^Demo /, "").replace(/ Catalog$/, "")}
               </FilterChip>
             ))}
             <span className="mx-1 hidden w-px self-stretch bg-line sm:block" aria-hidden="true" />
-            <FilterChip active={inStockOnly} onClick={() => setInStockOnly((v) => !v)}>
+            <FilterChip
+              active={inStockOnly}
+              onClick={() => {
+                setInStockOnly((v) => !v);
+                setPage(1);
+              }}
+            >
               In stock
             </FilterChip>
             <FilterChip
               active={fulfillment === "delivery"}
-              onClick={() => setFulfillment(fulfillment === "delivery" ? null : "delivery")}
+              onClick={() => {
+                setFulfillment(fulfillment === "delivery" ? null : "delivery");
+                setPage(1);
+              }}
             >
               Delivery
             </FilterChip>
             <FilterChip
               active={fulfillment === "will-call"}
-              onClick={() => setFulfillment(fulfillment === "will-call" ? null : "will-call")}
+              onClick={() => {
+                setFulfillment(fulfillment === "will-call" ? null : "will-call");
+                setPage(1);
+              }}
             >
               Will-call
             </FilterChip>
@@ -226,7 +296,10 @@ export default function Marketplace() {
             <select
               id="market-sort"
               value={sort}
-              onChange={(e) => setSort(e.target.value)}
+              onChange={(e) => {
+                setSort(e.target.value);
+                setPage(1);
+              }}
               className="h-9 rounded-full border border-line bg-surface px-3 text-sm text-fg hover:border-line-strong"
             >
               {Object.entries(SORTS).map(([key, s]) => (
@@ -240,9 +313,22 @@ export default function Marketplace() {
 
         <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
           <p className="text-sm text-fg-muted" aria-live="polite">
-            <span className="font-semibold text-fg tabular-nums">{results.length}</span> sample{" "}
-            {results.length === 1 ? "listing" : "listings"}
-            {categoryLabel && <> in {categoryLabel}</>}
+            {loading ? (
+              "Loading sample listings…"
+            ) : (
+              <>
+                <span className="font-semibold text-fg tabular-nums">{total.toLocaleString()}</span> sample{" "}
+                {total === 1 ? "listing" : "listings"}
+                {categoryLabel && <> in {categoryLabel}</>}
+                {totalPages > 1 && (
+                  <>
+                    {" "}
+                    · page <span className="tabular-nums">{page}</span> of{" "}
+                    <span className="tabular-nums">{totalPages}</span>
+                  </>
+                )}
+              </>
+            )}
           </p>
           {filtersActive && (
             <button type="button" onClick={resetFilters} className="text-sm font-medium text-brand hover:text-brand-hover">
@@ -251,28 +337,59 @@ export default function Marketplace() {
           )}
         </div>
 
-        {results.length > 0 ? (
-          <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {results.map((l) => (
-              <ListingCard key={l.id} listing={l} icon={categoryIcon(l.category)} />
-            ))}
-          </div>
-        ) : (
-          <div className="mt-5 rounded-2xl border border-dashed border-line-strong bg-surface px-6 py-14 text-center">
-            <p className="text-base font-semibold text-fg">No sample listings match those filters.</p>
-            <p className="mx-auto mt-2 max-w-md text-sm text-fg-muted">
-              On the live Exchange, a search that comes up empty is a good reason to post a request and let
-              sellers come to you.
-            </p>
-            <div className="mt-6 flex flex-wrap justify-center gap-3">
-              <Button size="sm" variant="secondary" onClick={resetFilters}>
-                Clear filters
-              </Button>
-              <Button size="sm" to="/register">
-                Post a request
-              </Button>
+        {error && (
+          <p role="alert" className="mt-5 rounded-xl border border-line bg-subtle px-4 py-3 text-sm font-medium text-danger">
+            {error}
+          </p>
+        )}
+
+        {!error && results.length > 0 ? (
+          <>
+            <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {results.map((l) => (
+                <ListingCard key={l.id} listing={l} icon={categoryIcon(l.category)} />
+              ))}
             </div>
-          </div>
+            {totalPages > 1 && (
+              <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  disabled={page <= 1 || loading}
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                >
+                  Previous
+                </Button>
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  disabled={page >= totalPages || loading}
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                >
+                  Next
+                </Button>
+              </div>
+            )}
+          </>
+        ) : (
+          !loading &&
+          !error && (
+            <div className="mt-5 rounded-2xl border border-dashed border-line-strong bg-surface px-6 py-14 text-center">
+              <p className="text-base font-semibold text-fg">No sample listings match those filters.</p>
+              <p className="mx-auto mt-2 max-w-md text-sm text-fg-muted">
+                On the live Exchange, a search that comes up empty is a good reason to post a request and let
+                sellers come to you.
+              </p>
+              <div className="mt-6 flex flex-wrap justify-center gap-3">
+                <Button size="sm" variant="secondary" onClick={resetFilters}>
+                  Clear filters
+                </Button>
+                <Button size="sm" to="/register">
+                  Post a request
+                </Button>
+              </div>
+            </div>
+          )
         )}
       </Section>
 
