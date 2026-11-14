@@ -45,6 +45,7 @@ import AdminMembers from "./pages/admin/AdminMembers";
 import AdminMemberDetail from "./pages/admin/AdminMemberDetail";
 import AdminJobs from "./pages/admin/AdminJobs";
 import AdminCatalog from "./pages/admin/AdminCatalog";
+import AdminFleetRequests from "./pages/admin/AdminFleetRequests";
 
 function ScrollToTop() {
   const { pathname, hash } = useLocation();
@@ -199,6 +200,7 @@ function App() {
           <Route path="/admin/members/:id" element={<AdminGate><AdminMemberDetail /></AdminGate>} />
           <Route path="/admin/jobs" element={<AdminGate><AdminJobs /></AdminGate>} />
           <Route path="/admin/catalog" element={<AdminGate><AdminCatalog /></AdminGate>} />
+          <Route path="/admin/fleet-requests" element={<AdminGate><AdminFleetRequests /></AdminGate>} />
           <Route path="/admin/*" element={<Navigate to="/admin" replace />} />
           <Route path="/bids" element={<Navigate to="/projects" replace />} />
           <Route path="/resources" element={<MarketingLayout><Resources /></MarketingLayout>} />

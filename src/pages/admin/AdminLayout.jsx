@@ -15,6 +15,7 @@ const NAV = [
   { to: "/admin/members", label: "Members", icon: "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" },
   { to: "/admin/jobs", label: "Job postings", icon: "M20 7h-4V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2zM10 5h4v2h-4z" },
   { to: "/admin/catalog", label: "Catalog", icon: "M21 8 12 3 3 8l9 5 9-5zM3 8v8l9 5 9-5V8M12 13v8" },
+  { to: "/admin/fleet-requests", label: "Fleet requests", icon: "M3 13h2l2-6h10l2 6h2M5 13v6h2v-2h10v2h2v-6M7 19a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm10 0a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" },
 ];
 
 function Icon({ d }) {

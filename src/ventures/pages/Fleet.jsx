@@ -181,7 +181,7 @@ function ModelCard({ model, onRequest }) {
 }
 
 function ReserveForm({ requested = "" }) {
-  const { state, invalid, onSubmit } = useInquiry({
+  const { state, invalid, onSubmit, reference, notified } = useInquiry({
     role: "Fleet reservation request",
     topic: "fleet",
     buildMessage: (d) =>
@@ -207,9 +207,21 @@ function ReserveForm({ requested = "" }) {
           <IconCheck width={22} height={22} aria-hidden="true" />
         </span>
         <h3 className="mt-5 text-xl font-semibold text-fg">Request received.</h3>
+        {reference && (
+          <p className="mt-4 text-fg">
+            Your reference number is{" "}
+            <strong className="font-mono text-lg tracking-wide">{reference}</strong>.
+            Quote it if you write or call about this request.
+          </p>
+        )}
         <p className="mt-2 text-fg-muted">
           We'll reply by email with availability and a per-vehicle quote. Nothing is reserved until you confirm it in writing.
         </p>
+        {reference && notified === false && (
+          <p className="mt-2 text-sm text-fg-muted">
+            The notification email did not go out. The request is saved under this reference.
+          </p>
+        )}
       </div>
     );
   }

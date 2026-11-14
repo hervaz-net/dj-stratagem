@@ -62,6 +62,8 @@ export function Field({ label, required, className = "", children }) {
 export function useInquiry({ role, topic, buildMessage }) {
   const [state, setState] = useState("idle"); // idle | sending | sent | error
   const [invalid, setInvalid] = useState("");
+  const [reference, setReference] = useState("");
+  const [notified, setNotified] = useState(true);
 
   async function onSubmit(e) {
     e.preventDefault();
@@ -120,6 +122,8 @@ export function useInquiry({ role, topic, buildMessage }) {
         throw new Error("failed");
       }
       form.reset();
+      setReference(typeof data.reference === "string" ? data.reference : "");
+      setNotified(data.notified !== false);
       setState("sent");
     } catch {
       setState("error");
@@ -128,7 +132,7 @@ export function useInquiry({ role, topic, buildMessage }) {
     }
   }
 
-  return { state, invalid, onSubmit };
+  return { state, invalid, onSubmit, reference, notified };
 }
 
 export function FormStatus({ state, invalid }) {
