@@ -39,6 +39,36 @@ function SubmitButton({ busy, children }) {
 
 const FieldError = ({ children }) => (children ? <p className="mt-1.5 text-xs text-danger">{children}</p> : null);
 
+/** Shown after signup and when a later sign-in is still waiting on approval. */
+function PendingReview({ brand, email, onBack }) {
+  return (
+    <AuthCard
+      brand={brand}
+      title="Pending review"
+      subtitle={`Your ${brand.name} account is pending human review.`}
+    >
+      <div className="flex items-start gap-3">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-soft text-brand-fg">
+          <IconCheck width={18} height={18} aria-hidden="true" />
+        </span>
+        <p className="text-sm leading-relaxed text-fg-muted">
+          A person on our team still has to approve this account.
+          We&rsquo;ll email {email ? <>you at <span className="font-medium text-fg">{email}</span></> : "you"} once it&rsquo;s approved, and then you can sign in.
+        </p>
+      </div>
+      {onBack ? (
+        <button type="button" onClick={onBack} className="mt-6 text-sm font-semibold text-brand hover:text-brand-hover">
+          Use a different email
+        </button>
+      ) : (
+        <Link to={brand.path} className="mt-6 inline-flex text-sm font-semibold text-brand hover:text-brand-hover">
+          Back to {brand.name}
+        </Link>
+      )}
+    </AuthCard>
+  );
+}
+
 export function SignUp({ brand }) {
   const { pathname } = useLocation();
   useSeo(brand, { title: "Create an account", description: `Create a ${brand.name} account.`, path: pathname, noindex: true });
@@ -78,21 +108,7 @@ export function SignUp({ brand }) {
   }
 
   if (done) {
-    return (
-      <AuthCard brand={brand} title="Request received" subtitle={`Thanks for signing up for ${brand.name}.`}>
-        <div className="flex items-start gap-3">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-soft text-brand-fg">
-            <IconCheck width={18} height={18} aria-hidden="true" />
-          </span>
-          <p className="text-sm leading-relaxed text-fg-muted">
-            Every new account is reviewed by a person. We&rsquo;ll email you once yours is approved, and then you can sign in.
-          </p>
-        </div>
-        <Link to={brand.path} className="mt-6 inline-flex text-sm font-semibold text-brand hover:text-brand-hover">
-          Back to {brand.name}
-        </Link>
-      </AuthCard>
-    );
+    return <PendingReview brand={brand} email={values.email.trim()} />;
   }
 
   return (
@@ -157,6 +173,7 @@ export function SignIn({ brand }) {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
+  const [pending, setPending] = useState(false);
 
   if (user) return <Navigate to={`${brand.path}/account`} replace />;
 
@@ -165,14 +182,32 @@ export function SignIn({ brand }) {
     if (!email.trim() || !password) return setMessage("Enter your email and password.");
     setBusy(true);
     setMessage("");
+    setPending(false);
     try {
       await login(email.trim(), password);
       navigate(`${brand.path}/account`, { replace: true });
     } catch (err) {
+      if (err?.code === "account_pending") {
+        setPending(true);
+        return;
+      }
       setMessage(err.message);
     } finally {
       setBusy(false);
     }
+  }
+
+  if (pending) {
+    return (
+      <PendingReview
+        brand={brand}
+        email={email.trim()}
+        onBack={() => {
+          setPending(false);
+          setPassword("");
+        }}
+      />
+    );
   }
 
   return (
