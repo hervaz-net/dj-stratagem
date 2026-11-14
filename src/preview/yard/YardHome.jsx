@@ -9,10 +9,11 @@ import usePreviewFrame from "../usePreviewFrame";
 import {
   HOME,
   concepts,
-  exampleDashboard,
   facts,
+  roleNames,
   sections,
   subagentItems,
+  workspaceAccount,
 } from "../content";
 import "./yard.css";
 
@@ -142,13 +143,13 @@ export default function YardHome() {
               <Plate>
                 <div className="y-dash-top">
                   <span>{HOME.product}</span>
-                  <span>{exampleDashboard.account}</span>
+                  <span>{workspaceAccount}</span>
                 </div>
                 <div className="y-dash" aria-hidden="true">
                   <div className="y-side">
                     <p>
-                      <strong>{exampleDashboard.account}</strong>
-                      <span>{exampleDashboard.role}</span>
+                      <strong>{workspaceAccount}</strong>
+                      <span>{roleNames.gc}</span>
                     </p>
                     <ul>
                       {subagentItems.map((item) => (
@@ -157,66 +158,14 @@ export default function YardHome() {
                     </ul>
                   </div>
                   <div className="y-work">
-                    <header className="y-block" style={{ border: 0, marginBottom: 12 }}>
-                      <div>
-                        <strong>{exampleDashboard.greeting}</strong>
-                        <div style={{ color: "var(--y-faint)", fontSize: 13 }}>{exampleDashboard.sub}</div>
-                      </div>
-                    </header>
-                    <div className="y-metrics">
-                      {exampleDashboard.metrics.map((metric) => (
-                        <div key={metric.id} className="y-metric">
-                          <span>{metric.label}</span>
-                          <strong>{metric.value}</strong>
-                          <em>{metric.note}</em>
-                        </div>
+                    <ul className="y-notes">
+                      {subagentItems.map((item) => (
+                        <li key={item.key} className={item.key === "projects" ? "is-on" : undefined}>
+                          <strong>{item.name}</strong>
+                          <span>{item.note}</span>
+                        </li>
                       ))}
-                    </div>
-                    <div className="y-split">
-                      <div className="y-block">
-                        <header>
-                          <strong>{exampleDashboard.pursuitsTitle}</strong>
-                          <span>{exampleDashboard.pursuitsMeta}</span>
-                        </header>
-                        <div className="y-scroll">
-                          <table className="y-table">
-                            <thead>
-                              <tr>
-                                {["Project", "Trade", "City", "Due", "Status"].map((col) => <th key={col} scope="col">{col}</th>)}
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {exampleDashboard.pursuits.map((row) => (
-                                <tr key={row.project}>
-                                  <td>{row.project}</td>
-                                  <td>{row.trade}</td>
-                                  <td>{row.city}</td>
-                                  <td>{row.due}</td>
-                                  <td>
-                                    <span className={`y-pill ${row.status === "Bidding" ? "y-pill-bid" : ""} ${row.status === "Awarded" ? "y-pill-won" : ""}`}>{row.status}</span>
-                                  </td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
-                      <div className="y-block">
-                        <header>
-                          <strong>{exampleDashboard.quoteTitle}</strong>
-                          <span>{exampleDashboard.quoteSub}</span>
-                        </header>
-                        {exampleDashboard.quotes.map((quote) => (
-                          <div key={quote.name} className={`y-quote ${quote.flag ? "is-low" : ""}`}>
-                            <p>
-                              <strong>{quote.name}</strong>
-                              <small>{quote.lead}</small>
-                            </p>
-                            <b>{quote.flag ? `${quote.flag} ${quote.price}` : quote.price}</b>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
+                    </ul>
                   </div>
                 </div>
               </Plate>

@@ -4,7 +4,7 @@ import { subagents } from "../data/subagents";
  * Homepage copy shared by the three design previews.
  * Nothing here claims license or insurance verification, QuickBooks or Procore
  * integrations, or SOC 2. Do not add customers, logos, testimonials, or usage stats.
- * Workspace figures are shown without example or sample labels.
+ * The previews do not show invented bids, prices, suppliers, or usage counts.
  */
 
 export const HOME = {
@@ -21,7 +21,7 @@ export const HOME = {
     href: "/fleet",
   },
   primary: { label: "Create your account", href: "/register" },
-  secondary: { label: "Talk to our team", href: "/contact?topic=demo" },
+  secondary: { label: "Talk to our team", href: "/contact" },
   assurances: ["Free to start", "Every account reviewed by a person", "Based in Los Angeles"],
   audiences: [
     {
@@ -146,43 +146,12 @@ export const navFocus = {
   supplier: "supply",
 };
 
-export const exampleDashboard = {
-  account: "Your company",
-  role: "General contractor",
-  greeting: "Good morning",
-  sub: "Pursuits moving this week.",
-  metrics: [
-    { id: "bids", label: "Open bids", value: "12", note: "3 due this week" },
-    { id: "matched", label: "Matched projects", value: "48", note: "+6 since Monday" },
-    { id: "quotes", label: "Material quotes", value: "9", note: "2 awaiting reply" },
-    { id: "fleet", label: "Vehicle reservations", value: "4", note: "Next: Thu, 7:00 am" },
-  ],
-  pursuitsTitle: "Active pursuits",
-  pursuitsMeta: "4 of 12",
-  pursuits: [
-    { project: "Medical office TI", trade: "Drywall", city: "Pasadena", due: "This week", status: "Submitted" },
-    { project: "Civic center roof", trade: "Roofing", city: "Riverside", due: "Next week", status: "Bidding" },
-    { project: "Warehouse expansion", trade: "Concrete", city: "Ontario", due: "In 3 weeks", status: "Matched" },
-    { project: "School modernization", trade: "Electrical", city: "Long Beach", due: "Later", status: "Awarded" },
-  ],
-  quoteTitle: "Quote comparison",
-  quoteSub: "Electrical rough-in · Medical office TI",
-  quotes: [
-    { name: "Electric Supply", lead: "Delivers in 3 days", price: "$1,842" },
-    { name: "Wire Mfg.", lead: "Delivers in 5 days", price: "$1,790", flag: "Lowest" },
-    { name: "Trade Distributors", lead: "Delivers in 2 days", price: "$1,965" },
-  ],
-};
+export const workspaceAccount = "Your company";
 
-export const exampleRfq = {
-  title: "Request for quote · Electrical rough-in",
-  rows: [
-    ["12/2 MC cable", "500 ft"],
-    ["EMT conduit, 3/4 in.", "400 ft"],
-    ["Single-pole switch, 20 A", "48"],
-  ],
-  received: "3 quotes received",
-  low: "Lowest $1,790",
+export const roleNames = {
+  gc: "General contractor",
+  sub: "Subcontractor",
+  supplier: "Supplier",
 };
 
 export const fleetPhotos = [
@@ -311,7 +280,7 @@ export const concepts = [
     rootClass: "field",
     summary: "Full-width product homepage for Stratagem Exchange, with a navy dashboard band and a copper accent.",
     rationale:
-      "Field leads with Stratagem Exchange. The headline runs the full width, the role switcher is a stacked list, and the dashboard sits on a navy band underneath instead of in a side card. The nine agents read as an index. The color is navy and copper on linen, set in Plus Jakarta Sans. Motion is short and gated by prefers-reduced-motion.",
+      "Field leads with Stratagem Exchange. The headline is a standard heading, the role switcher is a stacked list, and the dashboard sits on a navy band underneath instead of in a side card. The nine agents read as an index, with their real descriptions and no invented prices or counts. The color is navy and copper on linen, set in Plus Jakarta Sans. Motion is short and gated by prefers-reduced-motion.",
     palette: [
       { name: "Linen", hex: "#f4efe6" },
       { name: "Surface", hex: "#fffcf8" },

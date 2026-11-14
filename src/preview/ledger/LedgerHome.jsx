@@ -8,10 +8,11 @@ import usePreviewFrame from "../usePreviewFrame";
 import {
   HOME,
   concepts,
-  exampleDashboard,
   facts,
+  roleNames,
   sections,
   subagentItems,
+  workspaceAccount,
 } from "../content";
 import "./ledger.css";
 
@@ -115,59 +116,30 @@ export default function LedgerHome() {
             <figure>
               <div className="l-sheet">
                 <header>
-                  <span>{exampleDashboard.account} · {exampleDashboard.role}</span>
-                  <span>{exampleDashboard.sub}</span>
+                  <span>{workspaceAccount} · {roleNames.gc}</span>
+                  <span>Stratagem Exchange</span>
                 </header>
                 <ul className="l-nav">
                   {subagentItems.map((item) => <li key={item.key}>{item.name}</li>)}
                 </ul>
-                <dl className="l-metrics">
-                  {exampleDashboard.metrics.map((metric) => (
-                    <div key={metric.id}>
-                      <dt>{metric.label}</dt>
-                      <dd>{metric.value}<small>{metric.note}</small></dd>
-                    </div>
-                  ))}
-                </dl>
                 <div className="l-scroll">
-                  <table className="l-table">
-                    <caption>{exampleDashboard.pursuitsTitle} · {exampleDashboard.pursuitsMeta}</caption>
-                    <thead>
-                      <tr>
-                        {["Project", "Trade", "City", "Due", "Status"].map((col) => <th key={col} scope="col">{col}</th>)}
+                <table className="l-table">
+                  <caption>The nine agents</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Agent</th>
+                      <th scope="col">What it does</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {subagentItems.map((item) => (
+                      <tr key={item.key}>
+                        <td>{item.name}</td>
+                        <td>{item.note}</td>
                       </tr>
-                    </thead>
-                    <tbody>
-                      {exampleDashboard.pursuits.map((row) => (
-                        <tr key={row.project}>
-                          <td>{row.project}</td>
-                          <td>{row.trade}</td>
-                          <td>{row.city}</td>
-                          <td>{row.due}</td>
-                          <td>{row.status}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                  <table className="l-table">
-                    <caption>{exampleDashboard.quoteTitle}</caption>
-                    <thead>
-                      <tr>
-                        <th scope="col">{exampleDashboard.quoteSub}</th>
-                        <th scope="col">Lead time</th>
-                        <th scope="col">Price</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {exampleDashboard.quotes.map((quote) => (
-                        <tr key={quote.name} className={quote.flag ? "l-low" : undefined}>
-                          <td>{quote.name}{quote.flag ? ` · ${quote.flag}` : ""}</td>
-                          <td>{quote.lead}</td>
-                          <td>{quote.price}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                    ))}
+                  </tbody>
+                </table>
                 </div>
               </div>
             </figure>

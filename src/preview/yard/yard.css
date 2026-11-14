@@ -409,6 +409,12 @@
 .y-side li.is-on { background: var(--y-amber); color: var(--y-amber-ink); }
 
 .y-work { padding: 16px; min-width: 0; }
+.y-notes { list-style: none; margin: 0; padding: 0; }
+.y-notes li { padding: 10px 0; border-top: 1px solid var(--y-line); }
+.y-notes li:first-child { border-top: 0; padding-top: 0; }
+.y-notes strong { display: block; font-size: 14px; }
+.y-notes span { display: block; margin-top: 2px; color: var(--y-muted); font-size: 13.5px; }
+.y-notes li.is-on strong { color: var(--y-amber); }
 
 .y-metrics {
   display: grid;

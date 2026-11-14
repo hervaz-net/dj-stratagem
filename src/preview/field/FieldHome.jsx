@@ -9,12 +9,13 @@ import usePreviewFrame from "../usePreviewFrame";
 import {
   HOME,
   concepts,
-  exampleDashboard,
   facts,
   fleetPhotos,
   navFocus,
+  roleNames,
   sections,
   subagentItems,
+  workspaceAccount,
 } from "../content";
 import "./field.css";
 
@@ -52,7 +53,8 @@ export default function FieldHome() {
     roleRefs.current[next]?.focus();
   };
 
-  const hotMetric = role === "sub" ? "matched" : role === "gc" ? "bids" : null;
+  const focusedKey = navFocus[role];
+  const focused = subagentItems.find((item) => item.key === focusedKey);
 
   return (
     <PreviewShell id="field">
@@ -168,66 +170,26 @@ export default function FieldHome() {
               <div className="f-frame">
                 <div className="f-frame-bar">
                   <span>{HOME.product}</span>
-                  <span>{exampleDashboard.account}</span>
+                  <span>{workspaceAccount}</span>
                 </div>
                 <div className="f-frame-body" aria-hidden="true">
                   <div className="f-dash">
                   <div className="f-side">
                     <ul>
                       {subagentItems.map((item) => (
-                        <li key={item.key} className={item.key === navFocus[role] ? "is-on" : undefined}>{item.name}</li>
+                        <li key={item.key} className={item.key === focusedKey ? "is-on" : undefined}>{item.name}</li>
                       ))}
                     </ul>
                   </div>
                   <div className="f-work">
                   <div className="f-account">
-                    <strong>{exampleDashboard.account}</strong>
-                    <span>{exampleDashboard.role}</span>
+                    <strong>{workspaceAccount}</strong>
+                    <span>{roleNames[role]}</span>
                   </div>
-                  <div className="f-metrics">
-                    {exampleDashboard.metrics.map((metric) => (
-                      <div key={metric.id} className={`f-metric ${metric.id === hotMetric ? "f-hot" : ""}`}>
-                        <span>{metric.label}</span>
-                        <strong>{metric.value}</strong>
-                        <small>{metric.note}</small>
-                      </div>
-                    ))}
-                  </div>
-                  <div className={`f-block ${role === "gc" ? "f-hot" : ""}`}>
-                    <header>
-                      <strong>{exampleDashboard.pursuitsTitle}</strong>
-                      <span>{exampleDashboard.pursuitsMeta}</span>
-                    </header>
-                    <div className="f-scroll">
-                      <table className="f-table">
-                        <thead>
-                          <tr>{["Project", "Trade", "City", "Due", "Status"].map((col) => <th key={col}>{col}</th>)}</tr>
-                        </thead>
-                        <tbody>
-                          {exampleDashboard.pursuits.map((row) => (
-                            <tr key={row.project}>
-                              <td>{row.project}</td>
-                              <td>{row.trade}</td>
-                              <td>{row.city}</td>
-                              <td>{row.due}</td>
-                              <td>{row.status}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                  <div className={`f-block ${role === "supplier" ? "f-hot" : ""}`}>
-                    <header>
-                      <strong>{exampleDashboard.quoteTitle}</strong>
-                      <span>{exampleDashboard.quoteSub}</span>
-                    </header>
-                    {exampleDashboard.quotes.map((quote) => (
-                      <div key={quote.name} className="f-quote">
-                        <p><strong>{quote.name}</strong><small>{quote.lead}</small></p>
-                        <b>{quote.flag ? `${quote.flag} ${quote.price}` : quote.price}</b>
-                      </div>
-                    ))}
+                  <div className="f-focus">
+                    <h2>{focused.name}</h2>
+                    <p>{focused.note}</p>
+                    <p>{audience.title}</p>
                   </div>
                   </div>
                   </div>
