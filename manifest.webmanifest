@@ -1,12 +1,12 @@
 {
   "name": "D&J Stratagem, Inc.",
-  "short_name": "D&J Stratagem",
-  "description": "Find construction work, win it, market the business, and keep the customer.",
+  "short_name": "DJ Stratagem",
+  "description": "One desk for construction. Projects, materials, and trucks are modes of DJ Stratagem.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#fafaf7",
-  "theme_color": "#fafaf7",
+  "background_color": "#f4f0e8",
+  "theme_color": "#f4f0e8",
   "icons": [
     {
       "src": "/favicon.svg",
