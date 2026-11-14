@@ -51,8 +51,8 @@ export default function About() {
             Where we are today
           </p>
           <p className="mt-3 text-base leading-relaxed text-fg-muted">
-            D&amp;J Stratagem is pre-launch and currently onboarding early users. We&rsquo;d
-            rather show you the product than quote numbers we haven&rsquo;t earned yet.
+            D&amp;J Stratagem is in Los Angeles. Send the work. A person replies. We don&rsquo;t
+            quote numbers we haven&rsquo;t earned.
           </p>
         </div>
       </Section>

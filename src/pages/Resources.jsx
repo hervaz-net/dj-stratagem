@@ -87,7 +87,7 @@ export default function Resources() {
         index="11"
         kicker="Help center"
         title={<>Answers, <em>plainly.</em></>}
-        lede="Search how accounts, bidding, Supply Exchange, and billing work today. We are onboarding early users, so where something is not live yet, the answer says so."
+        lede="Search how accounts, pursuits, supply, and billing work. Each answer points at a step you can finish."
       >
         <ResourceSearch value={q} onChange={setQuery} resultLabel={resultLabel} suggestions={POPULAR_SEARCHES} />
       </PageHero>

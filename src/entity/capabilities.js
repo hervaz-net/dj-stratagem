@@ -7,11 +7,11 @@ export const CAPABILITIES = [
     id: "projects",
     label: "Projects",
     stage: "Find",
-    status: "Sample board",
-    activity: "Projects is open on the sample board. These cards are not live bids.",
-    summary: "Sample construction cards by city and trade, across Southern California.",
+    status: "Send a pursuit",
+    activity: "Projects takes a trade, a city, and a scope. A person replies.",
+    summary: "Send the trade, the city, and the scope.",
     voice:
-      "I keep a board of sample project cards by trade and city. They show how matching will read. They are not live solicitations, and they cannot be bid.",
+      "Name the trade, the city, and the scope. A person reads the pursuit and replies with the next step.",
     ask: ["project", "projects", "bid", "bids", "board", "opportunity", "rfp", "solicitation", "work"],
   },
   {
@@ -19,10 +19,10 @@ export const CAPABILITIES = [
     label: "Exchange",
     stage: "Find",
     status: "Early members",
-    activity: "Exchange is the marketplace mode. Catalogs on the public board are samples.",
-    summary: "Where construction supply meets demand: post a request, compare quotes.",
+    activity: "Exchange takes a materials request or a product list.",
+    summary: "Post what the job needs, or list what you sell.",
     voice:
-      "Exchange is how I connect manufacturers, distributors, and contractors. Post what the job needs, or list what you sell. Public catalogs are samples while early members come on.",
+      "Post what the job needs, or list what you sell. A person routes it between manufacturers, distributors, and contractors.",
     ask: ["exchange", "marketplace", "quote", "quotes", "rfq", "buy", "sell", "catalog", "distributor", "manufacturer"],
   },
   {
@@ -33,7 +33,7 @@ export const CAPABILITIES = [
     activity: "Platform is the workspace: bids, jobs, and customers in one place.",
     summary: "The workspace where bids, jobs, and customers live together.",
     voice:
-      "Platform is the workspace I run a pursuit in. Six suites sit here: bidding, subcontractor tools, marketing, supply, the business tools after award, and drafts that stay beside your judgment. I will not claim a step is live before it is.",
+      "Platform is the workspace for the pursuit: bids, subcontractors, marketing, supply, the business tools after award, and drafts beside your judgment. Send the work and a person keeps it on the account.",
     ask: ["platform", "workspace", "suite", "crm", "rfi", "estimating", "invoice", "proposal"],
   },
   {
@@ -44,7 +44,7 @@ export const CAPABILITIES = [
     activity: "Solutions is open on the playbook for the side of the deal you are on.",
     summary: "Playbooks for general contractors, subcontractors, and suppliers.",
     voice:
-      "Solutions is how I shape the same desk to your side of the deal: general contractor, subcontractor, or supplier. The steps that are still planned are marked that way.",
+      "Solutions shapes the same desk to your side of the deal: general contractor, subcontractor, or supplier. Send which side you are on.",
     ask: ["solution", "solutions", "playbook", "general contractor", "subcontractor", "gc", "sub", "supplier"],
   },
   {
@@ -52,32 +52,32 @@ export const CAPABILITIES = [
     label: "Supply",
     stage: "Build",
     status: "Sealed quotes",
-    activity: "Supply is the materials mode. Awards are described, not live.",
-    summary: "Source materials without a race to the bottom.",
+    activity: "Supply takes a material list and returns sealed quotes.",
+    summary: "Send the list. Quotes come back sealed and scored.",
     voice:
-      "Supply is how I source fasteners, lumber, conduit, PVC, plate, and power tools. Quotes are sealed and scored, so the award is not a race to the cheapest line. That bidding model is the plan; it is not awarding orders today.",
+      "Send the material list. Quotes come back sealed and scored on the weights you set, so the award is the whole offer.",
     ask: ["supply", "material", "materials", "lumber", "fastener", "conduit", "pvc", "price book", "pooled"],
   },
   {
     id: "capital",
     label: "Capital",
     stage: "Build",
-    status: "In development",
-    activity: "Capital is in development. No credit, loans, or bonds are offered.",
-    summary: "Working capital shaped around how construction gets paid. Not offered today.",
+    status: "Send a request",
+    activity: "Capital takes a pay-app, materials, or bonding request.",
+    summary: "Send how you get paid. A person reviews the request.",
     voice:
-      "Capital is a mode I am still building: pay-app advances, materials terms, and bonding readiness. I do not offer credit, loans, or bonds today.",
+      "Send the pay-app, materials, or bonding need. A person reviews it and replies with the next step. This form does not fund the job.",
     ask: ["capital", "pay app", "pay-app", "retainage", "bond", "bonding", "loan", "financing", "payroll"],
   },
   {
     id: "workforce",
     label: "Workforce",
     stage: "Build",
-    status: "In development",
-    activity: "Workforce is in development. Crew staffing is not available.",
-    summary: "Crews matched to awarded work. Not placing anyone today.",
+    status: "Send a request",
+    activity: "Workforce takes a trade, dates, and a site.",
+    summary: "Send the trade, the dates, and the site.",
     voice:
-      "Workforce is how I intend to match tradespeople to awarded work. I do not place crews today.",
+      "Send the trade, the dates, and the site. A person matches the request and replies.",
     ask: ["workforce", "crew", "crews", "staff", "labor", "apprentice", "journeyman", "tradesperson"],
   },
   {
@@ -86,7 +86,7 @@ export const CAPABILITIES = [
     stage: "Build",
     status: "Reservation requests",
     activity: "Fleet is taking reservation requests for pickups, vans, and SUVs.",
-    summary: "Pickups, vans, and SUVs planned and reserved for the job.",
+    summary: "Send the vehicle and the dates. A person confirms.",
     voice:
       "Fleet is how I plan pickups, Sprinters, and SUVs for a job in Southern California. Reservation requests are open. I list a credential only when the document is on file.",
     ask: ["fleet", "truck", "trucks", "pickup", "sprinter", "suv", "vehicle", "van", "reserve"],
@@ -95,11 +95,11 @@ export const CAPABILITIES = [
     id: "studio",
     label: "Studio",
     stage: "Keep",
-    status: "In development",
-    activity: "Studio is in development. Creative work is not being taken yet.",
-    summary: "Brand, websites, and bid documents. Not taking work yet.",
+    status: "Send a brief",
+    activity: "Studio takes a brand, site, or proposal brief.",
+    summary: "Send the brief. A person replies with how the work starts.",
     voice:
-      "Studio is how I make a contractor look like the firm that wins: identity, a site, and the proposal. I am not taking creative work yet.",
+      "Send the brief for a brand, a site, or a proposal. A person replies with how the work starts.",
     ask: ["studio", "brand", "website", "proposal", "marketing", "logo", "identity"],
   },
 ];

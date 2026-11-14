@@ -4,7 +4,7 @@ import Seo from "../components/Seo";
 
 const suggestions = [
   { to: "/platform", label: "Platform", detail: "Bidding, sourcing, and the workspace" },
-  { to: "/projects", label: "Projects", detail: "Sample listings by trade and city" },
+  { to: "/command/projects", label: "Projects", detail: "Send a pursuit by trade and city" },
   { to: "/supply", label: "Supply", detail: "Sealed, scored materials sourcing" },
   { to: "/pricing", label: "Pricing", detail: "Plans from free to enterprise" },
   { to: "/contact", label: "Contact", detail: "Book a walkthrough with our team" },

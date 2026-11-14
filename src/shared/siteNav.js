@@ -65,7 +65,7 @@ export const NAV_MENUS = [
     },
     columns: 2,
     links: [
-      { href: "/command/projects", label: "Project board", text: "Sample project cards by trade and city" },
+      { href: "/command/projects", label: "Project board", text: "Send a pursuit by trade and city" },
       { href: "/command/solutions", label: "Solutions", text: "Playbooks for your side of the deal" },
       { href: "/changelog", label: "Changelog", text: "Everything we've shipped" },
       { href: "/brand", label: "Brand", text: "Logos, colors, and usage" },

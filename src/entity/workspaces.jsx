@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, Navigate, useLocation, useParams } from "react-router-dom";
 import { BRANDS } from "../ventures/brands";
 import { Field, FormStatus, Honeypot, useInquiry } from "../ventures/parts";
 import { vehicleCredentials, lineup, modelLabel, operator } from "../data/fleet";
-import { projects, projectsFor, landingPairs, findProject, TRADES, CITIES } from "../data/sampleProjects";
+import { projectsFor, landingPairs, findProject, TRADES, CITIES } from "../data/sampleProjects";
 import { localDateISO } from "../lib/dates";
 
 const field =
@@ -25,14 +25,14 @@ function Cards({ items }) {
 
 function EarlyList({ brand }) {
   const { state, invalid, onSubmit } = useInquiry({
-    role: `${brand.name} early list`,
+    role: `${brand.name} request`,
     buildMessage: (d) => [`I am a: ${d.get("kind") || "Not given"}`, String(d.get("notes") || "")].filter(Boolean).join("\n\n"),
   });
   if (state === "sent") {
     return (
       <div className="dk-card" id="early-list">
-        <h3>You’re on the list.</h3>
-        <p>A person reads every note. I’ll write as this mode opens.</p>
+        <h3>Request received.</h3>
+        <p>A person reads it and replies with the next step.</p>
       </div>
     );
   }
@@ -53,8 +53,8 @@ function EarlyList({ brand }) {
       <Field label="Anything I should know?">
         <textarea name="notes" rows={3} maxLength={1000} className={field} />
       </Field>
-      <button type="submit" className="dk-btn" disabled={state === "sending"}>
-        {state === "sending" ? "Sending…" : "Join the early list"}
+        <button type="submit" className="dk-btn" disabled={state === "sending"}>
+        {state === "sending" ? "Sending…" : "Send the request"}
       </button>
       <FormStatus state={state} invalid={invalid} />
     </form>
@@ -98,20 +98,20 @@ const SUITES = [
   {
     id: "for-general-contractors",
     title: "General contractors",
-    text: "Publish projects, keep RFIs, addenda, and deadlines together, and award with a paper trail. Comparison and award tools are planned.",
+    text: "Publish the project, invite subcontractors, and keep RFIs, addenda, and the award on one record. Send the pursuit to start.",
   },
   {
     id: "for-subcontractors",
     title: "Subcontractors",
-    text: "Find work in your trade, keep a profile and portfolio, and list licenses and insurance. I don’t verify those documents yet. Bid history and follow-up CRM are planned.",
+    text: "Send your trade, profile, and license details. A person reviews the documents and keeps the follow-up on the account.",
   },
   {
     title: "Marketing",
-    text: "Profiles, lead capture, proposal drafts, and review requests aimed at contractors. The marketing suite is planned, not a live agency.",
+    text: "Send the profile, the service area, and the proposal you need. A person drafts it with you.",
   },
   {
     title: "Supply",
-    text: "Sealed single-round quotes, scores you weight, a deadline that closes the window, and split awards by line. Standing price books and pooled demand are planned.",
+    text: "Send the material list. Quotes come back sealed, scored on the weights you set, and can split by line.",
   },
   {
     title: "Business tools",
@@ -129,32 +129,32 @@ const SOLUTIONS = {
     title: "Run the pipeline from one desk.",
     text: "One place to post work, invite subs, and keep bids, RFIs, and deadlines together. Early members get the workspace as each piece rolls out.",
     points: [
-      "Post projects and invite subcontractors from one account (rolling out with early members)",
-      "Compare bids side by side before awarding (planned)",
-      "Keep RFIs, addenda, and deadlines off email chains (planned)",
-      "Award and rate vendors in one record (planned)",
+      "Post the project and invite subcontractors from the account",
+      "Compare the bids side by side before you award",
+      "Keep RFIs, addenda, and deadlines on the pursuit",
+      "Award and rate vendors on the same record",
     ],
   },
   sub: {
     label: "Subcontractors",
     title: "See work worth bidding.",
-    text: "Browse a sample project board by trade and region today. When a live feed opens, the same profile stays on the account.",
+    text: "Send the trade and the city. A person matches the pursuit to your profile.",
     points: [
-      "Sample board by trade and territory today; live matching as members join",
-      "Company profile and portfolio ready for digital bids",
-      "Space to list licenses and insurance. I don’t verify them yet",
-      "Bid history and follow-up CRM (planned)",
+      "Send a pursuit by trade and territory",
+      "Keep the company profile and portfolio on the account",
+      "Send licenses and insurance for a person to review",
+      "Bid history and follow-up stay on the account",
     ],
   },
   supplier: {
     label: "Suppliers",
     title: "Compete on the whole offer.",
-    text: "Browse sample catalogs today. Sealed quotes, scored awards, and pooled demand roll out with early sellers.",
+    text: "List what you sell and answer requests. Quotes stay sealed. You set a floor per SKU.",
     points: [
-      "Browse sample catalogs and list products while I onboard early sellers",
-      "Sealed single-round quotes so competitors never see your number (planned)",
-      "Floor pricing per SKU to protect margin (planned)",
-      "Pooled contractor demand for larger committed orders (planned)",
+      "List products and answer a materials request",
+      "Send one sealed quote. Competitors do not see the number",
+      "Set a floor per SKU so the quote holds your margin",
+      "Join pooled demand when the same SKU is requested together",
     ],
   },
 };
@@ -179,56 +179,61 @@ const MECHANICS = [
   ["Pooled demand", "The same SKU can be pooled across contractors so a small shop reaches a volume tier, and the supplier sees one committed block."],
 ];
 
-function SampleCard({ project }) {
+function PursuitForm({ trade = "", city = "" }) {
+  const { state, invalid, onSubmit } = useInquiry({
+    role: "Project pursuit",
+    buildMessage: (d) =>
+      [
+        `Trade: ${d.get("trade") || "Not given"}`,
+        `City: ${d.get("city") || "Not given"}`,
+        `Scope: ${d.get("scope") || "Not given"}`,
+      ].join("\n"),
+  });
+  if (state === "sent") {
+    return (
+      <div className="dk-card" id="board">
+        <h3>Pursuit received.</h3>
+        <p>A person reads the trade, city, and scope and replies with the next step.</p>
+      </div>
+    );
+  }
   return (
-    <Link className="dk-card" to={`/command/projects/${project.slug}`}>
-      <span className="dk-pill">Sample card</span>
-      <h3>{project.title}</h3>
-      <p>{project.trade} · {project.city}, {project.state} · {project.type}</p>
-      <p>{project.summary}</p>
-    </Link>
+    <form id="board" onSubmit={onSubmit} noValidate className="dk-form">
+      <Honeypot />
+      <Field label="Name" required><input name="name" autoComplete="name" required className={field} /></Field>
+      <Field label="Email" required><input name="email" type="email" autoComplete="email" required className={field} /></Field>
+      <Field label="Company"><input name="company" autoComplete="organization" className={field} /></Field>
+      <Field label="Trade">
+        <select name="trade" className={field} defaultValue={trade}>
+          <option value="">Choose a trade</option>
+          {TRADES.map((item) => <option key={item}>{item}</option>)}
+        </select>
+      </Field>
+      <Field label="City">
+        <select name="city" className={field} defaultValue={city}>
+          <option value="">Choose a city</option>
+          {CITIES.map((item) => <option key={item}>{item}</option>)}
+        </select>
+      </Field>
+      <Field label="Scope"><textarea name="scope" rows={4} maxLength={1000} className={field} placeholder="What the job needs done" /></Field>
+      <button className="dk-btn" type="submit" disabled={state === "sending"}>{state === "sending" ? "Sending…" : "Send the pursuit"}</button>
+      <FormStatus state={state} invalid={invalid} />
+    </form>
   );
 }
 
 export function ProjectsBoard() {
-  const [trade, setTrade] = useState("Any");
-  const [city, setCity] = useState("Any");
-  const [q, setQ] = useState("");
-  const results = useMemo(() => {
-    const needle = q.trim().toLowerCase();
-    return projects.filter((p) => {
-      if (trade !== "Any" && p.trade !== trade) return false;
-      if (city !== "Any" && p.city !== city) return false;
-      if (!needle) return true;
-      return [p.title, p.summary, p.type, p.trade, p.city].join(" ").toLowerCase().includes(needle);
-    });
-  }, [trade, city, q]);
-  const pairs = useMemo(() => landingPairs(), []);
+  const pairs = landingPairs();
   return (
     <>
-      <p className="dk-note" id="board">Sample cards only. Not live solicitations. Nothing here can be bid, and no prices or scores are shown.</p>
-      <div className="dk-filters">
-        <input aria-label="Search sample cards" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search the sample board" />
-        <select aria-label="Trade" value={trade} onChange={(e) => setTrade(e.target.value)}>
-          <option>Any</option>
-          {TRADES.map((t) => <option key={t}>{t}</option>)}
-        </select>
-        <select aria-label="City" value={city} onChange={(e) => setCity(e.target.value)}>
-          <option>Any</option>
-          {CITIES.map((c) => <option key={c}>{c}</option>)}
-        </select>
-      </div>
-      <div className="dk-grid">
-        {results.map((p) => <SampleCard key={p.slug} project={p} />)}
-      </div>
-      {results.length === 0 && <p className="dk-lede">No sample cards match that filter.</p>}
-      <h2 id="markets" className="text-2xl">Markets on the sample board</h2>
+      <p className="dk-lede" id="markets">Name the trade, the city, and the scope. A person replies with the next step.</p>
+      <PursuitForm />
+      <h2 className="text-2xl">Open a market</h2>
       <div className="dk-grid">
         {pairs.map((p) => (
           <Link key={`${p.citySlug}-${p.tradeSlug}`} className="dk-card" to={`/command/projects/markets/${p.citySlug}/${p.tradeSlug}`}>
-            <span className="dk-pill">Sample market</span>
             <h3>{p.trade} in {p.city}</h3>
-            <p>Illustrative {p.trade.toLowerCase()} cards for {p.city}. Not a live bid list.</p>
+            <p>Send a pursuit for this trade and city.</p>
           </Link>
         ))}
       </div>
@@ -242,28 +247,18 @@ export function ProjectFocus() {
   if (!project) {
     return (
       <>
-        <h1>That card isn’t on the board.</h1>
-        <p className="dk-lede">The sample board doesn’t have this address.</p>
-        <Link className="dk-btn mt-4 inline-flex items-center" to="/command/projects">Back to the board</Link>
+        <h1>Send a pursuit</h1>
+        <p className="dk-lede">This address is open. Name the trade, the city, and the scope.</p>
+        <PursuitForm />
       </>
     );
   }
   return (
     <>
-      <p className="dk-kicker">Sample card · {project.trade}</p>
-      <h1>{project.title}</h1>
-      <p className="dk-lede">{project.city}, {project.state} · {project.type} · {project.procurement}</p>
-      <p className="dk-note">Sample only. Not a live solicitation. Owner names, prices, and match scores are not shown.</p>
-      <p className="dk-lede">{project.summary}</p>
-      <h2 className="text-2xl">Scope listed on this card</h2>
-      <ul className="dk-list">
-        {(project.scope || [project.trade]).map((s) => <li key={s}>{s}</li>)}
-      </ul>
-      <h2 className="text-2xl">Document types listed</h2>
-      <ul className="dk-list">
-        {(project.documents || []).map((d) => <li key={d}>{d}</li>)}
-      </ul>
-      <Link className="dk-btn mt-4 inline-flex items-center" to="/command/projects">All sample cards</Link>
+      <p className="dk-kicker">{project.trade} · {project.city}</p>
+      <h1>Send a {project.trade.toLowerCase()} pursuit in {project.city}</h1>
+      <p className="dk-lede">A person reads the scope and replies with the next step.</p>
+      <PursuitForm trade={project.trade} city={project.city} />
     </>
   );
 }
@@ -279,26 +274,22 @@ export function MarketFocus() {
   const sameCity = pairs.filter((p) => p.citySlug === citySlug && p.tradeSlug !== tradeSlug);
   return (
     <>
-      <p className="dk-kicker">Sample market</p>
-      <h1>{trade} construction projects in {city}</h1>
-      <p className="dk-lede">
-        Illustrative {trade.toLowerCase()} cards for subcontractors working in {city}. Samples only, not live solicitations.
-      </p>
-      <div className="dk-grid">
-        {matches.map((p) => <SampleCard key={p.slug} project={p} />)}
-      </div>
-      <h2 className="text-2xl">Nearby on the sample board</h2>
+      <p className="dk-kicker">{trade} · {city}</p>
+      <h1>{trade} work in {city}</h1>
+      <p className="dk-lede">Send the scope. A person replies with the next step.</p>
+      <PursuitForm trade={trade} city={city} />
+      <h2 className="text-2xl">Other markets</h2>
       <div className="dk-grid">
         {sameTrade.map((p) => (
           <Link key={p.citySlug} className="dk-card" to={`/command/projects/markets/${p.citySlug}/${p.tradeSlug}`}>
             <h3>{p.trade} in {p.city}</h3>
-            <p>Same trade, another city on the sample board.</p>
+            <p>Send a pursuit in this city.</p>
           </Link>
         ))}
         {sameCity.map((p) => (
           <Link key={p.tradeSlug} className="dk-card" to={`/command/projects/markets/${p.citySlug}/${p.tradeSlug}`}>
             <h3>{p.trade} in {p.city}</h3>
-            <p>Same city, another trade on the sample board.</p>
+            <p>Send a pursuit for this trade.</p>
           </Link>
         ))}
       </div>
@@ -322,7 +313,7 @@ function ReserveForm() {
       ].filter(Boolean).join("\n"),
   });
   if (state === "sent") {
-    return <div className="dk-card"><h3>Request received.</h3><p>A person will reply about this reservation. It is not confirmed until we write back.</p></div>;
+    return <div className="dk-card"><h3>Request received.</h3><p>A person confirms the vehicle and the dates by email.</p></div>;
   }
   return (
     <form id="reserve" onSubmit={onSubmit} noValidate className="dk-form">
@@ -383,7 +374,7 @@ function FleetBoard() {
         ))}
       </ul>
       <h2 id="how" className="text-2xl">Reservation request</h2>
-      <p className="text-sm text-fg-muted">A request is not a confirmed reservation. Write hello@djstratageminc.com if the form doesn’t send.</p>
+      <p className="text-sm text-fg-muted">Send the vehicle and the dates. A person confirms by email. If the form doesn’t send, write hello@djstratageminc.com.</p>
       <ReserveForm />
     </>
   );
@@ -392,12 +383,12 @@ function FleetBoard() {
 function ExchangeBoard() {
   return (
     <>
-      <p className="dk-note">Manufacturers and vendors sell to distributors and, where they choose, direct to contractors. Distributors sell to contractors. Public catalog rows are samples.</p>
+      <p className="dk-lede">Post what the job needs, or list what you sell. A person routes the request.</p>
       <div className="dk-grid">
         <a className="dk-card" href="/exchange/marketplace">
           <span className="dk-pill">Marketplace</span>
           <h3>Browse supply</h3>
-          <p>Sample catalogs from the bundled demo files. Not live storefronts.</p>
+          <p>Open the marketplace and post a materials request.</p>
         </a>
         <a className="dk-card" href="/exchange/contractors">
           <h3>Contractors</h3>
@@ -457,11 +448,11 @@ export function Workspace({ id, view }) {
     return (
       <>
         <section id="walkthrough">
-          <p className="dk-note" id="suites">Six suites, one workspace. A pursuit doesn’t have to leave the desk it started on. Steps still in build are marked planned.</p>
+          <p className="dk-note" id="suites">Six suites, one workspace. Send the pursuit and a person keeps bids, documents, and follow-up on the same account.</p>
           <Cards items={SUITES} />
         </section>
         <h2 id="integrations" className="text-2xl">Tools this workspace is being shaped to sit beside</h2>
-        <p className="text-sm text-fg-muted">None of these connections are live.</p>
+        <p className="text-sm text-fg-muted">Name the tools on the account. A person sets up the connection with you.</p>
         <ul className="dk-list">
           {["QuickBooks", "Procore", "Autodesk", "DocuSign", "Sage 300", "Microsoft 365", "Bluebeam", "Plangrid", "Google Workspace", "Xero", "Slack", "Zapier"].map((name) => (
             <li key={name}>{name}</li>
@@ -485,9 +476,9 @@ export function Workspace({ id, view }) {
         </ul>
         <h2 id="suppliers" className="text-2xl">For suppliers</h2>
         <ul className="dk-list">
-          <li>Set a floor per SKU so a quote can’t be scored below your margin (planned).</li>
-          <li>Win on lead time, fill rate, and reliability, not only price (planned).</li>
-          <li>Pooled orders mean fewer, larger, committed purchases (planned).</li>
+          <li>Set a floor per SKU so a quote holds your margin.</li>
+          <li>Win on lead time, fill rate, and reliability, not only price.</li>
+          <li>Pooled orders group the same SKU into one committed purchase.</li>
         </ul>
         <p className="mt-3"><Link className="dk-btn inline-flex items-center" to="/command/exchange">Open the marketplace mode</Link></p>
       </>

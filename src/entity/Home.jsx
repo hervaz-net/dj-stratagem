@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Seo from "../components/Seo";
-import { projects } from "../data/sampleProjects";
 import { CAPABILITIES, capabilityById } from "./capabilities";
 import "./home.css";
 
@@ -18,16 +17,10 @@ function useReducedMotion() {
 }
 
 function rowsFor(id) {
-  if (id === "projects") {
-    return projects.slice(0, 5).map((p) => ({
-      title: p.title,
-      meta: `${p.trade} · ${p.city}, ${p.state}`,
-      tag: "Sample",
-    }));
-  }
   const cap = capabilityById(id);
   const extras = {
-    exchange: ["Marketplace catalogs are samples", "Post a request", "Compare quotes", "Contractors, distributors, manufacturers"],
+    projects: ["Post a project", "Name the trade and city", "Describe the scope", "A person replies"],
+    exchange: ["Post a materials request", "List what you sell", "Compare quotes", "Contractors, distributors, manufacturers"],
     platform: ["General contractors", "Subcontractors", "Marketing", "Supply", "Business tools", "Drafts beside your judgment"],
     solutions: ["General contractors", "Subcontractors", "Suppliers"],
     supply: ["Sealed quotes, one round", "Scored, not just cheapest", "Standing price books", "Pooled demand"],
@@ -173,7 +166,7 @@ export default function Home() {
     <>
       <Seo
         title="DJ Stratagem"
-        description="One desk for construction: sample project cards, materials, and truck reservation requests. Crew staffing, capital, and studio work are still in development. Los Angeles."
+        description="One desk for construction in Los Angeles. Send a pursuit, a materials list, a vehicle request, a crew request, or a studio brief. A person replies."
       />
       <section className="hx" onPointerDown={() => setPaused(true)}>
         <div className="hx-inner">
@@ -202,7 +195,7 @@ export default function Home() {
             </figure>
           </div>
           <p className="hx-credit">
-            Jobsite photographs from <a href="https://unsplash.com/license">Unsplash</a>. The window shows module descriptions and sample card titles. No prices, clients, or live bids.
+            Jobsite photographs from <a href="https://unsplash.com/license">Unsplash</a>. The window is the workflow. Open a mode to send the request.
           </p>
         </div>
       </section>
