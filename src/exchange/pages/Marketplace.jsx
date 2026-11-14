@@ -31,6 +31,7 @@ const SORTS = {
   "price-asc": { label: "Price: low to high" },
   "price-desc": { label: "Price: high to low" },
   stock: { label: "In stock first" },
+  lead: { label: "Shortest lead time" },
 };
 
 const mechanics = [
@@ -90,6 +91,10 @@ export default function Marketplace() {
   const [seller, setSeller] = useState("all");
   const [inStockOnly, setInStockOnly] = useState(false);
   const [fulfillment, setFulfillment] = useState(null);
+  const [trade, setTrade] = useState("");
+  const [lead, setLead] = useState("");
+  const [trades, setTrades] = useState([]);
+  const [leadTimes, setLeadTimes] = useState([]);
   const [sort, setSort] = useState("relevance");
   const [page, setPage] = useState(1);
   const [results, setResults] = useState([]);
@@ -109,6 +114,9 @@ export default function Marketplace() {
       q: query,
       category: category || "",
       seller,
+      trade,
+      lead,
+      fulfillment: fulfillment || "",
       inStock: inStockOnly,
       sort,
       page,
@@ -116,12 +124,10 @@ export default function Marketplace() {
       signal: ctrl.signal,
     })
       .then((data) => {
-        let list = data.listings ?? [];
-        if (fulfillment) {
-          list = list.filter((l) => (l.fulfillment ?? []).includes(fulfillment));
-        }
-        setResults(list);
+        setResults(data.listings ?? []);
         setCategories(data.categories ?? []);
+        setTrades(data.trades ?? []);
+        setLeadTimes(data.leadTimes ?? []);
         setSellers(data.sellers ?? []);
         setTotal(data.total ?? 0);
         setTotalPages(data.totalPages ?? 1);
@@ -137,9 +143,9 @@ export default function Marketplace() {
         if (!ctrl.signal.aborted) setLoading(false);
       });
     return () => ctrl.abort();
-  }, [query, category, seller, inStockOnly, sort, page, fulfillment]);
+  }, [query, category, seller, inStockOnly, sort, page, fulfillment, trade, lead]);
 
-  const filtersActive = query || category || seller !== "all" || inStockOnly || fulfillment;
+  const filtersActive = query || category || seller !== "all" || inStockOnly || fulfillment || trade || lead;
   const resetFilters = () => {
     setQuery("");
     setDraftQuery("");
@@ -147,6 +153,8 @@ export default function Marketplace() {
     setSeller("all");
     setInStockOnly(false);
     setFulfillment(null);
+    setTrade("");
+    setLead("");
     setPage(1);
   };
 
@@ -237,7 +245,7 @@ export default function Marketplace() {
           <CategoryTile icon={<IconTruck />} title="Equipment rental" text="Machines and trucks by the day" to="/fleet" />
         </div>
 
-        <div className="mt-10 flex flex-col gap-4 border-b border-line pb-5 lg:flex-row lg:items-center lg:justify-between">
+        <div className="mt-10 flex flex-col gap-4 border-b border-line pb-5">
           <div className="flex flex-wrap gap-2" role="group" aria-label="Filter listings">
             <FilterChip
               active={seller === "all"}
@@ -289,6 +297,39 @@ export default function Marketplace() {
               Will-call
             </FilterChip>
           </div>
+          <div className="flex flex-wrap items-center gap-2" role="group" aria-label="Filter by trade and lead time">
+            <label htmlFor="market-trade" className="text-sm text-fg-muted">
+              Trade
+            </label>
+            <select
+              id="market-trade"
+              value={trade}
+              onChange={(e) => {
+                setTrade(e.target.value);
+                setPage(1);
+              }}
+              className="h-9 rounded-full border border-line bg-surface px-3 text-sm text-fg hover:border-line-strong"
+            >
+              <option value="">All trades</option>
+              {trades.map((t) => (
+                <option key={t.key} value={t.key}>
+                  {t.title}
+                </option>
+              ))}
+            </select>
+            {leadTimes.map((option) => (
+              <FilterChip
+                key={option.key}
+                active={lead === option.key}
+                onClick={() => {
+                  setLead(lead === option.key ? "" : option.key);
+                  setPage(1);
+                }}
+              >
+                {option.title}
+              </FilterChip>
+            ))}
+          </div>
           <div className="flex items-center gap-2">
             <label htmlFor="market-sort" className="text-sm text-fg-muted">
               Sort
@@ -320,6 +361,8 @@ export default function Marketplace() {
                 <span className="font-semibold text-fg tabular-nums">{total.toLocaleString()}</span> sample{" "}
                 {total === 1 ? "listing" : "listings"}
                 {categoryLabel && <> in {categoryLabel}</>}
+                {trade && <> · {trades.find((t) => t.key === trade)?.title}</>}
+                {lead && <> · {leadTimes.find((t) => t.key === lead)?.title}</>}
                 {totalPages > 1 && (
                   <>
                     {" "}

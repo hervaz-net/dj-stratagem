@@ -3,7 +3,8 @@
  * Public marketplace product browse.
  *
  * GET /api/products.php
- *   q, category, seller, inStock=1, sort=relevance|price-asc|price-desc|stock
+ *   q, category, seller, trade, lead=7|14|15, fulfillment=delivery|will-call,
+ *   inStock=1, sort=relevance|price-asc|price-desc|stock|lead
  *   page (1+), limit (1–48, default 24)
  *
  * Reads the bundled demo catalog at /data/catalog/products.sqlite.
@@ -61,8 +62,36 @@ if (!preg_match('/^[a-z0-9_-]{0,32}$/i', $seller)) {
 }
 $inStock = isset($_GET['inStock']) && ($_GET['inStock'] === '1' || $_GET['inStock'] === 'true');
 $sort = (string) ($_GET['sort'] ?? 'relevance');
-if (!in_array($sort, ['relevance', 'price-asc', 'price-desc', 'stock'], true)) {
+if (!in_array($sort, ['relevance', 'price-asc', 'price-desc', 'stock', 'lead'], true)) {
     $sort = 'relevance';
+}
+$lead = (string) ($_GET['lead'] ?? '');
+if (!in_array($lead, ['', '7', '14', '15'], true)) {
+    $lead = '';
+}
+$fulfillment = (string) ($_GET['fulfillment'] ?? '');
+if (!in_array($fulfillment, ['', 'delivery', 'will-call'], true)) {
+    $fulfillment = '';
+}
+// Trades are groups of the category names already in the demo catalog.
+$tradePatterns = [
+    'electrical' => ['Electrical', ['%electr%', '%lighting%']],
+    'fasteners' => ['Fasteners', ['%fasten%']],
+    'steel' => ['Steel and framing', ['%steel%', '%framing%']],
+    'openings' => ['Doors and windows', ['%door%', '%window%']],
+    'safety' => ['Safety', ['%safety%']],
+    'paint' => ['Paint', ['%paint%']],
+    'drywall' => ['Drywall', ['%drywall%']],
+    'insulation' => ['Insulation', ['%insul%']],
+    'flooring' => ['Flooring', ['%floor%']],
+    'roofing' => ['Roofing', ['%roof%']],
+    'masonry' => ['Concrete and masonry', ['%concrete%', '%masonry%', '%cement%']],
+    'lumber' => ['Lumber', ['%lumber%', '%plywood%']],
+    'tools' => ['Tools', ['%tool%']],
+];
+$trade = (string) ($_GET['trade'] ?? '');
+if (!isset($tradePatterns[$trade])) {
+    $trade = '';
 }
 $page = max(1, (int) ($_GET['page'] ?? 1));
 $limit = (int) ($_GET['limit'] ?? 24);
@@ -87,6 +116,28 @@ if ($seller !== '') {
 }
 if ($inStock) {
     $where[] = 'p.stock > 0';
+}
+if ($lead === '7') {
+    $where[] = 'p.lead_time_days <= 7';
+} elseif ($lead === '14') {
+    $where[] = 'p.lead_time_days <= 14';
+} elseif ($lead === '15') {
+    $where[] = 'p.lead_time_days >= 15';
+}
+if ($trade !== '') {
+    $likes = [];
+    foreach ($tradePatterns[$trade][1] as $i => $pattern) {
+        $key = ':trade' . $i;
+        $likes[] = 'lower(p.category) LIKE ' . $key;
+        $params[$key] = $pattern;
+    }
+    $where[] = '(' . implode(' OR ', $likes) . ')';
+}
+// The demo catalog has no fulfillment column. Every sample row is labeled
+// for both delivery and will-call, so either choice keeps that labeling
+// instead of inventing a split the spreadsheet does not have.
+if ($fulfillment === 'delivery' || $fulfillment === 'will-call') {
+    $where[] = '1=1';
 }
 
 $join = '';
@@ -116,6 +167,7 @@ $order = match ($sort) {
     'price-asc' => 'p.price ASC, p.name ASC',
     'price-desc' => 'p.price DESC, p.name ASC',
     'stock' => 'p.stock DESC, p.price ASC',
+    'lead' => 'p.lead_time_days ASC, p.name ASC',
     default => $useFts ? 'bm25(products_fts) ASC, p.name ASC' : 'p.name ASC',
 };
 
@@ -217,6 +269,31 @@ foreach ($sellersMeta['sellers'] ?? [] as $s) {
     ];
 }
 
+$tradeSelect = [];
+foreach ($tradePatterns as $key => [$label, $patterns]) {
+    $parts = [];
+    foreach ($patterns as $pattern) {
+        $parts[] = 'lower(category) LIKE ' . $pdo->quote($pattern);
+    }
+    $tradeSelect[] = 'SUM(CASE WHEN ' . implode(' OR ', $parts) . ' THEN 1 ELSE 0 END) AS ' . $key;
+}
+$tradeRow = $pdo->query('SELECT ' . implode(', ', $tradeSelect) . ' FROM products')->fetch() ?: [];
+$trades = [];
+foreach ($tradePatterns as $key => [$label, $_patterns]) {
+    $count = (int) ($tradeRow[$key] ?? 0);
+    if ($count < 1) {
+        continue;
+    }
+    $trades[] = ['key' => $key, 'title' => $label, 'count' => $count];
+}
+$leadCounts = $pdo->query(
+    'SELECT
+        SUM(CASE WHEN lead_time_days <= 7 THEN 1 ELSE 0 END) AS d7,
+        SUM(CASE WHEN lead_time_days <= 14 THEN 1 ELSE 0 END) AS d14,
+        SUM(CASE WHEN lead_time_days >= 15 THEN 1 ELSE 0 END) AS d15
+       FROM products'
+)->fetch() ?: [];
+
 echo json_encode([
     'ok' => true,
     'live' => true,
@@ -229,4 +306,10 @@ echo json_encode([
     'listings' => $listings,
     'categories' => $categories,
     'sellers' => $sellers,
+    'trades' => $trades,
+    'leadTimes' => [
+        ['key' => '7', 'title' => '7 days or less', 'count' => (int) ($leadCounts['d7'] ?? 0)],
+        ['key' => '14', 'title' => '14 days or less', 'count' => (int) ($leadCounts['d14'] ?? 0)],
+        ['key' => '15', 'title' => 'Over 2 weeks', 'count' => (int) ($leadCounts['d15'] ?? 0)],
+    ],
 ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
