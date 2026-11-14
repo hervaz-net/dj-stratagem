@@ -113,51 +113,57 @@ export default function FieldHome() {
 
       <main id="content" tabIndex={-1}>
         <section className="f-hero" id="start" aria-labelledby="field-h1">
-          <div className="f-wrap f-hero-grid">
-            <div className="f-hero-copy">
-              <SiteLink className="f-kicker" to={HOME.fleet.href}>
-                <b>{HOME.fleet.flag}</b>
-                {HOME.fleet.label}
-              </SiteLink>
-              <h1 id="field-h1">
-                {HOME.headline[0]}<br />{HOME.headline[1]}
-              </h1>
-              <p className="f-lede">{HOME.lede}</p>
-              <div className="f-seg" role="radiogroup" aria-label="Show the workspace for" onKeyDown={onRoleKey}>
-                <span className="f-seg-thumb" style={{ "--i": roleIndex }} aria-hidden="true" />
-                {HOME.audiences.map((item, index) => (
-                  <button
-                    key={item.id}
-                    type="button"
-                    role="radio"
-                    aria-checked={item.id === role}
-                    tabIndex={item.id === role ? 0 : -1}
-                    ref={(node) => { roleRefs.current[index] = node; }}
-                    onClick={() => setRole(item.id)}
-                  >
-                    {item.id === "gc" ? "Contractors" : item.id === "sub" ? "Subcontractors" : "Suppliers"}
-                  </button>
-                ))}
+          <div className="f-wrap f-hero-copy">
+            <SiteLink className="f-kicker" to={HOME.fleet.href}>
+              <b>{HOME.fleet.flag}</b>
+              {HOME.fleet.label}
+            </SiteLink>
+            <h1 id="field-h1">
+              {HOME.headline[0]}<br />{HOME.headline[1]}
+            </h1>
+            <div className="f-hero-split">
+              <div>
+                <p className="f-lede">{HOME.lede}</p>
+                <div className="f-actions">
+                  <SiteLink className="f-btn f-btn-teal" to={HOME.primary.href}>{HOME.primary.label} <Arrow /></SiteLink>
+                  <SiteLink className="f-btn f-btn-line" to={HOME.secondary.href}>{HOME.secondary.label}</SiteLink>
+                </div>
+                <ul className="f-assure">
+                  {HOME.assurances.map((item) => (
+                    <li key={item}>
+                      <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+                        <path d="M3 8.2 6.4 11.5 13 4.8" fill="none" stroke="currentColor" strokeWidth="1.8" />
+                      </svg>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <p className="f-roleline" aria-live="polite">
-                {audience.title}{" "}
-                <SiteLink to={audience.href}>{audience.cta}</SiteLink>
-              </p>
-              <div className="f-actions">
-                <SiteLink className="f-btn f-btn-teal" to={HOME.primary.href}>{HOME.primary.label} <Arrow /></SiteLink>
-                <SiteLink className="f-btn f-btn-line" to={HOME.secondary.href}>{HOME.secondary.label}</SiteLink>
+              <div>
+                <div className="f-seg" role="radiogroup" aria-label="Show the workspace for" onKeyDown={onRoleKey}>
+                  {HOME.audiences.map((item, index) => (
+                    <button
+                      key={item.id}
+                      type="button"
+                      role="radio"
+                      aria-checked={item.id === role}
+                      tabIndex={item.id === role ? 0 : -1}
+                      ref={(node) => { roleRefs.current[index] = node; }}
+                      onClick={() => setRole(item.id)}
+                    >
+                      {item.id === "gc" ? "Contractors" : item.id === "sub" ? "Subcontractors" : "Suppliers"}
+                    </button>
+                  ))}
+                </div>
+                <p className="f-roleline" aria-live="polite">
+                  {audience.title}{" "}
+                  <SiteLink to={audience.href}>{audience.cta}</SiteLink>
+                </p>
               </div>
-              <ul className="f-assure">
-                {HOME.assurances.map((item) => (
-                  <li key={item}>
-                    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
-                      <path d="M3 8.2 6.4 11.5 13 4.8" fill="none" stroke="currentColor" strokeWidth="1.8" />
-                    </svg>
-                    {item}
-                  </li>
-                ))}
-              </ul>
             </div>
+          </div>
+          <div className="f-stage">
+            <div className="f-wrap">
             <figure className="f-frame-rise" aria-label="Dashboard">
               <div className="f-frame">
                 <div className="f-frame-bar">
@@ -228,6 +234,7 @@ export default function FieldHome() {
                 </div>
               </div>
             </figure>
+            </div>
           </div>
         </section>
 
