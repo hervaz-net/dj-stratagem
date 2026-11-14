@@ -73,7 +73,7 @@ export default function CorporateHome() {
               <h1 id="co-h1" style={{ margin: "12px 0 0", fontFamily: "'Inter Tight', 'Inter', sans-serif", fontSize: "clamp(42px, 5.8vw, 80px)", lineHeight: "1.02", fontWeight: "700", letterSpacing: "-0.035em" }}>
                 The construction business,
                 <br />
-                <span style={{ color: "#B8893B" }}>
+                <span style={{ color: "#B28335" }}>
                   run from one place.
                 </span>
               </h1>
@@ -1168,7 +1168,7 @@ export default function CorporateHome() {
               <span style={{ fontWeight: "700" }}>
                 Support
               </span>
-              <Link to="/help" className="lk">
+              <Link to="/resources" className="lk">
                 Help center
               </Link>
               <a className="lk" href="mailto:support@djstratageminc.com">

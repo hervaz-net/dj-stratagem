@@ -3,7 +3,7 @@ import { CONTACT_EMAIL } from "./brands";
 import { localDateISO } from "../lib/dates";
 
 /** Per-page title and description, suffixed with the company name only. */
-export function useSeo(brand, { title, description, path }) {
+export function useSeo(brand, { title, description, path, noindex = false }) {
   useEffect(() => {
     document.title = title ? `${title} | ${brand.name}` : brand.name;
     const set = (sel, attr, key, value) => {
@@ -31,7 +31,13 @@ export function useSeo(brand, { title, description, path }) {
       document.head.appendChild(canonical);
     }
     canonical.setAttribute("href", url);
-  }, [brand, title, description, path]);
+    const robots = document.head.querySelector('meta[name="robots"]');
+    if (noindex) {
+      set('meta[name="robots"]', "name", "robots", "noindex, nofollow");
+    } else if (robots) {
+      robots.remove();
+    }
+  }, [brand, title, description, path, noindex]);
 }
 
 export const fieldClass =

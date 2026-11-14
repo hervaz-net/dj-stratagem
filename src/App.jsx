@@ -126,6 +126,19 @@ function DashboardShell({ children }) {
   );
 }
 
+/** Leave this app for a URL the server (or another bundle) owns. */
+function FullLoad({ to }) {
+  const { search, hash } = useLocation();
+  useEffect(() => {
+    window.location.replace(`${to}${search}${hash}`);
+  }, [to, search, hash]);
+  return (
+    <p className="px-6 py-24 text-center text-sm text-fg-muted" role="status">
+      Opening this page…
+    </p>
+  );
+}
+
 /** Full page load into a company site, which runs its own app and styles. */
 function ToCompanySite() {
   const { pathname, search, hash } = useLocation();
@@ -210,6 +223,82 @@ function App() {
           <Route path="/marketing/fleet-cards" element={<MarketingLayout><FleetCards /></MarketingLayout>} />
           <Route path="/marketing/receipts" element={<MarketingLayout><Receipts /></MarketingLayout>} />
           <Route path="/marketing/signage" element={<MarketingLayout><Signage /></MarketingLayout>} />
+          {/* Same aliases as public/.htaccess, so an in-app link doesn't 404 while a full load redirects. */}
+          {[
+            ["/signin", "/login"],
+            ["/sign-in", "/login"],
+            ["/log-in", "/login"],
+            ["/account", "/login"],
+            ["/sign-up", "/register"],
+            ["/trial", "/register"],
+            ["/start", "/register"],
+            ["/get-started", "/register"],
+            ["/join", "/register"],
+            ["/forgot", "/forgot-password"],
+            ["/reset", "/forgot-password"],
+            ["/password", "/forgot-password"],
+            ["/about-us", "/about"],
+            ["/company", "/about"],
+            ["/team", "/about"],
+            ["/status", "/about"],
+            ["/security", "/about"],
+            ["/investors", "/about"],
+            ["/accessibility", "/about"],
+            ["/a11y", "/about"],
+            ["/contact-us", "/contact"],
+            ["/demo", "/contact"],
+            ["/book", "/contact"],
+            ["/book-demo", "/contact"],
+            ["/request-demo", "/contact"],
+            ["/careers", "/contact"],
+            ["/jobs", "/contact"],
+            ["/help", "/resources"],
+            ["/support", "/resources"],
+            ["/faq", "/resources"],
+            ["/faqs", "/resources"],
+            ["/resource", "/resources"],
+            ["/privacy-policy", "/privacy"],
+            ["/cookies", "/privacy"],
+            ["/cookie", "/privacy"],
+            ["/cookie-policy", "/privacy"],
+            ["/gdpr", "/privacy"],
+            ["/unsubscribe", "/privacy"],
+            ["/terms-of-service", "/terms"],
+            ["/tos", "/terms"],
+            ["/legal", "/terms"],
+            ["/eula", "/terms"],
+            ["/brand-guidelines", "/brand"],
+            ["/blog", "/changelog"],
+            ["/docs", "/changelog"],
+            ["/news", "/changelog"],
+            ["/press", "/changelog"],
+            ["/features", "/platform"],
+            ["/product", "/platform"],
+            ["/services", "/platform"],
+            ["/how-it-works", "/platform"],
+            ["/howitworks", "/platform"],
+            ["/home", "/"],
+            ["/partners", "/solutions"],
+            ["/project", "/projects"],
+            ["/bid", "/projects"],
+            ["/profile", "/dashboard/settings"],
+            ["/settings", "/dashboard/settings"],
+          ].map(([from, to]) => (
+            <Route key={from} path={from} element={<Navigate to={to} replace />} />
+          ))}
+          <Route path="/blog/*" element={<Navigate to="/changelog" replace />} />
+          {[
+            ["/marketplace", "/exchange/marketplace"],
+            ["/contractors", "/exchange/contractors"],
+            ["/distributors", "/exchange/distributors"],
+            ["/suppliers", "/exchange/suppliers"],
+            ["/shop", "/exchange/marketplace"],
+            ["/catalog", "/exchange/marketplace"],
+            ["/supplier", "/exchange/suppliers"],
+            ["/equipment", "/fleet"],
+          ].map(([from, to]) => (
+            <Route key={from} path={from} element={<FullLoad to={to} />} />
+          ))}
           <Route path="*" element={<MarketingLayout><NotFound /></MarketingLayout>} />
         </Routes>
       </ToastProvider>

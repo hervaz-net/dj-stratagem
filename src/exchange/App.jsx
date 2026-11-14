@@ -82,6 +82,19 @@ const SkipLink = () => (
 
 const OWN_SHELL_ROUTES = ["/login", "/register", "/forgot-password", "/verify-email"];
 
+/** Password emails use the parent /reset-password page. Stay on Exchange and the token is dropped. */
+function ToParentReset() {
+  const { search, hash } = useLocation();
+  useEffect(() => {
+    window.location.replace(`/reset-password${search}${hash}`);
+  }, [search, hash]);
+  return (
+    <p className="px-6 py-24 text-center text-sm text-fg-muted" role="status">
+      Opening password reset…
+    </p>
+  );
+}
+
 /** Public marketing pages: site navbar, footer, back-to-top, cookie banner, floating CTA. */
 function MarketingLayout({ children }) {
   const { pathname } = useLocation();
@@ -242,7 +255,7 @@ function App() {
           <Route path="/admin" element={<Navigate to="/dashboard/admin" replace />} />
           <Route path="/forgot-password" element={<MarketingLayout><ForgotPassword /></MarketingLayout>} />
           <Route path="/forgot" element={<Navigate to="/forgot-password" replace />} />
-          <Route path="/reset-password" element={<Navigate to="/forgot-password" replace />} />
+          <Route path="/reset-password" element={<ToParentReset />} />
           <Route path="/reset" element={<Navigate to="/forgot-password" replace />} />
           <Route path="/password" element={<Navigate to="/forgot-password" replace />} />
           <Route path="/verify-email" element={<MarketingLayout><VerifyEmail /></MarketingLayout>} />
