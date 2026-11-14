@@ -142,7 +142,7 @@ const SOLUTIONS = {
     points: [
       "Send a pursuit by trade and territory",
       "Keep the company profile and portfolio on the account",
-      "Send licenses and insurance for a person to review",
+      "List licenses and insurance in the request, and email copies to hello@djstratageminc.com",
       "Bid history and follow-up stay on the account",
     ],
   },

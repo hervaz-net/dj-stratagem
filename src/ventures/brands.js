@@ -97,7 +97,7 @@ export const BRANDS = {
       "Winning the bid is half the job. Staffing it is the other half. Send the trade, the dates, and the site. A person matches the request.",
     offerings: [
       { icon: "users", title: "Crews on demand", text: "Request journeymen, apprentices, and foremen by trade, date, and site." },
-      { icon: "shield", title: "Credentials up front", text: "Send licenses, OSHA cards, and certifications with the request. A person reviews them." },
+      { icon: "shield", title: "Credentials up front", text: "List the licenses, OSHA cards, and certifications in the request, and email copies to hello@djstratageminc.com. A person reviews them." },
       { icon: "clipboard", title: "Payroll paperwork", text: "Include prevailing wage or certified payroll on public work and a person handles the paperwork with you." },
     ],
     audience: [
