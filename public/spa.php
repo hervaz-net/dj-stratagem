@@ -178,6 +178,35 @@ function meta_for(string $path, array $projects, string $parent, string $exchang
     if (str_starts_with($path, '/dashboard')) {
         return page('Dashboard', 'Your D&J Stratagem dashboard.', $parent, true);
     }
+    if ($path === '/services') {
+        return page('Services', 'DJ Stratagem is one desk: projects, exchange, platform, solutions, supply, capital, workforce, fleet, and studio. Some modes are open. Others are still in development.', $parent);
+    }
+    $modes = [
+        'projects' => page('Projects', 'Sample construction cards by trade and city across Southern California. They are not live solicitations, and they cannot be bid.', $parent),
+        'exchange' => page('Exchange', 'Exchange connects manufacturers, distributors, and contractors. Public catalogs are samples while early members come on.', $parent),
+        'platform' => page('Platform', 'Six suites in one workspace: bidding, subcontractor tools, marketing, supply, business tools, and drafts. Steps still in build are marked planned.', $parent),
+        'solutions' => page('Solutions', 'The same desk, shaped for general contractors, subcontractors, and suppliers. Steps that are still planned are marked that way.', $parent),
+        'supply' => page('Supply', 'Materials sourced with sealed, scored quotes. That bidding model is described here and is not awarding orders today.', $parent),
+        'capital' => page('Capital', 'Working capital shaped around how construction gets paid. In development. No credit, loans, or bonds are offered today.', $parent),
+        'workforce' => page('Workforce', 'Crews matched to awarded work. In development. Crew staffing is not available today.', $parent),
+        'fleet' => page('Fleet', 'Pickups, vans, and SUVs planned for a job in Southern California. Reservation requests are open. A request is not a confirmed booking.', $parent),
+        'studio' => page('Studio', 'Brand, websites, and bid documents for construction companies. In development. Not taking creative work yet.', $parent),
+    ];
+    if ($path === '/command' || $path === '/command/projects') {
+        return $modes['projects'];
+    }
+    if (preg_match('#^/command/(projects|exchange|platform|solutions|supply|capital|workforce|fleet|studio)$#', $path, $m)) {
+        return $modes[$m[1]];
+    }
+    if (preg_match('#^/command/projects/([a-z0-9-]+)$#', $path, $m) && isset($projects[$m[1]])) {
+        [$name, $where] = $projects[$m[1]];
+        return page($name . ' — ' . $where, 'Sample card: ' . $name . ' in ' . $where . '. Not a live solicitation.', $parent);
+    }
+    if (preg_match('#^/command/projects/markets/([a-z0-9-]+)/([a-z0-9-]+)$#', $path, $m)) {
+        $city = ucwords(str_replace('-', ' ', $m[1]));
+        $trade = trade_label($m[2]);
+        return page($trade . ' Construction Projects in ' . $city, 'Illustrative ' . strtolower($trade) . ' project cards in ' . $city . ', CA. Samples only — not live solicitations.', $parent);
+    }
     if (str_starts_with($path, '/exchange')) {
         return page('Page not found', "The page you're looking for has moved or no longer exists.", $exchange, true, 404);
     }

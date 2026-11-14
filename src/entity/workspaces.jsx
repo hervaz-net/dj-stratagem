@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, Navigate, useLocation, useParams } from "react-router-dom";
 import { BRANDS } from "../ventures/brands";
 import { Field, FormStatus, Honeypot, useInquiry } from "../ventures/parts";
-import { credentials, lineup, modelLabel, operator } from "../data/fleet";
+import { vehicleCredentials, lineup, modelLabel, operator } from "../data/fleet";
 import { projects, projectsFor, landingPairs, findProject, TRADES, CITIES } from "../data/sampleProjects";
 import { localDateISO } from "../lib/dates";
 
@@ -13,7 +13,7 @@ function Cards({ items }) {
   return (
     <div className="dk-grid">
       {items.map((item) => (
-        <article key={item.title} className="dk-card">
+        <article key={item.title} id={item.id} className="dk-card">
           {item.kicker && <span className="dk-pill">{item.kicker}</span>}
           <h3>{item.title}</h3>
           <p>{item.text}</p>
@@ -96,10 +96,12 @@ function Developing({ id }) {
 
 const SUITES = [
   {
+    id: "for-general-contractors",
     title: "General contractors",
     text: "Publish projects, keep RFIs, addenda, and deadlines together, and award with a paper trail. Comparison and award tools are planned.",
   },
   {
+    id: "for-subcontractors",
     title: "Subcontractors",
     text: "Find work in your trade, keep a profile and portfolio, and list licenses and insurance. I don’t verify those documents yet. Bid history and follow-up CRM are planned.",
   },
@@ -373,7 +375,7 @@ function FleetBoard() {
       ))}
       <h2 id="credentials" className="text-2xl">Credentials on file</h2>
       <ul className="dk-list">
-        {credentials.map((c) => (
+        {vehicleCredentials.map((c) => (
           <li key={c.key}>
             <strong>{c.label}.</strong> {c.value || c.optional || "Pending"}
             <p className="mt-1 text-sm text-fg-muted">{c.vehicleNote || c.note}</p>
@@ -454,8 +456,10 @@ export function Workspace({ id, view }) {
   if (id === "platform") {
     return (
       <>
-        <p className="dk-note" id="suites">Six suites, one workspace. A pursuit doesn’t have to leave the desk it started on. Steps still in build are marked planned.</p>
-        <Cards items={SUITES} />
+        <section id="walkthrough">
+          <p className="dk-note" id="suites">Six suites, one workspace. A pursuit doesn’t have to leave the desk it started on. Steps still in build are marked planned.</p>
+          <Cards items={SUITES} />
+        </section>
         <h2 id="integrations" className="text-2xl">Tools this workspace is being shaped to sit beside</h2>
         <p className="text-sm text-fg-muted">None of these connections are live.</p>
         <ul className="dk-list">
