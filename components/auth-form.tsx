@@ -32,6 +32,28 @@ async function getCsrfToken() {
   return result.csrf;
 }
 
+function authErrorMessage(result: ApiResult | null) {
+  if (result?.message) {
+    return result.message;
+  }
+  if (result?.error === "server_not_configured") {
+    return API_UNAVAILABLE;
+  }
+  if (result?.error === "validation_failed") {
+    const fieldErrors = Object.values(result.fields ?? {}).filter(
+      (message): message is string =>
+        typeof message === "string" && message.trim() !== "",
+    );
+    return fieldErrors.length > 0
+      ? `Please check your details: ${fieldErrors.join(" ")}`
+      : "Please check the information you entered and try again.";
+  }
+  if (result?.error === "server_error") {
+    return "We couldn’t complete your request just now. Please try again shortly, or contact our team.";
+  }
+  return "Something went wrong. Please try again.";
+}
+
 async function postAuth(path: string, payload: Record<string, string>) {
   const csrf = await getCsrfToken();
   const response = await fetch(`${AUTH_API_BASE}/${path}`, {
@@ -46,12 +68,7 @@ async function postAuth(path: string, payload: Record<string, string>) {
   });
   const result = (await response.json().catch(() => null)) as ApiResult | null;
   if (!response.ok || !result?.ok) {
-    throw new Error(
-      result?.message ||
-        (result?.error === "server_not_configured"
-          ? API_UNAVAILABLE
-          : "Something went wrong. Please try again."),
-    );
+    throw new Error(authErrorMessage(result));
   }
   return result;
 }
@@ -194,7 +211,14 @@ export function AuthForm({ mode }: AuthFormProps) {
         {mode === "join" && (
           <label className="field">
             <span>Phone <small>Optional</small></span>
-            <input autoComplete="tel" maxLength={40} name="phone" type="tel" />
+            <input
+              autoComplete="tel"
+              maxLength={40}
+              name="phone"
+              pattern="[0-9()+. -]{7,40}"
+              title="Use 7 to 40 digits, spaces, or standard phone punctuation."
+              type="tel"
+            />
           </label>
         )}
         {(mode === "join" || mode === "login" || mode === "reset") && (
