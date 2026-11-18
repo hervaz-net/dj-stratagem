@@ -1,44 +1,42 @@
-# D&J Stratagem, Inc. — marketing site
+# D&J Stratagem, Inc. — construction platform
 
-Marketing site for D&J Stratagem: **the operating system for construction growth**.
-Helps contractors win more work, market their business, source materials, and manage the
-entire bidding pipeline from opportunity to award.
+The public website for D&J Stratagem, a Los Angeles-based construction platform:
+**Find the work. Price it. Build it.** One account connects contractors,
+subcontractors, and suppliers across the job lifecycle.
 
-Tagline: **Win More Projects. Build Bigger Business.**
-
-Built with React, Vite, React Router, and Tailwind CSS v4. Live at
-[djstratageminc.com](https://djstratageminc.com).
+Built with Next.js 15 App Router, TypeScript, Tailwind CSS v4, Framer Motion,
+and Lucide React. Live at [djstratageminc.com](https://djstratageminc.com).
 
 ## Pages
 
 | Route | Purpose |
 | --- | --- |
-| `/` | Positioning, the six platform pillars, competitive framing |
-| `/platform` | Deep dive on all six suites |
-| `/solutions` | Tabbed by audience: general contractors, subcontractors, suppliers |
-| `/supply` | Supply Exchange — B2B materials sourcing and its bidding model |
-| `/pricing` | Starter / Professional / Growth / Enterprise, plus add-ons |
-| `/about` | Mission and positioning vs. PlanHub, Dodge, BuildingConnected, ConstructConnect |
-| `/contact` | Demo request form (see below) |
-| `/login` | Sign-in portal (placeholder auth — see below). `noindex` |
-| `*` | 404 page |
+| `/` | One account, nine modes, and the full job lifecycle |
+| `/projects`, `/exchange`, `/platform`, `/solutions`, `/supply`, `/capital`, `/workforce`, `/fleet`, `/studio` | Product pages for all nine modes |
+| `/pricing` | Starter, Professional, Growth, and Enterprise access |
+| `/about` | Company, principles, and Los Angeles roots |
+| `/resources`, `/resources/blog`, `/resources/changelog`, `/resources/guides` | Field notes, product updates, and guides |
+| `/contact` | Person-to-person inquiry form |
+| `/join`, `/login`, `/forgot-password`, `/reset-password` | Account request and sign-in flows (`noindex`) |
+| `/dashboard` | Separate app-area entry point for the future workspace |
 
-Each route sets its own `<title>`, description, canonical URL, and Open Graph tags
-via the `Seo` component; `index.html` only supplies the defaults.
+Page metadata and canonicals are defined in the App Router. The homepage emits
+Organization structured data; `src/app/opengraph-image.tsx` generates a branded
+social preview. `public/sitemap.xml` and `public/robots.txt` remain the public SEO
+entry points.
 
-### The six platform suites
+### Nine modes. One desk.
 
-1. **For general contractors** — post projects, invite subs, compare bids, manage RFIs and
-   addenda, track deadlines, award contracts, rate vendor performance.
-2. **For subcontractors** — trade-matched projects, digital bids, profile and portfolio,
-   license/insurance verification, bid analytics, follow-up CRM.
-3. **Marketing suite** — SEO profiles, lead gen, AI proposals, email/SMS campaigns, Google
-   Business Profile, reviews and reputation, social content.
-4. **Supply Exchange** — sourcing for always-in-demand materials (see below).
-5. **Business tools** — CRM, estimating, invoicing, change orders, document management,
-   e-signatures, team collaboration, mobile app with field notifications.
-6. **AI features** — project matching, bid competitiveness prediction, proposal drafts,
-   plan/spec analysis, missing-document detection, pipeline forecasting.
+The mode content and job stages are maintained in `lib/site-data.ts`; the
+dynamic mode route at `src/app/(marketing)/[slug]/page.tsx` generates the nine
+product pages. Shared layout and navigation live in the marketing route group.
+Authentication and the future dashboard use separate route groups so app
+chrome can evolve independently of the public site.
+
+Projects and Exchange help find work. Platform and Solutions support pursuit.
+Supply, Capital, Workforce, and Fleet help build the job. Studio turns finished
+work into the next customer conversation. AI subagents can prepare work across
+the pipeline, but a person approves before anything runs.
 
 ## Supply Exchange: the bidding model
 
@@ -73,45 +71,15 @@ and performance ratings that compound into better future matching.
 
 ## Design system
 
-Colors are semantic tokens, not literal names — `ink` is the recessed surface,
-`ink-2` the raised card surface, `paper` the text color, `steel` muted text
-(chroma-free, so it never reads as a link), `line` borders, and `amber` the
-accent text. Each Tailwind token in `src/index.css` is declared inside
-`@theme inline` and resolves through a second variable (`--surface`, `--text`,
-`--accent`, …), so `[data-theme="dark"]` swaps the whole palette without
-touching a single component.
+The global tokens and responsive system live in `src/app/globals.css`. Colors
+use OKLCH custom properties; the site defaults to a dark construction-tech
+palette with a refined orange accent and supports system appearance plus a
+manual theme cycle. Typography uses local Bricolage Grotesque and JetBrains
+Mono variable fonts. Shared button primitives are in `components/ui`.
 
-Chromatic tokens have one job each: `amber` is contrast-tuned electric-blue
-text and selected chrome; `brand` is the `#001cf7` identity fill; `cta` is
-coral primary buttons (white-on-cta ≥ 4.5:1); `warning` is watch/caution
-gold; `danger` and `success` are status. CTA is never the same hex as danger.
-
-The theme follows the OS by default and remembers an explicit choice in
-`localStorage` under `djs-theme`. A small inline script in `index.html` applies
-it before first paint so dark-theme visitors never see a white flash.
-
-Motion is opt-in via the `lift` class and the `Reveal` component rather than
-blanket `transition: all` rules, and everything collapses under
-`prefers-reduced-motion: reduce`.
-
-## Marketplace product catalogs
-
-Exchange Marketplace browse is backed by bundled demo catalogs in
-`public/data/catalog/` (SQLite + gzipped JSONL), served by
-`GET /api/products.php`. Responses are always `sample: true` with generic
-demo seller names — not live storefronts (see `PROOF.md`).
-
-Rebuild from supplier spreadsheets:
-
-```bash
-pip install openpyxl
-python3 scripts/import-catalog-xlsx.py --from-dir /path/to/xlsx
-# Optional: fill missing GI/MyFBM photos from product-page og:image
-python3 scripts/enrich-catalog-images.py --sources gi,myfbm
-```
-
-Listing cards use `image` (card) and `imageHd` (2000px / largest available) from
-`/api/products.php`.
+Framer Motion is limited to viewport reveals and honors
+`prefers-reduced-motion`. Construction photography is stored locally under
+`public/media` and rendered through `next/image` for responsive optimization.
 
 ## Development
 
@@ -120,95 +88,44 @@ npm install
 npm run dev
 ```
 
-Lint with `npm run lint` (oxlint).
+Lint with `npm run lint` (oxlint) and check types with `npm run typecheck`.
+
+The optional API base URLs are documented in `.env.example`. The contact and
+account forms use the existing PHP handlers; local Next.js development does not
+execute PHP.
 
 ## Build
 
 ```bash
 npm run build
+npm run start
 ```
 
-Outputs to `dist/`. That folder is a complete static site: HTML/CSS/JS plus three files copied
-straight from `public/`:
-
-- **`.htaccess`** — Apache/LiteSpeed rewrite rules so client-side routes load correctly on
-  direct visit or refresh, plus long cache lifetimes for hashed assets.
-- **`contact.php`** — server-side handler for the contact form.
-- **`robots.txt`** / **`sitemap.xml`** — kept in sync with the routes above.
+`next build` exports the pre-rendered App Router pages to `out/`. `npm run start`
+serves that export through PHP locally, matching the Namecheap host and allowing
+the existing PHP endpoints to run. The export can be published to cPanel without
+a Node.js runtime.
 
 ## Deployment
 
-Hosted on **Namecheap Stellar shared hosting** (cPanel + LiteSpeed), deployed via cPanel's
-Git Version Control.
-
-Two branches:
-
-- **`main`** — source of truth. Full source tree.
-- **`deploy`** — build output only (the contents of `dist/`) plus `.cpanel.yml`. This is the
-  branch cPanel checks out, so the server never needs Node or a build step.
-
-### Automatic deploys (merge to `main`)
-
-Every push to `main` runs `.github/workflows/publish-deploy.yml`, which:
-
-1. refuses to run if the commit is behind `origin/main` (same guard as `deploy.sh`),
-2. builds and checks `dist/`, then refreshes the `deploy` branch,
-3. calls the cPanel UAPI `VersionControl/update` (branch `deploy`) and
-   `VersionControlDeployment/create`, failing on any UAPI error,
-4. polls https://djstratageminc.com for up to ~2 minutes until it serves the new
-   `assets/index-*.js` hash, then probes the PHP health endpoints.
-
-One-time setup: add these under GitHub → Settings → Secrets and variables → Actions →
-**New repository secret**:
-
-| Secret | Value |
-| --- | --- |
-| `CPANEL_TOKEN` | cPanel → Security → **Manage API Tokens** → Create (no expiry, or note the date) |
-| `CPANEL_USER` | `djstlime` |
-| `CPANEL_HOST` | `server247.web-hosting.com` (port `2083` is assumed if omitted) |
-| `DEPLOY_PAT` | optional; only if the branch ruleset blocks `github-actions[bot]` from pushing `deploy` |
-
-Re-run a deploy any time from Actions → **Publish deploy branch** → Run workflow.
-If the cPanel step fails, the `deploy` branch is still current, so the manual path below works.
-
-### Shipping a change
-
-Manual path, from a machine that has Node, git, curl, and `~/.cpanel_token`:
-
-```bash
-git checkout main && git pull origin main
-./deploy.sh
-```
-
-That script builds `dist/`, replaces the `deploy` branch, asks cPanel to pull, runs
-`.cpanel.yml`, and checks that the live homepage JS hash matches the build.
-
-Do **not** copy the old one-liner `rsync -a` into `.cpanel.yml`. `-a` copies perms and
-group from the git checkout (`djstlime:djstlime` mode `0700`). The web server runs as
-`nobody`, so every `/assets/*` GET 404s while the directory index can still render.
-`deploy.sh` writes `-rltD` plus chmod/chgrp tasks so `public_html` ends as
-`djstlime:nobody` mode `0750`.
-
-If you cannot run `deploy.sh`, after someone has already pushed a fresh `deploy` tip:
-cPanel → **Git™ Version Control** → `dj-stratagem` → **Update from Remote** →
-**Deploy HEAD Commit**.
-
-> Note: `rsync --delete` briefly empties `public_html` mid-sync. A request during that window
-> can return a directory listing or 404s. Re-check ~10 seconds after deploying before
-> concluding something broke.
-
-> If the account is ever locked again (`/cgi-sys/suspendedpage.cgi`), that is a
-> Namecheap billing/host lock, not a git or Vite failure. Unsuspend the Stellar
-> account before any cPanel pull will go live.
+The cPanel workflow publishes the Next.js static export and retains the PHP
+handlers on the same origin. Merging to `main` builds and verifies `out/`, then
+updates the `deploy` branch and asks cPanel to publish it. The verification
+script checks the exported routes, assets, and backend endpoints before it can
+ship. `./deploy.sh` is the local fallback and requires a cPanel API token at
+`~/.cpanel_token`.
 
 ### Contact form
 
-The Contact page posts to `/contact.php`, a same-origin PHP script that validates fields and
-sends via PHP `mail()` to the configured destination address, with the submitter as `Reply-To`.
-A hidden honeypot field (`bot-field`) silently discards bot submissions.
+The Contact page posts to the configured PHP contact handler (defaults to
+`/contact.php`), which validates fields and sends via PHP `mail()` to the
+configured destination address. A honeypot field (`bot-field`) filters
+automated submissions.
 
-This only works on real PHP hosting — `npm run dev` has no PHP runtime, so local submissions
-fail with a fetch error and surface the form's error state. That's expected.
+This only works on PHP hosting—`npm run dev` has no PHP runtime, so local
+submissions show an explicit error and offer direct email as an alternative.
+The sign-in and account-request forms use `/api/me.php`, `/api/login.php`,
+`/api/register.php`, and `/api/password-reset.php` with the existing CSRF flow.
 
 **Deliverability:** shared-hosting `mail()` is sometimes spam-filtered. If demo requests aren't
 arriving, check spam first. The durable fix is sending through an authenticated mailbox on the
@@ -216,41 +133,32 @@ domain (create one in cPanel, switch `contact.php` from `mail()` to SMTP).
 
 ## Outstanding
 
-- **Namecheap account is live again.** Re-checked 1 Oct 2026 09:54 PDT:
-  apex `https://djstratageminc.com/` returns 200 (not the suspended CGI).
-  `/api/health.php` and `/api/me.php` return JSON. Do not treat a 302 to
-  `/cgi-sys/suspendedpage.cgi` as current.
+The notes below describe the existing PHP services and legacy SPA. They are
+not deployment instructions for the new Next.js website.
+
 - **Stratagem AI needs its API key and cron job on the server** before
   approved jobs can run. See "Jobs and subagents (Stratagem AI)" below.
-- **cPanel can lag GitHub `deploy`.** On 13 Oct 2026 live matched `main`.
-  Actions builds and pushes `deploy`, then Pull and deploy fails while repo
-  secret `CPANEL_TOKEN` is empty. After `main` updates:
-  `./deploy.sh` on a machine with `~/.cpanel_token`, or cPanel → Git Version
-  Control → `dj-stratagem` → Update from Remote → Deploy HEAD Commit. Confirm
-  `public_html` is `djstlime:nobody` mode `0750`. Do not rsync with `-a`.
-  Do not point cPanel at `main`.
-- **`/changelog` was broken on `main` and restored in 1.78.** Audit 1.77
-  (`0f51e8c`) replaced `src/pages/Changelog.jsx` with `PLACEHOLDER_REVERT`.
-  Restored in 1.78 (`da55f5d`). Do not overwrite that file with a host-audit
-  placeholder again.
 - HTTPS is live (AutoSSL). Auth endpoints stay HTTPS-only via `require_https`.
   Do not disable that flag to "get it working" on plaintext.
-- Pricing figures are placeholders pending a real pricing decision. The annual
-  toggle derives its numbers from a flat 20% discount constant in `Pricing.jsx`.
+- Paid-plan prices are intentionally not invented; the new pricing page offers
+  a person-reviewed access request for paid tiers.
 - Screenshots/mock panels throughout the site are illustrative, not live product.
 
 ## Operations dashboard
 
-`/dashboard/*` is session-gated (`noindex`). `/dashboard` redirects to
-`/dashboard/overview`. The route guard is a convenience — the PHP APIs
-are the real boundary.
+The Next route group `src/app/(app)` is reserved for the signed-in workspace.
+`/dashboard` is currently an explicit entry page, not the legacy operations UI.
+The existing PHP APIs and Vite dashboard components remain in the repository
+but are not rendered by the new Next website yet. Keep the API authorization
+checks as the security boundary when migrating those screens.
 
-Screens: **Overview**, **Suppliers**, **Bids**, **Orders**, **Analytics**,
-**Alerts**, **Settings**, plus **Accounts** for admins.
+The older SPA included **Overview**, **Suppliers**, **Bids**, **Orders**,
+**Analytics**, **Alerts**, **Settings**, and admin **Accounts** screens. Those
+screens have not yet been migrated into the Next.js dashboard.
 
 ### Jobs and subagents (Stratagem AI)
 
-Members submit a job at `/dashboard/jobs` and pick which of the nine
+The PHP job API previously let members submit a job at `/dashboard/jobs` and pick which of the nine
 subagents (Projects, Exchange, Platform, Solutions, Supply, Capital,
 Workforce, Fleet, Studio) should work it. Every job lands in
 `pending_approval`; **nothing runs until an admin approves it**. Approval
@@ -302,7 +210,7 @@ returns 404); admins see everything. The nine subagents are listed in three
 files (`src/data/subagents.js`, `src/api/jobs.js`, `public/api/jobs-lib.php`);
 `scripts/check-subagents.mjs` fails the build if they ever disagree.
 
-### Testing against a real database
+### Testing the existing PHP services against a real database
 
 ```bash
 # PHP + MySQL running, public/api/config.php pointing at a dev database,
@@ -312,11 +220,9 @@ files (`src/data/subagents.js`, `src/api/jobs.js`, `public/api/jobs-lib.php`);
 #   'site_url' => 'http://127.0.0.1:8080',
 #   'mail_hook' => fn ($to, $subject, $body) => file_put_contents('/tmp/mail.log', json_encode(compact('to','subject','body'))."\n", FILE_APPEND),
 MOCK_CLAUDE_LOG=/tmp/mock.log python3 scripts/mock-claude.py 8765 &
-npm run build && php -S 127.0.0.1:8080 -t dist <router.php>
+php -S 127.0.0.1:8080 -t public
 python3 scripts/smoke-api.py http://127.0.0.1:8080 --admin-email you@example.com --admin-password '…'
 python3 scripts/test-ai-subagents.py http://127.0.0.1:8080 /tmp/mail.log /tmp/mock.log --admin-email you@example.com --admin-password '…'
-python3 scripts/e2e-jobs.py  http://127.0.0.1:8080 you@example.com '…'   # needs Python Playwright
-python3 scripts/e2e-admin.py http://127.0.0.1:8080 you@example.com '…'
 ```
 
 `smoke-api.py` calls every endpoint signed out, as a member and as an admin.
@@ -324,10 +230,9 @@ python3 scripts/e2e-admin.py http://127.0.0.1:8080 you@example.com '…'
 each subagent sees earlier work, call-backs recurse 3 deep and no further,
 the task cap, retry on overload, a bad key blocking with retry/skip, cancel
 mid-call, edit and resubmit, every email, and password reset.
-`e2e-jobs.py` drives a real browser through register → account approval →
-new job → approval → the subagents finishing on their own → reading the
-output → reject and resubmit. All of them create rows, so never point them
-at production.
+The former `e2e-jobs.py` and `e2e-admin.py` scripts target the legacy SPA and
+must be updated before they can exercise the new Next.js pages. These tests
+create database rows; never point them at production.
 
 ### Dashboard APIs
 
@@ -376,7 +281,7 @@ Exact shapes live in `src/api/dashboard.js` and `src/api/fixtures.js`.
 
 ## Authentication
 
-`/login` and `/register` are backed by PHP endpoints under `public/api/`,
+`/login` and `/join` are backed by PHP endpoints under `public/api/`,
 matching the existing `contact.php` pattern. Accounts are **approval-gated**:
 registering creates a `pending` account that cannot sign in until an admin activates
 it.
