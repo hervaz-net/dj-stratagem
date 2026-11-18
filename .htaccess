@@ -1,20 +1,15 @@
-# Namecheap LiteSpeed on server247 uses CloudLinux alt-php, not EasyApache.
-# Live responses advertise PHP/8.1.34. The previous ea-php82___lsphp handler
-# is not installed on this account, so LiteSpeed started PHP then returned
-# an empty HTML 500 for every .php request (contact form, /api/me.php, login).
-# Use the CloudLinux lsphp MIME type (three underscores). The short
-# application/x-httpd-alt-php81 name is not registered on this host.
-# Keep the handler in source: rsync --delete wipes the MultiPHP-injected block.
+# Namecheap LiteSpeed uses CloudLinux alt-php, not EasyApache.
 <FilesMatch "[.]php$">
   SetHandler application/x-httpd-alt-php81___lsphp
 </FilesMatch>
 <IfModule mime_module>
   AddHandler application/x-httpd-alt-php81___lsphp .php .php8 .phtml
-  AddType application/manifest+json .webmanifest
 </IfModule>
 AddType application/manifest+json .webmanifest
 
 Options -Indexes -MultiViews
+DirectoryIndex index.html index.php
+ErrorDocument 404 /404.html
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
@@ -23,183 +18,67 @@ Options -Indexes -MultiViews
   RewriteCond %{HTTP_HOST} ^www[.]djstratageminc[.]com$ [NC]
   RewriteRule ^ https://djstratageminc.com%{REQUEST_URI} [R=301,L]
 
-  # /api/health.php must not depend on the file existing under public_html/api.
-  # Live trees have been missing that file; LiteSpeed then emits its HTML 404
-  # before later aliases run because /api/ is a real directory. Always send
-  # the probe to the working root /health.php first. PT forces handler rerun.
+  # The root health probe remains available even if a partial API tree ships.
   RewriteRule ^api/health(\.php)?/?$ /health.php [L,PT]
-
-  # Extensionless app routes must run before the existing-file stop.
-  # LiteSpeed MultiViews maps /privacy and /terms onto privacy.html and
-  # terms.html, then the -f rule below would end rewriting. That served the
-  # printable Exchange sheets with no site chrome and the wrong share card.
-  # Printable files stay at /privacy.html, /terms.html, and
-  # /brand-guidelines.html for the iframe.
-  RewriteRule ^privacy/?$ /spa.php [L]
-  RewriteRule ^terms/?$ /spa.php [L]
-  RewriteRule ^brand/?$ /spa.php [L]
-  RewriteRule ^fleet/?$ /command/fleet [R=301,L]
-  # Same MultiViews trap under the Exchange prefix if a printable sheet
-  # is ever added beside these routes.
-  RewriteRule ^exchange/(privacy|terms|brand)/?$ /spa.php [L]
-  # Old Exchange legal aliases are client redirects. Crawlers never run
-  # those, so send them on the server before the existing-file stop.
-  RewriteRule ^exchange/privacy-policy/?$ /exchange/privacy [R=301,L]
-  RewriteRule ^exchange/terms-of-service/?$ /exchange/terms [R=301,L]
-  RewriteRule ^exchange/tos/?$ /exchange/terms [R=301,L]
-  RewriteRule ^exchange/legal/?$ /exchange/terms [R=301,L]
-  RewriteRule ^exchange/eula/?$ /exchange/terms [R=301,L]
-  RewriteRule ^exchange/brand-guidelines/?$ /exchange/brand [R=301,L]
-
-  RewriteCond %{REQUEST_FILENAME} -f
-  RewriteRule ^ - [L]
-
-  # /fleet redirects above, before the existing-file stop, so a leftover
-  # public/fleet/ directory cannot list photos instead of the desk.
-
-  # Each company has its own top-level site; old /companies/<slug> links move.
-  RewriteRule ^companies/(capital|studio|workforce|fleet)/?$ /command/$1 [R=301,L]
-
-  # /manifest.json must never become index.html. Live public_html has shipped
-  # without the file, and LiteSpeed DOCUMENT_ROOT is unreliable on this account,
-  # so do not gate the alias on a filesystem probe.
-  RewriteRule ^manifest[.]json$ manifest.webmanifest [L]
-  RewriteRule ^credit$ /exchange/dashboard/settings [R=301,L]
-  RewriteRule ^credits$ /exchange/dashboard/settings [R=301,L]
-  RewriteRule ^credit-application$ /exchange/dashboard/settings [R=301,L]
-  # Stratagem Exchange moved under /exchange when D&J Stratagem, Inc. returned
-  # to the root. Keep its old top-level URLs working.
-  RewriteRule ^(marketplace|contractors|distributors|suppliers)$ /exchange/$1 [R=301,L]
-
-  # Partial public_html trees have been missing /api/*.php and health.php.
-  # Never let those URLs become the marketing SPA — JSON or a PHP 404 only.
-  # /api (no slash) 301s to /api/ because it is a directory. Serve the
-  # index from the parent too, so a host that skips the subdirectory rule
-  # still returns the API descriptor instead of the marketing SPA.
-  RewriteRule ^api/?$ api/index.php [L]
-  RewriteRule ^api/ api/index.php [L]
-  RewriteRule [.]php$ contact.php [L]
-
-  RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule ^(.+)/$ /$1 [R=301,L]
-
-  RewriteRule ^blog$ /changelog [R=301,L]
-  RewriteRule ^blog/ /changelog [R=301,L]
-
-  RewriteRule ^signin$ /login [R=301,L]
-  RewriteRule ^sign-in$ /login [R=301,L]
-  RewriteRule ^log-in$ /login [R=301,L]
-  RewriteRule ^account$ /login [R=301,L]
-  RewriteRule ^credit$ /exchange/dashboard/settings [R=301,L]
-  RewriteRule ^credits$ /exchange/dashboard/settings [R=301,L]
-  RewriteRule ^credit-application$ /exchange/dashboard/settings [R=301,L]
-  RewriteRule ^signup$ /register [R=301,L]
-  RewriteRule ^sign-up$ /register [R=301,L]
-  RewriteRule ^trial$ /register [R=301,L]
-  RewriteRule ^start$ /register [R=301,L]
-  RewriteRule ^get-started$ /register [R=301,L]
-  RewriteRule ^join$ /register [R=301,L]
-  RewriteRule ^forgot$ /forgot-password [R=301,L]
-  RewriteRule ^reset$ /forgot-password [R=301,L]
-  RewriteRule ^password$ /forgot-password [R=301,L]
-  RewriteRule ^project$ /command/projects [R=301,L]
-  RewriteRule ^bids$ /command/projects [R=301,L]
-  RewriteRule ^bid$ /command/projects [R=301,L]
-  RewriteRule ^resource$ /resources [R=301,L]
-  RewriteRule ^profile$ /dashboard/settings [R=301,L]
-  RewriteRule ^settings$ /dashboard/settings [R=301,L]
-  RewriteRule ^about-us$ /about [R=301,L]
-  RewriteRule ^company$ /about [R=301,L]
-  RewriteRule ^team$ /about [R=301,L]
-  RewriteRule ^status$ /about [R=301,L]
-  RewriteRule ^security$ /about [R=301,L]
-  RewriteRule ^investors$ /about [R=301,L]
-  RewriteRule ^partners$ /command/solutions [R=301,L]
-  RewriteRule ^accessibility$ /about [R=301,L]
-  RewriteRule ^a11y$ /about [R=301,L]
-  RewriteRule ^contact-us$ /contact [R=301,L]
-  RewriteRule ^help$ /resources [R=301,L]
-  RewriteRule ^support$ /resources [R=301,L]
-  RewriteRule ^demo$ /contact [R=301,L]
-  RewriteRule ^faq$ /resources [R=301,L]
-  RewriteRule ^faqs$ /resources [R=301,L]
-  RewriteRule ^book$ /contact [R=301,L]
-  RewriteRule ^book-demo$ /contact [R=301,L]
-  RewriteRule ^request-demo$ /contact [R=301,L]
-  RewriteRule ^careers$ /contact [R=301,L]
-  RewriteRule ^jobs$ /contact [R=301,L]
-  RewriteRule ^docs$ /changelog [R=301,L]
-  RewriteRule ^home$ / [R=301,L]
-  RewriteRule ^features$ /services [R=301,L]
-  RewriteRule ^product$ /services [R=301,L]
-  RewriteRule ^how-it-works$ /services [R=301,L]
-  RewriteRule ^howitworks$ /services [R=301,L]
-  RewriteRule ^news$ /changelog [R=302,L]
-  RewriteRule ^press$ /changelog [R=302,L]
-  RewriteRule ^privacy-policy$ /privacy [R=301,L]
-  RewriteRule ^cookies$ /privacy [R=301,L]
-  RewriteRule ^cookie$ /privacy [R=301,L]
-  RewriteRule ^cookie-policy$ /privacy [R=301,L]
-  RewriteRule ^gdpr$ /privacy [R=301,L]
-  RewriteRule ^unsubscribe$ /privacy [R=301,L]
-  RewriteRule ^terms-of-service$ /terms [R=301,L]
-  RewriteRule ^tos$ /terms [R=301,L]
-  RewriteRule ^legal$ /terms [R=301,L]
-  RewriteRule ^eula$ /terms [R=301,L]
-  RewriteRule ^brand-guidelines$ /brand [R=301,L]
-  # Printable sheets are real files. Do not send them through the SPA:
-  # a stale bundle renders an empty marketing shell and never sets a title.
-  # Short URLs are the printable sheets. /marketing/* is the site page that
-  # frames the same file, so a refresh keeps the navigation.
-  RewriteRule ^fleet-cards$ /fleet-cards.html [L]
-  RewriteRule ^signage$ /signage.html [L]
-  RewriteRule ^receipts$ /receipts.html [L]
-  # /supply is the parent site's page again; the marketplace lives at
-  # /exchange/marketplace (Stratagem Exchange subsidiary).
-  RewriteRule ^supply/catalog/?$ /exchange/marketplace [R=301,L]
-  RewriteRule ^supply/catalog/ /exchange/marketplace [R=301,L]
-  RewriteRule ^catalog/?$ /exchange/marketplace [R=301,L]
-  RewriteRule ^catalog/ /exchange/marketplace [R=301,L]
-  RewriteRule ^shop$ /exchange/marketplace [R=301,L]
-  RewriteRule ^equipment$ /command/fleet [R=301,L]
-  RewriteRule ^supplier$ /exchange/suppliers [R=301,L]
+  RewriteRule ^api/?$ /api/index.php [L]
+  RewriteRule ^send-demo[.]php$ /contact.php [L]
+  RewriteRule ^favicon[.]ico$ /favicon.svg [L]
+  RewriteRule ^apple-touch-icon(-precomposed)?[.]png$ /favicon.svg [L]
   RewriteRule ^sitemap$ /sitemap.xml [R=301,L]
-  RewriteRule ^(feed|rss|atom)$ /changelog [R=301,L]
-  RewriteRule ^app$ /login [R=301,L]
-  RewriteRule ^companies$ / [R=301,L]
 
-  # Former subagent sites are modes of the one desk. Keep the old URLs.
-  RewriteRule ^(platform|solutions|supply|capital|studio|workforce)/?$ /command/$1 [R=301,L]
-  RewriteRule ^(fleet|capital|studio|workforce)/(signup)/?$ /register [R=301,L]
-  RewriteRule ^(fleet|capital|studio|workforce)/(signin)/?$ /login [R=301,L]
-  RewriteRule ^(fleet|capital|studio|workforce)/(account)/?$ /login [R=301,L]
-  RewriteRule ^projects/?$ /command/projects [R=301,L]
-  RewriteRule ^projects/([^/]+)/?$ /command/projects/$1 [R=301,L]
-  RewriteRule ^construction-projects/([^/]+)/([^/]+)/?$ /command/projects/markets/$1/$2 [R=301,L]
-  RewriteRule ^exchange/?$ /command/exchange [R=301,L]
-  RewriteRule ^exchange/(platform|solutions|supply|fleet)/?$ /command/$1 [R=301,L]
-  RewriteRule ^exchange/projects/?$ /command/projects [R=301,L]
-  RewriteRule ^exchange/projects/([^/]+)/?$ /command/projects/$1 [R=301,L]
-  RewriteRule ^exchange/construction-projects/([^/]+)/([^/]+)/?$ /command/projects/markets/$1/$2 [R=301,L]
-  RewriteRule ^exchange/(about|about-us|company|team)/?$ /about [R=301,L]
-  RewriteRule ^exchange/(contact|contact-us)/?$ /contact [R=301,L]
-  RewriteRule ^exchange/pricing/?$ /pricing [R=301,L]
-  RewriteRule ^exchange/(features|product|services|how-it-works|howitworks)/?$ /services [R=301,L]
-  RewriteRule ^exchange/partners/?$ /command/solutions [R=301,L]
+  # Keep legacy public URLs pointed at the new route tree.
+  RewriteRule ^(blog|changelog)/?$ /resources/$1/ [R=301,L]
+  RewriteRule ^blog/.+$ /resources/blog/ [R=301,L]
+  RewriteRule ^changelog/.+$ /resources/changelog/ [R=301,L]
+  RewriteRule ^(register|signup|sign-up|trial|start|get-started)/?$ /join/ [R=301,L]
+  RewriteRule ^(signin|sign-in|log-in|account|app)/?$ /login/ [R=301,L]
+  RewriteRule ^(forgot|reset|password)/?$ /forgot-password/ [R=301,L]
+  RewriteRule ^(profile|settings|admin)/?$ /login/ [R=301,L]
+  RewriteRule ^dashboard/.+$ /dashboard/ [R=301,L]
+  RewriteRule ^(credit|credits|credit-application)/?$ /capital/ [R=301,L]
+  RewriteRule ^companies/(capital|studio|workforce|fleet)/?$ /$1/ [R=301,L]
+  RewriteRule ^companies/?$ / [R=301,L]
+  RewriteRule ^(marketplace|contractors|distributors|suppliers)/?$ /exchange/ [R=301,L]
+  RewriteRule ^exchange/(marketplace|contractors|distributors|suppliers)/?$ /exchange/ [R=301,L]
+  RewriteRule ^(supply/catalog|catalog|shop)/?$ /exchange/ [R=301,L]
+  RewriteRule ^supplier/?$ /exchange/ [R=301,L]
+  RewriteRule ^(project|bids|bid)/?$ /projects/ [R=301,L]
+  RewriteRule ^projects/[^/]+/?$ /projects/ [R=301,L]
+  RewriteRule ^construction-projects/[^/]+/[^/]+/?$ /projects/ [R=301,L]
+  RewriteRule ^exchange/projects(?:/[^/]+)?/?$ /projects/ [R=301,L]
+  RewriteRule ^exchange/construction-projects/[^/]+/[^/]+/?$ /projects/ [R=301,L]
+  RewriteRule ^exchange/(privacy-policy|privacy)/?$ /privacy/ [R=301,L]
+  RewriteRule ^exchange/(terms-of-service|terms|tos|legal|eula)/?$ /terms/ [R=301,L]
+  RewriteRule ^exchange/brand(?:-guidelines)?/?$ /about/ [R=301,L]
+  RewriteRule ^exchange/(about|about-us|company|team)/?$ /about/ [R=301,L]
+  RewriteRule ^exchange/(contact|contact-us)/?$ /contact/ [R=301,L]
+  RewriteRule ^exchange/pricing/?$ /pricing/ [R=301,L]
+  RewriteRule ^exchange/(features|product|services|how-it-works|howitworks)/?$ /platform/ [R=301,L]
+  RewriteRule ^exchange/partners/?$ /solutions/ [R=301,L]
+  RewriteRule ^exchange/dashboard(?:/.*)?$ /login/ [R=301,L]
+  RewriteRule ^(help|support|faq|faqs|docs|resource)/?$ /resources/guides/ [R=301,L]
+  RewriteRule ^(features|product|services|how-it-works|howitworks)/?$ /platform/ [R=301,L]
+  RewriteRule ^(partners)/?$ /solutions/ [R=301,L]
+  RewriteRule ^(contact-us|demo|book|book-demo|request-demo|careers|jobs)/?$ /contact/ [R=301,L]
+  RewriteRule ^(about-us|company|team|status|security|investors|accessibility|a11y|brand|brand-guidelines)/?$ /about/ [R=301,L]
+  RewriteRule ^(privacy-policy|cookies|cookie|cookie-policy|gdpr|unsubscribe)/?$ /privacy/ [R=301,L]
+  RewriteRule ^(terms-of-service|tos|legal|eula)/?$ /terms/ [R=301,L]
+  RewriteRule ^(feed|rss|atom|news|press)/?$ /resources/changelog/ [R=301,L]
+  RewriteRule ^equipment/?$ /fleet/ [R=301,L]
+  RewriteRule ^fleet-cards/?$ /fleet-cards.html [L]
+  RewriteRule ^signage/?$ /signage.html [L]
+  RewriteRule ^receipts/?$ /receipts.html [L]
+  RewriteRule ^manifest[.]json$ /manifest.webmanifest [L]
+  RewriteRule ^spa[.]php$ / [R=301,L]
 
-  RewriteRule ^send-demo[.]php$ contact.php [L]
-  RewriteRule ^favicon[.]ico$ favicon.svg [L]
-  RewriteRule ^apple-touch-icon(-precomposed)?[.]png$ favicon.svg [L]
-  RewriteRule ^manifest[.]json$ manifest.webmanifest [L]
-
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteRule ^assets/ - [R=404,L]
-
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteCond %{REQUEST_URI} ![.]php$ [NC]
-  RewriteRule ^ spa.php [L]
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
 </IfModule>
+
+<Files "opengraph-image">
+  ForceType image/png
+</Files>
 
 <IfModule mod_headers.c>
   Header always set X-Content-Type-Options "nosniff"
@@ -209,22 +88,22 @@ Options -Indexes -MultiViews
   <FilesMatch "html$">
     Header set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
-  <FilesMatch "^(robots.txt|sitemap.xml|manifest.webmanifest|manifest.json)$">
+  <FilesMatch "^(robots[.]txt|sitemap[.]xml|manifest[.]webmanifest|manifest[.]json)$">
     Header set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
-  <FilesMatch "(manifest[.]webmanifest|manifest[.]json)$">
-    Header set Content-Type "application/manifest+json"
+  <FilesMatch "^[A-Za-z0-9._-]+[.](js|css|woff2)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
   </FilesMatch>
 </IfModule>
 
 <IfModule mod_expires.c>
   ExpiresActive On
   ExpiresByType text/html "access plus 0 seconds"
-  ExpiresByType text/plain "access plus 0 seconds"
   ExpiresByType application/xml "access plus 0 seconds"
   ExpiresByType text/xml "access plus 0 seconds"
   ExpiresByType application/manifest+json "access plus 0 seconds"
   ExpiresByType text/css "access plus 1 year"
   ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType font/woff2 "access plus 1 year"
   ExpiresByType image/svg+xml "access plus 1 year"
 </IfModule>
