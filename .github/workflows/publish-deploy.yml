@@ -43,15 +43,15 @@ jobs:
         run: |
           npm ci
           npm run build
-          bash scripts/verify-dist.sh dist
-          test -f dist/index.html
-          test -f dist/api/health.php
-          test -f dist/api/login.php
-          test -f dist/.htaccess
-          grep -q 'application/x-httpd-alt-php81___lsphp' dist/.htaccess
-          grep -oE 'assets/index-[A-Za-z0-9_-]+[.]js' dist/index.html | head -1
+          bash scripts/verify-dist.sh out
+          test -f out/index.html
+          test -f out/api/health.php
+          test -f out/api/login.php
+          test -f out/.htaccess
+          grep -q 'application/x-httpd-alt-php81___lsphp' out/.htaccess
+          grep -oE '/_next/static/[^"]+[.]js' out/index.html | head -1
 
-      - name: Refresh deploy branch from dist/
+      - name: Refresh deploy branch from out/
         id: refresh
         continue-on-error: true
         env:
@@ -67,7 +67,7 @@ jobs:
             "$WORK/repo"
           cd "$WORK/repo"
           find . -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
-          cp -R "$GITHUB_WORKSPACE/dist/." .
+          cp -R "$GITHUB_WORKSPACE/out/." .
           cp "$GITHUB_WORKSPACE/scripts/cpanel.yml" .cpanel.yml
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -99,12 +99,12 @@ jobs:
             echo "pushed=true" >> "$GITHUB_OUTPUT"
           fi
           git fetch --quiet origin deploy
-          EXPECTED="$(grep -oE 'assets/index-[A-Za-z0-9_-]+[.]js' "$GITHUB_WORKSPACE/dist/index.html" | head -1 || true)"
-          REMOTE="$(git show origin/deploy:index.html | grep -oE 'assets/index-[A-Za-z0-9_-]+[.]js' | head -1 || true)"
-          echo "dist bundle   ${EXPECTED:-<none>}"
+          EXPECTED="$(grep -oE '/_next/static/[^"]+[.]js' "$GITHUB_WORKSPACE/out/index.html" | head -1 || true)"
+          REMOTE="$(git show origin/deploy:index.html | grep -oE '/_next/static/[^"]+[.]js' | head -1 || true)"
+          echo "export bundle ${EXPECTED:-<none>}"
           echo "deploy bundle ${REMOTE:-<none>}"
           if [ -z "$EXPECTED" ] || [ "$EXPECTED" != "$REMOTE" ]; then
-            echo "::error::GitHub deploy index.html does not match this build. Host pull would ship a stale or stripped tree."
+            echo "::error::GitHub deploy index.html does not match this export. Host pull would ship a stale or stripped tree."
             echo "pushed=false" >> "$GITHUB_OUTPUT"
             exit 1
           fi
@@ -178,11 +178,11 @@ jobs:
         if: ${{ !cancelled() && steps.cpanel.outputs.pulled == 'true' }}
         run: |
           set -uo pipefail
-          EXPECTED="$(grep -oE 'assets/index-[A-Za-z0-9_-]+[.]js' dist/index.html | head -1 || true)"
-          [ -n "$EXPECTED" ] || { echo "::error::no bundle hash in dist/index.html"; exit 1; }
+          EXPECTED="$(grep -oE '/_next/static/[^"]+[.]js' out/index.html | head -1 || true)"
+          [ -n "$EXPECTED" ] || { echo "::error::no bundle path in out/index.html"; exit 1; }
           LIVE=""
           for i in $(seq 1 12); do
-            LIVE="$(curl -sS --max-time 30 -H 'Cache-Control: no-cache' "https://djstratageminc.com/?v=${GITHUB_SHA}" | grep -oE 'assets/index-[A-Za-z0-9_-]+[.]js' | head -1 || true)"
+            LIVE="$(curl -sS --max-time 30 -H 'Cache-Control: no-cache' "https://djstratageminc.com/?v=${GITHUB_SHA}" | grep -oE '/_next/static/[^"]+[.]js' | head -1 || true)"
             [ "$LIVE" = "$EXPECTED" ] && break
             echo "  attempt ${i}: live ${LIVE:-<none>}, waiting for cPanel rsync…"
             sleep 10
@@ -190,7 +190,7 @@ jobs:
           echo "expected ${EXPECTED}"
           echo "live     ${LIVE:-<none>}"
           if [ "$EXPECTED" != "$LIVE" ]; then
-            echo "::error::Live bundle does not match this build after ~2 min."
+            echo "::error::Live bundle does not match this export after ~2 min."
             echo "Check: ./deploy.sh --status, and that public_html is djstlime:nobody 0750."
             exit 1
           fi
@@ -201,8 +201,8 @@ jobs:
           set -euo pipefail
           fail=0
           html="$(curl -sS --max-time 30 https://djstratageminc.com/)"
-          LIVE="$(printf '%s' "$html" | grep -oE 'assets/index-[A-Za-z0-9_-]+[.]js' | head -1 || true)"
-          JS_CODE="$(curl -sS -o /dev/null -w '%{http_code}' --max-time 20 "https://djstratageminc.com/${LIVE}")"
+          LIVE="$(printf '%s' "$html" | grep -oE '/_next/static/[^"]+[.]js' | head -1 || true)"
+          JS_CODE="$(curl -sS -o /dev/null -w '%{http_code}' --max-time 20 "https://djstratageminc.com${LIVE}")"
           HEALTH="$(curl -sS --max-time 20 https://djstratageminc.com/health.php)"
           API_HEALTH="$(curl -sS --max-time 20 https://djstratageminc.com/api/health.php)"
           CONTACT="$(curl -sS --max-time 20 https://djstratageminc.com/contact.php)"

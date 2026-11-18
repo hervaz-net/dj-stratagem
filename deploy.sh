@@ -11,7 +11,7 @@
 #
 # Usage:
 #   ./deploy.sh                # build + push + deploy + verify
-#   ./deploy.sh --no-build     # reuse existing dist/
+#   ./deploy.sh --no-build     # reuse existing out/
 #   ./deploy.sh --status       # last deployment info
 #   ./deploy.sh --manual       # instructions for other hosts (FTP/S3/Vercel/Netlify)
 #
@@ -37,16 +37,16 @@ step() { printf "\n${BLUE}==>${NC} %s\n" "$*"; }
 if [[ "${1:-}" == "--manual" || "${1:-}" == "--instructions" ]]; then
   printf "${BLUE}Manual deployment targets${NC}\n"
   echo "----------------------------------------"
-  echo "Contents of dist/ to upload:"
-  ls -la dist/ 2>/dev/null || echo "  (no dist/ — run npm run build)"
+  echo "Contents of out/ to upload:"
+  ls -la out/ 2>/dev/null || echo "  (no out/ — run npm run build)"
   cat <<'TXT'
 
-• Namecheap cPanel (manual): upload dist/ contents into public_html/
+• Namecheap cPanel (manual): upload out/ contents into public_html/
     IMPORTANT: public_html must end up djstlime:nobody mode 0750.
     Uploading with a tool that preserves source perms/group will break it.
-• AWS S3:  aws s3 sync dist/ s3://bucket-name/
+• AWS S3:  aws s3 sync out/ s3://bucket-name/
 • Vercel:  npx vercel --prod
-• Netlify: drop dist/ into the Netlify UI
+• Netlify: drop out/ into the Netlify UI
 TXT
   exit 0
 fi
@@ -111,16 +111,16 @@ if [[ "${1:-}" != "--no-build" ]]; then
 else
   step "Skipping build (--no-build)"
 fi
-[[ -d "$REPO_DIR/dist" ]] || die "no dist/ — run a build first"
-bash "$REPO_DIR/scripts/verify-dist.sh" "$REPO_DIR/dist"
+[[ -d "$REPO_DIR/out" ]] || die "no out/ — run a build first"
+bash "$REPO_DIR/scripts/verify-dist.sh" "$REPO_DIR/out"
 
 # --------------------------------------------------- refresh deploy branch
-step "Refreshing '$BRANCH' branch from dist/"
+step "Refreshing '$BRANCH' branch from out/"
 WORK="$(mktemp -d)"; trap 'rm -rf "$WORK"' EXIT
 git clone --quiet --branch "$BRANCH" --single-branch "$GIT_REMOTE" "$WORK/repo"
 cd "$WORK/repo"
 find . -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
-cp -R "$REPO_DIR/dist/." .
+cp -R "$REPO_DIR/out/." .
 
 # PERMISSIONS — do NOT change these rsync flags back to `-a`.
 #
@@ -169,10 +169,10 @@ if ! python3 -c 'import socket,sys; socket.getaddrinfo("djstratageminc.com", 443
   printf "  CNAME www → djstratageminc.com.\n"
   exit 1
 fi
-EXPECTED="$(grep -o 'assets/index-[A-Za-z0-9_-]*\.js' "$REPO_DIR/dist/index.html" | head -1)"
+EXPECTED="$(grep -oE '/_next/static/[^" ]+[.]js' "$REPO_DIR/out/index.html" | head -1)"
 for i in 1 2 3 4 5 6; do
   sleep 5
-  LIVE="$(curl -sS --max-time 30 "$SITE_URL/" 2>/dev/null | grep -o 'assets/index-[A-Za-z0-9_-]*\.js' | head -1 || true)"
+  LIVE="$(curl -sS --max-time 30 "$SITE_URL/" 2>/dev/null | grep -oE '/_next/static/[^" ]+[.]js' | head -1 || true)"
   [[ "$LIVE" == "$EXPECTED" ]] && break
   printf '  attempt %d: waiting for rsync…\n' "$i"
 done
