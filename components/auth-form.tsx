@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState, type FormEvent } from "react";
-import { ArrowLeft, ArrowRight, LoaderCircle, ShieldCheck } from "lucide-react";
+import { ArrowLeft, ArrowRight, ShieldCheck } from "lucide-react";
 
 type FormMode = "join" | "login" | "forgot" | "reset";
 type AuthFormProps = { mode: FormMode };
@@ -161,14 +161,17 @@ export function AuthForm({ mode }: AuthFormProps) {
           ? "If an approved account uses that email, a reset link is on its way. It works for one hour."
           : "Your password has been updated. Sign in with your new password.";
     return (
-      <div aria-live="polite" className="form-success auth-success" role="status">
-        <span className="success-check">✓</span>
-        <h2>{mode === "join" ? "Request received." : "You’re all set."}</h2>
-        <p>{confirmation}</p>
-        <Link className="button button-secondary" href={mode === "join" ? "/" : "/login"}>
-          {mode === "join" ? "Back to home" : "Continue to sign in"}
-          <ArrowRight size={15} />
-        </Link>
+      <div aria-live="polite" className="alert alert-success items-start" role="status">
+        <div>
+          <h2 className="text-xl font-semibold">
+            {mode === "join" ? "Request received." : "You’re all set."}
+          </h2>
+          <p className="mt-1">{confirmation}</p>
+          <Link className="btn btn-outline mt-4" href={mode === "join" ? "/" : "/login"}>
+            {mode === "join" ? "Back to home" : "Continue to sign in"}
+            <ArrowRight size={15} />
+          </Link>
+        </div>
       </div>
     );
   }
@@ -176,42 +179,46 @@ export function AuthForm({ mode }: AuthFormProps) {
   const { title, description } = headings[mode];
 
   return (
-    <div className="auth-form-wrap">
-      <div className="auth-form-heading">
-        <span className="eyebrow">
+    <div className="w-full max-w-md">
+      <div className="mb-6">
+        <span className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-primary">
           {mode === "join" ? "Request access" : mode === "login" ? "Member sign in" : "Account help"}
         </span>
-        <h1>{title}</h1>
-        <p>{description}</p>
+        <h1 className="mt-3 text-4xl font-semibold tracking-tight">{title}</h1>
+        <p className="mt-2 text-sm leading-relaxed text-base-content/70">{description}</p>
       </div>
-      <form className="form-stack" onSubmit={submit}>
+      <form className="grid gap-4" onSubmit={submit}>
         {mode === "join" && (
-          <div className="form-two-col">
-            <label className="field">
-              <span>Full name</span>
-              <input autoComplete="name" maxLength={120} name="fullName" required />
-            </label>
-            <label className="field">
-              <span>Company</span>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <fieldset className="fieldset">
+              <legend className="fieldset-legend">Full name</legend>
+              <input className="input" autoComplete="name" maxLength={120} name="fullName" required />
+            </fieldset>
+            <fieldset className="fieldset">
+              <legend className="fieldset-legend">Company</legend>
               <input
+                className="input"
                 autoComplete="organization"
                 maxLength={160}
                 name="company"
                 required
               />
-            </label>
+            </fieldset>
           </div>
         )}
         {mode !== "reset" && (
-          <label className="field">
-            <span>Work email</span>
-            <input autoComplete="email" name="email" required type="email" />
-          </label>
+          <fieldset className="fieldset">
+            <legend className="fieldset-legend">Work email</legend>
+            <input className="input" autoComplete="email" name="email" required type="email" />
+          </fieldset>
         )}
         {mode === "join" && (
-          <label className="field">
-            <span>Phone <small>Optional</small></span>
+          <fieldset className="fieldset">
+            <legend className="fieldset-legend">
+              Phone <span className="font-normal text-base-content/50">Optional</span>
+            </legend>
             <input
+              className="input"
               autoComplete="tel"
               maxLength={40}
               name="phone"
@@ -219,47 +226,49 @@ export function AuthForm({ mode }: AuthFormProps) {
               title="Use 7 to 40 digits, spaces, or standard phone punctuation."
               type="tel"
             />
-          </label>
+          </fieldset>
         )}
         {(mode === "join" || mode === "login" || mode === "reset") && (
           <>
-            <label className="field">
-              <span>Password</span>
+            <fieldset className="fieldset">
+              <legend className="fieldset-legend">Password</legend>
               <input
+                className="input"
                 autoComplete={mode === "login" ? "current-password" : "new-password"}
                 minLength={mode === "login" ? undefined : 12}
                 name="password"
                 required
                 type="password"
               />
-            </label>
+            </fieldset>
             {(mode === "join" || mode === "reset") && (
-              <label className="field">
-                <span>Confirm password</span>
+              <fieldset className="fieldset">
+                <legend className="fieldset-legend">Confirm password</legend>
                 <input
+                  className="input"
                   autoComplete="new-password"
                   minLength={12}
                   name="confirm"
                   required
                   type="password"
                 />
-              </label>
+              </fieldset>
             )}
             {mode === "join" && (
-              <span className="field-hint">
-                <ShieldCheck size={14} /> Use at least 12 characters.
-              </span>
+              <p className="flex items-center gap-2 text-xs text-base-content/60">
+                <ShieldCheck aria-hidden="true" size={14} /> Use at least 12 characters.
+              </p>
             )}
           </>
         )}
         {error && (
-          <p aria-live="polite" className="form-error" role="alert">
+          <p aria-live="polite" className="alert alert-error text-sm" role="alert">
             {error}
           </p>
         )}
-        <button className="button button-primary button-large auth-submit" disabled={pending}>
+        <button className="btn btn-primary w-full" disabled={pending} type="submit">
           {pending ? (
-            <><LoaderCircle className="spin" size={16} /> One moment…</>
+            <><span className="loading loading-spinner loading-sm" /> One moment…</>
           ) : (
             <>
               {mode === "join"
@@ -274,18 +283,26 @@ export function AuthForm({ mode }: AuthFormProps) {
           )}
         </button>
       </form>
-      <div className="auth-form-links">
+      <div className="mt-4 flex flex-wrap justify-between gap-3 text-sm text-base-content/70">
         {mode === "join" && (
-          <span>Already have an account? <Link href="/login">Sign in</Link></span>
+          <span>Already have an account? <Link className="link link-primary" href="/login">Sign in</Link></span>
         )}
         {mode === "login" && (
           <>
-            <Link href="/forgot-password">Forgot password?</Link>
-            <span>New to D&amp;J? <Link href="/join">Join free</Link></span>
+            <Link className="link link-primary" href="/forgot-password">Forgot password?</Link>
+            <span>New to D&amp;J? <Link className="link link-primary" href="/join">Join free</Link></span>
           </>
         )}
-        {mode === "forgot" && <Link href="/login"><ArrowLeft size={14} /> Back to sign in</Link>}
-        {mode === "reset" && <Link href="/login"><ArrowLeft size={14} /> Back to sign in</Link>}
+        {mode === "forgot" && (
+          <Link className="link link-primary inline-flex items-center gap-1" href="/login">
+            <ArrowLeft size={14} /> Back to sign in
+          </Link>
+        )}
+        {mode === "reset" && (
+          <Link className="link link-primary inline-flex items-center gap-1" href="/login">
+            <ArrowLeft size={14} /> Back to sign in
+          </Link>
+        )}
       </div>
     </div>
   );

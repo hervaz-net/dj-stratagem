@@ -6,7 +6,10 @@ export default function MarketingLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <>
-      <a className="skip-link" href="#main">
+      <a
+        className="btn btn-primary fixed top-3 left-3 z-[80] -translate-y-[200%] focus:translate-y-0"
+        href="#main"
+      >
         Skip to content
       </a>
       <SiteHeader />

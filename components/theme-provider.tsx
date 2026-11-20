@@ -24,30 +24,27 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const stored = window.localStorage.getItem("djstratagem-theme");
     const initial: Theme =
-      stored === "system" || stored === "light" || stored === "dark"
-        ? stored
-        : "dark";
+      stored === "system" || stored === "light" || stored === "dark" ? stored : "dark";
     setTheme(initial);
-    setResolvedTheme(initial === "system" ? getSystemTheme() : initial);
   }, []);
 
   useEffect(() => {
+    const resolved = theme === "system" ? getSystemTheme() : theme;
     const root = document.documentElement;
-    if (theme === "system") {
-      root.removeAttribute("data-theme");
-      setResolvedTheme(getSystemTheme());
-    } else {
-      root.dataset.theme = theme;
-      setResolvedTheme(theme);
-    }
-    root.style.colorScheme = theme === "system" ? "light dark" : theme;
+    root.dataset.theme = resolved;
+    root.style.colorScheme = resolved;
+    setResolvedTheme(resolved);
     window.localStorage.setItem("djstratagem-theme", theme);
   }, [theme]);
 
   useEffect(() => {
     const media = window.matchMedia("(prefers-color-scheme: light)");
     const syncSystemTheme = () => {
-      if (theme === "system") setResolvedTheme(getSystemTheme());
+      if (theme !== "system") return;
+      const resolved = getSystemTheme();
+      document.documentElement.dataset.theme = resolved;
+      document.documentElement.style.colorScheme = resolved;
+      setResolvedTheme(resolved);
     };
     media.addEventListener("change", syncSystemTheme);
     return () => media.removeEventListener("change", syncSystemTheme);
@@ -78,14 +75,14 @@ export function ThemeToggle() {
   return (
     <Button
       aria-label={`${label}. Change appearance`}
-      className="theme-toggle"
+      className="gap-2 px-2"
       onClick={cycleTheme}
       size="small"
       title={`${label} — click to change`}
       variant="ghost"
     >
       <Icon aria-hidden="true" size={17} />
-      <span className="theme-toggle-label">{theme}</span>
+      <span className="hidden font-mono text-[0.65rem] uppercase sm:inline">{theme}</span>
     </Button>
   );
 }

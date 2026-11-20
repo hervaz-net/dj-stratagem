@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowLeft, LockKeyhole, MapPin, ShieldCheck } from "lucide-react";
 import { AuthForm } from "@/components/auth-form";
 import { BrandMark } from "@/components/brand-mark";
+import { eyebrow } from "@/lib/ui";
 
 export const metadata: Metadata = {
   title: "Sign in",
@@ -12,33 +13,29 @@ export const metadata: Metadata = {
 
 export default function LoginPage() {
   return (
-    <section className="auth-page auth-login-page">
-      <div className="auth-aside">
-        <Link className="auth-back" href="/">
+    <section className="grid min-h-svh lg:grid-cols-[minmax(18rem,0.85fr)_1.15fr]">
+      <aside className="relative hidden flex-col justify-between overflow-hidden border-r border-base-300 bg-base-200 p-8 lg:flex">
+        <Link className="link inline-flex w-fit items-center gap-2 text-sm" href="/">
           <ArrowLeft size={15} /> Back to D&amp;J
         </Link>
-        <div className="auth-aside-inner">
+        <div className="max-w-md py-10">
           <BrandMark />
-          <span className="eyebrow">Your work, in motion</span>
-          <h2>Welcome back to the desk.</h2>
-          <p>
-            Pick up the pipeline where you left off. Your account connects the
-            work, people, and next steps.
+          <p className={`${eyebrow} mt-12`}>Your work, in motion</p>
+          <h2 className="mt-3 text-4xl font-semibold tracking-tight">Welcome back to the desk.</h2>
+          <p className="mt-3 text-sm leading-relaxed text-base-content/75">
+            Pick up the pipeline where you left off. Your account connects the work, people, and next steps.
           </p>
-          <ul>
-            <li><LockKeyhole size={15} /> Secure account session</li>
-            <li><ShieldCheck size={15} /> Your team stays in control</li>
-            <li><MapPin size={15} /> Southern California focused</li>
+          <ul className="mt-6 grid gap-2 text-sm">
+            <li className="flex items-center gap-2"><LockKeyhole className="text-primary" size={15} /> Secure account session</li>
+            <li className="flex items-center gap-2"><ShieldCheck className="text-primary" size={15} /> Your team stays in control</li>
+            <li className="flex items-center gap-2"><MapPin className="text-primary" size={15} /> Southern California focused</li>
           </ul>
         </div>
-        <span className="auth-aside-foot">D&amp;J STRATAGEM · LOS ANGELES</span>
-      </div>
-      <div className="auth-main">
-        <div className="auth-mobile-brand"><BrandMark /></div>
+        <p className="font-mono text-[0.65rem] tracking-[0.14em] text-base-content/50">D&amp;J STRATAGEM · LOS ANGELES</p>
+      </aside>
+      <div className="flex flex-col justify-center px-5 py-10 sm:px-12">
+        <div className="mb-8 lg:hidden"><BrandMark /></div>
         <AuthForm mode="login" />
-        <p className="auth-legal">
-          Need an account? <Link href="/join">Join free</Link>
-        </p>
       </div>
     </section>
   );

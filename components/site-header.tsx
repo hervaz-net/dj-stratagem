@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowUpRight, ChevronDown, Menu, X } from "lucide-react";
 import { modes, resourceSections } from "@/lib/site-data";
+import { shell } from "@/lib/ui";
 import { BrandMark } from "@/components/brand-mark";
 import { ThemeToggle } from "@/components/theme-provider";
 
@@ -16,129 +17,170 @@ const primaryLinks = [
 export function SiteHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMobileOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [mobileOpen]);
+
   function closeMenu() {
     setMobileOpen(false);
   }
 
   return (
-    <header className="site-header">
-      <div className="utility-bar">
-        <div className="container utility-inner">
-          <span>
-            <span aria-hidden="true" className="status-dot" />
-            Based in Los Angeles · Focused on Southern California
-          </span>
-          <a href="mailto:hello@djstratageminc.com">Talk to a person</a>
-        </div>
+    <header className="sticky top-0 z-40 border-b border-base-300 bg-base-100/90 backdrop-blur-md">
+      <div className={`${shell} flex min-h-8 items-center justify-between gap-3 font-mono text-[0.65rem] tracking-wide text-base-content/60`}>
+        <span className="inline-flex items-center gap-2">
+          <span aria-hidden="true" className="size-1.5 shrink-0 rounded-full bg-success" />
+          <span className="sm:hidden">Los Angeles · Southern California</span>
+          <span className="hidden sm:inline">Based in Los Angeles · Focused on Southern California</span>
+        </span>
+        <a className="link link-hover hidden sm:inline" href="mailto:hello@djstratageminc.com">
+          Talk to a person
+        </a>
       </div>
-      <div className="container header-inner">
-        <BrandMark />
-        <nav aria-label="Main navigation" className="desktop-nav">
-          <details className="nav-disclosure">
-            <summary>
+      <div className={`${shell} navbar min-h-16 px-0`}>
+        <div className="navbar-start w-auto flex-none">
+          <BrandMark />
+        </div>
+        <nav aria-label="Main navigation" className="navbar-center hidden flex-1 justify-center gap-1 xl:flex">
+          <div className="dropdown dropdown-bottom">
+            <button className="btn btn-ghost btn-sm gap-1" type="button">
               Platform <ChevronDown aria-hidden="true" size={14} />
-            </summary>
-            <div className="nav-menu mode-menu">
-              <div className="menu-heading">
-                <span className="eyebrow">One account</span>
-                <span>Nine modes. One desk.</span>
+            </button>
+            <div className="dropdown-content z-30 mt-2 w-[22rem] rounded-box border border-base-300 bg-base-100 p-3 shadow-xl">
+              <div className="mb-2 flex items-baseline justify-between border-b border-base-300 px-1 pb-2">
+                <span className="font-mono text-[0.62rem] uppercase tracking-[0.14em] text-primary">
+                  One account
+                </span>
+                <span className="text-xs font-semibold">Nine modes. One desk.</span>
               </div>
-              <div className="mode-menu-grid">
+              <ul className="grid grid-cols-3 gap-1">
                 {modes.map((mode) => (
-                  <Link href={`/${mode.slug}`} key={mode.slug}>
-                    <span>{mode.name}</span>
-                    <small>{mode.stage}</small>
-                  </Link>
+                  <li key={mode.slug}>
+                    <Link
+                      className="flex flex-col rounded-box px-2 py-2 text-sm hover:bg-base-200"
+                      href={`/${mode.slug}`}
+                    >
+                      <span className="font-semibold">{mode.name}</span>
+                      <span className="font-mono text-[0.6rem] uppercase text-base-content/55">
+                        {mode.stage}
+                      </span>
+                    </Link>
+                  </li>
                 ))}
-              </div>
-              <Link className="menu-bottom-link" href="/#how-it-works">
+              </ul>
+              <Link className="link link-hover mt-2 flex items-center justify-between px-1 pt-2 text-sm text-primary" href="/#how-it-works">
                 See how a job moves <ArrowUpRight size={14} />
               </Link>
             </div>
-          </details>
+          </div>
           {primaryLinks.map((item) => (
-            <Link href={item.href} key={item.href}>
+            <Link className="btn btn-ghost btn-sm" href={item.href} key={item.href}>
               {item.label}
             </Link>
           ))}
-          <details className="nav-disclosure">
-            <summary>
+          <div className="dropdown dropdown-bottom">
+            <button className="btn btn-ghost btn-sm gap-1" type="button">
               Resources <ChevronDown aria-hidden="true" size={14} />
-            </summary>
-            <div className="nav-menu resource-menu">
+            </button>
+            <ul className="dropdown-content menu z-30 mt-2 w-72 rounded-box border border-base-300 bg-base-100 p-2 shadow-xl">
               {resourceSections.map((section) => (
-                <Link href={`/resources/${section.slug}`} key={section.slug}>
-                  <span>{section.title}</span>
-                  <small>{section.description}</small>
-                </Link>
+                <li key={section.slug}>
+                  <Link href={`/resources/${section.slug}`}>
+                    <span className="flex flex-col items-start gap-0.5">
+                      <span className="font-semibold">{section.title}</span>
+                      <span className="text-xs font-normal whitespace-normal text-base-content/60">
+                        {section.description}
+                      </span>
+                    </span>
+                  </Link>
+                </li>
               ))}
-            </div>
-          </details>
+            </ul>
+          </div>
         </nav>
-        <div className="header-actions">
+        <div className="navbar-end hidden w-auto flex-none items-center gap-1 xl:flex">
           <ThemeToggle />
-          <Link className="header-signin" href="/login">
+          <Link className="btn btn-ghost btn-sm" href="/login">
             Sign in
           </Link>
-          <Link className="button button-primary button-small" href="/join">
+          <Link className="btn btn-primary btn-sm" href="/join">
             Join free <ArrowUpRight aria-hidden="true" size={15} />
           </Link>
         </div>
-        <button
-          aria-controls="mobile-navigation"
-          aria-expanded={mobileOpen}
-          aria-label={mobileOpen ? "Close menu" : "Open menu"}
-          className="mobile-menu-toggle"
-          onClick={() => setMobileOpen((open) => !open)}
-          type="button"
-        >
-          {mobileOpen ? <X size={21} /> : <Menu size={21} />}
-        </button>
+        <div className="navbar-end w-auto flex-none xl:hidden">
+          <button
+            aria-controls="mobile-navigation"
+            aria-expanded={mobileOpen}
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            className="btn btn-square btn-ghost"
+            onClick={() => setMobileOpen((open) => !open)}
+            type="button"
+          >
+            {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
+        </div>
       </div>
       {mobileOpen && (
         <nav
           aria-label="Mobile navigation"
-          className="mobile-nav"
+          className="max-h-[calc(100svh-6.5rem)] overflow-auto border-t border-base-300 bg-base-100 xl:hidden"
           id="mobile-navigation"
         >
-          <div className="mobile-nav-group">
-            <span className="eyebrow">The platform</span>
-            {modes.map((mode) => (
-              <Link href={`/${mode.slug}`} key={mode.slug} onClick={closeMenu}>
-                <span>{mode.name}</span>
-                <small>{mode.stage}</small>
+          <div className={`${shell} grid gap-6 py-4`}>
+            <div>
+              <p className="mb-2 font-mono text-[0.65rem] uppercase tracking-[0.14em] text-primary">
+                The platform
+              </p>
+              <ul className="menu menu-sm grid grid-cols-2 gap-1 p-0 sm:grid-cols-3">
+                {modes.map((mode) => (
+                  <li key={mode.slug}>
+                    <Link href={`/${mode.slug}`} onClick={closeMenu}>
+                      <span>{mode.name}</span>
+                      <span className="font-mono text-[0.6rem] uppercase text-base-content/50">
+                        {mode.stage}
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <ul className="menu menu-sm p-0">
+              {primaryLinks.map((item) => (
+                <li key={item.href}>
+                  <Link href={item.href} onClick={closeMenu}>
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+              {resourceSections.map((section) => (
+                <li key={section.slug}>
+                  <Link href={`/resources/${section.slug}`} onClick={closeMenu}>
+                    {section.title}
+                  </Link>
+                </li>
+              ))}
+              <li>
+                <Link href="/contact" onClick={closeMenu}>
+                  Contact
+                </Link>
+              </li>
+              <li>
+                <Link href="/login" onClick={closeMenu}>
+                  Sign in
+                </Link>
+              </li>
+            </ul>
+            <div className="flex flex-wrap items-center gap-2">
+              <ThemeToggle />
+              <Link className="btn btn-primary" href="/join" onClick={closeMenu}>
+                Join free <ArrowUpRight aria-hidden="true" size={16} />
               </Link>
-            ))}
-          </div>
-          <div className="mobile-nav-links">
-            <ThemeToggle />
-            {primaryLinks.map((item) => (
-              <Link href={item.href} key={item.href} onClick={closeMenu}>
-                {item.label}
-              </Link>
-            ))}
-            {resourceSections.map((section) => (
-              <Link
-                href={`/resources/${section.slug}`}
-                key={section.slug}
-                onClick={closeMenu}
-              >
-                {section.title}
-              </Link>
-            ))}
-            <Link href="/contact" onClick={closeMenu}>
-              Contact
-            </Link>
-            <Link href="/login" onClick={closeMenu}>
-              Sign in
-            </Link>
-            <Link
-              className="button button-primary"
-              href="/join"
-              onClick={closeMenu}
-            >
-              Join free <ArrowUpRight aria-hidden="true" size={16} />
-            </Link>
+            </div>
           </div>
         </nav>
       )}

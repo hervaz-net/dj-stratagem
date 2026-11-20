@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowUpRight, BookOpen, Check, Radio } from "lucide-react";
 import { Reveal } from "@/components/reveal";
 import { resourceSections } from "@/lib/site-data";
+import { display, eyebrow, sectionY, shell } from "@/lib/ui";
 
 type Props = { params: Promise<{ section: string }> };
 
@@ -89,40 +90,46 @@ export default async function ResourceSectionPage({ params }: Props) {
 
   return (
     <>
-      <section className="page-hero resource-hero">
-        <div className="container page-hero-inner">
-          <Link className="back-link" href="/resources">
+      <section className="border-b border-base-300 py-14 sm:py-20">
+        <div className={shell}>
+          <Link className="link mb-8 inline-flex items-center gap-2 text-sm" href="/resources">
             <ArrowLeft size={14} /> All resources
           </Link>
-          <span className="eyebrow">{item.title}</span>
-          <h1>{item.description}</h1>
-          <p>Useful, practical, and made for the people moving the work.</p>
+          <p className={`${eyebrow} mt-6`}>{item.title}</p>
+          <h1 className={`${display} mt-4 max-w-3xl text-4xl sm:text-5xl`}>{item.description}</h1>
+          <p className="mt-4 text-base-content/70">Useful, practical, and made for the people moving the work.</p>
         </div>
       </section>
-      <section className="section resource-list-section">
-        <div className="container resource-list">
+      <section className={sectionY}>
+        <div className={`${shell} grid gap-4`}>
           {section === "blog" &&
             posts.map((post, index) => (
               <Reveal delay={index * 0.06} key={post.slug}>
-                <article className="resource-article-card">
-                  <span className="eyebrow">{post.category}</span>
-                  <h2>{post.title}</h2>
-                  <p>{post.summary}</p>
-                  <Link href={`/resources/blog/${post.slug}`}>
-                    Read field note <ArrowUpRight size={14} />
-                  </Link>
+                <article className="card border border-base-300 bg-base-100">
+                  <div className="card-body">
+                    <p className={eyebrow}>{post.category}</p>
+                    <h2 className="card-title text-2xl">{post.title}</h2>
+                    <p className="max-w-3xl text-sm text-base-content/75">{post.summary}</p>
+                    <Link className="link link-primary mt-2 inline-flex w-fit items-center gap-1 text-sm font-semibold" href={`/resources/blog/${post.slug}`}>
+                      Read field note <ArrowUpRight size={14} />
+                    </Link>
+                  </div>
                 </article>
               </Reveal>
             ))}
           {section === "changelog" &&
             updates.map((update, index) => (
               <Reveal delay={index * 0.06} key={update.title}>
-                <article className="changelog-entry">
-                  <div className="changelog-marker"><Radio size={17} /></div>
-                  <div>
-                    <span className="eyebrow">{update.label}</span>
-                    <h2>{update.title}</h2>
-                    <p>{update.text}</p>
+                <article className="card border border-base-300 bg-base-100">
+                  <div className="card-body sm:flex-row sm:gap-4">
+                    <span className="grid size-10 shrink-0 place-items-center rounded-box bg-primary/15 text-primary">
+                      <Radio size={17} />
+                    </span>
+                    <div>
+                      <p className={eyebrow}>{update.label}</p>
+                      <h2 className="mt-2 text-2xl font-semibold tracking-tight">{update.title}</h2>
+                      <p className="mt-2 max-w-3xl text-sm text-base-content/75">{update.text}</p>
+                    </div>
                   </div>
                 </article>
               </Reveal>
@@ -130,19 +137,25 @@ export default async function ResourceSectionPage({ params }: Props) {
           {section === "guides" &&
             guides.map((guide, index) => (
               <Reveal delay={index * 0.06} key={guide.title}>
-                <article className="guide-card">
-                  <span className="resource-icon"><BookOpen size={19} /></span>
-                  <span className="eyebrow">Field guide</span>
-                  <h2>{guide.title}</h2>
-                  <p>{guide.text}</p>
-                  <div className="guide-tags">
-                    {guide.tags.map((tag) => (
-                      <span key={tag}><Check size={12} /> {tag}</span>
-                    ))}
+                <article className="card border border-base-300 bg-base-100">
+                  <div className="card-body">
+                    <span className="grid size-10 place-items-center rounded-box bg-primary/15 text-primary">
+                      <BookOpen size={18} />
+                    </span>
+                    <p className={`${eyebrow} mt-3`}>Field guide</p>
+                    <h2 className="card-title text-2xl">{guide.title}</h2>
+                    <p className="max-w-3xl text-sm text-base-content/75">{guide.text}</p>
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {guide.tags.map((tag) => (
+                        <span className="badge badge-ghost gap-1" key={tag}>
+                          <Check size={12} /> {tag}
+                        </span>
+                      ))}
+                    </div>
+                    <Link className="link link-primary mt-2 inline-flex w-fit items-center gap-1 text-sm font-semibold" href="/contact">
+                      Talk through your workflow <ArrowUpRight size={14} />
+                    </Link>
                   </div>
-                  <Link href="/contact">
-                    Talk through your workflow <ArrowUpRight size={14} />
-                  </Link>
                 </article>
               </Reveal>
             ))}
