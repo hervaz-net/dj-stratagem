@@ -10,8 +10,8 @@
  *   1. Approval queues one task per picked subagent, in pipeline order
  *      (Projects → … → Studio).
  *   2. The runner takes the next queued task, gives Claude the job, the
- *      subagent's brief, and every finished subagent's work so far, and
- *      saves what comes back.
+ *      subagent's brief, and a short summary of each finished subagent so
+ *      far — not their full write-ups — and saves what comes back.
  *   3. A subagent may call up to two others back in for follow-up work
  *      ("handoffs"). Each call-back is queued one level deeper and runs next
  *      — before the pipeline moves on — so its own call-backs run before it
@@ -39,8 +39,12 @@ const AI_DEFAULT_MODEL = 'claude-sonnet-5-5';
 const AI_MAX_ATTEMPTS = 3;
 /** A task "running" longer than this was orphaned by a dead process. */
 const AI_STALE_MINUTES = 10;
-/** Earlier work is trimmed to this many characters per task in the prompt. */
-const AI_CONTEXT_CHARS_PER_TASK = 6000;
+/**
+ * Earlier work is passed on as the summary only, capped here. Full write-ups
+ * stay in the database for the contractor; replaying them made each later
+ * call carry every previous deliverable.
+ */
+const AI_CONTEXT_CHARS_PER_TASK = 700;
 
 final class AiError extends RuntimeException
 {
@@ -152,15 +156,15 @@ function claude_tool_call(string $system, string $prompt, array $tool): array
 function subagent_tool(string $self, int $depth): array
 {
     $props = [
-        'summary' => ['type' => 'string', 'description' => 'One or two plain sentences on what you produced, for the job timeline.'],
-        'output'  => ['type' => 'string', 'description' => 'Your full deliverable in Markdown: headings, lists and tables. Specific to this job.'],
+        'summary' => ['type' => 'string', 'description' => 'The only text later subagents will see. Two or three sentences with the concrete facts they need: quantities, dates, decisions, and open items. No preamble.'],
+        'output'  => ['type' => 'string', 'description' => 'The contractor-facing deliverable in Markdown: headings, lists and tables. Specific to this job. Later subagents do not see this.'],
     ];
     if ($depth < MAX_CALL_DEPTH) {
         $others = array_values(array_filter(array_keys(SUBAGENTS), static fn ($k) => $k !== $self));
         $props['handoffs'] = [
             'type'        => 'array',
             'maxItems'    => 2,
-            'description' => 'Optional. Call another subagent back in when its follow-up work would materially improve the job. It runs next and sees your work. Leave empty when not needed.',
+            'description' => 'Optional. Call another subagent back in when its follow-up work would materially improve the job. It runs next and sees your summary, not your full write-up. Leave empty when not needed.',
             'items'       => [
                 'type'       => 'object',
                 'properties' => [
@@ -199,7 +203,8 @@ The nine subagents run in this order, each building on the work before it:
 
 Rules:
 - Be concrete and specific to this job. Write for a busy contractor: short sections, lists and tables.
-- Use the earlier subagents' work; don't repeat it, build on it and fix anything that's wrong.
+- Later subagents see only your summary, so put the facts they need there.
+- Use the earlier summaries; don't repeat them, build on them and fix anything that's wrong.
 - Never claim something happened that didn't: no confirmed bookings, supplier quotes, approvals, permits or financing. Label estimates as estimates and list the actions a person must take.
 - If key information is missing, state your assumption and carry on.
 - {$calls}
@@ -218,12 +223,15 @@ function job_prompt(array $job, array $task, array $earlier): string
         'Notes from the contractor: ' . ($job['notes'] ?: 'none'),
     ];
     if ($earlier) {
-        $lines[] = "\nWORK SO FAR (in the order it was done):";
+        $lines[] = "\nWORK SO FAR (summaries only, in the order it was done):";
         foreach ($earlier as $e) {
             $who = SUBAGENTS[$e['subagent']]['name'] ?? $e['subagent'];
-            $out = (string) $e['output'];
+            $out = trim((string) ($e['summary'] ?? ''));
+            if ($out === '') {
+                $out = trim((string) ($e['output'] ?? ''));
+            }
             if (mb_strlen($out) > AI_CONTEXT_CHARS_PER_TASK) {
-                $out = mb_substr($out, 0, AI_CONTEXT_CHARS_PER_TASK) . "\n…(trimmed)";
+                $out = rtrim(mb_substr($out, 0, AI_CONTEXT_CHARS_PER_TASK)) . '…';
             }
             $lines[] = "\n--- {$who}" . ((int) $e['depth'] > 0 ? ' (call-back)' : '') . " ---\n{$out}";
         }
@@ -332,7 +340,7 @@ function run_next_task(int $jobId): string
     $name = SUBAGENTS[$task['subagent']]['name'] ?? $task['subagent'];
 
     $e = $pdo->prepare(
-        "SELECT subagent, depth, output FROM job_tasks
+        "SELECT subagent, depth, summary, output FROM job_tasks
           WHERE job_id = ? AND status = 'done' AND output IS NOT NULL ORDER BY finished_at, id"
     );
     $e->execute([$jobId]);

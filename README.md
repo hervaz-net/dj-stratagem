@@ -166,7 +166,9 @@ starts the run, and the subagents work on their own on the Claude API
 (`public/api/ai-lib.php`):
 
 - **Chained.** Subagents run one after another in pipeline order. Each one
-  gets the job details, its own brief, and every earlier subagent's work.
+  gets the job details, its own brief, and a short summary of every earlier
+  subagent. Full write-ups are saved for the contractor and are not replayed
+  into later calls, so a long job does not resend the same deliverables.
 - **Recursive call-backs.** A subagent can call up to two others back in
   for follow-up work. A call-back runs next, one level deeper, and can make
   its own call-backs (depth-first), up to 3 levels. A job is capped at 24
