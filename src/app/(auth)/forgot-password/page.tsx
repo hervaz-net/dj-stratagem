@@ -9,8 +9,12 @@ export const metadata: Metadata = {
 
 export default function ForgotPasswordPage() {
   return (
-    <section className="auth-single auth-forgot-page">
-      <AuthForm mode="forgot" />
+    <section className="grid min-h-svh place-items-center px-4 py-10">
+      <div className="card w-full max-w-md border border-base-300 bg-base-100 shadow-sm">
+        <div className="card-body">
+          <AuthForm mode="forgot" />
+        </div>
+      </div>
     </section>
   );
 }

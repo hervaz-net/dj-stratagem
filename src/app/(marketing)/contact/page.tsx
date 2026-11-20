@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowUpRight, Mail, MapPin, Phone } from "lucide-react";
 import { ContactForm } from "@/components/contact-form";
 import { Reveal } from "@/components/reveal";
+import { display, eyebrow, shell } from "@/lib/ui";
 
 export const metadata: Metadata = {
   title: "Talk to a person",
@@ -14,40 +15,50 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <>
-      <section className="contact-hero">
-        <div className="container contact-layout">
-          <div className="contact-intro">
-            <span className="eyebrow">Real people. Real answers.</span>
-            <h1>
-              Let’s talk
-              <br />
-              <span>about the work.</span>
+      <section className="py-14 sm:py-20">
+        <div className={`${shell} grid items-start gap-10 lg:grid-cols-[0.8fr_1.1fr]`}>
+          <div>
+            <p className={eyebrow}>Real people. Real answers.</p>
+            <h1 className={`${display} mt-4`}>
+              Let’s talk <span className="text-primary">about the work.</span>
             </h1>
-            <p>
-              Tell us what your company does and what you’re trying to get done.
-              A person from our team will get back to you.
+            <p className="mt-4 max-w-md text-base-content/75">
+              Tell us what your company does and what you’re trying to get done. A person from our team will get back to you.
             </p>
-            <div className="contact-details">
-              <a href="mailto:hello@djstratageminc.com">
-                <Mail size={17} /> hello@djstratageminc.com <ArrowUpRight size={14} />
-              </a>
-              <span><MapPin size={17} /> Los Angeles, California</span>
-              <span><Phone size={17} /> Prefer email? We’ll follow up personally.</span>
-            </div>
-            <div className="contact-human-note">
-              <span className="human-avatar">D/J</span>
-              <span><strong>A person reads every request.</strong><small>No bot maze. No hard sell.</small></span>
+            <ul className="mt-6 grid gap-3 text-sm">
+              <li>
+                <a className="link inline-flex items-center gap-2" href="mailto:hello@djstratageminc.com">
+                  <Mail className="text-primary" size={16} /> hello@djstratageminc.com <ArrowUpRight size={14} />
+                </a>
+              </li>
+              <li className="inline-flex items-center gap-2">
+                <MapPin className="text-primary" size={16} /> Los Angeles, California
+              </li>
+              <li className="inline-flex items-center gap-2 text-base-content/70">
+                <Phone className="text-primary" size={16} /> Prefer email? We’ll follow up personally.
+              </li>
+            </ul>
+            <div className="mt-8 flex items-center gap-3 border-t border-base-300 pt-4">
+              <span className="grid size-10 place-items-center rounded-full bg-primary/15 font-mono text-xs text-primary">D/J</span>
+              <span>
+                <strong className="block text-sm">A person reads every request.</strong>
+                <small className="text-base-content/60">No bot maze. No hard sell.</small>
+              </span>
             </div>
           </div>
-          <Reveal className="contact-form-card">
-            <ContactForm />
+          <Reveal>
+            <div className="card border border-base-300 bg-base-100 shadow-sm">
+              <div className="card-body">
+                <ContactForm />
+              </div>
+            </div>
           </Reveal>
         </div>
       </section>
-      <section className="section contact-bottom">
-        <div className="container contact-bottom-inner">
-          <p>Want to see the platform first?</p>
-          <Link className="text-link" href="/platform">
+      <section className="border-t border-base-300 py-8">
+        <div className={`${shell} flex flex-wrap items-center justify-center gap-4 text-sm`}>
+          <p className="text-base-content/70">Want to see the platform first?</p>
+          <Link className="link link-primary inline-flex items-center gap-1 font-semibold" href="/platform">
             Explore the nine modes <ArrowUpRight size={15} />
           </Link>
         </div>

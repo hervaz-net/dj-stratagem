@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { modes } from "@/lib/site-data";
+import { eyebrow, shell } from "@/lib/ui";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -68,27 +69,35 @@ export default async function BlogArticlePage({ params }: Props) {
   const mode = modes.find(({ slug: modeSlug }) => modeSlug === article.mode);
 
   return (
-    <article className="article-page">
-      <div className="container article-container">
-        <Link className="back-link" href="/resources/blog">
+    <article className="py-14 sm:py-20">
+      <div className={`${shell} max-w-3xl`}>
+        <Link className="link inline-flex items-center gap-2 text-sm" href="/resources/blog">
           <ArrowLeft size={14} /> All field notes
         </Link>
-        <span className="eyebrow">Field notes · D&amp;J Stratagem</span>
-        <h1>{article.title}</h1>
-        <p className="article-intro">{article.intro}</p>
-        <div className="article-meta">
+        <p className={`${eyebrow} mt-10`}>Field notes · D&amp;J Stratagem</p>
+        <h1 className="mt-4 text-4xl font-semibold tracking-tight text-balance sm:text-6xl">{article.title}</h1>
+        <p className="mt-4 text-lg text-base-content/75">{article.intro}</p>
+        <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-y border-base-300 py-3 font-mono text-[0.68rem] tracking-wide text-base-content/60">
           <span>Practical notes for construction teams</span>
-          {mode && <Link href={`/${mode.slug}`}>{mode.name} <ArrowUpRight size={13} /></Link>}
+          {mode && (
+            <Link className="link link-primary inline-flex items-center gap-1" href={`/${mode.slug}`}>
+              {mode.name} <ArrowUpRight size={13} />
+            </Link>
+          )}
         </div>
-        <div className="article-body">
-          {article.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+        <div className="mt-8 grid gap-4 text-base leading-relaxed text-base-content/80">
+          {article.paragraphs.map((paragraph) => (
+            <p key={paragraph}>{paragraph}</p>
+          ))}
         </div>
-        <div className="article-end">
-          <span className="eyebrow">Keep the work moving</span>
-          <h2>Find the work. Price it. Build it.</h2>
-          <Link className="button button-primary" href="/join">
-            Join free <ArrowUpRight size={15} />
-          </Link>
+        <div className="card mt-12 border border-base-300 bg-base-200">
+          <div className="card-body">
+            <p className={eyebrow}>Keep the work moving</p>
+            <h2 className="card-title text-2xl">Find the work. Price it. Build it.</h2>
+            <Link className="btn btn-primary w-fit" href="/join">
+              Join free <ArrowUpRight size={15} />
+            </Link>
+          </div>
         </div>
       </div>
     </article>

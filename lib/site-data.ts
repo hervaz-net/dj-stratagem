@@ -174,3 +174,21 @@ export const resourceSections = [
     description: "Useful starting points for the people who keep projects moving.",
   },
 ];
+
+export const faqs = [
+  {
+    question: "Is Starter really free?",
+    answer:
+      "Yes. There’s no card required to request and set up a Starter account. Every company is reviewed by a person.",
+  },
+  {
+    question: "What does a paid plan cost?",
+    answer:
+      "We’ll confirm a plan’s scope and price with you before you commit. Request access and our team will talk through your workflow.",
+  },
+  {
+    question: "Do I have to use all nine modes?",
+    answer:
+      "No. Start with the parts that fit your business. Talk with our team about which workflows are available for your account.",
+  },
+];

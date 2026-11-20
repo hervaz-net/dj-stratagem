@@ -47,11 +47,16 @@ export const viewport: Viewport = {
   ],
 };
 
+const themeBoot = `(function(){try{var stored=localStorage.getItem("djstratagem-theme");var system=window.matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";var theme=stored==="light"||stored==="dark"?stored:stored==="system"?system:"dark";document.documentElement.setAttribute("data-theme",theme);document.documentElement.style.colorScheme=theme;}catch(e){document.documentElement.setAttribute("data-theme","dark");}})();`;
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeBoot }} />
+      </head>
       <body>
         <ThemeProvider>{children}</ThemeProvider>
       </body>

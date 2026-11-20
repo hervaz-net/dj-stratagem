@@ -9,10 +9,10 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   return (
-    <section className="legal-page">
-      <div className="container legal-page-head">
-        <span className="eyebrow">Legal</span>
-        <h1>Privacy policy</h1>
+    <section className="py-16">
+      <div className="mx-auto mb-6 w-full max-w-3xl px-4">
+        <span className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-primary">Legal</span>
+        <h1 className="mt-3 text-4xl font-semibold tracking-tight sm:text-5xl">Privacy policy</h1>
       </div>
       <iframe
         className="legal-frame"
