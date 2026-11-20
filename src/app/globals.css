@@ -5,35 +5,35 @@
   logs: false;
 }
 
-/* Night desk: copper actions on a navy field. Light is the same system, not a second brand. */
+/* Tokens copied from the pre-redesign desk: navy field, copper action, tight radii. */
 @plugin "daisyui/theme" {
   name: "dark";
   default: true;
   prefersdark: true;
   color-scheme: dark;
-  --color-base-100: oklch(16% 0.018 245);
-  --color-base-200: oklch(19.5% 0.02 244);
-  --color-base-300: oklch(24% 0.02 244);
+  --color-base-100: oklch(15% 0.02 245);
+  --color-base-200: oklch(18% 0.022 244);
+  --color-base-300: oklch(21% 0.022 244);
   --color-base-content: oklch(94% 0.012 90);
-  --color-primary: oklch(74% 0.16 52);
-  --color-primary-content: oklch(18% 0.03 50);
-  --color-secondary: oklch(32% 0.02 245);
+  --color-primary: oklch(72% 0.17 51);
+  --color-primary-content: oklch(15% 0.02 245);
+  --color-secondary: oklch(25% 0.024 244);
   --color-secondary-content: oklch(94% 0.012 90);
-  --color-accent: oklch(76% 0.11 154);
-  --color-accent-content: oklch(16% 0.03 154);
-  --color-neutral: oklch(26% 0.02 245);
-  --color-neutral-content: oklch(92% 0.01 90);
+  --color-accent: oklch(76% 0.12 154);
+  --color-accent-content: oklch(15% 0.03 154);
+  --color-neutral: oklch(18% 0.025 244);
+  --color-neutral-content: oklch(96% 0.01 90);
   --color-info: oklch(74% 0.1 230);
   --color-info-content: oklch(16% 0.03 230);
-  --color-success: oklch(76% 0.11 154);
-  --color-success-content: oklch(16% 0.03 154);
+  --color-success: oklch(76% 0.12 154);
+  --color-success-content: oklch(15% 0.03 154);
   --color-warning: oklch(82% 0.14 85);
-  --color-warning-content: oklch(22% 0.04 70);
-  --color-error: oklch(70% 0.16 25);
+  --color-warning-content: oklch(20% 0.04 70);
+  --color-error: oklch(72% 0.17 25);
   --color-error-content: oklch(16% 0.04 25);
-  --radius-selector: 0.4rem;
-  --radius-field: 0.45rem;
-  --radius-box: 0.75rem;
+  --radius-selector: 0.25rem;
+  --radius-field: 0.25rem;
+  --radius-box: 0.375rem;
   --size-selector: 0.25rem;
   --size-field: 0.25rem;
   --border: 1px;
@@ -44,29 +44,29 @@
 @plugin "daisyui/theme" {
   name: "light";
   color-scheme: light;
-  --color-base-100: oklch(98% 0.006 85);
-  --color-base-200: oklch(95% 0.01 80);
-  --color-base-300: oklch(90% 0.014 75);
-  --color-base-content: oklch(22% 0.02 250);
-  --color-primary: oklch(58% 0.16 46);
-  --color-primary-content: oklch(98% 0.01 85);
-  --color-secondary: oklch(92% 0.012 80);
-  --color-secondary-content: oklch(22% 0.02 250);
-  --color-accent: oklch(48% 0.11 154);
+  --color-base-100: oklch(97% 0.008 85);
+  --color-base-200: oklch(99% 0.005 85);
+  --color-base-300: oklch(94% 0.012 80);
+  --color-base-content: oklch(19% 0.02 250);
+  --color-primary: oklch(62% 0.19 47);
+  --color-primary-content: oklch(15% 0.02 245);
+  --color-secondary: oklch(100% 0 0);
+  --color-secondary-content: oklch(19% 0.02 250);
+  --color-accent: oklch(51% 0.13 154);
   --color-accent-content: oklch(98% 0.01 154);
-  --color-neutral: oklch(28% 0.02 250);
-  --color-neutral-content: oklch(96% 0.01 90);
+  --color-neutral: oklch(20% 0.03 245);
+  --color-neutral-content: oklch(96% 0.008 85);
   --color-info: oklch(52% 0.1 230);
   --color-info-content: oklch(98% 0.01 230);
-  --color-success: oklch(48% 0.11 154);
+  --color-success: oklch(51% 0.13 154);
   --color-success-content: oklch(98% 0.01 154);
   --color-warning: oklch(62% 0.14 70);
   --color-warning-content: oklch(18% 0.04 70);
-  --color-error: oklch(52% 0.17 25);
+  --color-error: oklch(53% 0.19 25);
   --color-error-content: oklch(98% 0.01 25);
-  --radius-selector: 0.4rem;
-  --radius-field: 0.45rem;
-  --radius-box: 0.75rem;
+  --radius-selector: 0.25rem;
+  --radius-field: 0.25rem;
+  --radius-box: 0.375rem;
   --size-selector: 0.25rem;
   --size-field: 0.25rem;
   --border: 1px;
@@ -77,11 +77,15 @@
 @theme {
   --font-sans: "Bricolage Grotesque Variable", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono Variable", ui-monospace, monospace;
+  --color-ink-dim: oklch(75% 0.018 235);
+  --color-ink-muted: oklch(58% 0.022 235);
+  --color-line: oklch(35% 0.022 245 / 0.7);
+  --color-line-soft: oklch(31% 0.02 245 / 0.5);
 }
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 6.5rem;
+  scroll-padding-top: 6rem;
   background: var(--color-base-100);
 }
 
@@ -89,19 +93,28 @@ body {
   min-width: 320px;
   margin: 0;
   background:
-    radial-gradient(ellipse at 8% -8%, color-mix(in oklch, var(--color-primary) 18%, transparent), transparent 28rem),
+    radial-gradient(ellipse at 18% 0%, oklch(22% 0.035 245 / 0.24), transparent 34rem),
     var(--color-base-100);
   color: var(--color-base-content);
   font-family: var(--font-sans);
-  font-synthesis: none;
+  letter-spacing: -0.006em;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }
 
+html[data-theme="light"] body {
+  --color-ink-dim: oklch(36% 0.022 250);
+  --color-ink-muted: oklch(50% 0.02 250);
+  --color-line: oklch(84% 0.012 245 / 0.8);
+  --color-line-soft: oklch(88% 0.009 245 / 0.75);
+}
+
 h1,
 h2,
-h3 {
+h3,
+h4 {
   text-wrap: balance;
+  letter-spacing: -0.04em;
 }
 
 p {
@@ -113,17 +126,11 @@ p {
   color: var(--color-primary-content);
 }
 
-a:focus-visible,
-button:focus-visible,
-summary:focus-visible,
-input:focus-visible,
-select:focus-visible,
-textarea:focus-visible {
+:focus-visible {
   outline: 2px solid var(--color-primary);
-  outline-offset: 3px;
+  outline-offset: 2px;
 }
 
-/* daisyUI fields cap width at 20rem; forms on this site are full width. */
 .input,
 .select,
 .textarea {
@@ -131,14 +138,26 @@ textarea:focus-visible {
   max-width: none;
 }
 
+.hero-aura {
+  display: block;
+  width: 100%;
+}
+
 .legal-frame {
   display: block;
-  width: min(52rem, calc(100% - 2rem));
-  min-height: 70vh;
+  width: min(850px, calc(100% - 64px));
+  min-height: 1100px;
   margin-inline: auto;
-  border: 1px solid var(--color-base-300);
-  border-radius: var(--radius-box);
+  border: 1px solid var(--color-line);
+  border-radius: 6px;
   background: white;
+}
+
+@media (max-width: 680px) {
+  .legal-frame {
+    width: calc(100% - 36px);
+    min-height: 1000px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

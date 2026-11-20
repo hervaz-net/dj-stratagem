@@ -19,11 +19,9 @@ import {
   Wrench,
 } from "lucide-react";
 import { BrandMark } from "@/components/brand-mark";
-import { FaqList } from "@/components/faq-list";
-import { InquiryModal } from "@/components/inquiry-modal";
 import { Reveal } from "@/components/reveal";
-import { faqs, modes, pipeline } from "@/lib/site-data";
-import { display, eyebrow, sectionY, shell } from "@/lib/ui";
+import { modes, pipeline } from "@/lib/site-data";
+import { btnLg, eyebrow, sectionTitle, sectionY, shell, textLink } from "@/lib/ui";
 
 export const metadata: Metadata = {
   title: "Find the work. Price it. Build it.",
@@ -50,37 +48,11 @@ const proofPoints = [
   "Made for Southern California.",
 ];
 
-const gallery = [
-  {
-    src: "/media/jobsite/site.jpg",
-    alt: "A crew in hard hats looking over a foundation deck with conduit laid out behind them",
-    caption: "The job, in one view",
-    className: "col-span-2 row-span-2 min-h-64 sm:min-h-80",
-  },
-  {
-    src: "/media/jobsite/crew.jpg",
-    alt: "Two workers in orange vests among rebar and a cutoff saw on a concrete deck",
-    caption: "The crew",
-    className: "min-h-40",
-  },
-  {
-    src: "/media/jobsite/plans.jpg",
-    alt: "A person marking a rolled set of construction drawings at a table",
-    caption: "The drawings",
-    className: "min-h-40",
-  },
-  {
-    src: "/media/construction-structure.jpg",
-    alt: "Concrete structure under construction in the afternoon light",
-    caption: "The structure",
-    className: "min-h-44",
-  },
-  {
-    src: "/media/jobsite/hardhat.jpg",
-    alt: "Ironworkers climbing a rebar cage on an open construction site",
-    caption: "The steel",
-    className: "min-h-44",
-  },
+const heroFrames = [
+  { src: "/media/construction-site.jpg", alt: "Construction crew at work on a Southern California job site" },
+  { src: "/media/jobsite/site.jpg", alt: "A crew in hard hats looking over a foundation deck with conduit laid out behind them" },
+  { src: "/media/jobsite/crew.jpg", alt: "Two workers in orange vests among rebar on a concrete deck" },
+  { src: "/media/construction-structure.jpg", alt: "Concrete structure under construction in the afternoon light" },
 ];
 
 export default function HomePage() {
@@ -102,137 +74,162 @@ export default function HomePage() {
 
   return (
     <>
-      <script
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        type="application/ld+json"
-      />
-      <section className="hero items-start bg-transparent">
-        <div className={`${shell} grid items-center gap-10 py-14 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:py-20`}>
-          <div>
+      <script dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} type="application/ld+json" />
+      <section className="hero relative items-start overflow-hidden border-b border-line-soft bg-transparent pt-[clamp(58px,8vw,110px)]">
+        <div className="relative w-full">
+        <div aria-hidden="true" className="pointer-events-none absolute top-[8%] -right-[13%] size-[56vw] rounded-full border border-line-soft opacity-50" />
+        <div className={`${shell} relative grid items-center gap-[clamp(42px,7vw,100px)] min-[901px]:grid-cols-[minmax(0,0.94fr)_minmax(400px,1.06fr)]`}>
+          <div className="relative z-[1] pb-[42px] max-[900px]:max-w-[730px] max-[900px]:pb-5">
             <p className={eyebrow}>
-              <span className="size-1.5 rounded-full bg-primary" />
+              <span className="status status-primary status-sm" />
               The construction desk for what’s next
             </p>
-            <h1 className={`${display} mt-5 leading-[0.95]`}>
+            <h1 className="mt-[23px] mb-5 text-balance text-[clamp(58px,7.3vw,96px)] font-[700] leading-[0.9] tracking-[-0.075em] max-[680px]:text-[clamp(61px,15vw,82px)]">
               Find the work.
               <br />
               Price it.
               <br />
               <span className="text-primary">Build it.</span>
             </h1>
-            <p className="mt-5 max-w-lg text-lg font-medium tracking-tight text-base-content">
+            <p className="mt-6 mb-[9px] max-w-[500px] text-[clamp(18px,1.9vw,23px)] font-semibold tracking-[-0.035em] text-base-content">
               One account for the full job lifecycle—from first lead to the next customer.
             </p>
-            <p className="mt-3 max-w-lg text-base leading-relaxed text-base-content/70">
+            <p className="max-w-[500px] text-[15px] leading-[1.75] text-ink-dim">
               Built for contractors, subcontractors, and suppliers who want to spend less time chasing the process and more time building the business.
             </p>
-            <div className="mt-7 flex flex-wrap items-center gap-3">
-              <Link className="btn btn-primary btn-lg w-full sm:w-auto" href="/join">
+            <div className="mt-7 flex flex-wrap items-center gap-[21px]">
+              <Link className={btnLg} href="/join">
                 Join free <ArrowUpRight aria-hidden="true" size={17} />
               </Link>
-              <InquiryModal className="btn btn-outline btn-lg w-full sm:w-auto" />
-              <Link className="btn btn-ghost" href="#how-it-works">
+              <Link className={textLink} href="#how-it-works">
                 See how it works <ArrowDownRight aria-hidden="true" size={16} />
               </Link>
             </div>
-            <ul aria-label="Platform benefits" className="mt-8 flex flex-col gap-2 text-sm text-base-content/70 sm:flex-row sm:flex-wrap sm:gap-x-5">
+            <ul aria-label="Platform benefits" className="mt-[34px] flex flex-wrap gap-x-[18px] gap-y-[9px] text-[10px] text-ink-muted max-[680px]:grid">
               {proofPoints.map((point) => (
-                <li className="inline-flex items-center gap-2" key={point}>
-                  <Check aria-hidden="true" className="text-success" size={15} />
+                <li className="inline-flex items-center gap-1.5" key={point}>
+                  <Check aria-hidden="true" className="text-success" size={14} />
                   {point}
                 </li>
               ))}
             </ul>
           </div>
-          <div className="relative pb-16 pl-4 sm:pl-8">
-            <div className="relative min-h-[22rem] overflow-hidden rounded-box border border-base-300 sm:min-h-[30rem]">
-              <Image
-                alt="Construction crew at work on a Southern California job site"
-                className="object-cover"
-                fill
-                priority
-                sizes="(max-width: 1024px) 100vw, 50vw"
-                src="/media/construction-site.jpg"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-black/25" />
-              <p className="absolute top-4 left-4 inline-flex items-center gap-1 font-mono text-[0.65rem] tracking-[0.12em] text-white">
-                <MapPin aria-hidden="true" size={13} /> SOUTHERN CALIFORNIA
-              </p>
-            </div>
-            <article className="card absolute right-0 bottom-0 w-[min(24rem,92%)] border border-base-300 bg-base-100/95 shadow-xl backdrop-blur">
-              <div className="card-body gap-3 p-4">
-                <div className="flex items-center justify-between gap-2 font-mono text-[0.62rem] tracking-wider text-base-content/60">
-                  <span className="inline-flex items-center gap-2">
-                    <span className="size-1.5 rounded-full bg-primary" />
-                    JOB IN MOTION
+          <div className="relative min-w-0 pt-0 pr-0 pb-8 pl-[26px] max-[680px]:pb-[27px] max-[680px]:pl-[17px]">
+            <div className="aura aura-xs hero-aura text-primary/70">
+              <figure className="hover-gallery card relative min-h-[510px] overflow-hidden rounded-[9px] border border-line bg-base-300 shadow-[0_24px_70px_-38px_oklch(3%_0.01_240/0.8)] max-[1100px]:min-h-[450px] max-[900px]:min-h-[480px] max-[680px]:min-h-[clamp(285px,85vw,410px)]">
+                {heroFrames.map((frame, index) => (
+                  <Image
+                    alt={frame.alt}
+                    className="object-cover saturate-[0.7] contrast-105"
+                    fill
+                    key={frame.src}
+                    priority={index === 0}
+                    sizes="(max-width: 760px) 100vw, 52vw"
+                    src={frame.src}
+                  />
+                ))}
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/5 from-20% to-black/70" />
+                <figcaption className="pointer-events-none absolute right-6 bottom-6 left-6 z-[2] flex items-end justify-between gap-5 text-[13px] font-semibold text-white max-[680px]:grid max-[680px]:text-[11px]">
+                  <span className="inline-flex items-center gap-1.5 font-mono text-[9px] tracking-[0.08em] text-white/80">
+                    <MapPin aria-hidden="true" size={13} /> SOUTHERN CALIFORNIA
                   </span>
-                  <span className="badge badge-outline badge-sm">Sample</span>
+                  <span>Built around the work on the ground.</span>
+                </figcaption>
+              </figure>
+            </div>
+            <article className="card absolute -right-[17px] -bottom-[3px] z-[3] w-[min(390px,87%)] border border-line bg-base-200/95 shadow-[0_24px_70px_-36px_oklch(0_0_0/0.8)] backdrop-blur-[18px] max-[680px]:-right-1.5 max-[680px]:w-[min(355px,96%)]">
+              <div className="card-body gap-0 p-[18px] max-[680px]:p-[13px]">
+                <div className="flex items-center justify-between gap-2.5">
+                  <span className="inline-flex items-center gap-[7px] font-mono text-[8px] tracking-[0.07em] text-ink-muted">
+                    <span className="status status-primary status-xs" /> JOB IN MOTION
+                  </span>
+                  <span className="font-mono text-[8px] text-ink-muted">DJS · 014</span>
                 </div>
-                <h2 className="card-title text-base">Commercial tenant improvement</h2>
-                <p className="text-xs text-base-content/60">
-                  Pasadena, CA · Electrical · $280k–$340k
-                </p>
-                <progress aria-label="Sample job progress, pursuit stage" className="progress progress-primary h-1.5" value={41} max={100} />
-                <div className="flex justify-between font-mono text-[0.62rem] uppercase tracking-wide text-base-content/50">
-                  <span className="text-primary">Found</span>
-                  <span className="text-primary">Pursuit</span>
-                  <span>Build</span>
-                  <span>Showcase</span>
+                <h2 className="mt-[13px] mb-[9px] text-[17px] font-[650] tracking-[-0.035em] max-[680px]:text-sm">Commercial tenant improvement</h2>
+                <div className="flex flex-wrap items-center gap-3.5 text-[9px] text-ink-muted">
+                  <span className="inline-flex items-center gap-1"><MapPin size={13} /> Pasadena, CA</span>
+                  <span>Electrical · $280k–$340k</span>
                 </div>
-                <p className="text-xs text-base-content/60">
-                  Sample ticket. One job. The right people in the loop.
-                </p>
+                <div className="mt-[18px]">
+                  <div className="mb-[7px] flex justify-between font-mono text-[7px] text-ink-muted">
+                    <span className="text-primary">Found</span>
+                    <span className="text-primary">Pursuit</span>
+                    <span>Build</span>
+                    <span>Showcase</span>
+                  </div>
+                  <progress aria-label="Sample job illustration, pursuit stage" className="progress progress-primary h-[3px]" max={100} value={41} />
+                </div>
+                <div className="mt-[13px] flex items-center gap-2 text-[9px] text-ink-muted">
+                  <div className="avatar-group -space-x-1">
+                    {["GC", "EL", "+"].map((mark) => (
+                      <div className="avatar avatar-placeholder" key={mark}>
+                        <div className={`mask mask-circle w-[21px] border border-base-200 text-[7px] ${mark === "+" ? "bg-primary/15 text-primary" : "bg-base-300 text-base-content"}`}>
+                          <span>{mark}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <span>One job. The right people in the loop.</span>
+                </div>
               </div>
             </article>
+            <div aria-hidden="true" className="absolute top-[23px] left-0 grid gap-[3px] font-mono text-[8px] tracking-[0.07em] text-ink-muted [writing-mode:vertical-rl] max-[680px]:left-[-1px] max-[680px]:text-[7px]">
+              <span>34°08&apos; N</span>
+              <span>118°08&apos; W</span>
+            </div>
           </div>
+        </div>
+        <div className={`${shell} flex justify-between border-t border-line-soft py-[19px] text-[11px] text-ink-muted`}>
+          <span className="font-mono text-[10px] tracking-[0.09em]">ONE ACCOUNT · NINE MODES</span>
+          <a className="link inline-flex items-center gap-2 text-ink-dim no-underline hover:text-primary" href="#modes">
+            Explore the desk <ArrowRight aria-hidden="true" size={15} />
+          </a>
+        </div>
         </div>
       </section>
 
-      <section aria-label="Platform positioning" className="border-y border-base-300 bg-base-200/70">
-        <ul className={`${shell} flex flex-wrap items-center justify-center gap-2 py-4 sm:justify-between`}>
+      <section aria-label="Platform positioning" className="border-b border-line-soft bg-base-200">
+        <div className={`${shell} stats stats-horizontal w-full bg-transparent shadow-none`}>
           {["Free to start", "Every account reviewed by a person", "Based in Los Angeles", "Focused on Southern California"].map((item) => (
-            <li className="badge badge-lg badge-ghost gap-2 font-mono text-[0.65rem] uppercase" key={item}>
-              <span aria-hidden="true" className="size-1 rounded-full bg-primary" />
-              {item}
-            </li>
+            <div className="stat place-items-center px-2 py-4" key={item}>
+              <div className="stat-title font-mono text-[9px] tracking-[0.035em] text-ink-dim uppercase">{item}</div>
+            </div>
           ))}
-        </ul>
+        </div>
       </section>
 
       <section className={sectionY} id="modes">
         <div className={shell}>
-          <Reveal className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <Reveal className="mb-[38px] flex items-end justify-between gap-[46px] max-[680px]:mb-[26px] max-[680px]:block">
             <div>
-              <p className={eyebrow}>One connected system</p>
-              <h2 className={`${display} mt-3 text-3xl sm:text-5xl`}>
-                Nine modes. <span className="text-primary">One desk.</span>
+              <span className={eyebrow}>One connected system</span>
+              <h2 className={sectionTitle}>
+                Nine modes.
+                <br />
+                <span className="text-primary">One desk.</span>
               </h2>
             </div>
-            <p className="max-w-md text-sm leading-relaxed text-base-content/70">
+            <p className="mb-1 max-w-[405px] text-sm leading-[1.75] text-ink-dim max-[680px]:mt-3.5 max-[680px]:text-xs">
               The parts of the job have always depended on each other. Now your tools can, too. Move through the whole pipeline without starting over in a different system.
             </p>
           </Reveal>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-2.5 min-[681px]:grid-cols-2 min-[901px]:grid-cols-3">
             {modes.map((mode, index) => {
               const Icon = modeIcons[mode.slug as keyof typeof modeIcons];
               return (
                 <Reveal delay={Math.min(index * 0.035, 0.22)} key={mode.slug}>
-                  <Link
-                    className="card h-full border border-base-300 bg-base-100 motion-safe:transition motion-safe:hover:-translate-y-0.5 hover:border-primary"
-                    href={`/${mode.slug}`}
-                  >
-                    <div className="card-body">
+                  <Link className="card group relative min-h-[234px] rounded-[6px] border border-line-soft bg-base-300 transition hover:-translate-y-[3px] hover:border-primary/60 hover:bg-base-200" href={`/${mode.slug}`}>
+                    <span className="absolute -top-px left-[21px] h-0.5 w-7 bg-primary/55 transition-all group-hover:w-[54px] group-hover:bg-primary" />
+                    <div className="card-body px-[21px] pt-5 pb-[17px]">
                       <div className="flex items-center justify-between">
-                        <span className="grid size-10 place-items-center rounded-box border border-base-300 bg-base-200 text-primary">
-                          <Icon aria-hidden="true" size={18} strokeWidth={1.7} />
+                        <span className="grid size-10 place-items-center rounded-[5px] border border-line bg-base-200 text-primary">
+                          <Icon aria-hidden="true" size={20} strokeWidth={1.7} />
                         </span>
-                        <span className="badge badge-outline font-mono text-[0.62rem] uppercase">
-                          {mode.stage}
-                        </span>
+                        <span className="badge badge-ghost font-mono text-[9px] tracking-[0.1em] text-ink-muted uppercase">{mode.stage}</span>
                       </div>
-                      <h3 className="card-title mt-3">{mode.name}</h3>
-                      <p className="text-sm text-base-content/70">{mode.summary}</p>
-                      <span className="mt-auto inline-flex items-center gap-1 pt-3 text-sm font-semibold text-primary">
+                      <h3 className="mt-[23px] mb-[5px] text-xl font-[650] tracking-[-0.045em]">{mode.name}</h3>
+                      <p className="max-w-[290px] text-xs leading-[1.65] text-ink-muted">{mode.summary}</p>
+                      <span className="mt-auto inline-flex items-center gap-[7px] pt-[19px] text-[11px] font-[650] text-ink-dim group-hover:text-primary">
                         Explore {mode.name}
                         <ArrowUpRight aria-hidden="true" size={14} />
                       </span>
@@ -242,34 +239,32 @@ export default function HomePage() {
               );
             })}
           </div>
-          <div className="mt-4 flex flex-col gap-3 rounded-box border border-base-300 bg-base-200/60 p-4 text-sm text-base-content/75 sm:flex-row sm:items-center">
-            <ShieldCheck aria-hidden="true" className="shrink-0 text-success" size={18} />
-            <p className="flex-1">
-              AI subagents can prepare the work across your pipeline. A person approves before anything runs.
-            </p>
-            <Link className="link link-primary inline-flex items-center gap-1 font-semibold" href="/platform">
+          <div className="alert mt-[19px] items-center rounded-[5px] border border-line-soft bg-base-200/65 py-3.5 text-[11px] text-ink-muted">
+            <ShieldCheck aria-hidden="true" className="text-success" size={17} />
+            <span className="flex-1">AI subagents can prepare the work across your pipeline. A person approves before anything runs.</span>
+            <Link className="link inline-flex items-center gap-1 text-[10px] font-[650] text-primary no-underline" href="/platform">
               How the platform works <ChevronRight size={14} />
             </Link>
           </div>
         </div>
       </section>
 
-      <section className={`${sectionY} border-y border-base-300 bg-base-200/50`} id="how-it-works">
+      <section className={`${sectionY} border-y border-line-soft bg-base-200`} id="how-it-works">
         <div className={shell}>
-          <Reveal className="mb-10 max-w-2xl">
-            <p className={eyebrow}>A job, in motion</p>
-            <h2 className={`${display} mt-3 text-3xl sm:text-5xl`}>Build the pipeline, not the paperwork.</h2>
-            <p className="mt-3 text-base-content/70">One job moves through the desk. Your team keeps the context.</p>
+          <Reveal className="mb-12 max-w-[700px]">
+            <span className={eyebrow}>A job, in motion</span>
+            <h2 className={sectionTitle}>Build the pipeline, not the paperwork.</h2>
+            <p className="mt-3 text-sm text-ink-dim">One job moves through the desk. Your team keeps the context.</p>
           </Reveal>
-          <ul className="steps steps-vertical w-full lg:steps-horizontal">
+          <ul className="steps steps-vertical w-full min-[901px]:steps-horizontal">
             {pipeline.map((step) => (
-              <li className="step step-primary min-w-0" key={step.number}>
-                <div className="mt-2 px-1 text-left lg:px-3">
-                  <h3 className="font-semibold">{step.title}</h3>
-                  <p className="mt-1 text-sm text-base-content/70">{step.text}</p>
-                  <div className="mt-2 flex flex-wrap justify-start gap-1">
+              <li className="step step-primary min-w-0" data-content={step.number} key={step.number}>
+                <div className="px-2 pt-3 text-left">
+                  <h3 className="text-xl font-[650] tracking-[-0.04em]">{step.title}</h3>
+                  <p className="mt-2 max-w-[245px] text-xs leading-[1.7] text-ink-muted">{step.text}</p>
+                  <div className="mt-3 flex flex-wrap gap-[5px]">
                     {step.modes.map((mode) => (
-                      <span className="badge badge-sm badge-ghost" key={mode}>
+                      <span className="badge badge-ghost badge-sm rounded-[3px] border border-line-soft font-mono text-[8px]" key={mode}>
                         {mode}
                       </span>
                     ))}
@@ -282,180 +277,122 @@ export default function HomePage() {
       </section>
 
       <section className={sectionY}>
-        <div className={`${shell} grid items-center gap-10 lg:grid-cols-2`}>
+        <div className={`${shell} grid items-center gap-[clamp(45px,9vw,130px)] min-[901px]:grid-cols-[minmax(0,0.9fr)_minmax(400px,1.1fr)]`}>
           <Reveal>
-            <p className={eyebrow}>AI that stays in its lane</p>
-            <h2 className={`${display} mt-3 text-3xl sm:text-5xl`}>Automation should earn your trust.</h2>
-            <p className="mt-4 max-w-xl text-sm leading-relaxed text-base-content/75">
+            <span className={eyebrow}>AI that stays in its lane</span>
+            <h2 className={`${sectionTitle} max-w-[520px]`}>Automation should earn your trust.</h2>
+            <p className="mt-5 max-w-[520px] text-sm leading-[1.8] text-ink-dim">
               Stratagem’s AI subagents prepare real work across the pipeline: qualifying opportunities, organizing requests, and drafting the next step. A human reviews and approves before anything executes.
             </p>
-            <ul className="mt-5 grid gap-2 text-sm text-base-content/80">
+            <ul className="list my-6 gap-3 text-xs text-ink-dim">
               {["You choose what work to hand off", "A person approves every run", "The result stays connected to the job"].map((item) => (
-                <li className="flex items-center gap-2" key={item}>
-                  <Check aria-hidden="true" className="text-success" size={16} /> {item}
+                <li className="list-row items-center px-0 py-0" key={item}>
+                  <Check className="text-success" size={16} />
+                  <span>{item}</span>
                 </li>
               ))}
             </ul>
-            <Link className="btn btn-ghost mt-4 px-0" href="/platform">
+            <Link className={textLink} href="/platform">
               Meet the platform <ArrowRight size={15} />
             </Link>
           </Reveal>
           <Reveal delay={0.1}>
-            <article className="card border border-base-300 bg-base-100 shadow-sm">
-              <div className="flex items-center gap-3 border-b border-base-300 px-5 py-4">
-                <span className="grid size-9 place-items-center rounded-box bg-primary/15 font-mono text-xs text-primary">D/J</span>
-                <div className="min-w-0 flex-1">
-                  <p className="text-sm font-semibold">Work ready for review</p>
-                  <p className="font-mono text-[0.62rem] tracking-wide text-base-content/50">PROJECTS → PLATFORM → EXCHANGE</p>
-                </div>
-                <span className="badge badge-primary badge-outline">Needs your OK</span>
+            <article className="card overflow-hidden rounded-[7px] border border-line bg-base-200 shadow-[0_24px_70px_-38px_oklch(3%_0.01_240/0.8)]">
+              <div className="flex items-center gap-[11px] border-b border-line-soft px-[19px] py-4">
+                <span className="grid size-[35px] place-items-center rounded-[5px] border border-primary/40 bg-primary/12 font-mono text-[10px] text-primary">D/J</span>
+                <span className="grid flex-1 gap-1">
+                  <strong className="text-xs font-[650]">Work ready for review</strong>
+                  <small className="font-mono text-[7px] tracking-[0.06em] text-ink-muted">PROJECTS → PLATFORM → EXCHANGE</small>
+                </span>
+                <span className="badge badge-outline badge-primary rounded-[3px] font-mono text-[8px]">Needs your OK</span>
               </div>
-              <div className="card-body">
-                <div className="flex gap-3">
-                  <span className="grid size-9 shrink-0 place-items-center rounded-box border border-base-300 text-primary">
-                    <ClipboardCheck size={16} />
+              <div className="flex gap-[13px] px-[22px] pt-[25px] pb-[17px]">
+                <div className="grid size-[34px] shrink-0 place-items-center rounded-[5px] border border-line text-primary">
+                  <ClipboardCheck size={17} />
+                </div>
+                <div>
+                  <span className="text-[13px] font-[650]">Pursuit brief · Pasadena TI</span>
+                  <p className="mt-[7px] max-w-[370px] text-[11px] leading-[1.65] text-ink-muted">
+                    Trade fit confirmed. Supplier request drafted with the electrical scope and due date.
+                  </p>
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-[7px] px-[22px] pb-5 pl-[69px]">
+                {["Scope attached", "3 suppliers matched", "No action taken yet"].map((item) => (
+                  <span className="badge badge-ghost gap-1 rounded-[3px] border border-line-soft font-mono text-[8px] text-ink-muted" key={item}>
+                    <Check size={13} className="text-success" /> {item}
                   </span>
-                  <div>
-                    <p className="font-semibold">Pursuit brief · Pasadena TI</p>
-                    <p className="mt-1 text-sm text-base-content/70">
-                      Trade fit confirmed. Supplier request drafted with the electrical scope and due date.
-                    </p>
-                  </div>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {["Scope attached", "3 suppliers matched", "No action taken yet"].map((item) => (
-                    <span className="badge badge-ghost gap-1" key={item}>
-                      <Check size={12} /> {item}
-                    </span>
-                  ))}
-                </div>
-                <div className="card-actions justify-end">
-                  <span className="btn btn-sm btn-ghost pointer-events-none">Review details</span>
-                  <span className="btn btn-sm btn-primary pointer-events-none">Approve run</span>
-                </div>
-                <p className="text-xs text-base-content/50">Illustration of a review step. Nothing is sent from this panel.</p>
+                ))}
+              </div>
+              <div className="flex justify-end gap-2 border-t border-line-soft px-[18px] py-3.5">
+                <span className="inline-flex items-center gap-1.5 rounded-[4px] border border-line px-2.5 py-2 text-[9px] text-ink-dim">Review details</span>
+                <span className="inline-flex items-center gap-1.5 rounded-[4px] border border-primary bg-primary px-2.5 py-2 text-[9px] font-bold text-primary-content">
+                  Approve run <ArrowRight size={14} />
+                </span>
               </div>
             </article>
           </Reveal>
         </div>
       </section>
 
-      <section className={`${sectionY} border-y border-base-300 bg-base-200/40`} aria-labelledby="gallery-heading">
-        <div className={shell}>
-          <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <p className={eyebrow}>On the ground</p>
-              <h2 className={`${display} mt-3 text-3xl sm:text-5xl`} id="gallery-heading">
-                The work this desk is for.
-              </h2>
-            </div>
-            <p className="max-w-sm text-sm text-base-content/70">
-              Job-site photography. These frames are reference media, not a client portfolio.
-            </p>
-          </div>
-          <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-            {gallery.map((shot) => (
-              <figure className={`relative overflow-hidden rounded-box border border-base-300 ${shot.className}`} key={shot.src}>
-                <Image alt={shot.alt} className="object-cover" fill sizes="(max-width: 768px) 50vw, 25vw" src={shot.src} />
-                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/75 to-transparent" />
-                <figcaption className="absolute right-3 bottom-3 left-3 font-mono text-[0.62rem] tracking-[0.12em] text-white uppercase">
-                  {shot.caption}
-                </figcaption>
-              </figure>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className={sectionY}>
-        <div className={`${shell} grid items-center gap-10 lg:grid-cols-2`}>
-          <div className="relative min-h-72 overflow-hidden rounded-box border border-base-300">
+      <section className="border-y border-line-soft bg-base-200">
+        <div className={`${shell} grid items-center gap-[clamp(44px,8vw,110px)] py-[clamp(65px,8vw,105px)] max-[680px]:grid-cols-1 min-[681px]:grid-cols-[1fr_0.88fr]`}>
+          <div className="relative min-h-[370px] overflow-hidden rounded-[6px] border border-line bg-base-300 max-[680px]:min-h-[260px]">
             <Image
               alt="Concrete structure under construction in the afternoon light"
-              className="object-cover"
+              className="object-cover saturate-[0.65] contrast-[1.04]"
               fill
-              sizes="(max-width: 1024px) 100vw, 50vw"
+              sizes="(max-width: 760px) 100vw, 48vw"
               src="/media/construction-structure.jpg"
             />
-            <span className="absolute bottom-4 left-4 font-mono text-[0.65rem] tracking-[0.12em] text-white">
+            <span className="absolute bottom-5 left-[21px] z-[1] font-mono text-[8px] tracking-[0.11em] text-white">
               BUILT FOR THE WORK THAT BUILDS OUR CITIES
             </span>
           </div>
           <Reveal>
-            <p className={eyebrow}>Los Angeles, built for the region</p>
-            <h2 className={`${display} mt-3 text-3xl sm:text-5xl`}>Local work. Shared momentum.</h2>
-            <p className="mt-4 max-w-xl text-sm leading-relaxed text-base-content/75">
+            <span className={eyebrow}>Los Angeles, built for the region</span>
+            <h2 className={`${sectionTitle} max-w-[490px]`}>Local work. Shared momentum.</h2>
+            <p className="mt-5 max-w-[520px] text-sm leading-[1.8] text-ink-dim">
               D&amp;J Stratagem is based in Los Angeles and focused on the people building across Southern California. We start close to home, with a network that understands the trades, suppliers, and jobs in this region.
             </p>
-            <div className="mt-4 flex flex-wrap gap-2">
-              <span className="badge badge-outline gap-1"><MapPin size={13} /> Los Angeles, CA</span>
-              <span className="badge badge-outline gap-1"><Users size={13} /> Contractor-first</span>
-              <span className="badge badge-outline gap-1"><Wrench size={13} /> Made for the trades</span>
+            <div className="my-[22px] flex flex-wrap gap-2">
+              <span className="badge badge-ghost gap-1.5 rounded-[3px] border border-line-soft px-[9px] py-2 text-[9px] text-ink-dim"><MapPin className="text-primary" size={15} /> Los Angeles, CA</span>
+              <span className="badge badge-ghost gap-1.5 rounded-[3px] border border-line-soft px-[9px] py-2 text-[9px] text-ink-dim"><Users className="text-primary" size={15} /> Contractor-first</span>
+              <span className="badge badge-ghost gap-1.5 rounded-[3px] border border-line-soft px-[9px] py-2 text-[9px] text-ink-dim"><Wrench className="text-primary" size={15} /> Made for the trades</span>
             </div>
-            <Link className="btn btn-ghost mt-4 px-0" href="/about">
+            <Link className={textLink} href="/about">
               More about D&amp;J <ArrowRight size={15} />
             </Link>
           </Reveal>
         </div>
       </section>
 
-      <section className={`${sectionY} border-t border-base-300`} aria-labelledby="stories-heading">
-        <div className={`${shell} grid gap-8 lg:grid-cols-[0.8fr_1.2fr]`}>
-          <div>
-            <p className={eyebrow}>From the field</p>
-            <h2 className={`${display} mt-3 text-3xl sm:text-4xl`} id="stories-heading">
-              Stories, when we have them.
-            </h2>
-          </div>
-          <div className="alert items-start border border-base-300 bg-base-200">
-            <div>
-              <span className="badge badge-outline">Placeholder</span>
-              <p className="mt-2 text-sm leading-relaxed">
-                Customer stories are not published yet. This space stays empty of invented quotes, win rates, and dollar claims. If you have worked with D&amp;J Stratagem and want to share a note, email{" "}
-                <a className="link link-primary" href="mailto:hello@djstratageminc.com">hello@djstratageminc.com</a>.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className={`${sectionY} bg-base-200/40`}>
-        <div className={`${shell} grid gap-8 lg:grid-cols-[0.8fr_1.2fr]`}>
-          <div>
-            <p className={eyebrow}>Before you join</p>
-            <h2 className={`${display} mt-3 text-3xl sm:text-4xl`}>Clear answers, from a person.</h2>
-          </div>
-          <FaqList items={faqs} />
-        </div>
-      </section>
-
-      <section className={sectionY}>
+      <section className="pt-[clamp(76px,8vw,100px)] pb-[clamp(75px,9.5vw,132px)] max-[680px]:pt-0">
         <div className={shell}>
-          <div className="relative overflow-hidden rounded-box border border-primary/40 bg-neutral px-6 py-12 text-center text-neutral-content sm:px-12">
+          <div className="relative overflow-hidden rounded-[8px] border border-primary/40 bg-[oklch(18%_0.025_244)] px-[clamp(38px,7vw,84px)] py-[clamp(38px,7vw,84px)] text-center text-[#f5f2eb]">
+            <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[linear-gradient(oklch(1_0_0/0.045)_1px,transparent_1px),linear-gradient(90deg,oklch(1_0_0/0.045)_1px,transparent_1px)] bg-[size:44px_44px] [mask-image:radial-gradient(ellipse_at_center,black_0%,transparent_78%)]" />
             <div className="relative">
-              <div className="flex justify-center text-neutral-content">
-                <BrandMark compact onDark />
-              </div>
-              <p className={`${eyebrow} mx-auto mt-6`}>Your next job starts here</p>
-              <h2 className="mt-3 text-4xl font-semibold tracking-tight text-balance sm:text-6xl">
+              <div className="mb-[22px] flex justify-center text-[#f5f2eb]"><BrandMark compact /></div>
+              <span className={`${eyebrow} justify-center`}>Your next job starts here</span>
+              <h2 className="mt-[17px] mb-[13px] text-[clamp(42px,6vw,76px)] font-[700] leading-[0.95] tracking-[-0.07em] text-[#f5f2eb]">
                 Find the work.
                 <br />
                 <span className="text-primary">Build what’s next.</span>
               </h2>
-              <p className="mx-auto mt-3 max-w-md text-sm text-neutral-content/75">
+              <p className="mx-auto max-w-[440px] text-[13px] leading-[1.7] text-[oklch(78%_0.016_235)]">
                 Start with a free account. We review every company before it joins the network.
               </p>
-              <div className="mt-6 flex flex-wrap justify-center gap-3">
-                <Link className="btn btn-primary btn-lg" href="/join">
+              <div className="mt-[25px] flex flex-wrap justify-center gap-2.5">
+                <Link className="btn h-[52px] min-h-[52px] rounded-[5px] border-0 bg-[oklch(97%_0.008_85)] px-[21px] text-sm font-bold text-[oklch(17%_0.02_245)] hover:bg-white" href="/join">
                   Join free <ArrowUpRight size={17} />
                 </Link>
-                <Link className="btn btn-outline border-neutral-content/30 text-neutral-content" href="/contact">
+                <Link className="btn btn-outline h-[46px] min-h-[46px] rounded-[5px] border-white/30 px-[17px] text-sm font-bold text-white hover:border-primary hover:bg-transparent hover:text-primary" href="/contact">
                   Talk to a person
                 </Link>
               </div>
-              <p className="mt-4 inline-flex items-center gap-2 text-xs text-neutral-content/70">
-                <CircleDollarSign size={15} /> No card required to get started
-              </p>
+              <span className="mt-[18px] inline-flex items-center gap-1.5 text-[10px] text-[oklch(70%_0.015_235)]">
+                <CircleDollarSign className="text-primary" size={15} /> No card required to get started
+              </span>
             </div>
           </div>
         </div>

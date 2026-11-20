@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowUpRight, Mail, MapPin, Phone } from "lucide-react";
 import { ContactForm } from "@/components/contact-form";
 import { Reveal } from "@/components/reveal";
-import { display, eyebrow, shell } from "@/lib/ui";
+import { eyebrow, shell, textLink } from "@/lib/ui";
 
 export const metadata: Metadata = {
   title: "Talk to a person",
@@ -15,50 +15,48 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <>
-      <section className="py-14 sm:py-20">
-        <div className={`${shell} grid items-start gap-10 lg:grid-cols-[0.8fr_1.1fr]`}>
+      <section className="border-b border-line-soft bg-[radial-gradient(ellipse_at_15%_30%,var(--color-primary)/12,transparent_29rem)] py-[clamp(62px,8vw,100px)]">
+        <div className={`${shell} grid items-start gap-[clamp(40px,8vw,108px)] min-[901px]:grid-cols-[minmax(290px,0.74fr)_minmax(420px,1fr)]`}>
           <div>
-            <p className={eyebrow}>Real people. Real answers.</p>
-            <h1 className={`${display} mt-4`}>
-              Let’s talk <span className="text-primary">about the work.</span>
+            <span className={eyebrow}>Real people. Real answers.</span>
+            <h1 className="mt-[19px] mb-4 text-[clamp(49px,6.5vw,79px)] font-[700] leading-[0.94] tracking-[-0.075em]">
+              Let’s talk
+              <br />
+              <span className="text-primary">about the work.</span>
             </h1>
-            <p className="mt-4 max-w-md text-base-content/75">
+            <p className="max-w-[420px] text-sm leading-[1.8] text-ink-dim">
               Tell us what your company does and what you’re trying to get done. A person from our team will get back to you.
             </p>
-            <ul className="mt-6 grid gap-3 text-sm">
-              <li>
-                <a className="link inline-flex items-center gap-2" href="mailto:hello@djstratageminc.com">
-                  <Mail className="text-primary" size={16} /> hello@djstratageminc.com <ArrowUpRight size={14} />
-                </a>
-              </li>
-              <li className="inline-flex items-center gap-2">
-                <MapPin className="text-primary" size={16} /> Los Angeles, California
-              </li>
-              <li className="inline-flex items-center gap-2 text-base-content/70">
-                <Phone className="text-primary" size={16} /> Prefer email? We’ll follow up personally.
-              </li>
-            </ul>
-            <div className="mt-8 flex items-center gap-3 border-t border-base-300 pt-4">
-              <span className="grid size-10 place-items-center rounded-full bg-primary/15 font-mono text-xs text-primary">D/J</span>
-              <span>
-                <strong className="block text-sm">A person reads every request.</strong>
-                <small className="text-base-content/60">No bot maze. No hard sell.</small>
+            <div className="mt-[27px] grid gap-3.5 text-[11px] text-ink-dim">
+              <a className="link flex items-center gap-[9px] text-ink-dim no-underline hover:text-primary" href="mailto:hello@djstratageminc.com">
+                <Mail className="text-primary" size={17} /> hello@djstratageminc.com <ArrowUpRight className="ml-auto" size={14} />
+              </a>
+              <span className="flex items-center gap-[9px]"><MapPin className="text-primary" size={17} /> Los Angeles, California</span>
+              <span className="flex items-center gap-[9px]"><Phone className="text-primary" size={17} /> Prefer email? We’ll follow up personally.</span>
+            </div>
+            <div className="mt-[35px] flex items-center gap-[11px] border-t border-line pt-[18px]">
+              <div className="avatar avatar-placeholder">
+                <div className="mask mask-circle w-[35px] bg-primary/15 font-mono text-[9px] text-primary"><span>D/J</span></div>
+              </div>
+              <span className="grid gap-[3px]">
+                <strong className="text-[11px] font-semibold">A person reads every request.</strong>
+                <small className="text-[9px] text-ink-muted">No bot maze. No hard sell.</small>
               </span>
             </div>
           </div>
           <Reveal>
-            <div className="card border border-base-300 bg-base-100 shadow-sm">
-              <div className="card-body">
+            <div className="card rounded-[6px] border border-line bg-base-200 shadow-[0_24px_70px_-38px_oklch(3%_0.01_240/0.8)]">
+              <div className="card-body p-[clamp(20px,3vw,30px)]">
                 <ContactForm />
               </div>
             </div>
           </Reveal>
         </div>
       </section>
-      <section className="border-t border-base-300 py-8">
-        <div className={`${shell} flex flex-wrap items-center justify-center gap-4 text-sm`}>
-          <p className="text-base-content/70">Want to see the platform first?</p>
-          <Link className="link link-primary inline-flex items-center gap-1 font-semibold" href="/platform">
+      <section className="py-[30px]">
+        <div className={`${shell} flex flex-wrap items-center justify-center gap-[18px]`}>
+          <p className="text-[11px] text-ink-muted">Want to see the platform first?</p>
+          <Link className={`${textLink} text-[11px] text-primary`} href="/platform">
             Explore the nine modes <ArrowUpRight size={15} />
           </Link>
         </div>

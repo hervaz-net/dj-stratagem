@@ -73,16 +73,17 @@ export function ThemeToggle() {
     theme === "system" ? "System appearance" : `${resolvedTheme} appearance`;
 
   return (
+    <div className="tooltip tooltip-bottom" data-tip={`${label}. Click to change.`}>
     <Button
       aria-label={`${label}. Change appearance`}
-      className="gap-2 px-2"
+      className="min-h-[34px] min-w-[34px] gap-1.5 px-2 capitalize"
       onClick={cycleTheme}
       size="small"
-      title={`${label} — click to change`}
       variant="ghost"
     >
       <Icon aria-hidden="true" size={17} />
-      <span className="hidden font-mono text-[0.65rem] uppercase sm:inline">{theme}</span>
+      <span className="hidden font-sans text-[10px] normal-case min-[1101px]:inline">{theme}</span>
     </Button>
+    </div>
   );
 }

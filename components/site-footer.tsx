@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { BrandMark } from "@/components/brand-mark";
 import { modes, resourceSections } from "@/lib/site-data";
-import { shell } from "@/lib/ui";
+import { btn, eyebrow, shell } from "@/lib/ui";
 
 const footerGroups = [
   {
@@ -36,54 +36,47 @@ const footerGroups = [
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-base-300 bg-base-200">
-      <div className={`${shell} flex flex-col items-start justify-between gap-4 border-b border-base-300 py-8 sm:flex-row sm:items-center`}>
+    <footer className="border-t border-line bg-base-200 text-base-content">
+      <div className={`${shell} flex min-h-[145px] items-center justify-between gap-[30px] border-b border-line-soft max-[680px]:min-h-0 max-[680px]:flex-col max-[680px]:items-start max-[680px]:py-[27px]`}>
         <div>
-          <p className="font-mono text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-primary">
-            One account. Every stage.
-          </p>
-          <h2 className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">
+          <span className={eyebrow}>One account. Every stage.</span>
+          <h2 className="mt-2 text-[clamp(23px,3vw,32px)] font-[650] tracking-[-0.055em] max-[680px]:text-[25px]">
             Bring your next job into focus.
           </h2>
         </div>
-        <Link className="btn btn-primary" href="/join">
+        <Link className={btn} href="/join">
           Start free <ArrowUpRight aria-hidden="true" size={16} />
         </Link>
       </div>
-      <div className={`${shell} footer md:footer-horizontal py-10`}>
-        <aside className="max-w-xs">
+      <div className={`${shell} footer grid-cols-2 py-[30px] text-[11px] min-[681px]:footer-horizontal min-[681px]:grid-cols-[minmax(200px,1.6fr)_repeat(4,minmax(100px,1fr))] min-[681px]:gap-10 min-[681px]:py-[43px] min-[681px]:pb-[39px]`}>
+        <div className="col-span-2 min-[681px]:col-span-1">
           <BrandMark />
-          <p className="mt-3 text-sm leading-relaxed text-base-content/70">
-            Construction work, connected from the first lead to the next
-            customer.
+          <p className="mt-4 max-w-[250px] text-[11px] leading-[1.7] text-ink-muted">
+            Construction work, connected from the first lead to the next customer.
           </p>
-          <p className="font-mono text-xs text-base-content/60">Los Angeles, California</p>
-        </aside>
+          <span className="font-mono text-[9px] text-ink-dim">Los Angeles, California</span>
+        </div>
         {footerGroups.map((group) => (
           <nav key={group.title}>
-            <h3 className="footer-title">{group.title}</h3>
-            {group.links.map((link) => (
-              <Link className="link link-hover" href={link.href} key={link.href}>
-                {link.label}
-              </Link>
-            ))}
+            <h3 className="footer-title mt-1 mb-[15px] font-mono text-[9px] tracking-[0.11em] text-ink-muted opacity-100">
+              {group.title}
+            </h3>
+            <ul className="grid gap-[9px]">
+              {group.links.map((link) => (
+                <li key={link.href}>
+                  <Link className="text-[11px] text-ink-dim hover:text-primary" href={link.href}>
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </nav>
         ))}
-        <nav>
-          <h3 className="footer-title">Social</h3>
-          <p className="max-w-[16rem] text-sm text-base-content/70">
-            Placeholder: social profiles are not published yet. We won’t link
-            accounts that don’t exist.
-          </p>
-          <a className="link link-hover" href="mailto:hello@djstratageminc.com">
-            hello@djstratageminc.com
-          </a>
-        </nav>
       </div>
-      <div className={`${shell} flex flex-col gap-2 border-t border-base-300 py-4 font-mono text-[0.68rem] text-base-content/55 sm:flex-row sm:items-center sm:justify-between`}>
+      <div className={`${shell} flex min-h-12 flex-wrap items-center justify-start gap-[18px] border-t border-line-soft py-3 font-mono text-[8px] text-ink-muted min-[681px]:justify-between min-[681px]:py-0`}>
         <span>© {new Date().getFullYear()} D&amp;J Stratagem, Inc.</span>
         <span>Free to start · Every account reviewed by a person</span>
-        <a className="link link-hover inline-flex items-center gap-1" href="mailto:hello@djstratageminc.com">
+        <a className="inline-flex items-center gap-1 hover:text-primary" href="mailto:hello@djstratageminc.com">
           hello@djstratageminc.com <ArrowUpRight size={13} />
         </a>
       </div>

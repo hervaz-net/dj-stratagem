@@ -6,15 +6,15 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 };
 
 const variants = {
-  primary: "btn-primary",
-  secondary: "btn-outline",
-  ghost: "btn-ghost",
+  primary: "btn-primary border-transparent shadow-none hover:border-transparent",
+  secondary: "btn-outline border-line bg-base-300 text-base-content shadow-none hover:border-primary hover:bg-base-300 hover:text-base-content",
+  ghost: "btn-ghost text-ink-dim shadow-none hover:bg-base-300 hover:text-base-content",
 };
 
 const sizes = {
-  default: "",
-  small: "btn-sm",
-  large: "btn-lg",
+  default: "h-[46px] min-h-[46px] rounded-[5px] px-[17px] text-sm font-bold",
+  small: "h-9 min-h-9 rounded-[5px] px-2 text-[10px] font-bold",
+  large: "h-[52px] min-h-[52px] rounded-[5px] px-[21px] text-sm font-bold",
 };
 
 export function Button({
