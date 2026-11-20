@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { hideMarketingChrome } from "../chrome/formRoutes";
 
@@ -26,6 +26,8 @@ export default function CookieBanner() {
   const { pathname } = useLocation();
   const hide = hideMarketingChrome(pathname);
   const [dismissed, setDismissed] = useState(() => getConsent() !== null);
+  const barRef = useRef(null);
+  const showing = !dismissed && !hide;
 
   useEffect(() => {
     if (dismissed || hide) {
@@ -38,7 +40,29 @@ export default function CookieBanner() {
     };
   }, [dismissed, hide]);
 
-  if (dismissed || hide) return null;
+  useEffect(() => {
+    const root = document.documentElement;
+    if (!showing) {
+      root.style.removeProperty("--cookie-banner-h");
+      return undefined;
+    }
+    const el = barRef.current;
+    if (!el) return undefined;
+    const apply = () => {
+      root.style.setProperty("--cookie-banner-h", `${Math.ceil(el.getBoundingClientRect().height)}px`);
+    };
+    apply();
+    const observer = new ResizeObserver(apply);
+    observer.observe(el);
+    window.addEventListener("resize", apply);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", apply);
+      root.style.removeProperty("--cookie-banner-h");
+    };
+  }, [showing]);
+
+  if (!showing) return null;
 
   const accept = () => {
     setConsent(true);
@@ -52,6 +76,7 @@ export default function CookieBanner() {
   // A slim full-width bar: a floating card covered first-fold content on phones.
   return (
     <div
+      ref={barRef}
       role="region"
       aria-label="Cookie consent"
       className="no-print animate-menu-in fixed inset-x-0 bottom-0 z-[110] border-t border-line bg-surface/95 px-4 py-2.5 shadow-[var(--shadow-pop)] backdrop-blur-md"

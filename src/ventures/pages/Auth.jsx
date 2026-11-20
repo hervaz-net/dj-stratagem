@@ -11,7 +11,7 @@ import { Field, fieldClass, useSeo } from "../parts";
 /** Centered card on the company's canvas, the same frame Exchange uses. */
 function AuthCard({ brand, title, subtitle, children, footer }) {
   return (
-    <section className="px-5 py-14 sm:px-6 md:py-20">
+    <section className="px-5 py-14 sm:px-6 md:py-20 max-[767px]:[[data-cookie-banner=1]_&]:py-6">
       <div className="mx-auto max-w-md">
         <div className="flex flex-col items-center text-center">
           <Mark slug={brand.slug} size={48} />

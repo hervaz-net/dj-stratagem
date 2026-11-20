@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 // Cookie and storage consent. Truthful about what the site keeps: a sign-in
 // session, a security check (Cloudflare Turnstile) on sign-in and sign-up,
@@ -69,6 +69,7 @@ export default function CookieConsent({ hidden = false }) {
   }, []);
 
   const showing = open && !hidden;
+  const cardRef = useRef(null);
   useEffect(() => {
     if (showing) document.documentElement.dataset.cookieBanner = "1";
     else delete document.documentElement.dataset.cookieBanner;
@@ -76,6 +77,30 @@ export default function CookieConsent({ hidden = false }) {
       delete document.documentElement.dataset.cookieBanner;
     };
   }, [showing]);
+
+  // The card is fixed. On a phone its height has to shrink the scrollport,
+  // or it sits on top of "Create your account" and the fleet sign-up link.
+  useEffect(() => {
+    const root = document.documentElement;
+    if (!showing) {
+      root.style.removeProperty("--cookie-banner-h");
+      return undefined;
+    }
+    const el = cardRef.current;
+    if (!el) return undefined;
+    const apply = () => {
+      root.style.setProperty("--cookie-banner-h", `${Math.ceil(el.getBoundingClientRect().height)}px`);
+    };
+    apply();
+    const observer = new ResizeObserver(apply);
+    observer.observe(el);
+    window.addEventListener("resize", apply);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", apply);
+      root.style.removeProperty("--cookie-banner-h");
+    };
+  }, [showing, manage]);
 
   if (!showing) return null;
 
@@ -87,10 +112,11 @@ export default function CookieConsent({ hidden = false }) {
 
   return (
     <div
+      ref={cardRef}
       role="dialog"
       aria-modal="false"
       aria-labelledby="cookie-title"
-      className="no-print fixed inset-x-3 bottom-3 z-[120] mx-auto max-w-2xl rounded-2xl border border-line bg-surface p-5 shadow-[0_18px_44px_-18px_rgba(17,19,24,0.35)] sm:bottom-5 sm:p-6"
+      className="no-print fixed inset-x-0 bottom-0 z-[120] mx-auto max-w-none rounded-t-2xl border border-line bg-surface p-3 shadow-[0_18px_44px_-18px_rgba(17,19,24,0.35)] sm:inset-x-3 sm:bottom-3 sm:max-w-2xl sm:rounded-2xl sm:p-5 md:bottom-5 md:p-6"
       style={{ backgroundColor: "color-mix(in srgb, var(--surface-raised, #fff) 96%, transparent)", backdropFilter: "blur(16px)" }}
     >
       <div className="flex items-start gap-3">
@@ -102,7 +128,7 @@ export default function CookieConsent({ hidden = false }) {
         </span>
         <div className="min-w-0">
           <h2 id="cookie-title" className="text-base font-bold tracking-tight text-fg">Your privacy</h2>
-          <p className="mt-1 text-sm leading-relaxed text-fg-muted">
+          <p className="mt-1 text-sm leading-snug text-fg-muted sm:leading-relaxed">
             We use only what the site needs to work: a sign-in session, a Cloudflare security check on sign-in and sign-up,
             and a few preferences. No analytics or advertising trackers.{" "}
             <a href="/privacy" className="font-medium text-brand underline underline-offset-2">Privacy Policy</a>
@@ -129,7 +155,7 @@ export default function CookieConsent({ hidden = false }) {
         </div>
       )}
 
-      <div className="mt-4 flex flex-wrap items-center justify-end gap-2">
+      <div className="mt-3 flex flex-wrap items-center justify-end gap-2 sm:mt-4">
         {manage ? (
           <button type="button" onClick={() => done(prefs)} className="rounded-full bg-brand px-5 py-2 text-sm font-semibold text-white hover:opacity-90">
             Save choices
