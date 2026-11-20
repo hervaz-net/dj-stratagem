@@ -117,13 +117,13 @@ export function ContactForm() {
       </label>
       <div className="grid gap-4 sm:grid-cols-2">
         <fieldset className="fieldset">
-          <legend className="fieldset-legend">Name</legend>
-          <input className="input" autoComplete="name" maxLength={120} name="name" required />
+          <legend className="fieldset-legend py-1 text-[10px] font-semibold text-ink-dim">Name</legend>
+          <input className="input validator h-[43px] min-h-[43px] rounded-[4px] border-line bg-base-100 text-xs" autoComplete="name" maxLength={120} name="name" required />
         </fieldset>
         <fieldset className="fieldset">
-          <legend className="fieldset-legend">Company</legend>
+          <legend className="fieldset-legend py-1 text-[10px] font-semibold text-ink-dim">Company</legend>
           <input
-            className="input"
+            className="input validator h-[43px] min-h-[43px] rounded-[4px] border-line bg-base-100 text-xs"
             autoComplete="organization"
             maxLength={160}
             name="company"
@@ -133,9 +133,9 @@ export function ContactForm() {
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
         <fieldset className="fieldset">
-          <legend className="fieldset-legend">Work email</legend>
+          <legend className="fieldset-legend py-1 text-[10px] font-semibold text-ink-dim">Work email</legend>
           <input
-            className="input"
+            className="input validator h-[43px] min-h-[43px] rounded-[4px] border-line bg-base-100 text-xs"
             autoComplete="email"
             maxLength={254}
             name="email"
@@ -144,14 +144,14 @@ export function ContactForm() {
           />
         </fieldset>
         <fieldset className="fieldset">
-          <legend className="fieldset-legend">Phone <span className="font-normal text-base-content/50">Optional</span></legend>
-          <input className="input" autoComplete="tel" maxLength={40} name="phone" type="tel" />
+          <legend className="fieldset-legend py-1 text-[10px] font-semibold text-ink-dim">Phone <span className="font-normal text-ink-muted">Optional</span></legend>
+          <input className="input h-[43px] min-h-[43px] rounded-[4px] border-line bg-base-100 text-xs" autoComplete="tel" maxLength={40} name="phone" type="tel" />
         </fieldset>
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
         <fieldset className="fieldset">
-          <legend className="fieldset-legend">I’m a</legend>
-          <select className="select" defaultValue="" name="role" required>
+          <legend className="fieldset-legend py-1 text-[10px] font-semibold text-ink-dim">I’m a</legend>
+          <select className="select validator h-[43px] min-h-[43px] rounded-[4px] border-line bg-base-100 text-xs" defaultValue="" name="role" required>
             <option disabled value="">Choose one</option>
             <option>General contractor</option>
             <option>Subcontractor</option>
@@ -160,9 +160,9 @@ export function ContactForm() {
           </select>
         </fieldset>
         <fieldset className="fieldset">
-          <legend className="fieldset-legend">What can we help with?</legend>
+          <legend className="fieldset-legend py-1 text-[10px] font-semibold text-ink-dim">What can we help with?</legend>
           <select
-            className="select"
+            className="select validator h-[43px] min-h-[43px] rounded-[4px] border-line bg-base-100 text-xs"
             name="topic"
             onChange={(event: ChangeEvent<HTMLSelectElement>) => {
               const nextTopic = event.currentTarget.value;
@@ -182,10 +182,10 @@ export function ContactForm() {
         </fieldset>
       </div>
       <fieldset className="fieldset">
-        <legend className="fieldset-legend">
-          Anything we should know? <span className="font-normal text-base-content/50">Optional</span>
+        <legend className="fieldset-legend py-1 text-[10px] font-semibold text-ink-dim">
+          Anything we should know? <span className="font-normal text-ink-muted">Optional</span>
         </legend>
-        <textarea className="textarea min-h-28" maxLength={1000} name="message" rows={4} />
+        <textarea className="textarea min-h-24 rounded-[4px] border-line bg-base-100 text-xs" maxLength={1000} name="message" rows={4} />
       </fieldset>
       {error && (
         <p aria-live="polite" className="alert alert-error text-sm" role="alert">
@@ -193,7 +193,7 @@ export function ContactForm() {
         </p>
       )}
       <div className="flex flex-wrap items-center gap-3">
-        <button className="btn btn-primary" disabled={pending} type="submit">
+        <button className="btn btn-primary h-[52px] min-h-[52px] rounded-[5px] px-[21px] text-sm font-bold" disabled={pending} type="submit">
           {pending ? (
             <><span className="loading loading-spinner loading-sm" /> Sending…</>
           ) : (

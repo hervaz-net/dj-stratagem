@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ArrowUpRight, BookOpen, Check, Radio } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, BookOpen, Check } from "lucide-react";
 import { Reveal } from "@/components/reveal";
 import { resourceSections } from "@/lib/site-data";
 import { display, eyebrow, sectionY, shell } from "@/lib/ui";
@@ -101,6 +101,21 @@ export default async function ResourceSectionPage({ params }: Props) {
         </div>
       </section>
       <section className={sectionY}>
+        <div className={shell}>
+          <div className="tabs tabs-border mb-8 w-full">
+            {resourceSections.map((tab) => (
+              <Link
+                aria-current={tab.slug === section ? "page" : undefined}
+                className={`tab ${tab.slug === section ? "tab-active" : ""}`}
+                href={`/resources/${tab.slug}`}
+                key={tab.slug}
+                role="tab"
+              >
+                {tab.title}
+              </Link>
+            ))}
+          </div>
+        </div>
         <div className={`${shell} grid gap-4`}>
           {section === "blog" &&
             posts.map((post, index) => (
@@ -117,23 +132,22 @@ export default async function ResourceSectionPage({ params }: Props) {
                 </article>
               </Reveal>
             ))}
-          {section === "changelog" &&
-            updates.map((update, index) => (
-              <Reveal delay={index * 0.06} key={update.title}>
-                <article className="card border border-base-300 bg-base-100">
-                  <div className="card-body sm:flex-row sm:gap-4">
-                    <span className="grid size-10 shrink-0 place-items-center rounded-box bg-primary/15 text-primary">
-                      <Radio size={17} />
-                    </span>
-                    <div>
-                      <p className={eyebrow}>{update.label}</p>
-                      <h2 className="mt-2 text-2xl font-semibold tracking-tight">{update.title}</h2>
-                      <p className="mt-2 max-w-3xl text-sm text-base-content/75">{update.text}</p>
-                    </div>
+          {section === "changelog" && (
+            <ul className="timeline timeline-vertical timeline-snap-icon">
+              {updates.map((update) => (
+                <li key={update.title}>
+                  <hr />
+                  <div className="timeline-start font-mono text-[10px] text-ink-muted">{update.label}</div>
+                  <div className="timeline-middle"><span className="status status-primary" /></div>
+                  <div className="timeline-end timeline-box mb-4 text-left">
+                    <h2 className="text-lg font-[650] tracking-tight">{update.title}</h2>
+                    <p className="mt-1 text-sm text-ink-dim">{update.text}</p>
                   </div>
-                </article>
-              </Reveal>
-            ))}
+                  <hr />
+                </li>
+              ))}
+            </ul>
+          )}
           {section === "guides" &&
             guides.map((guide, index) => (
               <Reveal delay={index * 0.06} key={guide.title}>

@@ -191,13 +191,13 @@ export function AuthForm({ mode }: AuthFormProps) {
         {mode === "join" && (
           <div className="grid gap-4 sm:grid-cols-2">
             <fieldset className="fieldset">
-              <legend className="fieldset-legend">Full name</legend>
-              <input className="input" autoComplete="name" maxLength={120} name="fullName" required />
+              <legend className="fieldset-legend py-1 text-[10px] font-semibold text-ink-dim">Full name</legend>
+              <input className="input validator h-[43px] min-h-[43px] rounded-[4px] border-line bg-base-100 text-xs" autoComplete="name" maxLength={120} name="fullName" required />
             </fieldset>
             <fieldset className="fieldset">
-              <legend className="fieldset-legend">Company</legend>
+              <legend className="fieldset-legend py-1 text-[10px] font-semibold text-ink-dim">Company</legend>
               <input
-                className="input"
+                className="input validator h-[43px] min-h-[43px] rounded-[4px] border-line bg-base-100 text-xs"
                 autoComplete="organization"
                 maxLength={160}
                 name="company"
@@ -208,17 +208,17 @@ export function AuthForm({ mode }: AuthFormProps) {
         )}
         {mode !== "reset" && (
           <fieldset className="fieldset">
-            <legend className="fieldset-legend">Work email</legend>
-            <input className="input" autoComplete="email" name="email" required type="email" />
+            <legend className="fieldset-legend py-1 text-[10px] font-semibold text-ink-dim">Work email</legend>
+            <input className="input validator h-[43px] min-h-[43px] rounded-[4px] border-line bg-base-100 text-xs" autoComplete="email" name="email" required type="email" />
           </fieldset>
         )}
         {mode === "join" && (
           <fieldset className="fieldset">
-            <legend className="fieldset-legend">
+            <legend className="fieldset-legend py-1 text-[10px] font-semibold text-ink-dim">
               Phone <span className="font-normal text-base-content/50">Optional</span>
             </legend>
             <input
-              className="input"
+              className="input validator h-[43px] min-h-[43px] rounded-[4px] border-line bg-base-100 text-xs"
               autoComplete="tel"
               maxLength={40}
               name="phone"
@@ -231,9 +231,9 @@ export function AuthForm({ mode }: AuthFormProps) {
         {(mode === "join" || mode === "login" || mode === "reset") && (
           <>
             <fieldset className="fieldset">
-              <legend className="fieldset-legend">Password</legend>
+              <legend className="fieldset-legend py-1 text-[10px] font-semibold text-ink-dim">Password</legend>
               <input
-                className="input"
+                className="input validator h-[43px] min-h-[43px] rounded-[4px] border-line bg-base-100 text-xs"
                 autoComplete={mode === "login" ? "current-password" : "new-password"}
                 minLength={mode === "login" ? undefined : 12}
                 name="password"
@@ -243,9 +243,9 @@ export function AuthForm({ mode }: AuthFormProps) {
             </fieldset>
             {(mode === "join" || mode === "reset") && (
               <fieldset className="fieldset">
-                <legend className="fieldset-legend">Confirm password</legend>
+                <legend className="fieldset-legend py-1 text-[10px] font-semibold text-ink-dim">Confirm password</legend>
                 <input
-                  className="input"
+                  className="input validator h-[43px] min-h-[43px] rounded-[4px] border-line bg-base-100 text-xs"
                   autoComplete="new-password"
                   minLength={12}
                   name="confirm"
@@ -266,7 +266,7 @@ export function AuthForm({ mode }: AuthFormProps) {
             {error}
           </p>
         )}
-        <button className="btn btn-primary w-full" disabled={pending} type="submit">
+        <button className="btn btn-primary mt-1 h-[52px] min-h-[52px] w-full rounded-[5px] text-sm font-bold" disabled={pending} type="submit">
           {pending ? (
             <><span className="loading loading-spinner loading-sm" /> One moment…</>
           ) : (
