@@ -1,0 +1,34 @@
+name: Read cPanel deploy log
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  log:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Retrieve the last deployment
+        env:
+          CPANEL_TOKEN: ${{ secrets.CPANEL_TOKEN }}
+          CPANEL_USER: ${{ secrets.CPANEL_USER }}
+          CPANEL_HOST: ${{ secrets.CPANEL_HOST }}
+        run: |
+          set -euo pipefail
+          HOST="${CPANEL_HOST#https://}"; HOST="${HOST%/}"
+          case "$HOST" in *:*) ;; *) HOST="${HOST}:2083" ;; esac
+          ROOT="/home/${CPANEL_USER}/repositories/dj-stratagem"
+          curl -sS --fail-with-body --max-time 60 \
+            -H "Authorization: cpanel ${CPANEL_USER}:${CPANEL_TOKEN}" \
+            "https://${HOST}/execute/VersionControl/retrieve" \
+            --get --data-urlencode "repository_root=${ROOT}" \
+            | python3 -c '
+          import json, sys
+          data = json.load(sys.stdin)
+          print("status", data.get("status"))
+          print("errors", data.get("errors"))
+          rows = data.get("data") or []
+          print(json.dumps(rows, indent=2)[:20000])
+          '
