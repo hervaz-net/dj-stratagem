@@ -1,9 +1,12 @@
 name: Deploy to Fly
 
-# Ships the container on Fly. Requires the Actions secret FLY_API_TOKEN
-# (a deploy token from `fly tokens create deploy`). Does not touch DNS.
+# Deploys only after Django CI succeeds on main, or when someone starts this
+# workflow by hand. A failing CI run does not deploy. Requires the Actions
+# secret FLY_API_TOKEN (a deploy token from `fly tokens create deploy`).
 on:
-  push:
+  workflow_run:
+    workflows: ["Django CI"]
+    types: [completed]
     branches: [main]
   workflow_dispatch:
 
@@ -11,12 +14,18 @@ concurrency:
   group: fly-deploy
   cancel-in-progress: false
 
+permissions:
+  contents: read
+
 jobs:
   deploy:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout the commit CI tested
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
 
       - name: Install flyctl
         uses: superfly/flyctl-actions/setup-flyctl@ed8efb33836e8b2096c7fd3ba1c8afe303ebbff1 # 1.6

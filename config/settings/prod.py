@@ -102,6 +102,42 @@ STORAGES = {
     },
 }
 
+
+class MediaServeMiddleware:
+    """Serve uploaded files from MEDIA_ROOT.
+
+    django.conf.urls.static.static() adds no routes when DEBUG is false, and
+    gallery uploads are created at runtime so they are not in the WhiteNoise
+    manifest. safe_join inside django.views.static.serve blocks path traversal.
+    """
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        from django.conf import settings
+        from django.views.static import serve
+
+        prefix = settings.MEDIA_URL
+        path = request.path_info or "/"
+        if (
+            settings.SERVE_MEDIA
+            and request.method in ("GET", "HEAD")
+            and prefix.startswith("/")
+            and path.startswith(prefix)
+        ):
+            from django.core.exceptions import SuspiciousFileOperation
+            from django.http import Http404, HttpResponseNotFound
+
+            try:
+                return serve(request, path[len(prefix):], document_root=settings.MEDIA_ROOT)
+            except (Http404, SuspiciousFileOperation):
+                return HttpResponseNotFound()
+        return self.get_response(request)
+
+
+MIDDLEWARE = [*MIDDLEWARE, "config.settings.prod.MediaServeMiddleware"]
+
 if not os.getenv("EMAIL_BACKEND"):
     if os.getenv("EMAIL_HOST"):
         EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"

@@ -112,7 +112,45 @@ mount the volume. That catches a bad migration before traffic moves, and it
 migrates Postgres when `DATABASE_URL` is set. The copy that matters for SQLite
 is the one on boot.
 
-Create the first staff user after the Machine is up:
+Check `https://djstratagem.fly.dev/health/` returns `{"ok": true, "service": "django"}`
+before changing DNS.
+
+## Bring the cPanel database across
+
+Do this before `createsuperuser` and before the DNS change, when the cPanel
+app has already stored anything. The cPanel deploy keeps the database and
+uploads outside the git tree, at:
+
+- `/home/djstlime/djstratagem/data/db.sqlite3`
+- `/home/djstlime/djstratagem/media/`
+
+If `db.sqlite3` is not there, the cPanel app was never used. Skip this section.
+The Fly volume is seeded by migrations on first boot, and that empty site is
+the one to cut over.
+
+If the file is there, copy it onto the volume before creating a new staff
+user. Replacing the file later would throw away that user. On the cPanel host:
+
+```bash
+mkdir -p /tmp/djs-export/media
+cp /home/djstlime/djstratagem/data/db.sqlite3 /tmp/djs-export/db.sqlite3
+cp -a /home/djstlime/djstratagem/media/. /tmp/djs-export/media/
+tar czf /tmp/djs-cutover.tgz -C /tmp/djs-export db.sqlite3 media
+```
+
+Download that archive, then put it on the Machine and unpack it at `/data`
+(the database at `/data/db.sqlite3`, uploads at `/data/media`). Restart
+afterwards so the entrypoint gives those files to the `app` user:
+
+```bash
+fly ssh sftp put djs-cutover.tgz /tmp/djs-cutover.tgz
+fly ssh console -C "tar xzf /tmp/djs-cutover.tgz -C /data && rm /tmp/djs-cutover.tgz"
+fly apps restart
+```
+
+Confirm an account from the old database can sign in on the `fly.dev` hostname
+before changing DNS. Create a staff user only when the restored database does
+not already have one:
 
 ```bash
 fly ssh console -C "python manage.py createsuperuser"
@@ -120,14 +158,12 @@ fly ssh console -C "python manage.py createsuperuser"
 
 Approve member accounts at `/admin/`.
 
-Check `https://djstratagem.fly.dev/health/` returns `{"ok": true, "service": "django"}`
-before changing DNS.
-
 ## GitHub
 
-Pushing `main` runs `.github/workflows/fly-deploy.yml`, which is
-`flyctl deploy --remote-only`. It can also be started by hand from the Actions
-tab. Add this repository secret first:
+A push to `main` runs Django CI. `.github/workflows/fly-deploy.yml` deploys
+with `flyctl deploy --remote-only` only after that run succeeds. A failing
+lint, test, deploy check, or image build does not deploy. The workflow can
+also be started by hand from the Actions tab. Add this repository secret first:
 
 ```bash
 fly tokens create deploy -x 999999h
@@ -139,8 +175,9 @@ deploy workflow fails and the site is unchanged. Pull requests run lint,
 
 ## DNS cutover
 
-Do this only after the `fly.dev` hostname serves the new site. The records
-come from Fly, not from this file:
+Do this only after the `fly.dev` hostname serves the new site, and only after
+the cPanel database and media have been restored or confirmed absent. The
+records come from Fly, not from this file:
 
 ```bash
 fly certs show djstratageminc.com
