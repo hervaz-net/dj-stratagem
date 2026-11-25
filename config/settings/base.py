@@ -5,6 +5,13 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
+from config.storage import (
+    VIDEO_CACHE_CONTROL,
+    build_storages,
+    ensure_media_mimetypes,
+    r2_django_settings,
+)
+
 BASE_DIR = Path(__file__).resolve().parents[2]
 load_dotenv(BASE_DIR / ".env")
 
@@ -101,12 +108,28 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 SERVE_MEDIA = env_bool("DJANGO_SERVE_MEDIA", True)
 
-STORAGES = {
-    "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
-    },
-}
+# Preview videos. R2 when the media env vars are set; the media directory
+# otherwise. Public objects use unsigned URLs and a year-long immutable cache.
+# See DEPLOY.md. Gallery uploads stay on the default filesystem storage.
+ensure_media_mimetypes()
+_r2_media = r2_django_settings()
+AWS_S3_CUSTOM_DOMAIN = _r2_media["custom_domain"]
+AWS_QUERYSTRING_AUTH = False
+AWS_S3_OBJECT_PARAMETERS = {"CacheControl": VIDEO_CACHE_CONTROL}
+AWS_DEFAULT_ACL = None
+MEDIA_CDN_ORIGIN = _r2_media["media_cdn_origin"]
+if _r2_media["enabled"]:
+    AWS_S3_ENDPOINT_URL = _r2_media["endpoint_url"]
+    AWS_STORAGE_BUCKET_NAME = _r2_media["bucket_name"]
+    AWS_S3_REGION_NAME = "auto"
+    AWS_S3_SIGNATURE_VERSION = "s3v4"
+    AWS_S3_ADDRESSING_STYLE = "path"
+
+STORAGES = build_storages(
+    staticfiles_backend="whitenoise.storage.CompressedStaticFilesStorage",
+    media_root=MEDIA_ROOT,
+    media_url=MEDIA_URL,
+)
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 

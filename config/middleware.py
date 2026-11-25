@@ -1,3 +1,8 @@
+from django.conf import settings
+
+from config.storage import allow_media_cdn
+
+
 class StripPreviewPrefixMiddleware:
     """Passenger mounts the first check at /djs-preview/ before the domain root."""
 
@@ -27,4 +32,21 @@ class SecurityHeadersMiddleware:
         response.setdefault("Permissions-Policy", "camera=(), microphone=(), geolocation=()")
         response.setdefault("X-Content-Type-Options", "nosniff")
         response.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
+        _allow_media_cdn(response)
         return response
+
+
+def _allow_media_cdn(response):
+    """If a CSP header is already set, let the media hostname load video and posters.
+
+    This app does not send Content-Security-Policy on its own. When some other
+    layer has set one, media-src and img-src need the R2 custom domain or the
+    browser will block preview videos and poster images.
+    """
+    policy = response.get("Content-Security-Policy")
+    if not policy:
+        return
+    origin = getattr(settings, "MEDIA_CDN_ORIGIN", "")
+    updated = allow_media_cdn(policy, origin)
+    if updated != policy:
+        response["Content-Security-Policy"] = updated
