@@ -42,6 +42,9 @@ data/
 media/
 staticfiles/
 theme/node_modules/
+.coverage
+.coverage.*
+htmlcov/
 
 # Server-only auth config — holds database credentials
 public/api/config.php
