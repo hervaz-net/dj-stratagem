@@ -3,7 +3,6 @@ name: Django CI
 on:
   pull_request:
   push:
-    branches: [main]
 
 jobs:
   test:
@@ -19,6 +18,10 @@ jobs:
           node-version: "22"
           cache: npm
           cache-dependency-path: theme/package-lock.json
+      - name: Lint
+        run: |
+          python -m pip install 'ruff==0.17.6'
+          ruff check .
       - name: Build CSS
         working-directory: theme
         run: |
@@ -30,6 +33,17 @@ jobs:
         run: |
           python -m pip install -r requirements.txt
           python manage.py test --verbosity 1
+      - name: Deployment checks
+        env:
+          DJANGO_SETTINGS_MODULE: config.settings.prod
+          DJANGO_SECRET_KEY: ci-only-deploy-check-0123456789abcdefABCDEF-not-a-secret
+          DJANGO_ALLOWED_HOSTS: djstratageminc.com,www.djstratageminc.com
+          CSRF_TRUSTED_ORIGINS: https://djstratageminc.com,https://www.djstratageminc.com
+          DJANGO_BEHIND_PROXY: "1"
+          DJANGO_SECURE_SSL: "1"
+        run: |
+          mkdir -p data
+          python manage.py check --deploy
 
   image:
     runs-on: ubuntu-latest

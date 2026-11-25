@@ -1,4 +1,5 @@
 .git
+.github
 .venv
 venv
 node_modules
@@ -11,10 +12,18 @@ staticfiles
 public/data
 **/*.sqlite3
 **/.env
+**/.env.*
 **/__pycache__
 **/*.pyc
-.github
+**/tests.py
 src
 components
 lib
 docsalot-docs
+scripts
+*.md
+fly.toml
+docker-compose.yml
+deploy.sh
+passenger_wsgi.py
+requirements-shared.txt
