@@ -136,11 +136,14 @@ selector_json install-modules --json --interpreter python \
   --app-root djstratagem \
   --requirements-file "$APP/requirements-shared.txt"
 
-venv_python=$(find /home/djstlime/virtualenv/djstratagem -path '*/bin/python' -type f | sort | tail -1)
-if [[ -z "$venv_python" ]]; then
+echo "==> Virtualenv layout"
+find /home/djstlime/virtualenv -maxdepth 4 \( -type d -o -type f -name 'python*' \) 2>/dev/null | head -80 || true
+venv_python=$(find /home/djstlime/virtualenv -type f -name 'python3*' ! -name '*config' 2>/dev/null | sort | tail -1)
+if [[ -z "${venv_python}" ]]; then
   echo "Selector virtualenv python was not found."
   exit 1
 fi
+echo "Using ${venv_python}"
 
 echo "==> Migrate and collect static files"
 set -a
