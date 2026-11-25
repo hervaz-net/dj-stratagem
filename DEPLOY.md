@@ -188,6 +188,13 @@ matching image type for a poster. A browser will not play a file stored as
 the `videos` storage sets it again. Disk serving registers the same types,
 so a host with a thin mime database still sends `video/mp4` and `video/webm`.
 
+Boto3's default is to attach a full-object CRC32 checksum. R2 accepts CRC32
+only as a composite checksum on a multipart upload, and rejects that default
+on `PutObject`, including a preview at the 5 MB limit. The `videos` storage
+sets request and response checksums to `when_required`, so a save through
+Django does not send one. `scripts/upload_media.sh` exports the same setting
+for the AWS CLI.
+
 The app does not send a Content-Security-Policy header. If a response
 already has one, `media-src` and `img-src` gain `https://media.djstratageminc.com`
 (the value of `AWS_S3_CUSTOM_DOMAIN`). Posters are images, so `img-src` is

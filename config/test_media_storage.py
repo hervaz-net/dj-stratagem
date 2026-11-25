@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 from unittest.mock import patch
 
+from botocore.config import Config
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.core.files.storage import storages
@@ -128,6 +129,37 @@ class R2ObjectTests(SimpleTestCase):
             location="videos",
             object_parameters={"CacheControl": VIDEO_CACHE_CONTROL},
         )
+
+    def test_checksums_are_sent_only_when_required(self):
+        config = self.storage.client_config
+        self.assertEqual(config.request_checksum_calculation, "when_required")
+        self.assertEqual(config.response_checksum_validation, "when_required")
+        self.assertEqual(config.signature_version, "s3v4")
+        self.assertEqual(config.s3["addressing_style"], "path")
+
+    def test_caller_client_config_keeps_its_own_settings(self):
+        storage = R2VideoStorage(
+            bucket_name="djstratagem-media",
+            access_key="access-key",
+            secret_key="secret-key",
+            endpoint_url="https://account.r2.cloudflarestorage.com",
+            custom_domain="media.djstratageminc.com",
+            region_name="auto",
+            signature_version="s3v4",
+            addressing_style="path",
+            querystring_auth=False,
+            client_config=Config(
+                max_pool_connections=3,
+                signature_version="s3v4",
+                s3={"addressing_style": "virtual"},
+                request_checksum_calculation="when_supported",
+            ),
+        )
+        config = storage.client_config
+        self.assertEqual(config.max_pool_connections, 3)
+        self.assertEqual(config.s3["addressing_style"], "virtual")
+        self.assertEqual(config.request_checksum_calculation, "when_required")
+        self.assertEqual(config.response_checksum_validation, "when_required")
 
     def test_public_url_has_no_signature(self):
         url = self.storage.url("clip.mp4")
