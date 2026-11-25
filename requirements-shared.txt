@@ -1,0 +1,6 @@
+# Packages for Namecheap's Python app. SQLite needs no Postgres driver.
+Django==6.1.3
+whitenoise==6.11.0
+Pillow==12.0.0
+dj-database-url==3.0.1
+python-dotenv==1.2.1

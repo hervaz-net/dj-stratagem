@@ -64,6 +64,11 @@ class PublicPageTests(TestCase):
             response = self.client.get(source)
             self.assertRedirects(response, target, status_code=301, fetch_redirect_response=False)
 
+    def test_preview_prefix_reaches_health(self):
+        response = self.client.get("/djs-preview/health/")
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["service"], "django")
+
     def test_health_sitemap_and_robots(self):
         health = self.client.get("/health/")
         self.assertEqual(health.json()["ok"], True)
