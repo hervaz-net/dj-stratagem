@@ -134,7 +134,12 @@ def resource_section(request, section):
 
 
 def article(request, slug):
-    item = get_object_or_404(Article.objects.select_related("related_mode", "section"), slug=slug, published=True)
+    item = get_object_or_404(
+        Article.objects.select_related("related_mode", "section"),
+        slug=slug,
+        published=True,
+        section__published=True,
+    )
     return render(
         request,
         "pages/article.html",
@@ -212,7 +217,10 @@ def sitemap(request):
     paths = [path for _name, path in STATIC_PAGES]
     paths += [mode.get_absolute_url() for mode in Mode.objects.filter(published=True)]
     paths += [section.get_absolute_url() for section in ResourceSection.objects.filter(published=True)]
-    paths += [item.get_absolute_url() for item in Article.objects.filter(published=True)]
+    paths += [
+        item.get_absolute_url()
+        for item in Article.objects.filter(published=True, section__published=True)
+    ]
     return render(
         request,
         "sitemap.xml",
@@ -260,5 +268,10 @@ def legacy_file(request, name):
 
 def company_redirect(request, slug):
     if slug in {"capital", "studio", "workforce", "fleet"}:
-        return redirect(f"/{slug}/", permanent=True)
-    return redirect("/", permanent=True)
+        target = f"/{slug}/"
+    else:
+        target = "/"
+    query = request.META.get("QUERY_STRING", "")
+    if query:
+        target = f"{target}?{query}"
+    return redirect(target, permanent=True)

@@ -237,18 +237,10 @@ class InquiryAdminTests(TestCase):
         self.assertContains(changelist, "&lt;script&gt;alert(1)&lt;/script&gt;")
 
         add = self.client.get(reverse("admin:inquiries_inquiry_add"))
-        self.assertEqual(add.status_code, 200)
-        self.assertContains(add, "name")
+        self.assertEqual(add.status_code, 403)
 
         change = self.client.get(reverse("admin:inquiries_inquiry_change", args=[self.inquiry.pk]))
-        self.assertEqual(change.status_code, 200)
-        self.assertContains(change, "Call me.")
-        self.assertNotContains(change, "<script>alert(1)</script>")
+        self.assertEqual(change.status_code, 403)
 
         missing = self.client.get(reverse("admin:inquiries_inquiry_change", args=[999999]))
-        self.assertRedirects(missing, reverse("admin:index"))
-        followed = self.client.get(
-            reverse("admin:inquiries_inquiry_change", args=[999999]),
-            follow=True,
-        )
-        self.assertContains(followed, "doesn’t exist")
+        self.assertEqual(missing.status_code, 403)

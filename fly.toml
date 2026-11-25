@@ -1,0 +1,69 @@
+# Fly.io app for djstratageminc.com. Create the app with `fly launch --no-deploy`
+# (see DEPLOY.md). Do not scale past one machine: the SQLite file and the
+# volume can attach to only one Machine.
+
+app = "djstratagem"
+primary_region = "lax"
+
+[build]
+
+[env]
+  DJANGO_SETTINGS_MODULE = "config.settings.prod"
+  PORT = "8000"
+  WEB_CONCURRENCY = "1"
+  GUNICORN_THREADS = "2"
+  GUNICORN_TIMEOUT = "30"
+  DJANGO_BEHIND_PROXY = "1"
+  DJANGO_SECURE_SSL = "1"
+  DJANGO_ALLOWED_HOSTS = "djstratageminc.com,www.djstratageminc.com,djstratagem.fly.dev"
+  CSRF_TRUSTED_ORIGINS = "https://djstratageminc.com,https://www.djstratageminc.com,https://djstratagem.fly.dev"
+  SITE_URL = "https://djstratageminc.com"
+  DJANGO_DATA_DIR = "/data"
+  DJANGO_MEDIA_ROOT = "/data/media"
+  DJANGO_HSTS_SECONDS = "604800"
+
+[http_service]
+  internal_port = 8000
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
+
+  # The checker calls the private address over plain HTTP and does not follow
+  # redirects. These headers make Django treat it as an already-secure request
+  # for an allowed host.
+  [[http_service.checks]]
+    interval = "15s"
+    timeout = "5s"
+    grace_period = "40s"
+    method = "GET"
+    path = "/health/"
+
+    [http_service.checks.headers]
+      X-Forwarded-Proto = "https"
+      Host = "djstratageminc.com"
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"
+
+# Accounts, inquiries, sessions, and gallery uploads are SQLite writes.
+# One volume holds the database and uploaded media. Release machines do not
+# mount this volume; entrypoint.sh migrates it on boot. The release command
+# still runs migrate so a Postgres DATABASE_URL is migrated before traffic,
+# and so a broken migration fails the deploy.
+[mounts]
+  source = "djs_data"
+  destination = "/data"
+  initial_size = "1gb"
+
+[deploy]
+  release_command = "python manage.py migrate --noinput"
+  release_command_timeout = "5m"
+
+  [deploy.release_command_vm]
+    size = "shared-cpu-1x"
+    memory = "512mb"
+
+kill_timeout = 20

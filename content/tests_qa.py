@@ -2,7 +2,7 @@
 
 import importlib
 import os
-from unittest import expectedFailure, mock
+from unittest import mock
 
 from django.apps import apps
 from django.contrib import admin
@@ -229,7 +229,6 @@ class LegacyRedirectTests(TestCase):
             fetch_redirect_response=False,
         )
 
-    @expectedFailure
     def test_company_redirect_keeps_the_query_string(self):
         """Bug: /companies/<slug>/ drops the query string.
 
@@ -372,7 +371,6 @@ class ContentModelTests(TestCase):
         photo = GalleryImage.objects.first()
         self.assertEqual(str(photo), photo.alt)
 
-    @expectedFailure
     def test_article_back_link_follows_its_section(self):
         """Bug: every article links back to the blog.
 
@@ -397,7 +395,6 @@ class ContentModelTests(TestCase):
         self.assertContains(response, "Another paragraph.")
         self.assertContains(response, f'href="{section.get_absolute_url()}">All field notes')
 
-    @expectedFailure
     def test_unpublished_section_removes_article_urls_and_sitemap_entries(self):
         """Bug: unpublishing a section leaves its articles on the site.
 
@@ -490,8 +487,12 @@ class ContentAdminTests(TestCase):
                 changelist = self.client.get(reverse(f"admin:{app}_{name}_changelist"))
                 self.assertEqual(changelist.status_code, 200, label)
                 add = self.client.get(reverse(f"admin:{app}_{name}_add"))
-                self.assertEqual(add.status_code, 200, label)
                 change = self.client.get(reverse(f"admin:{app}_{name}_change", args=[obj.pk]))
+                if label == "inquiries.inquiry":
+                    self.assertEqual(add.status_code, 403, label)
+                    self.assertEqual(change.status_code, 403, label)
+                    continue
+                self.assertEqual(add.status_code, 200, label)
                 self.assertEqual(change.status_code, 200, label)
                 missing = self.client.get(reverse(f"admin:{app}_{name}_change", args=[999999]))
                 self.assertRedirects(missing, reverse("admin:index"))
@@ -560,12 +561,12 @@ class ProductionSettingsTests(SimpleTestCase):
             )
         with self.assertRaises(ImproperlyConfigured):
             self._reload_prod(
-                DJANGO_SECRET_KEY="x" * 48,
+                DJANGO_SECRET_KEY="ci-only-deploy-check-0123456789abcdefABCDEF-not-a-secret",
                 DJANGO_ALLOWED_HOSTS="",
             )
 
     def test_production_sqlite_smtp_and_proxy_flags(self):
-        secret = "x" * 48
+        secret = "ci-only-deploy-check-0123456789abcdefABCDEF-not-a-secret"
         base, prod = self._reload_prod(
             DJANGO_SECRET_KEY=secret,
             DJANGO_ALLOWED_HOSTS="djstratageminc.com,www.djstratageminc.com",

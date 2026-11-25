@@ -8,7 +8,7 @@
 {% block content %}
 <article class="py-12 lg:py-16">
   <div class="shell max-w-3xl">
-    <a class="text-sm font-semibold underline underline-offset-4" href="{% url 'resource_section' 'blog' %}">All field notes</a>
+    <a class="text-sm font-semibold underline underline-offset-4" href="{{ article.section.get_absolute_url }}">All field notes</a>
     <p class="kicker mt-8 text-base-content/75">Field notes · D&amp;J Stratagem</p>
     <h1 class="display mt-3 text-5xl sm:text-6xl">{{ article.title }}</h1>
     <p class="mt-4 text-lg leading-relaxed text-base-content/80">{{ article.intro }}</p>

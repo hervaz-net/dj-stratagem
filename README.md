@@ -6,9 +6,9 @@ subcontractors, and suppliers across the job lifecycle.
 
 The site is a Django 6 application on Python 3.12. Templates use Tailwind CSS
 and daisyUI, compiled from `theme/` (no CDN in production). Gunicorn and
-WhiteNoise serve it from the Dockerfile. Live cutover is documented in
-`./deploy.sh --manual`. The Next.js and PHP tree is still in the repo; it is
-not what this app serves, and this branch does not publish it to cPanel.
+WhiteNoise serve it from the Dockerfile. Fly.io setup and the DNS cutover are
+in `DEPLOY.md`. The Next.js and PHP tree is still in the repo; it is not what
+this app serves.
 
 ## Run locally
 
@@ -37,8 +37,8 @@ Member requests stay inactive until a staff user approves them in `/admin/`.
 Inquiries are stored there too. Set `CONTACT_TO_EMAIL` and the `EMAIL_*`
 variables to send mail; with no mailbox configured, the inquiry is still saved.
 
-`./deploy.sh` builds CSS, runs tests, and builds a local image. It does not
-touch the Namecheap host.
+`./deploy.sh` runs the production deployment check and `flyctl deploy`.
+It does not create the Fly app and it does not change DNS. See `DEPLOY.md`.
 
 ## Pages
 

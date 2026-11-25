@@ -101,13 +101,13 @@ print("frame", settings.X_FRAME_OPTIONS)
         self.assertNotEqual(short.returncode, 0)
         self.assertIn("DJANGO_SECRET_KEY", short.stderr)
 
-        missing_hosts = self.boot(DJANGO_SECRET_KEY="k" * 48, DJANGO_ALLOWED_HOSTS="")
+        missing_hosts = self.boot(DJANGO_SECRET_KEY="ci-only-deploy-check-0123456789abcdefABCDEF-not-a-secret", DJANGO_ALLOWED_HOSTS="")
         self.assertNotEqual(missing_hosts.returncode, 0)
         self.assertIn("DJANGO_ALLOWED_HOSTS", missing_hosts.stderr)
 
     def test_production_rejects_tls_and_ssl_together(self):
         result = self.boot(
-            DJANGO_SECRET_KEY="k" * 48,
+            DJANGO_SECRET_KEY="ci-only-deploy-check-0123456789abcdefABCDEF-not-a-secret",
             DJANGO_ALLOWED_HOSTS="djstratageminc.com",
             EMAIL_USE_TLS="true",
             EMAIL_USE_SSL="true",
@@ -117,7 +117,7 @@ print("frame", settings.X_FRAME_OPTIONS)
 
     def test_production_sets_secure_cookies_without_the_ssl_redirect_flag(self):
         result = self.boot(
-            DJANGO_SECRET_KEY="k" * 48,
+            DJANGO_SECRET_KEY="ci-only-deploy-check-0123456789abcdefABCDEF-not-a-secret",
             DJANGO_ALLOWED_HOSTS="djstratageminc.com",
             DJANGO_SECURE_SSL="0",
             EMAIL_USE_SSL="false",
