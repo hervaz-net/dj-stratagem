@@ -8,8 +8,10 @@ from pathlib import Path
 import dj_database_url
 from django.core.exceptions import ImproperlyConfigured
 
+from config.storage import build_storages
+
 from .base import *  # noqa: F403
-from .base import BASE_DIR, SECRET_KEY, env_bool, env_list
+from .base import BASE_DIR, MEDIA_URL, SECRET_KEY, env_bool, env_list
 
 DEBUG = False
 
@@ -95,12 +97,14 @@ X_FRAME_OPTIONS = "DENY"
 # security.W021 wants HSTS preload. Preload is off on purpose: it cannot be undone.
 SILENCED_SYSTEM_CHECKS = ["security.W021"]
 
-STORAGES = {
-    "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    },
-}
+# ``videos`` is R2 when the media secrets are set, and MEDIA_ROOT/videos on
+# this volume when they are not. The default storage stays the volume so
+# gallery uploads are unchanged.
+STORAGES = build_storages(
+    staticfiles_backend="whitenoise.storage.CompressedManifestStaticFilesStorage",
+    media_root=MEDIA_ROOT,
+    media_url=MEDIA_URL,
+)
 
 
 class MediaServeMiddleware:

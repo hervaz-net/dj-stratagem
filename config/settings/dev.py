@@ -2,8 +2,10 @@
 
 import os
 
+from config.storage import build_storages
+
 from .base import *  # noqa: F403
-from .base import BASE_DIR, SECRET_KEY
+from .base import BASE_DIR, MEDIA_ROOT, MEDIA_URL, SECRET_KEY
 
 DEBUG = True
 if not SECRET_KEY:
@@ -27,7 +29,8 @@ EMAIL_BACKEND = os.getenv(
     "django.core.mail.backends.console.EmailBackend",
 )
 
-STORAGES = {
-    "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
-    "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
-}
+STORAGES = build_storages(
+    staticfiles_backend="django.contrib.staticfiles.storage.StaticFilesStorage",
+    media_root=MEDIA_ROOT,
+    media_url=MEDIA_URL,
+)
