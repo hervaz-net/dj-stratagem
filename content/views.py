@@ -2,6 +2,7 @@ from pathlib import Path
 
 from django.conf import settings
 from django.http import FileResponse, Http404, JsonResponse
+from django.templatetags.static import static
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_GET
 
@@ -231,8 +232,8 @@ def manifest(request):
             "scope": "/",
             "display": "standalone",
             "background_color": "#f4f5f1",
-            "theme_color": "#17181b",
-            "icons": [{"src": "/static/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any"}],
+            "theme_color": "#f4f5f1",
+            "icons": [{"src": static("favicon.svg"), "sizes": "any", "type": "image/svg+xml", "purpose": "any"}],
         }
     )
 

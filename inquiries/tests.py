@@ -48,6 +48,8 @@ class InquiryTests(TestCase):
         self.assertFalse(Inquiry.objects.exists())
         self.assertEqual(len(mail.outbox), 0)
         self.assertContains(response, "Enter your name")
+        self.assertContains(response, 'aria-invalid="true"')
+        self.assertContains(response, 'id="id_name-error"')
 
     def test_honeypot_is_dropped(self):
         response = self.client.post(reverse("contact"), payload(**{"bot-field": "spam"}))

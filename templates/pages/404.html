@@ -1,5 +1,6 @@
 {% extends "base.html" %}
-{% block title %}Page not found{% endblock %}
+{% load ui %}
+{% block seo %}{% seo_defaults canonical="/" %}{% endblock %}
 {% block robots %}noindex, nofollow{% endblock %}
 {% block content %}
 <section class="py-20">

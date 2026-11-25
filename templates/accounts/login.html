@@ -1,5 +1,6 @@
 {% extends "accounts/auth_base.html" %}
-{% block title %}Sign in{% endblock %}
+{% load ui %}
+{% block seo %}{% seo_defaults title="Sign in" description="Sign in to the D&J Stratagem desk and pick up the job where your team left off." %}{% endblock %}
 {% block aside_kicker %}Your work, in motion{% endblock %}
 {% block aside_title %}Welcome back to the desk.{% endblock %}
 {% block aside_copy %}Pick up the pipeline where you left off. Your account connects the work, people, and next steps.{% endblock %}

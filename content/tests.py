@@ -102,3 +102,36 @@ class PublicPageTests(TestCase):
         response = self.client.get(reverse("home"))
         self.assertContains(response, "conduit laid out")
         self.assertContains(response, "/media/gallery/")
+        self.assertContains(response, 'loading="lazy"')
+        self.assertContains(response, 'fetchpriority="high"')
+
+    def test_public_pages_have_document_metadata(self):
+        home = self.client.get(reverse("home"))
+        self.assertContains(home, 'rel="canonical" href="https://djstratageminc.com/"')
+        self.assertContains(home, 'name="twitter:card" content="summary_large_image"')
+        self.assertContains(home, 'property="og:image"')
+        self.assertContains(home, "application/ld+json")
+        self.assertContains(home, "D&J Stratagem, Inc.")
+        self.assertNotContains(home, "D&amp;amp;J")
+        self.assertContains(home, 'href="#main"')
+        self.assertContains(home, "Skip to content")
+        pricing = self.client.get(reverse("pricing"))
+        self.assertContains(pricing, "Explore Professional, Growth, and Enterprise")
+        self.assertContains(pricing, "FAQPage")
+        article = self.client.get(reverse("article", args=["a-better-view-of-the-next-job"]))
+        self.assertContains(article, 'property="og:type" content="article"')
+        self.assertContains(article, "BlogPosting")
+        missing = self.client.get("/not-a-page/")
+        self.assertContains(missing, 'rel="canonical" href="https://djstratageminc.com/"', status_code=404)
+        self.assertContains(missing, "noindex", status_code=404)
+
+    def test_sign_in_has_its_own_title_and_description(self):
+        response = self.client.get(reverse("login"))
+        self.assertContains(response, "<title>Sign in | D&amp;J Stratagem</title>")
+        self.assertContains(response, "Sign in to the D&J Stratagem desk")
+
+    def test_mobile_nav_includes_resources(self):
+        response = self.client.get(reverse("home"))
+        self.assertContains(response, 'aria-label="Mobile"')
+        self.assertContains(response, "Field notes")
+        self.assertContains(response, 'aria-controls="mobile-nav"')

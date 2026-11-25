@@ -1,13 +1,19 @@
 {% extends "accounts/auth_base.html" %}
-{% block title %}Choose a new password{% endblock %}
+{% load ui %}
+{% block seo %}
+  {% if validlink %}
+    {% seo_defaults title="Choose a new password" description="Choose a new password for your D&J Stratagem account." %}
+  {% else %}
+    {% seo_defaults title="That link has expired" description="Request a new D&J Stratagem password reset link." %}
+  {% endif %}
+{% endblock %}
 {% block auth %}
   {% if validlink %}
     <p class="kicker text-base-content/75">Account help</p>
     <h1 class="display mt-3 text-5xl">Choose a new password.</h1>
-    <p class="mt-2 text-sm text-base-content/75">Use at least 12 characters. Longer is better.</p>
     <form class="mt-6 grid gap-4" method="post">
       {% csrf_token %}
-      {% include "includes/field.html" with field=form.new_password1 %}
+      {% include "includes/field.html" with field=form.new_password1 hint="Use at least 12 characters. Longer is better." %}
       {% include "includes/field.html" with field=form.new_password2 %}
       <button class="btn btn-primary h-12 min-h-12 rounded-none font-semibold" type="submit">Update password</button>
     </form>

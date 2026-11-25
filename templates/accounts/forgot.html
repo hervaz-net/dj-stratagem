@@ -1,5 +1,6 @@
 {% extends "accounts/auth_base.html" %}
-{% block title %}Reset password{% endblock %}
+{% load ui %}
+{% block seo %}{% seo_defaults title="Reset password" description="Request a password reset link for your D&J Stratagem account." %}{% endblock %}
 {% block aside_title %}A fresh start.{% endblock %}
 {% block aside_copy %}Enter the email on your account. If it’s active, we’ll send a reset link.{% endblock %}
 {% block auth %}

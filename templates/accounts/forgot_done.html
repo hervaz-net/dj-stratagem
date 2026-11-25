@@ -1,5 +1,6 @@
 {% extends "accounts/auth_base.html" %}
-{% block title %}Check your email{% endblock %}
+{% load ui %}
+{% block seo %}{% seo_defaults title="Check your email" description="If an approved D&J Stratagem account uses that email, a reset link is on its way." %}{% endblock %}
 {% block auth %}
   <div class="alert rounded-none border border-base-content/20" role="status">
     <div>
