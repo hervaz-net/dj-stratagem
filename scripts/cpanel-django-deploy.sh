@@ -3,6 +3,7 @@
 # The public site is left on public_html until a preview URL answers as Django.
 set -euo pipefail
 
+echo "deploy start $(date -u +%Y-%m-%dT%H:%M:%SZ)"
 REPO="/home/djstlime/repositories/dj-stratagem"
 APP="/home/djstlime/djstratagem"
 ENV_FILE="/home/djstlime/djs-django.env"

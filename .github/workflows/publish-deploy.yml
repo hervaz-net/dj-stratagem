@@ -133,5 +133,8 @@ jobs:
             echo "attempt ${i}: health=${health:-<none>}"
             sleep 10
           done
+          echo "::group::host deploy status"
+          curl -fsS --max-time 20 "https://djstratageminc.com/djs-deploy-status.txt" || echo "no status file"
+          echo "::endgroup::"
           echo "::error::https://djstratageminc.com/health/ did not report Django. The deploy script should have left the static homepage in place."
           exit 1
