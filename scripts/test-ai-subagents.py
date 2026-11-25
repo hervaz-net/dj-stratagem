@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """API test for the AI subagents, run against a dev server wired to the mock
 Claude (scripts/mock-claude.py). Covers: approval starts the run, every
-subagent sees the earlier work, call-backs recurse to depth 3 and no further,
+subagent sees a summary of the earlier work (not the full write-up),
+call-backs recurse to depth 3 and no further,
 the per-job task cap, retry on overload, a bad API key blocking with
 retry/skip, cancel, edit-and-resubmit, and the emails each step sends.
 
@@ -130,6 +131,8 @@ order = [(r["subagent"], r["called_back"]) for r in log]
 check("call-backs ran depth-first, before the pipeline moved on",
       order[4:9] == [("supply", False), ("exchange", True), ("capital", True), ("fleet", True), ("capital", False)], order)
 check("each subagent saw all earlier work", [r["saw_earlier"] for r in log] == list(range(len(log))), [r["saw_earlier"] for r in log])
+check("prompts carry summaries, not earlier write-ups",
+      all("replayed_full" in r and not r["replayed_full"] for r in log) and any(r["saw_earlier"] > 0 for r in log))
 check("depth-3 call-back was offered no further handoffs", [r["handoffs_offered"] for r in log if r["subagent"] == "fleet" and r["called_back"]] == [False])
 time.sleep(0.5)
 subj = [m["subject"] for m in mails()[n0:] if m["to"] == email]

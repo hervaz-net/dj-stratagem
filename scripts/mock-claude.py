@@ -56,12 +56,17 @@ class Handler(BaseHTTPRequestHandler):
         has_handoffs = "handoffs" in tool["input_schema"]["properties"]
         depth = len(re.findall(r"\(call-back\)", prompt)) if called else 0
         ref = re.search(r"JOB (JOB-\d+)", prompt).group(1)
+        earlier = prompt.split("WORK SO FAR", 1)[1] if "WORK SO FAR" in prompt else ""
+        # Full write-ups from this mock start with a Markdown heading and a
+        # "Built on" line. Those must not be pasted back into the next call.
+        replayed_full = "\n## " in earlier or "\n- Built on " in earlier
         with open(LOG, "a") as f:
             f.write(json.dumps({"ref": ref, "subagent": key, "called_back": called, "handoffs_offered": has_handoffs,
                                 "headers_ok": self.headers.get("x-api-key") == "test"
                                 and self.headers.get("anthropic-version") == "2023-06-01",
                                 "forced_tool": req.get("tool_choice") == {"type": "tool", "name": tool["name"]},
-                                "saw_earlier": prompt.count("\n--- ")}) + "\n")
+                                "saw_earlier": prompt.count("\n--- "),
+                                "replayed_full": replayed_full}) + "\n")
 
         if "MOCK_SLOW" in prompt:
             time.sleep(4)

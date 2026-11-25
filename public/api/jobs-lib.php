@@ -9,10 +9,12 @@
  *   A job is created by a member in `pending_approval`. Nothing runs until an
  *   administrator approves it. Approval starts it: the AI orchestrator
  *   (ai-lib.php) runs the picked subagents one after another in pipeline
- *   order, each reading every earlier subagent's work. A subagent can call
- *   another back in for follow-up work; that call-back runs next, and can
- *   call further subagents, up to MAX_CALL_DEPTH levels. When every task is
- *   done or skipped the job completes and the owner is emailed.
+ *   order, each reading a short summary of every earlier subagent's work.
+ *   Full write-ups are saved for the contractor and are not sent back to the
+ *   model. A subagent can call another back in for follow-up work; that
+ *   call-back runs next and can call further subagents, up to MAX_CALL_DEPTH
+ *   levels. When every task is done or skipped the job completes and the
+ *   owner is emailed.
  *
  * Must stay PHP 8.1 compatible: the live host runs alt-php81.
  */
