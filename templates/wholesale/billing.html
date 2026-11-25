@@ -8,25 +8,24 @@
     {% if company %}
       <p class="mt-3">{{ company.credit.get_status_display }} · limit {{ company.credit.limit_amount|money }} · available {{ company.credit.available|money }} · in use {{ company.credit.balance_used|money }}</p>
     {% endif %}
-    {% if error %}<div class="alert alert-error mt-4 rounded-none" role="alert">{{ error }}</div>{% endif %}
-    <div class="mt-6 grid gap-4">
-      {% for invoice in invoices %}
-        <article class="border border-base-content/15 p-4">
-          <h2 class="font-semibold">{{ invoice.number }} · {{ invoice.get_status_display }} · open {{ invoice.balance|money }}</h2>
-          {% if invoice.status == 'open' %}
-            <form class="mt-3 flex flex-wrap items-end gap-3" method="post">
-              {% csrf_token %}
-              <input type="hidden" name="invoice" value="{{ invoice.number }}">
-              {% include "includes/field.html" with field=form.amount %}
-              {% include "includes/field.html" with field=form.method %}
-              {% include "includes/field.html" with field=form.reference %}
-              <button class="btn btn-primary rounded-none" type="submit">Record payment</button>
-            </form>
-          {% endif %}
-        </article>
-      {% empty %}
-        <p>No invoices yet.</p>
-      {% endfor %}
+    <p class="mt-2 max-w-xl text-sm text-base-content/70">Open invoices and the Net 30 balance update when the desk records a payment. A note from the account does not release credit on its own.</p>
+    <div class="mt-6 overflow-x-auto border border-base-content/15">
+      <table class="table">
+        <thead><tr><th>Invoice</th><th>Order</th><th>Status</th><th>Open</th><th>Due</th></tr></thead>
+        <tbody>
+          {% for invoice in invoices %}
+            <tr>
+              <td>{{ invoice.number }}</td>
+              <td>{{ invoice.order.number }}</td>
+              <td>{{ invoice.get_status_display }}</td>
+              <td>{{ invoice.balance|money }}</td>
+              <td>{{ invoice.due_on }}</td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="5">No invoices yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
   </div>
 </section>

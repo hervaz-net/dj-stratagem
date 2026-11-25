@@ -7,6 +7,14 @@ from django.urls import reverse
 from wholesale.roles import sync_membership
 
 
+class NumberSequence(models.Model):
+    name = models.CharField(max_length=20, unique=True)
+    last = models.PositiveIntegerField(default=1040)
+
+    def __str__(self):
+        return f"{self.name}-{self.last}"
+
+
 class Company(models.Model):
     class Status(models.TextChoices):
         PENDING = "pending", "Pending review"

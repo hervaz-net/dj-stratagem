@@ -30,7 +30,6 @@ from wholesale.services import (
     activate_company,
     add_to_cart,
     apply_for_credit,
-    cancel_order,
     copy_order_to_cart,
     decide_credit,
     get_cart,
@@ -38,6 +37,7 @@ from wholesale.services import (
     place_order,
     record_payment,
     set_line_quantity,
+    set_order_status,
 )
 
 PAGE = {
@@ -403,24 +403,6 @@ def users(request):
 @_needs("view_billing")
 def billing(request):
     company = _company(request)
-    error = ""
-    form = PaymentForm()
-    if request.method == "POST":
-        form = PaymentForm(request.POST)
-        invoice = get_object_or_404(Invoice, number=request.POST.get("invoice"), company=company)
-        if form.is_valid():
-            try:
-                record_payment(
-                    invoice,
-                    form.cleaned_data["amount"],
-                    request.user,
-                    form.cleaned_data["method"],
-                    form.cleaned_data["reference"],
-                )
-            except OrderError as exc:
-                error = str(exc)
-            else:
-                return redirect("billing")
     return render(
         request,
         "wholesale/billing.html",
@@ -429,8 +411,6 @@ def billing(request):
             "robots": "noindex, nofollow",
             "company": company,
             "invoices": _scoped(Invoice, request).select_related("order"),
-            "form": form,
-            "error": error,
         },
     )
 
@@ -568,13 +548,8 @@ def desk_orders(request):
 @require_POST
 def desk_order_status(request, number):
     order = get_object_or_404(Order, number=number)
-    status = request.POST.get("status")
     try:
-        if status == Order.Status.CANCELLED:
-            cancel_order(order)
-        elif status in {Order.Status.PICKING, Order.Status.SHIPPED, Order.Status.SUBMITTED}:
-            order.status = status
-            order.save(update_fields=["status"])
+        set_order_status(order, request.POST.get("status"))
     except OrderError:
         pass
     return redirect("desk_orders")

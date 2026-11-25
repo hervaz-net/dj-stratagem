@@ -16,6 +16,7 @@ from wholesale.models import (
     Inventory,
     Invoice,
     Membership,
+    NumberSequence,
     Order,
     OrderLine,
     Payment,
@@ -59,14 +60,18 @@ def open_trade_account(user):
 
 
 def activate_company(company):
+    if company.status != Company.Status.PENDING:
+        return company
     company.status = Company.Status.ACTIVE
     company.save(update_fields=["status"])
     for membership in company.memberships.select_related("user"):
         user = membership.user
-        if user.status != user.Status.ACTIVE or not user.is_active:
-            user.status = user.Status.ACTIVE
-            user.is_active = True
-            user.save(update_fields=["status", "is_active", "email"])
+        if user.status != user.Status.PENDING:
+            continue
+        user.status = user.Status.ACTIVE
+        user.is_active = True
+        user.save(update_fields=["status", "is_active", "email"])
+    return company
 
 
 def sync_company_from_user(user):
@@ -139,10 +144,12 @@ def parse_quick_lines(text):
     return found, errors
 
 
-def _next_number(prefix, model):
-    last = model.objects.select_for_update().order_by("-id").first()
-    sequence = 1040 + (last.id if last else 0) + 1
-    return f"{prefix}-{sequence}"
+def _next_number(prefix, name):
+    sequence, _created = NumberSequence.objects.get_or_create(name=name, defaults={"last": 1040})
+    sequence = NumberSequence.objects.select_for_update().get(pk=sequence.pk)
+    sequence.last += 1
+    sequence.save(update_fields=["last"])
+    return f"{prefix}-{sequence.last}"
 
 
 def place_order(user, po_number=""):
@@ -152,7 +159,7 @@ def place_order(user, po_number=""):
         if company.status != Company.Status.ACTIVE:
             raise OrderError("This trade account is not approved to order yet.")
         cart = Cart.objects.select_for_update().get(user=user, company=company)
-        lines = list(cart.lines.select_related("product"))
+        lines = list(cart.lines.select_related("product").order_by("product_id"))
         if not lines:
             raise OrderError("The cart is empty.")
         credit = CreditAccount.objects.select_for_update().get(company=company)
@@ -175,7 +182,7 @@ def place_order(user, po_number=""):
                 f"This order is ${total} and ${credit.available} of Net 30 is still open."
             )
         order = Order.objects.create(
-            number=_next_number("DJS", Order),
+            number=_next_number("DJS", "order"),
             company=company,
             placed_by=user,
             po_number=po_number.strip(),
@@ -198,7 +205,7 @@ def place_order(user, po_number=""):
             credit.save(update_fields=["balance_used"])
         today = timezone.localdate()
         Invoice.objects.create(
-            number=_next_number("INV", Invoice),
+            number=_next_number("INV", "invoice"),
             order=order,
             company=company,
             on_terms=on_terms,
@@ -213,6 +220,7 @@ def place_order(user, po_number=""):
 def record_payment(invoice, amount, user, method, reference):
     amount = _money(amount)
     with transaction.atomic():
+        credit = CreditAccount.objects.select_for_update().get(company_id=invoice.company_id)
         invoice = Invoice.objects.select_for_update().get(pk=invoice.pk)
         if invoice.status != Invoice.Status.OPEN:
             raise OrderError("That invoice is not open.")
@@ -230,10 +238,27 @@ def record_payment(invoice, amount, user, method, reference):
             invoice.status = Invoice.Status.PAID
         invoice.save(update_fields=["amount_paid", "status"])
         if invoice.on_terms:
-            credit = CreditAccount.objects.select_for_update().get(company=invoice.company)
             credit.balance_used = max(Decimal("0.00"), _money(credit.balance_used - amount))
             credit.save(update_fields=["balance_used"])
         return invoice
+
+
+TRANSITIONS = {
+    Order.Status.SUBMITTED: {Order.Status.PICKING, Order.Status.SHIPPED, Order.Status.CANCELLED},
+    Order.Status.PICKING: {Order.Status.SHIPPED, Order.Status.CANCELLED},
+}
+
+
+def set_order_status(order, status):
+    with transaction.atomic():
+        order = Order.objects.select_for_update().get(pk=order.pk)
+        if status == Order.Status.CANCELLED:
+            return cancel_order(order)
+        if status not in TRANSITIONS.get(order.status, set()):
+            raise OrderError("That status change is not allowed.")
+        order.status = status
+        order.save(update_fields=["status"])
+        return order
 
 
 def cancel_order(order):
@@ -241,13 +266,15 @@ def cancel_order(order):
         order = Order.objects.select_for_update().get(pk=order.pk)
         if order.status not in {Order.Status.SUBMITTED, Order.Status.PICKING}:
             raise OrderError("Only open orders can be cancelled.")
-        for line in order.lines.select_related("product"):
-            inventory = Inventory.objects.select_for_update().get(product=line.product)
+        company = Company.objects.select_for_update().get(pk=order.company_id)
+        credit = CreditAccount.objects.select_for_update().get(company=company)
+        lines = list(order.lines.select_related("product").order_by("product_id"))
+        for line in lines:
+            inventory = Inventory.objects.select_for_update().get(product_id=line.product_id)
             inventory.on_hand += line.quantity
             inventory.save(update_fields=["on_hand"])
         invoice = Invoice.objects.select_for_update().get(order=order)
         if invoice.on_terms and invoice.status == Invoice.Status.OPEN:
-            credit = CreditAccount.objects.select_for_update().get(company=order.company)
             credit.balance_used = max(
                 Decimal("0.00"),
                 _money(credit.balance_used - invoice.balance),
