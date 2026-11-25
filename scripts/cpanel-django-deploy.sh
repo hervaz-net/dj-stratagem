@@ -118,7 +118,6 @@ if [[ "$app_exists" != "yes" ]]; then
     --version "$version" \
     --startup-file passenger_wsgi.py \
     --entry-point application \
-    --app-mode production \
     --passenger-log-file "$LOG"; then
     if printf '%s' "$SELECTOR_OUT" | grep -qi 'exist'; then
       echo "Application already exists; continuing."
@@ -178,8 +177,7 @@ selector_json set --json --interpreter python \
   --app-root djstratagem \
   --new-app-uri / \
   --startup-file passenger_wsgi.py \
-  --entry-point application \
-  --app-mode production
+  --entry-point application
 selector_json restart --json --interpreter python --app-root djstratagem
 
 hold_static() {
