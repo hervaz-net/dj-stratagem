@@ -5,7 +5,7 @@ from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods
 
-from accounts.views import client_ip
+from accounts.net import client_ip
 from inquiries.forms import ACCESS_TOPICS, InquiryForm
 from inquiries.mail import notify_inquiry
 from inquiries.models import Inquiry
@@ -31,7 +31,12 @@ def contact(request):
         if form.is_valid():
             ip = client_ip(request)
             since = timezone.now() - timezone.timedelta(hours=1)
-            recent = Inquiry.objects.filter(ip_address=ip, created_at__gte=since).count() if ip else 0
+            recent_from = Inquiry.objects.filter(created_at__gte=since)
+            if ip:
+                recent_from = recent_from.filter(ip_address=ip)
+            else:
+                recent_from = recent_from.filter(ip_address__isnull=True)
+            recent = recent_from.count()
             if recent >= settings.INQUIRY_RATE_LIMIT:
                 form.add_error(None, "That’s a lot of messages from this network. Email hello@djstratageminc.com and we’ll help.")
             else:

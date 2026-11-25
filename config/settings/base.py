@@ -3,6 +3,7 @@
 import os
 from pathlib import Path
 
+from django.core.exceptions import ImproperlyConfigured
 from dotenv import load_dotenv
 
 BASE_DIR = Path(__file__).resolve().parents[2]
@@ -19,6 +20,20 @@ def env_bool(name, default=False):
 def env_list(name, default=""):
     raw = os.getenv(name, default)
     return [item.strip() for item in raw.split(",") if item.strip()]
+
+
+def env_int(name, default, minimum=1):
+    raw = os.getenv(name)
+    if raw is None or not raw.strip():
+        value = default
+    else:
+        try:
+            value = int(raw.strip())
+        except ValueError as exc:
+            raise ImproperlyConfigured(f"{name} must be an integer.") from exc
+    if value < minimum:
+        raise ImproperlyConfigured(f"{name} must be at least {minimum}.")
+    return value
 
 
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "")
@@ -44,6 +59,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "config.middleware.StripPreviewPrefixMiddleware",
+    "config.middleware.AdminLoginRateLimitMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -75,9 +91,11 @@ TEMPLATES = [
 ]
 
 AUTH_USER_MODEL = "accounts.User"
+AUTHENTICATION_BACKENDS = ["accounts.backends.StatusBackend"]
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "dashboard"
 LOGOUT_REDIRECT_URL = "home"
+PASSWORD_RESET_TIMEOUT = 60 * 60 * 24
 
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
@@ -112,17 +130,24 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 EMAIL_BACKEND = os.getenv("EMAIL_BACKEND", "django.core.mail.backends.console.EmailBackend")
 EMAIL_HOST = os.getenv("EMAIL_HOST", "")
-EMAIL_PORT = int(os.getenv("EMAIL_PORT", "587"))
+EMAIL_PORT = env_int("EMAIL_PORT", 587)
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
 EMAIL_USE_TLS = env_bool("EMAIL_USE_TLS", True)
 EMAIL_USE_SSL = env_bool("EMAIL_USE_SSL", False)
-EMAIL_TIMEOUT = int(os.getenv("EMAIL_TIMEOUT", "10"))
+EMAIL_TIMEOUT = env_int("EMAIL_TIMEOUT", 10)
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "hello@djstratageminc.com")
 SERVER_EMAIL = os.getenv("SERVER_EMAIL", DEFAULT_FROM_EMAIL)
 CONTACT_TO_EMAIL = os.getenv("CONTACT_TO_EMAIL", "hello@djstratageminc.com")
-INQUIRY_RATE_LIMIT = int(os.getenv("INQUIRY_RATE_LIMIT", "8"))
-JOIN_RATE_LIMIT = int(os.getenv("JOIN_RATE_LIMIT", "8"))
+INQUIRY_RATE_LIMIT = env_int("INQUIRY_RATE_LIMIT", 8)
+JOIN_RATE_LIMIT = env_int("JOIN_RATE_LIMIT", 8)
+JOIN_POST_LIMIT = env_int("JOIN_POST_LIMIT", 20)
+JOIN_POST_WINDOW = env_int("JOIN_POST_WINDOW", 3600)
+LOGIN_ACCOUNT_LIMIT = env_int("LOGIN_ACCOUNT_LIMIT", 8)
+LOGIN_IP_LIMIT = env_int("LOGIN_IP_LIMIT", 30)
+LOGIN_RATE_WINDOW = env_int("LOGIN_RATE_WINDOW", 900)
+PASSWORD_RESET_RATE_LIMIT = env_int("PASSWORD_RESET_RATE_LIMIT", 5)
+PASSWORD_RESET_WINDOW = env_int("PASSWORD_RESET_WINDOW", 3600)
 
 CACHES = {
     "default": {
@@ -133,12 +158,14 @@ CACHES = {
 
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = "Lax"
+CSRF_COOKIE_HTTPONLY = True
 CSRF_COOKIE_SAMESITE = "Lax"
 SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
-X_FRAME_OPTIONS = "SAMEORIGIN"
+X_FRAME_OPTIONS = "DENY"
 
 DJANGO_BEHIND_PROXY = env_bool("DJANGO_BEHIND_PROXY", False)
+DJANGO_TRUSTED_PROXY_COUNT = env_int("DJANGO_TRUSTED_PROXY_COUNT", 1, minimum=0)
 if DJANGO_BEHIND_PROXY:
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
     USE_X_FORWARDED_HOST = True
@@ -157,3 +184,16 @@ CSRF_TRUSTED_ORIGINS = env_list(
 )
 
 LEGACY_PUBLIC = BASE_DIR / "public"
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {"class": "logging.StreamHandler"},
+    },
+    "loggers": {
+        "django.security": {"handlers": ["console"], "level": "INFO", "propagate": True},
+        "accounts": {"handlers": ["console"], "level": "INFO", "propagate": False},
+        "inquiries": {"handlers": ["console"], "level": "INFO", "propagate": False},
+    },
+}

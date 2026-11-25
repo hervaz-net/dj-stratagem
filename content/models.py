@@ -1,5 +1,37 @@
+import logging
+from io import BytesIO
+from urllib.parse import urlsplit
+
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.urls import reverse
+from PIL import Image
+
+MAX_GALLERY_BYTES = 8 * 1024 * 1024
+logger = logging.getLogger(__name__)
+
+
+def validate_public_url(value):
+    """Allow a same-site path or an http(s) URL. Reject scriptable schemes."""
+
+    candidate = (value or "").strip()
+    if not candidate or any(ord(char) < 32 for char in candidate):
+        raise ValidationError("Enter a path starting with / or an http(s) URL.")
+    if candidate.startswith("/") and not candidate.startswith("//") and "\\" not in candidate:
+        return candidate
+    parsed = urlsplit(candidate)
+    if parsed.scheme in {"http", "https"} and parsed.netloc:
+        return candidate
+    raise ValidationError("Enter a path starting with / or an http(s) URL.")
+
+
+def validate_gallery_upload(image):
+    size = getattr(image, "size", None)
+    if not size:
+        source = getattr(image, "file", None)
+        size = getattr(source, "size", 0) if source is not None else 0
+    if size and size > MAX_GALLERY_BYTES:
+        raise ValidationError("Images must be 8 MB or smaller.")
 
 
 class Mode(models.Model):
@@ -90,6 +122,14 @@ class Plan(models.Model):
 
     def __str__(self):
         return self.name
+
+    def clean(self):
+        super().clean()
+        self.action_url = validate_public_url(self.action_url)
+
+    def save(self, *args, **kwargs):
+        self.action_url = validate_public_url(self.action_url)
+        super().save(*args, **kwargs)
 
 
 class PlanFeature(models.Model):
@@ -209,6 +249,50 @@ class GalleryImage(models.Model):
 
     class Meta:
         ordering = ["position", "pk"]
+        indexes = [
+            models.Index(fields=["published", "kind", "position"], name="gallery_listing_idx"),
+        ]
 
     def __str__(self):
         return self.alt
+
+    def clean(self):
+        super().clean()
+        if self.image:
+            validate_gallery_upload(self.image)
+
+    def populate_dimensions(self):
+        if not self.image:
+            return False
+        source = None
+        try:
+            if getattr(self.image, "_committed", False) and self.image.name:
+                with self.image.storage.open(self.image.name, "rb") as handle:
+                    payload = handle.read()
+            else:
+                source = self.image.file
+                source.seek(0)
+                payload = source.read()
+            with Image.open(BytesIO(payload)) as image:
+                self.width, self.height = image.size
+            return True
+        except Exception:
+            logger.warning("Could not read dimensions for gallery image %s", getattr(self.image, "name", ""))
+            return False
+        finally:
+            if source is not None:
+                try:
+                    source.seek(0)
+                except Exception:
+                    pass
+
+    def save(self, *args, **kwargs):
+        update_fields = kwargs.get("update_fields")
+        fields = set(update_fields) if update_fields is not None else None
+        if self.image:
+            validate_gallery_upload(self.image)
+            if self.populate_dimensions() and fields is not None:
+                fields.update({"width", "height"})
+        if fields is not None:
+            kwargs["update_fields"] = list(fields)
+        super().save(*args, **kwargs)

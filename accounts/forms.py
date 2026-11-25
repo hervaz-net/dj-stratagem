@@ -1,8 +1,12 @@
+from urllib.parse import urlsplit
+
 from django import forms
+from django.conf import settings
 from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm, SetPasswordForm
 from django.contrib.auth.password_validation import validate_password
 
 from accounts.models import User
+from accounts.throttle import LOGIN_LIMIT_MESSAGE
 
 INPUT = "input h-12 min-h-12 w-full rounded-none border-base-content/25 bg-base-100 text-base"
 SELECT = "select h-12 min-h-12 w-full rounded-none border-base-content/25 bg-base-100 text-base"
@@ -37,6 +41,11 @@ class SignInForm(AuthenticationForm):
                 "autocomplete": "current-password",
             }
         )
+
+    def clean(self):
+        if getattr(self, "rate_limited", False):
+            raise forms.ValidationError(LOGIN_LIMIT_MESSAGE, code="rate_limited")
+        return super().clean()
 
 
 class JoinForm(forms.Form):
@@ -126,6 +135,18 @@ class StyledPasswordResetForm(PasswordResetForm):
                 "spellcheck": "false",
             }
         )
+
+    def get_users(self, email):
+        for user in super().get_users(email):
+            if getattr(user, "status", None) == User.Status.ACTIVE:
+                yield user
+
+    def save(self, **kwargs):
+        parts = urlsplit(settings.SITE_URL)
+        if parts.netloc:
+            kwargs["domain_override"] = parts.netloc
+            kwargs["use_https"] = parts.scheme == "https"
+        return super().save(**kwargs)
 
 
 class StyledSetPasswordForm(SetPasswordForm):

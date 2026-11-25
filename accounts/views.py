@@ -1,6 +1,5 @@
 import logging
 
-from django.conf import settings
 from django.contrib.auth.views import (
     LoginView,
     PasswordResetCompleteView,
@@ -8,29 +7,34 @@ from django.contrib.auth.views import (
     PasswordResetDoneView,
     PasswordResetView,
 )
+from django.db import IntegrityError, transaction
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
-from django.utils import timezone
 from django.views import View
 from django.views.decorators.http import require_GET
 
 from accounts.forms import JoinForm, SignInForm, StyledPasswordResetForm, StyledSetPasswordForm
+from accounts.mail import send_approval_notice
 from accounts.models import User
+from accounts.net import client_ip
+from accounts.throttle import join_blocked, login_blocked, record_join, record_login_failure, record_reset, reset_blocked
 
 logger = logging.getLogger(__name__)
-
-
-def client_ip(request):
-    forwarded = request.META.get("HTTP_X_FORWARDED_FOR", "")
-    if forwarded and getattr(settings, "DJANGO_BEHIND_PROXY", False):
-        return forwarded.split(",")[0].strip()
-    return request.META.get("REMOTE_ADDR")
 
 
 class SignInView(LoginView):
     template_name = "accounts/login.html"
     authentication_form = SignInForm
     redirect_authenticated_user = True
+
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        form.rate_limited = login_blocked(request)
+        if form.is_valid():
+            return self.form_valid(form)
+        if not form.rate_limited:
+            record_login_failure(request)
+        return self.form_invalid(form)
 
 
 class JoinView(View):
@@ -53,21 +57,27 @@ class JoinView(View):
             return render(request, self.template_name, {"form": form, "received": False})
 
         ip = client_ip(request)
-        since = timezone.now() - timezone.timedelta(hours=1)
-        recent = User.objects.filter(signup_ip=ip, date_joined__gte=since).count() if ip else 0
         email = form.cleaned_data["email"]
-        if recent < settings.JOIN_RATE_LIMIT and not User.objects.filter(email=email).exists():
-            user = User.objects.create_user(
-                email=email,
-                password=form.cleaned_data["password"],
-                first_name=form.cleaned_data["full_name"],
-                company=form.cleaned_data["company"],
-                phone=form.cleaned_data["phone"],
-                is_active=False,
-                status=User.Status.PENDING,
-                signup_ip=ip,
-            )
-            logger.info("Account request %s stored for review", user.pk)
+        limited = join_blocked(ip)
+        if not limited:
+            record_join(ip)
+        if not limited and not User.objects.filter(email__iexact=email).exists():
+            try:
+                with transaction.atomic():
+                    user = User.objects.create_user(
+                        email=email,
+                        password=form.cleaned_data["password"],
+                        first_name=form.cleaned_data["full_name"],
+                        company=form.cleaned_data["company"],
+                        phone=form.cleaned_data["phone"],
+                        is_active=False,
+                        status=User.Status.PENDING,
+                        signup_ip=ip,
+                    )
+            except IntegrityError:
+                logger.info("Join request matched an existing account")
+            else:
+                logger.info("Account request %s stored for review", user.pk)
         request.session["join_received"] = True
         return redirect("join")
 
@@ -80,6 +90,10 @@ class ForgotPasswordView(PasswordResetView):
     success_url = reverse_lazy("password_reset_done")
 
     def form_valid(self, form):
+        if reset_blocked(self.request):
+            logger.info("Dropped a password reset because the rate limit was reached")
+            return redirect(self.success_url)
+        record_reset(self.request)
         try:
             return super().form_valid(form)
         except Exception:
@@ -107,9 +121,15 @@ def reset_missing(request):
 
 
 def approve_user(user):
+    """Activate a member. Return "sent", "unconfigured", "failed", or "unchanged"."""
+
+    already = User.objects.filter(pk=user.pk, status=User.Status.ACTIVE, is_active=True).exists()
     user.status = User.Status.ACTIVE
     user.is_active = True
-    user.save(update_fields=["status", "is_active"])
+    user.save(update_fields=["status", "is_active", "email"])
+    if already:
+        return "unchanged"
+    return send_approval_notice(user)
 
 
 def suspend_user(user):

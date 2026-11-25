@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 from django.core import mail
 from django.test import TestCase, override_settings
 from django.urls import reverse
@@ -35,6 +37,7 @@ class InquiryTests(TestCase):
         self.assertEqual(inquiry.topic, "Platform or account question")
         self.assertTrue(inquiry.emailed)
         self.assertEqual(mail.outbox[0].to, ["hello@djstratageminc.com"])
+        self.assertEqual(mail.outbox[0].reply_to, ["ada@example.com"])
         self.assertIn("Analytical Engines", mail.outbox[0].body)
         page = self.client.get(reverse("contact"))
         self.assertContains(page, "Message received")
@@ -82,6 +85,46 @@ class InquiryTests(TestCase):
         self.assertContains(response, "a lot of messages")
         self.assertEqual(Inquiry.objects.count(), 8)
 
+    def test_subject_newlines_cannot_inject_headers(self):
+        from inquiries.mail import notify_inquiry
+
+        inquiry = Inquiry.objects.create(
+            name="Ada\nBcc: spam@example.net",
+            company="Analytical Engines",
+            email="ada@example.com",
+            role="General contractor",
+            topic="Partnership",
+        )
+        self.assertTrue(notify_inquiry(inquiry))
+        self.assertNotIn("\n", mail.outbox[0].subject)
+        self.assertNotIn("\r", mail.outbox[0].subject)
+        self.assertEqual(mail.outbox[0].bcc, [])
+
+    def test_failed_send_leaves_the_inquiry_unsent(self):
+        from inquiries.mail import notify_inquiry
+
+        inquiry = Inquiry.objects.create(
+            name="Ada Lovelace",
+            company="Analytical Engines",
+            email="ada@example.com",
+            role="General contractor",
+            topic="Partnership",
+        )
+        with patch("inquiries.mail.EmailMessage.send", side_effect=OSError("down")):
+            self.assertFalse(notify_inquiry(inquiry))
+        inquiry.refresh_from_db()
+        self.assertFalse(inquiry.emailed)
+        self.assertEqual(len(mail.outbox), 0)
+
+    @override_settings(INQUIRY_RATE_LIMIT=1)
+    def test_missing_ip_shares_one_bucket(self):
+        first = self.client.post(reverse("contact"), payload(), REMOTE_ADDR="")
+        self.assertRedirects(first, reverse("contact"))
+        second = self.client.post(reverse("contact"), payload(email="other@example.com"), REMOTE_ADDR="")
+        self.assertEqual(second.status_code, 200)
+        self.assertContains(second, "a lot of messages")
+        self.assertEqual(Inquiry.objects.count(), 1)
+
     def test_admin_lists_the_inquiry(self):
         Inquiry.objects.create(
             name="Ada Lovelace",
@@ -94,6 +137,25 @@ class InquiryTests(TestCase):
         self.client.force_login(staff)
         response = self.client.get(reverse("admin:inquiries_inquiry_changelist"))
         self.assertContains(response, "Ada Lovelace")
+        inquiry = Inquiry.objects.get()
+        change = reverse("admin:inquiries_inquiry_change", args=[inquiry.pk])
+        self.assertEqual(self.client.get(reverse("admin:inquiries_inquiry_add")).status_code, 403)
+        self.assertEqual(self.client.get(change).status_code, 200)
+        edited = self.client.post(change, {"name": "Hacked"})
+        self.assertEqual(edited.status_code, 403)
+        inquiry.refresh_from_db()
+        self.assertEqual(inquiry.name, "Ada Lovelace")
+
+
+@override_settings(
+    CONTACT_TO_EMAIL="hello@djstratageminc.com",
+    EMAIL_BACKEND="django.core.mail.backends.console.EmailBackend",
+)
+class InquiryConsoleBackendTests(TestCase):
+    def test_console_backend_does_not_count_as_delivered(self):
+        self.client.post(reverse("contact"), payload())
+        inquiry = Inquiry.objects.get()
+        self.assertFalse(inquiry.emailed)
 
 
 @override_settings(CONTACT_TO_EMAIL="")

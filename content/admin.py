@@ -81,6 +81,7 @@ class ArticleAdmin(admin.ModelAdmin):
     list_display_links = ("title",)
     list_editable = ("position", "published")
     list_filter = ("section", "published")
+    list_select_related = ("section", "related_mode")
     search_fields = ("title", "summary", "body")
     prepopulated_fields = {"slug": ("title",)}
 

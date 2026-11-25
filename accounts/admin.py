@@ -7,11 +7,30 @@ from accounts.views import approve_user, suspend_user
 
 @admin.action(description="Approve selected accounts")
 def approve_accounts(modeladmin, request, queryset):
-    count = 0
+    sent = failed = unconfigured = 0
     for user in queryset:
-        approve_user(user)
-        count += 1
-    modeladmin.message_user(request, f"Approved {count} account(s).", messages.SUCCESS)
+        result = approve_user(user)
+        if result == "sent":
+            sent += 1
+        elif result == "failed":
+            failed += 1
+        elif result == "unconfigured":
+            unconfigured += 1
+    modeladmin.message_user(request, f"Approved {queryset.count()} account(s).", messages.SUCCESS)
+    if sent:
+        modeladmin.message_user(request, f"Sent {sent} approval email(s).", messages.SUCCESS)
+    if unconfigured:
+        modeladmin.message_user(
+            request,
+            "No delivery mailbox is configured, so approval email was not marked sent.",
+            messages.INFO,
+        )
+    if failed:
+        modeladmin.message_user(
+            request,
+            f"{failed} approval email(s) could not be sent. The accounts are still approved.",
+            messages.WARNING,
+        )
 
 
 @admin.action(description="Suspend selected accounts")

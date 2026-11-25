@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from django.conf import settings
-from django.http import FileResponse, Http404, HttpResponse, JsonResponse
+from django.http import FileResponse, Http404, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_GET
 
@@ -30,9 +30,9 @@ STATIC_PAGES = [
 
 
 def home(request):
-    photos = list(GalleryImage.objects.filter(published=True, kind=GalleryImage.Kind.JOBSITE))
-    hero = next((photo for photo in photos if photo.featured), photos[0] if photos else None)
-    rest = [photo for photo in photos if hero is None or photo.pk != hero.pk]
+    photos = GalleryImage.objects.filter(published=True, kind=GalleryImage.Kind.JOBSITE)
+    hero = photos.filter(featured=True).first() or photos.first()
+    rest = photos.exclude(pk=hero.pk)[:3] if hero is not None else []
     return render(
         request,
         "pages/home.html",
@@ -43,7 +43,7 @@ def home(request):
             "modes": Mode.objects.filter(published=True),
             "steps": PipelineStep.objects.all(),
             "hero": hero,
-            "photos": rest[:3],
+            "photos": rest,
         },
     )
 
@@ -51,7 +51,10 @@ def home(request):
 def mode(request, slug):
     current = get_object_or_404(Mode.objects.prefetch_related("capabilities"), slug=slug, published=True)
     modes = list(Mode.objects.filter(published=True))
-    index = next(i for i, item in enumerate(modes) if item.pk == current.pk)
+    try:
+        index = next(i for i, item in enumerate(modes) if item.pk == current.pk)
+    except StopIteration:
+        raise Http404("That mode is not available.") from None
     kind = GalleryImage.Kind.VEHICLE if slug == "fleet" else GalleryImage.Kind.JOBSITE if slug == "studio" else None
     photos = GalleryImage.objects.filter(published=True, kind=kind) if kind else GalleryImage.objects.none()
     return render(
