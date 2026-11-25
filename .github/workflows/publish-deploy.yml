@@ -108,15 +108,7 @@ jobs:
               "https://${HOST}/execute/${module}/${func}" "$@"
           }
           api_check() {
-            python3 -c '
-import json,sys
-raw=sys.stdin.read()
-try: d=json.loads(raw)
-except Exception: print("::error::non-JSON UAPI response:", raw[:300]); sys.exit(1)
-if not d.get("status") or d.get("errors"):
-    print("::error::UAPI failed:", "; ".join(map(str, d.get("errors") or ["status=0"]))); sys.exit(1)
-print("  ok")
-'
+            python3 "$GITHUB_WORKSPACE/scripts/uapi_check.py"
           }
           echo "==> VersionControl/update (branch deploy)"
           uapi VersionControl update --get \
