@@ -1,4 +1,4 @@
-<a class="inline-flex items-center gap-2.5 no-underline" href="{% url 'home' %}" aria-label="D&amp;J Stratagem home">
+<a class="inline-flex items-center gap-2.5 no-underline" href="{% url 'home' %}" aria-label="D&amp;J Stratagem home"{% if request.resolver_match.url_name == "home" %} aria-current="page"{% endif %}>
   <svg class="size-8" viewBox="0 0 32 32" aria-hidden="true">
     <rect width="32" height="32" fill="currentColor"/>
     <path d="M8 23.5 16 8.5l8 15M8 23.5h16" fill="none" stroke="var(--color-base-100)" stroke-width="1.6" stroke-linecap="round"/>
@@ -8,6 +8,6 @@
   </svg>
   <span class="leading-none">
     <strong class="block font-display text-[1.35rem] font-semibold tracking-tight">D&amp;J</strong>
-    <span class="kicker text-[0.62rem] text-base-content/75">Stratagem</span>
+    <span class="kicker text-base-content/80">Stratagem</span>
   </span>
 </a>

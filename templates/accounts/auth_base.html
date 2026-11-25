@@ -3,14 +3,14 @@
 {% block footer %}{% endblock %}
 {% block content %}
 <section class="grid min-h-[calc(100vh-7rem)] lg:grid-cols-[minmax(16rem,0.8fr)_1.1fr]">
-  <aside class="hidden flex-col justify-between border-r border-base-content/15 bg-base-200 p-8 lg:flex">
+  <aside class="hidden flex-col justify-between border-r border-base-content/15 bg-base-200 p-8 lg:flex" aria-label="About this step">
     <a class="text-sm font-semibold underline underline-offset-4" href="{% url 'home' %}">Back to D&amp;J</a>
     <div class="max-w-md py-10">
-      <p class="kicker text-base-content/75">{% block aside_kicker %}D&amp;J Stratagem{% endblock %}</p>
-      <h2 class="display mt-3 text-5xl">{% block aside_title %}One desk for the whole job.{% endblock %}</h2>
-      <p class="mt-4 text-sm leading-relaxed text-base-content/75">{% block aside_copy %}{% endblock %}</p>
+      <p class="kicker text-base-content/80">{% block aside_kicker %}D&amp;J Stratagem{% endblock %}</p>
+      <p class="display mt-3 text-5xl">{% block aside_title %}One desk for the whole job.{% endblock %}</p>
+      <p class="mt-4 text-sm leading-relaxed text-base-content/80">{% block aside_copy %}{% endblock %}</p>
     </div>
-    <p class="kicker text-[0.62rem] text-base-content/50">Los Angeles</p>
+    <p class="kicker text-base-content/80">Los Angeles</p>
   </aside>
   <div class="flex flex-col justify-center px-5 py-10 sm:px-12">
     <div class="mb-8 lg:hidden">{% include "includes/mark.html" %}</div>

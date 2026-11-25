@@ -1,5 +1,6 @@
 {% extends "base.html" %}
-{% block title %}Privacy policy{% endblock %}
+{% load ui %}
+{% block structured_data %}{% json_ld_breadcrumbs "Home" "/" "Privacy policy" "/privacy/" %}{% endblock %}
 {% block content %}
 <article class="legal shell max-w-3xl py-14">
   <p class="kicker text-base-content/75">Legal</p>
@@ -10,12 +11,13 @@
   <p>D&amp;J Stratagem, Inc. is a Delaware corporation with offices at 506 S Spring St #13308, Los Angeles, CA 90013. We act as the controller of personal information collected through our website and marketing, and as a processor of the project, bid and contact data our customers upload into the Services.</p>
   <h2>2 · What we collect</h2>
   <table>
+    <caption class="sr-only">Information we collect</caption>
     <tbody>
-      <tr><td>Account data</td><td>Name, business email, company, role, phone number and billing details you provide when you register or subscribe.</td></tr>
-      <tr><td>Customer content</td><td>Bids, quotes, drawings, scope schedules, pricing, contact records and messages you or your invitees upload to the Services.</td></tr>
-      <tr><td>Usage data</td><td>IP address, device and browser type, pages viewed, features used, and timestamps, collected through server logs and strictly necessary cookies.</td></tr>
-      <tr><td>Support data</td><td>Correspondence you send to our support, billing or sales addresses, and any attachments included with it.</td></tr>
-      <tr><td>Third-party data</td><td>Business contact and firmographic details from public registries, permit records and lead partners, used for marketing and lead qualification.</td></tr>
+      <tr><th scope="row">Account data</th><td>Name, business email, company, role, phone number and billing details you provide when you register or subscribe.</td></tr>
+      <tr><th scope="row">Customer content</th><td>Bids, quotes, drawings, scope schedules, pricing, contact records and messages you or your invitees upload to the Services.</td></tr>
+      <tr><th scope="row">Usage data</th><td>IP address, device and browser type, pages viewed, features used, and timestamps, collected through server logs and strictly necessary cookies.</td></tr>
+      <tr><th scope="row">Support data</th><td>Correspondence you send to our support, billing or sales addresses, and any attachments included with it.</td></tr>
+      <tr><th scope="row">Third-party data</th><td>Business contact and firmographic details from public registries, permit records and lead partners, used for marketing and lead qualification.</td></tr>
     </tbody>
   </table>
   <h2>3 · How we use it</h2>

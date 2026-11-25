@@ -1,11 +1,11 @@
 <header class="sticky top-0 z-40 border-b border-base-content/15 bg-base-100/95 backdrop-blur">
   <div class="bg-base-content text-base-100">
     <div class="shell flex min-h-9 items-center justify-between gap-4 py-1.5">
-      <p class="kicker flex items-center gap-2 text-[0.62rem] text-base-100">
+      <p class="kicker flex items-center gap-2 text-base-100">
         <span class="mark" aria-hidden="true"></span>
         Los Angeles · Southern California
       </p>
-      <a class="kicker hidden text-[0.62rem] text-base-100 underline-offset-4 hover:underline sm:inline" href="mailto:{{ contact_email }}">{{ contact_email }}</a>
+      <a class="kicker hidden text-base-100 underline-offset-4 hover:underline sm:inline" href="mailto:{{ contact_email }}">{{ contact_email }}</a>
     </div>
   </div>
   <div class="shell flex min-h-16 items-center justify-between gap-4">
@@ -13,14 +13,14 @@
     <nav class="hidden items-center gap-1 text-sm font-semibold lg:flex" aria-label="Main">
       <details class="relative">
         <summary class="cursor-pointer px-3 py-2">Platform</summary>
-        <div class="absolute left-0 z-30 mt-1 w-[34rem] border border-base-content/20 bg-base-100 p-3">
-          <p class="kicker px-2 pb-2 text-base-content/75">Nine modes · one desk</p>
-          <ul class="grid grid-cols-3 gap-1">
+        <div class="absolute left-0 z-30 mt-1 w-[min(34rem,calc(100vw-2rem))] border border-base-content/20 bg-base-100 p-3">
+          <p class="kicker px-2 pb-2 text-base-content/80">Nine modes · one desk</p>
+          <ul class="grid grid-cols-2 gap-1 xl:grid-cols-3">
             {% for mode in nav_modes %}
               <li>
-                <a class="block px-2 py-2 hover:bg-base-200" href="{{ mode.get_absolute_url }}">
+                <a class="block px-2 py-2 hover:bg-base-200" href="{{ mode.get_absolute_url }}"{% if request.path == mode.get_absolute_url %} aria-current="page"{% endif %}>
                   <span class="block">{{ mode.name }}</span>
-                  <span class="kicker text-[0.58rem] text-base-content/70">{{ mode.stage }}</span>
+                  <span class="kicker text-base-content/80">{{ mode.stage }}</span>
                 </a>
               </li>
             {% endfor %}
@@ -28,16 +28,16 @@
         </div>
       </details>
       <a class="px-3 py-2 hover:bg-base-200" href="{% url 'home' %}#stations">How it works</a>
-      <a class="px-3 py-2 hover:bg-base-200" href="{% url 'pricing' %}">Pricing</a>
-      <a class="px-3 py-2 hover:bg-base-200" href="{% url 'about' %}">Company</a>
+      <a class="px-3 py-2 hover:bg-base-200" href="{% url 'pricing' %}"{% if request.resolver_match.url_name == "pricing" %} aria-current="page"{% endif %}>Pricing</a>
+      <a class="px-3 py-2 hover:bg-base-200" href="{% url 'about' %}"{% if request.resolver_match.url_name == "about" %} aria-current="page"{% endif %}>Company</a>
       <details class="relative">
         <summary class="cursor-pointer px-3 py-2">Resources</summary>
         <ul class="absolute right-0 z-30 mt-1 w-72 border border-base-content/20 bg-base-100 p-2">
           {% for section in resource_sections %}
             <li>
-              <a class="block px-2 py-2 hover:bg-base-200" href="{{ section.get_absolute_url }}">
+              <a class="block px-2 py-2 hover:bg-base-200" href="{{ section.get_absolute_url }}"{% if request.path == section.get_absolute_url %} aria-current="page"{% endif %}>
                 <span class="block">{{ section.title }}</span>
-                <span class="block text-xs font-normal text-base-content/65">{{ section.description }}</span>
+                <span class="block text-xs font-normal text-base-content/80">{{ section.description }}</span>
               </a>
             </li>
           {% endfor %}
@@ -47,7 +47,7 @@
     <div class="hidden items-center gap-3 lg:flex">
       <button class="btn btn-ghost h-10 min-h-10 rounded-none px-2 text-xs font-semibold" type="button" data-theme-toggle aria-pressed="false">Night sheet</button>
       {% if user.is_authenticated %}
-        <a class="text-sm font-semibold" href="{% url 'dashboard' %}">Desk</a>
+        <a class="text-sm font-semibold" href="{% url 'dashboard' %}"{% if request.resolver_match.url_name == "dashboard" %} aria-current="page"{% endif %}>Desk</a>
         <form method="post" action="{% url 'logout' %}">
           {% csrf_token %}
           <button class="text-sm font-semibold underline-offset-4 hover:underline" type="submit">Sign out</button>
@@ -58,36 +58,42 @@
       {% endif %}
     </div>
     <div class="lg:hidden">
-      <label class="btn btn-outline h-11 min-h-11 rounded-none border-base-content/30 px-3" for="site-nav">Menu</label>
+      <div class="nav-toggle btn btn-outline h-11 min-h-11 rounded-none border-base-content/30 px-3">
+        <span aria-hidden="true">Menu</span>
+        <input id="site-nav" type="checkbox" aria-label="Menu" aria-controls="mobile-nav">
+      </div>
     </div>
   </div>
 </header>
-<input class="peer sr-only" id="site-nav" type="checkbox">
-<div class="fixed inset-0 z-50 hidden overflow-y-auto bg-base-100 peer-checked:block lg:hidden" id="mobile-nav">
-    <div class="shell flex items-center justify-between py-4">
-      {% include "includes/mark.html" %}
-      <label class="btn btn-outline h-11 min-h-11 rounded-none border-base-content/30" for="site-nav">Close</label>
+<div class="fixed inset-0 z-50 overflow-y-auto bg-base-100 lg:hidden" id="mobile-nav">
+  <div class="shell flex items-center justify-between py-4">
+    {% include "includes/mark.html" %}
+    <label class="btn btn-outline h-11 min-h-11 rounded-none border-base-content/30" for="site-nav" data-nav-close tabindex="0">Close</label>
+  </div>
+  <nav class="shell grid gap-1 pb-16 text-lg font-semibold" aria-label="Mobile">
+    <a class="border-b border-base-content/15 py-3" href="{% url 'home' %}#stations">How it works</a>
+    <a class="border-b border-base-content/15 py-3" href="{% url 'pricing' %}"{% if request.resolver_match.url_name == "pricing" %} aria-current="page"{% endif %}>Pricing</a>
+    <a class="border-b border-base-content/15 py-3" href="{% url 'about' %}"{% if request.resolver_match.url_name == "about" %} aria-current="page"{% endif %}>Company</a>
+    <a class="border-b border-base-content/15 py-3" href="{% url 'contact' %}"{% if request.resolver_match.url_name == "contact" %} aria-current="page"{% endif %}>Contact</a>
+    <p class="kicker pt-4 text-base-content/80">Platform</p>
+    {% for mode in nav_modes %}
+      <a class="flex items-baseline justify-between border-b border-base-content/10 py-3" href="{{ mode.get_absolute_url }}"{% if request.path == mode.get_absolute_url %} aria-current="page"{% endif %}>
+        <span>{{ mode.name }}</span>
+        <span class="kicker text-base-content/80">{{ mode.stage }}</span>
+      </a>
+    {% endfor %}
+    <p class="kicker pt-4 text-base-content/80">Resources</p>
+    {% for section in resource_sections %}
+      <a class="border-b border-base-content/10 py-3" href="{{ section.get_absolute_url }}"{% if request.path == section.get_absolute_url %} aria-current="page"{% endif %}>{{ section.title }}</a>
+    {% endfor %}
+    <div class="mt-4 flex flex-wrap gap-3">
+      {% if user.is_authenticated %}
+        <a class="btn btn-primary rounded-none" href="{% url 'dashboard' %}">Your desk</a>
+      {% else %}
+        <a class="btn btn-primary rounded-none" href="{% url 'join' %}">Join free</a>
+        <a class="btn btn-outline rounded-none border-base-content/30" href="{% url 'login' %}">Sign in</a>
+      {% endif %}
+      <button class="btn btn-ghost rounded-none" type="button" data-theme-toggle aria-pressed="false">Night sheet</button>
     </div>
-    <nav class="shell grid gap-1 pb-16 text-lg font-semibold" aria-label="Mobile">
-      <a class="border-b border-base-content/15 py-3" href="{% url 'home' %}#stations">How it works</a>
-      <a class="border-b border-base-content/15 py-3" href="{% url 'pricing' %}">Pricing</a>
-      <a class="border-b border-base-content/15 py-3" href="{% url 'about' %}">Company</a>
-      <a class="border-b border-base-content/15 py-3" href="{% url 'contact' %}">Contact</a>
-      <p class="kicker pt-4 text-base-content/70">Platform</p>
-      {% for mode in nav_modes %}
-        <a class="flex items-baseline justify-between border-b border-base-content/10 py-3" href="{{ mode.get_absolute_url }}">
-          <span>{{ mode.name }}</span>
-          <span class="kicker text-[0.62rem] text-base-content/70">{{ mode.stage }}</span>
-        </a>
-      {% endfor %}
-      <div class="mt-4 flex flex-wrap gap-3">
-        {% if user.is_authenticated %}
-          <a class="btn btn-primary rounded-none" href="{% url 'dashboard' %}">Your desk</a>
-        {% else %}
-          <a class="btn btn-primary rounded-none" href="{% url 'join' %}">Join free</a>
-          <a class="btn btn-outline rounded-none border-base-content/30" href="{% url 'login' %}">Sign in</a>
-        {% endif %}
-        <button class="btn btn-ghost rounded-none" type="button" data-theme-toggle>Night sheet</button>
-      </div>
-    </nav>
+  </nav>
 </div>

@@ -1,5 +1,6 @@
 {% extends "base.html" %}
-{% block title %}Talk to a person{% endblock %}
+{% load ui %}
+{% block structured_data %}{% json_ld_breadcrumbs "Home" "/" "Contact" "/contact/" %}{% endblock %}
 {% block content %}
 <section class="py-12 lg:py-16">
   <div class="shell grid items-start gap-10 lg:grid-cols-[minmax(16rem,0.8fr)_minmax(20rem,1fr)]">
@@ -27,9 +28,9 @@
         {% if context_topic %}
           <p class="mb-4 border border-primary bg-primary/30 px-3 py-2 text-sm">This note is about {{ context_topic }}.</p>
         {% endif %}
-        <form class="grid gap-4" method="post" action="{% url 'contact' %}" novalidate>
+        <form class="relative grid gap-4" method="post" action="{% url 'contact' %}" novalidate>
           {% csrf_token %}
-          <div class="absolute -left-[9999px] h-px w-px overflow-hidden" aria-hidden="true">
+          <div class="hp" aria-hidden="true">
             <label for="bot-field">Leave this field empty</label>
             <input id="bot-field" name="bot-field" tabindex="-1" autocomplete="off">
           </div>

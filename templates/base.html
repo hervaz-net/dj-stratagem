@@ -1,35 +1,59 @@
-{% load static %}
+{% load static ui %}
 <!DOCTYPE html>
 <html lang="en" data-theme="sheet">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block full_title %}{% block title %}{{ page_title|default:"Find the work. Price it. Build it." }}{% endblock %} | D&amp;J Stratagem{% endblock %}</title>
+  <script>
+    try {
+      var storedTheme = localStorage.getItem("djs-theme");
+      if (storedTheme === "night") document.documentElement.setAttribute("data-theme", "night");
+      if (localStorage.getItem("djs-cookie") === "1") document.documentElement.classList.add("cookie-ok");
+    } catch (error) {}
+  </script>
+  {% block seo %}{% endblock %}
+  <title>{% block full_title %}{{ page_title|default:"Find the work. Price it. Build it." }} | D&amp;J Stratagem{% endblock %}</title>
   <meta name="description" content="{{ page_description|default:'One construction account for contractors, subcontractors, and suppliers to find work, price it, and build what’s next.' }}">
   <link rel="canonical" href="{{ site_url }}{{ canonical_path|default:request.path }}">
   <meta name="robots" content="{% block robots %}{{ robots|default:'index, follow' }}{% endblock %}">
+  <meta property="og:locale" content="en_US">
   <meta property="og:site_name" content="D&amp;J Stratagem">
   <meta property="og:title" content="{{ page_title|default:'Find the work. Price it. Build it.' }}">
-  <meta property="og:description" content="{{ page_description|default:'Nine modes. One desk.' }}">
+  <meta property="og:description" content="{{ page_description|default:'One construction account for contractors, subcontractors, and suppliers to find work, price it, and build what’s next.' }}">
   <meta property="og:url" content="{{ site_url }}{{ canonical_path|default:request.path }}">
-  <meta property="og:type" content="website">
+  <meta property="og:type" content="{{ og_type|default:'website' }}">
+  <meta property="og:image" content="{{ site_url }}{% static 'img/og.png' %}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="D&amp;J Stratagem. Find the work. Price it. Build it.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ page_title|default:'Find the work. Price it. Build it.' }}">
+  <meta name="twitter:description" content="{{ page_description|default:'One construction account for contractors, subcontractors, and suppliers to find work, price it, and build what’s next.' }}">
+  <meta name="twitter:image" content="{{ site_url }}{% static 'img/og.png' %}">
+  <meta name="twitter:image:alt" content="D&amp;J Stratagem. Find the work. Price it. Build it.">
   <meta name="theme-color" content="#f4f5f1">
+  <meta name="color-scheme" content="light dark">
   <link rel="icon" href="{% static 'favicon.svg' %}" type="image/svg+xml">
   <link rel="manifest" href="{% url 'manifest' %}">
+  <link rel="preload" href="{% static 'fonts/barlow-condensed-600.woff2' %}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{% static 'fonts/barlow-400.woff2' %}" as="font" type="font/woff2" crossorigin>
+  {% block head_assets %}{% endblock %}
   <link rel="stylesheet" href="{% static 'css/app.css' %}">
-  <script src="{% static 'js/theme.js' %}"></script>
+  {% json_ld_organization %}
+  {% block structured_data %}{% endblock %}
 </head>
 <body class="min-h-screen bg-base-100 text-base-content antialiased">
-  <a class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[80] focus:bg-primary focus:px-3 focus:py-2 focus:font-semibold focus:text-primary-content" href="#main">Skip to content</a>
+  <a class="skip-link" href="#main">Skip to content</a>
   {% block chrome %}
     {% include "includes/header.html" %}
   {% endblock %}
-  <main id="main">
+  <main id="main" tabindex="-1">
     {% block content %}{% endblock %}
   </main>
   {% block footer %}
     {% include "includes/footer.html" %}
   {% endblock %}
   {% include "includes/cookie.html" %}
+  <script src="{% static 'js/theme.js' %}" defer></script>
 </body>
 </html>

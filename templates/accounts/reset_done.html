@@ -1,5 +1,6 @@
 {% extends "accounts/auth_base.html" %}
-{% block title %}Password updated{% endblock %}
+{% load ui %}
+{% block seo %}{% seo_defaults title="Password updated" description="Your D&J Stratagem password has been updated." %}{% endblock %}
 {% block auth %}
   <h1 class="display text-5xl">You’re all set.</h1>
   <p class="mt-3 text-sm">Your password has been updated. Sign in with your new password.</p>

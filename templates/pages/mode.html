@@ -1,5 +1,6 @@
 {% extends "base.html" %}
-{% block title %}{{ mode.name }}{% endblock %}
+{% load ui %}
+{% block structured_data %}{% json_ld_breadcrumbs "Home" "/" mode.name mode.get_absolute_url %}{% endblock %}
 {% block content %}
 <section class="border-b border-base-content/15 py-12 lg:py-16">
   <div class="shell grid items-start gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(18rem,0.8fr)]">
@@ -26,7 +27,7 @@
       <ol>
         {% for capability in mode.capabilities.all %}
           <li class="grid grid-cols-[2.5rem_1fr] gap-2 border-b border-base-content/10 px-4 py-3 text-sm">
-            <span class="kicker text-[0.62rem] text-base-content/50">0{{ forloop.counter }}</span>
+            <span class="kicker text-base-content/80">0{{ forloop.counter }}</span>
             <span>{{ capability.text }}</span>
           </li>
         {% endfor %}
@@ -56,7 +57,7 @@
     <ul class="grid gap-px bg-base-content/15 sm:grid-cols-2">
       {% for item in stage_modes %}
         <li class="bg-base-100">
-          <a class="flex items-center justify-between gap-3 px-4 py-4 {% if item.pk == mode.pk %}bg-primary/40{% endif %}" href="{{ item.get_absolute_url }}" {% if item.pk == mode.pk %}aria-current="page"{% endif %}>
+          <a class="flex items-center justify-between gap-3 px-4 py-4 {% if item.pk == mode.pk %}bg-primary/40{% endif %}" href="{{ item.get_absolute_url }}"{% if item.pk == mode.pk %} aria-current="page"{% endif %}>
             <span>
               <span class="kicker block text-[0.58rem] text-base-content/70">{{ item.stage }}</span>
               <span class="font-semibold">{{ item.name }}</span>
@@ -77,9 +78,13 @@
     <ul class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {% for photo in photos %}
         <li>
-          <img class="{% if mode.slug == 'fleet' %}aspect-[16/10] bg-base-200 object-contain{% else %}aspect-[4/3] object-cover{% endif %} w-full" src="{{ photo.image.url }}" alt="{{ photo.alt }}" width="{{ photo.width }}" height="{{ photo.height }}">
-          <p class="mt-2 text-sm">{{ photo.alt }}</p>
-          <p class="text-xs text-base-content/75">{{ photo.credit }}</p>
+          <figure>
+            <img class="{% if mode.slug == 'fleet' %}aspect-[16/10] bg-base-200 object-contain{% else %}aspect-[4/3] object-cover{% endif %} w-full" src="{{ photo.image.url }}" alt="" {% if photo.width %}width="{{ photo.width }}"{% endif %} {% if photo.height %}height="{{ photo.height }}"{% endif %} loading="lazy" decoding="async">
+            <figcaption class="mt-2">
+              <p class="text-sm">{{ photo.alt }}</p>
+              <p class="text-xs text-base-content/80">{{ photo.credit }}</p>
+            </figcaption>
+          </figure>
         </li>
       {% endfor %}
     </ul>
