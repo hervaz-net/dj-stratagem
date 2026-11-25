@@ -1,0 +1,86 @@
+import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { hideMarketingChrome } from "../chrome/formRoutes";
+
+const KEY = "djs-cookie-consent";
+
+function getConsent() {
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
+}
+
+function setConsent(accepted) {
+  try {
+    localStorage.setItem(KEY, JSON.stringify({ accepted, ts: Date.now() }));
+  } catch {
+    /* private mode / blocked storage */
+  }
+}
+
+export default function CookieBanner() {
+  const { pathname } = useLocation();
+  const hide = hideMarketingChrome(pathname);
+  const [dismissed, setDismissed] = useState(() => getConsent() !== null);
+
+  useEffect(() => {
+    if (dismissed || hide) {
+      delete document.documentElement.dataset.cookieBanner;
+    } else {
+      document.documentElement.dataset.cookieBanner = "1";
+    }
+    return () => {
+      delete document.documentElement.dataset.cookieBanner;
+    };
+  }, [dismissed, hide]);
+
+  if (dismissed || hide) return null;
+
+  const accept = () => {
+    setConsent(true);
+    setDismissed(true);
+  };
+  const decline = () => {
+    setConsent(false);
+    setDismissed(true);
+  };
+
+  return (
+    <div
+      role="region"
+      aria-label="Cookie consent"
+      className="fixed bottom-4 right-4 z-[110] w-[min(22rem,calc(100vw-2rem))] slab p-5"
+    >
+      <p className="text-sm leading-relaxed text-fg-muted">
+        This site stores theme preference and this consent choice on your device. There is no analytics or advertising pixel.{" "}
+        <Link
+          to="/privacy"
+          className="font-medium text-brand underline underline-offset-2 hover:text-brand-hover"
+        >
+          Privacy Policy
+        </Link>
+        .
+      </p>
+      <div className="mt-3 flex shrink-0 justify-end gap-2">
+        <button
+          type="button"
+          onClick={decline}
+          className="draw-link px-2 py-1.5 text-xs font-semibold text-fg-muted hover:text-fg"
+        >
+          Dismiss
+        </button>
+        <button
+          type="button"
+          onClick={accept}
+          className="chamfer-sm bg-brand px-4 py-1.5 text-xs font-semibold text-white hover:bg-brand-hover"
+        >
+          OK
+        </button>
+      </div>
+    </div>
+  );
+}

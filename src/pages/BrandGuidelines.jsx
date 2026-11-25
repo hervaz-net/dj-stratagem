@@ -1,0 +1,18 @@
+import DocFrame from "../components/DocFrame";
+import Seo from "../components/Seo";
+import SubagentMarkSheet, { SymbolSheet } from "../shared/SubagentMarkSheet";
+
+export default function BrandGuidelines() {
+  return (
+    <>
+      <Seo
+        title="Brand guidelines"
+        description="How to use the D&J Stratagem name, mark, and color. Printable sheet for partners and press."
+      />
+      <h1 className="sr-only">Brand guidelines</h1>
+      <SubagentMarkSheet />
+      <SymbolSheet />
+      <DocFrame src="/brand-guidelines.html" title="Brand Guidelines" />
+    </>
+  );
+}

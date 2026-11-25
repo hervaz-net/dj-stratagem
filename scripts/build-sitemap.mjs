@@ -1,0 +1,89 @@
+#!/usr/bin/env node
+/**
+ * Regenerates public/sitemap.xml from the routes the app actually serves.
+ *
+ * The sitemap was hand-maintained and had already drifted — it listed seven
+ * URLs while the app served twenty-odd, and it would have gone stale again the
+ * moment a project or landing page was added. Generating it from the same data
+ * module the pages render keeps the two in step.
+ *
+ * Runs automatically as part of `npm run build`.
+ */
+import { writeFileSync, mkdirSync } from "node:fs";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const here = dirname(fileURLToPath(import.meta.url));
+const root = resolve(here, "..");
+
+const { projects, landingPairs } = await import(
+  resolve(root, "src/data/sampleProjects.js")
+);
+
+const SITE = "https://djstratageminc.com";
+
+const staticPaths = [
+  ["/", "1.0"],
+  ["/services", "0.8"],
+  ["/command/projects", "0.9"],
+  ["/command/exchange", "0.8"],
+  ["/command/platform", "0.8"],
+  ["/command/solutions", "0.8"],
+  ["/command/supply", "0.8"],
+  ["/command/fleet", "0.7"],
+  ["/command/capital", "0.6"],
+  ["/command/studio", "0.6"],
+  ["/command/workforce", "0.6"],
+  ["/pricing", "0.8"],
+  ["/about", "0.6"],
+  ["/contact", "0.6"],
+  ["/resources", "0.6"],
+  ["/changelog", "0.4"],
+  ["/privacy", "0.3"],
+  ["/terms", "0.3"],
+  ["/brand", "0.3"],
+  ["/exchange/marketplace", "0.8"],
+  ["/exchange/contractors", "0.7"],
+  ["/exchange/distributors", "0.7"],
+  ["/exchange/suppliers", "0.7"],
+  ["/exchange/changelog", "0.4"],
+  ["/exchange/privacy", "0.3"],
+  ["/exchange/terms", "0.3"],
+  ["/exchange/brand", "0.3"],
+];
+
+const urls = [
+  ...staticPaths.map(([path, priority]) => ({ path, priority })),
+  ...projects.map((p) => ({ path: `/command/projects/${p.slug}`, priority: "0.7" })),
+  ...landingPairs().map((p) => ({
+    path: `/command/projects/markets/${p.citySlug}/${p.tradeSlug}`,
+    priority: "0.7",
+  })),
+];
+
+// lastmod is a calendar day, not a UTC instant. toISOString() rolls
+// the sitemap to tomorrow after 5pm Pacific.
+function localDateISO(date = new Date()) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+
+const today = localDateISO();
+
+const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls
+  .map(
+    ({ path, priority }) =>
+      `  <url><loc>${SITE}${path}</loc><lastmod>${today}</lastmod><priority>${priority}</priority></url>`,
+  )
+  .join("\n")}
+</urlset>
+`;
+
+const out = resolve(root, "public/sitemap.xml");
+mkdirSync(dirname(out), { recursive: true });
+writeFileSync(out, xml);
+console.log(`sitemap: ${urls.length} URLs -> public/sitemap.xml`);

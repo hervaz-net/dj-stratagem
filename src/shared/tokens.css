@@ -1,0 +1,107 @@
+/* ---------------------------------------------------------------------------
+  Stratagem Exchange tokens: the single source of color, type and shadow for
+  every site (Exchange, the venture sites, and the parent D&J Stratagem site).
+  Imported right after "tailwindcss" by each entry stylesheet. Change a value
+  here, never in a page stylesheet. See DESIGN_SYSTEM.md.
+  --------------------------------------------------------------------------- */
+
+@theme inline {
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* Canonical */
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface-raised);
+  --color-subtle: var(--subtle);
+  --color-line: var(--border);
+  --color-line-strong: var(--border-strong);
+  --color-fg: var(--text-strong);
+  --color-fg-muted: var(--text-muted);
+
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --color-brand-soft: var(--brand-soft);
+  --color-brand-fg: var(--brand-fg);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+
+  --color-role-contractor: var(--role-contractor);
+  --color-role-contractor-soft: var(--role-contractor-soft);
+  --color-role-distributor: var(--role-distributor);
+  --color-role-distributor-soft: var(--role-distributor-soft);
+  --color-role-supplier: var(--role-supplier);
+  --color-role-supplier-soft: var(--role-supplier-soft);
+
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+
+  /* The always-dark band */
+  --color-bid-navy: #071a33;
+  --color-bid-navy-hover: #04101f;
+
+  --radius-card: 1rem;
+}
+
+:root {
+  color-scheme: light;
+
+  --canvas: #f6f5f2;
+  --surface-raised: #ffffff;
+  --subtle: #eef0f3;
+  --surface: var(--surface-raised);
+  --surface-hover: #e6e9ee;
+  --border: #e1e4ea;
+  --border-strong: #c9d0da;
+
+  --text-strong: #071a33;
+  --text: #071a33;
+  --text-muted: #3e4c63;
+
+  --brand: #c2410c;
+  --brand-hover: #9a3412;
+  --brand-soft: #fff1e8;
+  --brand-fg: #9a3412;
+  --accent: #c2410c;
+  --accent-soft: #fff1e8;
+
+  --role-contractor: #c2610c;
+  --role-contractor-soft: #fdeedd;
+  --role-distributor: #2459c4;
+  --role-distributor-soft: #e5edfb;
+  --role-supplier: #0e6b4f;
+  --role-supplier-soft: #e6f2ec;
+
+  --success: #13784a;
+  --success-soft: #e3f4ea;
+  --warning: #a55d06;
+  --warning-soft: #fdf1dc;
+  --danger: #b42318;
+  --danger-soft: #fde8e6;
+
+  /* Older raw names still read by a few components */
+  --cta: var(--brand);
+  --cta-hover: var(--brand-hover);
+  --page-bg: var(--canvas);
+  --grid-line: rgba(21, 32, 27, 0.05);
+  --glass-bg: rgba(255, 255, 255, 0.9);
+  --glass-border: var(--border);
+  --shadow-color: 28 25 21;
+
+  --viz-blue: #2459c4;
+  --viz-cyan: #0e8a8a;
+  --viz-red: #b42318;
+  --viz-gold: #b86e12;
+  --viz-green: #13784a;
+
+  --panel-bg: var(--surface-raised);
+  --panel-border: var(--border);
+  --panel-glow: rgba(7, 26, 51, 0.08);
+  --panel-shadow: 0 1px 2px rgba(7, 26, 51, 0.05), 0 18px 40px -24px rgba(7, 26, 51, 0.35);
+  --shadow-card: 0 1px 2px rgba(7, 26, 51, 0.04), 0 8px 24px -16px rgba(7, 26, 51, 0.18);
+  --shadow-pop: 0 8px 30px -12px rgba(7, 26, 51, 0.28);
+}

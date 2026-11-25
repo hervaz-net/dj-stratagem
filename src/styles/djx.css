@@ -1,0 +1,172 @@
+/*
+ * Stratagem AI redesign: the subagent header and the home page.
+ *
+ * Scoped under .djx. Every --x-* name reads a token from
+ * src/shared/tokens.css; only the "keep" stage brown has no token yet.
+ */
+.djx {
+  --x-bg: var(--canvas);
+  --x-surface: var(--surface-raised);
+  --x-subtle: var(--subtle);
+  --x-border: var(--border);
+  --x-border-strong: var(--border-strong);
+  --x-text: var(--text-strong);
+  --x-muted: var(--text-muted);
+  --x-brand: var(--brand);
+  --x-brand-hover: var(--brand-hover);
+  --x-brand-soft: var(--brand-soft);
+  --x-find: var(--role-contractor);
+  --x-find-soft: var(--role-contractor-soft);
+  --x-win: var(--role-distributor);
+  --x-win-soft: var(--role-distributor-soft);
+  --x-build: var(--brand-fg);
+  --x-build-soft: var(--brand-soft);
+  --x-keep: #8a4f0a;
+  --x-keep-soft: var(--accent-soft);
+  --x-accent: var(--accent);
+  --x-shadow-card: var(--shadow-card);
+  --x-shadow-pop: var(--shadow-pop);
+  --x-gutter: clamp(16px, 3vw, 40px);
+  color: var(--x-text);
+  font-family: var(--font-sans);
+  letter-spacing: -0.006em;
+}
+.djx .x-mono { font-family: var(--font-mono, ui-monospace, "SF Mono", Menlo, monospace); }
+
+/* Stage colors, shared by pills, chips and the hub diagram. */
+.djx [data-stage="find"]  { --stage: var(--x-find);  --stage-soft: var(--x-find-soft); }
+.djx [data-stage="win"]   { --stage: var(--x-win);   --stage-soft: var(--x-win-soft); }
+.djx [data-stage="build"] { --stage: var(--x-build); --stage-soft: var(--x-build-soft); }
+.djx [data-stage="keep"]  { --stage: var(--x-keep);  --stage-soft: var(--x-keep-soft); }
+.djx .x-chip {
+  display: inline-flex; align-items: center; border-radius: 999px;
+  padding: 3px 10px; font-size: 12px; font-weight: 600;
+  background: var(--stage-soft); color: var(--stage);
+}
+
+/* Buttons */
+.djx .x-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 44px; padding: 12px 22px; border-radius: 999px;
+  font-weight: 600; font-size: 15px; box-sizing: border-box;
+  transition: background-color .2s ease, transform .2s ease, border-color .2s ease;
+}
+.djx .x-btn:hover { transform: translateY(-1px); }
+.djx .x-btn-primary { background: var(--x-brand); color: #fff; }
+.djx .x-btn-primary:hover { background: var(--x-brand-hover); color: #fff; }
+.djx .x-btn-ghost { background: var(--x-surface); color: var(--x-text); border: 1px solid var(--x-border-strong); }
+.djx .x-btn-ghost:hover { border-color: var(--x-brand); }
+
+/* Header pills */
+.djx .x-pill {
+  display: inline-flex; align-items: center; gap: 8px; white-space: nowrap;
+  min-height: 44px; padding: 10px 12px; border-radius: 999px;
+  font-size: 14px; font-weight: 600; color: var(--x-text);
+  transition: background-color .2s ease, color .2s ease;
+}
+.djx .x-pill:hover { background: var(--x-brand-soft); color: var(--x-brand-hover); }
+.djx .x-pill[aria-current="page"] { background: var(--x-brand); color: #fff; }
+.djx .x-pill .x-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--stage); }
+.djx .x-pill[aria-current="page"] .x-dot { background: #fff; }
+.djx .x-pills { scrollbar-width: none; }
+.djx .x-pills::-webkit-scrollbar { display: none; }
+
+/* Cards */
+.djx .x-card {
+  background: var(--x-surface); border: 1px solid var(--x-border); border-radius: 16px;
+  box-shadow: var(--x-shadow-card);
+  transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+.djx a.x-card:hover { transform: translateY(-4px); box-shadow: var(--x-shadow-pop); border-color: var(--x-brand); }
+.djx .x-arrow { transition: transform .25s ease; }
+.djx a.x-card:hover .x-arrow { transform: translateX(4px); }
+
+/* Animations */
+@keyframes djxDrift { from { background-position: 0 0; } to { background-position: 32px 32px; } }
+@keyframes djxBlink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+@keyframes djxPulse { 0% { box-shadow: 0 0 0 0 rgba(184,110,18,.5); } 70% { box-shadow: 0 0 0 8px rgba(184,110,18,0); } 100% { box-shadow: 0 0 0 0 rgba(184,110,18,0); } }
+@keyframes djxMarquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@keyframes djxBeam { from { stroke-dashoffset: 260; } to { stroke-dashoffset: 0; } }
+@keyframes djxHub { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+@keyframes djxFill { from { width: 0; } to { width: 100%; } }
+@keyframes djxRise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes djxFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+
+.djx .x-grid {
+  background-image: linear-gradient(#15201b0d 1px, transparent 1px), linear-gradient(90deg, #15201b0d 1px, transparent 1px);
+  background-size: 32px 32px; animation: djxDrift 6s linear infinite;
+}
+.djx .x-grid-dark {
+  background-image: linear-gradient(#ffffff14 1px, transparent 1px), linear-gradient(90deg, #ffffff14 1px, transparent 1px);
+  background-size: 32px 32px; animation: djxDrift 6s linear infinite;
+}
+.djx .x-pulse { animation: djxPulse 2s infinite; }
+.djx .x-caret { display: inline-block; width: 8px; height: 1.1em; background: #7fd1ae; vertical-align: -2px; animation: djxBlink 1s step-end infinite; }
+.djx .x-hcaret { display: inline-block; width: 4px; height: .9em; background: var(--x-brand); margin-left: 4px; vertical-align: -4px; animation: djxBlink 1s step-end infinite; }
+.djx .x-track { animation: djxMarquee 36s linear infinite; }
+.djx .x-track:hover { animation-play-state: paused; }
+.djx .x-beam { stroke-dasharray: 14 246; animation: djxBeam 2.6s linear infinite; }
+.djx .x-hub { transform-box: fill-box; transform-origin: center; animation: djxHub 3s ease-in-out infinite; }
+.djx .x-fill { animation: djxFill 2.4s linear forwards; }
+.djx .x-out { animation: djxRise .4s ease-out both; }
+.djx .x-float { animation: djxFloat 6s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .djx .x-grid, .djx .x-grid-dark, .djx .x-pulse, .djx .x-caret, .djx .x-hcaret, .djx .x-track,
+  .djx .x-beam, .djx .x-hub, .djx .x-fill, .djx .x-out, .djx .x-float { animation: none !important; }
+  .djx .x-btn, .djx .x-card, .djx .x-pill, .djx .x-arrow { transition: none; }
+  .djx .x-btn:hover, .djx a.x-card:hover { transform: none; }
+}
+
+/* ---------------------------------------------------------- main nav + mega */
+.djx .x-navlink {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px;
+  border-radius: 999px; font-size: 15px; font-weight: 600; color: var(--x-text);
+  background: transparent; border: 0; cursor: pointer; white-space: nowrap;
+  transition: background-color .2s ease, color .2s ease;
+}
+.djx .x-navlink:hover, .djx .x-navlink.is-active { background: var(--x-brand-soft); color: var(--x-brand-hover); }
+.djx .x-chevron { transition: transform .25s ease; }
+.djx .x-chevron.is-open { transform: rotate(180deg); }
+
+@keyframes djxRipple { 0%, 60%, 100% { transform: scale(1); opacity: 1; } 30% { transform: scale(1.45); opacity: .75; } }
+.djx .x-glyph { overflow: visible; transition: transform .45s cubic-bezier(.3,1.5,.5,1); }
+.djx .x-glyph.is-open { transform: rotate(45deg) scale(1.08); }
+.djx .x-glyph-dot { fill: var(--stage); transform-box: fill-box; transform-origin: center; animation: djxRipple 2.8s ease-in-out infinite; }
+.djx .x-glyph.is-open .x-glyph-dot { animation-duration: 1.2s; }
+
+@keyframes djxDrop { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+.djx .x-mega {
+  position: absolute; left: 0; right: 0; top: 100%;
+  background: var(--x-bg); border-bottom: 1px solid var(--x-border);
+  box-shadow: 0 24px 48px -24px #15201b40;
+  max-height: calc(100vh - 64px); overflow-y: auto;
+  animation: djxDrop .22s ease-out both;
+}
+.djx .x-mega-grid { display: grid; gap: 20px; grid-template-columns: 1fr; }
+@media (min-width: 640px) { .djx .x-mega-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1100px) { .djx .x-mega-grid { grid-template-columns: repeat(4, minmax(0, 1fr)) 18rem; } }
+.djx .x-mega-item {
+  display: flex; gap: 12px; align-items: flex-start; padding: 10px 12px; border-radius: 14px;
+  transition: background-color .2s ease; animation: djxRise .35s ease-out both;
+}
+.djx .x-mega-item:hover, .djx .x-mega-item:focus-visible { background: var(--x-surface); box-shadow: var(--x-shadow-card); }
+.djx .x-mega-item[aria-current="page"] { background: var(--x-brand-soft); }
+.djx .x-mega-icon {
+  flex: none; width: 34px; height: 34px; border-radius: 10px; display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; letter-spacing: .02em; background: var(--stage-soft); color: var(--stage);
+  transition: transform .3s cubic-bezier(.3,1.6,.5,1);
+}
+.djx .x-mega-item:hover .x-mega-icon { transform: rotate(-8deg) scale(1.08); }
+.djx .x-mega-arrow { opacity: 0; transform: translateX(-4px); transition: opacity .2s ease, transform .2s ease; color: var(--x-brand); }
+.djx .x-mega-item:hover .x-mega-arrow, .djx .x-mega-item:focus-visible .x-mega-arrow { opacity: 1; transform: none; }
+.djx .x-mega-feature {
+  border-radius: 18px; padding: 22px; background-color: var(--x-brand); align-self: start;
+  animation: djxRise .4s ease-out .2s both;
+}
+@media (min-width: 640px) and (max-width: 1099px) { .djx .x-mega-feature { grid-column: 1 / -1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .djx .x-glyph, .djx .x-glyph-dot, .djx .x-mega, .djx .x-mega-item, .djx .x-mega-feature,
+  .djx .x-mega-icon, .djx .x-chevron, .djx .x-mega-arrow { animation: none !important; transition: none !important; }
+}

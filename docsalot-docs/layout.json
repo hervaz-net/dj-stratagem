@@ -1,0 +1,77 @@
+{
+  "name": "sadboy",
+  "favicon": "/favicon.ico",
+  "font": {
+    "headings": {
+      "family": "Work Sans",
+      "url": "/fonts/Work_Sans/WorkSans-VariableFont_wght.ttf",
+      "weight": "600"
+    },
+    "body": {
+      "family": "Inter"
+    }
+  },
+  "colors": {
+    "primary": "#2563EB",
+    "light": "#60A5FA",
+    "dark": "#1D4ED8",
+    "background": {
+      "light": "#FFFFFF",
+      "dark": "#0F172A"
+    },
+    "anchors": {
+      "from": "#2563EB",
+      "to": "#1D4ED8"
+    }
+  },
+  "background": {
+    "style": "gradient"
+  },
+  "layout": {
+    "rounded": "default",
+    "wide": true
+  },
+  "sidebar": {
+    "items": "container"
+  },
+  "topbar": {
+    "style": "default"
+  },
+  "topbarCtaButton": {
+    "name": "Visit Product",
+    "url": "https://sadboy-docs.docsalot.dev"
+  },
+  "anchors": [
+    {
+      "name": "Website",
+      "icon": "globe",
+      "url": "https://sadboy-docs.docsalot.dev"
+    }
+  ],
+  "navigation": [
+    {
+      "group": "Getting Started",
+      "pages": [
+        "getting-started/overview"
+      ]
+    },
+    {
+      "group": "Guides",
+      "pages": [
+        "guides/core-workflow"
+      ]
+    },
+    {
+      "group": "Support",
+      "pages": [
+        "support/faq"
+      ]
+    },
+    {
+      "group": "Troubleshooting",
+      "pages": [
+        "troubleshooting/common-issues"
+      ]
+    }
+  ]
+}

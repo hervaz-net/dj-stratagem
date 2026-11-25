@@ -1,0 +1,256 @@
+// D&J Stratagem - Design System SCSS Tokens
+// This file provides SCSS variables and utilities for consistent styling across the app
+
+// ============================================================
+// COLOR PALETTE
+// ============================================================
+
+// Primary Colors
+$color-ink: #f5f5f7;
+$color-ink-2: #ffffff;
+$color-ink-3: #f5f5f7;
+$color-line: #e5e5e7;
+
+// Text Colors
+$color-paper: #1d1d1f;
+$color-paper-2: #424245;
+$color-steel: #86868b;
+
+// Accent Colors
+$color-amber: #0071e3;
+$color-amber-2: #34c759;
+
+// Status Colors
+$color-success: #34c759;
+$color-warning: #ff9500;
+$color-error: #ff3b30;
+$color-info: #0071e3;
+
+// ============================================================
+// TYPOGRAPHY
+// ============================================================
+
+$font-sans: "Archivo", "Inter", ui-sans-serif, system-ui, sans-serif;
+
+$font-size-xs: 12px;
+$font-size-sm: 14px;
+$font-size-base: 16px;
+$font-size-lg: 18px;
+$font-size-xl: 20px;
+$font-size-2xl: 24px;
+$font-size-3xl: 30px;
+$font-size-4xl: 36px;
+$font-size-5xl: 48px;
+$font-size-6xl: 60px;
+
+$font-weight-light: 300;
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+$font-weight-extrabold: 800;
+
+$line-height-tight: 1;
+$line-height-snug: 1.2;
+$line-height-normal: 1.5;
+$line-height-relaxed: 1.625;
+$line-height-loose: 2;
+
+// ============================================================
+// SPACING
+// ============================================================
+
+$space-0: 0;
+$space-1: 4px;
+$space-2: 8px;
+$space-3: 12px;
+$space-4: 16px;
+$space-6: 24px;
+$space-8: 32px;
+$space-10: 40px;
+$space-12: 48px;
+$space-14: 56px;
+$space-16: 64px;
+
+// ============================================================
+// BORDER RADIUS
+// ============================================================
+
+$radius-none: 0;
+$radius-sm: 4px;
+$radius-md: 8px;
+$radius-lg: 12px;
+$radius-xl: 16px;
+$radius-2xl: 24px;
+$radius-full: 9999px;
+
+// ============================================================
+// SHADOWS
+// ============================================================
+
+$shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+$shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+// ============================================================
+// BREAKPOINTS
+// ============================================================
+
+$breakpoint-sm: 640px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 1024px;
+$breakpoint-xl: 1280px;
+$breakpoint-2xl: 1536px;
+
+// ============================================================
+// TRANSITIONS & ANIMATIONS
+// ============================================================
+
+$transition-fast: 150ms ease-in-out;
+$transition-base: 200ms ease-in-out;
+$transition-slow: 300ms ease-in-out;
+
+// ============================================================
+// MIXINS
+// ============================================================
+
+// Responsive utilities
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == sm {
+    @media (min-width: $breakpoint-sm) {
+      @content;
+    }
+  } @else if $breakpoint == md {
+    @media (min-width: $breakpoint-md) {
+      @content;
+    }
+  } @else if $breakpoint == lg {
+    @media (min-width: $breakpoint-lg) {
+      @content;
+    }
+  } @else if $breakpoint == xl {
+    @media (min-width: $breakpoint-xl) {
+      @content;
+    }
+  } @else if $breakpoint == 2xl {
+    @media (min-width: $breakpoint-2xl) {
+      @content;
+    }
+  }
+}
+
+// Flexbox centering
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// Absolute centering
+@mixin absolute-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+// Truncate text
+@mixin truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Multi-line truncate
+@mixin line-clamp($lines: 2) {
+  display: -webkit-box;
+  -webkit-line-clamp: $lines;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+// Smooth transitions
+@mixin smooth-transition($properties: all, $duration: $transition-base) {
+  transition: $properties $duration;
+}
+
+// Glass morphism effect
+@mixin glass-effect($opacity: 0.1) {
+  background: rgba(255, 255, 255, $opacity);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+// ============================================================
+// UTILITY FUNCTIONS
+// ============================================================
+
+// Convert px to rem
+@function rem($px) {
+  @return ($px / 16px) * 1rem;
+}
+
+// Darken/lighten colors
+@function darken-color($color, $amount) {
+  @return mix(black, $color, $amount);
+}
+
+@function lighten-color($color, $amount) {
+  @return mix(white, $color, $amount);
+}
+
+// ============================================================
+// COMMON COMPONENT STYLES
+// ============================================================
+
+// Card base style
+@mixin card {
+  border-radius: $radius-lg;
+  border: 1px solid $color-line;
+  background: linear-gradient(to bottom, $color-ink-2, $color-ink-3);
+  padding: $space-6;
+  @include smooth-transition();
+
+  &:hover {
+    border-color: $color-amber;
+    box-shadow: $shadow-lg;
+  }
+}
+
+// Button base style
+@mixin button-base {
+  padding: $space-3 $space-4;
+  border-radius: $radius-md;
+  font-weight: $font-weight-bold;
+  font-size: $font-size-sm;
+  cursor: pointer;
+  @include smooth-transition();
+  border: none;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+// Input base style
+@mixin input-base {
+  padding: $space-2 $space-3;
+  border-radius: $radius-md;
+  border: 1px solid $color-line;
+  font-family: $font-sans;
+  font-size: $font-size-base;
+  @include smooth-transition(border, $transition-fast);
+
+  &:focus {
+    outline: none;
+    border-color: $color-amber;
+  }
+
+  &:disabled {
+    background-color: $color-ink-3;
+    cursor: not-allowed;
+  }
+}

@@ -1,0 +1,49 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+.next
+out
+*.tsbuildinfo
+.playwright-mcp
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.claude/
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# never commit credentials
+.cpanel_token
+*.token
+
+# Django
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+data/
+media/
+staticfiles/
+theme/node_modules/
+
+# Server-only auth config — holds database credentials
+public/api/config.php
+dist/api/config.php
+scripts/mock-claude.log

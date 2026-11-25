@@ -1,0 +1,4 @@
+---
+deployment:
+  tasks:
+    - /bin/bash /home/djstlime/repositories/dj-stratagem/scripts/cpanel-django-deploy.sh

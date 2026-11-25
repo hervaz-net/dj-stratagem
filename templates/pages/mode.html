@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block title %}{{ mode.name }}{% endblock %}
+{% block content %}
+<section class="border-b border-base-content/15 py-12 lg:py-16">
+  <div class="shell grid items-start gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(18rem,0.8fr)]">
+    <div>
+      <p class="kicker text-base-content/75">
+        <a class="hover:underline" href="{% url 'home' %}">Home</a>
+        · {{ mode.stage }} the work
+        · Mode {{ mode_number }}
+      </p>
+      <h1 class="display mt-5 max-w-4xl text-[clamp(3rem,6vw,5.4rem)]">{{ mode.headline }}</h1>
+      <p class="mt-5 max-w-2xl text-lg leading-relaxed text-base-content/80">{{ mode.description }}</p>
+      <div class="mt-7 flex flex-wrap items-center gap-5">
+        <a class="btn btn-primary h-12 min-h-12 rounded-none px-5 font-semibold" href="{% url 'join' %}">Join free</a>
+        <a class="font-semibold underline underline-offset-4" href="{% url 'contact' %}">Talk to our team</a>
+      </div>
+      <p class="mt-5 text-sm text-base-content/65">Free to start · Account reviewed by a person</p>
+    </div>
+    <aside class="border border-base-content/20 bg-base-200">
+      <div class="flex items-center justify-between border-b border-base-content/15 px-4 py-3">
+        <p class="font-semibold">{{ mode.name }} desk</p>
+        <p class="kicker text-[0.62rem]">{{ mode.stage }}</p>
+      </div>
+      <p class="border-b border-base-content/15 px-4 py-4 text-sm">{{ mode.summary }}</p>
+      <ol>
+        {% for capability in mode.capabilities.all %}
+          <li class="grid grid-cols-[2.5rem_1fr] gap-2 border-b border-base-content/10 px-4 py-3 text-sm">
+            <span class="kicker text-[0.62rem] text-base-content/50">0{{ forloop.counter }}</span>
+            <span>{{ capability.text }}</span>
+          </li>
+        {% endfor %}
+      </ol>
+      <p class="px-4 py-4 text-sm font-medium">{{ mode.outcome }}</p>
+    </aside>
+  </div>
+</section>
+
+<section class="py-14 lg:py-20">
+  <div class="shell grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
+    <h2 class="display text-4xl sm:text-5xl">One more part of the job. Not another place to start over.</h2>
+    <div class="text-base leading-relaxed text-base-content/80">
+      <p>{{ mode.detail }} Because it lives in the same account as the rest of the pipeline, your team can bring the right context forward and keep the next action clear.</p>
+      <p class="mt-4">Every company is reviewed by a person. AI-assisted work is always subject to human approval before it runs.</p>
+    </div>
+  </div>
+</section>
+
+<section class="border-y border-base-content/15 bg-base-200 py-14 lg:py-16">
+  <div class="shell grid gap-8 lg:grid-cols-[0.8fr_1fr] lg:items-start">
+    <div>
+      <p class="kicker text-base-content/75">{{ mode.stage }} stage</p>
+      <h2 class="display mt-3 text-4xl sm:text-5xl">Keep moving through the job.</h2>
+      <p class="mt-4 text-sm leading-relaxed text-base-content/75">{{ mode.name }} connects with the other tools your team uses as work moves from first signal to finished project.</p>
+    </div>
+    <ul class="grid gap-px bg-base-content/15 sm:grid-cols-2">
+      {% for item in stage_modes %}
+        <li class="bg-base-100">
+          <a class="flex items-center justify-between gap-3 px-4 py-4 {% if item.pk == mode.pk %}bg-primary/40{% endif %}" href="{{ item.get_absolute_url }}" {% if item.pk == mode.pk %}aria-current="page"{% endif %}>
+            <span>
+              <span class="kicker block text-[0.58rem] text-base-content/70">{{ item.stage }}</span>
+              <span class="font-semibold">{{ item.name }}</span>
+            </span>
+            <span aria-hidden="true">→</span>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+    <p class="lg:col-start-2"><a class="font-semibold underline underline-offset-4" href="{{ next_mode.get_absolute_url }}">Next up: {{ next_mode.name }}</a></p>
+  </div>
+</section>
+
+{% if photos %}
+<section class="py-14 lg:py-16" aria-label="{% if mode.slug == 'fleet' %}Vehicle references{% else %}Jobsite photographs{% endif %}">
+  <div class="shell">
+    <p class="kicker text-base-content/75">{% if mode.slug == 'fleet' %}Vehicle references · not a counted fleet{% else %}Jobsite photographs · not named client projects{% endif %}</p>
+    <ul class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {% for photo in photos %}
+        <li>
+          <img class="{% if mode.slug == 'fleet' %}aspect-[16/10] bg-base-200 object-contain{% else %}aspect-[4/3] object-cover{% endif %} w-full" src="{{ photo.image.url }}" alt="{{ photo.alt }}" width="{{ photo.width }}" height="{{ photo.height }}">
+          <p class="mt-2 text-sm">{{ photo.alt }}</p>
+          <p class="text-xs text-base-content/75">{{ photo.credit }}</p>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+{% endif %}
+
+<section class="pb-16">
+  <div class="shell border border-base-content/20 p-6 sm:p-10">
+    <p class="kicker text-base-content/75">The whole job, connected</p>
+    <h2 class="display mt-3 max-w-3xl text-4xl sm:text-5xl">{{ mode.outcome }}</h2>
+    <p class="mt-3 text-sm text-base-content/75">Start free, set up your company, and see how the desk fits the way you work.</p>
+    <a class="btn btn-primary mt-6 h-12 min-h-12 rounded-none px-5 font-semibold" href="{% url 'join' %}">Get started</a>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,32 @@
+/* Site-wide symbols (src/shared/Symbol.jsx). Plain CSS so they render the
+   same in every app, whatever its Tailwind tokens. */
+.sym {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  border-radius: 28%;
+  vertical-align: middle;
+}
+.sym-tile { background: color-mix(in srgb, var(--sym) 12%, transparent); }
+.sym-solid { background: var(--sym); }
+
+/* Role glow: a soft halo in the role's own color that breathes slowly. */
+@keyframes symGlow {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--sym) 0%, transparent), 0 0 14px 1px color-mix(in srgb, var(--sym) 45%, transparent); }
+  50% { box-shadow: 0 0 0 5px color-mix(in srgb, var(--sym) 14%, transparent), 0 0 24px 4px color-mix(in srgb, var(--sym) 55%, transparent); }
+}
+@keyframes symGlowPlain {
+  0%, 100% { filter: drop-shadow(0 0 2px color-mix(in srgb, var(--sym) 55%, transparent)); }
+  50% { filter: drop-shadow(0 0 6px color-mix(in srgb, var(--sym) 75%, transparent)); }
+}
+.sym-glow.sym-solid, .sym-glow.sym-tile { animation: symGlow 3.2s ease-in-out infinite; }
+svg.sym-glow { animation: symGlowPlain 3.2s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sym-glow.sym-solid, .sym-glow.sym-tile { animation: none; box-shadow: 0 0 16px 2px color-mix(in srgb, var(--sym) 45%, transparent); }
+  svg.sym-glow { animation: none; filter: drop-shadow(0 0 4px color-mix(in srgb, var(--sym) 60%, transparent)); }
+}
+@media print {
+  .sym-glow { animation: none !important; box-shadow: none !important; filter: none !important; }
+}

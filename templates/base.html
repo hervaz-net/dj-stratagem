@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-theme="sheet">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block full_title %}{% block title %}{{ page_title|default:"Find the work. Price it. Build it." }}{% endblock %} | D&amp;J Stratagem{% endblock %}</title>
+  <meta name="description" content="{{ page_description|default:'One construction account for contractors, subcontractors, and suppliers to find work, price it, and build what’s next.' }}">
+  <link rel="canonical" href="{{ site_url }}{{ canonical_path|default:request.path }}">
+  <meta name="robots" content="{% block robots %}{{ robots|default:'index, follow' }}{% endblock %}">
+  <meta property="og:site_name" content="D&amp;J Stratagem">
+  <meta property="og:title" content="{{ page_title|default:'Find the work. Price it. Build it.' }}">
+  <meta property="og:description" content="{{ page_description|default:'Nine modes. One desk.' }}">
+  <meta property="og:url" content="{{ site_url }}{{ canonical_path|default:request.path }}">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#f4f5f1">
+  <link rel="icon" href="{% static 'favicon.svg' %}" type="image/svg+xml">
+  <link rel="manifest" href="{% url 'manifest' %}">
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+  <script src="{% static 'js/theme.js' %}"></script>
+</head>
+<body class="min-h-screen bg-base-100 text-base-content antialiased">
+  <a class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[80] focus:bg-primary focus:px-3 focus:py-2 focus:font-semibold focus:text-primary-content" href="#main">Skip to content</a>
+  {% block chrome %}
+    {% include "includes/header.html" %}
+  {% endblock %}
+  <main id="main">
+    {% block content %}{% endblock %}
+  </main>
+  {% block footer %}
+    {% include "includes/footer.html" %}
+  {% endblock %}
+  {% include "includes/cookie.html" %}
+</body>
+</html>

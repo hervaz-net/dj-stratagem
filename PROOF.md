@@ -1,0 +1,165 @@
+# Proof and claims policy
+
+The marketing site must not carry invented proof. This file records what was
+removed, why, and the bar a claim has to clear before it goes on the site.
+
+## The rule
+
+**Every customer-facing claim must be true and substantiable at the moment it
+is published.** Not aspirational, not illustrative-but-unlabelled, not "we'll
+have these numbers soon."
+
+This is not only a credibility question. In the US, testimonials and
+endorsements are regulated by the FTC (16 CFR Part 255); fabricated
+endorsements and unsubstantiated performance claims create real liability. And
+naming another company as a customer when they are not can expose you to
+trademark and unfair-competition claims from that company.
+
+## What was removed (2026-08-07)
+
+| Where | What | Why |
+|---|---|---|
+| `Home.jsx` | "Trusted by construction teams at" — Granite, Turner, PCL, McCarthy, Swinerton, Hensel Phelps | **Most serious.** Named real, identifiable companies as customers. None are customers. |
+| `Home.jsx` | 3 testimonials — "Marcus D.", "Lisa T.", "James R." | Invented endorsements, one claiming a "30% win rate" increase. |
+| `Pricing.jsx` | 3 testimonials — "Tony K.", "Sandra L.", "Derek O." | Invented endorsements with specific dollar claims ("$680k contract", "$34k saved"). |
+| `About.jsx` | "2,400+ Contractors", "$2B+ Bids managed", "4.8★ Avg. rating" | Invented usage metrics. |
+| `About.jsx` | 8 named team members | Invented people with invented roles. |
+| `About.jsx` | 4 open job postings | Invented openings; an "Apply →" affordance that went nowhere. |
+| `Solutions.jsx` | 3 case studies under the heading "Real results from real contractors" | Invented companies, cities, and metrics presented explicitly as real. |
+
+Replaced with honest pre-launch framing: *"Built for contractors. Currently
+onboarding early users."*
+
+## The bar for putting something back
+
+**Usage metrics** (contractors, bids managed, projects matched) — must come
+from a query you can re-run against production. Record the date and restate it
+on the page ("as of March 2027"). Round down, never up.
+
+**Testimonials** — need a named real person at a named real company who has
+given written permission to be quoted. Keep the permission on file. If they
+want to be anonymous, "General contractor, Los Angeles" is fine; an invented
+name is not.
+
+**Customer logos** — written permission from that company. A signed order form
+is not permission to use a logo.
+
+**Case studies** — a real engagement, with metrics the customer has confirmed
+and approved for publication.
+
+**Performance claims** ("win rate up 30%") — need a documented measurement
+methodology, not a single anecdote. If it is one customer's result, say so and
+say it is not typical.
+
+## Sample product data is fine, when labelled
+
+`OpportunityPreview.jsx` shows representative project rows. That is a product
+mockup, not a customer claim, and it carries a visible "Sample view" label.
+Keep that label as long as the data is illustrative. The same applies to the
+dashboard mockups in `WalkthroughModal.jsx`.
+
+The line: **showing what the product does** is fine. **Claiming someone
+used it and got a result** requires proof.
+
+### Sample project listings carry a higher duty
+
+`src/data/sampleProjects.js` feeds `/projects`, the project detail pages, and
+the trade/location landing pages. These are illustrative, not a live feed.
+
+This matters more than a mockup on a marketing page. A contractor who mistakes
+a sample listing for a real solicitation loses real hours — chasing a bid,
+pulling a team onto an estimate, calling an owner who never posted the work.
+So every surface that renders this data shows `PreviewNotice`: a full-width
+banner stating plainly that the listings are not live solicitations and cannot
+be bid on.
+
+Rules while the feed is illustrative:
+
+- Never remove `PreviewNotice` from a page rendering `sampleProjects`.
+- Never present a sample listing as biddable — no live countdowns implying a
+  real deadline, no downloadable "plans" that do not exist.
+- Owner and GC names must stay clearly generic or explicitly marked sample.
+  Do not name a real GC as the contractor on an invented project.
+
+When the real feed lands, replace the module with the API client and drop
+`PreviewNotice` from the pages backed by live data — not before.
+
+## Also removed: the phantom blog (2026-08-13)
+
+`Home.jsx` carried a "From the blog" section advertising three articles with
+titles, excerpts, publication dates, and read times. None were written, and
+the cards were not even clickable. A teaser for content that does not exist is
+a broken promise in the same family as invented proof, so it came down.
+
+Put it back when there are posts. It needs real articles at real URLs — not
+cards that link to `/changelog`, which is a changelog, not a blog.
+
+## Also removed: real companies in the dashboard seed (2026-09-30)
+
+`public/api/ops.php` seeded the hosted dashboard's bid tracker with Turner
+Construction, PCL, McCarthy, Hensel Phelps, Swinerton, and Granite
+Construction as the counterparties on bids, two of them marked "awarded". The
+same names were taken off the marketing site on 2026-08-07, but this copy came
+from the API, so the dashboard showed it as live data with no sample label.
+
+Schema v2 (`migrate_ops_v2`) deletes the v1 seed by its fixed ids and reseeds
+with the fictional names from `src/api/fixtures.js`. Every seed row now
+carries `is_seed = 1`, and endpoints answer `sample: true` while seed rows are
+present, so the dashboard keeps its sample notice on the hosted site too.
+Overview, metrics, analytics, and the price ticker always answer
+`sample: true`: their change figures and trend lines are synthetic, not
+measured. An admin can delete the seed rows under Accounts → Remove sample data.
+
+## Demo product catalogs (2026-11-13)
+
+`public/data/catalog/` holds bundled marketplace browse data imported from
+public price-list spreadsheets (Uline-, Global Industrial-, and MyFBM-shaped
+columns). Seller names on the site are generic demo catalogs
+(“Demo Packaging & Shipping Catalog”, and so on). **Do not** rename those
+sellers to the real retailers or imply they sell on Stratagem. Every
+`/api/products.php` response is `sample: true`, and listing cards keep the
+SampleLabel. Rebuild with `scripts/import-catalog-xlsx.py`.
+
+Product photos are remote CDN URLs (Uline Scene7 HD 2000px; Global Industrial
+1000px where available), shown with SampleLabel for demo browse only. Do not
+download and re-host retailer photo libraries into `public/` without a license.
+Enrich missing GI/MyFBM URLs with `scripts/enrich-catalog-images.py`.
+
+## Still outstanding
+
+- The blog (`/blog`, from main) is unpublished: routes redirect to
+  /changelog and it is out of the footer, palette, and sitemap. One post
+  claimed a SOC 2 Type II report that is not on file, and the others describe
+  the pre-rebrand bidding product. Republish only with posts that are true
+  for Stratagem Exchange; `src/pages/Blog.jsx` and `src/data/posts.js` remain.
+
+- Starter stays free. Paid tiers are request-access only until billing
+  actually exists. Do not put “free trial / no credit card” back on Pricing
+  or Home unless a real trial is wired. Pricing copy must keep “planned” /
+  “request access” language until checkout is real.
+- Document pages (`privacy.html`, `terms.html`, brand/fleet/receipts/signage)
+  now use the system UI stack and in-repo SVG marks. Do not put
+  `fonts.googleapis.com` or missing `uploads/*.png` paths back.
+
+## Stratagem Fleet credentials (2026-10-04)
+
+`/fleet` is a passenger-transportation operator page driven by
+`src/data/fleet.js`. Issued credentials render an Active badge and are not
+printed as raw numbers on the page; permit numbers and the certificate of
+insurance stay available on request. An empty field still renders Pending.
+The FMCSA authority row stays "Intrastate only" until an MC number is on file.
+Do not mark the page "now booking" or list a vehicle in `vehicles` until that
+unit is registered, inspected, and insured, with a photo you own.
+
+2026-10-11: at the owner's request, `owned` is empty and the partner-arranged
+vehicle list was removed. The five vehicle-class photos are Wikimedia Commons
+images under CC BY-SA, credited on the page; keep the credit if a photo is
+reused.
+
+2026-10-12: at the owner's request, all vehicle photos were removed from
+/fleet and deleted from public/media/fleet. Classes are described in words and
+numbers only. Add photos back only of vehicles we own.
+
+2026-10-14: at the owner's request, /fleet cards show owner-supplied studio
+images (white background) from public/media/vehicles/ where one exists; the
+other models show their SVG drawing. Only add an image the owner supplies.

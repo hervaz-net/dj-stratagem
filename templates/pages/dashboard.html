@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Your desk{% endblock %}
+{% block robots %}noindex, nofollow{% endblock %}
+{% block footer %}{% endblock %}
+{% block content %}
+<section class="py-10">
+  <div class="shell max-w-xl border border-base-content/20 p-6 sm:p-8">
+    <p class="kicker text-base-content/75">Your construction desk</p>
+    <h1 class="display mt-3 text-5xl">The workspace is being prepared.</h1>
+    {% if user.is_authenticated %}
+      <p class="mt-4 text-base leading-relaxed">Signed in as <strong>{{ user.first_name|default:user.email }}</strong>{% if user.company %}, {{ user.company }}{% endif %}. Account status: {{ user.get_status_display }}.</p>
+      <p class="mt-3 text-sm leading-relaxed text-base-content/75">The public site and account access are ready. The signed-in operations workspace is still a separate area and is not switched on here yet.</p>
+      <form class="mt-6" method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button class="btn btn-primary rounded-none" type="submit">Sign out</button>
+      </form>
+    {% else %}
+      <p class="mt-4 text-sm leading-relaxed text-base-content/75">The public site and account access are ready to explore. The signed-in workspace is a separate app area and will connect here as it comes online.</p>
+      <div class="mt-6 flex flex-wrap gap-3">
+        <a class="btn btn-primary rounded-none" href="{% url 'login' %}">Sign in</a>
+        <a class="btn btn-ghost rounded-none" href="{% url 'home' %}">Back to D&amp;J</a>
+      </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}
