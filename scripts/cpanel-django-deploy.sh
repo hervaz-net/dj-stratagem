@@ -118,7 +118,6 @@ if [[ "$app_exists" != "yes" ]]; then
     --version "$version" \
     --startup-file passenger_wsgi.py \
     --entry-point application \
-    --app-mode production \
     --passenger-log-file "$LOG"; then
     if printf '%s' "$SELECTOR_OUT" | grep -qi 'exist'; then
       echo "Application already exists; continuing."
@@ -158,7 +157,7 @@ selector_json restart --json --interpreter python --app-root djstratagem
 
 echo "==> Preview health"
 preview_ok=0
-for _ in 1 2 3 4 5 6 7 8 9 10; do
+for _ in $(seq 1 24); do
   body=$(curl -fsS --max-time 20 "https://${DOMAIN}/${PREVIEW_URI}/health/" || true)
   if printf '%s' "$body" | grep -q '"service": "django"'; then
     preview_ok=1
@@ -178,8 +177,7 @@ selector_json set --json --interpreter python \
   --app-root djstratagem \
   --new-app-uri / \
   --startup-file passenger_wsgi.py \
-  --entry-point application \
-  --app-mode production
+  --entry-point application
 selector_json restart --json --interpreter python --app-root djstratagem
 
 hold_static() {
