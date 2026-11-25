@@ -1,24 +1,13 @@
 {% extends "base.html" %}
+{% load ui %}
 {% block full_title %}D&amp;J Stratagem — Find the work. Price it. Build it.{% endblock %}
+{% block head_assets %}
+{% if hero %}
+<link rel="preload" as="image" href="{{ hero.image.url }}" fetchpriority="high">
+{% endif %}
+{% endblock %}
+{% block structured_data %}{% json_ld_website %}{% endblock %}
 {% block content %}
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "D&amp;J Stratagem, Inc.",
-  "url": "{{ site_url }}",
-  "email": "{{ contact_email }}",
-  "address": {
-    "@type": "PostalAddress",
-    "streetAddress": "506 S Spring St #13308",
-    "addressLocality": "Los Angeles",
-    "addressRegion": "CA",
-    "postalCode": "90013",
-    "addressCountry": "US"
-  },
-  "description": "A construction platform connecting contractors, subcontractors, and suppliers across the job lifecycle."
-}
-</script>
 <section class="sheet-grid border-b border-base-content/15">
   <div class="shell grid items-end gap-10 py-12 lg:grid-cols-[minmax(0,1.05fr)_minmax(18rem,0.95fr)] lg:py-16">
     <div>
@@ -43,7 +32,7 @@
     </div>
     <figure>
       {% if hero %}
-        <img class="aspect-[4/3] w-full object-cover" src="{{ hero.image.url }}" alt="{{ hero.alt }}" width="{{ hero.width }}" height="{{ hero.height }}">
+        <img class="aspect-[4/3] w-full object-cover" src="{{ hero.image.url }}" alt="{{ hero.alt }}" {% if hero.width %}width="{{ hero.width }}"{% endif %} {% if hero.height %}height="{{ hero.height }}"{% endif %} loading="eager" decoding="async" fetchpriority="high">
       {% endif %}
       <figcaption class="mt-2 flex items-baseline justify-between gap-3">
         <span class="kicker text-[0.62rem] text-base-content/75">Jobsite photograph</span>
@@ -146,8 +135,10 @@
     <ul class="mt-8 grid gap-6 md:grid-cols-3">
       {% for photo in photos %}
         <li>
-          <img class="aspect-[4/3] w-full object-cover" src="{{ photo.image.url }}" alt="{{ photo.alt }}" width="{{ photo.width }}" height="{{ photo.height }}">
-          <p class="mt-2 text-sm text-base-content/75">{{ photo.alt }}</p>
+          <figure>
+            <img class="aspect-[4/3] w-full object-cover" src="{{ photo.image.url }}" alt="" {% if photo.width %}width="{{ photo.width }}"{% endif %} {% if photo.height %}height="{{ photo.height }}"{% endif %} loading="lazy" decoding="async">
+            <figcaption class="mt-2 text-sm text-base-content/80">{{ photo.alt }}</figcaption>
+          </figure>
         </li>
       {% endfor %}
     </ul>

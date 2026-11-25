@@ -1,5 +1,10 @@
 {% extends "base.html" %}
-{% block title %}{{ article.title }}{% endblock %}
+{% load ui %}
+{% block seo %}{% seo_defaults og_type="article" %}{% endblock %}
+{% block structured_data %}
+{% json_ld_article article %}
+{% json_ld_breadcrumbs "Home" "/" "Resources" "/resources/" "Field notes" "/resources/blog/" article.title article.get_absolute_url %}
+{% endblock %}
 {% block content %}
 <article class="py-12 lg:py-16">
   <div class="shell max-w-3xl">

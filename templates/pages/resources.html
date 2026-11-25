@@ -1,5 +1,6 @@
 {% extends "base.html" %}
-{% block title %}Resources{% endblock %}
+{% load ui %}
+{% block structured_data %}{% json_ld_breadcrumbs "Home" "/" "Resources" "/resources/" %}{% endblock %}
 {% block content %}
 <section class="border-b border-base-content/15 py-14 lg:py-20">
   <div class="shell">

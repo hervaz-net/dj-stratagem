@@ -1,14 +1,20 @@
+{% load ui %}
 {% if field.is_hidden %}
   {{ field }}
 {% else %}
   <div class="grid gap-1.5">
     <label class="text-sm font-semibold" for="{{ field.id_for_label }}">
       {{ field.label }}
-      {% if not field.field.required %}<span class="font-normal text-base-content/75">Optional</span>{% endif %}
+      {% if not field.field.required %}<span class="font-normal text-base-content/80">Optional</span>{% endif %}
     </label>
-    {{ field }}
+    {% if hint %}
+      {% form_widget field hint_id=field.id_for_label|add:"-hint" %}
+      <p class="text-sm text-base-content/80" id="{{ field.id_for_label }}-hint">{{ hint }}</p>
+    {% else %}
+      {% form_widget field %}
+    {% endif %}
     {% if field.errors %}
-      <p class="text-sm text-error" role="alert">{{ field.errors.0 }}</p>
+      <p class="text-sm text-error" id="{{ field.id_for_label }}-error" role="alert">{{ field.errors.0 }}</p>
     {% endif %}
   </div>
 {% endif %}

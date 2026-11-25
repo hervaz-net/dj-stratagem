@@ -1,5 +1,6 @@
 {% extends "accounts/auth_base.html" %}
-{% block title %}Join free{% endblock %}
+{% load ui %}
+{% block seo %}{% seo_defaults title="Join free" description="Request a free D&J Stratagem account. Every company is reviewed by a person before it joins the network." %}{% endblock %}
 {% block aside_kicker %}Find the work. Price it. Build it.{% endblock %}
 {% block aside_title %}One desk for the whole job.{% endblock %}
 {% block aside_copy %}Get your company in the network and put your next opportunity in motion. Free to start. Reviewed by a person. Focused on Southern California.{% endblock %}
@@ -27,9 +28,8 @@
       </div>
       {% include "includes/field.html" with field=form.email %}
       {% include "includes/field.html" with field=form.phone %}
-      {% include "includes/field.html" with field=form.password %}
+      {% include "includes/field.html" with field=form.password hint="Use at least 12 characters." %}
       {% include "includes/field.html" with field=form.confirm %}
-      <p class="text-sm text-base-content/65">Use at least 12 characters.</p>
       <button class="btn btn-primary h-12 min-h-12 rounded-none font-semibold" type="submit">Request access</button>
     </form>
     <p class="mt-4 text-sm">Already have an account? <a class="font-semibold underline underline-offset-4" href="{% url 'login' %}">Sign in</a></p>

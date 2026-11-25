@@ -1,5 +1,6 @@
 {% extends "base.html" %}
-{% block title %}About D&amp;J{% endblock %}
+{% load ui %}
+{% block structured_data %}{% json_ld_breadcrumbs "Home" "/" "About D&amp;J" "/about/" %}{% endblock %}
 {% block content %}
 <section class="border-b border-base-content/15 py-12 lg:py-16">
   <div class="shell grid items-end gap-8 lg:grid-cols-[1.1fr_0.9fr]">
@@ -10,7 +11,7 @@
     </div>
     {% if photo %}
       <figure>
-        <img class="aspect-[4/3] w-full object-cover" src="{{ photo.image.url }}" alt="{{ photo.alt }}" width="{{ photo.width }}" height="{{ photo.height }}">
+        <img class="aspect-[4/3] w-full object-cover" src="{{ photo.image.url }}" alt="{{ photo.alt }}" {% if photo.width %}width="{{ photo.width }}"{% endif %} {% if photo.height %}height="{{ photo.height }}"{% endif %} loading="eager" decoding="async">
         <figcaption class="kicker mt-2 text-[0.62rem] text-base-content/75">Los Angeles · Southern California</figcaption>
       </figure>
     {% endif %}

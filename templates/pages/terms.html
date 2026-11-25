@@ -1,5 +1,6 @@
 {% extends "base.html" %}
-{% block title %}Terms and conditions{% endblock %}
+{% load ui %}
+{% block structured_data %}{% json_ld_breadcrumbs "Home" "/" "Terms and conditions" "/terms/" %}{% endblock %}
 {% block content %}
 <article class="legal shell max-w-3xl py-14">
   <p class="kicker text-base-content/75">Legal</p>
