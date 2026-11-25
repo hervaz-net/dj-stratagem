@@ -1,0 +1,29 @@
+# Statement coverage for the Django apps. Tests and migrations are omitted so
+# the total reflects application code. Run from the repository root:
+#
+#   python -m pip install -r requirements-dev.txt
+#   coverage run manage.py test && coverage report
+#
+# DJANGO_SETTINGS_MODULE defaults to config.settings.dev (see manage.py).
+
+[run]
+source =
+    accounts
+    content
+    inquiries
+    config
+omit =
+    */migrations/*
+    */tests.py
+    */tests_*.py
+    manage.py
+    passenger_wsgi.py
+    config/asgi.py
+    config/wsgi.py
+branch = False
+
+[report]
+show_missing = True
+skip_empty = True
+precision = 0
+sort = Cover

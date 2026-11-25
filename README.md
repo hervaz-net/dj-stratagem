@@ -26,6 +26,13 @@ cp .env.example .env   # optional; SQLite and console email work without it
 .venv/bin/python manage.py createsuperuser
 ```
 
+Coverage uses `.coveragerc` (application code only; migrations and test modules are omitted):
+
+```bash
+python -m pip install -r requirements-dev.txt
+coverage run manage.py test && coverage report
+```
+
 Member requests stay inactive until a staff user approves them in `/admin/`.
 Inquiries are stored there too. Set `CONTACT_TO_EMAIL` and the `EMAIL_*`
 variables to send mail; with no mailbox configured, the inquiry is still saved.
