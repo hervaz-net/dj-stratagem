@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load money %}
+{% block title %}Catalog{% endblock %}
+{% block content %}
+<section class="py-10">
+  <div class="shell">
+    <p class="kicker text-base-content/70">Trade price · account required to buy</p>
+    <h1 class="display mt-2 text-6xl uppercase">Catalog</h1>
+    <form class="mt-6 flex flex-wrap gap-2" method="get" action="{% url 'catalog' %}" role="search">
+      <label class="sr-only" for="q">Search SKUs</label>
+      <input class="input h-12 min-h-12 w-full max-w-md rounded-none border-base-content/25" id="q" name="q" value="{{ query }}" placeholder="Search SKU or name">
+      <label class="sr-only" for="category">Category</label>
+      <select class="select h-12 min-h-12 rounded-none border-base-content/25" id="category" name="category">
+        <option value="">All categories</option>
+        {% for category_item in catalog_categories %}
+          <option value="{{ category_item.slug }}" {% if category == category_item.slug %}selected{% endif %}>{{ category_item.name }}</option>
+        {% endfor %}
+      </select>
+      <button class="btn btn-primary h-12 min-h-12 rounded-none" type="submit">Search</button>
+    </form>
+    <div class="mt-4 flex flex-wrap gap-2" aria-label="Categories">
+      <a class="btn btn-sm rounded-none {% if not category %}btn-primary{% else %}btn-outline border-base-content/30{% endif %}" href="{% url 'catalog' %}">All</a>
+      {% for category_item in catalog_categories %}
+        <a class="btn btn-sm rounded-none {% if category == category_item.slug %}btn-primary{% else %}btn-outline border-base-content/30{% endif %}" href="{{ category_item.get_absolute_url }}">{{ category_item.name }}</a>
+      {% endfor %}
+    </div>
+    <div class="mt-8 overflow-x-auto border border-base-content/15">
+      <table class="table">
+        <thead>
+          <tr><th>SKU</th><th>Item</th><th>Stock</th><th>Price</th></tr>
+        </thead>
+        <tbody>
+          {% for item in products %}
+            <tr>
+              <td class="font-mono text-sm">{{ item.sku }}</td>
+              <td><a class="font-semibold underline underline-offset-4" href="{{ item.get_absolute_url }}">{{ item.name }}</a><span class="mt-1 block text-xs text-base-content/65">{{ item.summary }}</span></td>
+              <td><span class="badge rounded-none {% if item.inventory.stock_label == 'In stock' %}badge-success{% elif item.inventory.stock_label == 'Low' %}badge-warning{% else %}badge-error{% endif %}">{{ item.inventory.on_hand }} {{ item.inventory.stock_label }}</span></td>
+              <td class="font-semibold">{{ item.price|money }}<span class="block text-xs font-normal text-base-content/60">/ {{ item.unit }}</span></td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="4">Nothing matches that search.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+{% endblock %}

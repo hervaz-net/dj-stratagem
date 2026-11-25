@@ -41,6 +41,7 @@ COPY config ./config
 COPY accounts ./accounts
 COPY content ./content
 COPY inquiries ./inquiries
+COPY wholesale ./wholesale
 COPY templates ./templates
 COPY static ./static
 COPY public/media ./public/media

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Users{% endblock %}
+{% block content %}
+<section class="py-10">
+  <div class="shell">
+    <h1 class="display text-5xl uppercase">Users</h1>
+    <p class="mt-2 text-sm text-base-content/70">Owners run the account. Buyers order. Accounts payable sees invoices and credit.</p>
+    {% if error %}<div class="alert alert-error mt-4 rounded-none" role="alert">{{ error }}</div>{% endif %}
+    <table class="table mt-6">
+      <thead><tr><th>Name</th><th>Email</th><th>Role</th></tr></thead>
+      <tbody>
+        {% for member in members %}
+          <tr>
+            <td>{{ member.user.first_name }}</td>
+            <td>{{ member.user.email }}</td>
+            <td>
+              <form class="flex gap-2" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="role">
+                <input type="hidden" name="member" value="{{ member.pk }}">
+                <label class="sr-only" for="role-{{ member.pk }}">Role for {{ member.user.email }}</label>
+                <select class="select select-sm rounded-none" id="role-{{ member.pk }}" name="role">
+                  {% for value, label in roles %}
+                    <option value="{{ value }}" {% if member.role == value %}selected{% endif %}>{{ label }}</option>
+                  {% endfor %}
+                </select>
+                <button class="btn btn-sm rounded-none" type="submit">Save</button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <h2 class="mt-10 font-display text-3xl uppercase">Add a person</h2>
+    <form class="mt-4 grid max-w-lg gap-4" method="post">
+      {% csrf_token %}
+      {% for field in form %}{% include "includes/field.html" with field=field %}{% endfor %}
+      <button class="btn btn-primary rounded-none" type="submit">Add user</button>
+    </form>
+  </div>
+</section>
+{% endblock %}

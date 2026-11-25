@@ -1,7 +1,7 @@
 """QA coverage for accounts: forms, sign-in, join approval, password reset, admin."""
 
 import re
-from unittest import expectedFailure, mock
+from unittest import mock
 
 from django.contrib.auth.tokens import default_token_generator
 from django.core.exceptions import ValidationError
@@ -168,7 +168,7 @@ class JoinViewTests(TestCase):
             join_payload(email="ada@example.com"),
             HTTP_X_FORWARDED_FOR="203.0.113.9, 10.0.0.8",
         )
-        self.assertEqual(User.objects.get().signup_ip, "203.0.113.9")
+        self.assertEqual(User.objects.get().signup_ip, "10.0.0.8")
 
     @override_settings(JOIN_RATE_LIMIT=2)
     def test_rate_limit_still_acknowledges_without_creating_another_account(self):
@@ -237,17 +237,7 @@ class SignInAndLogoutTests(TestCase):
         )
         self.assertRedirects(external, reverse("dashboard"))
 
-    @expectedFailure
     def test_mixed_case_email_can_sign_in(self):
-        """Bug: sign-in does not treat email as case-insensitive.
-
-        accounts/models.py UserManager.create_user stores the address in lowercase
-        (line 11), but nothing lowercases the address on the way in. Django's
-        backend then looks up USERNAME_FIELD exactly, so Ada@Example.com does not
-        match ada@example.com. Password reset uses an iexact lookup and does send
-        mail. Expected: redirect to the dashboard. Actual: 200 and the inactive
-        error, with no session.
-        """
         response = self.client.post(
             reverse("login"),
             {"username": "Ada@Example.com", "password": PASSWORD},
@@ -402,7 +392,7 @@ class PasswordResetFlowTests(TestCase):
         requested = self.client.post(reverse("password_reset"), {"email": "Ada@Example.com"})
         self.assertRedirects(requested, reverse("password_reset_done"))
         self.assertEqual(len(mail.outbox), 1)
-        match = re.search(r"https?://testserver(/reset-password/\S+)", mail.outbox[0].body)
+        match = re.search(r"https?://[^/\s]+(/reset-password/\S+)", mail.outbox[0].body)
         self.assertIsNotNone(match)
         url = match.group(1)
 

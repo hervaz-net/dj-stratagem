@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load money %}
+{% block title %}Credit desk{% endblock %}
+{% block content %}
+<section class="py-10">
+  <div class="shell">
+    <h1 class="display text-5xl uppercase">Credit applications</h1>
+    {% if error %}<div class="alert alert-error mt-4 rounded-none" role="alert">{{ error }}</div>{% endif %}
+    <div class="mt-6 grid gap-4">
+      {% for application in applications %}
+        <article class="border border-base-content/20 p-4">
+          <h2 class="font-display text-2xl uppercase">{{ application.company.name }}</h2>
+          <p class="text-sm">{{ application.get_status_display }} · requested {{ application.requested_limit|money }} · {{ application.years_in_business }} years · buys {{ application.annual_purchases|money }}/yr</p>
+          <p class="mt-1 text-sm">{{ application.trade_reference }}</p>
+          <p class="text-sm text-base-content/70">Now {{ application.company.credit.get_status_display }} · available {{ application.company.credit.available|money }}</p>
+          {% if application.status == 'pending' %}
+            <form class="mt-3 flex flex-wrap items-end gap-3" method="post">
+              {% csrf_token %}
+              <input type="hidden" name="application" value="{{ application.pk }}">
+              <label class="grid gap-1 text-sm font-semibold">Approved limit
+                <input class="input h-12 w-40 rounded-none" name="limit_amount" type="number" min="0" step="100" value="{{ application.requested_limit }}">
+              </label>
+              <label class="grid gap-1 text-sm font-semibold">Note
+                <input class="input h-12 w-64 rounded-none" name="note" maxlength="240">
+              </label>
+              <button class="btn btn-primary rounded-none" name="decision" value="approve" type="submit">Approve</button>
+              <button class="btn btn-outline rounded-none border-base-content/30" name="decision" value="decline" type="submit">Decline</button>
+            </form>
+          {% elif application.review_note %}
+            <p class="mt-2 text-sm">{{ application.review_note }}</p>
+          {% endif %}
+        </article>
+      {% empty %}
+        <p>No applications.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

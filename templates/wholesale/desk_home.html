@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load money %}
+{% block title %}Desk{% endblock %}
+{% block content %}
+<section class="py-10">
+  <div class="shell">
+    <p class="kicker">Staff</p>
+    <h1 class="display text-6xl uppercase">Desk</h1>
+    <div class="stats mt-6 stats-vertical w-full rounded-none border border-base-content/20 lg:stats-horizontal">
+      <div class="stat"><div class="stat-title">Customers</div><div class="stat-value font-display text-4xl">{{ companies }}</div></div>
+      <div class="stat"><div class="stat-title">Open orders</div><div class="stat-value font-display text-4xl">{{ open_orders }}</div></div>
+      <div class="stat"><div class="stat-title">Open invoices</div><div class="stat-value font-display text-4xl">{{ open_invoices }}</div></div>
+      <div class="stat"><div class="stat-title">Credit waiting</div><div class="stat-value font-display text-4xl">{{ pending_credit }}</div></div>
+    </div>
+    <nav class="mt-6 flex flex-wrap gap-2" aria-label="Desk">
+      <a class="btn btn-primary rounded-none" href="{% url 'desk_customers' %}">Customers</a>
+      <a class="btn btn-outline rounded-none border-base-content/30" href="{% url 'desk_credit' %}">Credit</a>
+      <a class="btn btn-outline rounded-none border-base-content/30" href="{% url 'desk_products' %}">Inventory</a>
+      <a class="btn btn-outline rounded-none border-base-content/30" href="{% url 'desk_orders' %}">Orders</a>
+      <a class="btn btn-outline rounded-none border-base-content/30" href="{% url 'desk_invoices' %}">Invoices</a>
+      <a class="btn btn-outline rounded-none border-base-content/30" href="{% url 'desk_roles' %}">Roles</a>
+    </nav>
+    <div class="mt-10 grid gap-8 lg:grid-cols-3">
+      <section>
+        <h2 class="font-display text-2xl uppercase">Latest orders</h2>
+        <ul class="mt-3 grid gap-2 text-sm">
+          {% for order in recent_orders %}
+            <li><a class="underline" href="{% url 'order_detail' order.number %}">{{ order.number }}</a> · {{ order.company.name }} · {{ order.get_status_display }} · {{ order.subtotal|money }}</li>
+          {% empty %}<li>No orders yet.</li>{% endfor %}
+        </ul>
+      </section>
+      <section>
+        <h2 class="font-display text-2xl uppercase">Credit queue</h2>
+        <ul class="mt-3 grid gap-2 text-sm">
+          {% for application in applications %}
+            <li><a class="underline" href="{% url 'desk_credit' %}">{{ application.company.name }}</a> · {{ application.requested_limit|money }}</li>
+          {% empty %}<li>Queue is clear.</li>{% endfor %}
+        </ul>
+      </section>
+      <section>
+        <h2 class="font-display text-2xl uppercase">Low stock</h2>
+        <ul class="mt-3 grid gap-2 text-sm">
+          {% for item in low_stock %}
+            <li><a class="underline" href="{% url 'desk_product' item.sku %}">{{ item.sku }}</a> · {{ item.inventory.on_hand }} on hand</li>
+          {% empty %}<li>Nothing at the reorder point.</li>{% endfor %}
+        </ul>
+      </section>
+    </div>
+  </div>
+</section>
+{% endblock %}

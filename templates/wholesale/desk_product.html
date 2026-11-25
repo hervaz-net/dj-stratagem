@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load money %}
+{% block title %}{{ item.sku }}{% endblock %}
+{% block content %}
+<section class="py-10">
+  <div class="shell max-w-lg">
+    <h1 class="display text-5xl uppercase">{{ item.sku }}</h1>
+    <p class="mt-2">{{ item.name }} · {{ item.price|money }} · bin {{ item.inventory.location }}</p>
+    <form class="mt-6 grid gap-4" method="post">
+      {% csrf_token %}
+      {% include "includes/field.html" with field=form.on_hand %}
+      <button class="btn btn-primary rounded-none" type="submit">Update stock</button>
+    </form>
+  </div>
+</section>
+{% endblock %}

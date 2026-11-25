@@ -117,7 +117,7 @@ class ContactViewTests(TestCase):
         self.assertFalse(response.context["received"])
         self.assertEqual(response.context["context_topic"], "")
         self.assertEqual(response.context["canonical_path"], "/contact/")
-        self.assertContains(response, "Let’s talk about the work.")
+        self.assertContains(response, "Let’s talk about the next delivery.")
 
         rejected = self.client.put(reverse("contact"))
         self.assertEqual(rejected.status_code, 405)
@@ -178,10 +178,10 @@ class ContactViewTests(TestCase):
             payload(),
             HTTP_X_FORWARDED_FOR="203.0.113.9, 10.0.0.8",
         )
-        self.assertEqual(Inquiry.objects.get().ip_address, "203.0.113.9")
+        self.assertEqual(Inquiry.objects.get().ip_address, "10.0.0.8")
 
     def test_mail_failure_keeps_the_inquiry(self):
-        with mock.patch("inquiries.mail.send_mail", side_effect=OSError("smtp down")):
+        with mock.patch("inquiries.mail.EmailMessage.send", side_effect=OSError("smtp down")):
             response = self.client.post(reverse("contact"), payload())
         self.assertRedirects(response, reverse("contact"), fetch_redirect_response=False)
         inquiry = Inquiry.objects.get()
@@ -240,7 +240,9 @@ class InquiryAdminTests(TestCase):
         self.assertEqual(add.status_code, 403)
 
         change = self.client.get(reverse("admin:inquiries_inquiry_change", args=[self.inquiry.pk]))
-        self.assertEqual(change.status_code, 403)
+        self.assertEqual(change.status_code, 200)
+        self.assertContains(change, "&lt;script&gt;alert(1)&lt;/script&gt;")
+        self.assertNotContains(change, "<script>alert(1)</script>")
 
         missing = self.client.get(reverse("admin:inquiries_inquiry_change", args=[999999]))
-        self.assertEqual(missing.status_code, 403)
+        self.assertRedirects(missing, reverse("admin:index"))

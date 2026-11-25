@@ -1,13 +1,13 @@
 {% extends "accounts/auth_base.html" %}
 {% load ui %}
 {% block seo %}{% seo_defaults title="Sign in" description="Sign in to the D&J Stratagem desk and pick up the job where your team left off." %}{% endblock %}
-{% block aside_kicker %}Your work, in motion{% endblock %}
-{% block aside_title %}Welcome back to the desk.{% endblock %}
-{% block aside_copy %}Pick up the pipeline where you left off. Your account connects the work, people, and next steps.{% endblock %}
+{% block aside_kicker %}Trade accounts{% endblock %}
+{% block aside_title %}The shelf is open.{% endblock %}
+{% block aside_copy %}Sign in to reorder, check Net 30, and pull invoices for the company.{% endblock %}
 {% block auth %}
-  <p class="kicker text-base-content/75">Member sign in</p>
-  <h1 class="display mt-3 text-5xl">Welcome back.</h1>
-  <p class="mt-2 text-sm text-base-content/75">Sign in to pick up where your team left off.</p>
+  <p class="kicker text-base-content/75">Account sign in</p>
+  <h1 class="display mt-3 text-5xl uppercase">Welcome back.</h1>
+  <p class="mt-2 text-sm text-base-content/75">Buyers, owners, and accounts payable use the same login.</p>
   <form class="mt-6 grid gap-4" method="post" novalidate>
     {% csrf_token %}
     {% if form.non_field_errors %}
@@ -19,6 +19,6 @@
   </form>
   <p class="mt-4 flex flex-wrap justify-between gap-3 text-sm">
     <a class="font-semibold underline underline-offset-4" href="{% url 'password_reset' %}">Forgot password?</a>
-    <span>New to D&amp;J? <a class="font-semibold underline underline-offset-4" href="{% url 'join' %}">Join free</a></span>
+    <span>Need an account? <a class="font-semibold underline underline-offset-4" href="{% url 'join' %}">Apply</a></span>
   </p>
 {% endblock %}

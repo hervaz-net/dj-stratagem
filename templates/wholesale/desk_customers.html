@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load money %}
+{% block title %}Customers{% endblock %}
+{% block content %}
+<section class="py-10">
+  <div class="shell">
+    <h1 class="display text-5xl uppercase">Customers</h1>
+    <table class="table mt-6">
+      <thead><tr><th>Company</th><th>Status</th><th>Credit</th><th>Available</th><th>Users</th></tr></thead>
+      <tbody>
+        {% for company in companies %}
+          <tr>
+            <td><a class="font-semibold underline" href="{% url 'desk_customer' company.slug %}">{{ company.name }}</a><span class="block text-xs text-base-content/60">{{ company.trade }}</span></td>
+            <td>{{ company.get_status_display }}</td>
+            <td>{{ company.credit.get_status_display }}</td>
+            <td>{{ company.credit.available|money }}</td>
+            <td>{{ company.memberships.count }}</td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="5">No trade accounts yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

@@ -14,6 +14,7 @@ urlpatterns = [
     path("", include("accounts.urls")),
     path("", include("inquiries.urls")),
     path("", include("content.urls")),
+    path("", include("wholesale.urls")),
     path("", include("config.redirects")),
     path("<slug:slug>/", mode, name="mode"),
 ]

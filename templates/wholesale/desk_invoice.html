@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load money %}
+{% block title %}{{ invoice.number }}{% endblock %}
+{% block content %}
+<section class="py-10">
+  <div class="shell max-w-xl">
+    <h1 class="display text-5xl uppercase">{{ invoice.number }}</h1>
+    <p class="mt-2">{{ invoice.company.name }} · {{ invoice.get_status_display }} · open {{ invoice.balance|money }} · terms {% if invoice.on_terms %}Net 30{% else %}due on receipt{% endif %}</p>
+    <p class="text-sm">Credit in use on the account: {{ invoice.company.credit.balance_used|money }} of {{ invoice.company.credit.limit_amount|money }}</p>
+    {% if error %}<div class="alert alert-error mt-4 rounded-none" role="alert">{{ error }}</div>{% endif %}
+    <ul class="mt-4 text-sm">{% for payment in payments %}<li>{{ payment.created_at|date:"N j" }} · {{ payment.get_method_display }} · {{ payment.amount|money }} · {{ payment.reference }}</li>{% empty %}<li>No payments recorded.</li>{% endfor %}</ul>
+    {% if invoice.status == 'open' %}
+      <form class="mt-6 grid gap-4" method="post">
+        {% csrf_token %}
+        {% for field in form %}{% include "includes/field.html" with field=field %}{% endfor %}
+        <button class="btn btn-primary rounded-none" type="submit">Record payment</button>
+      </form>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

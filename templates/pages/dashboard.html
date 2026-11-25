@@ -1,23 +1,92 @@
 {% extends "base.html" %}
-{% block robots %}noindex, nofollow{% endblock %}
-{% block footer %}{% endblock %}
+{% load money %}
+{% block title %}Your desk{% endblock %}
 {% block content %}
-<section class="py-10">
-  <div class="shell max-w-xl border border-base-content/20 p-6 sm:p-8">
-    <p class="kicker text-base-content/75">Your construction desk</p>
-    <h1 class="display mt-3 text-5xl">The workspace is being prepared.</h1>
+<section class="py-10 lg:py-14">
+  <div class="shell">
     {% if user.is_authenticated %}
-      <p class="mt-4 text-base leading-relaxed">Signed in as <strong>{{ user.first_name|default:user.email }}</strong>{% if user.company %}, {{ user.company }}{% endif %}. Account status: {{ user.get_status_display }}.</p>
-      <p class="mt-3 text-sm leading-relaxed text-base-content/75">The public site and account access are ready. The signed-in operations workspace is still a separate area and is not switched on here yet.</p>
-      <form class="mt-6" method="post" action="{% url 'logout' %}">
-        {% csrf_token %}
-        <button class="btn btn-primary rounded-none" type="submit">Sign out</button>
-      </form>
+      <p class="kicker text-base-content/70">Signed in as {{ user.first_name|default:user.email }}</p>
+      <h1 class="display mt-3 text-6xl uppercase">{{ trade.company.name|default:user.company|default:"Your account" }}</h1>
+      <p class="mt-2 text-sm text-base-content/70">{{ user.get_status_display }}{% if trade %} · {{ trade.get_role_display }}{% endif %}{% if user.company %} · {{ user.company }}{% endif %}</p>
+      {% if trade %}
+        <div class="mt-8 stats stats-vertical w-full rounded-none border border-base-content/20 bg-base-100 shadow-none lg:stats-horizontal">
+          <div class="stat">
+            <div class="stat-title">Credit limit</div>
+            <div class="stat-value font-display text-4xl">{{ trade.company.credit.limit_amount|money }}</div>
+            <div class="stat-desc">{{ trade.company.credit.get_status_display }}</div>
+          </div>
+          <div class="stat">
+            <div class="stat-title">Available</div>
+            <div class="stat-value font-display text-4xl">{{ trade.company.credit.available|money }}</div>
+            <div class="stat-desc">{{ trade.company.credit.balance_used|money }} in use</div>
+          </div>
+          <div class="stat">
+            <div class="stat-title">Terms</div>
+            <div class="stat-value font-display text-4xl">{{ trade.company.credit.terms_days }} days</div>
+            <div class="stat-desc">Drawn when an invoice is open</div>
+          </div>
+        </div>
+        <nav class="mt-6 flex flex-wrap gap-2" aria-label="Account">
+          <a class="btn btn-primary rounded-none" href="{% url 'quick_order' %}">Quick order</a>
+          <a class="btn btn-outline rounded-none border-base-content/30" href="{% url 'cart' %}">Cart</a>
+          <a class="btn btn-outline rounded-none border-base-content/30" href="{% url 'orders' %}">Orders</a>
+          <a class="btn btn-outline rounded-none border-base-content/30" href="{% url 'invoices' %}">Invoices</a>
+          <a class="btn btn-outline rounded-none border-base-content/30" href="{% url 'billing' %}">Billing</a>
+          <a class="btn btn-outline rounded-none border-base-content/30" href="{% url 'app_credit' %}">Credit</a>
+          <a class="btn btn-outline rounded-none border-base-content/30" href="{% url 'company_users' %}">Users</a>
+          <a class="btn btn-outline rounded-none border-base-content/30" href="{% url 'account' %}">Account</a>
+        </nav>
+        <div class="mt-10 grid gap-8 lg:grid-cols-2">
+          <section aria-labelledby="orders-heading">
+            <h2 id="orders-heading" class="font-display text-3xl uppercase">Recent orders</h2>
+            <div class="mt-3 overflow-x-auto border border-base-content/15">
+              <table class="table">
+                <thead><tr><th>Order</th><th>Status</th><th>Total</th></tr></thead>
+                <tbody>
+                  {% for order in account_orders %}
+                    <tr>
+                      <td><a class="font-semibold underline" href="{{ order.get_absolute_url }}">{{ order.number }}</a></td>
+                      <td><span class="badge rounded-none">{{ order.get_status_display }}</span></td>
+                      <td>{{ order.subtotal|money }}</td>
+                    </tr>
+                  {% empty %}
+                    <tr><td colspan="3">No orders yet. Start from quick order.</td></tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </section>
+          <section aria-labelledby="invoices-heading">
+            <h2 id="invoices-heading" class="font-display text-3xl uppercase">Invoices</h2>
+            <div class="mt-3 overflow-x-auto border border-base-content/15">
+              <table class="table">
+                <thead><tr><th>Invoice</th><th>Status</th><th>Open</th></tr></thead>
+                <tbody>
+                  {% for invoice in account_invoices %}
+                    <tr>
+                      <td>{{ invoice.number }}</td>
+                      <td>{{ invoice.get_status_display }}</td>
+                      <td>{{ invoice.balance|money }}</td>
+                    </tr>
+                  {% empty %}
+                    <tr><td colspan="3">No invoices yet.</td></tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      {% else %}
+        <p class="mt-6 max-w-lg">This login is not attached to a trade account yet. Apply, or ask the account owner to add you.</p>
+        <a class="btn btn-primary mt-4 rounded-none" href="{% url 'join' %}">Apply for an account</a>
+      {% endif %}
     {% else %}
-      <p class="mt-4 text-sm leading-relaxed text-base-content/75">The public site and account access are ready to explore. The signed-in workspace is a separate app area and will connect here as it comes online.</p>
+      <p class="kicker text-base-content/70">Trade accounts</p>
+      <h1 class="display mt-3 text-6xl uppercase">Sign in to order.</h1>
+      <p class="mt-4 max-w-lg text-base-content/75">Catalog prices are the trade price. Checkout, Net 30, and invoices live on the account.</p>
       <div class="mt-6 flex flex-wrap gap-3">
         <a class="btn btn-primary rounded-none" href="{% url 'login' %}">Sign in</a>
-        <a class="btn btn-ghost rounded-none" href="{% url 'home' %}">Back to D&amp;J</a>
+        <a class="btn btn-outline rounded-none border-base-content/30" href="{% url 'join' %}">Apply for an account</a>
       </div>
     {% endif %}
   </div>

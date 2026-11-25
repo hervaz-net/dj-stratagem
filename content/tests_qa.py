@@ -9,7 +9,7 @@ from django.contrib import admin
 from django.contrib.auth.models import Group
 from django.core.exceptions import ImproperlyConfigured
 from django.db.utils import OperationalError
-from django.test import RequestFactory, SimpleTestCase, TestCase, override_settings
+from django.test import RequestFactory, SimpleTestCase, TestCase
 from django.urls import reverse
 
 from accounts.models import User
@@ -33,7 +33,7 @@ from inquiries.models import Inquiry
 PASSWORD = "correct-horse-battery"
 
 PUBLIC_PAGES = [
-    ("home", "pages/home.html", "Find the work. Price it. Build it.", ("modes", "steps", "hero", "photos")),
+    ("home", "pages/home.html", "Stocked for the pour.", ("modes", "steps", "hero", "photos")),
     ("pricing", "pages/pricing.html", "Pricing", ("plans", "faqs")),
     ("about", "pages/about.html", "About D&J", ("principles", "photo")),
     ("resources", "pages/resources.html", "Resources", ("sections",)),
@@ -83,7 +83,7 @@ class PublicPageContractTests(TestCase):
         response = self.client.post(reverse("home"))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "pages/home.html")
-        self.assertContains(response, "Find the work.")
+        self.assertContains(response, "Stocked for the pour.")
 
     def test_mode_pages_expose_neighbors_and_the_right_photos(self):
         modes = list(Mode.objects.filter(published=True))
@@ -301,7 +301,7 @@ class NotFoundAndMachineTests(TestCase):
         self.assertContains(preview, "Start free.")
         root = self.client.get("/djs-preview")
         self.assertEqual(root.status_code, 200)
-        self.assertContains(root, "Find the work.")
+        self.assertContains(root, "Stocked for the pour.")
 
     def test_unpublished_mode_and_article_leave_the_sitemap(self):
         mode = Mode.objects.get(slug="fleet")
@@ -490,7 +490,7 @@ class ContentAdminTests(TestCase):
                 change = self.client.get(reverse(f"admin:{app}_{name}_change", args=[obj.pk]))
                 if label == "inquiries.inquiry":
                     self.assertEqual(add.status_code, 403, label)
-                    self.assertEqual(change.status_code, 403, label)
+                    self.assertEqual(change.status_code, 200, label)
                     continue
                 self.assertEqual(add.status_code, 200, label)
                 self.assertEqual(change.status_code, 200, label)

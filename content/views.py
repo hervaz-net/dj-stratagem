@@ -38,8 +38,8 @@ def home(request):
         request,
         "pages/home.html",
         {
-            "page_title": "Find the work. Price it. Build it.",
-            "page_description": "D&J Stratagem connects nine parts of the construction job lifecycle in one account—for contractors, subcontractors, and suppliers across Southern California.",
+            "page_title": "Stocked for the pour.",
+            "page_description": "D&J Stratagem is the wholesale counter for commercial contractors. Anchors, fasteners, abrasives, and site safety, in stock in Los Angeles.",
             "canonical_path": "/",
             "modes": Mode.objects.filter(published=True),
             "steps": PipelineStep.objects.all(),
@@ -177,14 +177,24 @@ def terms(request):
 
 
 def dashboard(request):
+    account_orders = []
+    account_invoices = []
+    if request.user.is_authenticated:
+        membership = getattr(request.user, "membership", None)
+        if membership is not None:
+            company = membership.company
+            account_orders = list(company.orders.select_related("invoice")[:5])
+            account_invoices = list(company.invoices.all()[:5])
     return render(
         request,
         "pages/dashboard.html",
         {
             "page_title": "Your desk",
-            "page_description": "The signed-in workspace for D&J Stratagem.",
+            "page_description": "Trade account, credit, orders, and invoices for D&J Stratagem.",
             "robots": "noindex, nofollow",
             "canonical_path": "/dashboard/",
+            "account_orders": account_orders,
+            "account_invoices": account_invoices,
         },
     )
 
@@ -215,6 +225,7 @@ def robots(request):
 @require_GET
 def sitemap(request):
     paths = [path for _name, path in STATIC_PAGES]
+    paths += ["/catalog/", "/shipping/", "/credit/"]
     paths += [mode.get_absolute_url() for mode in Mode.objects.filter(published=True)]
     paths += [section.get_absolute_url() for section in ResourceSection.objects.filter(published=True)]
     paths += [

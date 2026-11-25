@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Net 30{% endblock %}
+{% block content %}
+<section class="py-14">
+  <div class="shell grid items-start gap-10 lg:grid-cols-2">
+    <div>
+      <p class="kicker text-base-content/70">Trade credit</p>
+      <h1 class="display mt-3 text-6xl uppercase">Net 30, after a person says yes.</h1>
+      <p class="mt-5 max-w-xl leading-relaxed">Approved accounts order against a limit. Each open invoice uses the balance. A payment puts it back the same day it is recorded. Until then, orders are due on receipt.</p>
+      <ul class="mt-6 grid gap-2 text-sm">
+        <li>The account owner or accounts payable applies.</li>
+        <li>We look at years in business, yearly materials, and one trade reference.</li>
+        <li>The desk sets the limit. Both dashboards show what is left.</li>
+      </ul>
+    </div>
+    <div class="border border-base-content/20 bg-base-200 p-5">
+      {% if not user.is_authenticated %}
+        <h2 class="font-display text-3xl uppercase">Apply with the account</h2>
+        <p class="mt-3 text-sm">Open a trade account first. Credit is part of that application, not a separate storefront.</p>
+        <a class="btn btn-primary mt-4 rounded-none" href="{% url 'join' %}">Apply for an account</a>
+      {% elif company %}
+        {% if error %}<div class="alert alert-error mb-4 rounded-none" role="alert">{{ error }}</div>{% endif %}
+        <form class="grid gap-4" method="post">
+          {% csrf_token %}
+          {% for field in form %}
+            {% include "includes/field.html" with field=field %}
+          {% endfor %}
+          <button class="btn btn-primary rounded-none" type="submit">Submit for review</button>
+        </form>
+      {% else %}
+        <p>This login can’t apply for terms.</p>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endblock %}

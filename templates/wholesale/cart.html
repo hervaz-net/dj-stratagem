@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load money %}
+{% block title %}Cart{% endblock %}
+{% block content %}
+<section class="py-10">
+  <div class="shell">
+    <h1 class="display text-5xl uppercase">Cart</h1>
+    {% if error %}<div class="alert alert-error mt-4 rounded-none" role="alert">{{ error }}</div>{% endif %}
+    <div class="mt-6 overflow-x-auto border border-base-content/15">
+      <table class="table">
+        <thead><tr><th>SKU</th><th>Item</th><th>Qty</th><th>On hand</th><th>Ext</th></tr></thead>
+        <tbody>
+          {% for line in lines %}
+            <tr>
+              <td class="font-mono">{{ line.product.sku }}</td>
+              <td>{{ line.product.name }}</td>
+              <td>
+                <form method="post" class="flex gap-2">
+                  {% csrf_token %}
+                  <input type="hidden" name="action" value="qty">
+                  <input type="hidden" name="line" value="{{ line.pk }}">
+                  <label class="sr-only" for="qty-{{ line.pk }}">Quantity for {{ line.product.sku }}</label>
+                  <input class="input input-sm w-20 rounded-none" id="qty-{{ line.pk }}" name="quantity" type="number" min="0" value="{{ line.quantity }}">
+                  <button class="btn btn-sm rounded-none" type="submit">Update</button>
+                </form>
+              </td>
+              <td>{{ line.product.inventory.on_hand }}</td>
+              <td>{{ line.extended|money }}</td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="5">The cart is empty. <a class="underline" href="{% url 'quick_order' %}">Quick order</a> or the <a class="underline" href="{% url 'catalog' %}">catalog</a>.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% if lines %}
+      <p class="mt-4 font-display text-3xl">{{ total|money }}</p>
+      <form class="mt-4 flex flex-wrap items-end gap-3" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="checkout">
+        {% include "includes/field.html" with field=form.po_number %}
+        <button class="btn btn-primary rounded-none" type="submit">Place order</button>
+      </form>
+      <p class="mt-2 text-sm text-base-content/70">Approved Net 30 draws the credit balance. Otherwise the invoice is due on receipt. Stock drops when the order is placed.</p>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

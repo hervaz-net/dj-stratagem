@@ -63,4 +63,4 @@ class QueryTests(TestCase):
             response = self.client.get(reverse("home"))
         self.assertEqual(response.status_code, 200)
         self.assertLessEqual(len(captured), 10)
-        self.assertContains(response, "conduit laid out")
+        self.assertContains(response, "Stocked for the pour.")

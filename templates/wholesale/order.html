@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load money %}
+{% block title %}{{ order.number }}{% endblock %}
+{% block content %}
+<section class="py-10">
+  <div class="shell max-w-3xl">
+    <p class="kicker">{{ order.company.name }}</p>
+    <h1 class="display mt-2 text-5xl uppercase">{{ order.number }}</h1>
+    <p class="mt-2 text-sm">{{ order.get_status_display }}{% if order.po_number %} · PO {{ order.po_number }}{% endif %} · {{ order.subtotal|money }}</p>
+    {% if order.invoice %}
+      <p class="mt-2 text-sm">Invoice {{ order.invoice.number }} · {{ order.invoice.get_status_display }} · due {{ order.invoice.due_on }} · open {{ order.invoice.balance|money }}</p>
+    {% endif %}
+    <table class="table mt-6">
+      <thead><tr><th>SKU</th><th>Item</th><th>Qty</th><th>Price</th><th>Ext</th></tr></thead>
+      <tbody>
+        {% for line in order.lines.all %}
+          <tr>
+            <td class="font-mono">{{ line.sku }}</td>
+            <td>{{ line.name }}</td>
+            <td>{{ line.quantity }}</td>
+            <td>{{ line.unit_price|money }}</td>
+            <td>{{ line.line_total|money }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

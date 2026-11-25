@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Not available{% endblock %}
+{% block content %}
+<section class="py-16">
+  <div class="shell max-w-xl">
+    <h1 class="display text-5xl uppercase">That page isn’t on this role.</h1>
+    <p class="mt-4">Account owners manage users and credit. Buyers order. Accounts payable handles invoices. The desk is for staff.</p>
+    <a class="btn btn-primary mt-6 rounded-none" href="{% url 'dashboard' %}">Back to the account</a>
+  </div>
+</section>
+{% endblock %}

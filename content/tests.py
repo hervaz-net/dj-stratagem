@@ -8,14 +8,14 @@ from content.models import Mode
 class PublicPageTests(TestCase):
     def test_primary_pages_render_real_copy(self):
         pages = [
-            ("home", "Find the work."),
+            ("home", "Stocked for the pour."),
             ("pricing", "Start free."),
-            ("about", "Built around the people"),
+            ("about", "The counter came off the job."),
             ("contact", "Let’s talk"),
             ("resources", "Field notes"),
             ("privacy", "506 S Spring St"),
             ("terms", "506 S Spring St"),
-            ("dashboard", "workspace is being prepared"),
+            ("dashboard", "Sign in to order."),
         ]
         for name, copy in pages:
             response = self.client.get(reverse(name))
@@ -58,7 +58,6 @@ class PublicPageTests(TestCase):
             "/help/": "/resources/guides/",
             "/projects/example-job/": "/projects/",
             "/companies/fleet/": "/fleet/",
-            "/credit/": "/capital/",
         }
         for source, target in cases.items():
             response = self.client.get(source)
@@ -98,12 +97,10 @@ class PublicPageTests(TestCase):
         self.assertContains(response, "Projects")
         self.assertContains(response, "Studio")
 
-    def test_jobsite_photos_are_on_the_homepage(self):
+    def test_homepage_is_the_wholesale_counter(self):
         response = self.client.get(reverse("home"))
-        self.assertContains(response, "conduit laid out")
-        self.assertContains(response, "/media/gallery/")
-        self.assertContains(response, 'loading="lazy"')
-        self.assertContains(response, 'fetchpriority="high"')
+        self.assertContains(response, "Net 30")
+        self.assertContains(response, "2 p.m.")
 
     def test_public_pages_have_document_metadata(self):
         home = self.client.get(reverse("home"))
@@ -133,5 +130,5 @@ class PublicPageTests(TestCase):
     def test_mobile_nav_includes_resources(self):
         response = self.client.get(reverse("home"))
         self.assertContains(response, 'aria-label="Mobile"')
-        self.assertContains(response, "Field notes")
-        self.assertContains(response, 'aria-controls="mobile-nav"')
+        self.assertContains(response, "Catalog")
+        self.assertContains(response, 'for="site-nav"')

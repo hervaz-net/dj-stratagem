@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load money %}
+{% block title %}Orders{% endblock %}
+{% block content %}
+<section class="py-10">
+  <div class="shell">
+    <h1 class="display text-5xl uppercase">Orders</h1>
+    <div class="mt-6 overflow-x-auto border border-base-content/15">
+      <table class="table">
+        <thead><tr><th>Number</th><th>PO</th><th>Status</th><th>Total</th><th></th></tr></thead>
+        <tbody>
+          {% for order in orders %}
+            <tr>
+              <td><a class="font-semibold underline" href="{{ order.get_absolute_url }}">{{ order.number }}</a></td>
+              <td>{{ order.po_number|default:"—" }}</td>
+              <td><span class="badge rounded-none">{{ order.get_status_display }}</span></td>
+              <td>{{ order.subtotal|money }}</td>
+              <td>
+                <form method="post" action="{% url 'quick_order' %}">
+                  {% csrf_token %}
+                  <input type="hidden" name="action" value="reorder">
+                  <input type="hidden" name="order" value="{{ order.number }}">
+                  <button class="btn btn-sm rounded-none" type="submit">Reorder</button>
+                </form>
+              </td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="5">No orders yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+{% endblock %}

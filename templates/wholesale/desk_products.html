@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load money %}
+{% block title %}Inventory{% endblock %}
+{% block content %}
+<section class="py-10">
+  <div class="shell">
+    <h1 class="display text-5xl uppercase">Inventory</h1>
+    <table class="table mt-6">
+      <thead><tr><th>SKU</th><th>Item</th><th>On hand</th><th>Reorder</th><th>Bin</th><th>Price</th></tr></thead>
+      <tbody>
+        {% for item in products %}
+          <tr>
+            <td><a class="font-mono underline" href="{% url 'desk_product' item.sku %}">{{ item.sku }}</a></td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.inventory.on_hand }}</td>
+            <td>{{ item.inventory.reorder_point }}</td>
+            <td>{{ item.inventory.location }}</td>
+            <td>{{ item.price|money }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Shipping{% endblock %}
+{% block content %}
+<section class="py-14">
+  <div class="shell">
+    <p class="kicker text-base-content/70">Why crews call us first</p>
+    <h1 class="display mt-3 text-6xl uppercase">On the truck the same day.</h1>
+    <ol class="steps steps-vertical mt-10 lg:steps-horizontal">
+      <li class="step step-primary">Order by 2 p.m.</li>
+      <li class="step step-primary">Pick from stock on the shelf</li>
+      <li class="step step-primary">LA and OC leave today</li>
+      <li class="step">California is next-day</li>
+    </ol>
+    <div class="mt-12 grid gap-6 lg:grid-cols-3">
+      <article class="border border-base-content/20 p-5">
+        <h2 class="font-display text-3xl uppercase">Cutoff</h2>
+        <p class="mt-3 text-sm leading-relaxed">Orders placed before 2 p.m. Pacific on a stocked SKU ship the same day. After that, they go out the next business morning.</p>
+      </article>
+      <article class="border border-base-content/20 p-5">
+        <h2 class="font-display text-3xl uppercase">Where</h2>
+        <p class="mt-3 text-sm leading-relaxed">Los Angeles and Orange County are same-day. The rest of California is next-day on what is on hand. Will-call is open at the warehouse.</p>
+      </article>
+      <article class="border border-base-content/20 p-5">
+        <h2 class="font-display text-3xl uppercase">What we won’t do</h2>
+        <p class="mt-3 text-sm leading-relaxed">We don’t sell to the public, and we don’t promise a date on a SKU that isn’t on the shelf. The catalog shows the count.</p>
+      </article>
+    </div>
+  </div>
+</section>
+{% endblock %}

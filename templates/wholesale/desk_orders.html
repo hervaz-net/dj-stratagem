@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load money %}
+{% block title %}Orders{% endblock %}
+{% block content %}
+<section class="py-10">
+  <div class="shell">
+    <h1 class="display text-5xl uppercase">Orders</h1>
+    <table class="table mt-6">
+      <thead><tr><th>Number</th><th>Company</th><th>Status</th><th>Total</th><th>Move</th></tr></thead>
+      <tbody>
+        {% for order in orders %}
+          <tr>
+            <td><a class="underline" href="{% url 'order_detail' order.number %}">{{ order.number }}</a></td>
+            <td>{{ order.company.name }}</td>
+            <td>{{ order.get_status_display }}</td>
+            <td>{{ order.subtotal|money }}</td>
+            <td>
+              <form method="post" action="{% url 'desk_order_status' order.number %}">
+                {% csrf_token %}
+                <label class="sr-only" for="status-{{ order.number }}">Status for {{ order.number }}</label>
+                <select class="select select-sm rounded-none" id="status-{{ order.number }}" name="status">
+                  <option value="picking">Picking</option>
+                  <option value="shipped">Shipped</option>
+                  <option value="cancelled">Cancel and restock</option>
+                </select>
+                <button class="btn btn-sm rounded-none" type="submit">Save</button>
+              </form>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="5">No orders.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

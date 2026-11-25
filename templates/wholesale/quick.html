@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Quick order{% endblock %}
+{% block content %}
+<section class="py-10">
+  <div class="shell max-w-2xl">
+    <h1 class="display text-5xl uppercase">Quick order</h1>
+    <p class="mt-3 text-sm text-base-content/75">One SKU per line. Comma or space between the SKU and the quantity. A header row that starts with SKU is skipped. Paste a spreadsheet column the same way.</p>
+    {% if errors %}
+      <div class="alert alert-error mt-4 rounded-none" role="alert">
+        <ul class="list-disc pl-4">{% for item in errors %}<li>{{ item }}</li>{% endfor %}</ul>
+      </div>
+    {% endif %}
+    <form class="mt-6 grid gap-4" method="post">
+      {% csrf_token %}
+      {% include "includes/field.html" with field=form.bulk %}
+      {% include "includes/field.html" with field=form.po_number %}
+      <div class="flex flex-wrap gap-2">
+        <button class="btn btn-outline rounded-none border-base-content/30" name="action" value="add" type="submit">Add to cart</button>
+        <button class="btn btn-primary rounded-none" name="action" value="place" type="submit">Add and place order</button>
+      </div>
+    </form>
+    <p class="mt-6 text-sm">Reorder from an <a class="underline" href="{% url 'orders' %}">order</a> copies the lines into the cart.</p>
+  </div>
+</section>
+{% endblock %}

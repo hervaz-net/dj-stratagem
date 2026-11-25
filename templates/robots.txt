@@ -6,6 +6,8 @@ Disallow: /join
 Disallow: /forgot-password
 Disallow: /reset-password
 Disallow: /dashboard
+Disallow: /app
+Disallow: /desk
 Disallow: /admin/
 Disallow: /health
 Disallow: /signin

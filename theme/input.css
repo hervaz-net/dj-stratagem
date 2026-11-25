@@ -4,11 +4,12 @@
 @source "../templates";
 @source "../accounts/forms.py";
 @source "../inquiries/forms.py";
+@source "../wholesale/forms.py";
 
 @plugin "daisyui" {
   themes: false;
   logs: false;
-  include: properties, rootcolor, scrollbar, svg, button, input, select, textarea, alert;
+  include: properties, rootcolor, scrollbar, svg, button, input, select, textarea, alert, badge, card, table, stat, menu, tabs, breadcrumbs, kbd, dropdown, divider, indicator, navbar, link;
 }
 
 @plugin "daisyui/theme" {

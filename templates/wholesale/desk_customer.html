@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load money %}
+{% block title %}{{ company.name }}{% endblock %}
+{% block content %}
+<section class="py-10">
+  <div class="shell">
+    <p class="kicker"><a class="underline" href="{% url 'desk_customers' %}">Customers</a></p>
+    <h1 class="display mt-2 text-5xl uppercase">{{ company.name }}</h1>
+    <p class="mt-2 text-sm">{{ company.get_status_display }} · {{ company.trade }} · {{ company.city }} {{ company.state }}</p>
+    <p class="mt-2">Credit {{ company.credit.get_status_display }} · limit {{ company.credit.limit_amount|money }} · available {{ company.credit.available|money }} · in use {{ company.credit.balance_used|money }}</p>
+    {% if company.status != 'active' %}
+      <form class="mt-4" method="post">{% csrf_token %}<input type="hidden" name="action" value="activate"><button class="btn btn-primary rounded-none" type="submit">Approve account</button></form>
+    {% endif %}
+    <h2 class="mt-8 font-display text-3xl uppercase">People</h2>
+    <ul class="mt-2 text-sm">{% for member in company.memberships.all %}<li>{{ member.user.email }} · {{ member.get_role_display }} · {{ member.user.get_status_display }}</li>{% endfor %}</ul>
+    <h2 class="mt-8 font-display text-3xl uppercase">Orders</h2>
+    <ul class="mt-2 text-sm">{% for order in orders %}<li>{{ order.number }} · {{ order.get_status_display }} · {{ order.subtotal|money }}</li>{% empty %}<li>None.</li>{% endfor %}</ul>
+    <h2 class="mt-8 font-display text-3xl uppercase">Invoices</h2>
+    <ul class="mt-2 text-sm">{% for invoice in invoices %}<li><a class="underline" href="{% url 'desk_invoice' invoice.number %}">{{ invoice.number }}</a> · {{ invoice.get_status_display }} · {{ invoice.balance|money }}</li>{% empty %}<li>None.</li>{% endfor %}</ul>
+  </div>
+</section>
+{% endblock %}

@@ -1,55 +1,47 @@
 <footer class="border-t border-base-content bg-base-100">
   <div class="shell flex flex-col items-start justify-between gap-6 border-b border-base-content/15 py-8 sm:flex-row sm:items-end">
     <div>
-      <p class="kicker text-base-content/80">One account. Every stage.</p>
-      <p class="display mt-2 text-4xl">Bring your next job into focus.</p>
+      <p class="kicker text-base-content/75">Commercial contractors only.</p>
+      <p class="display mt-2 text-4xl uppercase">Order by 2. On the truck today.</p>
     </div>
-    <a class="btn btn-primary h-12 min-h-12 rounded-none px-5 font-semibold" href="{% url 'join' %}">Start free</a>
+    <a class="btn btn-primary h-12 min-h-12 rounded-none px-5 font-semibold" href="{% url 'join' %}">Apply for an account</a>
   </div>
-  <div class="shell grid gap-8 py-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-[1.4fr_repeat(4,1fr)]">
+  <div class="shell grid gap-8 py-10 sm:grid-cols-2 lg:grid-cols-4">
     <div>
       {% include "includes/mark.html" %}
-      <p class="mt-4 max-w-xs text-sm leading-relaxed text-base-content/80">Construction work, connected from the first lead to the next customer.</p>
-      <p class="kicker mt-3 text-base-content/80">Los Angeles, California</p>
+      <p class="mt-4 max-w-xs text-sm leading-relaxed text-base-content/75">Wholesale anchors, fasteners, abrasives, and site safety. The counter grew out of commercial construction in Los Angeles.</p>
     </div>
-    <nav aria-label="Platform">
-      <p class="kicker mb-3 text-base-content/80">Platform</p>
+    <nav aria-label="Catalog">
+      <h2 class="kicker mb-3 text-[0.62rem] text-base-content/70">Catalog</h2>
       <ul class="grid gap-2 text-sm">
-        {% for mode in nav_modes %}
-          <li><a class="hover:underline" href="{{ mode.get_absolute_url }}"{% if request.path == mode.get_absolute_url %} aria-current="page"{% endif %}>{{ mode.name }}</a></li>
+        {% for category in catalog_categories %}
+          <li><a class="hover:underline" href="{{ category.get_absolute_url }}">{{ category.name }}</a></li>
+        {% empty %}
+          <li><a class="hover:underline" href="{% url 'catalog' %}">Browse the shelf</a></li>
         {% endfor %}
       </ul>
     </nav>
     <nav aria-label="Company">
-      <p class="kicker mb-3 text-base-content/80">Company</p>
+      <h2 class="kicker mb-3 text-[0.62rem] text-base-content/70">Company</h2>
       <ul class="grid gap-2 text-sm">
-        <li><a class="hover:underline" href="{% url 'about' %}"{% if request.resolver_match.url_name == "about" %} aria-current="page"{% endif %}>About D&amp;J</a></li>
-        <li><a class="hover:underline" href="{% url 'pricing' %}"{% if request.resolver_match.url_name == "pricing" %} aria-current="page"{% endif %}>Pricing</a></li>
-        <li><a class="hover:underline" href="{% url 'contact' %}"{% if request.resolver_match.url_name == "contact" %} aria-current="page"{% endif %}>Contact</a></li>
-        <li><a class="hover:underline" href="{% url 'join' %}">Join free</a></li>
-      </ul>
-    </nav>
-    <nav aria-label="Resources">
-      <p class="kicker mb-3 text-base-content/80">Resources</p>
-      <ul class="grid gap-2 text-sm">
-        {% for section in resource_sections %}
-          <li><a class="hover:underline" href="{{ section.get_absolute_url }}"{% if request.path == section.get_absolute_url %} aria-current="page"{% endif %}>{{ section.title }}</a></li>
-        {% endfor %}
+        <li><a class="hover:underline" href="{% url 'shipping' %}">Shipping</a></li>
+        <li><a class="hover:underline" href="{% url 'credit' %}">Net 30</a></li>
+        <li><a class="hover:underline" href="{% url 'about' %}">About</a></li>
+        <li><a class="hover:underline" href="{% url 'contact' %}">Contact</a></li>
       </ul>
     </nav>
     <nav aria-label="Legal">
-      <p class="kicker mb-3 text-base-content/80">Legal</p>
+      <h2 class="kicker mb-3 text-[0.62rem] text-base-content/70">Legal</h2>
       <ul class="grid gap-2 text-sm">
-        <li><a class="hover:underline" href="{% url 'privacy' %}"{% if request.resolver_match.url_name == "privacy" %} aria-current="page"{% endif %}>Privacy policy</a></li>
-        <li><a class="hover:underline" href="{% url 'terms' %}"{% if request.resolver_match.url_name == "terms" %} aria-current="page"{% endif %}>Terms & conditions</a></li>
+        <li><a class="hover:underline" href="{% url 'privacy' %}">Privacy</a></li>
+        <li><a class="hover:underline" href="{% url 'terms' %}">Terms</a></li>
+        <li><a class="hover:underline" href="{% url 'login' %}">Sign in</a></li>
+        <li><a class="hover:underline" href="{% url 'join' %}">Apply</a></li>
       </ul>
     </nav>
   </div>
-  <div class="bg-base-content text-base-100">
-    <div class="shell flex flex-col gap-2 py-3 text-xs sm:flex-row sm:items-center sm:justify-between">
-      <p>© {% now "Y" %} D&amp;J Stratagem, Inc.</p>
-      <p>Free to start · Every account reviewed by a person</p>
-      <a class="underline-offset-4 hover:underline" href="mailto:{{ contact_email }}">{{ contact_email }}</a>
-    </div>
+  <div class="shell flex flex-wrap items-center justify-between gap-3 border-t border-base-content/15 py-4 text-xs text-base-content/70">
+    <p>{{ mailing_address }}</p>
+    <p>© D&amp;J Stratagem, Inc.</p>
   </div>
 </footer>

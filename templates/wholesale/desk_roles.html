@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Roles{% endblock %}
+{% block content %}
+<section class="py-10">
+  <div class="shell">
+    <h1 class="display text-5xl uppercase">Roles</h1>
+    <p class="mt-2 max-w-2xl text-sm">Admin and staff use the desk. On a customer account the groups are account owner, buyer, and accounts payable.</p>
+    {% if error %}<div class="alert alert-error mt-4 rounded-none" role="alert">{{ error }}</div>{% endif %}
+    <h2 class="mt-8 font-display text-3xl uppercase">Staff</h2>
+    <ul class="mt-3 text-sm">
+      {% for person in staff %}
+        <li>{{ person.email }} · {% for group in person.groups.all %}{{ group.name }} {% empty %}no group{% endfor %}</li>
+      {% endfor %}
+    </ul>
+    <form class="mt-6 flex flex-wrap items-end gap-3" method="post">
+      {% csrf_token %}
+      {% include "includes/field.html" with field=form.email %}
+      <button class="btn btn-primary rounded-none" type="submit">Grant staff</button>
+    </form>
+    <h2 class="mt-10 font-display text-3xl uppercase">Groups</h2>
+    <ul class="mt-3 text-sm">{% for group in groups %}<li>{{ group.name }}</li>{% endfor %}</ul>
+  </div>
+</section>
+{% endblock %}

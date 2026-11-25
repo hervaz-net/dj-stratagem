@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load money %}
+{% block title %}Invoices{% endblock %}
+{% block content %}
+<section class="py-10">
+  <div class="shell">
+    <h1 class="display text-5xl uppercase">Invoices</h1>
+    <table class="table mt-6">
+      <thead><tr><th>Invoice</th><th>Order</th><th>Status</th><th>Terms</th><th>Open</th><th>Due</th></tr></thead>
+      <tbody>
+        {% for invoice in invoices %}
+          <tr>
+            <td>{{ invoice.number }}</td>
+            <td><a class="underline" href="{{ invoice.order.get_absolute_url }}">{{ invoice.order.number }}</a></td>
+            <td>{{ invoice.get_status_display }}</td>
+            <td>{% if invoice.on_terms %}Net 30{% else %}Due on receipt{% endif %}</td>
+            <td>{{ invoice.balance|money }}</td>
+            <td>{{ invoice.due_on }}</td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="6">No invoices yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load money %}
+{% block title %}Credit{% endblock %}
+{% block content %}
+<section class="py-10">
+  <div class="shell max-w-2xl">
+    <h1 class="display text-5xl uppercase">Credit</h1>
+    {% if company %}
+      <div class="stats mt-6 stats-vertical w-full rounded-none border border-base-content/20 lg:stats-horizontal">
+        <div class="stat"><div class="stat-title">Status</div><div class="stat-value text-2xl">{{ company.credit.get_status_display }}</div></div>
+        <div class="stat"><div class="stat-title">Limit</div><div class="stat-value text-2xl">{{ company.credit.limit_amount|money }}</div></div>
+        <div class="stat"><div class="stat-title">Available</div><div class="stat-value text-2xl">{{ company.credit.available|money }}</div></div>
+      </div>
+      <p class="mt-4 text-sm">Terms are {{ company.credit.terms_days }} days. {{ company.credit.balance_used|money }} is in use on open invoices.</p>
+      <a class="btn btn-outline mt-4 rounded-none border-base-content/30" href="{% url 'credit' %}">Apply or request a change</a>
+      <ul class="mt-6 grid gap-2 text-sm">
+        {% for application in applications %}
+          <li>{{ application.created_at|date:"N j, Y" }} · requested {{ application.requested_limit|money }} · {{ application.get_status_display }}</li>
+        {% empty %}
+          <li>No applications yet.</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

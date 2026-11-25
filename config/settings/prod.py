@@ -39,7 +39,10 @@ if not hosts or any(host == "*" for host in hosts):
     )
 ALLOWED_HOSTS = hosts
 
-origins = env_list("CSRF_TRUSTED_ORIGINS", "")
+origins = env_list(
+    "CSRF_TRUSTED_ORIGINS",
+    "https://djstratageminc.com,https://www.djstratageminc.com",
+)
 if not origins:
     raise ImproperlyConfigured(
         "Set CSRF_TRUSTED_ORIGINS to the https origins that submit forms."

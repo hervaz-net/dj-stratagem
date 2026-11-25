@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Account{% endblock %}
+{% block content %}
+<section class="py-10">
+  <div class="shell max-w-xl">
+    <h1 class="display text-5xl uppercase">Account</h1>
+    {% if company %}
+      <p class="mt-3">{{ company.name }} · {{ company.get_status_display }} · {{ company.trade }}</p>
+      <p class="text-sm text-base-content/70">{{ user.email }} · {{ trade.get_role_display }}</p>
+      {% if trade.role == 'owner' %}
+        <form class="mt-6 grid gap-4" method="post">
+          {% csrf_token %}
+          {% for field in form %}{% include "includes/field.html" with field=field %}{% endfor %}
+          <button class="btn btn-primary rounded-none" type="submit">Save</button>
+        </form>
+      {% else %}
+        <p class="mt-4 text-sm">{{ company.city }} {{ company.state }} · {{ company.phone }}</p>
+      {% endif %}
+    {% else %}
+      <p class="mt-4">No trade account is linked to this login.</p>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

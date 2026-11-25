@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load money %}
+{% block title %}{{ item.name }}{% endblock %}
+{% block content %}
+<section class="py-10">
+  <div class="shell max-w-3xl">
+    <div class="breadcrumbs text-sm">
+      <ul>
+        <li><a href="{% url 'catalog' %}">Catalog</a></li>
+        <li><a href="{{ item.category.get_absolute_url }}">{{ item.category.name }}</a></li>
+        <li>{{ item.sku }}</li>
+      </ul>
+    </div>
+    <p class="kicker mt-6 text-base-content/60">{{ item.sku }} · {{ item.unit }}</p>
+    <h1 class="display mt-2 text-6xl uppercase">{{ item.name }}</h1>
+    <p class="mt-4 text-lg">{{ item.summary }}</p>
+    <p class="mt-6 flex flex-wrap items-center gap-4">
+      <span class="font-display text-4xl">{{ item.price|money }}</span>
+      <span class="badge badge-lg rounded-none {% if item.inventory.stock_label == 'In stock' %}badge-success{% elif item.inventory.stock_label == 'Low' %}badge-warning{% else %}badge-error{% endif %}">{{ item.inventory.on_hand }} on hand · {{ item.inventory.location }}</span>
+    </p>
+    {% if error %}<div class="alert alert-error mt-6 rounded-none" role="alert">{{ error }}</div>{% endif %}
+    {% if user.is_authenticated %}
+      <form class="mt-6 flex flex-wrap items-end gap-3" method="post">
+        {% csrf_token %}
+        <label class="grid gap-1 text-sm font-semibold" for="quantity">Quantity
+          <input class="input h-12 w-28 rounded-none border-base-content/25" id="quantity" name="quantity" type="number" min="1" value="1" inputmode="numeric">
+        </label>
+        <button class="btn btn-primary h-12 rounded-none" type="submit">Add to cart</button>
+      </form>
+    {% else %}
+      <p class="mt-6"><a class="btn btn-primary rounded-none" href="{% url 'login' %}">Sign in to order</a></p>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}
