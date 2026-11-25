@@ -6,9 +6,14 @@ import dj_database_url
 from django.core.exceptions import ImproperlyConfigured
 
 from .base import *  # noqa: F403
-from .base import BASE_DIR, SECRET_KEY, env_list
+from .base import BASE_DIR, EMAIL_USE_SSL, EMAIL_USE_TLS, SECRET_KEY, env_int, env_list
 
 DEBUG = False
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+if EMAIL_USE_TLS and EMAIL_USE_SSL:
+    raise ImproperlyConfigured("Set only one of EMAIL_USE_TLS and EMAIL_USE_SSL.")
 
 if not SECRET_KEY or SECRET_KEY.startswith("dev-only") or len(SECRET_KEY) < 32:
     raise ImproperlyConfigured(
@@ -25,7 +30,7 @@ if database_url:
     DATABASES = {
         "default": dj_database_url.parse(
             database_url,
-            conn_max_age=int(os.getenv("DATABASE_CONN_MAX_AGE", "60")),
+            conn_max_age=env_int("DATABASE_CONN_MAX_AGE", 60, minimum=0),
             ssl_require=os.getenv("DATABASE_SSL_REQUIRE", "").lower() in {"1", "true", "yes"},
         )
     }

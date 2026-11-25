@@ -16,6 +16,10 @@ class Inquiry(models.Model):
     class Meta:
         ordering = ["-created_at"]
         verbose_name_plural = "inquiries"
+        indexes = [
+            models.Index(fields=["ip_address", "created_at"], name="inquiry_ip_created_idx"),
+            models.Index(fields=["-created_at"], name="inquiry_created_idx"),
+        ]
 
     def __str__(self):
         return f"{self.name} · {self.company}"
