@@ -1,0 +1,21 @@
+target-version = "py312"
+line-length = 100
+extend-exclude = [
+  "migrations",
+  "src",
+  "public",
+  "theme",
+  "static",
+  "scripts",
+  "node_modules",
+  ".venv",
+]
+
+[lint]
+select = ["E4", "E7", "E9", "F"]
+
+[lint.per-file-ignores]
+"config/settings/*.py" = ["F403", "F405"]
+# Existing findings outside this change. Application modules are not rewritten here.
+"content/views.py" = ["F401"]
+"passenger_wsgi.py" = ["E402"]
