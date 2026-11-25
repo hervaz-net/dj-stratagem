@@ -4,15 +4,40 @@ from django.db import migrations, models
 
 
 def sync_accounts(apps, schema_editor):
+    """Lowercase every email and separate rows that would collapse together.
+
+    A case-sensitive unique index can already hold both ada@ and ADA@. Login
+    now looks up the lowercase form, so the extra rows are suspended and moved
+    to a unique address instead of being left attached to someone else's login.
+    """
+
     User = apps.get_model("accounts", "User")
     User.objects.exclude(status="active").update(is_active=False)
-    for user in User.objects.all().iterator():
+    groups = {}
+    for user in User.objects.all().order_by("pk"):
         lowered = (user.email or "").strip().lower()
-        if not lowered or lowered == user.email:
+        groups.setdefault(lowered, []).append(user)
+    for lowered, rows in groups.items():
+        if not lowered:
             continue
-        if User.objects.filter(email=lowered).exclude(pk=user.pk).exists():
-            continue
-        User.objects.filter(pk=user.pk).update(email=lowered)
+        rows.sort(
+            key=lambda row: (
+                0 if row.email == lowered else 1,
+                0 if row.is_active and row.status == "active" else 1,
+                0 if row.is_staff else 1,
+                row.pk,
+            )
+        )
+        keeper = rows[0]
+        if keeper.email != lowered:
+            User.objects.filter(pk=keeper.pk).update(email=lowered)
+        local = lowered.split("@", 1)[0][:40]
+        for duplicate in rows[1:]:
+            User.objects.filter(pk=duplicate.pk).update(
+                email=f"duplicate-{duplicate.pk}-{local}@users.invalid",
+                is_active=False,
+                status="suspended",
+            )
 
 
 class Migration(migrations.Migration):
@@ -58,5 +83,9 @@ class Migration(migrations.Migration):
         migrations.AddIndex(
             model_name='authattempt',
             index=models.Index(fields=['kind', 'ip_address', 'identifier', 'created_at'], name='auth_attempt_ident_idx'),
+        ),
+        migrations.AddIndex(
+            model_name='authattempt',
+            index=models.Index(fields=['kind', 'identifier', 'created_at'], name='auth_attempt_account_idx'),
         ),
     ]

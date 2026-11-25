@@ -1,3 +1,4 @@
+import importlib
 import os
 import subprocess
 import sys
@@ -5,11 +6,15 @@ from pathlib import Path
 from unittest.mock import patch
 from urllib.parse import urlsplit
 
+from django.apps import apps
+from django.contrib import admin as django_admin
+from django.contrib.messages.storage.fallback import FallbackStorage
 from django.core.exceptions import ImproperlyConfigured
 from django.db import IntegrityError, transaction
 from django.test import RequestFactory, SimpleTestCase, TestCase, override_settings
 from django.urls import reverse
 
+from accounts.admin import OWN_ACCOUNT_MESSAGE
 from accounts.models import AuthAttempt, User
 from accounts.net import client_ip
 from accounts.throttle import LOGIN_LIMIT_MESSAGE
@@ -285,3 +290,95 @@ class MembershipSecurityTests(TestCase):
         staff.refresh_from_db()
         self.assertTrue(staff.is_active)
         self.assertEqual(staff.status, User.Status.ACTIVE)
+
+    def test_case_collisions_keep_one_login_and_suspend_the_rest(self):
+        keeper = User.objects.create_user(
+            email="ada@example.com",
+            password=PASSWORD,
+            is_active=True,
+            status=User.Status.ACTIVE,
+        )
+        other = User.objects.create_user(
+            email="other@example.com",
+            password=PASSWORD,
+            is_active=True,
+            status=User.Status.ACTIVE,
+        )
+        User.objects.filter(pk=other.pk).update(email="ADA@example.com")
+        sync_accounts = importlib.import_module("accounts.migrations.0002_security_and_indexes").sync_accounts
+        sync_accounts(apps, None)
+        keeper.refresh_from_db()
+        other.refresh_from_db()
+        self.assertEqual(keeper.email, "ada@example.com")
+        self.assertTrue(keeper.is_active)
+        self.assertEqual(keeper.status, User.Status.ACTIVE)
+        self.assertFalse(other.is_active)
+        self.assertEqual(other.status, User.Status.SUSPENDED)
+        self.assertTrue(other.email.startswith(f"duplicate-{other.pk}-"))
+        signed_in = self.client.post(reverse("login"), {"username": "ADA@example.com", "password": PASSWORD})
+        self.assertRedirects(signed_in, reverse("dashboard"))
+
+    @override_settings(LOGIN_ACCOUNT_LIMIT=2, LOGIN_IP_LIMIT=30)
+    def test_account_limit_counts_failures_from_different_addresses(self):
+        User.objects.create_user(email="ada@example.com", password=PASSWORD, is_active=True, status=User.Status.ACTIVE)
+        for address in ("203.0.113.1", "203.0.113.2"):
+            self.client.post(
+                reverse("login"),
+                {"username": "ada@example.com", "password": "wrong-password-value"},
+                REMOTE_ADDR=address,
+            )
+        blocked = self.client.post(
+            reverse("login"),
+            {"username": "ada@example.com", "password": PASSWORD},
+            REMOTE_ADDR="203.0.113.3",
+        )
+        self.assertContains(blocked, LOGIN_LIMIT_MESSAGE)
+        self.assertNotIn("_auth_user_id", self.client.session)
+
+    def test_change_form_cannot_lock_out_the_current_staff_user(self):
+        staff = User.objects.create_superuser(email="owner@example.com", password=PASSWORD)
+        member = User.objects.create_user(
+            email="ada@example.com",
+            password=PASSWORD,
+            is_active=False,
+            status=User.Status.PENDING,
+        )
+        self.client.force_login(staff)
+        own = self.client.get(reverse("admin:accounts_user_change", args=[staff.pk]))
+        self.assertNotContains(own, 'name="status"')
+        self.assertNotContains(own, 'name="is_active"')
+        other = self.client.get(reverse("admin:accounts_user_change", args=[member.pk]))
+        self.assertContains(other, 'name="status"')
+
+        request = RequestFactory().post("/admin/accounts/user/")
+        request.user = staff
+        request.session = {}
+        request._messages = FallbackStorage(request)
+        staff.status = User.Status.SUSPENDED
+        staff.is_active = False
+        django_admin.site._registry[User].save_model(request, staff, form=None, change=True)
+        staff.refresh_from_db()
+        self.assertEqual(staff.status, User.Status.ACTIVE)
+        self.assertTrue(staff.is_active)
+        self.assertIn(OWN_ACCOUNT_MESSAGE, [str(message) for message in request._messages])
+
+    def test_change_form_approval_sends_the_notice(self):
+        from django.core import mail
+
+        staff = User.objects.create_superuser(email="owner@example.com", password=PASSWORD)
+        member = User.objects.create_user(
+            email="ada@example.com",
+            password=PASSWORD,
+            is_active=False,
+            status=User.Status.PENDING,
+        )
+        request = RequestFactory().post("/admin/accounts/user/")
+        request.user = staff
+        request.session = {}
+        request._messages = FallbackStorage(request)
+        member.status = User.Status.ACTIVE
+        member.is_active = True
+        django_admin.site._registry[User].save_model(request, member, form=None, change=True)
+        member.refresh_from_db()
+        self.assertTrue(member.is_active)
+        self.assertEqual(mail.outbox[0].to, ["ada@example.com"])

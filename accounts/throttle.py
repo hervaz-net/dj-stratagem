@@ -31,8 +31,11 @@ def _identifier(value):
     return hashlib.sha256(text.encode()).hexdigest()
 
 
-def _count(kind, ip, *, seconds, identifier=None):
-    attempts = _bucket(kind, ip).filter(created_at__gte=_since(seconds))
+def _count(kind, ip, *, seconds, identifier=None, any_ip=False):
+    if any_ip:
+        attempts = AuthAttempt.objects.filter(kind=kind, created_at__gte=_since(seconds))
+    else:
+        attempts = _bucket(kind, ip).filter(created_at__gte=_since(seconds))
     if identifier is not None:
         attempts = attempts.filter(identifier=_identifier(identifier))
     return attempts.count()
@@ -67,6 +70,7 @@ def login_blocked(request):
         ip,
         seconds=window,
         identifier=email,
+        any_ip=True,
     ) >= settings.LOGIN_ACCOUNT_LIMIT:
         return True
     return False

@@ -105,6 +105,7 @@ class AuthAttempt(models.Model):
                 fields=["kind", "ip_address", "identifier", "created_at"],
                 name="auth_attempt_ident_idx",
             ),
+            models.Index(fields=["kind", "identifier", "created_at"], name="auth_attempt_account_idx"),
         ]
 
     def __str__(self):
