@@ -1,0 +1,11 @@
+{% extends "accounts/auth_base.html" %}
+{% block title %}Check your email{% endblock %}
+{% block auth %}
+  <div class="alert rounded-none border border-base-content/20" role="status">
+    <div>
+      <h1 class="text-2xl font-semibold">You’re all set.</h1>
+      <p class="mt-2">If an approved account uses that email, a reset link is on its way. It works for a limited time. If it doesn’t arrive, write to <a class="underline underline-offset-4" href="mailto:{{ contact_email }}">{{ contact_email }}</a>.</p>
+      <a class="btn btn-outline mt-4 rounded-none border-base-content/30" href="{% url 'login' %}">Continue to sign in</a>
+    </div>
+  </div>
+{% endblock %}

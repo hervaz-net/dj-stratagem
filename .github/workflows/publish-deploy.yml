@@ -1,217 +1,45 @@
-name: Publish deploy branch
+name: Django image
 
+# This replaces the cPanel static publish.
+# It does not push the `deploy` branch and it does not call the cPanel API,
+# so merging it leaves the current public_html site in place until DNS is
+# pointed at a host that runs this container.
 on:
   push:
     branches: [main]
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
-  group: publish-deploy
+  group: django-image
   cancel-in-progress: true
 
 jobs:
-  publish:
+  image:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout main source
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v4
+      - name: Build image
+        run: docker build -t djstratagem:${{ github.sha }} .
 
-      # Same guard as deploy.sh: never ship a build that is missing commits
-      # already on origin/main (e.g. a manual dispatch from an old branch).
-      - name: Guard against deploying behind main
-        run: |
-          set -euo pipefail
-          git fetch -q origin main
-          behind="$(git rev-list --count HEAD..origin/main)"
-          if [ "$behind" != "0" ]; then
-            echo "::error::HEAD is ${behind} commit(s) behind origin/main. Refusing to deploy a stale build."
-            exit 1
-          fi
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-          cache: npm
-
-      - name: Install and build
-        run: |
-          npm ci
-          npm run build
-          bash scripts/verify-dist.sh out
-          test -f out/index.html
-          test -f out/api/health.php
-          test -f out/api/login.php
-          test -f out/.htaccess
-          grep -q 'application/x-httpd-alt-php81___lsphp' out/.htaccess
-          grep -oE '/_next/static/[^"]+[.]js' out/index.html | head -1
-
-      - name: Refresh deploy branch from out/
-        id: refresh
-        continue-on-error: true
+      - name: Push image
+        if: ${{ vars.DJANGO_DEPLOY_ENABLED == 'true' }}
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DEPLOY_PAT: ${{ secrets.DEPLOY_PAT }}
+          REGISTRY: ${{ vars.DJANGO_REGISTRY }}
+          IMAGE: ${{ vars.DJANGO_IMAGE }}
+          REGISTRY_USER: ${{ secrets.DJANGO_REGISTRY_USER }}
+          REGISTRY_PASSWORD: ${{ secrets.DJANGO_REGISTRY_PASSWORD }}
         run: |
           set -euo pipefail
-          SHORT="$(git rev-parse --short HEAD)"
-          TOKEN="${DEPLOY_PAT:-${GH_TOKEN}}"
-          WORK="$(mktemp -d)"
-          git clone --quiet --branch deploy --single-branch \
-            "https://x-access-token:${TOKEN}@github.com/hervaz-net/dj-stratagem.git" \
-            "$WORK/repo"
-          cd "$WORK/repo"
-          find . -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
-          cp -R "$GITHUB_WORKSPACE/out/." .
-          cp "$GITHUB_WORKSPACE/scripts/cpanel.yml" .cpanel.yml
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
-          if git diff --cached --quiet; then
-            echo "deploy branch already matches this build"
-            echo "pushed=false" >> "$GITHUB_OUTPUT"
-          else
-            git commit -m "Deploy ${SHORT}"
-            push_deploy() {
-              git push origin deploy
-            }
-            if ! push_deploy; then
-              echo "deploy push rejected; fetching and retrying once"
-              git fetch origin deploy
-              # A concurrent publish can win the race. If that tip already
-              # matches this build, the retry is unnecessary.
-              if git merge-base --is-ancestor HEAD origin/deploy; then
-                echo "origin/deploy already contains this deploy commit"
-              elif ! git pull --rebase origin deploy || ! push_deploy; then
-                echo "::error::Push to deploy was rejected. The ~ALL branch ruleset blocks github-actions[bot], or another publish won the race."
-                echo "Add repo secret DEPLOY_PAT, or exclude refs/heads/deploy from ruleset 23688330."
-                echo "cPanel will still pull the current deploy tip."
-                echo "pushed=false" >> "$GITHUB_OUTPUT"
-                exit 1
-              fi
-            fi
-            echo "pushed deploy $(git rev-parse --short HEAD) from main ${SHORT}"
-            echo "pushed=true" >> "$GITHUB_OUTPUT"
-          fi
-          git fetch --quiet origin deploy
-          EXPECTED="$(grep -oE '/_next/static/[^"]+[.]js' "$GITHUB_WORKSPACE/out/index.html" | head -1 || true)"
-          REMOTE="$(git show origin/deploy:index.html | grep -oE '/_next/static/[^"]+[.]js' | head -1 || true)"
-          echo "export bundle ${EXPECTED:-<none>}"
-          echo "deploy bundle ${REMOTE:-<none>}"
-          if [ -z "$EXPECTED" ] || [ "$EXPECTED" != "$REMOTE" ]; then
-            echo "::error::GitHub deploy index.html does not match this export. Host pull would ship a stale or stripped tree."
-            echo "pushed=false" >> "$GITHUB_OUTPUT"
-            exit 1
-          fi
-          missing=0
-          for rel in privacy.html terms.html fleet-cards.html signage.html receipts.html health.php send-demo.php manifest.webmanifest manifest.json api/login.php api/register.php api/bootstrap.php api/logout.php api/credit.php api/.htaccess api/jobs.php api/jobs-lib.php api/jobs-run.php api/subagents.php api/ai-lib.php api/ai-worker.php api/mail-lib.php api/password-reset.php; do
-            if ! git cat-file -e "origin/deploy:${rel}" 2>/dev/null; then
-              echo "::error::GitHub deploy is missing ${rel} (stripped tree)."
-              missing=1
-            fi
-          done
-          if [ "$missing" -ne 0 ]; then
-            echo "pushed=false" >> "$GITHUB_OUTPUT"
-            exit 1
-          fi
-
-      - name: Pull and deploy on cPanel
-        id: cpanel
-        # Run even if the deploy-branch push was skipped or rejected, so the
-        # server still pulls the current deploy tip. Never after a failed build
-        # or behind-main guard.
-        if: ${{ !cancelled() && steps.refresh.conclusion != 'skipped' }}
-        env:
-          CPANEL_TOKEN: ${{ secrets.CPANEL_TOKEN }}
-          CPANEL_USER: ${{ secrets.CPANEL_USER }}
-          CPANEL_HOST: ${{ secrets.CPANEL_HOST }}
-        run: |
-          set -euo pipefail
-          missing=""
-          [ -n "${CPANEL_TOKEN}" ] || missing="${missing} CPANEL_TOKEN"
-          [ -n "${CPANEL_USER}" ]  || missing="${missing} CPANEL_USER"
-          [ -n "${CPANEL_HOST}" ]  || missing="${missing} CPANEL_HOST"
-          if [ -n "$missing" ]; then
-            echo "pulled=false" >> "$GITHUB_OUTPUT"
-            echo "::error::Missing repo secret(s):${missing}. See README → Automatic deploys."
-            echo "GitHub deploy branch is current. public_html was not pulled."
-            echo "Fallback: cPanel Git Version Control → Update from Remote → Deploy HEAD Commit, or ./deploy.sh."
-            exit 1
-          fi
-          # CPANEL_HOST may be given with or without scheme/port.
-          HOST="${CPANEL_HOST#https://}"; HOST="${HOST%/}"
-          case "$HOST" in *:*) ;; *) HOST="${HOST}:2083" ;; esac
-          ROOT="/home/${CPANEL_USER}/repositories/dj-stratagem"
-          uapi() {
-            local module="$1" func="$2"; shift 2
-            curl -sS --fail-with-body --max-time 90 \
-              -H "Authorization: cpanel ${CPANEL_USER}:${CPANEL_TOKEN}" \
-              "https://${HOST}/execute/${module}/${func}" "$@"
-          }
-          # UAPI answers HTTP 200 even on failure; the verdict is in the JSON.
-          api_check() {
-            python3 -c '
-          import json,sys
-          raw=sys.stdin.read()
-          try: d=json.loads(raw)
-          except Exception: print("::error::non-JSON UAPI response:", raw[:300]); sys.exit(1)
-          if not d.get("status") or d.get("errors"):
-              print("::error::UAPI failed:", "; ".join(map(str, d.get("errors") or ["status=0"]))); sys.exit(1)
-          print("  ok")
-          '
-          }
-          echo "==> VersionControl/update (branch deploy)"
-          uapi VersionControl update --get \
-            --data-urlencode "repository_root=${ROOT}" \
-            --data-urlencode "branch=deploy" | api_check
-          echo "==> VersionControlDeployment/create"
-          uapi VersionControlDeployment create -X POST \
-            --data-urlencode "repository_root=${ROOT}" | api_check
-          echo "pulled=true" >> "$GITHUB_OUTPUT"
-
-      - name: Verify live site serves this build
-        if: ${{ !cancelled() && steps.cpanel.outputs.pulled == 'true' }}
-        run: |
-          set -uo pipefail
-          EXPECTED="$(grep -oE '/_next/static/[^"]+[.]js' out/index.html | head -1 || true)"
-          [ -n "$EXPECTED" ] || { echo "::error::no bundle path in out/index.html"; exit 1; }
-          LIVE=""
-          for i in $(seq 1 12); do
-            LIVE="$(curl -sS --max-time 30 -H 'Cache-Control: no-cache' "https://djstratageminc.com/?v=${GITHUB_SHA}" | grep -oE '/_next/static/[^"]+[.]js' | head -1 || true)"
-            [ "$LIVE" = "$EXPECTED" ] && break
-            echo "  attempt ${i}: live ${LIVE:-<none>}, waiting for cPanel rsync…"
-            sleep 10
-          done
-          echo "expected ${EXPECTED}"
-          echo "live     ${LIVE:-<none>}"
-          if [ "$EXPECTED" != "$LIVE" ]; then
-            echo "::error::Live bundle does not match this export after ~2 min."
-            echo "Check: ./deploy.sh --status, and that public_html is djstlime:nobody 0750."
-            exit 1
-          fi
-
-      - name: Verify live PHP probes and assets
-        if: ${{ !cancelled() && steps.cpanel.outputs.pulled == 'true' }}
-        run: |
-          set -euo pipefail
-          fail=0
-          html="$(curl -sS --max-time 30 https://djstratageminc.com/)"
-          LIVE="$(printf '%s' "$html" | grep -oE '/_next/static/[^"]+[.]js' | head -1 || true)"
-          JS_CODE="$(curl -sS -o /dev/null -w '%{http_code}' --max-time 20 "https://djstratageminc.com${LIVE}")"
-          HEALTH="$(curl -sS --max-time 20 https://djstratageminc.com/health.php)"
-          API_HEALTH="$(curl -sS --max-time 20 https://djstratageminc.com/api/health.php)"
-          CONTACT="$(curl -sS --max-time 20 https://djstratageminc.com/contact.php)"
-          echo "live bundle ${LIVE:-<none>} js=${JS_CODE}"
-          echo "health.php ${HEALTH}"
-          echo "api/health.php ${API_HEALTH}"
-          echo "contact.php ${CONTACT}"
-          if [ "${JS_CODE}" != "200" ]; then echo "::error::live JS bundle not 200"; fail=1; fi
-          echo "${HEALTH}" | grep -q '"ok":true' || { echo "::error::/health.php is not JSON ok"; fail=1; }
-          echo "${API_HEALTH}" | grep -q '"ok":true' || { echo "::error::/api/health.php is not JSON ok"; fail=1; }
-          echo "${CONTACT}" | grep -q 'method_not_allowed' || { echo "::error::/contact.php is not the JSON handler"; fail=1; }
-          exit "$fail"
+          test -n "$REGISTRY"
+          test -n "$IMAGE"
+          test -n "$REGISTRY_USER"
+          test -n "$REGISTRY_PASSWORD"
+          echo "$REGISTRY_PASSWORD" | docker login "$REGISTRY" -u "$REGISTRY_USER" --password-stdin
+          docker tag "djstratagem:${GITHUB_SHA}" "$IMAGE:${GITHUB_SHA}"
+          docker tag "djstratagem:${GITHUB_SHA}" "$IMAGE:latest"
+          docker push "$IMAGE:${GITHUB_SHA}"
+          docker push "$IMAGE:latest"
+          echo "Pushed $IMAGE:${GITHUB_SHA}. Restart the host process yourself; this workflow does not touch cPanel."

@@ -1,0 +1,7 @@
+{% extends "accounts/auth_base.html" %}
+{% block title %}Password updated{% endblock %}
+{% block auth %}
+  <h1 class="display text-5xl">You’re all set.</h1>
+  <p class="mt-3 text-sm">Your password has been updated. Sign in with your new password.</p>
+  <a class="btn btn-primary mt-5 rounded-none" href="{% url 'login' %}">Continue to sign in</a>
+{% endblock %}

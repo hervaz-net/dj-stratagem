@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}{{ article.title }}{% endblock %}
+{% block content %}
+<article class="py-12 lg:py-16">
+  <div class="shell max-w-3xl">
+    <a class="text-sm font-semibold underline underline-offset-4" href="{% url 'resource_section' 'blog' %}">All field notes</a>
+    <p class="kicker mt-8 text-base-content/75">Field notes · D&amp;J Stratagem</p>
+    <h1 class="display mt-3 text-5xl sm:text-6xl">{{ article.title }}</h1>
+    <p class="mt-4 text-lg leading-relaxed text-base-content/80">{{ article.intro }}</p>
+    <p class="mt-6 flex flex-wrap items-center justify-between gap-3 border-y border-base-content/15 py-3 text-sm">
+      <span>Practical notes for construction teams</span>
+      {% if article.related_mode %}
+        <a class="font-semibold underline underline-offset-4" href="{{ article.related_mode.get_absolute_url }}">{{ article.related_mode.name }}</a>
+      {% endif %}
+    </p>
+    <div class="mt-8 grid gap-4 text-base leading-relaxed">
+      {% for paragraph in article.paragraphs %}
+        <p>{{ paragraph }}</p>
+      {% endfor %}
+    </div>
+    <div class="mt-12 border border-base-content/20 p-6">
+      <p class="kicker text-base-content/75">Keep the work moving</p>
+      <h2 class="display mt-2 text-4xl">Find the work. Price it. Build it.</h2>
+      <a class="btn btn-primary mt-4 h-11 min-h-11 rounded-none px-4 font-semibold" href="{% url 'join' %}">Join free</a>
+    </div>
+  </div>
+</article>
+{% endblock %}

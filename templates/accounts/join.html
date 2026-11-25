@@ -1,0 +1,38 @@
+{% extends "accounts/auth_base.html" %}
+{% block title %}Join free{% endblock %}
+{% block aside_kicker %}Find the work. Price it. Build it.{% endblock %}
+{% block aside_title %}One desk for the whole job.{% endblock %}
+{% block aside_copy %}Get your company in the network and put your next opportunity in motion. Free to start. Reviewed by a person. Focused on Southern California.{% endblock %}
+{% block auth %}
+  {% if received %}
+    <div class="alert rounded-none border border-success/40" role="status">
+      <div>
+        <h1 class="text-2xl font-semibold">Request received.</h1>
+        <p class="mt-1">Your request is with our team. We’ll email you once your account is approved.</p>
+        <a class="btn btn-outline mt-4 rounded-none border-base-content/30" href="{% url 'home' %}">Back to home</a>
+      </div>
+    </div>
+  {% else %}
+    <p class="kicker text-base-content/75">Request access</p>
+    <h1 class="display mt-3 text-5xl">Get your company on the desk.</h1>
+    <p class="mt-2 text-sm text-base-content/75">Tell us who you are. A real person reviews every account before it joins the network.</p>
+    <form class="mt-6 grid gap-4" method="post" novalidate>
+      {% csrf_token %}
+      {% if form.non_field_errors %}
+        <div class="alert alert-error rounded-none" role="alert">{{ form.non_field_errors }}</div>
+      {% endif %}
+      <div class="grid gap-4 sm:grid-cols-2">
+        {% include "includes/field.html" with field=form.full_name %}
+        {% include "includes/field.html" with field=form.company %}
+      </div>
+      {% include "includes/field.html" with field=form.email %}
+      {% include "includes/field.html" with field=form.phone %}
+      {% include "includes/field.html" with field=form.password %}
+      {% include "includes/field.html" with field=form.confirm %}
+      <p class="text-sm text-base-content/65">Use at least 12 characters.</p>
+      <button class="btn btn-primary h-12 min-h-12 rounded-none font-semibold" type="submit">Request access</button>
+    </form>
+    <p class="mt-4 text-sm">Already have an account? <a class="font-semibold underline underline-offset-4" href="{% url 'login' %}">Sign in</a></p>
+    <p class="mt-4 text-xs leading-relaxed text-base-content/75">By requesting access, you agree to our <a class="underline underline-offset-4" href="{% url 'terms' %}">Terms</a> and <a class="underline underline-offset-4" href="{% url 'privacy' %}">Privacy Policy</a>.</p>
+  {% endif %}
+{% endblock %}

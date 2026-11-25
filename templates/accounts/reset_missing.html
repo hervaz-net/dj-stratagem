@@ -1,0 +1,7 @@
+{% extends "accounts/auth_base.html" %}
+{% block title %}Choose a new password{% endblock %}
+{% block auth %}
+  <h1 class="display text-5xl">Use the link in your email.</h1>
+  <p class="mt-3 text-sm leading-relaxed">Password reset links are sent to the work email on an approved account. Open the latest message, or request another one.</p>
+  <a class="btn btn-primary mt-5 rounded-none" href="{% url 'password_reset' %}">Request a reset link</a>
+{% endblock %}

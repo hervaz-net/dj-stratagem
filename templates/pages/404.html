@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Page not found{% endblock %}
+{% block robots %}noindex, nofollow{% endblock %}
+{% block content %}
+<section class="py-20">
+  <div class="shell max-w-2xl">
+    <p class="kicker text-base-content/75">Sheet missing</p>
+    <h1 class="display mt-4 text-6xl">That page isn’t on this site.</h1>
+    <p class="mt-4 text-base text-base-content/75">The address may have moved. The desk, the pricing, and a person are still here.</p>
+    <div class="mt-6 flex flex-wrap gap-3">
+      <a class="btn btn-primary rounded-none" href="{% url 'home' %}">Back to D&amp;J</a>
+      <a class="btn btn-outline rounded-none border-base-content/30" href="{% url 'contact' %}">Contact</a>
+    </div>
+  </div>
+</section>
+{% endblock %}

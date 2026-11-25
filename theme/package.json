@@ -1,0 +1,15 @@
+{
+  "name": "djs-theme",
+  "private": true,
+  "scripts": {
+    "css": "node copy-fonts.mjs && tailwindcss -i ./input.css -o ../static/css/app.css --minify"
+  },
+  "devDependencies": {
+    "@fontsource/barlow": "^5.2.8",
+    "@fontsource/barlow-condensed": "^5.2.8",
+    "@fontsource/ibm-plex-mono": "^5.2.7",
+    "@tailwindcss/cli": "^4.1.17",
+    "daisyui": "^5.5.5",
+    "tailwindcss": "^4.1.17"
+  }
+}
