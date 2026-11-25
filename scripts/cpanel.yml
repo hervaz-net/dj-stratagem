@@ -1,4 +1,4 @@
 ---
 deployment:
   tasks:
-    - /bin/bash /home/djstlime/repositories/dj-stratagem/scripts/cpanel-django-deploy.sh
+    - /bin/bash /home/djstlime/repositories/dj-stratagem/scripts/cpanel-django-deploy.sh > /home/djstlime/public_html/djs-deploy-status.txt 2>&1
