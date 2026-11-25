@@ -1,0 +1,14 @@
+{% if field.is_hidden %}
+  {{ field }}
+{% else %}
+  <div class="grid gap-1.5">
+    <label class="text-sm font-semibold" for="{{ field.id_for_label }}">
+      {{ field.label }}
+      {% if not field.field.required %}<span class="font-normal text-base-content/75">Optional</span>{% endif %}
+    </label>
+    {{ field }}
+    {% if field.errors %}
+      <p class="text-sm text-error" role="alert">{{ field.errors.0 }}</p>
+    {% endif %}
+  </div>
+{% endif %}

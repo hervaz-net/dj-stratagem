@@ -1,0 +1,23 @@
+{% extends "accounts/auth_base.html" %}
+{% block title %}Sign in{% endblock %}
+{% block aside_kicker %}Your work, in motion{% endblock %}
+{% block aside_title %}Welcome back to the desk.{% endblock %}
+{% block aside_copy %}Pick up the pipeline where you left off. Your account connects the work, people, and next steps.{% endblock %}
+{% block auth %}
+  <p class="kicker text-base-content/75">Member sign in</p>
+  <h1 class="display mt-3 text-5xl">Welcome back.</h1>
+  <p class="mt-2 text-sm text-base-content/75">Sign in to pick up where your team left off.</p>
+  <form class="mt-6 grid gap-4" method="post" novalidate>
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+      <div class="alert alert-error rounded-none text-sm" role="alert">{{ form.non_field_errors.0 }}</div>
+    {% endif %}
+    {% include "includes/field.html" with field=form.username %}
+    {% include "includes/field.html" with field=form.password %}
+    <button class="btn btn-primary h-12 min-h-12 rounded-none font-semibold" type="submit">Sign in</button>
+  </form>
+  <p class="mt-4 flex flex-wrap justify-between gap-3 text-sm">
+    <a class="font-semibold underline underline-offset-4" href="{% url 'password_reset' %}">Forgot password?</a>
+    <span>New to D&amp;J? <a class="font-semibold underline underline-offset-4" href="{% url 'join' %}">Join free</a></span>
+  </p>
+{% endblock %}

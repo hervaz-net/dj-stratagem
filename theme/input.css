@@ -1,0 +1,275 @@
+@import "tailwindcss";
+
+@source "../templates/**/*.html";
+@source "../accounts/**/*.py";
+@source "../inquiries/**/*.py";
+@source "../content/**/*.py";
+
+@plugin "daisyui" {
+  themes: false;
+  logs: false;
+}
+
+@plugin "daisyui/theme" {
+  name: "sheet";
+  default: true;
+  color-scheme: light;
+  --color-base-100: #f4f5f1;
+  --color-base-200: #e7e9e2;
+  --color-base-300: #d5d9d0;
+  --color-base-content: #17181b;
+  --color-primary: #dff000;
+  --color-primary-content: #17181b;
+  --color-secondary: #17181b;
+  --color-secondary-content: #f4f5f1;
+  --color-accent: #1f4d3c;
+  --color-accent-content: #f4f5f1;
+  --color-neutral: #17181b;
+  --color-neutral-content: #f4f5f1;
+  --color-info: #1d4e89;
+  --color-info-content: #f4f5f1;
+  --color-success: #1f4d3c;
+  --color-success-content: #f4f5f1;
+  --color-warning: #8a5a00;
+  --color-warning-content: #17181b;
+  --color-error: #9d1c1c;
+  --color-error-content: #fff8f6;
+  --radius-selector: 0;
+  --radius-field: 0;
+  --radius-box: 0;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+}
+
+@plugin "daisyui/theme" {
+  name: "night";
+  color-scheme: dark;
+  --color-base-100: #141613;
+  --color-base-200: #1c1f1a;
+  --color-base-300: #2a2e28;
+  --color-base-content: #f3f4ef;
+  --color-primary: #dff000;
+  --color-primary-content: #141613;
+  --color-secondary: #f3f4ef;
+  --color-secondary-content: #141613;
+  --color-accent: #b7e3a4;
+  --color-accent-content: #141613;
+  --color-neutral: #f3f4ef;
+  --color-neutral-content: #141613;
+  --color-info: #9ec0ea;
+  --color-info-content: #141613;
+  --color-success: #b7e3a4;
+  --color-success-content: #141613;
+  --color-warning: #f0c14a;
+  --color-warning-content: #141613;
+  --color-error: #ffb4a8;
+  --color-error-content: #141613;
+  --radius-selector: 0;
+  --radius-field: 0;
+  --radius-box: 0;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+}
+
+@theme {
+  --font-sans: "Barlow", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Barlow Condensed", "Barlow", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+@font-face {
+  font-family: "Barlow";
+  src: url("/static/fonts/barlow-400.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Barlow";
+  src: url("/static/fonts/barlow-500.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Barlow";
+  src: url("/static/fonts/barlow-600.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Barlow Condensed";
+  src: url("/static/fonts/barlow-condensed-600.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Barlow Condensed";
+  src: url("/static/fonts/barlow-condensed-700.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IBM Plex Mono";
+  src: url("/static/fonts/ibm-plex-mono-400.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "IBM Plex Mono";
+  src: url("/static/fonts/ibm-plex-mono-500.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 8.5rem;
+  background: var(--color-base-100);
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background: var(--color-base-100);
+  color: var(--color-base-content);
+  font-family: var(--font-sans);
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+::selection {
+  background: #dff000;
+  color: #17181b;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-base-content);
+  outline-offset: 3px;
+}
+
+summary {
+  list-style: none;
+}
+
+summary::-webkit-details-marker {
+  display: none;
+}
+
+.shell {
+  width: min(72rem, calc(100% - 2rem));
+  margin-inline: auto;
+}
+
+.display {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 0.9;
+}
+
+.kicker {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+#stations,
+#modes {
+  scroll-margin-top: 8.5rem;
+}
+
+#mobile-nav {
+  display: none;
+}
+
+#site-nav:checked ~ #mobile-nav {
+  display: block;
+}
+
+@media (min-width: 1024px) {
+  #mobile-nav {
+    display: none !important;
+  }
+}
+
+.sheet-grid {
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--color-base-content) 9%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--color-base-content) 9%, transparent) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.mark {
+  display: inline-block;
+  width: 0.55rem;
+  height: 0.55rem;
+  background: var(--color-primary);
+  flex: none;
+}
+
+.legal h2 {
+  margin-top: 2.2rem;
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+
+.legal p,
+.legal li {
+  max-width: 68ch;
+  line-height: 1.7;
+}
+
+.legal table {
+  width: min(100%, 68ch);
+  border-collapse: collapse;
+}
+
+.legal td {
+  padding: 0.7rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-base-content) 16%, transparent);
+  vertical-align: top;
+}
+
+.legal td:first-child {
+  width: 9.5rem;
+  padding-right: 1rem;
+  font-weight: 600;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

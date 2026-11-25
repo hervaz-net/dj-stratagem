@@ -32,6 +32,17 @@ dist-ssr
 .cpanel_token
 *.token
 
+# Django
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+data/
+media/
+staticfiles/
+theme/node_modules/
+
 # Server-only auth config — holds database credentials
 public/api/config.php
 dist/api/config.php

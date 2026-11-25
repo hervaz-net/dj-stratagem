@@ -1,188 +1,74 @@
 #!/usr/bin/env bash
+# Build and check the Django app. This script does not publish to cPanel.
 #
-# D&J Stratagem deployment tool.
+# The live site is still the previous static export until DNS moves to a host
+# that runs the container. Do not rsync this tree into public_html.
 #
-# Default: fully automated deploy to Namecheap cPanel over the cPanel UAPI —
-# build, refresh the `deploy` branch, pull on the server, run the deployment,
-# and verify the live bundle. No browser, no cPanel login.
-#
-# Requires a cPanel API token at ~/.cpanel_token (chmod 600).
-# The token is read from disk at call time and never printed or logged.
-#
-# Usage:
-#   ./deploy.sh                # build + push + deploy + verify
-#   ./deploy.sh --no-build     # reuse existing out/
-#   ./deploy.sh --status       # last deployment info
-#   ./deploy.sh --manual       # instructions for other hosts (FTP/S3/Vercel/Netlify)
-#
+#   ./deploy.sh            # CSS, tests, docker image
+#   ./deploy.sh --no-docker
+#   ./deploy.sh --manual   # host, secrets, and DNS notes
 set -euo pipefail
 
-CPANEL_HOST="server247.web-hosting.com:2083"
-CPANEL_USER="djstlime"
-TOKEN_FILE="${CPANEL_TOKEN_FILE:-$HOME/.cpanel_token}"
-# Must be ABSOLUTE — the UAPI rejects a home-relative repository_root.
-REPO_ROOT="/home/djstlime/repositories/dj-stratagem"
-DOCROOT="/home/djstlime/public_html"
-BRANCH="deploy"
-GIT_REMOTE="https://github.com/hervaz-net/dj-stratagem.git"
-SITE_URL="https://djstratageminc.com"
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$ROOT"
 
-REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
-GREEN='\033[0;32m'; BLUE='\033[0;36m'; YELLOW='\033[1;33m'; RED='\033[0;31m'; NC='\033[0m'
-die()  { printf "${RED}error:${NC} %s\n" "$*" >&2; exit 1; }
-step() { printf "\n${BLUE}==>${NC} %s\n" "$*"; }
-
-# ---------------------------------------------------------------- manual mode
 if [[ "${1:-}" == "--manual" || "${1:-}" == "--instructions" ]]; then
-  printf "${BLUE}Manual deployment targets${NC}\n"
-  echo "----------------------------------------"
-  echo "Contents of out/ to upload:"
-  ls -la out/ 2>/dev/null || echo "  (no out/ — run npm run build)"
   cat <<'TXT'
+D&J Stratagem now runs as Django (gunicorn + WhiteNoise) in the Dockerfile.
 
-• Namecheap cPanel (manual): upload out/ contents into public_html/
-    IMPORTANT: public_html must end up djstlime:nobody mode 0750.
-    Uploading with a tool that preserves source perms/group will break it.
-• AWS S3:  aws s3 sync out/ s3://bucket-name/
-• Vercel:  npx vercel --prod
-• Netlify: drop out/ into the Netlify UI
+This script does not update Namecheap cPanel. The previous workflow pushed a
+static Next.js export to the `deploy` branch and asked cPanel to rsync it into
+public_html. A Django process cannot run that way on this shared host.
+
+Before the new site can replace https://djstratageminc.com:
+
+1. Provision a host that can run the container (a small VPS, or any registry
+   plus a platform that runs Docker). cPanel on server247.web-hosting.com is
+   not that host.
+2. Create a long DJANGO_SECRET_KEY and set DJANGO_ALLOWED_HOSTS to the
+   hostname you will serve (djstratageminc.com,www.djstratageminc.com).
+3. Set SITE_URL=https://djstratageminc.com.
+4. Set DATABASE_URL for Postgres, or accept the SQLite file on a persistent
+   volume. Put the volume on /app/data and /app/media.
+5. Set EMAIL_HOST, EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, EMAIL_USE_TLS,
+   DEFAULT_FROM_EMAIL, and CONTACT_TO_EMAIL so inquiry mail and password
+   resets leave the server. Use a mailbox on the domain.
+6. Put TLS in front of the container. Set DJANGO_BEHIND_PROXY=1 and
+   DJANGO_SECURE_SSL=1 when the proxy sends X-Forwarded-Proto.
+7. Set CSRF_TRUSTED_ORIGINS=https://djstratageminc.com,https://www.djstratageminc.com.
+8. Create the first admin: docker compose exec web python manage.py createsuperuser
+   Then approve member accounts at /admin/.
+9. Point DNS only after /health/ returns {"ok": true} on the new host:
+   Namecheap → Advanced DNS → A @ to the new host, CNAME www to the apex.
+   Lower the TTL before the cutover.
+10. Optional image push: set the repository variable DJANGO_DEPLOY_ENABLED=true
+    plus DJANGO_REGISTRY, DJANGO_IMAGE, and the registry secrets. The workflow
+    still does not restart a server and still does not call cPanel.
+
+Until that cutover, the current public_html site keeps serving the last
+static deploy. Merging this branch stops new cPanel publishes so the live
+files are not replaced with a Django tree the shared host cannot run.
 TXT
   exit 0
 fi
 
-# Never ship a build that is missing commits already on origin/main: the live
-# site would silently roll back someone else's work. Set ALLOW_BEHIND=1 to skip.
-if [[ "${1:-}" != "--status" && "${ALLOW_BEHIND:-}" != "1" ]]; then
-  if git -C "$REPO_DIR" fetch -q origin main 2>/dev/null; then
-    behind="$(git -C "$REPO_DIR" rev-list --count HEAD..origin/main)"
-    [[ "$behind" == "0" ]] || die "HEAD is $behind commit(s) behind origin/main.
-Pull or rebase first (git pull --rebase origin main), then deploy."
-  else
-    printf "${YELLOW}warning:${NC} could not fetch origin/main; skipping the up-to-date check\n" >&2
-  fi
+step() { printf '\n==> %s\n' "$*"; }
+
+step "CSS"
+( cd theme && npm install && npm run css )
+
+step "Tests"
+if [[ ! -d .venv ]]; then
+  python3 -m venv .venv
+  .venv/bin/pip install -r requirements.txt
 fi
+DJANGO_SETTINGS_MODULE=config.settings.dev .venv/bin/python manage.py test --verbosity 1
 
-[[ -f "$TOKEN_FILE" ]] || die "no token file at $TOKEN_FILE
-Create one in cPanel → Manage API Tokens, then save it without echoing:
-  (umask 077; cat > $TOKEN_FILE)"
-
-TOKEN="$(tr -d '[:space:]' < "$TOKEN_FILE")"
-[[ -n "$TOKEN" ]] || die "$TOKEN_FILE is empty"
-
-uapi() {
-  local module="$1" func="$2"; shift 2
-  curl -sS --max-time 90 \
-    -H "Authorization: cpanel ${CPANEL_USER}:${TOKEN}" \
-    "https://${CPANEL_HOST}/execute/${module}/${func}" "$@"
-}
-
-api_check() {
-  python3 -c '
-import json,sys
-raw=sys.stdin.read()
-try: d=json.loads(raw)
-except Exception: print("  non-JSON response:", raw[:300]); sys.exit(1)
-if d.get("errors"): print("  FAILED:", "; ".join(map(str,d["errors"]))); sys.exit(1)
-print("  ok")
-'
-}
-
-# -------------------------------------------------------------- status mode
-if [[ "${1:-}" == "--status" ]]; then
-  step "Last deployment"
-  uapi VersionControl retrieve --get --data-urlencode "fields=last_deployment,last_update" \
-    | python3 -c '
-import json,sys
-d=json.load(sys.stdin)
-for r in (d.get("data") or []):
-    lu=r.get("last_update") or {}; ld=r.get("last_deployment") or {}
-    print("  server HEAD :", (lu.get("identifier") or "?")[:8], "|", (lu.get("message") or "").strip()[:60])
-    rs=ld.get("repository_state") or {}
-    print("  deployed    :", (rs.get("identifier") or "?")[:8], "| deploy_id", ld.get("deploy_id"))
-'
+if [[ "${1:-}" == "--no-docker" ]]; then
+  echo "Skipped docker build."
   exit 0
 fi
 
-# ------------------------------------------------------------------- build
-if [[ "${1:-}" != "--no-build" ]]; then
-  step "Building"
-  ( cd "$REPO_DIR" && npm run build )
-else
-  step "Skipping build (--no-build)"
-fi
-[[ -d "$REPO_DIR/out" ]] || die "no out/ — run a build first"
-bash "$REPO_DIR/scripts/verify-dist.sh" "$REPO_DIR/out"
-
-# --------------------------------------------------- refresh deploy branch
-step "Refreshing '$BRANCH' branch from out/"
-WORK="$(mktemp -d)"; trap 'rm -rf "$WORK"' EXIT
-git clone --quiet --branch "$BRANCH" --single-branch "$GIT_REMOTE" "$WORK/repo"
-cd "$WORK/repo"
-find . -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
-cp -R "$REPO_DIR/out/." .
-
-# PERMISSIONS — do NOT change these rsync flags back to `-a`.
-#
-# `-a` implies -p (perms) and -g (group). The rsync source is the cPanel git
-# repo dir, owned djstlime:djstlime mode 0700, so `-a` silently chmods
-# public_html to 0700 AND chgrps it to djstlime. cPanel needs djstlime:nobody
-# 0750 because the web server runs as `nobody`. Get it wrong and the directory
-# index still renders while every static file GET returns 404 — which looks
-# exactly like the deploy wiped the site. This cost hours to track down once.
-cat > .cpanel.yml <<YML
----
-deployment:
-  tasks:
-    - /usr/bin/rsync -rltD --delete --exclude='.git' --exclude='.cpanel.yml' --exclude='api/config.php' --exclude='djs/config.php' --exclude='djs-config.php' ./ ${DOCROOT}/
-    - /usr/bin/find ${DOCROOT} -type d -exec /bin/chmod 0755 {} +
-    - /usr/bin/find ${DOCROOT} -type f -exec /bin/chmod 0644 {} +
-    - /bin/chgrp nobody ${DOCROOT}
-    - /bin/chmod 0750 ${DOCROOT}
-YML
-
-git add -A
-if git diff --cached --quiet; then
-  echo "  no changes"
-else
-  git commit --quiet -m "Deploy $(cd "$REPO_DIR" && git rev-parse --short HEAD)"
-  git push --quiet origin "$BRANCH"
-  echo "  pushed $(git rev-parse --short HEAD)"
-fi
-cd "$REPO_DIR"
-
-# ------------------------------------------------- pull on server + deploy
-step "Pulling '$BRANCH' on the server"
-uapi VersionControl update --get \
-  --data-urlencode "repository_root=${REPO_ROOT}" \
-  --data-urlencode "branch=${BRANCH}" | api_check
-
-step "Triggering deployment"
-uapi VersionControlDeployment create -X POST \
-  --data-urlencode "repository_root=${REPO_ROOT}" | api_check
-
-# ------------------------------------------------------------------ verify
-step "Verifying live site"
-if ! python3 -c 'import socket,sys; socket.getaddrinfo("djstratageminc.com", 443)' >/dev/null 2>&1; then
-  printf "${RED}error:${NC} djstratageminc.com has no public A/AAAA record.\n"
-  printf "  Namecheap → Advanced DNS → A @ 199.188.200.92 (server247.web-hosting.com)\n"
-  printf "  CNAME www → djstratageminc.com.\n"
-  exit 1
-fi
-EXPECTED="$(grep -oE '/_next/static/[^" ]+[.]js' "$REPO_DIR/out/index.html" | head -1)"
-for i in 1 2 3 4 5 6; do
-  sleep 5
-  LIVE="$(curl -sS --max-time 30 "$SITE_URL/" 2>/dev/null | grep -oE '/_next/static/[^" ]+[.]js' | head -1 || true)"
-  [[ "$LIVE" == "$EXPECTED" ]] && break
-  printf '  attempt %d: waiting for rsync…\n' "$i"
-done
-
-printf '  expected: %s\n  live:     %s\n' "$EXPECTED" "${LIVE:-<none>}"
-if [[ "$LIVE" == "$EXPECTED" ]]; then
-  printf "\n${GREEN}✓ deployed${NC} %s\n" "$SITE_URL"
-else
-  printf "\n${YELLOW}!${NC} live bundle still not matching.\n"
-  printf "  Check perms:  ./deploy.sh --status\n"
-  printf "  public_html must be djstlime:nobody 0750.\n"
-  exit 1
-fi
+step "Docker image"
+docker build -t djstratagem:local .
+echo "Image djstratagem:local is local only. Nothing was published."

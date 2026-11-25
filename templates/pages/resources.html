@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Resources{% endblock %}
+{% block content %}
+<section class="border-b border-base-content/15 py-14 lg:py-20">
+  <div class="shell">
+    <p class="kicker text-base-content/75">The useful stuff</p>
+    <h1 class="display mt-4 text-[clamp(3.2rem,7vw,6rem)]">Notes from the jobsite.</h1>
+    <p class="mt-4 max-w-xl text-lg text-base-content/80">Ideas, product changes, and guides for the people moving construction work forward.</p>
+  </div>
+</section>
+<section class="py-12 lg:py-16">
+  <div class="shell border-t border-base-content">
+    {% for section in sections %}
+      <a class="grid gap-2 border-b border-base-content/15 py-6 hover:bg-base-200 md:grid-cols-[6rem_1fr_auto] md:items-baseline md:px-2" href="{{ section.get_absolute_url }}">
+        <span class="display text-4xl">0{{ forloop.counter }}</span>
+        <span>
+          <span class="block font-display text-4xl font-semibold">{{ section.title }}</span>
+          <span class="mt-1 block text-sm text-base-content/75">{{ section.description }}</span>
+        </span>
+        <span class="font-semibold">Explore</span>
+      </a>
+    {% empty %}
+      <p class="py-8">No resources are published yet.</p>
+    {% endfor %}
+  </div>
+</section>
+<section class="border-t border-base-content/15 bg-base-200 py-12">
+  <div class="shell flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+    <div>
+      <p class="kicker text-base-content/75">Need a person?</p>
+      <h2 class="display mt-2 text-4xl">Our team is right here.</h2>
+    </div>
+    <a class="btn btn-primary h-12 min-h-12 rounded-none px-5 font-semibold" href="{% url 'contact' %}">Get in touch</a>
+  </div>
+</section>
+{% endblock %}

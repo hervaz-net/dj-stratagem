@@ -1,0 +1,15 @@
+{% extends "accounts/auth_base.html" %}
+{% block title %}Reset password{% endblock %}
+{% block aside_title %}A fresh start.{% endblock %}
+{% block aside_copy %}Enter the email on your account. If it’s active, we’ll send a reset link.{% endblock %}
+{% block auth %}
+  <p class="kicker text-base-content/75">Account help</p>
+  <h1 class="display mt-3 text-5xl">A fresh start.</h1>
+  <p class="mt-2 text-sm text-base-content/75">Enter the email on your account. If it’s active, we’ll send a reset link.</p>
+  <form class="mt-6 grid gap-4" method="post">
+    {% csrf_token %}
+    {% include "includes/field.html" with field=form.email %}
+    <button class="btn btn-primary h-12 min-h-12 rounded-none font-semibold" type="submit">Send reset link</button>
+  </form>
+  <p class="mt-4 text-sm"><a class="font-semibold underline underline-offset-4" href="{% url 'login' %}">Back to sign in</a></p>
+{% endblock %}
