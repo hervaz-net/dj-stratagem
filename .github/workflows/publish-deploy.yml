@@ -123,7 +123,7 @@ jobs:
           set -euo pipefail
           health=""
           home=""
-          for i in $(seq 1 12); do
+          for i in $(seq 1 24); do
             health="$(curl -fsS --max-time 30 "https://djstratageminc.com/health/" || true)"
             home="$(curl -fsS --max-time 30 "https://djstratageminc.com/" || true)"
             if printf '%s' "$health" | grep -q '"service": "django"' && printf '%s' "$home" | grep -q 'Find the work'; then
@@ -131,7 +131,7 @@ jobs:
               exit 0
             fi
             echo "attempt ${i}: health=${health:-<none>}"
-            sleep 10
+            sleep 15
           done
           echo "::group::host deploy status"
           curl -fsS --max-time 20 "https://djstratageminc.com/djs-deploy-status.txt" || echo "no status file"

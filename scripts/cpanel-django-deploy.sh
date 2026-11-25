@@ -157,7 +157,7 @@ selector_json restart --json --interpreter python --app-root djstratagem
 
 echo "==> Preview health"
 preview_ok=0
-for _ in 1 2 3 4 5 6 7 8 9 10; do
+for _ in $(seq 1 24); do
   body=$(curl -fsS --max-time 20 "https://${DOMAIN}/${PREVIEW_URI}/health/" || true)
   if printf '%s' "$body" | grep -q '"service": "django"'; then
     preview_ok=1
